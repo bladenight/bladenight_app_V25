@@ -37,7 +37,7 @@ class TimeConverter {
     final minutes = seconds ~/ Duration.secondsPerMinute;
     seconds -= minutes * Duration.secondsPerMinute;
 
-    final List<String> tokens = []; git remote -v
+    final List<String> tokens = [];
     if (days != 0) {
       tokens.add('${days}d');
     }
