@@ -1,0 +1,225 @@
+import UIKit
+import Flutter
+import AVKit
+import BackgroundTasks
+import WatchConnectivity
+//import workmanager
+
+@UIApplicationMain
+@objc class AppDelegate: FlutterAppDelegate {
+    var session: WCSession?
+    var appTerminatedFlag: Bool = false
+    
+    let methodChannelName: String = "bladenightchannel"
+    let backgroundTaskName: String = "workmanager.background.task"
+    
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        NSLog("Start Bladenight Runner")
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
+            //not working on iOS registerBackgroundPlugins()
+        }
+        initFlutterChannel()
+        
+        if WCSession.isSupported() {
+            session = WCSession.default;
+            session!.delegate = self;
+            session!.activate();
+        }
+        
+        GeneratedPluginRegistrant.register(with: self);
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+    
+    override func applicationDidFinishLaunching(_ application: UIApplication) {
+        //Show notifications in foreground
+        UNUserNotificationCenter.current().delegate = self
+        
+    }
+    
+   /* func registerBackgroundPlugins(){
+        //update Event in background
+        WorkmanagerPlugin.registerTask(withIdentifier: backgroundTaskName)
+        //important next lines-> when not registered backgroundtask fails with MissingPluginException
+        WorkmanagerPlugin.setPluginRegistrantCallback { registry in
+            GeneratedPluginRegistrant.register(with: registry)
+        }
+    }*/
+    
+    override func applicationWillTerminate(_ application: UIApplication) {
+        guard let watchSession = self.session, watchSession.isPaired else {
+            print("applicationWillTerminate received - error on init watchsession")
+            return;
+        }
+        let watchData: [String: Any] = ["method" : "phoneAppWillTerminate" , "data": "true"]
+        watchSession.transferUserInfo(watchData)
+        print("applicationWillTerminate received")
+    }
+    
+    override func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                         willPresent notification: UNNotification,
+                                         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(.alert) // shows banner even if app is in foreground
+    }
+    
+    private func showTestNotification(text:String?){
+        let content = UNMutableNotificationContent()
+        content.title = text ?? "Notification"
+        content.subtitle = "Bladenight App"
+        content.body = "new information"
+        content.sound = UNNotificationSound.default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request)
+        
+    }
+    
+    
+    private func initFlutterChannel() {
+        if let controller = window?.rootViewController as? FlutterViewController {
+            
+            let channel = FlutterMethodChannel(
+                name: "bladenightchannel",
+                binaryMessenger: controller.binaryMessenger)
+            
+            channel.setMethodCallHandler({ [weak self] (
+                call: FlutterMethodCall,
+                result: @escaping FlutterResult) -> Void in
+                switch call.method {
+                case "flutterToWatchTransferUserInfo":
+                    //debugPrint("flutterToWatchTransferUserInfo channel called")
+                    guard let watchSession = self?.session, watchSession.isPaired, let methodData = call.arguments as? [String: Any], let method = methodData["method"], let data = methodData["data"] else {
+                        result(false)
+                        //debugPrint("flutterToWatchTransferUserInfo failed. ")
+                        return
+                    }
+                    let watchData: [String: Any] = ["method": method, "data": data]
+                    // Pass the receiving message to Apple Watch
+                    watchSession.transferUserInfo(watchData)
+                    //debugPrint("flutterToWatchTransferUserInfo channel finished \(watchData)")
+                    result(true)
+                    
+                case "flutterToWatchTransferApplicationContext":
+                    //debugPrint("flutterToWatchTransferApplicationContext channel called")
+                    guard let watchSession = self?.session, watchSession.isPaired, let methodData = call.arguments as? [String: Any], let method = methodData["method"], let data = methodData["data"] else {
+                        result(false)
+                        //print("flutterToWatchTransferApplicationContext failed.")
+                        return
+                    }
+                    
+                    let watchData: [String: Any] = ["method": method, "data": data]
+                    // Pass the receiving message to Apple Watch
+                    do{
+                        try watchSession.updateApplicationContext(watchData)
+                    }
+                    catch {
+                        print("flutterToWatchTransferApplicationContext channel failed \(error.localizedDescription)")
+                    }
+                    //debugPrint("flutterToWatchTransferApplicationContext channel finished \(watchData)")
+                    result(true)
+                    
+                case "flutterToWatch":
+                    guard let watchSession = self?.session, watchSession.isPaired, watchSession.isReachable, let methodData = call.arguments as? [String: Any], let method = methodData["method"], let data = methodData["data"] else {
+                        result(false)
+                        return
+                    }
+                    
+                    let watchData: [String: Any] = ["method": method, "data": data]
+                    
+                    // Pass the receiving message to Apple Watch
+                    watchSession.sendMessage(watchData, replyHandler: nil, errorHandler: nil)
+                    result(true)
+                default:
+                    result(FlutterMethodNotImplemented)
+                }
+            })
+            
+        }
+    }
+}
+
+extension AppDelegate: WCSessionDelegate {
+    
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+    }
+    
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        //print("Watch reachability: \(session.isReachable)")
+        if (session.isReachable) {
+            //invoke sendWakeupToFlutter via MethodChannel when reachability is true
+            DispatchQueue.main.async {
+                if let controller = self.window?.rootViewController as? FlutterViewController {
+                    let channel = FlutterMethodChannel(
+                        name: self.methodChannelName,
+                        binaryMessenger: controller.binaryMessenger)
+                    channel.invokeMethod("sendWakeupToFlutter", arguments: [])
+                }
+            }
+        }
+    }
+    
+    
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        print("WCSession sessionDidBecomeInactive")
+    }
+    
+    func sessionDidDeactivate(_ session: WCSession) {
+        print("WCSession sessionDidDeactivate")
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        DispatchQueue.main.async {
+            if let method = message["method"] as? String, let controller = self.window?.rootViewController as? FlutterViewController {
+                let channel = FlutterMethodChannel(
+                    name: "bladenightchannel",
+                    binaryMessenger: controller.binaryMessenger)
+                channel.invokeMethod(method, arguments: message)
+                
+            }
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        DispatchQueue.main.async {
+            //print("Data applicationContext Received \(applicationContext)")
+            self.initFlutterChannel()
+            if let method = applicationContext.keys.first, let controller = self.window?.rootViewController as? FlutterViewController {
+                let channel = FlutterMethodChannel(
+                    name: "bladenightchannel",
+                    binaryMessenger: controller.binaryMessenger)
+                channel.invokeMethod("sendWakeupToFlutter", arguments: [])
+                channel.invokeMethod(method, arguments: applicationContext[method])
+            }
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
+        DispatchQueue.main.async {
+            //print("Data didReceiveUserInfo Received \(userInfo)")
+            self.initFlutterChannel()
+            if let method = userInfo.keys.first, let controller = self.window?.rootViewController as? FlutterViewController {
+                let channel = FlutterMethodChannel(
+                    name: "bladenightchannel",
+                    binaryMessenger: controller.binaryMessenger)
+                channel.invokeMethod("sendWakeupToFlutter", arguments: [])
+                channel.invokeMethod(method, arguments: userInfo[method])
+            }
+        }
+    }
+    
+    
+    func session(_ session: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
+        DispatchQueue.main.async {
+            //print("Data didReceiveMessageData \(messageData)")
+        }
+    }
+    
+    func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
+        //inform sender about successfull tansfer
+    }
+}

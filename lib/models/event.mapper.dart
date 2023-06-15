@@ -1,0 +1,357 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element
+
+part of 'event.dart';
+
+class EventStatusMapper extends EnumMapper<EventStatus> {
+  EventStatusMapper._();
+
+  static EventStatusMapper? _instance;
+  static EventStatusMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = EventStatusMapper._());
+    }
+    return _instance!;
+  }
+
+  static EventStatus fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  EventStatus decode(dynamic value) {
+    switch (value) {
+      case 'PEN':
+        return EventStatus.pending;
+      case 'CON':
+        return EventStatus.confirmed;
+      case 'CAN':
+        return EventStatus.cancelled;
+      case 'NOE':
+        return EventStatus.noevent;
+      case 'RUN':
+        return EventStatus.running;
+      case 'FIN':
+        return EventStatus.finished;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(EventStatus self) {
+    switch (self) {
+      case EventStatus.pending:
+        return 'PEN';
+      case EventStatus.confirmed:
+        return 'CON';
+      case EventStatus.cancelled:
+        return 'CAN';
+      case EventStatus.noevent:
+        return 'NOE';
+      case EventStatus.running:
+        return 'RUN';
+      case EventStatus.finished:
+        return 'FIN';
+    }
+  }
+}
+
+extension EventStatusMapperExtension on EventStatus {
+  dynamic toValue() {
+    EventStatusMapper.ensureInitialized();
+    return MapperContainer.globals.toValue(this);
+  }
+}
+
+class EventMapper extends ClassMapperBase<Event> {
+  EventMapper._();
+
+  static EventMapper? _instance;
+  static EventMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = EventMapper._());
+      MapperContainer.globals.useAll([DurationMapper()]);
+      EventStatusMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'Event';
+
+  static DateTime _$startDate(Event v) => v.startDate;
+  static const Field<Event, DateTime> _f$startDate =
+      Field('startDate', _$startDate, key: 'sta');
+  static String _$routeName(Event v) => v.routeName;
+  static const Field<Event, String> _f$routeName =
+      Field('routeName', _$routeName, key: 'rou');
+  static Duration _$duration(Event v) => v.duration;
+  static const Field<Event, Duration> _f$duration = Field(
+      'duration', _$duration,
+      key: 'dur', opt: true, def: const Duration(days: 240));
+  static int _$participants(Event v) => v.participants;
+  static const Field<Event, int> _f$participants =
+      Field('participants', _$participants, key: 'par', opt: true, def: 0);
+  static int _$routeLength(Event v) => v.routeLength;
+  static const Field<Event, int> _f$routeLength =
+      Field('routeLength', _$routeLength, key: 'len', opt: true, def: 0);
+  static EventStatus _$status(Event v) => v.status;
+  static const Field<Event, EventStatus> _f$status = Field('status', _$status,
+      key: 'sts', opt: true, def: EventStatus.pending);
+  static DateTime? _$lastupdate(Event v) => v.lastupdate;
+  static const Field<Event, DateTime> _f$lastupdate =
+      Field('lastupdate', _$lastupdate, opt: true);
+  static Exception? _$rpcException(Event v) => v.rpcException;
+  static const Field<Event, Exception> _f$rpcException =
+      Field('rpcException', _$rpcException, opt: true);
+
+  @override
+  final Map<Symbol, Field<Event, dynamic>> fields = const {
+    #startDate: _f$startDate,
+    #routeName: _f$routeName,
+    #duration: _f$duration,
+    #participants: _f$participants,
+    #routeLength: _f$routeLength,
+    #status: _f$status,
+    #lastupdate: _f$lastupdate,
+    #rpcException: _f$rpcException,
+  };
+
+  static Event _instantiate(DecodingData data) {
+    return Event(
+        startDate: data.dec(_f$startDate),
+        routeName: data.dec(_f$routeName),
+        duration: data.dec(_f$duration),
+        participants: data.dec(_f$participants),
+        routeLength: data.dec(_f$routeLength),
+        status: data.dec(_f$status),
+        lastupdate: data.dec(_f$lastupdate),
+        rpcException: data.dec(_f$rpcException));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Event fromMap(Map<String, dynamic> map) {
+    return _guard((c) => c.fromMap<Event>(map));
+  }
+
+  static Event fromJson(String json) {
+    return _guard((c) => c.fromJson<Event>(json));
+  }
+}
+
+mixin EventMappable {
+  String toJson() {
+    return EventMapper._guard((c) => c.toJson(this as Event));
+  }
+
+  Map<String, dynamic> toMap() {
+    return EventMapper._guard((c) => c.toMap(this as Event));
+  }
+
+  EventCopyWith<Event, Event, Event> get copyWith =>
+      _EventCopyWithImpl(this as Event, $identity, $identity);
+  @override
+  String toString() {
+    return EventMapper._guard((c) => c.asString(this));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            EventMapper._guard((c) => c.isEqual(this, other)));
+  }
+
+  @override
+  int get hashCode {
+    return EventMapper._guard((c) => c.hash(this));
+  }
+}
+
+extension EventValueCopy<$R, $Out> on ObjectCopyWith<$R, Event, $Out> {
+  EventCopyWith<$R, Event, $Out> get $asEvent =>
+      $base.as((v, t, t2) => _EventCopyWithImpl(v, t, t2));
+}
+
+abstract class EventCopyWith<$R, $In extends Event, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call(
+      {DateTime? startDate,
+      String? routeName,
+      Duration? duration,
+      int? participants,
+      int? routeLength,
+      EventStatus? status,
+      DateTime? lastupdate,
+      Exception? rpcException});
+  EventCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
+    implements EventCopyWith<$R, Event, $Out> {
+  _EventCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<Event> $mapper = EventMapper.ensureInitialized();
+  @override
+  $R call(
+          {DateTime? startDate,
+          String? routeName,
+          Duration? duration,
+          int? participants,
+          int? routeLength,
+          EventStatus? status,
+          Object? lastupdate = $none,
+          Object? rpcException = $none}) =>
+      $apply(FieldCopyWithData({
+        if (startDate != null) #startDate: startDate,
+        if (routeName != null) #routeName: routeName,
+        if (duration != null) #duration: duration,
+        if (participants != null) #participants: participants,
+        if (routeLength != null) #routeLength: routeLength,
+        if (status != null) #status: status,
+        if (lastupdate != $none) #lastupdate: lastupdate,
+        if (rpcException != $none) #rpcException: rpcException
+      }));
+  @override
+  Event $make(CopyWithData data) => Event(
+      startDate: data.get(#startDate, or: $value.startDate),
+      routeName: data.get(#routeName, or: $value.routeName),
+      duration: data.get(#duration, or: $value.duration),
+      participants: data.get(#participants, or: $value.participants),
+      routeLength: data.get(#routeLength, or: $value.routeLength),
+      status: data.get(#status, or: $value.status),
+      lastupdate: data.get(#lastupdate, or: $value.lastupdate),
+      rpcException: data.get(#rpcException, or: $value.rpcException));
+
+  @override
+  EventCopyWith<$R2, Event, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _EventCopyWithImpl($value, $cast, t);
+}
+
+class EventsMapper extends ClassMapperBase<Events> {
+  EventsMapper._();
+
+  static EventsMapper? _instance;
+  static EventsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = EventsMapper._());
+      EventMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'Events';
+
+  static List<Event> _$events(Events v) => v.events;
+  static const Field<Events, List<Event>> _f$events =
+      Field('events', _$events, key: 'evt');
+  static Exception? _$rpcException(Events v) => v.rpcException;
+  static const Field<Events, Exception> _f$rpcException =
+      Field('rpcException', _$rpcException, opt: true);
+
+  @override
+  final Map<Symbol, Field<Events, dynamic>> fields = const {
+    #events: _f$events,
+    #rpcException: _f$rpcException,
+  };
+
+  static Events _instantiate(DecodingData data) {
+    return Events(data.dec(_f$events), data.dec(_f$rpcException));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Events fromMap(Map<String, dynamic> map) {
+    return _guard((c) => c.fromMap<Events>(map));
+  }
+
+  static Events fromJson(String json) {
+    return _guard((c) => c.fromJson<Events>(json));
+  }
+}
+
+mixin EventsMappable {
+  String toJson() {
+    return EventsMapper._guard((c) => c.toJson(this as Events));
+  }
+
+  Map<String, dynamic> toMap() {
+    return EventsMapper._guard((c) => c.toMap(this as Events));
+  }
+
+  EventsCopyWith<Events, Events, Events> get copyWith =>
+      _EventsCopyWithImpl(this as Events, $identity, $identity);
+  @override
+  String toString() {
+    return EventsMapper._guard((c) => c.asString(this));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            EventsMapper._guard((c) => c.isEqual(this, other)));
+  }
+
+  @override
+  int get hashCode {
+    return EventsMapper._guard((c) => c.hash(this));
+  }
+}
+
+extension EventsValueCopy<$R, $Out> on ObjectCopyWith<$R, Events, $Out> {
+  EventsCopyWith<$R, Events, $Out> get $asEvents =>
+      $base.as((v, t, t2) => _EventsCopyWithImpl(v, t, t2));
+}
+
+abstract class EventsCopyWith<$R, $In extends Events, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, Event, EventCopyWith<$R, Event, Event>> get events;
+  $R call({List<Event>? events, Exception? rpcException});
+  EventsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _EventsCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Events, $Out>
+    implements EventsCopyWith<$R, Events, $Out> {
+  _EventsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<Events> $mapper = EventsMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, Event, EventCopyWith<$R, Event, Event>> get events =>
+      ListCopyWith($value.events, (v, t) => v.copyWith.$chain(t),
+          (v) => call(events: v));
+  @override
+  $R call({List<Event>? events, Object? rpcException = $none}) =>
+      $apply(FieldCopyWithData({
+        if (events != null) #events: events,
+        if (rpcException != $none) #rpcException: rpcException
+      }));
+  @override
+  Events $make(CopyWithData data) => Events(
+      data.get(#events, or: $value.events),
+      data.get(#rpcException, or: $value.rpcException));
+
+  @override
+  EventsCopyWith<$R2, Events, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _EventsCopyWithImpl($value, $cast, t);
+}

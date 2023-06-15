@@ -1,0 +1,59 @@
+buildscript {
+    ext.kotlin_version = '1.6.10'
+    ext {
+        compileSdkVersion   = 31                // or higher
+        targetSdkVersion    = 31                // or higher
+        appCompatVersion    = "1.4.2"           // or higher
+        playServicesLocationVersion = "21.0.0"  // or higher
+         }
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.2'
+        // START: FlutterFire Configuration
+        classpath 'com.google.gms:google-services:4.3.10'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.5'
+        // END: FlutterFire Configuration
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+
+    tasks.withType(JavaCompile) {
+        configure(options) {
+            options.compilerArgs << '-Xlint:deprecation'
+            options.encoding = 'UTF-8'
+        }
+    }
+
+}
+
+
+rootProject.buildDir = '../build'
+
+allprojects {
+    repositories {
+        maven {
+            // [required] flutter_background_geolocation
+            url "${project(':flutter_background_geolocation').projectDir}/libs"
+        }
+        maven {
+            // [required] background_fetch
+            url "${project(':background_fetch').projectDir}/libs"
+        }
+    }
+}
+
+
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
