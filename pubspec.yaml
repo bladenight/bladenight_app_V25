@@ -2,7 +2,7 @@ name: bladenight_app_flutter
 description: Bladenight App
 
 publish_to: 'none'
-version: 1.0.2355
+version: 1.0.2356
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -20,7 +20,7 @@ dependencies:
   encrypt: ^5.0.1
   f_logs: ^2.0.1
   #f_logs:
-   # path: ../Flogs/
+  # path: ../Flogs/
   fast_color_picker: ^0.1.1
   firebase_core: ^2.13.0
   firebase_crashlytics: ^3.3.1
@@ -46,12 +46,19 @@ dependencies:
   intl: ^0.17.0
   intro_slider: ^4.2.0
   latlong2: ^0.8.1
+    #location:
+    #git:
+    #url: https://github.com/fairuzmn/flutterlocation.git
+    #ref: location-v5.5.0.0-dev.9-fix
+    #path: packages/location
+  #geolocator:
+      #git:
+        #url: https://github.com/Baseflow/flutter-geolocator.git
+  #ref: location-v5.5.0.0-dev.9-fix
+        #path: ../flutter-geolocator/geolocator
   #location: ^4.4.0
-  #location:
-  #  git:
-  #    url: https://github.com/Lyokone/flutterlocation.git
-  #    path: packages/location
-  #    version: ^5.0.0
+
+  location2: ^6.0.2
   #modal_bottom_sheet: ^2.1.2
   maps_toolkit: ^2.0.1
   modal_bottom_sheet:

@@ -3308,11 +3308,31 @@ class Localize {
     );
   }
 
-  /// `Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht`
+  /// `Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht.`
   String get someSettingsNotAvailableBecauseOffline {
     return Intl.message(
-      'Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht',
+      'Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht.',
       name: 'someSettingsNotAvailableBecauseOffline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die Bladenight stattfindet empfangen werden. Empfohlene Einstellung 'Ein'.`
+  String get enableOnesignalPushMessageTitle {
+    return Intl.message(
+      'Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die Bladenight stattfindet empfangen werden. Empfohlene Einstellung \'Ein\'.',
+      name: 'enableOnesignalPushMessageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Push Mitteilung aktiv`
+  String get enableOnesignalPushMessage {
+    return Intl.message(
+      'Push Mitteilung aktiv',
+      name: 'enableOnesignalPushMessage',
       desc: '',
       args: [],
     );

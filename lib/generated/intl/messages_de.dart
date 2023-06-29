@@ -203,6 +203,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "editfriend": MessageLookupByLibrary.simpleMessage("Freund:in ändern"),
         "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
             "Um die BladeNight-App auch im Hintergrund (Standort mit Freunden teilen und Zuggenauigkeit zu erhöhen) ohne das der Bildschirm an ist, sollte die Standortfunktion \'Immer zulassen\' aktiviert werden.\nWeiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
+        "enableOnesignalPushMessage":
+            MessageLookupByLibrary.simpleMessage("Push Mitteilung aktiv"),
+        "enableOnesignalPushMessageTitle": MessageLookupByLibrary.simpleMessage(
+            "Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die Bladenight stattfindet empfangen werden. Empfohlene Einstellung \'Ein\'."),
         "enter6digitcode": MessageLookupByLibrary.simpleMessage(
             "Bitte 6-stelligen Code eingeben"),
         "enterEmail": MessageLookupByLibrary.simpleMessage("Email eingeben"),
@@ -507,7 +511,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "since": MessageLookupByLibrary.simpleMessage("seit"),
         "someSettingsNotAvailableBecauseOffline":
             MessageLookupByLibrary.simpleMessage(
-                "Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht"),
+                "Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht."),
         "specialfunction": MessageLookupByLibrary.simpleMessage(
             "Sondereinstellungen - nur in Sonderfällen ändern!"),
         "speed": MessageLookupByLibrary.simpleMessage("Geschwindigkeit"),

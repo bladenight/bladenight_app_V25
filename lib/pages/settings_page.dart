@@ -27,6 +27,7 @@ import '../providers/location_provider.dart';
 import '../providers/network_connection_provider.dart';
 import '../providers/shared_prefs_provider.dart';
 import '../wamp/wamp_v2.dart';
+import 'widgets/settings_invisible_offline.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -212,8 +213,34 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                           ),
                         ]),
+                  settingsInvisibleOfflineWidget(context),
                   if (networkConnected.connectivityStatus ==
                       ConnectivityStatus.online)
+                    CupertinoFormSection(
+                      header: Text(
+                          Localize.of(context).enableOnesignalPushMessageTitle),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).enableOnesignalPushMessage,
+                            descriptionRight: '',
+                            rightWidget: CupertinoSwitch(
+                              onChanged: (val) async {
+                                HiveSettingsDB.setPushNotificationsEnabled(val);
+                                await initPushNotifications();
+                                setState(() {});
+                              },
+                              value: HiveSettingsDB.pushNotificationsEnabled,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (networkConnected.connectivityStatus ==
+                          ConnectivityStatus.online &&
+                      HiveSettingsDB.pushNotificationsEnabled)
                     Column(
                       children: [
                         CupertinoFormSection(
@@ -398,15 +425,6 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ],
                           ),
-                      ],
-                    ),
-                  if (networkConnected.connectivityStatus !=
-                      ConnectivityStatus.online)
-                    CupertinoFormSection(
-                      header: Text(Localize.of(context)
-                          .someSettingsNotAvailableBecauseOffline),
-                      children: <Widget>[
-                        Container(),
                       ],
                     ),
                   if (Globals.adminPass != null)

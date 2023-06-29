@@ -199,6 +199,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "editfriend": MessageLookupByLibrary.simpleMessage("Edit friend"),
         "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
             "To use BladeNight-App also in the background (Share location with friends and increase train accuracy) without screen on, should location settings changed to \'Allow all time\'."),
+        "enableOnesignalPushMessage":
+            MessageLookupByLibrary.simpleMessage("Push message active"),
+        "enableOnesignalPushMessageTitle": MessageLookupByLibrary.simpleMessage(
+            "Enable Onesignal Push Notifications. Herewith general information can be received via push notification e.g. if the bladenight takes place. Recommended setting is \'On\'"),
         "enter6digitcode": MessageLookupByLibrary.simpleMessage(
             "You must enter a 6-digit-code"),
         "enterEmail": MessageLookupByLibrary.simpleMessage("Enter email"),
@@ -454,7 +458,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "setDarkMode":
             MessageLookupByLibrary.simpleMessage("Activate Dark Mode"),
         "setDarkModeTitle": MessageLookupByLibrary.simpleMessage(
-            "Switch between light- and darkmode independent of OS-setting."),
+            "Switch between light- and dark-mode independent of OS-setting."),
         "setExportLogSupport": MessageLookupByLibrary.simpleMessage(
             "Export Log data (Support) it@huth.app"),
         "setIconSize": MessageLookupByLibrary.simpleMessage("Icon size: "),
@@ -495,7 +499,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "since": MessageLookupByLibrary.simpleMessage("since"),
         "someSettingsNotAvailableBecauseOffline":
             MessageLookupByLibrary.simpleMessage(
-                "Some settings not available because you aren\'t connected to internet"),
+                "Some settings are not available because there is no internet connection"),
         "specialfunction": MessageLookupByLibrary.simpleMessage(
             "Special functions - change only when you know what you do!"),
         "speed": MessageLookupByLibrary.simpleMessage("Speed"),

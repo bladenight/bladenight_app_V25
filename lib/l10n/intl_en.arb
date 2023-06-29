@@ -397,12 +397,15 @@
   "markMeAsTail": "Mark me as Tail of procession",
   "notification": "Notification",
   "appId": "App-Id",
+  "OneSignalId": "Push-Message-Id",
   "appIdTitle": "Unique application identification string",
-  "setDarkModeTitle": "Switch between light- and darkmode independent of OS-setting.",
+  "setDarkModeTitle": "Switch between light- and dark-mode independent of OS-setting.",
   "setDarkMode": "Activate Dark Mode",
   "since": "since",
   "setTeam": "Choose your team!",
   "bgTeam": "Bladeguard team",
-  "someSettingsNotAvailableBecauseOffline": "Some settings not available because you aren't connected to internet"
+  "someSettingsNotAvailableBecauseOffline": "Some settings are not available because there is no internet connection",
+  "enableOnesignalPushMessageTitle": "Enable Onesignal Push Notifications. Herewith general information can be received via push notification e.g. if the bladenight takes place. Recommended setting is 'On'",
+  "enableOnesignalPushMessage": "Push message active"
 
 }

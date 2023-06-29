@@ -1,18 +1,49 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../generated/l10n.dart';
+import '../helpers/hive_box/hive_settings_db.dart';
 import '../models/event.dart';
-import '../pages/widgets/no_connection_warning.dart';
 import '../pages/widgets/data_loading_indicator.dart';
+import '../pages/widgets/no_connection_warning.dart';
 import '../pages/widgets/no_data_warning.dart';
 import '../pages/widgets/route_dialog.dart';
 import '../providers/event_providers.dart';
 
-class EventsPage extends StatelessWidget {
+class EventsPage extends StatefulWidget {
   const EventsPage({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _EventsPageState();
+}
+
+class _EventsPageState extends State<EventsPage> {
+  final dataKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToActualEvent();
+    });
+  }
+
+  _scrollToActualEvent() async {
+    await Future.delayed(const Duration(milliseconds: 400));
+    if (dataKey.currentContext != null) {
+      Scrollable.ensureVisible(dataKey.currentContext!,
+          curve: Curves.slowMiddle, alignment: 0.5);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant EventsPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _scrollToActualEvent();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,39 +87,65 @@ class EventsPage extends StatelessWidget {
                   skipLoadingOnRefresh: false,
                   skipLoadingOnReload: false,
                   data: (events) {
-                if (events.rpcException != null) {
-                  return SliverFillRemaining(
-                      child: NoDataWarning(
-                    onReload: () {
-                      context.refresh(allEventsProvider);
+                    if (events.rpcException != null) {
+                      return SliverFillRemaining(
+                          child: NoDataWarning(onReload: () {
+                        context.refresh(allEventsProvider);
+                      }));
                     }
-                  ));
-                }
-                return SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                  if (index % 2 == 0) {
-                    var event = events.events[(index / 2).round()];
-                    return _listTile(context, event);
-                  } else {
-                    return Divider(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      height: 1,
-                      indent: 16,
-                      endIndent: 16,
+                    return SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                      if (index % 2 == 0) {
+                        var event = events.events[(index / 2).round()];
+                        var eventStartState = EventStartState.eventOver;
+                        var eventOver = event.startDateUtc
+                            .difference(DateTime.now().toUtc())
+                            .isNegative;
+                        var eventActual = !eventOver &&
+                            event.startDateUtc
+                                    .difference(DateTime.now().toUtc())
+                                    .inDays <
+                                7;
+                        var eventFuture = !eventOver &&
+                            event.startDateUtc
+                                    .difference(DateTime.now().toUtc())
+                                    .inDays >
+                                7;
+                        if (eventActual) {
+                          eventStartState = EventStartState.eventActual;
+                        }
+                        if (eventFuture) {
+                          eventStartState = EventStartState.eventFuture;
+                        }
+                        if (eventActual) {
+                          return Container(
+                              key: dataKey,
+                              child:
+                                  _listTile(context, event, eventStartState));
+                        }
+                        return _listTile(context, event, eventStartState);
+                      } else {
+                        return Divider(
+                          color: CupertinoTheme.of(context).primaryColor,
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                        );
+                      }
+                    }, childCount: events.events.length * 2 - 1));
+                  },
+                  loading: () {
+                    return const SliverFillRemaining(
+                      child: DataLoadingIndicator(),
                     );
-                  }
-                }, childCount: events.events.length * 2 - 1));
-              }, loading: () {
-                return const SliverFillRemaining(
-                  child: DataLoadingIndicator(),
-                );
-              }, orElse: () {
-                return SliverFillRemaining(
-                  child: NoDataWarning(
-                    onReload: () => context.refresh(allEventsProvider),
-                  ),
-                );
-              });
+                  },
+                  orElse: () {
+                    return SliverFillRemaining(
+                      child: NoDataWarning(
+                        onReload: () => context.refresh(allEventsProvider),
+                      ),
+                    );
+                  });
             }),
           ],
         ),
@@ -97,22 +154,22 @@ class EventsPage extends StatelessWidget {
   }
 }
 
-Widget _listTile(BuildContext context, Event event) {
+enum EventStartState { eventOver, eventActual, eventFuture }
+
+Widget _listTile(
+    BuildContext context, Event event, EventStartState startState) {
   //mark old actual an new events
-  var eventOver =
-      event.startDateUtc.difference(DateTime.now().toUtc()).isNegative;
-  var eventActual = !eventOver &&
-      event.startDateUtc.difference(DateTime.now().toUtc()).inDays < 7;
-  var eventFuture = !eventOver &&
-      event.startDateUtc.difference(DateTime.now().toUtc()).inDays > 7;
   Color? color;
-  if (eventOver) {
-    color = CupertinoColors.systemGrey;
+  if (startState == EventStartState.eventOver) {
+    color = HiveSettingsDB.adaptiveThemeMode == AdaptiveThemeMode.light ||
+            HiveSettingsDB.adaptiveThemeMode == AdaptiveThemeMode.system
+        ? Colors.blueGrey
+        : Colors.white70;
   }
-  if (eventActual) {
+  if (startState == EventStartState.eventActual) {
     color = CupertinoTheme.of(context).primaryColor;
   }
-  if (eventFuture) {}
+  if (startState == EventStartState.eventFuture) {}
   return GestureDetector(
     behavior: HitTestBehavior.opaque,
     onTap: () {
@@ -128,11 +185,13 @@ Widget _listTile(BuildContext context, Event event) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${eventActual ? Localize.of(context).nextEvent : Localize.of(context).route} ${Localize.of(context).on} ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    color: color,
+                FittedBox(
+                  child: Text(
+                    '${startState == EventStartState.eventActual ? Localize.of(context).nextEvent : Localize.of(context).route} ${Localize.of(context).on} ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: color,
+                    ),
                   ),
                 ),
                 Text(

@@ -8,6 +8,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
 import '../deviceid_helper.dart';
+import '../hive_box/hive_settings_db.dart';
 import '../url_launch_helper.dart';
 
 Future<bool> initPushNotifications() async {
@@ -19,11 +20,19 @@ Future<bool> initPushNotifications() async {
       OneSignal.shared.setLogLevel(OSLogLevel.error, OSLogLevel.none);
     }
 
-    OneSignal.shared.setLocationShared(false);
-    OneSignal.shared.setAppId(oneSignalAppId).catchError((error) {
+    if (HiveSettingsDB.pushNotificationsEnabled == false) {
+      await OneSignal.shared.disablePush(true);
+      return true;
+    } else {
+      //allow onesignal
+      await OneSignal.shared.disablePush(false);
+    }
+
+    await OneSignal.shared.setLocationShared(false);
+    await OneSignal.shared.setAppId(oneSignalAppId).catchError((error) {
       if (kIsWeb) {
         FLog.error(
-            text: 'Error neSignal.shared.setAppId $error', exception: error);
+            text: 'Error OneSignal.shared.setAppId $error', exception: error);
       }
     });
 
@@ -63,7 +72,10 @@ Future<bool> initPushNotifications() async {
       }
     });
     // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+    await OneSignal.shared
+        .promptUserForPushNotificationPermission()
+        .then((accepted) {
+      HiveSettingsDB.setPushNotificationsEnabled(accepted);
       print('Accepted permission: $accepted');
     });
   } catch (e) {
@@ -81,7 +93,7 @@ class OnesignalHandler {
 
   static OnesignalHandler get instance => _instance;
 
-  static Future<void> registerPushAsBladeGuard(bool value,int teamId) async {
+  static Future<void> registerPushAsBladeGuard(bool value, int teamId) async {
     await OneSignal.shared.sendTag('IsBladeguard', value).catchError((err) {
       if (!kIsWeb) {
         FLog.error(text: 'register IsBladeguard error $err', exception: err);
