@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
           case 1:
             return const MapPage();
           case 2:
-            return EventsPage();
+            return const EventsPage();
           case 3:
             if (!kIsWeb) {
               return const FriendsPage();

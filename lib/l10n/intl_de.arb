@@ -404,5 +404,7 @@
   "since": "seit",
   "setTeam": "Welches Team bist du?",
   "bgTeam": "Bladeguard Team",
-  "someSettingsNotAvailableBecauseOffline": "Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht"
+  "someSettingsNotAvailableBecauseOffline": "Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht.",
+  "enableOnesignalPushMessageTitle": "Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die Bladenight stattfindet empfangen werden. Empfohlene Einstellung 'Ein'.",
+  "enableOnesignalPushMessage": "Push Mitteilung aktiv"
 }

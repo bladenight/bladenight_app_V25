@@ -200,6 +200,19 @@ class HiveSettingsDB {
     _hiveBox.put(_hasShownIntroKey, val);
   }
 
+  static const String _pushNotificationsEnabledKey =
+      'pushNotificationsEnabledPref';
+
+  ///get pushNotificationsEnabled
+  static bool get pushNotificationsEnabled {
+    return _hiveBox.get(_pushNotificationsEnabledKey, defaultValue: true);
+  }
+
+  ///set if  setPushNotificationsEnabled were shown
+  static void setPushNotificationsEnabled(bool val) {
+    _hiveBox.put(_pushNotificationsEnabledKey, val);
+  }
+
   static const String _isBladeGuardKey = 'isBladeGuardPref';
 
   ///get isBladeGuard
