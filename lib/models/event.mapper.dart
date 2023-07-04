@@ -113,6 +113,16 @@ class EventMapper extends ClassMapperBase<Event> {
   static Exception? _$rpcException(Event v) => v.rpcException;
   static const Field<Event, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);
+  static double? _$startPointLatitude(Event v) => v.startPointLatitude;
+  static const Field<Event, double> _f$startPointLatitude =
+      Field('startPointLatitude', _$startPointLatitude, key: 'sla', opt: true);
+  static double? _$startPointLongitude(Event v) => v.startPointLongitude;
+  static const Field<Event, double> _f$startPointLongitude = Field(
+      'startPointLongitude', _$startPointLongitude,
+      key: 'slo', opt: true);
+  static String? _$startPoint(Event v) => v.startPoint;
+  static const Field<Event, String> _f$startPoint =
+      Field('startPoint', _$startPoint, key: 'stp', opt: true);
 
   @override
   final Map<Symbol, Field<Event, dynamic>> fields = const {
@@ -124,6 +134,9 @@ class EventMapper extends ClassMapperBase<Event> {
     #status: _f$status,
     #lastupdate: _f$lastupdate,
     #rpcException: _f$rpcException,
+    #startPointLatitude: _f$startPointLatitude,
+    #startPointLongitude: _f$startPointLongitude,
+    #startPoint: _f$startPoint,
   };
 
   static Event _instantiate(DecodingData data) {
@@ -135,7 +148,10 @@ class EventMapper extends ClassMapperBase<Event> {
         routeLength: data.dec(_f$routeLength),
         status: data.dec(_f$status),
         lastupdate: data.dec(_f$lastupdate),
-        rpcException: data.dec(_f$rpcException));
+        rpcException: data.dec(_f$rpcException),
+        startPointLatitude: data.dec(_f$startPointLatitude),
+        startPointLongitude: data.dec(_f$startPointLongitude),
+        startPoint: data.dec(_f$startPoint));
   }
 
   @override
@@ -194,7 +210,10 @@ abstract class EventCopyWith<$R, $In extends Event, $Out>
       int? routeLength,
       EventStatus? status,
       DateTime? lastupdate,
-      Exception? rpcException});
+      Exception? rpcException,
+      double? startPointLatitude,
+      double? startPointLongitude,
+      String? startPoint});
   EventCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -213,7 +232,10 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
           int? routeLength,
           EventStatus? status,
           Object? lastupdate = $none,
-          Object? rpcException = $none}) =>
+          Object? rpcException = $none,
+          Object? startPointLatitude = $none,
+          Object? startPointLongitude = $none,
+          Object? startPoint = $none}) =>
       $apply(FieldCopyWithData({
         if (startDate != null) #startDate: startDate,
         if (routeName != null) #routeName: routeName,
@@ -222,7 +244,12 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
         if (routeLength != null) #routeLength: routeLength,
         if (status != null) #status: status,
         if (lastupdate != $none) #lastupdate: lastupdate,
-        if (rpcException != $none) #rpcException: rpcException
+        if (rpcException != $none) #rpcException: rpcException,
+        if (startPointLatitude != $none)
+          #startPointLatitude: startPointLatitude,
+        if (startPointLongitude != $none)
+          #startPointLongitude: startPointLongitude,
+        if (startPoint != $none) #startPoint: startPoint
       }));
   @override
   Event $make(CopyWithData data) => Event(
@@ -233,7 +260,12 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
       routeLength: data.get(#routeLength, or: $value.routeLength),
       status: data.get(#status, or: $value.status),
       lastupdate: data.get(#lastupdate, or: $value.lastupdate),
-      rpcException: data.get(#rpcException, or: $value.rpcException));
+      rpcException: data.get(#rpcException, or: $value.rpcException),
+      startPointLatitude:
+          data.get(#startPointLatitude, or: $value.startPointLatitude),
+      startPointLongitude:
+          data.get(#startPointLongitude, or: $value.startPointLongitude),
+      startPoint: data.get(#startPoint, or: $value.startPoint));
 
   @override
   EventCopyWith<$R2, Event, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

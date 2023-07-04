@@ -387,8 +387,8 @@
   "sendData30sec": "Request sent - change need about 30 secs.",
   "noChoiceNoAction": "No choice, no action",
   "finishStopTrackingEventOver": "Automatic tracking stop, because this BladeNight event is finished. (Press long on ▶️ to deactivate Automatic tracking stop)",
-  "iAmBladeGuardTitle": "I am active Bladeguard",
-  "iAmBladeGuard": "I am Bladeguard",
+  "iAmBladeGuardTitle": "I am an active bladeguard and would like to receive info. Please ask the team leader or Skatemunich with team number for password (anonymous - i.e. no personal data like email etc. will be linked).",
+  "iAmBladeGuard": "I am a Bladeguard",
   "pushMessageParticipateAsBladeGuardTitle": "Bladeguard-participate via push-message?",
   "pushMessageParticipateAsBladeGuard": "Participate push req.",
   "pushMessageSkateMunichInfosTitle": "Receive SkateMunich infos via push message about events?",
@@ -406,6 +406,10 @@
   "bgTeam": "Bladeguard team",
   "someSettingsNotAvailableBecauseOffline": "Some settings are not available because there is no internet connection",
   "enableOnesignalPushMessageTitle": "Enable Onesignal Push Notifications. Herewith general information can be received via push notification e.g. if the bladenight takes place. Recommended setting is 'On'",
-  "enableOnesignalPushMessage": "Push message active"
+  "enableOnesignalPushMessage": "Push message active",
+  "alternativeLocationProviderTitle": "Use alternative location driver in case of problems with GPS data",
+  "alternativeLocationProvider": "Use alternative driver",
+  "oneSignalIdTitle" : "This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages.",
+  "oneSignalId" : "OneSignal-Id: "
 
 }

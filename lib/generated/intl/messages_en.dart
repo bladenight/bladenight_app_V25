@@ -119,6 +119,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Leave app waked up?"),
         "allowWakeLockHeader": MessageLookupByLibrary.simpleMessage(
             "App stays on while the app is open and tracking is active. Disables at 20% battery level. Leave switched on."),
+        "alternativeLocationProvider":
+            MessageLookupByLibrary.simpleMessage("Use alternative driver"),
+        "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
+            "Use alternative location driver in case of problems with GPS data"),
         "alwaysPermanentlyDenied": MessageLookupByLibrary.simpleMessage(
             "Location permission always denied in System.!"),
         "alwaysPermantlyDenied": MessageLookupByLibrary.simpleMessage(
@@ -260,9 +264,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "head": MessageLookupByLibrary.simpleMessage("Head"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "iAmBladeGuard":
-            MessageLookupByLibrary.simpleMessage("I am Bladeguard"),
-        "iAmBladeGuardTitle":
-            MessageLookupByLibrary.simpleMessage("I am active Bladeguard"),
+            MessageLookupByLibrary.simpleMessage("I am a Bladeguard"),
+        "iAmBladeGuardTitle": MessageLookupByLibrary.simpleMessage(
+            "I am an active bladeguard and would like to receive info. Please ask the team leader or Skatemunich with team number for password (anonymous - i.e. no personal data like email etc. will be linked)."),
         "iam": MessageLookupByLibrary.simpleMessage("I am"),
         "ignoreBatteriesOptimisation": MessageLookupByLibrary.simpleMessage(
             "Note - some manufacturers switch off the apps due to unfavorable battery optimization or close the app. If so, please try disabling battery optimization for the app. Set to No restrictions."),
@@ -383,6 +387,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "on": MessageLookupByLibrary.simpleMessage("at"),
         "onRoute": MessageLookupByLibrary.simpleMessage("on route"),
+        "oneSignalId": MessageLookupByLibrary.simpleMessage("OneSignal-Id: "),
+        "oneSignalIdTitle": MessageLookupByLibrary.simpleMessage(
+            "This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages."),
         "online": MessageLookupByLibrary.simpleMessage("Online"),
         "onlyWhenInUseEnabled": MessageLookupByLibrary.simpleMessage(
             "Location only \'Allow only while using the app\' set."),

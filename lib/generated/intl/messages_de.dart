@@ -121,6 +121,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "App im Vordergrund aktiv lassen?"),
         "allowWakeLockHeader": MessageLookupByLibrary.simpleMessage(
             "App aktiv lassen, heißt, das die App im wake mode ist und das Tracking aktiv ist. Wird bei kleiner 20% Akku deaktiviert."),
+        "alternativeLocationProvider":
+            MessageLookupByLibrary.simpleMessage("Nutze alt. Treiber"),
+        "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
+            "Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang"),
         "alwaysPermanentlyDenied": MessageLookupByLibrary.simpleMessage(
             "Standortfreigabe permanent verweigert oder im System gesperrt!"),
         "alwaysPermantlyDenied": MessageLookupByLibrary.simpleMessage(
@@ -266,8 +270,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "home": MessageLookupByLibrary.simpleMessage("Info"),
         "iAmBladeGuard":
             MessageLookupByLibrary.simpleMessage("Ich bin Bladeguard"),
-        "iAmBladeGuardTitle":
-            MessageLookupByLibrary.simpleMessage("Ich bin aktiver Bladeguard"),
+        "iAmBladeGuardTitle": MessageLookupByLibrary.simpleMessage(
+            "Ich bin aktiver Bladeguard und möchte Infos erhalten. Passwort bitte beim Teamleiter oder Skatemunich mit Teamnummer erfragen (anonym d.h. Es werden keine Daten verknüpft)"),
         "iam": MessageLookupByLibrary.simpleMessage("Ich bin"),
         "ignoreBatteriesOptimisation": MessageLookupByLibrary.simpleMessage(
             "Hinweis - manche Hersteller schalten die Apps durch ungünstige Batterieoptimierungen ab oder schließen die App. In dem Falle bitte versuchen die Batterieoptimierung für die App zu deaktivieren. Einstellung keine Beschränkung."),
@@ -391,6 +395,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "on": MessageLookupByLibrary.simpleMessage("am"),
         "onRoute": MessageLookupByLibrary.simpleMessage("auf der Strecke"),
+        "oneSignalId": MessageLookupByLibrary.simpleMessage("OneSignal-Id: "),
+        "oneSignalIdTitle": MessageLookupByLibrary.simpleMessage(
+            "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben."),
         "online": MessageLookupByLibrary.simpleMessage("Online"),
         "onlyWhenInUseEnabled": MessageLookupByLibrary.simpleMessage(
             "Standortfreigabe nur \'Zugriff nur während der Nutzung der App zulassen\'"),

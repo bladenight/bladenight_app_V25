@@ -84,7 +84,7 @@ You need the bladenight-server written in java to communicate routes, friends, p
     flutter packages pub get
     ```
     ```bash 
-    flutter packages pub run build_runner build --delete-conflicting-outputs
+    dart run build_runner build --delete-conflicting-outputs
     ```
     
 ## Connection

@@ -3148,10 +3148,10 @@ class Localize {
     );
   }
 
-  /// `Ich bin aktiver Bladeguard`
+  /// `Ich bin aktiver Bladeguard und möchte Infos erhalten. Passwort bitte beim Teamleiter oder Skatemunich mit Teamnummer erfragen (anonym d.h. Es werden keine Daten verknüpft)`
   String get iAmBladeGuardTitle {
     return Intl.message(
-      'Ich bin aktiver Bladeguard',
+      'Ich bin aktiver Bladeguard und möchte Infos erhalten. Passwort bitte beim Teamleiter oder Skatemunich mit Teamnummer erfragen (anonym d.h. Es werden keine Daten verknüpft)',
       name: 'iAmBladeGuardTitle',
       desc: '',
       args: [],
@@ -3333,6 +3333,46 @@ class Localize {
     return Intl.message(
       'Push Mitteilung aktiv',
       name: 'enableOnesignalPushMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang`
+  String get alternativeLocationProviderTitle {
+    return Intl.message(
+      'Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang',
+      name: 'alternativeLocationProviderTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nutze alt. Treiber`
+  String get alternativeLocationProvider {
+    return Intl.message(
+      'Nutze alt. Treiber',
+      name: 'alternativeLocationProvider',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben.`
+  String get oneSignalIdTitle {
+    return Intl.message(
+      'Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben.',
+      name: 'oneSignalIdTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OneSignal-Id: `
+  String get oneSignalId {
+    return Intl.message(
+      'OneSignal-Id: ',
+      name: 'oneSignalId',
       desc: '',
       args: [],
     );

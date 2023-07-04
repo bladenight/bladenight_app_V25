@@ -69,6 +69,22 @@ class HiveSettingsDB {
     _hiveBox.put(_disableMotionDetection, val);
   }
 
+  static const String _useAlternativeLocationProvider =
+      'useAlternativeLocationProviderPref';
+
+  ///get if motion detection is disabled
+  static bool get useAlternativeLocationProvider {
+    var val =
+        _hiveBox.get(_useAlternativeLocationProvider, defaultValue: false);
+    return val;
+  }
+
+  ///set if motion detection is disabled
+  static void setUseAlternativeLocationProvider(bool val) {
+    if (!kIsWeb) FLog.info(text: 'setUseAlternativeLocationProvider to $val');
+    _hiveBox.put(_useAlternativeLocationProvider, val);
+  }
+
   static const String _hasShownProminentDisclosure =
       'hasShownProminentDisclosurePref';
 
@@ -211,6 +227,18 @@ class HiveSettingsDB {
   ///set if  setPushNotificationsEnabled were shown
   static void setPushNotificationsEnabled(bool val) {
     _hiveBox.put(_pushNotificationsEnabledKey, val);
+  }
+
+  static const String _oneSignalIdKey = 'oneSignalIdPref';
+
+  ///get oneSignalId
+  static String get oneSignalId {
+    return _hiveBox.get(_oneSignalIdKey, defaultValue: true);
+  }
+
+  ///set if  setOneSignalId were shown
+  static void setOneSignalId(String val) {
+    _hiveBox.put(_oneSignalIdKey, val);
   }
 
   static const String _isBladeGuardKey = 'isBladeGuardPref';

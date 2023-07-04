@@ -9,6 +9,7 @@ import '../../../app_settings/app_configuration_helper.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
+import '../../../models/event.dart';
 import '../../../models/route.dart';
 import 'bn_dark_container.dart';
 import 'map_friend_marker_popup.dart';
@@ -16,7 +17,8 @@ import 'map_marker_popup.dart';
 
 class MapLayer extends StatefulWidget {
   const MapLayer(
-      {this.location,
+      {required this.event,
+      this.location,
       this.markers = const [],
       this.polyLines = const [],
       this.controller,
@@ -24,6 +26,7 @@ class MapLayer extends StatefulWidget {
       : super(key: key);
 
   final LatLng? location;
+  final Event event;
   final List<Marker> markers;
   final List<Polyline> polyLines;
   final MapController? controller;
@@ -45,8 +48,9 @@ class _MapLayerState extends State<MapLayer> {
         zoom: 13.0,
         minZoom: 5,
         maxZoom: HiveSettingsDB.openStreetMapEnabled ? 18 : 18,
-        center: defaultLatLng,
-        maxBounds: HiveSettingsDB.openStreetMapEnabled
+        center: widget.event.hasSpecialStartPoint? LatLng(widget.event.startPointLatitude!, widget.event.startPointLongitude!):defaultLatLng,
+        maxBounds: HiveSettingsDB.openStreetMapEnabled ||
+                widget.event.hasSpecialStartPoint
             ? null
             : LatLngBounds.fromPoints([
                 LatLng(kIsWeb ? 47.9579 : 48.0570, kIsWeb ? 11.8213 : 11.4416),
@@ -60,17 +64,20 @@ class _MapLayerState extends State<MapLayer> {
           TileLayer(
             minNativeZoom: 5,
             maxNativeZoom: HiveSettingsDB.openStreetMapEnabled ? 15 : 15,
-            urlTemplate: HiveSettingsDB.openStreetMapEnabled
+            urlTemplate: HiveSettingsDB.openStreetMapEnabled ||
+          widget.event.hasSpecialStartPoint
                 ? HiveSettingsDB.openStreetMapLinkString
                 : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
             evictErrorTileStrategy:
                 EvictErrorTileStrategy.notVisibleRespectMargin,
-            tileProvider: HiveSettingsDB.openStreetMapEnabled
+            tileProvider: HiveSettingsDB.openStreetMapEnabled ||
+                widget.event.hasSpecialStartPoint
                 ? CachedTileProvider(errorListener: () {
                     print('CachedTileProvider errorListener');
                   })
                 : AssetTileProvider(),
-            subdomains: HiveSettingsDB.openStreetMapEnabled
+            subdomains: HiveSettingsDB.openStreetMapEnabled ||
+                widget.event.hasSpecialStartPoint
                 ? ['a', 'b', 'c']
                 : <String>[],
             errorImage: const AssetImage(

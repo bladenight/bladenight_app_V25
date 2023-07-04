@@ -5,11 +5,13 @@ import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:location2/location2.dart';
-import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:location2/location2.dart' hide PermissionStatus;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:universal_io/io.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -19,6 +21,7 @@ import '../generated/l10n.dart';
 import '../helpers/device_info_helper.dart';
 import '../helpers/deviceid_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/toast_notification.dart';
@@ -43,7 +46,7 @@ class LocationProvider with ChangeNotifier {
     init();
   }
 
-  //bg.State? _state;
+  bg.State? _state;
   StreamSubscription? _locationSubscription;
   bool _stoppedAfterMaxTime = false;
   bool locationRequested = false;
@@ -125,7 +128,7 @@ class LocationProvider with ChangeNotifier {
 
   bool _isHead = false;
   bool _isTail = false;
-  LocationData? _lastKnownPoint;
+  bg.Location? _lastKnownPoint;
 
   bool get isHead => _isHead;
 
@@ -137,14 +140,14 @@ class LocationProvider with ChangeNotifier {
   List<UserTrackPoint> get userTrackingPoints => _userTrackingPoints;
   final _userTrackingPoints = <UserTrackPoint>[];
 
-  final _controller = StreamController<LocationData>.broadcast();
+  final _controller = StreamController<bg.Location>.broadcast();
   final _trainHeadController = StreamController<LatLng>.broadcast();
   final _userTrackPointsController =
       StreamController<UserTrackPoint>.broadcast();
 
   StreamSubscription<ConnectivityStatus>? _internetConnectionSubscription;
 
-  Stream<LocationData> get updates => _controller.stream;
+  Stream<bg.Location> get updates => _controller.stream;
 
   Stream<LatLng> get trainHeadUpdates => _trainHeadController.stream;
 
@@ -165,13 +168,15 @@ class LocationProvider with ChangeNotifier {
       notifyListeners();
       return;
     }
-    /*_state = await _startBackgroundGeolocation();
-    if (_state == null) {
-      if (!kIsWeb) FLog.error(text: 'bg-locationState is null');
-      _gpsGranted = false;
-      notifyListeners();
-      return;
-    }*/
+    if (!HiveSettingsDB.useAlternativeLocationProvider) {
+      _state = await _startBackgroundGeolocation();
+      if (_state == null) {
+        if (!kIsWeb) FLog.error(text: 'bg-locationState is null');
+        _gpsGranted = false;
+        notifyListeners();
+        return;
+      }
+    }
     _autoStop = await PreferencesHelper.getAutoStopFromPrefs();
     _gpsLocationPermissionsStatus =
         await LocationPermissionDialog().getPermissionsStatus();
@@ -204,7 +209,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   ///Initalizes BackgroundLocationPlugin
-  /* Future<bg.State?> _startBackgroundGeolocation() async {
+  Future<bg.State?> _startBackgroundGeolocation() async {
     try {
       bg.BackgroundGeolocation.onLocation(_onLocation, _onLocationError);
       bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
@@ -227,7 +232,7 @@ class LocationProvider with ChangeNotifier {
           heartbeatInterval: 60,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
           logMaxDays: 1,
-          persistMode: Config.PERSIST_MODE_NONE,
+          persistMode: bg.Config.PERSIST_MODE_NONE,
           stopAfterElapsedMinutes: 3600,
           preventSuspend: true,
           stopOnTerminate: true,
@@ -257,7 +262,7 @@ class LocationProvider with ChangeNotifier {
           disableMotionActivityUpdates: isMotionDetectionDisabled,
           heartbeatInterval: 60,
           stopDetectionDelay: 5000,
-          persistMode: Config.PERSIST_MODE_NONE,
+          persistMode: bg.Config.PERSIST_MODE_NONE,
           // Activity Recognition
           activityRecognitionInterval: 3000,
           allowIdenticalLocations: true,
@@ -302,34 +307,8 @@ class LocationProvider with ChangeNotifier {
     }
     return null;
   }
-  */
 
-  Future<void> _listenLocation() async {
-    _locationSubscription =
-        onLocationChanged(inBackground: true).handleError((dynamic err) {
-      if (err is PlatformException) {
-        _onLocationError(err);
-        //_error = err.code;
-      }
-      _locationSubscription?.cancel();
-      _locationSubscription = null;
-    }).listen((LocationData currentLocation) async {
-      _onLocation(currentLocation);
-
-      await updateBackgroundNotification(
-        subtitle:
-            'Location: ${currentLocation.latitude}, ${currentLocation.longitude}',
-        onTapBringToFront: true,
-      );
-    });
-  }
-
-  Future<void> _stopListen() async {
-    await _locationSubscription?.cancel();
-    _locationSubscription = null;
-  }
-
-  void _onLocation(LocationData location) {
+  void _onLocation(bg.Location location) {
     if (!kIsWeb) FLog.trace(text: '_onLocation $location');
     _controller.add(location);
     updateUserLocation(location);
@@ -337,10 +316,9 @@ class LocationProvider with ChangeNotifier {
   }
 
   ///Update user location and track points list
-  void updateUserLocation(LocationData location) {
+  void updateUserLocation(bg.Location location) {
     if (_lastKnownPoint != null) {
-      var intval = _lastKnownPoint!.time!.toInt();
-      var ts = DateTime.fromMillisecondsSinceEpoch(intval, isUtc: true);
+      var ts = DateTime.parse(_lastKnownPoint!.timestamp);
       var localTs = ts.toLocal();
       var diff = DateTime.now().difference(localTs);
       if (diff < const Duration(seconds: 1)) {
@@ -348,68 +326,65 @@ class LocationProvider with ChangeNotifier {
       }
     }
 
-    if (location.latitude != null && location.longitude != null) {
-      var userLatLng = LatLng(location.latitude!, location.longitude!);
-      _userLatLng = userLatLng;
-      var realSpeed = location.speed != null && location.speed! < 0
-          ? 0.0
-          : location.speed ?? 0 * 3.6;
-      _realUserSpeedKmh = realSpeed;
-      //_odometer = location.odometer / 1000;
-      var userTrackingPoint = UserTrackPoint(
-          location.latitude!,
-          location.longitude!,
-          realSpeed,
-          location.bearing ?? 0.0,
-          location.altitude ?? -1,
-          odometer,
-          DateTime.now());
-      if (_userTrackingPoints.isNotEmpty) {
-        var userLastPoint = _userTrackingPoints.last;
-        var lon = location.longitude;
-        var lat = location.latitude;
-        if (userLastPoint.latitude != lat && userLastPoint.longitude != lon) {
-          _userTrackingPoints.add(userTrackingPoint);
-        }
-      } else {
+    var userLatLng =
+        LatLng(location.coords.latitude, location.coords.longitude);
+    _userLatLng = userLatLng;
+    var realSpeed =
+        location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6;
+    _realUserSpeedKmh = realSpeed;
+    _odometer = location.odometer / 1000;
+    var userTrackingPoint = UserTrackPoint(
+        location.coords.latitude,
+        location.coords.longitude,
+        realSpeed,
+        location.coords.heading,
+        location.coords.altitude,
+        odometer,
+        DateTime.now());
+    if (_userTrackingPoints.isNotEmpty) {
+      var userLastPoint = _userTrackingPoints.last;
+      var lon = location.coords.longitude;
+      var lat = location.coords.latitude;
+      if (userLastPoint.latitude != lat && userLastPoint.longitude != lon) {
         _userTrackingPoints.add(userTrackingPoint);
       }
-      _lastKnownPoint = location;
+    } else {
+      _userTrackingPoints.add(userTrackingPoint);
+    }
+    _lastKnownPoint = location;
+    SendToWatch.setUserSpeed('${realSpeed.toStringAsFixed(1)} km/h');
+    SendToWatch.setIsLocationTracking(isTracking);
 
-      SendToWatch.setUserSpeed('${realSpeed.toStringAsFixed(1)} km/h');
-      SendToWatch.setIsLocationTracking(isTracking);
+    int maxSize = 250;
+    if (_userTrackingPoints.length > maxSize) {
+      var smallTrackPointList = <LatLng>[];
+      var divider = _userTrackingPoints.length ~/ maxSize;
+      var counter = 0;
 
-      int maxSize = 250;
-      if (_userTrackingPoints.length > maxSize) {
-        var smallTrackPointList = <LatLng>[];
-        var divider = _userTrackingPoints.length ~/ maxSize;
-        var counter = 0;
-
-        for (; counter < _userTrackingPoints.length - divider;) {
-          smallTrackPointList.add(LatLng(_userTrackingPoints[counter].latitude,
-              _userTrackingPoints[counter].longitude));
-          counter = counter + divider.toInt();
-        }
-        smallTrackPointList.add(LatLng(_userTrackingPoints.last.latitude,
-            _userTrackingPoints.last.longitude));
-        _userLatLongs = smallTrackPointList;
-      } else {
-        _userLatLongs.add(userLatLng);
+      for (; counter < _userTrackingPoints.length - divider;) {
+        smallTrackPointList.add(LatLng(_userTrackingPoints[counter].latitude,
+            _userTrackingPoints[counter].longitude));
+        counter = counter + divider.toInt();
       }
+      smallTrackPointList.add(LatLng(_userTrackingPoints.last.latitude,
+          _userTrackingPoints.last.longitude));
+      _userLatLongs = smallTrackPointList;
+    } else {
+      _userLatLongs.add(userLatLng);
     }
     if (!_isInBackground) {
       notifyListeners();
     }
   }
 
-  void _onLocationError(PlatformException error) {
+  void _onLocationError(bg.LocationError error) {
     if (!kIsWeb) FLog.trace(text: 'Location error reason:$error');
     if (_lastKnownPoint != null) {
       //sendLocation(_lastKnownPoint!);
     }
   }
 
-  /* void _onMotionChange(bg.Location location) {
+  void _onMotionChange(bg.Location location) {
     if (!kIsWeb) FLog.trace(text: 'OnMotionChange send location');
     //sendLocation(location); //dont send
   }
@@ -424,11 +399,10 @@ class LocationProvider with ChangeNotifier {
     _getHeartBeatLocation();
   }
 
-  _onConnectionChange(ConnectivityChangeEvent event) {
+  _onConnectionChange(bg.ConnectivityChangeEvent event) {
     if (!kIsWeb) FLog.debug(text: 'On ConnectivityChange  $event');
     _networkConnected = event.connected;
   }
-
 
   void _getHeartBeatLocation() async {
     try {
@@ -470,20 +444,20 @@ class LocationProvider with ChangeNotifier {
   _onProviderChange(bg.ProviderChangeEvent event) {
     if (!kIsWeb) FLog.info(text: 'onProviderChangeEvent  $event');
     switch (event.status) {
-      case ProviderChangeEvent.AUTHORIZATION_STATUS_NOT_DETERMINED:
+      case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_NOT_DETERMINED:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.notDetermined;
         break;
-      case ProviderChangeEvent.AUTHORIZATION_STATUS_RESTRICTED:
+      case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_RESTRICTED:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.restricted;
         break;
-      case ProviderChangeEvent.AUTHORIZATION_STATUS_DENIED:
+      case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_DENIED:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.denied;
         _stopTracking();
         break;
-      case ProviderChangeEvent.AUTHORIZATION_STATUS_ALWAYS:
+      case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_ALWAYS:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.always;
         break;
-      case ProviderChangeEvent.AUTHORIZATION_STATUS_WHEN_IN_USE:
+      case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_WHEN_IN_USE:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.whenInUse;
         bg.BackgroundGeolocation.ready(
             bg.Config(disableLocationAuthorizationAlert: true));
@@ -491,7 +465,6 @@ class LocationProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-*/
 
   ///toggles tracking when user is in procession
   ///set [userIsParticipant] to true if participant
@@ -518,8 +491,7 @@ class LocationProvider with ChangeNotifier {
   void _stopTracking() {
     _locationSubscription?.cancel();
     Wakelock.disable();
-    _stopListen();
-    /* bg.BackgroundGeolocation.stop().then((bg.State state) {
+    bg.BackgroundGeolocation.stop().then((bg.State state) {
       if (!kIsWeb) {
         FLog.info(
             text: 'location tracking stopped ${state.enabled}',
@@ -527,22 +499,21 @@ class LocationProvider with ChangeNotifier {
             methodName: '_stopTracking');
       }
       _isTracking = state.enabled;
-      */
-    _isTracking = false;
-    _userLatLng = null;
-    //reset autostart
-    //avoid second autostart on an event , reset after end
-    if (_startedTrackingTime != null &&
-        DateTime.now().difference(_startedTrackingTime!).inMinutes >
-            ActiveEventProvider.instance.event.duration.inMinutes) {
-      _startedTrackingTime = null;
-    }
-    SendToWatch.setIsLocationTracking(false);
-    HiveSettingsDB.setTrackingActive(false);
-    notifyListeners();
-    /* }).catchError((error) {
+
+      _userLatLng = null;
+      //reset autostart
+      //avoid second autostart on an event , reset after end
+      if (_startedTrackingTime != null &&
+          DateTime.now().difference(_startedTrackingTime!).inMinutes >
+              ActiveEventProvider.instance.event.duration.inMinutes) {
+        _startedTrackingTime = null;
+      }
+      SendToWatch.setIsLocationTracking(false);
+      HiveSettingsDB.setTrackingActive(false);
+      notifyListeners();
+    }).catchError((error) {
       if (!kIsWeb) FLog.error(text: 'Stopping ERROR: $error');
-    });*/
+    });
   }
 
   void _startTracking() async {
@@ -555,7 +526,7 @@ class LocationProvider with ChangeNotifier {
     if (HiveSettingsDB.wakeLockEnabled) {
       Wakelock.enable();
     }
-    var permissionWithService = ph.Permission.location;
+    var permissionWithService = Permission.location;
     var locationPermission = await permissionWithService.status;
     if (HiveSettingsDB.hasShownProminentDisclosure == false ||
         locationPermission.isPermanentlyDenied ||
@@ -576,9 +547,7 @@ class LocationProvider with ChangeNotifier {
       HiveSettingsDB.setHasShownProminentDisclosure(true);
     }
 
-    var permissionStatus = await getPermissionStatus();
-    if (permissionStatus == PermissionStatus.denied) {
-      //if ( locationPermission == ph.PermissionStatus.permanentlyDenied) {
+    if (locationPermission == PermissionStatus.permanentlyDenied) {
       Fluttertoast.showToast(
           msg: Localize.current.noLocationPermitted,
           backgroundColor: Colors.orange);
@@ -593,34 +562,88 @@ class LocationProvider with ChangeNotifier {
     }
 
     _userReachedFinishDateTime == null;
-    _listenLocation();
-    /*await bg.BackgroundGeolocation.start().then((bg.State state) {
+
+    if (HiveSettingsDB.useAlternativeLocationProvider) {
       if (!kIsWeb) {
         FLog.info(
-            text: 'location tracking started',
+            text: 'alternative location tracking started',
             className: 'location_provider',
             methodName: '_startTracking');
-      }*/
-    _isTracking = true;
-    _startedTrackingTime = DateTime.now();
-    _stoppedAfterMaxTime = false;
-    ActiveEventProvider.instance.refresh(forceUpdate: true);
-    notifyListeners();
-    _subToUpdates();
-    SendToWatch.setIsLocationTracking(_isTracking);
-    HiveSettingsDB.setTrackingActive(_isTracking);
-    /* }).catchError((error) {
-      if (!kIsWeb) FLog.error(text: 'Starting ERROR: $error');
-      HiveSettingsDB.setTrackingActive(false);
-      _isTracking = false;
-      SendToWatch.setIsLocationTracking(false);
+      }
+      _listenLocationWithAlternativePackage();
+      _isTracking = true;
+      _startedTrackingTime = DateTime.now();
+      _stoppedAfterMaxTime = false;
+      ActiveEventProvider.instance.refresh(forceUpdate: true);
       notifyListeners();
-      return;
-    });*/
+      _subToUpdates();
+      SendToWatch.setIsLocationTracking(_isTracking);
+      HiveSettingsDB.setTrackingActive(_isTracking);
+    } else {
+      await bg.BackgroundGeolocation.start().then((bg.State state) {
+        if (!kIsWeb) {
+          FLog.info(
+              text: 'location tracking started',
+              className: 'location_provider',
+              methodName: '_startTracking');
+        }
+        _isTracking = state.enabled;
+        _startedTrackingTime = DateTime.now();
+        _stoppedAfterMaxTime = false;
+        ActiveEventProvider.instance.refresh(forceUpdate: true);
+        notifyListeners();
+        _subToUpdates();
+        SendToWatch.setIsLocationTracking(_isTracking);
+        HiveSettingsDB.setTrackingActive(_isTracking);
+      }).catchError((error) {
+        if (!kIsWeb) FLog.error(text: 'Starting ERROR: $error');
+        HiveSettingsDB.setTrackingActive(false);
+        _isTracking = false;
+        SendToWatch.setIsLocationTracking(false);
+        notifyListeners();
+        return;
+      });
+    }
+  }
+
+  Future<void> _listenLocationWithAlternativePackage() async {
+    setLocationSettings(
+        rationaleMessageForGPSRequest:
+            Localize.current.requestAlwaysPermissionTitle,
+        rationaleMessageForPermissionRequest:
+            Localize.current.enableAlwaysLocationInfotext,
+        askForPermission: true);
+    _locationSubscription =
+        onLocationChanged(inBackground: true).handleError((dynamic err) {
+      if (err is PlatformException) {
+        //_onLocationError(bg.LocationError(err));
+        if (_lastKnownPoint != null) {
+          sendLocation(_lastKnownPoint!);
+        }
+      }
+      _locationSubscription?.cancel();
+      _locationSubscription = null;
+      _isTracking = false;
+      notifyListeners();
+    }).listen((LocationData currentLocation) async {
+      if (currentLocation.longitude == null ||
+          currentLocation.latitude == null) {
+        return;
+      }
+
+      var newLoc = currentLocation.convertToBGLocation();
+      _onLocation(newLoc);
+
+      await updateBackgroundNotification(
+        title: Localize.current.bgNotificationTitle,
+        subtitle: Localize.current.bgNotificationText,
+        onTapBringToFront: true,
+      );
+    });
   }
 
   ///get location and send to server
-  Future<LocationData?> _subToUpdates() async {
+  Future<bg.Location?> _subToUpdates() async {
     var timeDiff = DateTime.now().difference(_lastUpdate);
     if (timeDiff < const Duration(seconds: defaultSendNewLocationDelay)) {
       return _lastKnownPoint;
@@ -634,13 +657,26 @@ class LocationProvider with ChangeNotifier {
           text: 'started',
         );
       }
-      LocationData? newLocation;
-      newLocation = await getLocation().catchError((error, stackTrace) => null);
-      /*timeout: 3,
-        maximumAge: 60000,
-        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-        samples: 2, // How many location samples to attempt.
-      );*/
+      bg.Location? newLocation;
+      if (HiveSettingsDB.useAlternativeLocationProvider) {
+        newLocation = (await getLocation(
+                settings: LocationSettings(
+                    askForPermission: false,
+                    rationaleMessageForGPSRequest:
+                        Localize.current.requestAlwaysPermissionTitle,
+                    rationaleMessageForPermissionRequest:
+                        Localize.current.enableAlwaysLocationInfotext)))
+            .convertToBGLocation();
+        //if bg.location onLocation will be fired automatic / location 2 does this not
+        _onLocation(newLocation);
+      } else {
+        newLocation = await bg.BackgroundGeolocation.getCurrentPosition(
+          timeout: 3,
+          maximumAge: 60000,
+          desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+          samples: 2, // How many location samples to attempt.
+        );
+      }
       // double sending by onLocation sendLocation(newLocation);
       if (!kIsWeb) {
         FLog.trace(
@@ -660,9 +696,7 @@ class LocationProvider with ChangeNotifier {
       }
     }
     if (_lastKnownPoint != null) {
-      var ts = DateTime.fromMillisecondsSinceEpoch(
-          _lastKnownPoint!.time!.toInt(),
-          isUtc: true);
+      var ts = DateTime.parse(_lastKnownPoint!.timestamp);
       var localTs = ts.toLocal();
       var diff = DateTime.now().difference(localTs);
       if (diff < const Duration(minutes: 5)) {
@@ -674,7 +708,7 @@ class LocationProvider with ChangeNotifier {
     return null;
   }
 
-  void sendLocation(LocationData location) async {
+  void sendLocation(bg.Location location) async {
     if (!_isTracking) return;
     RealtimeUpdate? update;
     var dtNow = DateTime.now();
@@ -711,18 +745,15 @@ class LocationProvider with ChangeNotifier {
     //only result of this message contains friend position - requested [RealTimeUpdates] without location
     update = await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
       LocationInfo(
-          coords: LatLng(location.latitude!, location.longitude!),
+          coords: LatLng(location.coords.latitude, location.coords.longitude),
           deviceId: await DeviceId.getId,
           isParticipating: _userIsParticipant,
           specialFunction: HiveSettingsDB.wantSeeFullOfProcession
               ? HiveSettingsDB.specialCodeValue
               : null,
-          userSpeed: location.speed != null && location.speed! < 0
-              ? 0.0
-              : location.speed,
-          realSpeed: location.speed != null && location.speed! < 0
-              ? 0.0
-              : location.speed! * 3.6),
+          userSpeed: location.coords.speed < 0 ? 0.0 : location.coords.speed,
+          realSpeed:
+              location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6),
     ));
     if (update.rpcException != null) {
       return;
@@ -780,7 +811,7 @@ class LocationProvider with ChangeNotifier {
       }
       _lastRefreshRequest = dtNow;
 
-      LocationData? locData;
+      bg.Location? locData;
       var diffSec = DateTime.now().difference(_lastUpdate).inMilliseconds +
           1000; //most time  14 seconds because timer and refresh are async
       if (diffSec >= defaultRealtimeUpdateInterval * 1000 || forceUpdate) {
@@ -1042,8 +1073,7 @@ final isActiveEventProvider = Provider((ref) {
 
 final locationUpdateProvider = StreamProvider<LatLng?>((ref) {
   return LocationProvider.instance.updates.map((location) {
-    return LatLng(location.latitude ?? defaultLatitude,
-        location.longitude ?? defaultLongitude);
+    return LatLng(location.coords.latitude, location.coords.longitude);
   });
 });
 

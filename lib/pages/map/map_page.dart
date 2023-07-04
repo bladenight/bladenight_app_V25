@@ -264,6 +264,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
               var sizeValue = MediaQuery.of(context).textScaleFactor *
                   HiveSettingsDB.iconSizeValue;
               return MapLayer(
+                event: activeEvent.event,
                 polyLines: [
                   Polyline(
                     //active route points

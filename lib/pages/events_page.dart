@@ -173,7 +173,7 @@ Widget _listTile(
   return GestureDetector(
     behavior: HitTestBehavior.opaque,
     onTap: () {
-      RouteDialog.show(context, event.routeName, event.formatDistance);
+      RouteDialog.show(context, event);
     },
     child: Container(
       color: CupertinoDynamicColor.resolve(

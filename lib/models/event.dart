@@ -48,6 +48,12 @@ class Event with EventMappable implements Comparable {
   final EventStatus status;
   @MappableField(key: 'len')
   final int routeLength;
+  @MappableField(key: 'sla')
+  final double? startPointLatitude;
+  @MappableField(key: 'slo')
+  final double? startPointLongitude;
+  @MappableField(key: 'stp') //startPointInfo
+  final String? startPoint;
 
   @MappableField(key: 'lastupdate')
   late DateTime? lastupdate;
@@ -71,7 +77,10 @@ class Event with EventMappable implements Comparable {
       this.routeLength = 0,
       this.status = EventStatus.pending,
       this.lastupdate,
-      this.rpcException});
+      this.rpcException,
+      this.startPointLatitude,
+      this.startPointLongitude,
+      this.startPoint});
 
   @override
   String toString() {
@@ -100,6 +109,16 @@ class Event with EventMappable implements Comparable {
       s = '${km.toStringAsFixed(1)} km';
     }
     return s;
+  }
+
+  bool get hasSpecialStartPoint {
+    if (startPointLongitude is double &&
+        startPointLongitude != 0.0 &&
+        startPointLatitude is double &&
+        startPointLongitude != 0.0) {
+      return true;
+    }
+    return false;
   }
 
   ///Returns a base [Event] dated to now with with duration [initDaysDuration] of 3650 days to see its not actual

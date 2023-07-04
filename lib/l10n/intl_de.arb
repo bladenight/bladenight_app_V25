@@ -388,7 +388,7 @@
   "noChoiceNoAction": "Keine Auswahl da keine Aktion",
   "finishStopTrackingEventOver": "Autostopp Tracking, da die BladeNight Veranstaltung beendet ist. (Lange drücken auf ▶️ deaktiviert Autostopp)",
   "receiveBladeGuardInfos": "Empfange Bladeguard Infos",
-  "iAmBladeGuardTitle": "Ich bin aktiver Bladeguard",
+  "iAmBladeGuardTitle": "Ich bin aktiver Bladeguard und möchte Infos erhalten. Passwort bitte beim Teamleiter oder Skatemunich mit Teamnummer erfragen (anonym d.h. Es werden keine Daten verknüpft)",
   "iAmBladeGuard": "Ich bin Bladeguard",
   "pushMessageParticipateAsBladeGuardTitle": "Bladeguard--Teilnahme-Abfrage per Push-Mitteilung durchführen?",
   "pushMessageParticipateAsBladeGuard": "Bladeguard-Abfrage Push",
@@ -406,5 +406,9 @@
   "bgTeam": "Bladeguard Team",
   "someSettingsNotAvailableBecauseOffline": "Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht.",
   "enableOnesignalPushMessageTitle": "Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die Bladenight stattfindet empfangen werden. Empfohlene Einstellung 'Ein'.",
-  "enableOnesignalPushMessage": "Push Mitteilung aktiv"
+  "enableOnesignalPushMessage": "Push Mitteilung aktiv",
+  "alternativeLocationProviderTitle": "Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang",
+  "alternativeLocationProvider": "Nutze alt. Treiber",
+  "oneSignalIdTitle" : "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben.",
+  "oneSignalId" : "OneSignal-Id: "
 }

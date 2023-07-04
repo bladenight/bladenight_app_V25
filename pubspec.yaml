@@ -35,7 +35,9 @@ dependencies:
   flutter_map: ^4.0.0
   flutter_map_marker_popup: ^4.0.1
   flutter_native_splash: ^2.3.0
-  flutter_platform_alert: ^0.4.0
+  #flutter_platform_alert: ^0.4.0 not working on Android 6 fixed local - sent pull request to owner
+  flutter_platform_alert:
+    path: ../flutter_platform_alert
   flutter_riverpod: ^2.0.2
   fluttertoast: ^8.0.9
   geo: ^0.3.0

@@ -98,7 +98,7 @@ class ActiveEventProvider extends ChangeNotifier {
       }
       _routePoints = route.points ?? <LatLng>[];
       _headingPoints =
-          LocationBearingAndDistanceHelper.calculateHeadings(_routePoints);
+          GeoLocationHelper.calculateHeadings(_routePoints);
       SendToWatch.setRoutePoints(route);
     } else {
       _routePoints = <LatLng>[];

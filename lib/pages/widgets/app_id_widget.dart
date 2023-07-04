@@ -5,8 +5,8 @@ import '../../generated/l10n.dart';
 import '../../providers/version_provider.dart';
 import 'data_loading_indicator.dart';
 
-class IdWidget extends ConsumerWidget {
-  const IdWidget({super.key});
+class AppIdWidget extends ConsumerWidget {
+  const AppIdWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

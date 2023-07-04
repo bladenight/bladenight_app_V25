@@ -3,6 +3,7 @@ import 'package:f_logs/f_logs.dart';
 import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
@@ -19,14 +20,15 @@ import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger_helper.dart';
 import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/notification/toast_notification.dart';
+import '../pages/widgets/app_id_widget.dart';
 import '../pages/widgets/data_widget_left_right.dart';
-import '../pages/widgets/device_id.dart';
 import '../pages/widgets/fast_custom_color_picker.dart';
 import '../pages/widgets/password_input.dart';
 import '../providers/location_provider.dart';
 import '../providers/network_connection_provider.dart';
 import '../providers/shared_prefs_provider.dart';
 import '../wamp/wamp_v2.dart';
+import 'widgets/one_signal_id_widget.dart';
 import 'widgets/settings_invisible_offline.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -40,6 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
   var inputText = '';
   var _iconSize = HiveSettingsDB.iconSizeValue;
   bool _openInvisibleSettings = false;
+  final _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +232,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             rightWidget: CupertinoSwitch(
                               onChanged: (val) async {
                                 HiveSettingsDB.setPushNotificationsEnabled(val);
-                                await initPushNotifications();
+                                await OnesignalHandler.instance
+                                    .initPushNotifications();
                                 setState(() {});
                               },
                               value: HiveSettingsDB.pushNotificationsEnabled,
@@ -243,6 +247,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       HiveSettingsDB.pushNotificationsEnabled)
                     Column(
                       children: [
+                        const OneSignalIdWidget(),
                         CupertinoFormSection(
                           header: Text(Localize.of(context).iAmBladeGuardTitle),
                           children: <Widget>[
@@ -277,6 +282,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       teamId = await showTeamIdDialog(
                                               context, HiveSettingsDB.teamId) ??
                                           0;
+                                      HiveSettingsDB.setTeamId(teamId);
                                     }
                                     setState(() {});
                                     OnesignalHandler.registerPushAsBladeGuard(
@@ -471,7 +477,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   await BackgroundGeolocationHelper
                                       .openBatteriesSettings()),
                         ]),
-                  if (kIsWeb)
+                  if (!kIsWeb)
                     CupertinoFormSection(
                         header: Text(Localize.of(context).resetOdoMeterTitle),
                         children: <Widget>[
@@ -499,7 +505,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                       child: Column(
                         children: [
-                          const IdWidget(),
+                          const AppIdWidget(),
+                          const SizedBox(height: 5),
                           Visibility(
                             visible: _openInvisibleSettings,
                             child: Column(
@@ -551,45 +558,50 @@ class _SettingsPageState extends State<SettingsPage> {
                                             }
                                           }),
                                     ]),
-                                CupertinoFormSection(
-                                    header: const Text('Geolocation Log'),
-                                    children: <Widget>[
-                                      CupertinoButton(
-                                          child: Text(Localize.of(context)
-                                              .setExportLogSupport),
-                                          onPressed: () =>
-                                              exportBgLocationLogs()),
-                                      CupertinoButton(
-                                          child: Text(Localize.of(context)
-                                              .setClearLogs),
-                                          onPressed: () async {
-                                            final clickedButton =
-                                                await FlutterPlatformAlert.showCustomAlert(
-                                                    windowTitle: Localize
-                                                        .current.clearLogsTitle,
-                                                    text: Localize.current
-                                                        .clearLogsQuestion,
-                                                    positiveButtonTitle:
-                                                        Localize.current.yes,
-                                                    neutralButtonTitle:
-                                                        Localize.current.cancel,
-                                                    windowPosition:
-                                                        AlertWindowPosition
-                                                            .screenCenter,
-                                                    options: FlutterPlatformAlertOption(
-                                                        preferMessageBoxOnWindows:
-                                                            true,
-                                                        showAsLinksOnWindows:
-                                                            true));
-                                            if (clickedButton ==
-                                                CustomButton.positiveButton) {
-                                              bg.Logger.destroyLog();
-                                              showToast(
-                                                  message: Localize
-                                                      .current.finished);
-                                            }
-                                          }),
-                                    ]),
+                                if (HiveSettingsDB
+                                        .useAlternativeLocationProvider ==
+                                    false)
+                                  CupertinoFormSection(
+                                      header: const Text('Geolocation Log'),
+                                      children: <Widget>[
+                                        CupertinoButton(
+                                            child: Text(Localize.of(context)
+                                                .setExportLogSupport),
+                                            onPressed: () =>
+                                                exportBgLocationLogs()),
+                                        CupertinoButton(
+                                            child: Text(Localize.of(context)
+                                                .setClearLogs),
+                                            onPressed: () async {
+                                              final clickedButton =
+                                                  await FlutterPlatformAlert.showCustomAlert(
+                                                      windowTitle:
+                                                          Localize.current
+                                                              .clearLogsTitle,
+                                                      text: Localize.current
+                                                          .clearLogsQuestion,
+                                                      positiveButtonTitle:
+                                                          Localize.current.yes,
+                                                      neutralButtonTitle:
+                                                          Localize
+                                                              .current.cancel,
+                                                      windowPosition:
+                                                          AlertWindowPosition
+                                                              .screenCenter,
+                                                      options: FlutterPlatformAlertOption(
+                                                          preferMessageBoxOnWindows:
+                                                              true,
+                                                          showAsLinksOnWindows:
+                                                              true));
+                                              if (clickedButton ==
+                                                  CustomButton.positiveButton) {
+                                                bg.Logger.destroyLog();
+                                                showToast(
+                                                    message: Localize
+                                                        .current.finished);
+                                              }
+                                            }),
+                                      ]),
                                 const SizedBox(
                                   height: 15,
                                 ),
@@ -604,7 +616,192 @@ class _SettingsPageState extends State<SettingsPage> {
                                               LocationProvider.instance
                                                   .userTrackingPoints)),
                                     ]),
-                                /*CupertinoFormSection(
+                                const SizedBox(height: 20),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Center(
+                                    child: Text(
+                                      Localize.of(context).specialfunction,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        backgroundColor:
+                                            CupertinoColors.activeOrange,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                CupertinoFormSection(
+                                    header: Text(Localize.of(context)
+                                        .allowWakeLockHeader),
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 20),
+                                        child: DataLeftRightContent(
+                                          descriptionLeft: Localize.of(context)
+                                              .allowWakeLock,
+                                          descriptionRight: '',
+                                          rightWidget: CupertinoSwitch(
+                                            onChanged: (val) {
+                                              HiveSettingsDB.setWakeLockEnabled(
+                                                  val);
+                                              Wakelock.toggle(enable: val);
+                                              setState(() {});
+                                            },
+                                            value:
+                                                HiveSettingsDB.wakeLockEnabled,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                CupertinoFormSection(
+                                    header: Text(
+                                        Localize.of(context).openStreetMap),
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 20),
+                                        child: DataLeftRightContent(
+                                          descriptionLeft: Localize.of(context)
+                                              .openStreetMapText,
+                                          descriptionRight: '',
+                                          rightWidget: CupertinoSwitch(
+                                            onChanged: (val) {
+                                              HiveSettingsDB
+                                                  .setOpenStreetMapEnabled(val);
+                                              setState(() {});
+                                            },
+                                            value: HiveSettingsDB
+                                                .openStreetMapEnabled,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                CupertinoFormSection(
+                                    header: Text(Localize.of(context)
+                                        .fitnessPermissionSettingsText),
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 20),
+                                        child: DataLeftRightContent(
+                                          descriptionLeft: Localize.of(context)
+                                              .fitnessPermissionSwitchSettingsText,
+                                          descriptionRight: '',
+                                          rightWidget: CupertinoSwitch(
+                                            onChanged: (val) {
+                                              HiveSettingsDB
+                                                  .setIsMotionDetectionDisabled(
+                                                      val);
+                                              bg.BackgroundGeolocation
+                                                  .setConfig(bg.Config(
+                                                      disableMotionActivityUpdates:
+                                                          val));
+                                              setState(() {});
+                                            },
+                                            value: HiveSettingsDB
+                                                .isMotionDetectionDisabled,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                //if (Platform.isAndroid)
+                                  CupertinoFormSection(
+                                      header: Text(Localize.of(context)
+                                          .alternativeLocationProviderTitle),
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 20, right: 20),
+                                          child: DataLeftRightContent(
+                                            descriptionLeft: Localize.of(
+                                                    context)
+                                                .alternativeLocationProvider,
+                                            descriptionRight: '',
+                                            rightWidget: CupertinoSwitch(
+                                              onChanged: (val) {
+                                                HiveSettingsDB
+                                                    .setUseAlternativeLocationProvider(
+                                                        val);
+                                                setState(() {});
+                                              },
+                                              value: HiveSettingsDB
+                                                  .useAlternativeLocationProvider,
+                                            ),
+                                          ),
+                                        ),
+                                      ]),
+                                CupertinoFormSection(
+                                    header: Text(
+                                        Localize.of(context).openStreetMap),
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 20),
+                                        child: DataLeftRightContent(
+                                          descriptionLeft: Localize.of(context)
+                                              .openStreetMapText,
+                                          descriptionRight: '',
+                                          rightWidget: CupertinoSwitch(
+                                            onChanged: (val) {
+                                              HiveSettingsDB
+                                                  .setOpenStreetMapEnabled(val);
+                                              setState(() {});
+                                            },
+                                            value: HiveSettingsDB
+                                                .openStreetMapEnabled,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                CupertinoFormSection(
+                                    header: const Text('Testing only'),
+                                    children: <Widget>[
+                                      const Text('Server'),
+                                      CupertinoTextFormFieldRow(
+                                        placeholder: 'server address',
+                                        showCursor: true,
+                                        initialValue:
+                                            HiveSettingsDB.customServerAddress,
+                                        autocorrect: false,
+                                        onChanged: (value) {
+                                          HiveSettingsDB.setCustomServerAddress(
+                                              value);
+                                        },
+                                        onSaved: (inputText) => HiveSettingsDB
+                                            .setCustomServerAddress(inputText),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 20),
+                                        child: DataLeftRightContent(
+                                          descriptionLeft: 'Custom Server',
+                                          descriptionRight: '',
+                                          rightWidget: CupertinoSwitch(
+                                            onChanged: (val) {
+                                              Wamp_V2.instance
+                                                  .closeAndReconnect();
+                                              HiveSettingsDB.setUseCustomServer(
+                                                  val);
+                                              setState(() {});
+                                            },
+                                            value:
+                                                HiveSettingsDB.useCustomServer,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                CupertinoFormSection(
                                     header: Text(Localize.of(context)
                                         .setexportDataHeader),
                                     children: <Widget>[
@@ -653,164 +850,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       ),
                                     ),
                                   ],
-                                ),*/
-
-                                const SizedBox(height: 20),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Center(
-                                    child: Text(
-                                      Localize.of(context).specialfunction,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        backgroundColor:
-                                            CupertinoColors.activeOrange,
-                                      ),
-                                    ),
-                                  ),
                                 ),
-                                CupertinoFormSection(
-                                    header: Text(Localize.of(context)
-                                        .allowWakeLockHeader),
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20, right: 20),
-                                        child: DataLeftRightContent(
-                                          descriptionLeft: Localize.of(context)
-                                              .allowWakeLock,
-                                          descriptionRight: '',
-                                          rightWidget: CupertinoSwitch(
-                                            onChanged: (val) {
-                                              HiveSettingsDB.setWakeLockEnabled(
-                                                  val);
-                                              Wakelock.toggle(enable: val);
-                                              setState(() {});
-                                            },
-                                            value:
-                                                HiveSettingsDB.wakeLockEnabled,
-                                          ),
-                                        ),
-                                      ),
-                                    ]),
-                                CupertinoFormSection(
-                                    header: Text(Localize.of(context)
-                                        .fitnessPermissionSettingsText),
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20, right: 20),
-                                        child: DataLeftRightContent(
-                                          descriptionLeft: Localize.of(context)
-                                              .fitnessPermissionSwitchSettingsText,
-                                          descriptionRight: '',
-                                          rightWidget: CupertinoSwitch(
-                                            onChanged: (val) {
-                                              HiveSettingsDB
-                                                  .setIsMotionDetectionDisabled(
-                                                      val);
-                                              bg.BackgroundGeolocation
-                                                  .setConfig(bg.Config(
-                                                      disableMotionActivityUpdates:
-                                                          val));
-                                              setState(() {});
-                                            },
-                                            value: HiveSettingsDB
-                                                .isMotionDetectionDisabled,
-                                          ),
-                                        ),
-                                      ),
-                                    ]),
-                                CupertinoFormSection(
-                                    header: Text(
-                                        Localize.of(context).openStreetMap),
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20, right: 20),
-                                        child: DataLeftRightContent(
-                                          descriptionLeft: Localize.of(context)
-                                              .openStreetMapText,
-                                          descriptionRight: '',
-                                          rightWidget: CupertinoSwitch(
-                                            onChanged: (val) {
-                                              HiveSettingsDB
-                                                  .setOpenStreetMapEnabled(val);
-                                              setState(() {});
-                                            },
-                                            value: HiveSettingsDB
-                                                .openStreetMapEnabled,
-                                          ),
-                                        ),
-                                      ),
-                                    ]),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                CupertinoFormSection(
-                                    header: Text(Localize.of(context)
-                                        .fitnessPermissionSettingsText),
-                                    children: <Widget>[
-                                      const Text('Server'),
-                                      CupertinoTextFormFieldRow(
-                                        placeholder: 'server address',
-                                        showCursor: true,
-                                        initialValue:
-                                            HiveSettingsDB.customServerAddress,
-                                        autocorrect: false,
-                                        onChanged: (value) {
-                                          HiveSettingsDB.setCustomServerAddress(
-                                              value);
-                                        },
-                                        onSaved: (inputText) => HiveSettingsDB
-                                            .setCustomServerAddress(inputText),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20, right: 20),
-                                        child: DataLeftRightContent(
-                                          descriptionLeft: 'Custom Server',
-                                          descriptionRight: '',
-                                          rightWidget: CupertinoSwitch(
-                                            onChanged: (val) {
-                                              Wamp_V2.instance
-                                                  .closeAndReconnect();
-                                              HiveSettingsDB.setUseCustomServer(
-                                                  val);
-                                              setState(() {});
-                                            },
-                                            value:
-                                                HiveSettingsDB.useCustomServer,
-                                          ),
-                                        ),
-                                      ),
-                                    ]),
-                                /*  if (Platform.isAndroid)
-                                  CupertinoFormSection(
-                                      header: Text(Localize.of(context)
-                                          .allowHeadlessHeader),
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 20, right: 20),
-                                          child: DataLeftRightContent(
-                                            descriptionLeft:
-                                                Localize.of(context)
-                                                    .allowHeadless,
-                                            descriptionRight: '',
-                                            rightWidget: CupertinoSwitch(
-                                              onChanged: (val) {
-                                                HiveSettingsDB
-                                                    .setHeadlessAllowed(val);
-                                                setState(() {});
-                                              },
-                                              value: HiveSettingsDB
-                                                  .headlessAllowed,
-                                            ),
-                                          ),
-                                        ),
-                                      ]),*/
                               ],
                             ),
                           ),
@@ -843,7 +883,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     setState(() {
                       selected = value;
                     });
-                    ;
                   },
                   itemExtent: 50,
                   children: [

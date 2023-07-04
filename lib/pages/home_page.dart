@@ -63,13 +63,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   void initOneSignal() async {
-    if (!kIsWeb) return;
+    if (kIsWeb) return;
     if (Platform.isIOS) {
       if (!kIsWeb) {
         FLog.info(
             text: ' iOS - init OneSignal PushNotifications permissions OK');
       }
-      await initPushNotifications();
+      await OnesignalHandler.instance.initPushNotifications();
       return;
     }
     //workaround for android 8.1 Nexus
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             text:
                 ' Android is greater than V9 OneSignal  PushNotifications permissions OK');
       }
-      await initPushNotifications();
+      await OnesignalHandler.instance.initPushNotifications();
       return;
     }
     if (!kIsWeb) {

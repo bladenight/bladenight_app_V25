@@ -4,25 +4,27 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
+import '../../helpers/distance_converter.dart';
 import '../../helpers/location_bearing_distance.dart';
 import '../../models/bn_map_marker.dart';
+import '../../models/event.dart';
 import '../../providers/route_providers.dart';
 import '../map/widgets/map_layer.dart';
 import 'data_loading_indicator.dart';
 import 'no_data_warning.dart';
 
 class RouteDialog extends ConsumerWidget {
-  const RouteDialog({required this.route, required this.routeLength, Key? key})
+  const RouteDialog({required this.event, Key? key})
       : super(key: key);
 
-  final String route;
-  final String routeLength;
+  final Event event;
 
-  static show(BuildContext context, String routeName, String routeLength) {
+
+  static show(BuildContext context, Event event) {
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) =>
-            RouteDialog(route: routeName, routeLength: routeLength),
+            RouteDialog(event: event),
         fullscreenDialog: false,
       ),
     );
@@ -33,10 +35,10 @@ class RouteDialog extends ConsumerWidget {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle:
-            Text('${Localize.of(context).routeoverview}: $route $routeLength'),
+            Text('${Localize.of(context).routeoverview}: ${event.routeName} ${event.routeLength.formatDistance()}'),
       ),
       child: Builder(builder: (context) {
-        var asyncRoute = ref.watch(routeProvider(route));
+        var asyncRoute = ref.watch(routeProvider(event.routeName));
         return asyncRoute.maybeWhen(data: (route) {
           if (route.rpcException != null) {
             return SliverFillRemaining(
@@ -45,6 +47,7 @@ class RouteDialog extends ConsumerWidget {
             ));
           }
           return MapLayer(
+            event: event ,
             polyLines: [
               Polyline(
                 points: route.points ?? [],
@@ -99,7 +102,7 @@ class RouteDialog extends ConsumerWidget {
                   ),
                 if (route.points != null && route.points!.length > 3) ...[
                   for (var hp
-                      in LocationBearingAndDistanceHelper.calculateHeadings(
+                      in GeoLocationHelper.calculateHeadings(
                           route.points!))
                     Marker(
                       point: hp.latLng,
@@ -126,7 +129,7 @@ class RouteDialog extends ConsumerWidget {
         }, orElse: () {
           return Center(
             child: NoDataWarning(
-              onReload: () => ProviderContainer().refresh(routeProvider(route)),
+              onReload: () => ProviderContainer().refresh(routeProvider(event.routeName)),
             ),
           );
         });

@@ -5,7 +5,7 @@ import 'package:vector_math/vector_math.dart';
 
 import '../models/route.dart';
 
-class LocationBearingAndDistanceHelper {
+class GeoLocationHelper {
   static List<HeadingPoint> calculateHeadings(List<LatLng> routePoints) {
     List<HeadingPoint> headingPoints = <HeadingPoint>[];
     int count = routePoints.length;
@@ -40,6 +40,19 @@ class LocationBearingAndDistanceHelper {
       return sublist;
     }
     return headingPoints;
+  }
+
+  static double calculateDistance(List<LatLng> routePoints) {
+    if (routePoints.isEmpty) return 0.0;
+    double sumDistance = 0;
+
+    for (var i = 0; i < routePoints.length; i++) {
+      var point1 = mp.LatLng(routePoints[i].latitude, routePoints[i].longitude);
+      var point2 =
+          mp.LatLng(routePoints[i + 1].latitude, routePoints[i + 1].longitude);
+      sumDistance += mp.SphericalUtil.computeDistanceBetween(point1, point2);
+    }
+    return sumDistance;
   }
 
   static LatLng getMidPointBetweentwoPoints(
