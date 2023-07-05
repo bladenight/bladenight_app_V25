@@ -408,7 +408,8 @@
   "enableOnesignalPushMessageTitle": "Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die Bladenight stattfindet empfangen werden. Empfohlene Einstellung 'Ein'.",
   "enableOnesignalPushMessage": "Push Mitteilung aktiv",
   "alternativeLocationProviderTitle": "Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang",
-  "alternativeLocationProvider": "Nutze alt. Treiber",
+  "alternativeLocationProvider": "Nutze Alternative",
   "oneSignalIdTitle" : "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben.",
-  "oneSignalId" : "OneSignal-Id: "
+  "oneSignalId" : "OneSignal-Id: ",
+  "startPointTitle": "Startpunkt"
 }

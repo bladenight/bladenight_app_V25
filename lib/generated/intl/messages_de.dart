@@ -122,7 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "allowWakeLockHeader": MessageLookupByLibrary.simpleMessage(
             "App aktiv lassen, heißt, das die App im wake mode ist und das Tracking aktiv ist. Wird bei kleiner 20% Akku deaktiviert."),
         "alternativeLocationProvider":
-            MessageLookupByLibrary.simpleMessage("Nutze alt. Treiber"),
+            MessageLookupByLibrary.simpleMessage("Nutze Alternative"),
         "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
             "Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang"),
         "alwaysPermanentlyDenied": MessageLookupByLibrary.simpleMessage(
@@ -533,6 +533,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Teilnahme an BladeNight starten"),
         "startPoint": MessageLookupByLibrary.simpleMessage(
             "Startpunkt\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe München"),
+        "startPointTitle": MessageLookupByLibrary.simpleMessage("Startpunkt"),
         "startTime": MessageLookupByLibrary.simpleMessage("Startzeit"),
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "status_active": MessageLookupByLibrary.simpleMessage("Aktiv"),

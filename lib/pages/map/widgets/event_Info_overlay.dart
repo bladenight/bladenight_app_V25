@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../models/event.dart';
 import '../../../models/route.dart' hide Path;
@@ -44,7 +45,7 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                     child: FittedBox(
                       child: Text(
                         '${Localize.of(context).route}: ${widget.event.routeName}  '
-                        '${Localize.of(context).length}: ${widget.routePoints != null ? ((widget.routePoints!.getRoutePointsSummaryDistance)/1000).toStringAsFixed(1) : '-'} km  ',
+                        '${Localize.of(context).length}: ${widget.routePoints != null ? ((widget.routePoints!.getRoutePointsSummaryDistance) / 1000).toStringAsFixed(1) : '-'} km  ',
                         overflow: TextOverflow.fade,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                         maxLines: 1,
@@ -52,15 +53,27 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                     ),
                   ),
                   Center(
+                    child: FittedBox(
                       child: FittedBox(
-                          child: FittedBox(
-                    child: Text(
-                      '${Localize.of(context).at} ${Localize.current.dateTimeIntl(widget.event.startDate, widget.event.startDate)}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
+                        child: Text(
+                          '${Localize.of(context).at} ${Localize.current.dateTimeIntl(widget.event.startDate, widget.event.startDate)}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ),
-                  ))),
+                  ),
+                  Center(
+                    child: FittedBox(
+                      child: Text(
+                        '${Localize.of(context).startPointTitle} ${widget.event.startPoint ?? defaultStartPoint}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      textAlign: TextAlign.center,),
+                    ),
+                  ),
                 ]),
               ),
             ]),

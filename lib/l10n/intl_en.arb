@@ -393,8 +393,8 @@
   "pushMessageParticipateAsBladeGuard": "Participate push req.",
   "pushMessageSkateMunichInfosTitle": "Receive SkateMunich infos via push message about events?",
   "pushMessageSkateMunichInfos": "Get Skatemunich Infos",
-  "markMeAsHead": "Mark me as Head of procession",
-  "markMeAsTail": "Mark me as Tail of procession",
+  "markMeAsHead": "Mark me as head of procession",
+  "markMeAsTail": "Mark me as tail of procession",
   "notification": "Notification",
   "appId": "App-Id",
   "OneSignalId": "Push-Message-Id",
@@ -410,6 +410,7 @@
   "alternativeLocationProviderTitle": "Use alternative location driver in case of problems with GPS data",
   "alternativeLocationProvider": "Use alternative driver",
   "oneSignalIdTitle" : "This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages.",
-  "oneSignalId" : "OneSignal-Id: "
+  "oneSignalId" : "OneSignal-Id: ",
+  "startPointTitle": "Where is the start?"
 
 }

@@ -3348,10 +3348,10 @@ class Localize {
     );
   }
 
-  /// `Nutze alt. Treiber`
+  /// `Nutze Alternative`
   String get alternativeLocationProvider {
     return Intl.message(
-      'Nutze alt. Treiber',
+      'Nutze Alternative',
       name: 'alternativeLocationProvider',
       desc: '',
       args: [],
@@ -3373,6 +3373,16 @@ class Localize {
     return Intl.message(
       'OneSignal-Id: ',
       name: 'oneSignalId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Startpunkt`
+  String get startPointTitle {
+    return Intl.message(
+      'Startpunkt',
+      name: 'startPointTitle',
       desc: '',
       args: [],
     );

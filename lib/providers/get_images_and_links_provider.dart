@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,9 +65,18 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
         break;
       case 'openStreetMap':
         if (ial.link == null || ial.link!.isEmpty) {
-          break;
+          HiveSettingsDB.setOpenStreetMapEnabled(false);
+        } else {
+          try {
+            var decodedLink = utf8.decode(base64.decode(ial.link!));
+            HiveSettingsDB.setOpenStreetMapLink(decodedLink);
+            HiveSettingsDB.setOpenStreetMapEnabled(true);
+          } catch (e) {
+            if (!kIsWeb) {
+              FLog.error(text: 'Could not decode openstreetmaplink link must be bas64encoded $e');
+            }
+          }
         }
-        HiveSettingsDB.setOpenStreetMapLink(ial.link!);
         break;
       default:
         break;

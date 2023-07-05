@@ -319,9 +319,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "mapToStartNoFollowing": MessageLookupByLibrary.simpleMessage(
             "Move map to start, no following"),
         "markMeAsHead": MessageLookupByLibrary.simpleMessage(
-            "Mark me as Head of procession"),
+            "Mark me as head of procession"),
         "markMeAsTail": MessageLookupByLibrary.simpleMessage(
-            "Mark me as Tail of procession"),
+            "Mark me as tail of procession"),
         "me": MessageLookupByLibrary.simpleMessage("Me"),
         "metersOnRoute": MessageLookupByLibrary.simpleMessage("Driven route"),
         "model": MessageLookupByLibrary.simpleMessage("Model"),
@@ -521,6 +521,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Start participation"),
         "startPoint": MessageLookupByLibrary.simpleMessage(
             "Startpoint\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe Munich"),
+        "startPointTitle":
+            MessageLookupByLibrary.simpleMessage("Where is the start?"),
         "startTime": MessageLookupByLibrary.simpleMessage("Start time"),
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "status_active": MessageLookupByLibrary.simpleMessage("active"),
