@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app_settings/app_configuration_helper.dart';
 import '../helpers/location_bearing_distance.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/preferences_helper.dart';
@@ -19,7 +20,7 @@ class ActiveEventProvider extends ChangeNotifier {
 
   void init() async {
     _event = await PreferencesHelper.getEventFromPrefs();
-    _providerLastUpdate = _event.lastupdate??DateTime(2000, 1, 1, 0, 0, 0);
+    _providerLastUpdate = _event.lastupdate ?? DateTime(2000, 1, 1, 0, 0, 0);
     notifyListeners();
     //refresh();
   }
@@ -34,6 +35,13 @@ class ActiveEventProvider extends ChangeNotifier {
   Event get event => _event;
 
   List<LatLng> get activeEventRoutePoints => _routePoints;
+
+  LatLng get startPoint => _startPoint;
+
+  LatLng get finishPoint => _finishPoint;
+
+  LatLng _startPoint = defaultLatLng;
+  LatLng _finishPoint = defaultLatLng;
 
   List<HeadingPoint> get headingPoints => _headingPoints;
 
@@ -71,10 +79,11 @@ class ActiveEventProvider extends ChangeNotifier {
         if (oldEventInPrefs.compareTo(rpcEvent) != 0 || _routePoints.isEmpty) {
           await PreferencesHelper.saveEventToPrefs(rpcEvent);
           await _updateRoutePoints(rpcEvent);
-          if ((DateTime.now().difference(_providerLastUpdate)).inSeconds >
-              30) {
+          if ((DateTime.now().difference(_providerLastUpdate)).inSeconds > 30) {
             //avoid multiple notifications on forceupdate
-            if (!kIsWeb) NotificationHelper().updateNotifications(oldEventInPrefs, _event);
+            if (!kIsWeb) {
+              NotificationHelper().updateNotifications(oldEventInPrefs, _event);
+            }
           }
           _providerLastUpdate = DateTime.now();
           _event.lastupdate = _providerLastUpdate;
@@ -97,8 +106,11 @@ class ActiveEventProvider extends ChangeNotifier {
         return;
       }
       _routePoints = route.points ?? <LatLng>[];
-      _headingPoints =
-          GeoLocationHelper.calculateHeadings(_routePoints);
+      _headingPoints = GeoLocationHelper.calculateHeadings(_routePoints);
+      if (_routePoints.isNotEmpty) {
+        _startPoint = _routePoints.first;
+        _finishPoint = _routePoints.last;
+      }
       SendToWatch.setRoutePoints(route);
     } else {
       _routePoints = <LatLng>[];

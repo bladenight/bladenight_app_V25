@@ -228,7 +228,7 @@ class LocationProvider with ChangeNotifier {
           debug: false,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
           allowIdenticalLocations: true,
-          distanceFilter: 1,
+          distanceFilter: 0.5,
           heartbeatInterval: 60,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
           logMaxDays: 1,
@@ -258,7 +258,7 @@ class LocationProvider with ChangeNotifier {
           //ALL
           logLevel: bgLogLevel,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
-          distanceFilter: 1,
+          distanceFilter: 0.5,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
           heartbeatInterval: 60,
           stopDetectionDelay: 5000,

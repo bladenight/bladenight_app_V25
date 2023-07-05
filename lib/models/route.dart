@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/app_constants.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/location_bearing_distance.dart';
 import '../helpers/wamp/message_types.dart';
 import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_endpoints.dart';
@@ -82,5 +84,28 @@ class RoutePoints with RoutePointsMappable {
   @override
   String toString() {
     return 'RoutePoints $name, length:${points?.length}';
+  }
+}
+
+extension RoutePointExtension on RoutePoints {
+  double get getRoutePointsSummaryDistance {
+    if (points == null || points!.isEmpty) {
+      return 0.0;
+    }
+    return GeoLocationHelper.calculateDistance(points!);
+  }
+
+  LatLng get firstPointOrDefault {
+    if (points == null || points!.isEmpty) {
+      return defaultLatLng;
+    }
+    return points!.first;
+  }
+
+  LatLng get lastPointOrDefault {
+    if (points == null || points!.isEmpty) {
+      return defaultLatLng;
+    }
+    return points!.last;
   }
 }

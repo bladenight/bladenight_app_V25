@@ -249,7 +249,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print('build Fluttermaps');
+    //print('build Fluttermaps');
     return ScaffoldMessenger(
       key: scaffoldMessengerKey,
       child: CupertinoPageScaffold(
@@ -265,6 +265,8 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                   HiveSettingsDB.iconSizeValue;
               return MapLayer(
                 event: activeEvent.event,
+                startPoint: activeEvent.startPoint,
+                finishPoint: activeEvent.finishPoint,
                 polyLines: [
                   Polyline(
                     //active route points

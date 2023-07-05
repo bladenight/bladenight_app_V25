@@ -17,7 +17,7 @@ class GeoLocationHelper {
       var distP1P2 = mp.SphericalUtil.computeDistanceBetween(point1, point2);
       var bearing = bearingBetween(
           point1.latitude, point1.longitude, point2.latitude, point2.longitude);
-      var midPoint = getMidPointBetweentwoPoints(
+      var midPoint = getMidPointBetweenTwoPoints(
           point1.latitude, point1.longitude, point2.latitude, point2.longitude);
       headingPoints.add(HeadingPoint(
           LatLng(midPoint.latitude, midPoint.longitude),
@@ -46,16 +46,32 @@ class GeoLocationHelper {
     if (routePoints.isEmpty) return 0.0;
     double sumDistance = 0;
 
-    for (var i = 0; i < routePoints.length; i++) {
-      var point1 = mp.LatLng(routePoints[i].latitude, routePoints[i].longitude);
+    for (var i = 0; i < routePoints.length - 1; i++) {
+      var point1 = LatLng(routePoints[i].latitude, routePoints[i].longitude);
       var point2 =
-          mp.LatLng(routePoints[i + 1].latitude, routePoints[i + 1].longitude);
-      sumDistance += mp.SphericalUtil.computeDistanceBetween(point1, point2);
+          LatLng(routePoints[i + 1].latitude, routePoints[i + 1].longitude);
+      sumDistance += haversine(
+          point1.latitude, point1.longitude, point2.latitude, point2.longitude);
     }
     return sumDistance;
   }
 
-  static LatLng getMidPointBetweentwoPoints(
+  /// Calculate between two locations in meter
+  static double haversine(double lat1, double lon1, double lat2, double lon2) {
+    // distance between latitudes and longitudes
+    double dLat = radians(lat2 - lat1);
+    double dLon = radians(lon2 - lon1);
+    // convert to radians
+    lat1 = radians(lat1);
+    lat2 = radians(lat2); // apply formulae
+    var a =
+        pow(sin(dLat / 2), 2) + pow(sin(dLon / 2), 2) * cos(lat1) * cos(lat2);
+    double rad = 6371;
+    double c = 2 * asin(sqrt(a));
+    return rad * c*1000;
+  }
+
+  static LatLng getMidPointBetweenTwoPoints(
       double x1, double x2, double y1, double y2) {
     var lat1 = radians(x1);
     var lon1 = radians(x2);

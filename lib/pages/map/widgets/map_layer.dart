@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 
-import '../../../app_settings/app_configuration_helper.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
@@ -16,17 +15,20 @@ import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
 
 class MapLayer extends StatefulWidget {
-  const MapLayer(
-      {required this.event,
-      this.location,
-      this.markers = const [],
-      this.polyLines = const [],
-      this.controller,
-      Key? key})
+  const MapLayer({required this.event,
+    required this.startPoint,
+    required this.finishPoint,
+    this.location,
+    this.markers = const [],
+    this.polyLines = const [],
+    this.controller,
+    Key? key})
       : super(key: key);
 
   final LatLng? location;
   final Event event;
+  final LatLng startPoint;
+  final LatLng finishPoint;
   final List<Marker> markers;
   final List<Polyline> polyLines;
   final MapController? controller;
@@ -48,14 +50,14 @@ class _MapLayerState extends State<MapLayer> {
         zoom: 13.0,
         minZoom: 5,
         maxZoom: HiveSettingsDB.openStreetMapEnabled ? 18 : 18,
-        center: widget.event.hasSpecialStartPoint? LatLng(widget.event.startPointLatitude!, widget.event.startPointLongitude!):defaultLatLng,
+        center: widget.startPoint,
         maxBounds: HiveSettingsDB.openStreetMapEnabled ||
-                widget.event.hasSpecialStartPoint
+            widget.event.hasSpecialStartPoint
             ? null
             : LatLngBounds.fromPoints([
-                LatLng(kIsWeb ? 47.9579 : 48.0570, kIsWeb ? 11.8213 : 11.4416),
-                LatLng(kIsWeb ? 48.2349 : 48.2349, kIsWeb ? 11.2816 : 11.6213),
-              ]),
+          LatLng(kIsWeb ? 47.9579 : 48.0570, kIsWeb ? 11.8213 : 11.4416),
+          LatLng(kIsWeb ? 48.2349 : 48.2349, kIsWeb ? 11.2816 : 11.6213),
+        ]),
         interactiveFlags: InteractiveFlag.all ^ InteractiveFlag.rotate,
         onTap: (_, __) => _popupLayerController.hideAllPopups(),
       ),
@@ -65,16 +67,16 @@ class _MapLayerState extends State<MapLayer> {
             minNativeZoom: 5,
             maxNativeZoom: HiveSettingsDB.openStreetMapEnabled ? 15 : 15,
             urlTemplate: HiveSettingsDB.openStreetMapEnabled ||
-          widget.event.hasSpecialStartPoint
+                widget.event.hasSpecialStartPoint
                 ? HiveSettingsDB.openStreetMapLinkString
                 : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
             evictErrorTileStrategy:
-                EvictErrorTileStrategy.notVisibleRespectMargin,
+            EvictErrorTileStrategy.notVisibleRespectMargin,
             tileProvider: HiveSettingsDB.openStreetMapEnabled ||
                 widget.event.hasSpecialStartPoint
                 ? CachedTileProvider(errorListener: () {
-                    print('CachedTileProvider errorListener');
-                  })
+              print('CachedTileProvider errorListener');
+            })
                 : AssetTileProvider(),
             subdomains: HiveSettingsDB.openStreetMapEnabled ||
                 widget.event.hasSpecialStartPoint
