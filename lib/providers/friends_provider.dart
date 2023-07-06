@@ -5,10 +5,10 @@ import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geo/geo.dart' as geo;
 
 import '../generated/l10n.dart';
 import '../helpers/deviceid_helper.dart';
+import '../helpers/location_bearing_distance.dart';
 import '../helpers/preferences_helper.dart';
 import '../models/friend.dart';
 import '../models/messages/friends.dart';
@@ -54,7 +54,8 @@ class FriendsLogic with ChangeNotifier {
 
       var result = await FriendsMessage.getFriends(deviceId);
       if (result.exception != null) {
-        if (!kIsWeb) FLog.warning(text: 'refreshFriends read failed ${result.exception}');
+        if (!kIsWeb)
+          FLog.warning(text: 'refreshFriends read failed ${result.exception}');
         return;
       }
 
@@ -69,9 +70,9 @@ class FriendsLogic with ChangeNotifier {
         }
         if (!kIsWeb) {
           FLog.info(
-            className: 'friendsProvider',
-            methodName: 'refreshFriends',
-            text: 'Friendlist is empty');
+              className: 'friendsProvider',
+              methodName: 'refreshFriends',
+              text: 'Friendlist is empty');
         }
         notifyListeners();
         return;
@@ -116,16 +117,16 @@ class FriendsLogic with ChangeNotifier {
     } on WampError catch (e) {
       if (!kIsWeb) {
         FLog.error(
-          className: 'friendsProvider',
-          methodName: 'refreshFriends_WampError',
-          text: e.toString());
+            className: 'friendsProvider',
+            methodName: 'refreshFriends_WampError',
+            text: e.toString());
       }
     } on Exception catch (e) {
       if (!kIsWeb) {
         FLog.error(
-          className: 'friendsProvider',
-          methodName: 'refreshFriends_exception',
-          text: e.toString());
+            className: 'friendsProvider',
+            methodName: 'refreshFriends_exception',
+            text: e.toString());
       }
     } finally {
       notifyListeners();
@@ -166,8 +167,8 @@ class FriendsLogic with ChangeNotifier {
           userLon > 0 &&
           f.latitude! > 0 &&
           f.longitude! > 0) {
-        var dist = geo.computeDistanceBetween(geo.LatLng(userLat, userLon),
-            geo.LatLng(f.latitude!, f.longitude!));
+        var dist = GeoLocationHelper.haversine(
+            userLat, userLon, f.latitude!, f.longitude!);
         f.distanceToUser = dist.toInt();
       } else {
         f.distanceToUser = rtf.position -

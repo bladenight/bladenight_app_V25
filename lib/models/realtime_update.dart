@@ -4,12 +4,12 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geo/geo.dart' as geo;
 import 'package:latlong2/latlong.dart';
 
 import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/location_bearing_distance.dart';
 import '../helpers/wamp/message_types.dart';
 import '../providers/friends_provider.dart';
 import '../providers/location_provider.dart';
@@ -147,17 +147,12 @@ class RealtimeUpdate with RealtimeUpdateMappable {
 
     for (var i = 0; i < points.length - 1; i++) {
       var a = points[i], b = points[i + 1];
-      //var dx = b.latitude - a.latitude;
-      //var dy = b.longitude - a.longitude;
-      var segmentLength = geo.computeDistanceBetween(
-        geo.LatLng(a.latitude, a.longitude),
-        geo.LatLng(b.latitude, b.longitude),
+      var segmentLength = GeoLocationHelper.haversine(
+        a.latitude,
+        a.longitude,
+        b.latitude,
+        b.longitude,
       );
-
-      //find startpoint of head on route via length
-      //draw tail to head
-
-      //show icon on map when not running
 
       if (tailPos == 0 && headPos == 0) {
         running.add(a);
@@ -175,26 +170,13 @@ class RealtimeUpdate with RealtimeUpdateMappable {
         if (length + segmentLength >= headPos) {
           running.add(a);
           break;
-          // } else if (length + segmentLength > headPos) {
-          //worst case to add unimplemented points
-          //var f = (end - length) / segmentLength;
-          //running.add(LatLng( a.latitude + dx * f, a.longitude + dy * f,));
-
-          //break;
         } else {
           length += segmentLength;
           running.add(a);
         }
       }
     }
-    //fix outside track drawing
-    /*if (tail.latitude != null &&
-        tail.latitude != 0 &&
-        tail.longitude != null &&
-        tail.longitude != 0) {
-      running.add(LatLng(tail.latitude!, tail.longitude!);
-    }*/
-    //show startpoint when not running or empty
+
     if (running.isEmpty && points.isNotEmpty) {
       running.add(points.first);
     }

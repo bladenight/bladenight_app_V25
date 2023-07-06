@@ -85,9 +85,9 @@ class ActiveEventProvider extends ChangeNotifier {
               NotificationHelper().updateNotifications(oldEventInPrefs, _event);
             }
           }
-          _providerLastUpdate = DateTime.now();
-          _event.lastupdate = _providerLastUpdate;
         }
+        _providerLastUpdate = DateTime.now();
+        _event.lastupdate = _providerLastUpdate;
       }
     } catch (e) {
       print(e);

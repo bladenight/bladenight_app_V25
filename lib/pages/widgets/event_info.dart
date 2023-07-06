@@ -37,7 +37,9 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    initEventUpdates();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initEventUpdates();
+    });
   }
 
   @override
@@ -53,15 +55,17 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
       FLog.debug(text: 'event_info - didChangeAppLifecycleState $state');
     }
     if (state == AppLifecycleState.resumed) {
-      context.read(activeEventProvider).refresh(forceUpdate: true);
+      initEventUpdates(forceUpdate: true);
       context.read(locationProvider).refresh(forceUpdate: true);
-      context.read(updateImagesAndLinksProvider);
+    }
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      _updateTimer?.cancel();
     }
   }
 
-  void initEventUpdates() async {
+  void initEventUpdates({forceUpdate = false}) async {
     // first start
-    context.read(activeEventProvider).refresh();
+    context.read(activeEventProvider).refresh(forceUpdate: forceUpdate);
     context.refresh(updateImagesAndLinksProvider);
     _updateTimer?.cancel();
     _updateTimer = Timer.periodic(
@@ -72,7 +76,6 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
           print('refresh active Event periodic');
         }
         context.read(activeEventProvider).refresh();
-        //context.read(shakeHandsProvider);
       },
     );
   }

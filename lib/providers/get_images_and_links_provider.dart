@@ -63,17 +63,27 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
         liveMapLink = ial.link ?? '';
         liveMapLinkText = ial.text ?? '';
         break;
-      case 'openStreetMap':
-        if (ial.link == null || ial.link!.isEmpty) {
+      case 'openStreetMap': //disable OSM via remote
+        if (ial.text != null && ial.text! == '') {
+          //enable OSM via remote // if empty don't change
+          HiveSettingsDB.removeOpenStreetMapLink();
+        }
+        if (ial.text != null && ial.text! == 'on') {
+          //enable OSM via remote // if empty don't change
+          HiveSettingsDB.setOpenStreetMapEnabled(true);
+        }
+        if (ial.text != null && ial.text! == 'off') {
           HiveSettingsDB.setOpenStreetMapEnabled(false);
-        } else {
+        }
+        if (ial.link != null && ial.link!.isNotEmpty) {
           try {
             var decodedLink = utf8.decode(base64.decode(ial.link!));
             HiveSettingsDB.setOpenStreetMapLink(decodedLink);
-            HiveSettingsDB.setOpenStreetMapEnabled(true);
           } catch (e) {
             if (!kIsWeb) {
-              FLog.error(text: 'Could not decode openstreetmaplink link must be bas64encoded $e');
+              FLog.error(
+                  text:
+                      'Could not decode open street map link link. Must be bas64encoded $e');
             }
           }
         }

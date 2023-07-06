@@ -64,10 +64,11 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                       ),
                     ),
                   ),
+                  if (widget.event.startPoint!=null)
                   Center(
                     child: FittedBox(
                       child: Text(
-                        '${Localize.of(context).startPointTitle} ${widget.event.startPoint ?? defaultStartPoint}',
+                        '${Localize.of(context).startPointTitle} ${widget.event.startPoint}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                         ),

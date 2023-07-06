@@ -507,6 +507,12 @@ class HiveSettingsDB {
     _hiveBox.put(_openStreetMapLinkKey, val);
   }
 
+  static void removeOpenStreetMapLink() {
+    _hiveBox.delete(_openStreetMapLinkKey);
+  }
+
+
+
   static const String _mapMenuVisibleKey = 'mapMenuVisiblePref';
 
   ///get mapMenuVisible

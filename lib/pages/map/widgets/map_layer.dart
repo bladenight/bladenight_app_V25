@@ -68,7 +68,7 @@ class _MapLayerState extends State<MapLayer> {
             maxNativeZoom: HiveSettingsDB.openStreetMapEnabled ? 15 : 15,
             urlTemplate: HiveSettingsDB.openStreetMapEnabled ||
                 widget.event.hasSpecialStartPoint
-                ? HiveSettingsDB.openStreetMapLinkString
+                ? HiveSettingsDB.openStreetMapLinkString  //use own ts
                 : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
             evictErrorTileStrategy:
             EvictErrorTileStrategy.notVisibleRespectMargin,
