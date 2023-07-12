@@ -860,6 +860,57 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
               );
             }),
           ),
+          if (kIsWeb)
+            Positioned(
+              left: 10,
+              bottom: HiveSettingsDB.mapMenuVisible ?250: 100,
+              height: 40,
+              child: Builder(builder: (context) {
+                return FloatingActionButton(
+                  onPressed: () {
+                    switch (followLocationState) {
+                      case FollowLocationStates.followOff:
+                      case FollowLocationStates.followMeStopped:
+                        followLocationState =
+                            FollowLocationStates.followTrain;
+                        startFollowingTrainHead();
+                        showToast(
+                            message: Localize.of(context).mapFollowTrain);
+                        break;
+                      case FollowLocationStates.followTrain:
+                        followLocationState =
+                            FollowLocationStates.followTrainStopped;
+                        stopFollowingLocation();
+                        showToast(
+                            message: Localize.of(context)
+                                .mapFollowTrainStopped);
+                        break;
+                      case FollowLocationStates.followTrainStopped:
+                        followLocationState =
+                            FollowLocationStates.followOff;
+                        moveMapToDefault();
+                        showToast(
+                            message: Localize.of(context)
+                                .mapToStartNoFollowing);
+                        break;
+                      default:
+                        followLocationState =
+                            FollowLocationStates.followOff;
+                        if (locationSubscription != null) {
+                          stopFollowingLocation();
+                        } else {
+                          startFollowingMeLocation();
+                        }
+                        break;
+                    }
+                  },
+                  heroTag: 'locationBtnTagWeb',
+                  child: FollowingLocationIcon(
+                    followLocationStatus: followLocationState,
+                  ),
+                );
+              }),
+            ),
           Visibility(
             visible: HiveSettingsDB.mapMenuVisible,
             child: Stack(
@@ -895,57 +946,6 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                       } else {
                         return Container();
                       }
-                    }),
-                  ),
-                if (kIsWeb)
-                  Positioned(
-                    left: 10,
-                    bottom: 250,
-                    height: 40,
-                    child: Builder(builder: (context) {
-                      return FloatingActionButton(
-                        onPressed: () {
-                          switch (followLocationState) {
-                            case FollowLocationStates.followOff:
-                            case FollowLocationStates.followMeStopped:
-                              followLocationState =
-                                  FollowLocationStates.followTrain;
-                              startFollowingTrainHead();
-                              showToast(
-                                  message: Localize.of(context).mapFollowTrain);
-                              break;
-                            case FollowLocationStates.followTrain:
-                              followLocationState =
-                                  FollowLocationStates.followTrainStopped;
-                              stopFollowingLocation();
-                              showToast(
-                                  message: Localize.of(context)
-                                      .mapFollowTrainStopped);
-                              break;
-                            case FollowLocationStates.followTrainStopped:
-                              followLocationState =
-                                  FollowLocationStates.followOff;
-                              moveMapToDefault();
-                              showToast(
-                                  message: Localize.of(context)
-                                      .mapToStartNoFollowing);
-                              break;
-                            default:
-                              followLocationState =
-                                  FollowLocationStates.followOff;
-                              if (locationSubscription != null) {
-                                stopFollowingLocation();
-                              } else {
-                                startFollowingMeLocation();
-                              }
-                              break;
-                          }
-                        },
-                        heroTag: 'locationBtnTagWeb',
-                        child: FollowingLocationIcon(
-                          followLocationStatus: followLocationState,
-                        ),
-                      );
                     }),
                   ),
                 Positioned(
