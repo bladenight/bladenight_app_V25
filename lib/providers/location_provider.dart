@@ -620,7 +620,7 @@ class LocationProvider with ChangeNotifier {
         const Duration(seconds: defaultRealtimeUpdateInterval),
         (timer) {
           int lastUpdate = DateTime.now().difference(_lastUpdate).inSeconds;
-          if (lastUpdate >= defaultRealtimeUpdateInterval) {
+          if (lastUpdate >= defaultRealtimeUpdateInterval/2 ) {
             refresh();
           }
         },
