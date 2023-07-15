@@ -59,7 +59,7 @@ class LocationProvider with ChangeNotifier {
   get lastUpdate => _lastUpdate;
   DateTime? _userReachedFinishDateTime, _startedTrackingTime;
 
-  //Timer? _updateTimer;
+  Timer? _updateTimer;
 
   bool _isConfirmed = false;
 
@@ -490,6 +490,8 @@ class LocationProvider with ChangeNotifier {
 
   void _stopTracking() {
     _locationSubscription?.cancel();
+    _locationSubscription = null;
+    setUpdateTimer(false);
     Wakelock.disable();
     bg.BackgroundGeolocation.stop().then((bg.State state) {
       if (!kIsWeb) {
@@ -572,6 +574,7 @@ class LocationProvider with ChangeNotifier {
       }
       _listenLocationWithAlternativePackage();
       _isTracking = true;
+      setUpdateTimer(_isTracking);
       _startedTrackingTime = DateTime.now();
       _stoppedAfterMaxTime = false;
       ActiveEventProvider.instance.refresh(forceUpdate: true);
@@ -595,14 +598,35 @@ class LocationProvider with ChangeNotifier {
         _subToUpdates();
         SendToWatch.setIsLocationTracking(_isTracking);
         HiveSettingsDB.setTrackingActive(_isTracking);
+        setUpdateTimer(_isTracking);
       }).catchError((error) {
         if (!kIsWeb) FLog.error(text: 'Starting ERROR: $error');
         HiveSettingsDB.setTrackingActive(false);
         _isTracking = false;
+        setUpdateTimer(_isTracking);
         SendToWatch.setIsLocationTracking(false);
         notifyListeners();
         return;
       });
+    }
+  }
+
+  ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
+  void setUpdateTimer(bool enabled) {
+    _updateTimer?.cancel();
+    if (enabled) {
+      _updateTimer = Timer.periodic(
+        //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
+        const Duration(seconds: defaultRealtimeUpdateInterval),
+        (timer) {
+          int lastUpdate = DateTime.now().difference(_lastUpdate).inSeconds;
+          if (lastUpdate >= defaultRealtimeUpdateInterval) {
+            refresh();
+          }
+        },
+      );
+    } else {
+      _updateTimer?.cancel();
     }
   }
 
@@ -660,12 +684,13 @@ class LocationProvider with ChangeNotifier {
       bg.Location? newLocation;
       if (HiveSettingsDB.useAlternativeLocationProvider) {
         newLocation = (await getLocation(
-                settings: LocationSettings(
-                    askForPermission: false,
-                    rationaleMessageForGPSRequest:
-                        Localize.current.requestAlwaysPermissionTitle,
-                    rationaleMessageForPermissionRequest:
-                        Localize.current.enableAlwaysLocationInfotext)))
+                    settings: LocationSettings(
+                        askForPermission: false,
+                        rationaleMessageForGPSRequest:
+                            Localize.current.requestAlwaysPermissionTitle,
+                        rationaleMessageForPermissionRequest:
+                            Localize.current.enableAlwaysLocationInfotext))
+                .timeout(const Duration(seconds: 3)))
             .convertToBGLocation();
         //if bg.location onLocation will be fired automatic / location 2 does this not
         _onLocation(newLocation);
@@ -699,8 +724,9 @@ class LocationProvider with ChangeNotifier {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp);
       var localTs = ts.toLocal();
       var diff = DateTime.now().difference(localTs);
-      if (diff < const Duration(minutes: 5)) {
-        ///TODO dont update if older than...
+      if (diff < const Duration(minutes: 2)) {
+        _lastKnownPoint = null;
+        return null;
       }
       sendLocation(_lastKnownPoint!);
       return _lastKnownPoint;

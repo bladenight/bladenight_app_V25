@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,15 +33,31 @@ class TrackProgressOverlay extends StatefulWidget {
   State<TrackProgressOverlay> createState() => _TrackProgressOverlayState();
 }
 
-class _TrackProgressOverlayState extends State<TrackProgressOverlay> {
+class _TrackProgressOverlayState extends State<TrackProgressOverlay>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read(locationProvider).refresh(forceUpdate: true);
+      context.read(locationProvider).refresh(forceUpdate: true); //update in map
       context.read(activeEventProvider).refresh(forceUpdate: true);
       context.read(refreshTimerProvider.notifier).start();
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      if (!kIsWeb) {
+        FLog.debug(
+            text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
+      }
+    }
+    if (state == AppLifecycleState.resumed) {
+      context.read(refreshTimerProvider.notifier).start();
+    } else if (state == AppLifecycleState.paused) {
+      context.read(refreshTimerProvider.notifier).stop();
+    }
   }
 
   @override

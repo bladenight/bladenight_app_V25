@@ -54,36 +54,36 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
         defaultLongitude = double.tryParse(ial.text!) ?? defaultAppLongitude;
         break;
       case 'androidPlayStoreLink':
-        playStoreLink = ial.link ?? '';
+        playStoreLink = (ial.link ?? '').trim();
         break;
       case 'iOSAppStoreLink':
-        iOSAppStoreLink = ial.link ?? '';
+        iOSAppStoreLink = (ial.link ?? '').trim();
         break;
       case 'liveMapLink':
-        liveMapLink = ial.link ?? '';
+        liveMapLink = (ial.link ?? '').trim();
         liveMapLinkText = ial.text ?? '';
         break;
       case 'openStreetMap': //disable OSM via remote
-        if (ial.text != null && ial.text! == '') {
+        if (ial.text != null && ial.text!.trim() == '') {
           //enable OSM via remote // if empty don't change
           HiveSettingsDB.removeOpenStreetMapLink();
         }
-        if (ial.text != null && ial.text! == 'on') {
+        if (ial.text != null && ial.text!.trim() == 'on') {
           //enable OSM via remote // if empty don't change
           HiveSettingsDB.setOpenStreetMapEnabled(true);
         }
-        if (ial.text != null && ial.text! == 'off') {
+        if (ial.text != null && ial.text!.trim() == 'off') {
           HiveSettingsDB.setOpenStreetMapEnabled(false);
         }
         if (ial.link != null && ial.link!.isNotEmpty) {
           try {
-            var decodedLink = utf8.decode(base64.decode(ial.link!));
+            var decodedLink = utf8.decode(base64.decode(ial.link!.trim()));
             HiveSettingsDB.setOpenStreetMapLink(decodedLink);
           } catch (e) {
             if (!kIsWeb) {
               FLog.error(
                   text:
-                      'Could not decode open street map link link. Must be bas64encoded $e');
+                      'Could not decode open street map link. Must be base64encoded $e');
             }
           }
         }

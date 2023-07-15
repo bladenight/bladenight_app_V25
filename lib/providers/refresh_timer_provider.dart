@@ -33,6 +33,11 @@ class TimerNotifier extends StateNotifier<TimerModel> {
     _startTimer();
   }
 
+  void stop() {
+    _tickerSubscription?.cancel();
+    _tickerSubscription = null;
+  }
+
   void _startTimer() {
     _tickerSubscription?.cancel();
 

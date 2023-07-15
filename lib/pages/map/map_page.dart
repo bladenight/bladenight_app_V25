@@ -92,7 +92,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
       }
     }
     if (state == AppLifecycleState.resumed) {
-      resumeUpdates();
+      resumeUpdates(force: true);
       LocationProvider.instance.setToBackground(false);
       if (!kIsWeb) {
         FLog.trace(
@@ -101,8 +101,6 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           text: 'resume updates calling',
         );
       }
-      //update view when not tracking in ViewMode immediately
-      context.read(locationProvider).refresh(forceUpdate: true);
     } else if (state == AppLifecycleState.paused) {
       LocationProvider.instance.setToBackground(true);
       if (!kIsWeb) {
@@ -119,10 +117,10 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
     _updateTimer?.cancel();
     if (force || _firstRefresh) {
       print('_firstRefresh resumeUpdates');
-      context.read(locationProvider).refresh();
+      context.read(locationProvider).refresh(forceUpdate: force);
       _firstRefresh = false;
     }
-    //update data
+    //update data if not tracking
     _updateTimer = Timer.periodic(
       //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
       const Duration(seconds: defaultRealtimeUpdateInterval),
