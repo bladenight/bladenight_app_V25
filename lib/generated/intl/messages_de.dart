@@ -448,10 +448,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Reset in Einstellungen"),
         "resetLongPress": MessageLookupByLibrary.simpleMessage(
             "Tachometer lange drücken zum Reset des km Zählers (ODO-Meter)"),
-        "resetOdoMeter":
-            MessageLookupByLibrary.simpleMessage("km-Zähler auf 0 setzen?"),
-        "resetOdoMeterTitle":
-            MessageLookupByLibrary.simpleMessage("Reset km Zähler"),
+        "resetOdoMeter": MessageLookupByLibrary.simpleMessage(
+            "Km-Zähler auf 0 setzen und eigene gefahrene Routenpunkte auf Karte (angezeigte gefahrene Route kann vorher in Einstellungen exportiert werden bzw. werden auch beim schließen der App gelöscht) ?"),
+        "resetOdoMeterTitle": MessageLookupByLibrary.simpleMessage(
+            "Reset km-Zähler und eigene Routenpunkte"),
         "route": MessageLookupByLibrary.simpleMessage("Strecke"),
         "routeoverview": MessageLookupByLibrary.simpleMessage("Routenverlauf"),
         "running": MessageLookupByLibrary.simpleMessage("Wir fahren gerade ⏳"),

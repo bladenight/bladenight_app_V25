@@ -439,10 +439,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Reset in settings-page"),
         "resetLongPress": MessageLookupByLibrary.simpleMessage(
             "Press gauge long to reset the ODO meter"),
-        "resetOdoMeter":
-            MessageLookupByLibrary.simpleMessage("Reset ODO meter to 0?"),
-        "resetOdoMeterTitle":
-            MessageLookupByLibrary.simpleMessage("ODO meter reset"),
+        "resetOdoMeter": MessageLookupByLibrary.simpleMessage(
+            "Reset ODO meter to 0 and clear driven route?"),
+        "resetOdoMeterTitle": MessageLookupByLibrary.simpleMessage(
+            "ODO meter reset and driven route"),
         "route": MessageLookupByLibrary.simpleMessage("Route"),
         "routeoverview": MessageLookupByLibrary.simpleMessage("Route overview"),
         "running": MessageLookupByLibrary.simpleMessage("We are on route ⏳"),

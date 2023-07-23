@@ -478,6 +478,22 @@ class _SettingsPageState extends State<SettingsPage> {
                                       .openBatteriesSettings()),
                         ]),
                   if (!kIsWeb)
+                    const SizedBox(
+                      height: 15,
+                    ),
+                  if (!kIsWeb)
+                  CupertinoFormSection(
+                      header: Text(Localize.of(context)
+                          .exportUserTrackingHeader),
+                      children: <Widget>[
+                        CupertinoButton(
+                            child: Text(Localize.of(context)
+                                .exportUserTracking),
+                            onPressed: () => exportUserTracking(
+                                LocationProvider.instance
+                                    .userTrackingPoints)),
+                      ]),
+                  if (!kIsWeb)
                     CupertinoFormSection(
                         header: Text(Localize.of(context).resetOdoMeterTitle),
                         children: <Widget>[
@@ -602,20 +618,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                               }
                                             }),
                                       ]),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                CupertinoFormSection(
-                                    header: Text(Localize.of(context)
-                                        .exportUserTrackingHeader),
-                                    children: <Widget>[
-                                      CupertinoButton(
-                                          child: Text(Localize.of(context)
-                                              .exportUserTracking),
-                                          onPressed: () => exportUserTracking(
-                                              LocationProvider.instance
-                                                  .userTrackingPoints)),
-                                    ]),
                                 const SizedBox(height: 20),
                                 Padding(
                                   padding: const EdgeInsets.only(

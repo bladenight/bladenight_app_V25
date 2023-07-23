@@ -4,8 +4,11 @@ import 'dart:ui';
 double mediaSizePercentage = 0.05;
 double mediaSizeTrackProgressIconsPercentage = 0.03;
 
-///Defaultupdateintervall to get [Realtimedata] when not tracking in seconds
+///Default update interval to get [RealtimeData] when not tracking in seconds
 const int defaultRealtimeUpdateInterval = 15;
+
+///Default update interval to get [RealtimeData] when tracking in seconds
+const int defaultLocationUpdateInterval = 5;
 
 const Duration wampTimeout = Duration(seconds: 10);
 

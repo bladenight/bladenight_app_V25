@@ -574,7 +574,8 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                                 : const Icon(Icons.gps_fixed_sharp),
                           );
                         }),
-                ], //Markers end
+                ],
+                //Markers end
                 controller: controller,
               );
             },
@@ -594,6 +595,9 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                   var alwaysPermissionGranted =
                       (lp.gpsLocationPermissionsStatus ==
                           LocationPermissionStatus.always);
+                  var whenInusePermissionGranted =
+                  (lp.gpsLocationPermissionsStatus ==
+                      LocationPermissionStatus.whenInUse);
                   return GestureDetector(
                     onLongPress: () async {
                       await BackgroundGeolocationHelper.resetOdoMeter(context);
@@ -644,29 +648,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                       ),
                       onPressed: () async {
                         if (alwaysPermissionGranted) {
-                          var odometerResetResult =
-                              await FlutterPlatformAlert.showCustomAlert(
-                                  windowTitle:
-                                      Localize.current.resetOdoMeterTitle,
-                                  text:
-                                      '${Localize.of(context).userSpeed}  ${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()}\n'
-                                      '${Localize.of(context).distanceDrivenOdo} ∑${lp.odometer.toStringAsFixed(1)} km \n '
-                                      '${Localize.current.resetOdoMeter}',
-                                  iconStyle: IconStyle.warning,
-                                  positiveButtonTitle: Localize.current.yes,
-                                  negativeButtonTitle: Localize.current.cancel);
-                          if (odometerResetResult ==
-                              CustomButton.positiveButton) {
-                            bg.BackgroundGeolocation.setOdometer(0.0)
-                                .then((value) => setState(() {}))
-                                .catchError((error) {
-                              showToast(message: Localize.of(context).failed);
-                              if (!kIsWeb) {
-                                FLog.error(
-                                    text: '[resetOdometer] ERROR: $error');
-                              }
-                            });
-                          }
+                           resetOdoMeterAndRoutePoints();
                         } else {
                           var reqResult =
                               await FlutterPlatformAlert.showCustomAlert(
@@ -861,7 +843,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           if (kIsWeb)
             Positioned(
               left: 10,
-              bottom: HiveSettingsDB.mapMenuVisible ?250: 100,
+              bottom: HiveSettingsDB.mapMenuVisible ? 250 : 100,
               height: 40,
               child: Builder(builder: (context) {
                 return FloatingActionButton(
@@ -869,31 +851,27 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                     switch (followLocationState) {
                       case FollowLocationStates.followOff:
                       case FollowLocationStates.followMeStopped:
-                        followLocationState =
-                            FollowLocationStates.followTrain;
+                        followLocationState = FollowLocationStates.followTrain;
                         startFollowingTrainHead();
-                        showToast(
-                            message: Localize.of(context).mapFollowTrain);
+                        showToast(message: Localize.of(context).mapFollowTrain);
                         break;
                       case FollowLocationStates.followTrain:
                         followLocationState =
                             FollowLocationStates.followTrainStopped;
                         stopFollowingLocation();
                         showToast(
-                            message: Localize.of(context)
-                                .mapFollowTrainStopped);
+                            message:
+                                Localize.of(context).mapFollowTrainStopped);
                         break;
                       case FollowLocationStates.followTrainStopped:
-                        followLocationState =
-                            FollowLocationStates.followOff;
+                        followLocationState = FollowLocationStates.followOff;
                         moveMapToDefault();
                         showToast(
-                            message: Localize.of(context)
-                                .mapToStartNoFollowing);
+                            message:
+                                Localize.of(context).mapToStartNoFollowing);
                         break;
                       default:
-                        followLocationState =
-                            FollowLocationStates.followOff;
+                        followLocationState = FollowLocationStates.followOff;
                         if (locationSubscription != null) {
                           stopFollowingLocation();
                         } else {
@@ -916,7 +894,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                 if (!kIsWeb)
                   Positioned(
                     left: 10,
-                    bottom: 250, //same height as qrcode in web
+                    bottom: 300, //same height as qrcode in web
                     height: 40,
                     child: Builder(builder: (context) {
                       var isActive = context.watch(
@@ -944,6 +922,25 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                       } else {
                         return Container();
                       }
+                    }),
+                  ),
+                if (!kIsWeb)
+                  Positioned(
+                    left: 10,
+                    bottom: 250, //same height as qrcode in web
+                    height: 40,
+                    child: Builder(builder: (context) {
+                      return FloatingActionButton(
+                        heroTag: 'resetBtnTag',
+                        backgroundColor: Colors.blue,
+                        onPressed: () {
+                          resetOdoMeterAndRoutePoints();
+                        },
+                        child: const Icon(
+                          Icons.restart_alt,
+                          color: Colors.white,
+                        ),
+                      );
                     }),
                   ),
                 Positioned(
@@ -1007,7 +1004,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
             ),
           ),
           Positioned(
-            left: 0,
+            left: -10,
             bottom: 0,
             width: MediaQuery.of(context).size.width * .350,
             child: Builder(builder: (context) {
@@ -1018,8 +1015,8 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                 },
                 child: const FittedBox(
                   child: Text(
-                    '©OpenStreetMap',
-                    maxLines: 1,
+                    '©OpenStreetMap contributors',
+                    maxLines: 2,
                     style: TextStyle(
                         backgroundColor: Colors.black26,
                         color: CupertinoColors.white,
@@ -1032,5 +1029,41 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
         ]),
       ),
     );
+  }
+
+  void resetOdoMeterAndRoutePoints()async{
+    var lp = LocationProvider.instance;
+    var alwaysPermissionGranted =
+    (lp.gpsLocationPermissionsStatus ==
+        LocationPermissionStatus.always);
+    var whenInusePermissionGranted =
+    (lp.gpsLocationPermissionsStatus ==
+        LocationPermissionStatus.whenInUse);
+    if (alwaysPermissionGranted || whenInusePermissionGranted) {
+      var odometerResetResult =
+          await FlutterPlatformAlert.showCustomAlert(
+          windowTitle:
+          Localize.current.resetOdoMeterTitle,
+          text:
+          '${Localize.of(context).userSpeed}  ${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()}\n'
+              '${Localize.of(context).distanceDrivenOdo} ∑${lp.odometer.toStringAsFixed(1)} km \n '
+              '${Localize.current.resetOdoMeter}',
+          iconStyle: IconStyle.warning,
+          positiveButtonTitle: Localize.current.yes,
+          negativeButtonTitle: Localize.current.cancel);
+      if (odometerResetResult ==
+          CustomButton.positiveButton) {
+        lp.resetTrackPoints();
+        bg.BackgroundGeolocation.setOdometer(0.0)
+            .then((value) => setState(() {}))
+            .catchError((error) {
+          showToast(message: Localize.of(context).failed);
+          if (!kIsWeb) {
+            FLog.error(
+                text: '[resetOdometer] ERROR: $error');
+          }
+        });
+      }
+    }
   }
 }

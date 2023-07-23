@@ -574,7 +574,7 @@ class LocationProvider with ChangeNotifier {
       }
       _listenLocationWithAlternativePackage();
       _isTracking = true;
-      setUpdateTimer(_isTracking);
+      setUpdateTimer(true);
       _startedTrackingTime = DateTime.now();
       _stoppedAfterMaxTime = false;
       ActiveEventProvider.instance.refresh(forceUpdate: true);
@@ -593,17 +593,17 @@ class LocationProvider with ChangeNotifier {
         _isTracking = state.enabled;
         _startedTrackingTime = DateTime.now();
         _stoppedAfterMaxTime = false;
+        setUpdateTimer(true);
         ActiveEventProvider.instance.refresh(forceUpdate: true);
         notifyListeners();
         _subToUpdates();
-        SendToWatch.setIsLocationTracking(_isTracking);
         HiveSettingsDB.setTrackingActive(_isTracking);
-        setUpdateTimer(_isTracking);
+        SendToWatch.setIsLocationTracking(_isTracking);
       }).catchError((error) {
         if (!kIsWeb) FLog.error(text: 'Starting ERROR: $error');
         HiveSettingsDB.setTrackingActive(false);
         _isTracking = false;
-        setUpdateTimer(_isTracking);
+        setUpdateTimer(false);
         SendToWatch.setIsLocationTracking(false);
         notifyListeners();
         return;
@@ -613,14 +613,27 @@ class LocationProvider with ChangeNotifier {
 
   ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
   void setUpdateTimer(bool enabled) {
+    if (!kIsWeb) {
+      FLog.trace(text: 'init setLocationTimer to $enabled');
+    }
     _updateTimer?.cancel();
     if (enabled) {
       _updateTimer = Timer.periodic(
-        //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
-        const Duration(seconds: defaultRealtimeUpdateInterval),
+        //realtimeUpdateProvider reads data on send-location -
+        //so it must not updated all 10 secs
+        const Duration(seconds: defaultLocationUpdateInterval),
         (timer) {
           int lastUpdate = DateTime.now().difference(_lastUpdate).inSeconds;
-          if (lastUpdate >= defaultRealtimeUpdateInterval/2 ) {
+          if (!kIsWeb) {
+            FLog.info(
+                className: 'locationProvider',
+                methodName: 'refresh',
+                text: 'update timer internal  lastupdate before ${lastUpdate}s will refresh');
+          }
+          if (lastUpdate >= defaultLocationUpdateInterval) {
+            if (!kIsWeb) {
+              FLog.trace(text: 'setUpdateTimer Refresh');
+            }
             refresh();
           }
         },
@@ -824,7 +837,8 @@ class LocationProvider with ChangeNotifier {
     if (!_isInBackground) notifyListeners();
   }
 
-  ///Refresh [RealTimeData] when location has no data or 30 seconds
+  ///Refresh [RealTimeData] when location has no data for 5s with tracking
+  ///30s without tracking
   ///[forceUpdate]-Mode to update after resume  default value = false
   ///necessary after app state switching in viewer mode
   Future<void> refresh({bool forceUpdate = false}) async {
@@ -838,64 +852,64 @@ class LocationProvider with ChangeNotifier {
       _lastRefreshRequest = dtNow;
 
       bg.Location? locData;
-      var diffSec = DateTime.now().difference(_lastUpdate).inMilliseconds +
+      /*  var diffSec = DateTime.now().difference(_lastUpdate).inMilliseconds +
           1000; //most time  14 seconds because timer and refresh are async
-      if (diffSec >= defaultRealtimeUpdateInterval * 1000 || forceUpdate) {
-        if (_isTracking) {
-          locData = await _subToUpdates();
+      if (diffSec >= defaultLocationUpdateInterval * 1000 || forceUpdate) {*/
+      if (_isTracking) {
+        locData = await _subToUpdates();
+      }
+      if (locData == null && _networkConnected) {
+        //update procession when no location data were sent
+        var update = await RealtimeUpdate.wampUpdate();
+        if (!kIsWeb) {
+          FLog.trace(
+              className: 'locationProvider',
+              methodName: 'refresh',
+              text: 'send refresh force $forceUpdate');
         }
-        if (locData == null && _networkConnected) {
-          //update procession when no location data were sent
-          var update = await RealtimeUpdate.wampUpdate();
-          if (!kIsWeb) {
-            FLog.trace(
-                className: 'locationProvider',
-                methodName: 'refresh',
-                text: 'send refresh force $forceUpdate');
-          }
-          /* if (isTesting) {
+        /* if (isTesting) {
             update = Mapper.fromJson<RealtimeUpdate>(
                 '{"hea":{"pos":17281,"spd":20,"eta":440010,"ior":true,"iip":true,"lat":48.12526909151467,"lon":11.549398275972768,"acc":0},"tai":{"pos":16663,"spd":0,"eta":490010,"ior":true,"iip":true,"lat":48.12016726012295,"lon":11.54839572144946,"acc":0},"fri":{"fri":{"9":{"req":0,"fid":0,"onl":false,"pos":16865,"spd":13,"eta":720259,"ior":true,"iip":true,"lat":48.1219677066427,"lon":11.548752403193944,"acc":0}}},"up":{"pos":16963,"spd":0,"eta":470010,"ior":true,"iip":false,"lat":0.0,"lon":0.0,"acc":0},"rle":18452.0,"rna":"Ost","ust":4,"usr":4}');
           }*/
 
-          if (update.rpcException != null) {
-            if (!kIsWeb) {
-              FLog.error(
-                  className: 'locationProvider',
-                  methodName: 'refresh',
-                  text: update.rpcException.toString());
-            }
-            _realUserSpeedKmh = null;
-            SendToWatch.setUserSpeed('0.0 - km/h');
-            SendToWatch.setIsLocationTracking(isTracking);
-            if (!_isInBackground) {
-              notifyListeners();
-            }
-            return;
+        if (update.rpcException != null) {
+          if (!kIsWeb) {
+            FLog.error(
+                className: 'locationProvider',
+                methodName: 'refresh',
+                text: update.rpcException.toString());
           }
-          _realtimeUpdate = update;
+          _realUserSpeedKmh = null;
+          SendToWatch.setUserSpeed('0.0 - km/h');
+          SendToWatch.setIsLocationTracking(isTracking);
+          if (!_isInBackground) {
+            notifyListeners();
+          }
+          return;
         }
-        _lastUpdate = dtNow;
-        if (_realtimeUpdate != null &&
-            _realtimeUpdate?.head != null &&
-            _realtimeUpdate?.head.longitude != 0.0) {
-          double lat = _realtimeUpdate?.head.latitude ?? defaultLatitude;
-          double lon = _realtimeUpdate?.head.longitude ?? defaultLongitude;
+        _realtimeUpdate = update;
+      }
 
-          _trainHeadController.add(LatLng(lat, lon));
-          if (_lastRouteName != _realtimeUpdate?.routeName ||
-              _eventState != _realtimeUpdate?.eventState) {
-            _lastRouteName = _realtimeUpdate!.routeName;
-            _eventState = _realtimeUpdate!.eventState;
-            ActiveEventProvider.instance.refresh(forceUpdate: true);
-          }
+      _lastUpdate = dtNow;
+      if (_realtimeUpdate != null &&
+          _realtimeUpdate?.head != null &&
+          _realtimeUpdate?.head.longitude != 0.0) {
+        double lat = _realtimeUpdate?.head.latitude ?? defaultLatitude;
+        double lon = _realtimeUpdate?.head.longitude ?? defaultLongitude;
+
+        _trainHeadController.add(LatLng(lat, lon));
+        if (_lastRouteName != _realtimeUpdate?.routeName ||
+            _eventState != _realtimeUpdate?.eventState) {
+          _lastRouteName = _realtimeUpdate!.routeName;
+          _eventState = _realtimeUpdate!.eventState;
+          ActiveEventProvider.instance.refresh(forceUpdate: true);
         }
-        _realUserSpeedKmh = null;
-        SendToWatch.setUserSpeed('- km/h');
-        if (!kIsWeb) _updateWatchData();
-        if (!_isInBackground) {
-          notifyListeners();
-        }
+      }
+      _realUserSpeedKmh = null;
+      SendToWatch.setUserSpeed('- km/h');
+      if (!kIsWeb) _updateWatchData();
+      if (!_isInBackground) {
+        notifyListeners();
       }
     } catch (e) {
       if (!kIsWeb) {
@@ -1048,6 +1062,12 @@ class LocationProvider with ChangeNotifier {
         FLog.error(text: 'Error on _updateWatchData ${e.toString()}');
       }
     }
+  }
+
+  ///Clear all tracked points
+  void resetTrackPoints() {
+    _userTrackingPoints.clear();
+    _userLatLongs.clear();
   }
 }
 

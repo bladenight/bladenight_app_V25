@@ -1964,20 +1964,20 @@ class Localize {
     );
   }
 
-  /// `Reset km Zähler`
+  /// `Reset km-Zähler und eigene Routenpunkte`
   String get resetOdoMeterTitle {
     return Intl.message(
-      'Reset km Zähler',
+      'Reset km-Zähler und eigene Routenpunkte',
       name: 'resetOdoMeterTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `km-Zähler auf 0 setzen?`
+  /// `Km-Zähler auf 0 setzen und eigene gefahrene Routenpunkte auf Karte (angezeigte gefahrene Route kann vorher in Einstellungen exportiert werden bzw. werden auch beim schließen der App gelöscht) ?`
   String get resetOdoMeter {
     return Intl.message(
-      'km-Zähler auf 0 setzen?',
+      'Km-Zähler auf 0 setzen und eigene gefahrene Routenpunkte auf Karte (angezeigte gefahrene Route kann vorher in Einstellungen exportiert werden bzw. werden auch beim schließen der App gelöscht) ?',
       name: 'resetOdoMeter',
       desc: '',
       args: [],
