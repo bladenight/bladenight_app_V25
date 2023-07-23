@@ -115,10 +115,10 @@ class LocationProvider with ChangeNotifier {
 
   double? _realUserSpeedKmh;
 
-  ///Userspeed in m/s
+  ///Userspeed in km/h
   double? get realUserSpeedKmh => _realUserSpeedKmh;
 
-  ///odometer in m/s
+  ///odometer in km/h
   double get odometer => _odometer;
   double _odometer = 0.0;
 
@@ -329,14 +329,13 @@ class LocationProvider with ChangeNotifier {
     var userLatLng =
         LatLng(location.coords.latitude, location.coords.longitude);
     _userLatLng = userLatLng;
-    var realSpeed =
+    var realSpeedKmH =
         location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6;
-    _realUserSpeedKmh = realSpeed;
     _odometer = location.odometer / 1000;
     var userTrackingPoint = UserTrackPoint(
         location.coords.latitude,
         location.coords.longitude,
-        realSpeed,
+        realSpeedKmH,
         location.coords.heading,
         location.coords.altitude,
         odometer,
@@ -351,8 +350,20 @@ class LocationProvider with ChangeNotifier {
     } else {
       _userTrackingPoints.add(userTrackingPoint);
     }
+    //calculate realspeed
+    var lastFive = _userTrackingPoints.toList().reversed.take(5);
+    if (lastFive.isEmpty) {
+      _realUserSpeedKmh = 0.0;
+    } else {
+      var sumSpeed = 0.0;
+      for (var item in lastFive) {
+        sumSpeed = sumSpeed + item.realSpeedKmh;
+      }
+      _realUserSpeedKmh = round(sumSpeed / lastFive.length,decimals: 2);
+    }
+
     _lastKnownPoint = location;
-    SendToWatch.setUserSpeed('${realSpeed.toStringAsFixed(1)} km/h');
+    SendToWatch.setUserSpeed('${realSpeedKmH.toStringAsFixed(1)} km/h');
     SendToWatch.setIsLocationTracking(isTracking);
 
     int maxSize = 250;
@@ -628,7 +639,8 @@ class LocationProvider with ChangeNotifier {
             FLog.info(
                 className: 'locationProvider',
                 methodName: 'refresh',
-                text: 'update timer internal  lastupdate before ${lastUpdate}s will refresh');
+                text:
+                    'update timer internal  lastupdate before ${lastUpdate}s will refresh');
           }
           if (lastUpdate >= defaultLocationUpdateInterval) {
             if (!kIsWeb) {
