@@ -59,18 +59,18 @@ class PreferencesHelper {
   ///Get and [Event] from preferences and return saved event or if nothing saved [Event.init]
   static Future<Event> getEventFromPrefs() async {
     try {
-      Event event;
       final prefs = await SharedPreferences.getInstance();
       final String? jsonData = prefs.getString(_nextEventPref);
       if (jsonData != null) {
-        event = MapperContainer.globals.fromJson<Event>(jsonData);
-        return event.isNoEventPlannedOrInvalidDuration ? Event.init : event;
+        return MapperContainer.globals.fromJson<Event>(jsonData);
       } else {
         PreferencesHelper.saveEventToPrefs(Event.init);
         return Event.init;
       }
     } catch (e) {
-      return Event.init;
+      Event event = Event.init;
+      event.rpcException = e as Exception;
+      return event;
     }
   }
 
@@ -106,7 +106,8 @@ class PreferencesHelper {
       }
       return Future.value(links);
     } catch (e) {
-      if (!kIsWeb) FLog.error(text: 'Error Prefs get images and links', exception: e);
+      if (!kIsWeb)
+        FLog.error(text: 'Error Prefs get images and links', exception: e);
     }
     return ImageAndLinkList(<ImageAndLink>[]);
   }
@@ -117,7 +118,8 @@ class PreferencesHelper {
       var prefString = MapperContainer.globals.toJson(ial);
       prefs.setString(_imagesAndLinksPref, prefString);
     } catch (e) {
-      if (!kIsWeb) FLog.error(text: 'Error Prefs set images and links', exception: e);
+      if (!kIsWeb)
+        FLog.error(text: 'Error Prefs set images and links', exception: e);
     }
   }
 }

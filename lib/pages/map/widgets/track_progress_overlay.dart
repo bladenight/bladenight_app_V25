@@ -382,7 +382,9 @@ class _TrackProgressOverlayState extends State<TrackProgressOverlay>
                                                 ) //Text when Event confirmed
                                               : FittedBox(
                                                   child: Text(
-                                                    '${Localize.of(context).nextEvent} ${DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(activeEvent.getUtcIso8601DateTime)}',
+                                                    '${activeEvent.status ==
+                                                        EventStatus.finished?Localize.of(context).finished: Localize.of(context).nextEvent} ${activeEvent.status ==
+                                                        EventStatus.finished?'':DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(activeEvent.getUtcIso8601DateTime)}',
                                                   ),
                                                 )) //empty when not confirmed no viewer mode available
                                           : !location.isTracking

@@ -495,10 +495,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       ]),
                   if (!kIsWeb)
                     CupertinoFormSection(
-                        header: Text(Localize.of(context).resetOdoMeterTitle),
+                        header: Text(Localize.of(context).resetOdoMeter),
                         children: <Widget>[
                           CupertinoButton(
-                              child: Text(Localize.of(context).resetOdoMeter),
+
+                              child: Text(Localize.of(context).resetOdoMeterTitle),
                               onPressed: () async =>
                                   await BackgroundGeolocationHelper
                                       .resetOdoMeter(context)),

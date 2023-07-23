@@ -71,8 +71,10 @@ class ActiveEventProvider extends ChangeNotifier {
           notifyListeners();
           return;
         }
-        _event =
-            rpcEvent.isNoEventPlannedOrInvalidDuration ? Event.init : rpcEvent;
+        /*if (rpcEvent.status != EventStatus.noevent && rpcEvent.isOver) {
+          _event = rpcEvent.copyWith(status:  EventStatus.finished);
+        }*/
+
         SendToWatch.updateEvent(rpcEvent);
         var oldEventInPrefs = await PreferencesHelper.getEventFromPrefs();
         //get routepoints on eventupdate to update Map
@@ -81,7 +83,7 @@ class ActiveEventProvider extends ChangeNotifier {
           await _updateRoutePoints(rpcEvent);
           if ((DateTime.now().difference(_providerLastUpdate)).inSeconds > 30) {
             //avoid multiple notifications on forceupdate
-            if (!kIsWeb) {
+            if (!kIsWeb && event.status != EventStatus.finished) {
               NotificationHelper().updateNotifications(oldEventInPrefs, _event);
             }
           }
@@ -99,8 +101,7 @@ class ActiveEventProvider extends ChangeNotifier {
   }
 
   Future<void> _updateRoutePoints(Event event) async {
-    print('_updateRoutePoints ${event.isNoEventPlannedOrInvalidDuration}');
-    if (!event.isNoEventPlannedOrInvalidDuration) {
+    if (event.status != EventStatus.noevent ) {
       var route = await RoutePoints.getActiveRoutePointsWamp();
       if (route.rpcException != null) {
         return;

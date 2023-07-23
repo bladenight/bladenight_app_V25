@@ -359,7 +359,7 @@ class LocationProvider with ChangeNotifier {
       for (var item in lastFive) {
         sumSpeed = sumSpeed + item.realSpeedKmh;
       }
-      _realUserSpeedKmh = round(sumSpeed / lastFive.length,decimals: 2);
+      _realUserSpeedKmh = round(sumSpeed / lastFive.length, decimals: 2);
     }
 
     _lastKnownPoint = location;
@@ -583,6 +583,19 @@ class LocationProvider with ChangeNotifier {
             className: 'location_provider',
             methodName: '_startTracking');
       }
+      _gpsLocationPermissionsStatus =
+          await LocationPermissionDialog().getPermissionsStatus();
+
+      _hasLocationPermissions =
+          _gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse ||
+              _gpsLocationPermissionsStatus == LocationPermissionStatus.always;
+      if (HiveSettingsDB.useAlternativeLocationProvider &&
+          _hasLocationPermissions) {
+        _gpsLocationPermissionsStatus =
+            _gpsLocationPermissionsStatus == LocationPermissionStatus.always
+                ? LocationPermissionStatus.always
+                : LocationPermissionStatus.whenInUse;
+      }
       _listenLocationWithAlternativePackage();
       _isTracking = true;
       setUpdateTimer(true);
@@ -635,12 +648,8 @@ class LocationProvider with ChangeNotifier {
         const Duration(seconds: defaultLocationUpdateInterval),
         (timer) {
           int lastUpdate = DateTime.now().difference(_lastUpdate).inSeconds;
-          if (!kIsWeb) {
-            FLog.info(
-                className: 'locationProvider',
-                methodName: 'refresh',
-                text:
-                    'update timer internal  lastupdate before ${lastUpdate}s will refresh');
+          if (kDebugMode) {
+            print('update timer internal  lastupdate before ${lastUpdate}s');
           }
           if (lastUpdate >= defaultLocationUpdateInterval) {
             if (!kIsWeb) {
@@ -652,6 +661,7 @@ class LocationProvider with ChangeNotifier {
       );
     } else {
       _updateTimer?.cancel();
+      _updateTimer = null;
     }
   }
 
@@ -708,17 +718,7 @@ class LocationProvider with ChangeNotifier {
       }
       bg.Location? newLocation;
       if (HiveSettingsDB.useAlternativeLocationProvider) {
-        newLocation = (await getLocation(
-                    settings: LocationSettings(
-                        askForPermission: false,
-                        rationaleMessageForGPSRequest:
-                            Localize.current.requestAlwaysPermissionTitle,
-                        rationaleMessageForPermissionRequest:
-                            Localize.current.enableAlwaysLocationInfotext))
-                .timeout(const Duration(seconds: 3)))
-            .convertToBGLocation();
-        //if bg.location onLocation will be fired automatic / location 2 does this not
-        _onLocation(newLocation);
+        //getLocation ignored if location is running
       } else {
         newLocation = await bg.BackgroundGeolocation.getCurrentPosition(
           timeout: 3,
@@ -749,7 +749,7 @@ class LocationProvider with ChangeNotifier {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp);
       var localTs = ts.toLocal();
       var diff = DateTime.now().difference(localTs);
-      if (diff < const Duration(minutes: 2)) {
+      if (diff < const Duration(minutes: 1)) {
         _lastKnownPoint = null;
         return null;
       }
@@ -891,7 +891,7 @@ class LocationProvider with ChangeNotifier {
                 methodName: 'refresh',
                 text: update.rpcException.toString());
           }
-          _realUserSpeedKmh = null;
+          _realUserSpeedKmh = 0.0;
           SendToWatch.setUserSpeed('0.0 - km/h');
           SendToWatch.setIsLocationTracking(isTracking);
           if (!_isInBackground) {
@@ -917,9 +917,11 @@ class LocationProvider with ChangeNotifier {
           ActiveEventProvider.instance.refresh(forceUpdate: true);
         }
       }
-      _realUserSpeedKmh = null;
-      SendToWatch.setUserSpeed('- km/h');
-      if (!kIsWeb) _updateWatchData();
+      if (_lastKnownPoint == null) {
+        _realUserSpeedKmh = null;
+        SendToWatch.setUserSpeed('- km/h');
+        if (!kIsWeb) _updateWatchData();
+      }
       if (!_isInBackground) {
         notifyListeners();
       }
@@ -986,6 +988,7 @@ class LocationProvider with ChangeNotifier {
         }
       }
       var maxDuration = ActiveEventProvider.instance.event.duration.inMinutes;
+      if (maxDuration==0) return;
       if ((ActiveEventProvider.instance.event.status == EventStatus.finished ||
               eventRuntime.inMinutes > maxDuration) &&
           _isTracking &&
@@ -1124,7 +1127,8 @@ final hasNewRealtimeData = Provider((ref) {
   return ref.watch(locationProvider.select((l) => l.realtimeUpdate));
 });
 
-//watch active event and turn of Navigation when event ist not running or finished (userPos == length ??)
+///Watch active [Event] and turn off Navigation when [Event] ist not running
+///or finished (userPos == length ??)
 final isActiveEventProvider = Provider((ref) {
   return ref.watch(activeEventProvider.select((ae) => ae.event));
 });

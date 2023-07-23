@@ -373,13 +373,13 @@ Widget _oneSignalWidget(BuildContext context) {
 
 Widget _mapKitWidget(BuildContext context) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text(Localize.of(context).about_h_mapbox,
+    Text(Localize.of(context).about_h_open_street_map,
         style: CupertinoTheme.of(context).textTheme.navActionTextStyle),
     Row(
       children: <Widget>[
         Expanded(
           child: Text(
-            Localize.of(context).about_mapbox,
+            Localize.of(context).about_open_street_map,
             overflow: TextOverflow.clip,
           ),
         ),

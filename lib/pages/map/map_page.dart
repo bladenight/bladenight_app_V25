@@ -595,9 +595,6 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                   var alwaysPermissionGranted =
                       (lp.gpsLocationPermissionsStatus ==
                           LocationPermissionStatus.always);
-                  var whenInusePermissionGranted =
-                  (lp.gpsLocationPermissionsStatus ==
-                      LocationPermissionStatus.whenInUse);
                   return GestureDetector(
                     onLongPress: () async {
                       await BackgroundGeolocationHelper.resetOdoMeter(context);
@@ -640,7 +637,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                       label: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          '${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()}  ∑${lp.odometer.toStringAsFixed(1)} km ${alwaysPermissionGranted ? "" : "!"}',
+                          '${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()}  ${HiveSettingsDB.useAlternativeLocationProvider?'': '${lp.odometer.toStringAsFixed(1)} km'} ${alwaysPermissionGranted ? "" : "!"}',
                           style: CupertinoTheme.of(context)
                               .textTheme
                               .navTitleTextStyle,
@@ -658,7 +655,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                                   text:
                                       '${alwaysPermissionGranted ? "" : "\n${Localize.of(context).onlyWhileInUse}"} \n'
                                       '${Localize.of(context).userSpeed} ${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()} \n'
-                                      '${Localize.of(context).distanceDrivenOdo} ∑${lp.odometer.toStringAsFixed(1)} km \n'
+                                      '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider?'': '${lp.odometer.toStringAsFixed(1)} km'}\n'
                                       '${Localize.of(context).resetLongPress}',
                                   positiveButtonTitle: Localize.of(context)
                                       .openOperatingSystemSettings,
@@ -1046,7 +1043,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           Localize.current.resetOdoMeterTitle,
           text:
           '${Localize.of(context).userSpeed}  ${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()}\n'
-              '${Localize.of(context).distanceDrivenOdo} ∑${lp.odometer.toStringAsFixed(1)} km \n '
+              '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider?'': '${lp.odometer.toStringAsFixed(1)} km'} \n '
               '${Localize.current.resetOdoMeter}',
           iconStyle: IconStyle.warning,
           positiveButtonTitle: Localize.current.yes,

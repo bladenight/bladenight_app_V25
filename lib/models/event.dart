@@ -136,14 +136,26 @@ class Event with EventMappable implements Comparable {
 
   ///Check if event is over
   ///Event is always in Future added by duration
-  bool get isNoEventPlannedOrInvalidDuration {
+  bool get isNoEventPlanned {
     if (status == EventStatus.noevent) {
       return true;
     }
+    return false;
+  }
+
+  ///Check for [Event] is over
+  ///
+  /// Returns true if over
+  /// or false if not
+  ///
+  /// if Event duration is zero return always false
+  bool get isOver {
+    if (duration.inMinutes ==0 ) return false;
     var eventDifference =
-        startDate.toUtc().add(duration).difference(DateTime.now().toUtc());
+    startDate.toUtc().add(duration).difference(DateTime.now().toUtc());
     return eventDifference.isNegative;
   }
+
 
   @override
   int compareTo(other) {
