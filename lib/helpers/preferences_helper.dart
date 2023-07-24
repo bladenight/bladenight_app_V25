@@ -3,14 +3,12 @@ import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/event.dart';
 import '../models/friend.dart';
 import '../models/image_and_link.dart';
 import '../models/images_and_links.dart';
 
 class PreferencesHelper {
   static const String _friendPref = 'friendlist';
-  static const String _nextEventPref = 'nextevent';
   static const String _trackAutoStopPref = 'trackAutoStopPref';
   static const String _imagesAndLinksPref = 'imagesAndLinksPref';
 

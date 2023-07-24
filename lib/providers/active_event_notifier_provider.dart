@@ -7,7 +7,6 @@ import '../app_settings/app_configuration_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location_bearing_distance.dart';
 import '../helpers/notification/notification_helper.dart';
-import '../helpers/preferences_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../models/event.dart';
 import '../models/route.dart';
