@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app_settings/app_configuration_helper.dart';
+import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location_bearing_distance.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/preferences_helper.dart';
@@ -19,10 +20,9 @@ class ActiveEventProvider extends ChangeNotifier {
   }
 
   void init() async {
-    _event = await PreferencesHelper.getEventFromPrefs();
+    _event = HiveSettingsDB.getActualEvent;
     _providerLastUpdate = _event.lastupdate ?? DateTime(2000, 1, 1, 0, 0, 0);
     notifyListeners();
-    //refresh();
   }
 
   DateTime _providerLastUpdate = DateTime(2000, 1, 1, 0, 0, 0);
@@ -48,12 +48,6 @@ class ActiveEventProvider extends ChangeNotifier {
   bool get appIsOutdated => _appIsOutdated;
   bool _appIsOutdated = false;
 
-  //save to prefs
-  void saveToPrefs({required Event event}) async {
-    event.lastupdate ??= DateTime.now();
-    await PreferencesHelper.saveEventToPrefs(event);
-  }
-
   void setAppOutDatedState(bool appIsOutdated) {
     _appIsOutdated = appIsOutdated;
     notifyListeners();
@@ -74,12 +68,12 @@ class ActiveEventProvider extends ChangeNotifier {
         /*if (rpcEvent.status != EventStatus.noevent && rpcEvent.isOver) {
           _event = rpcEvent.copyWith(status:  EventStatus.finished);
         }*/
-
+        _event = rpcEvent;
         SendToWatch.updateEvent(rpcEvent);
-        var oldEventInPrefs = await PreferencesHelper.getEventFromPrefs();
+        var oldEventInPrefs =  HiveSettingsDB.getActualEvent;
         //get routepoints on eventupdate to update Map
         if (oldEventInPrefs.compareTo(rpcEvent) != 0 || _routePoints.isEmpty) {
-          await PreferencesHelper.saveEventToPrefs(rpcEvent);
+           HiveSettingsDB.setActualEvent(rpcEvent);
           await _updateRoutePoints(rpcEvent);
           if ((DateTime.now().difference(_providerLastUpdate)).inSeconds > 30) {
             //avoid multiple notifications on forceupdate
@@ -89,11 +83,10 @@ class ActiveEventProvider extends ChangeNotifier {
           }
         }
         _providerLastUpdate = DateTime.now();
-        _event.lastupdate = _providerLastUpdate;
       }
     } catch (e) {
       print(e);
-      _event = await PreferencesHelper.getEventFromPrefs();
+      _event = HiveSettingsDB.getActualEvent;
       _providerLastUpdate = DateTime.now();
       SendToWatch.updateEvent(event);
     }

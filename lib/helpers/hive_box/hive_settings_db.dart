@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
@@ -7,6 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
+import '../../models/event.dart';
+
+part 'app_settings.dart';
 
 final hiveDBProvider =
     StateProvider<HiveSettingsDB>((ref) => HiveSettingsDB.instance);
@@ -465,9 +469,30 @@ class HiveSettingsDB {
     return _hiveBox.get(_actualEventStringKey, defaultValue: '');
   }
 
+
+  ///Get actual [Event] from preferences and
+  ///return saved event or if nothing saved [Event.init]
+  static get getActualEvent {
+    try {
+      var jsonData = _hiveBox.get(_actualEventStringKey);
+      if (jsonData != null) {
+        return MapperContainer.globals.fromJson<Event>(jsonData);
+      } else {
+        return Event.init;
+      }
+    } catch (e) {
+      Event event = Event.init;
+      event.rpcException = e as Exception;
+      return event;
+    }
+  }
+
   ///set actualEventStringString
-  static void setActualEventString(String val) {
-    _hiveBox.put(_actualEventStringKey, val);
+  static void setActualEvent(Event event) {
+    event.lastupdate = DateTime.now();
+    String eventJson = MapperContainer.globals.toJson(event);
+    _hiveBox.put(_actualEventStringKey, eventJson);
+    setActualEventLastUpdate(DateTime.now());
   }
 
   static const String _imagesAndLinksDataKey = 'imagesAndLinksJsonPref';
@@ -510,8 +535,6 @@ class HiveSettingsDB {
   static void removeOpenStreetMapLink() {
     _hiveBox.delete(_openStreetMapLinkKey);
   }
-
-
 
   static const String _mapMenuVisibleKey = 'mapMenuVisiblePref';
 

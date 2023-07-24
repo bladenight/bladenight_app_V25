@@ -29,6 +29,6 @@ final appIdProvider = FutureProvider((ref) async {
 
 final oneSignalIdProvider = FutureProvider((ref) async {
   final status = await OneSignal.shared.getDeviceState();
-  final String osUserID = status?.userId ?? "-";
+  final String osUserID = status?.userId ?? '-';
   return osUserID;
 });

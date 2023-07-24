@@ -18,6 +18,7 @@ class LoggerHelper {
   Future<void> _setUpLogs() async {
     var loglevel = LogLevel.values
         .where((element) => element.index == HiveSettingsDB.flogLogLevel);
+
     LogsConfig config = LogsConfig()
       ..isDebuggable = true
       ..customClosingDivider = '|'
@@ -26,7 +27,8 @@ class LoggerHelper {
       ..encryptionEnabled = false
       ..encryptionKey = ''
       ..isDevelopmentDebuggingEnabled = true
-      ..activeLogLevel = loglevel.first // LogLevel.INFO
+      ..activeLogLevel =
+          kDebugMode ? LogLevel.TRACE : loglevel.first // LogLevel.INFO
       ..formatType = FormatType.FORMAT_CSV
       ..logLevelsEnabled = [
         LogLevel.INFO,
@@ -50,9 +52,9 @@ class LoggerHelper {
     if (!kIsWeb) FLog.applyConfigurations(config);
     if (!kIsWeb) {
       FLog.info(
-        className: toString(),
-        methodName: 'setUpLogs',
-        text: 'Setting up logs finished...Level:${getActiveLogLevel()}');
+          className: toString(),
+          methodName: 'setUpLogs',
+          text: 'Setting up logs finished...Level:${getActiveLogLevel()}');
     }
   }
 
@@ -98,8 +100,8 @@ class LoggerHelper {
                   FLog.getDefaultConfigurations().activeLogLevel = logLevel!;
                   if (!kIsWeb) {
                     FLog.info(
-                    text: 'Loglevel changed to ${logLevel?.name}',
-                  );
+                      text: 'Loglevel changed to ${logLevel?.name}',
+                    );
                   }
                   HiveSettingsDB.setFlogLevel(logLevel!.index);
 

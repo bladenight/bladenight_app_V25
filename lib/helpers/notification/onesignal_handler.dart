@@ -38,10 +38,10 @@ class OnesignalHandler {
 
       if (HiveSettingsDB.pushNotificationsEnabled == false) {
         HiveSettingsDB.setBladeGuardClick(false);
-        OnesignalHandler.registerPushAsBladeGuard(false, 0);
+        await OnesignalHandler.registerPushAsBladeGuard(false, 0);
 
-        HiveSettingsDB.setRcvSkatemunichInfos(false);
-        OnesignalHandler.registerSkateMunichInfo(false);
+         HiveSettingsDB.setRcvSkatemunichInfos(false);
+        await OnesignalHandler.registerSkateMunichInfo(false);
 
         await OneSignal.shared.disablePush(true);
 
@@ -95,12 +95,14 @@ class OnesignalHandler {
         }
       });
       // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-      OneSignal.shared
+     await OneSignal.shared
           .promptUserForPushNotificationPermission()
           .then((accepted) {
-        HiveSettingsDB.setPushNotificationsEnabled(accepted);
-        print('Accepted permission: $accepted');
+       HiveSettingsDB.setPushNotificationsEnabled(accepted);
+       print('Accepted Onesignal permission: $accepted');
       });
+
+
     } catch (e) {
       if (!kIsWeb) {
         FLog.error(text: 'Error initPushNotifications', exception: e);

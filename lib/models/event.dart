@@ -192,9 +192,8 @@ class Event with EventMappable implements Comparable {
         .catchError((error, stackTrace) => Event.rpcError(error));
     if (wampResult is Map<String, dynamic>) {
       var event = MapperContainer.globals.fromMap<Event>(wampResult);
-      HiveSettingsDB.setActualEventString(
-          MapperContainer.globals.toJson(event));
-      HiveSettingsDB.setActualEventLastUpdate(DateTime.now());
+      HiveSettingsDB.setActualEvent(event);
+      event.lastupdate=DateTime.now();
       return event;
     }
     if (wampResult is Event) {

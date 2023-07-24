@@ -56,30 +56,6 @@ class PreferencesHelper {
     return finalFriendId;
   }
 
-  ///Get and [Event] from preferences and return saved event or if nothing saved [Event.init]
-  static Future<Event> getEventFromPrefs() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final String? jsonData = prefs.getString(_nextEventPref);
-      if (jsonData != null) {
-        return MapperContainer.globals.fromJson<Event>(jsonData);
-      } else {
-        PreferencesHelper.saveEventToPrefs(Event.init);
-        return Event.init;
-      }
-    } catch (e) {
-      Event event = Event.init;
-      event.rpcException = e as Exception;
-      return event;
-    }
-  }
-
-  static Future<void> saveEventToPrefs(Event event) async {
-    final prefs = await SharedPreferences.getInstance();
-    event.lastupdate = DateTime.now();
-    String eventJson = MapperContainer.globals.toJson(event);
-    prefs.setString(_nextEventPref, eventJson);
-  }
 
   static Future<bool> getAutoStopFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
