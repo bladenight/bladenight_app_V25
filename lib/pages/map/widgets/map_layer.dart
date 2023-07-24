@@ -55,8 +55,8 @@ class _MapLayerState extends State<MapLayer> {
             widget.event.hasSpecialStartPoint
             ? null
             : LatLngBounds.fromPoints([
-          LatLng(kIsWeb ? 47.9579 : 48.0570, kIsWeb ? 11.8213 : 11.4416),
-          LatLng(kIsWeb ? 48.2349 : 48.2349, kIsWeb ? 11.2816 : 11.6213),
+          const LatLng(kIsWeb ? 47.9579 : 48.0570, kIsWeb ? 11.8213 : 11.4416),
+          const LatLng(kIsWeb ? 48.2349 : 48.2349, kIsWeb ? 11.2816 : 11.6213),
         ]),
         interactiveFlags: InteractiveFlag.all ^ InteractiveFlag.rotate,
         onTap: (_, __) => _popupLayerController.hideAllPopups(),
@@ -90,22 +90,24 @@ class _MapLayerState extends State<MapLayer> {
         PolylineLayer(
           polylines: widget.polyLines,
         ),
-        PopupMarkerLayerWidget(
+        PopupMarkerLayer(
           options: PopupMarkerLayerOptions(
-            popupSnap: PopupSnap.markerBottom,
+            popupDisplayOptions: PopupDisplayOptions(
+              builder: (BuildContext context, Marker marker) {
+                if (marker is BnMapMarker) {
+                  return MapMarkerPopup(marker);
+                } else if (marker is BnMapFriendMarker) {
+                  return MapFriendMarkerPopup(marker);
+                }
+                return Container();
+              },
+            snap:PopupSnap.markerBottom, animation: const PopupAnimation.fade(
+    duration: Duration(milliseconds: 200)),),
             markerCenterAnimation: const MarkerCenterAnimation(),
             markers: widget.markers,
             popupController: _popupLayerController,
-            popupBuilder: (BuildContext context, Marker marker) {
-              if (marker is BnMapMarker) {
-                return MapMarkerPopup(marker);
-              } else if (marker is BnMapFriendMarker) {
-                return MapFriendMarkerPopup(marker);
-              }
-              return Container();
-            },
-            popupAnimation: const PopupAnimation.fade(
-                duration: Duration(milliseconds: 200)),
+
+
             markerTapBehavior: MarkerTapBehavior.togglePopup(),
             // : MarkerTapBehavior.togglePopupAndHideRest(),
             onPopupEvent: (event, selectedMarkers) {

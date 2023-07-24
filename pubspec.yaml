@@ -16,7 +16,7 @@ dependencies:
   crypto: ^3.0.2
   cupertino_icons: ^1.0.4
   dart_mappable: ^3.1.1
-  device_info_plus: ^8.1.0
+  device_info_plus: ^9.0.2
   encrypt: ^5.0.1
   f_logs: ^2.0.1
   #f_logs:
@@ -30,10 +30,10 @@ dependencies:
   flutter_cache_manager: ^3.3.0
   flutter_device_type: ^0.4.0
   flutter_launcher_icons: ^0.13.1
-  flutter_local_notifications: ^14.1.0
+  flutter_local_notifications: ^15.1.0+1
   flutter_localization: ^0.1.10
-  flutter_map: ^4.0.0
-  flutter_map_marker_popup: ^4.0.1
+  flutter_map: ^5.0.0
+  flutter_map_marker_popup: ^5.1.0
   flutter_native_splash: ^2.3.0
   #flutter_platform_alert: ^0.4.0 not working on Android 6 fixed in git - sent pull request
   #to owner waiting for update
@@ -49,7 +49,7 @@ dependencies:
   internet_connection_checker: ^1.0.0+1
   intl: ^0.17.0
   intro_slider: ^4.2.0
-  latlong2: ^0.8.1
+  latlong2: ^0.9.0
     #location:
     #git:
     #url: https://github.com/fairuzmn/flutterlocation.git
@@ -71,14 +71,14 @@ dependencies:
       ref: main
       path: modal_bottom_sheet
   onesignal_flutter: ^3.4.1
-  package_info_plus: ^3.1.2
+  package_info_plus: ^4.0.2
   path_provider: ^2.0.15
   permission_handler: ^10.2.0
   popover: ^0.2.6+3
   riverpod_context: ^0.3.0
   rxdart: ^0.27.4
   settings_ui: ^2.0.2
-  share_plus: ^6.3.1
+  share_plus: ^7.0.2
   shared_preferences: ^2.1.1
   step_progress_indicator: ^1.0.2
   test: ^1.22.0
@@ -88,7 +88,13 @@ dependencies:
   universal_io: ^2.2.0
   url_launcher: ^6.1.10
   vector_math: ^2.1.4
-  wakelock: ^0.6.2
+  #wakelock: ^0.6.2
+  wakelock:
+    git:
+      url: https://github.com/xunreal75/wakelock.git
+      path: wakelock/
+      ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
+      #path: ../wakelock/wakelock
   web_socket_channel: ^2.3.0
   webview_flutter: ^4.0.7
 
@@ -103,6 +109,27 @@ dependency_overrides:
   # Remove when firebase_ui_firestore stops relying on 0.17.0.
   # https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_localizations/pubspec.yaml#L18
   intl: ^0.18.0
+  wakelock_windows:
+    git:
+      url: https://github.com/xunreal75/wakelock.git
+      path: wakelock_windows
+      ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
+  wakelock_platform_interface:
+    git:
+      url: https://github.com/xunreal75/wakelock.git
+      path: wakelock_platform_interface
+      ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
+  wakelock_macos:
+    git:
+      url: https://github.com/xunreal75/wakelock.git
+      path: wakelock_macos
+      ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
+  wakelock_web:
+    git:
+      url: https://github.com/xunreal75/wakelock.git
+      path: wakelock_web
+      ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
+
 
 # can't compile mapper while generate is set to true --> solve it by set to false , clean and rebuild
 flutter:

@@ -61,11 +61,6 @@ class LocationProvider with ChangeNotifier {
 
   Timer? _updateTimer;
 
-  bool _isConfirmed = false;
-
-  ///Track only when event is confirmed
-  bool get isConfirmed => _isConfirmed;
-
   bool _isMoving = false;
   String _lastRouteName = '';
   EventStatus? _eventState;
