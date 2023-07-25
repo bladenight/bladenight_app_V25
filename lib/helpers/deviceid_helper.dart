@@ -83,7 +83,7 @@ class DeviceId {
       }
       if (dev is IosDeviceInfo) {
         var info = dev;
-        return info.systemVersion ?? '0';
+        return info.systemVersion;
       }
       return '0';
     } catch (e) {

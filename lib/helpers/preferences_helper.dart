@@ -80,8 +80,9 @@ class PreferencesHelper {
       }
       return Future.value(links);
     } catch (e) {
-      if (!kIsWeb)
+      if (!kIsWeb) {
         FLog.error(text: 'Error Prefs get images and links', exception: e);
+      }
     }
     return ImageAndLinkList(<ImageAndLink>[]);
   }

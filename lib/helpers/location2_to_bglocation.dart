@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:location2/location2.dart';
 import 'package:universal_io/io.dart';
 
-import 'deviceid_helper.dart';
 import 'uuid_helper.dart';
 
 extension Location2Mapper on LocationData {

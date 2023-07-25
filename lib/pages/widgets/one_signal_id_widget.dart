@@ -23,7 +23,7 @@ class OneSignalIdWidget extends ConsumerWidget {
                     header: Text(Localize.of(context).oneSignalIdTitle),
                     children: <Widget>[CupertinoButton(child:
                       Text(
-                            '${Localize.of(context).oneSignalId}\n${oneSignalInfoData}',
+                            '${Localize.of(context).oneSignalId}\n$oneSignalInfoData',
                             textAlign: TextAlign.center), onPressed: (){
                       if(oneSignalInfoData!=''){
                       Share.share(oneSignalInfoData);}

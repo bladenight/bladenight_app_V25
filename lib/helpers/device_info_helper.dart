@@ -7,7 +7,7 @@ class DeviceHelper {
     try {
       var dev = await DeviceInfoPlugin().deviceInfo;
       var device = dev as IosDeviceInfo;
-      if (device.model != null && device.model == 'iPad') {
+      if (device.model == 'iPad') {
         return true;
       }
     } catch (e) {
@@ -22,7 +22,7 @@ class DeviceHelper {
     try {
       var dev = await DeviceInfoPlugin().deviceInfo;
       var device = dev as IosDeviceInfo;
-      platformVersion = double.tryParse(device.systemVersion ?? '0.0');
+      platformVersion = double.tryParse(device.systemVersion);
       if (platformVersion != null && platformVersion > 14.5) {
         return true;
       }

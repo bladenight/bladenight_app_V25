@@ -398,7 +398,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                     BnMapMarker(
                       buildContext: context,
                       headerText: Localize.of(context).finish,
-                      anchorPos: AnchorPos.align(AnchorAlign.bottom),
+                      anchorPosition: AnchorPos.align(AnchorAlign.bottom),
                       color: Colors.red,
                       width: 35.0,
                       height: 35.0,
@@ -421,7 +421,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                     BnMapMarker(
                       buildContext: context,
                       headerText: Localize.of(context).start,
-                      anchorPos: AnchorPos.align(AnchorAlign.top),
+                      anchorPosition: AnchorPos.align(AnchorAlign.top),
                       color: Colors.transparent,
                       width: 35.0,
                       height: 35.0,

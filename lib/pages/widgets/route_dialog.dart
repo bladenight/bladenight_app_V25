@@ -1,4 +1,4 @@
-import 'package:bladenight_app_flutter/pages/map/widgets/event_Info_overlay.dart';
+import '../map/widgets/event_info_overlay.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -73,7 +73,7 @@ class RouteDialog extends ConsumerWidget {
                           BnMapMarker(
                             buildContext: context,
                             headerText: Localize.of(context).finish,
-                            anchorPos: AnchorPos.align(AnchorAlign.bottom),
+                            anchorPosition: AnchorPos.align(AnchorAlign.bottom),
                             color: Colors.red,
                             width: 20.0,
                             height: 20.0,
@@ -95,7 +95,7 @@ class RouteDialog extends ConsumerWidget {
                           BnMapMarker(
                             buildContext: context,
                             headerText: Localize.of(context).start,
-                            anchorPos: AnchorPos.align(AnchorAlign.top),
+                            anchorPosition: AnchorPos.align(AnchorAlign.top),
                             color: Colors.transparent,
                             width: sizeValue,
                             height: sizeValue,

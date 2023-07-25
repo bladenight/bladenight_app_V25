@@ -54,8 +54,9 @@ class FriendsLogic with ChangeNotifier {
 
       var result = await FriendsMessage.getFriends(deviceId);
       if (result.exception != null) {
-        if (!kIsWeb)
+        if (!kIsWeb) {
           FLog.warning(text: 'refreshFriends read failed ${result.exception}');
+        }
         return;
       }
 

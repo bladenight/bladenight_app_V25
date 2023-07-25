@@ -109,25 +109,26 @@ dependency_overrides:
   # Remove when firebase_ui_firestore stops relying on 0.17.0.
   # https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_localizations/pubspec.yaml#L18
   intl: ^0.18.0
-  wakelock_windows:
+
+  wakelock_macos:
     git:
       url: https://github.com/xunreal75/wakelock.git
-      path: wakelock_windows
+      path: wakelock_macos
       ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
   wakelock_platform_interface:
     git:
       url: https://github.com/xunreal75/wakelock.git
       path: wakelock_platform_interface
       ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
-  wakelock_macos:
-    git:
-      url: https://github.com/xunreal75/wakelock.git
-      path: wakelock_macos
-      ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
   wakelock_web:
     git:
       url: https://github.com/xunreal75/wakelock.git
       path: wakelock_web
+      ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
+  wakelock_windows:
+    git:
+      url: https://github.com/xunreal75/wakelock.git
+      path: wakelock_windows
       ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
 
 

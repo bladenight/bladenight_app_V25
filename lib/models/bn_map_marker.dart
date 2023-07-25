@@ -16,7 +16,7 @@ class BnMapMarker extends Marker {
       this.distanceTailText,
       this.timeToTailText,
       this.rightWidget,
-      this.anchorPos,
+      this.anchorPosition,
       required this.buildContext,
       required height,
       required width,
@@ -26,7 +26,7 @@ class BnMapMarker extends Marker {
       : super(
             point: point,
             builder: builder,
-            anchorPos: anchorPos,
+            anchorPos: anchorPosition,
             width: width,
             height: height);
 
@@ -43,6 +43,6 @@ class BnMapMarker extends Marker {
   final String? distanceTailText;
   final String? timeToTailText;
   final Widget? rightWidget;
-  final AnchorPos? anchorPos;
+  final AnchorPos? anchorPosition;
   final BuildContext? buildContext;
 }
