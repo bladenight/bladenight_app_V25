@@ -66,7 +66,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
       case 'openStreetMap': //disable OSM via remote
         if (ial.text != null && ial.text!.trim() == '') {
           //enable OSM via remote // if empty don't change
-          HiveSettingsDB.removeOpenStreetMapLink();
+          MapSettings.removeOpenStreetMapLink();
         }
         if (ial.text != null && ial.text!.trim() == 'on') {
           //enable OSM via remote // if empty don't change
@@ -78,12 +78,73 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
         if (ial.link != null && ial.link!.isNotEmpty) {
           try {
             var decodedLink = utf8.decode(base64.decode(ial.link!.trim()));
-            HiveSettingsDB.setOpenStreetMapLink(decodedLink);
+            MapSettings.setOpenStreetMapLink(decodedLink);
           } catch (e) {
             if (!kIsWeb) {
               FLog.error(
                   text:
                       'Could not decode open street map link. Must be base64encoded $e');
+            }
+          }
+        }
+        ///Image contains subdomains for osm link
+        if (ial.image != null && ial.image!.isNotEmpty) {
+          MapSettings.setMapLinkSubdomains(ial.image!.trim());
+        }
+        break;
+      /*case 'openStreetMapDark': //disable OSM via remote
+        if (ial.link != null && ial.link!.trim().isEmpty) {
+          //enable OSM via remote // if empty remove link
+          HiveSettingsDB.removeOpenStreetMapDarkLink();
+        }
+        if (ial.link != null && ial.link!.isNotEmpty) {
+          try {
+            var decodedLink = utf8.decode(base64.decode(ial.link!.trim()));
+            HiveSettingsDB.setOpenStreetMapDarkLink(decodedLink);
+          } catch (e) {
+            if (!kIsWeb) {
+              FLog.error(
+                  text:
+                      'Could not decode open street dark map link. Must be base64encoded $e');
+            }
+          }
+        }
+
+        ///Image contains subdomains for osm link
+        if (ial.image != null && ial.image!.isNotEmpty) {
+          MapSettings.setMapLinkSubdomains(ial.image!.trim());
+        }
+        break;*/
+      case 'tileServerMapBoundsAndZoom':
+        if (ial.link != null && ial.link!.trim() == '') {
+          MapSettings.removeMapBoundaries();
+        }
+        if (ial.link != null && ial.link!.isNotEmpty) {
+          try {
+            MapSettings.setMapBoundaries(ial.link!);
+          } catch (e) {
+            if (!kIsWeb) {
+              FLog.error(
+                  text: 'Could not decode setTileServerMapBoundsAndZoom.$e');
+            }
+          }
+        }
+        if (ial.text != null && ial.text!.isNotEmpty) {
+          try {
+            var content = ial.text!.split(',');
+            if (content.length == 2) {
+              MapSettings.setMinZoom(double.parse(content[0]));
+              MapSettings.setMaxZoom(double.parse(content[1]));
+            } else if (content.length == 4) {
+              MapSettings.setMinZoom(double.parse(content[0]));
+              MapSettings.setMaxZoom(double.parse(content[1]));
+              MapSettings.setMinNativeZoom(int.parse(content[2]));
+              MapSettings.setMaxNativeZoom(int.parse(content[3]));
+            }
+          } catch (e) {
+            if (!kIsWeb) {
+              FLog.error(
+                  text: 'Could not decode setTileServerMapBoundsAndZoom. $e');
             }
           }
         }

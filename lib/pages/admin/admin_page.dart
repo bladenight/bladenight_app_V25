@@ -181,11 +181,13 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                     }
                   }
 
-                  setState(() => _activityVisible = false);
-                  setState(() => _resultText = 'KillServer gesendet!');
-                  setState(() => _resultTextVisibility = true);
-                  await Future.delayed(const Duration(seconds: 2));
-                  setState(() => _resultTextVisibility = false);
+                  _activityVisible = false;
+                  _resultText = 'Kill Server sent!';
+                  setState(() {});
+
+                  if (mounted) {
+                    Navigator.of(context).pop();
+                  }
                 }
               },
             ),

@@ -93,8 +93,9 @@ class PreferencesHelper {
       var prefString = MapperContainer.globals.toJson(ial);
       prefs.setString(_imagesAndLinksPref, prefString);
     } catch (e) {
-      if (!kIsWeb)
+      if (!kIsWeb) {
         FLog.error(text: 'Error Prefs set images and links', exception: e);
+      }
     }
   }
 }

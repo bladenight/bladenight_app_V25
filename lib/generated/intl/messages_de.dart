@@ -524,11 +524,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "speed": MessageLookupByLibrary.simpleMessage("Geschwindigkeit"),
         "start": MessageLookupByLibrary.simpleMessage("Startpunkt"),
         "startLocationWithoutParticipating":
-            MessageLookupByLibrary.simpleMessage(
-                "Starte Position ohne Teilnahme"),
+            MessageLookupByLibrary.simpleMessage("Tracking ohne Teilnahme"),
         "startLocationWithoutParticipatingInfo":
             MessageLookupByLibrary.simpleMessage(
-                "Achtung, dies startet die Standortdarstellung der Karte ohne Teilnahme am Zug und überträgt zur Berechnung der Zeiten den Standort auf den Server. Der Modus muss manuell beendet werden. Soll dies gestartet werden."),
+                "Bitte Aufmerksam lesen.\nDies startet die Standortdarstellung auf der Karte ohne Teilnahme an der BladeNight und überträgt zur Berechnung der Zeiten deinen Standort auf den Server. Deine Freunde im Zug werden Dir angezeigt. Die Zeit zum Zuganfang /-ende von deinem Standort werden berechnet. Weiterhin, werden deine Geschwindigkeit und Trackingdaten aufgezeichnet die du speichern kannst. Bitte diese Funktion nicht verwenden, wenn du an der BladeNight teilnimmst. Der Modus muss manuell beendet werden. \nSoll dies gestartet werden?"),
         "startParticipationTracking": MessageLookupByLibrary.simpleMessage(
             "Teilnahme an BladeNight starten"),
         "startPoint": MessageLookupByLibrary.simpleMessage(

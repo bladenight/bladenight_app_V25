@@ -16,7 +16,7 @@ import 'data_loading_indicator.dart';
 import 'no_data_warning.dart';
 
 class RouteDialog extends ConsumerWidget {
-  RouteDialog({required this.event, Key? key}) : super(key: key);
+  const RouteDialog({required this.event, Key? key}) : super(key: key);
 
   final Event event;
 
@@ -29,13 +29,10 @@ class RouteDialog extends ConsumerWidget {
     );
   }
 
-  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-      GlobalKey<ScaffoldMessengerState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScaffoldMessenger(
-      key: scaffoldMessengerKey,
       child: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           middle:

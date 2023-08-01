@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
@@ -15,14 +14,15 @@ import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
 
 class MapLayer extends StatefulWidget {
-  const MapLayer({required this.event,
-    required this.startPoint,
-    required this.finishPoint,
-    this.location,
-    this.markers = const [],
-    this.polyLines = const [],
-    this.controller,
-    Key? key})
+  const MapLayer(
+      {required this.event,
+      required this.startPoint,
+      required this.finishPoint,
+      this.location,
+      this.markers = const [],
+      this.polyLines = const [],
+      this.controller,
+      Key? key})
       : super(key: key);
 
   final LatLng? location;
@@ -47,40 +47,52 @@ class _MapLayerState extends State<MapLayer> {
     return FlutterMap(
       mapController: widget.controller,
       options: MapOptions(
-        zoom: 13.0,
-        minZoom: 5,
-        maxZoom: HiveSettingsDB.openStreetMapEnabled ? 18 : 18,
+        keepAlive: true,
+        zoom: 12.0,
+        minZoom: HiveSettingsDB.openStreetMapEnabled
+            ? MapSettings.minZoom
+            : MapSettings.minZoomDefault,
+        maxZoom: HiveSettingsDB.openStreetMapEnabled
+            ? MapSettings.maxZoom
+            : MapSettings.maxZoomDefault,
         center: widget.startPoint,
         maxBounds: HiveSettingsDB.openStreetMapEnabled ||
-            widget.event.hasSpecialStartPoint
-            ? null
-            : LatLngBounds.fromPoints([
-          const LatLng(kIsWeb ? 47.9579 : 48.0570, kIsWeb ? 11.8213 : 11.4416),
-          const LatLng(kIsWeb ? 48.2349 : 48.2349, kIsWeb ? 11.2816 : 11.6213),
-        ]),
+                widget.event.hasSpecialStartPoint
+            ? MapSettings.mapOnlineBoundaries
+            : MapSettings.mapOfflineBoundaries,
         interactiveFlags: InteractiveFlag.all ^ InteractiveFlag.rotate,
         onTap: (_, __) => _popupLayerController.hideAllPopups(),
       ),
       children: [
         _darkModeContainerIfEnabled(
           TileLayer(
-            minNativeZoom: 5,
-            maxNativeZoom: HiveSettingsDB.openStreetMapEnabled ? 15 : 15,
+            minNativeZoom: HiveSettingsDB.openStreetMapEnabled
+                ? MapSettings.minNativeZoom
+                : MapSettings.minNativeZoomDefault,
+            maxNativeZoom: HiveSettingsDB.openStreetMapEnabled
+                ? MapSettings.maxNativeZoom
+                : MapSettings.maxNativeZoomDefault,
+            minZoom: HiveSettingsDB.openStreetMapEnabled
+                ? MapSettings.minZoom
+                : MapSettings.minZoomDefault,
+            maxZoom: HiveSettingsDB.openStreetMapEnabled
+                ? MapSettings.maxZoom
+                : MapSettings.maxZoomDefault,
             urlTemplate: HiveSettingsDB.openStreetMapEnabled ||
-                widget.event.hasSpecialStartPoint
-                ? HiveSettingsDB.openStreetMapLinkString  //use own ts
+                    widget.event.hasSpecialStartPoint
+                ? MapSettings.openStreetMapLinkString //use own ts
                 : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
             evictErrorTileStrategy:
-            EvictErrorTileStrategy.notVisibleRespectMargin,
+                EvictErrorTileStrategy.notVisibleRespectMargin,
             tileProvider: HiveSettingsDB.openStreetMapEnabled ||
-                widget.event.hasSpecialStartPoint
+                    widget.event.hasSpecialStartPoint
                 ? CachedTileProvider(errorListener: () {
-              print('CachedTileProvider errorListener');
-            })
+                    print('CachedTileProvider errorListener');
+                  })
                 : AssetTileProvider(),
             subdomains: HiveSettingsDB.openStreetMapEnabled ||
-                widget.event.hasSpecialStartPoint
-                ? ['a', 'b', 'c']
+                    widget.event.hasSpecialStartPoint
+                ? MapSettings.mapLinkSubdomains
                 : <String>[],
             errorImage: const AssetImage(
               'assets/images/skatemunichmaperror.png',
@@ -101,12 +113,13 @@ class _MapLayerState extends State<MapLayer> {
                 }
                 return Container();
               },
-            snap:PopupSnap.markerBottom, animation: const PopupAnimation.fade(
-    duration: Duration(milliseconds: 200)),),
+              snap: PopupSnap.markerBottom,
+              animation: const PopupAnimation.fade(
+                  duration: Duration(milliseconds: 200)),
+            ),
             markerCenterAnimation: const MarkerCenterAnimation(),
             markers: widget.markers,
             popupController: _popupLayerController,
-
 
             markerTapBehavior: MarkerTapBehavior.togglePopup(),
             // : MarkerTapBehavior.togglePopupAndHideRest(),

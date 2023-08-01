@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:universal_io/io.dart';
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:universal_io/io.dart';
 
 import '../../generated/l10n.dart';
 import '../../providers/version_provider.dart';
@@ -26,7 +25,8 @@ class VersionWidget extends ConsumerWidget {
                 style: CupertinoTheme.of(context).textTheme.navActionTextStyle),
             Container(
               child: Platform.isAndroid || kIsWeb
-                  ? Text(appInfoData.version,
+                  ? Text(
+                      '${appInfoData.version} (build:${appInfoData.buildNumber})',
                       style: CupertinoTheme.of(context)
                           .textTheme
                           .navTitleTextStyle)

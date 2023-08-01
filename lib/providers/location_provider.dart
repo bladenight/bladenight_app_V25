@@ -507,7 +507,7 @@ class LocationProvider with ChangeNotifier {
             methodName: '_stopTracking');
       }
       _isTracking = state.enabled;
-
+      _realUserSpeedKmh = null;
       _userLatLng = null;
       //reset autostart
       //avoid second autostart on an event , reset after end

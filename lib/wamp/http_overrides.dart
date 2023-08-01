@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' show HttpClient;
 
 import 'package:universal_io/io.dart' hide HttpClient;
 

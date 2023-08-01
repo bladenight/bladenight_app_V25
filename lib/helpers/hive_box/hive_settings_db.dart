@@ -4,13 +4,15 @@ import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../models/event.dart';
 
-part 'app_settings.dart';
+part 'map_settings.dart';
 
 final hiveDBProvider =
     StateProvider<HiveSettingsDB>((ref) => HiveSettingsDB.instance);
@@ -469,7 +471,6 @@ class HiveSettingsDB {
     return _hiveBox.get(_actualEventStringKey, defaultValue: '');
   }
 
-
   ///Get actual [Event] from preferences and
   ///return saved event or if nothing saved [Event.init]
   static get getActualEvent {
@@ -519,22 +520,6 @@ class HiveSettingsDB {
     _hiveBox.put(_eventsMapKey, val);
   }
 
-  static const String _openStreetMapLinkKey = 'openStreetMapLinkPref';
-
-  ///get openStreetMapLinkAsString
-  static String get openStreetMapLinkString {
-    return _hiveBox.get(_openStreetMapLinkKey,
-        defaultValue: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-  }
-
-  ///set openStreetMapLinkString
-  static void setOpenStreetMapLink(String val) {
-    _hiveBox.put(_openStreetMapLinkKey, val);
-  }
-
-  static void removeOpenStreetMapLink() {
-    _hiveBox.delete(_openStreetMapLinkKey);
-  }
 
   static const String _mapMenuVisibleKey = 'mapMenuVisiblePref';
 

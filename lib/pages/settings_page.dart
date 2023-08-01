@@ -658,32 +658,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                         ),
                                       ),
                                     ]),
-                                CupertinoFormSection(
-                                    header: Text(
-                                        Localize.of(context).openStreetMap),
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20, right: 20),
-                                        child: DataLeftRightContent(
-                                          descriptionLeft: Localize.of(context)
-                                              .openStreetMapText,
-                                          descriptionRight: '',
-                                          rightWidget: CupertinoSwitch(
-                                            onChanged: (val) {
-                                              HiveSettingsDB
-                                                  .setOpenStreetMapEnabled(val);
-                                              setState(() {});
-                                            },
-                                            value: HiveSettingsDB
-                                                .openStreetMapEnabled,
-                                          ),
-                                        ),
-                                      ),
-                                    ]),
-                                const SizedBox(
-                                  height: 10,
-                                ),
                                 const SizedBox(
                                   height: 15,
                                 ),

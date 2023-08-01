@@ -219,7 +219,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
   void toggleViewerLocationService() async {
     if (LocationProvider.instance.isTracking) {
       await LocationProvider.instance
-          .toggleProcessionTracking(userIsParticipant: true);
+          .toggleProcessionTracking(userIsParticipant: false);
       return;
     }
     final clickedButton = await FlutterPlatformAlert.showCustomAlert(
@@ -637,7 +637,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                       label: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          '${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()}  ${HiveSettingsDB.useAlternativeLocationProvider?'': '${lp.odometer.toStringAsFixed(1)} km'} ${alwaysPermissionGranted ? "" : "!"}',
+                          '${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()}  ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${lp.odometer.toStringAsFixed(1)} km'} ${alwaysPermissionGranted ? "" : "!"}',
                           style: CupertinoTheme.of(context)
                               .textTheme
                               .navTitleTextStyle,
@@ -645,7 +645,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                       ),
                       onPressed: () async {
                         if (alwaysPermissionGranted) {
-                           resetOdoMeterAndRoutePoints();
+                          resetOdoMeterAndRoutePoints();
                         } else {
                           var reqResult =
                               await FlutterPlatformAlert.showCustomAlert(
@@ -655,7 +655,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                                   text:
                                       '${alwaysPermissionGranted ? "" : "\n${Localize.of(context).onlyWhileInUse}"} \n'
                                       '${Localize.of(context).userSpeed} ${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()} \n'
-                                      '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider?'': '${lp.odometer.toStringAsFixed(1)} km'}\n'
+                                      '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${lp.odometer.toStringAsFixed(1)} km'}\n'
                                       '${Localize.of(context).resetLongPress}',
                                   positiveButtonTitle: Localize.of(context)
                                       .openOperatingSystemSettings,
@@ -818,6 +818,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
               }),
             ),
           //Left located buttons
+
           Positioned(
             left: 10,
             bottom: 50,
@@ -891,7 +892,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                 if (!kIsWeb)
                   Positioned(
                     left: 10,
-                    bottom: 300, //same height as qrcode in web
+                    bottom: 350, //same height as qrcode in web
                     height: 40,
                     child: Builder(builder: (context) {
                       var isActive = context.watch(
@@ -901,14 +902,14 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                         return currentRoute.when(data: (data) {
                           return FloatingActionButton(
                               heroTag: 'barcodeBtnTag',
-                              backgroundColor: Colors.blueAccent,
+                              backgroundColor: Colors.blue,
                               onPressed: () {
                                 _showLiveMapLink(context
                                     .read(LiveMapImageAndLink.provider)
                                     .link);
                               },
                               child: const Icon(
-                                CupertinoIcons.map,
+                                CupertinoIcons.qrcode,
                                 color: Colors.white,
                               ));
                         }, error: (err, stack) {
@@ -916,6 +917,33 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                         }, loading: () {
                           return Container();
                         });
+                      } else {
+                        return Container();
+                      }
+                    }),
+                  ),
+                if (!kIsWeb)
+                  Positioned(
+                    left: 10,
+                    bottom: HiveSettingsDB.mapMenuVisible ? 300 : 100,
+                    height: 40,
+                    child: Builder(builder: (context) {
+                      var isTracking = context.watch(
+                          locationProvider.select((it) => it.isTracking));
+                      if (!isTracking) {
+                        return FloatingActionButton(
+                          heroTag: 'viewerBtnTag',
+                          backgroundColor: Colors.blue,
+                          onPressed: () {
+                            toggleViewerLocationService();
+                          },
+                          child: const Icon(CupertinoIcons.eye_solid,
+                              color: CupertinoColors.white),
+                          /*CupertinoAdaptiveTheme.of(context).brightness ==
+                                Brightness.light
+                            ? context.watch(ThemePrimaryDarkColor.provider)
+                            : context.watch(ThemePrimaryColor.provider)),*/
+                        );
                       } else {
                         return Container();
                       }
@@ -1028,36 +1056,30 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
     );
   }
 
-  void resetOdoMeterAndRoutePoints()async{
+  void resetOdoMeterAndRoutePoints() async {
     var lp = LocationProvider.instance;
     var alwaysPermissionGranted =
-    (lp.gpsLocationPermissionsStatus ==
-        LocationPermissionStatus.always);
+        (lp.gpsLocationPermissionsStatus == LocationPermissionStatus.always);
     var whenInusePermissionGranted =
-    (lp.gpsLocationPermissionsStatus ==
-        LocationPermissionStatus.whenInUse);
+        (lp.gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse);
     if (alwaysPermissionGranted || whenInusePermissionGranted) {
-      var odometerResetResult =
-          await FlutterPlatformAlert.showCustomAlert(
-          windowTitle:
-          Localize.current.resetOdoMeterTitle,
+      var odometerResetResult = await FlutterPlatformAlert.showCustomAlert(
+          windowTitle: Localize.current.resetOdoMeterTitle,
           text:
-          '${Localize.of(context).userSpeed}  ${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()}\n'
-              '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider?'': '${lp.odometer.toStringAsFixed(1)} km'} \n '
+              '${Localize.of(context).userSpeed}  ${lp.realUserSpeedKmh == null ? '- km/h' : lp.realUserSpeedKmh.formatSpeedKmH()}\n'
+              '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${lp.odometer.toStringAsFixed(1)} km'} \n '
               '${Localize.current.resetOdoMeter}',
           iconStyle: IconStyle.warning,
           positiveButtonTitle: Localize.current.yes,
           negativeButtonTitle: Localize.current.cancel);
-      if (odometerResetResult ==
-          CustomButton.positiveButton) {
+      if (odometerResetResult == CustomButton.positiveButton) {
         lp.resetTrackPoints();
         bg.BackgroundGeolocation.setOdometer(0.0)
             .then((value) => setState(() {}))
             .catchError((error) {
           showToast(message: Localize.of(context).failed);
           if (!kIsWeb) {
-            FLog.error(
-                text: '[resetOdometer] ERROR: $error');
+            FLog.error(text: '[resetOdometer] ERROR: $error');
           }
         });
       }

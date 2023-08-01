@@ -8,6 +8,7 @@ import '../models/color_mapper.dart';
 
 final sharedPrefs = FutureProvider<SharedPreferences>((_) async {
   return await SharedPreferences.getInstance()
+      // ignore: invalid_return_type_for_catch_error
       .catchError((error) => print(error));
 });
 

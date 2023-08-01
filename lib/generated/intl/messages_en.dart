@@ -508,17 +508,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "specialfunction": MessageLookupByLibrary.simpleMessage(
             "Special functions - change only when you know what you do!"),
         "speed": MessageLookupByLibrary.simpleMessage("Speed"),
-        "start": MessageLookupByLibrary.simpleMessage("Startpoint"),
+        "start": MessageLookupByLibrary.simpleMessage("Start point"),
         "startLocationWithoutParticipating":
             MessageLookupByLibrary.simpleMessage(
                 "Start location without participating"),
         "startLocationWithoutParticipatingInfo":
             MessageLookupByLibrary.simpleMessage(
-                "Attention, this will start the location display on the map without participating the BladeNight. Your location data will anonymously transfered at the server to calculate the times. This mode must be ended manually by pressing stop button. Shall this be started."),
+                "Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and tracking data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?"),
         "startParticipationTracking":
             MessageLookupByLibrary.simpleMessage("Start participation"),
         "startPoint": MessageLookupByLibrary.simpleMessage(
-            "Startpoint\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe Munich"),
+            "Start point\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe Munich"),
         "startPointTitle":
             MessageLookupByLibrary.simpleMessage("Where is the start?"),
         "startTime": MessageLookupByLibrary.simpleMessage("Start time"),
