@@ -11,6 +11,8 @@ import MapKit
 
 class CommunicationHandler: NSObject, ObservableObject {
     private let session:WCSession
+    @Published var activeEvent:WatchEvent = WatchEvent(title:"Nächste BladeNight", startDate: "-", duration: 240, routeName: "-", status: "-", routeLength: "0 m", startPointLatitude: nil, startPointLongitude: nil, startPoint: nil, lastUpdate: nil)
+    @Published var updateEventDataLastUpdate = "-"
     @Published var activeEventRouteName = ""
     @Published var activeEventRouteStatusText = ""
     @Published var activeEventRouteDate = ""
@@ -25,8 +27,10 @@ class CommunicationHandler: NSObject, ObservableObject {
     @Published var userSpeed=""
     @Published var isCompanionAppInstalled=false;
     @Published var realTimeData = RealtimeUpdate(head: nil, tail: nil, user: nil, runningLength: 0.0, routeName: "-", usr: nil);
+    @Published var realTimeDataLastUpdate = "-"
     @Published var locations:[Location]=[Location]()
     @Published var friends:[Friend]=[Friend]()
+    @Published var friendDataLastUpdate:String = "-"
     @Published var userlocation:Location?
     @Published var routePoints:RoutePoints?
     @Published var message:String = "Start"
@@ -42,6 +46,7 @@ class CommunicationHandler: NSObject, ObservableObject {
         case setElapsedDistanceLength
         case setRunningLength
         case setUserSpeed
+        case updateEvent
         case updateRealtimeData
         case updateUserLocationData
         case updateFriends
@@ -55,6 +60,7 @@ class CommunicationHandler: NSObject, ObservableObject {
         case sendNavToggleToFlutter
         case getEventDataFromFlutter
         case getLocationIsTracking
+        case getFriendsDataFromFlutter
     }
     
     init(session: WCSession = .default) {
@@ -97,6 +103,7 @@ extension CommunicationHandler: WCSessionDelegate {
         if (watchReachable){
             sendDataMessage(for: .getEventDataFromFlutter);
             sendDataMessage(for: .getLocationIsTracking);
+            sendDataMessage(for: .getFriendsDataFromFlutter);
         }
     }
     
@@ -136,11 +143,32 @@ extension CommunicationHandler: WCSessionDelegate {
     }
     
     private func session(session: WCSession, didFinishUserInfoTransfer userInfoTransfer: WCSessionUserInfoTransfer, error: NSError?) {
-        NSLog(userInfoTransfer.description + " " + (error?.localizedDescription ?? "No error"))
+        NSLog("CommunicationHandler didFinishUserInfoTransfer" + userInfoTransfer.description + " " + (error?.localizedDescription ?? "No error"))
     }
+    
+    private func session(session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]){
+        print(applicationContext)
+        self.handleIncomingMessages(message:applicationContext);
+    }
+    
     
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
         // handle receiving user info
         self.handleIncomingMessages(message:userInfo);
     }
+    
+
+       func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
+           print("CommunicationHandler: ", "didFinish userInfoTransfer")
+       }
+
+     
+
+       func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) {
+           print("CommunicationHandler: ", "didFinish fileTransfer")
+       }
+
+       func session(_ session: WCSession, didReceive file: WCSessionFile) {
+           print("CommunicationHandler: ", "didReceive file")
+       }
 }

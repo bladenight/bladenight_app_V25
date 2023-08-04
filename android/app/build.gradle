@@ -13,7 +13,7 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '2362'
+    flutterVersionCode = '2363'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
@@ -39,9 +39,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
     compileSdk 33
-    //flutter.compileSdkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

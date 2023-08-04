@@ -36,6 +36,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
+      context.read(activeEventProvider).refresh(forceUpdate: true);
     });
   }
 
@@ -48,8 +49,8 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      ProviderContainer().read(activeEventProvider).refresh(forceUpdate: true);
-      ProviderContainer().read(locationProvider).refresh(forceUpdate: true);
+      context.read(activeEventProvider).refresh(forceUpdate: true);
+      context.read(locationProvider).refresh(forceUpdate: true);
     }
   }
 

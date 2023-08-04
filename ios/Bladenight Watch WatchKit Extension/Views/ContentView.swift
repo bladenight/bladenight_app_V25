@@ -13,10 +13,17 @@ struct ContentView: View {
     @StateObject var viewModel = CommunicationHandler()
     @State var tabSelection = 0
     
+    
+    
     //let timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
-    
     var body: some View {
+        let timer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { (_) in
+            print("send timed datarequest from iphone")
+            viewModel.sendDataMessage(for: .getEventDataFromFlutter)
+            
+           }
+
         TabView(selection: $tabSelection) {
             EventView(tabSelection: $tabSelection).environmentObject(viewModel)
                 .tag(0)
@@ -27,10 +34,11 @@ struct ContentView: View {
                 if (viewModel.isLocationTracking){
                     FriendsView(tabSelection: $tabSelection).environmentObject(viewModel).tag(3)}
             }
-            //LogView(tabSelection: $tabSelection).environmentObject(viewModel).tag(4)
+            AboutView(tabSelection: $tabSelection).environmentObject(viewModel).tag(5)
+            LogView(tabSelection: $tabSelection).environmentObject(viewModel).tag(4)
             //MapView(tabSelection: $tabSelection).environmentObject(viewModel).tag(5)
             
-        }.tabViewStyle(.automatic).indexViewStyle(.page(backgroundDisplayMode: .automatic))
+        }.tabViewStyle(.automatic).indexViewStyle(.page(backgroundDisplayMode: .never))
         /*.onReceive(timer) {
          _ in
          

@@ -77,6 +77,15 @@ extension Friend{
         return "- s"
     }
     
+    func getLastUpdateString()->String{
+        let date = Date(timeIntervalSince1970:  TimeInterval(self.timestamp/1000))
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = NSLocale.current
+        dateFormatter.dateFormat = "dd-MM-yy HH:mm:ss"
+        return dateFormatter.string(from: date)
+       
+    }
+    
     /*func getSpeedString()->String{
         Double speed = 0;
         if (realSpeed != nil) {speed = realSpeed!};

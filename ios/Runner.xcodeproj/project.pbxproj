@@ -41,11 +41,13 @@
 		46FC8A8328C3C94700407BB5 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46FC8A8228C3C94700407BB5 /* LogView.swift */; };
 		46FC8A8528C5AF3600407BB5 /* DistanceConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46FC8A8428C5AF3600407BB5 /* DistanceConverter.swift */; };
 		4B403649F0AB60C43221112A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D97977E4A022AD00497110AC /* GoogleService-Info.plist */; };
-		5E3E58EE3865BDD07841071C /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC4F01258B00D3ABFA3DF6E /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		889CCD27BE51F7330FDF40B0 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 044DE8C38BEDED3A7E4BE1CE /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
-		C4E2169ECEBDE4C3FDB251FF /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F3C2343F0CA203C4ABB8A82 /* Pods_OneSignalNotificationServiceExtension.framework */; };
+		C37C656811008FDAB362F551 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B73DE6792A0D62C9BA1F412 /* Pods_OneSignalNotificationServiceExtension.framework */; };
+		E2584CC02A7CE09B00346A03 /* WatchEventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */; };
+		E2584CC22A7D1F3100346A03 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CC12A7D1F3100346A03 /* AboutView.swift */; };
 		E2C23F1C29D4DDF000E06959 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */; };
 		E2C23F2229D4E87C00E06959 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F2129D4E87C00E06959 /* Images.xcassets */; };
 /* End PBXBuildFile section */
@@ -135,10 +137,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		10E44BA94DDE69760C66E712 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		044DE8C38BEDED3A7E4BE1CE /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		21FA755E35EA09823D2771D8 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		3F8505BD5A3D04BFD8373E6B /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		4302D16B6105FA39B7E122E5 /* Pods-OneSignalNotificationServiceExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.profile.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.profile.xcconfig"; sourceTree = "<group>"; };
 		46015A3B28B21F1500B1C8D0 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		46015A3D28B21F2500B1C8D0 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		46015A3F28B2C83100B1C8D0 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
@@ -183,24 +188,23 @@
 		46F4DBB228AF952C008E3AB9 /* SessionDelegator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDelegator.swift; sourceTree = "<group>"; };
 		46FC8A8228C3C94700407BB5 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		46FC8A8428C5AF3600407BB5 /* DistanceConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceConverter.swift; sourceTree = "<group>"; };
-		4F3C2343F0CA203C4ABB8A82 /* Pods_OneSignalNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneSignalNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
-		87EB839C887D670716224A1D /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
-		8EA866C93B1685E89E1177E3 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		8EF5657076B64320128EF2AE /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97C146FB1CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B2B22A80779A6ABE2783D825 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
-		BEC4F01258B00D3ABFA3DF6E /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B73DE6792A0D62C9BA1F412 /* Pods_OneSignalNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneSignalNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A34C87B04C6BE0551F7CA7E9 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		B67507D916D6FBF6B0EE0808 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		D97977E4A022AD00497110AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEventModel.swift; sourceTree = "<group>"; };
+		E2584CC12A7D1F3100346A03 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		E2C23F2129D4E87C00E06959 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		FE65465DCDEBFB586E122A36 /* Pods-OneSignalNotificationServiceExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.profile.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.profile.xcconfig"; sourceTree = "<group>"; };
+		F25926828209105BEFE4CA0B /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,7 +233,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4E2169ECEBDE4C3FDB251FF /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */,
+				C37C656811008FDAB362F551 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,7 +241,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E3E58EE3865BDD07841071C /* Pods_Runner.framework in Frameworks */,
+				889CCD27BE51F7330FDF40B0 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,6 +309,7 @@
 				46015A4828B3E84500B1C8D0 /* EventDetailView.swift */,
 				4618B21428C010E2006D3F6A /* FriendsView.swift */,
 				46FC8A8228C3C94700407BB5 /* LogView.swift */,
+				E2584CC12A7D1F3100346A03 /* AboutView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -336,6 +341,7 @@
 				46015A4128B2D10600B1C8D0 /* RealTimeDataModel.swift */,
 				468B3A5928B8AAD0006A50F8 /* RoutePointsModel.swift */,
 				4618B21028BFFD7A006D3F6A /* FriendModel.swift */,
+				E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -356,8 +362,8 @@
 			children = (
 				4609AD4428A98B0400219A59 /* HealthKit.framework */,
 				4609AD4228A9814700219A59 /* HealthKit.framework */,
-				BEC4F01258B00D3ABFA3DF6E /* Pods_Runner.framework */,
-				4F3C2343F0CA203C4ABB8A82 /* Pods_OneSignalNotificationServiceExtension.framework */,
+				9B73DE6792A0D62C9BA1F412 /* Pods_OneSignalNotificationServiceExtension.framework */,
+				044DE8C38BEDED3A7E4BE1CE /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -426,12 +432,12 @@
 		CF747FC8B35BEB56F72E6AFC /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				8EF5657076B64320128EF2AE /* Pods-Runner.debug.xcconfig */,
-				10E44BA94DDE69760C66E712 /* Pods-Runner.release.xcconfig */,
-				B2B22A80779A6ABE2783D825 /* Pods-Runner.profile.xcconfig */,
-				8EA866C93B1685E89E1177E3 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
-				87EB839C887D670716224A1D /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
-				FE65465DCDEBFB586E122A36 /* Pods-OneSignalNotificationServiceExtension.profile.xcconfig */,
+				F25926828209105BEFE4CA0B /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				A34C87B04C6BE0551F7CA7E9 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
+				4302D16B6105FA39B7E122E5 /* Pods-OneSignalNotificationServiceExtension.profile.xcconfig */,
+				21FA755E35EA09823D2771D8 /* Pods-Runner.debug.xcconfig */,
+				3F8505BD5A3D04BFD8373E6B /* Pods-Runner.release.xcconfig */,
+				B67507D916D6FBF6B0EE0808 /* Pods-Runner.profile.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -513,7 +519,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 46CF9BA928CDEC3900041078 /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
 			buildPhases = (
-				C9C102B65417C55D63EEFA13 /* [CP] Check Pods Manifest.lock */,
+				2CE21FB54C82860D014E6710 /* [CP] Check Pods Manifest.lock */,
 				46CF9B9B28CDEC3900041078 /* Sources */,
 				46CF9B9C28CDEC3900041078 /* Frameworks */,
 				46CF9B9D28CDEC3900041078 /* Resources */,
@@ -531,17 +537,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
-				71EB64F69A15A39D958872B5 /* [CP] Check Pods Manifest.lock */,
+				0BE98EBD85219CF4493D6263 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				C1994EE3E4174F40E9A78174 /* [CP] Embed Pods Frameworks */,
 				4668156628A8F45700504AF6 /* Embed Watch Content */,
 				46CF9BAD28CDEC3900041078 /* Embed App Extensions */,
 				1AD21EDCC20C9BB56646814A /* [firebase_crashlytics] Crashlytics Upload Symbols */,
+				183926AB039BF40DE19B1916 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -666,43 +672,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1AD21EDCC20C9BB56646814A /* [firebase_crashlytics] Crashlytics Upload Symbols */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}\"",
-				"\"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)\"",
-			);
-			name = "[firebase_crashlytics] Crashlytics Upload Symbols";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --flutter-project \"$PROJECT_DIR/firebase_app_id_file.json\" ";
-		};
-		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
-			);
-			name = "Thin Binary";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
-		};
-		71EB64F69A15A39D958872B5 /* [CP] Check Pods Manifest.lock */ = {
+		0BE98EBD85219CF4493D6263 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -724,22 +694,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9740EEB61CF901F6004384FC /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
-		};
-		C1994EE3E4174F40E9A78174 /* [CP] Embed Pods Frameworks */ = {
+		183926AB039BF40DE19B1916 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -827,7 +782,27 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C9C102B65417C55D63EEFA13 /* [CP] Check Pods Manifest.lock */ = {
+		1AD21EDCC20C9BB56646814A /* [firebase_crashlytics] Crashlytics Upload Symbols */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}\"",
+				"\"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)\"",
+			);
+			name = "[firebase_crashlytics] Crashlytics Upload Symbols";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --flutter-project \"$PROJECT_DIR/firebase_app_id_file.json\" ";
+		};
+		2CE21FB54C82860D014E6710 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -849,6 +824,37 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
+			);
+			name = "Thin Binary";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+		};
+		9740EEB61CF901F6004384FC /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -858,8 +864,10 @@
 			files = (
 				4668154128A8F45500504AF6 /* NotificationController.swift in Sources */,
 				46FC8A8528C5AF3600407BB5 /* DistanceConverter.swift in Sources */,
+				E2584CC22A7D1F3100346A03 /* AboutView.swift in Sources */,
 				46015A4228B2D10600B1C8D0 /* RealTimeDataModel.swift in Sources */,
 				46F4DBB128AB7052008E3AB9 /* ExtensionDelegate.swift in Sources */,
+				E2584CC02A7CE09B00346A03 /* WatchEventModel.swift in Sources */,
 				4668153F28A8F45500504AF6 /* ContentView.swift in Sources */,
 				46742C0128C3A9700024CCDA /* DateTimeFormatter.swift in Sources */,
 				46015A3E28B21F2500B1C8D0 /* MapView.swift in Sources */,
@@ -1020,7 +1028,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Debug.plist";
@@ -1032,7 +1040,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1059,14 +1067,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
@@ -1096,7 +1104,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1104,7 +1112,7 @@
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
 				PRODUCT_NAME = Bladenight;
@@ -1133,14 +1141,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
 				PRODUCT_NAME = Bladenight;
@@ -1165,7 +1173,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1183,7 +1191,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
@@ -1210,7 +1218,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1228,7 +1236,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1253,7 +1261,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1271,7 +1279,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1455,7 +1463,7 @@
 		};
 		46CF9BAA28CDEC3900041078 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8EA866C93B1685E89E1177E3 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			baseConfigurationReference = F25926828209105BEFE4CA0B /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1466,7 +1474,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1479,7 +1487,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
@@ -1493,7 +1501,7 @@
 		};
 		46CF9BAB28CDEC3900041078 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 87EB839C887D670716224A1D /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			baseConfigurationReference = A34C87B04C6BE0551F7CA7E9 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1504,7 +1512,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1517,7 +1525,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1530,7 +1538,7 @@
 		};
 		46CF9BAC28CDEC3900041078 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FE65465DCDEBFB586E122A36 /* Pods-OneSignalNotificationServiceExtension.profile.xcconfig */;
+			baseConfigurationReference = 4302D16B6105FA39B7E122E5 /* Pods-OneSignalNotificationServiceExtension.profile.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1541,7 +1549,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1554,7 +1562,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1687,7 +1695,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Debug.plist";
@@ -1699,7 +1707,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1724,7 +1732,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2362;
+				CURRENT_PROJECT_VERSION = 2363;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Release.plist";
@@ -1736,7 +1744,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.62;
+				MARKETING_VERSION = 1.0.63;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

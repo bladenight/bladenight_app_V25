@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:intl/intl.dart';
 
 import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
@@ -172,6 +173,20 @@ class Event with EventMappable implements Comparable {
       return 150;
     }
     return 0;
+  }
+
+  String get  statusText {
+    return '${Localize.current.status}: ${Intl.select(status, {
+      EventStatus.pending: Localize.current.pending,
+      EventStatus.confirmed:
+      Localize.current.confirmed,
+      EventStatus.cancelled:
+      Localize.current.canceled,
+      EventStatus.noevent: Localize.current.noEvent,
+      EventStatus.running: Localize.current.running,
+      EventStatus.finished: Localize.current.finished,
+      'other': Localize.current.unknown
+    })}';
   }
 
   static Future<Event> getEventWamp({bool forceUpdate = false}) async {

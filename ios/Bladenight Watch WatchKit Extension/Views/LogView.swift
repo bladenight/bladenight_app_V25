@@ -19,6 +19,6 @@ struct LogView: View {
 
 struct LogView_Previews: PreviewProvider {
     static var previews: some View {
-        LogView(tabSelection: .constant(4))
+        LogView(tabSelection: .constant(5))
     }
 }

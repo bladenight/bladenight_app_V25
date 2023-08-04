@@ -23,6 +23,7 @@ import 'models/route.dart' as p16;
 import 'models/route_names.dart' as p17;
 import 'models/shake_hand_result.dart' as p18;
 import 'models/shake_hands.dart' as p19;
+import 'models/watchEvent.dart' as p20;
 
 void initializeMappers() {
   p0.EventMapper.ensureInitialized();
@@ -48,4 +49,6 @@ void initializeMappers() {
   p17.RouteNamesMapper.ensureInitialized();
   p18.ShakeHandResultMapper.ensureInitialized();
   p19.ShakeHandMapper.ensureInitialized();
+  p20.WatchEventMapper.ensureInitialized();
+  p20.WatchEventsMapper.ensureInitialized();
 }

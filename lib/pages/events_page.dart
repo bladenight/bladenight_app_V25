@@ -22,11 +22,15 @@ class EventsPage extends StatefulWidget {
 
 class _EventsPageState extends State<EventsPage> {
   final dataKey = GlobalKey();
+  late ScrollController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.animateTo(1000,
+          duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
       _scrollToActualEvent();
     });
   }
@@ -50,6 +54,7 @@ class _EventsPageState extends State<EventsPage> {
     return CupertinoTabView(builder: (context) {
       return CupertinoPageScaffold(
         child: CustomScrollView(
+          controller: _controller,
           physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics(),
           ),
@@ -232,19 +237,31 @@ Widget _listTile(
             ),
           ),
           Column(children: [
+            if (event.participants > 0)
+              Row(
+                children: [
+                  const Icon(
+                    Icons.emoji_events_rounded,
+                    color: Colors.greenAccent,
+                  ),
+                  const Icon(CupertinoIcons.person_2_fill),
+                  const SizedBox(width: 5,),
+                  Text(event.participants.toString(),style: const TextStyle(fontWeight: FontWeight.bold),),
+                ],
+              ),
             if (event.status == EventStatus.pending)
               const Icon(
-                CupertinoIcons.clock,
+                CupertinoIcons.time,
                 color: Colors.grey,
               ),
             if (event.status == EventStatus.cancelled)
               const Icon(
-                CupertinoIcons.clear,
+                Icons.cancel_rounded,
                 color: Colors.redAccent,
               ),
-            if (event.status == EventStatus.confirmed)
+            if (event.status == EventStatus.confirmed && event.participants <=0)
               const Icon(
-                CupertinoIcons.check_mark,
+                Icons.emoji_events_rounded,
                 color: Colors.greenAccent,
               ),
             if (event.status == EventStatus.running)
@@ -257,15 +274,11 @@ Widget _listTile(
                 Icons.home_outlined,
                 color: Colors.orange,
               ),
-            if (event.participants > 0)
-              Row(
-                children: [
-                  const Icon(CupertinoIcons.person_2_fill),
-                  Text(event.participants.toString()),
-                ],
-              ),
           ]),
-          const Icon(CupertinoIcons.info),
+          const SizedBox(
+            width: 10,
+          ),
+          const Icon(CupertinoIcons.map),
         ],
       ),
     ),

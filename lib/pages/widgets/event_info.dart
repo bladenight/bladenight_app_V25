@@ -39,6 +39,9 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
+      //call on first start
+      context.read(locationProvider).refresh(forceUpdate: true);
+
     });
   }
 

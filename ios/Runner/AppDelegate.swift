@@ -29,6 +29,7 @@ import WatchConnectivity
             session!.delegate = self;
             session!.activate();
         }
+        clearOldWatchTransfers()
         
         GeneratedPluginRegistrant.register(with: self);
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -40,14 +41,14 @@ import WatchConnectivity
         
     }
     
-   /* func registerBackgroundPlugins(){
-        //update Event in background
-        WorkmanagerPlugin.registerTask(withIdentifier: backgroundTaskName)
-        //important next lines-> when not registered backgroundtask fails with MissingPluginException
-        WorkmanagerPlugin.setPluginRegistrantCallback { registry in
-            GeneratedPluginRegistrant.register(with: registry)
-        }
-    }*/
+    /* func registerBackgroundPlugins(){
+     //update Event in background
+     WorkmanagerPlugin.registerTask(withIdentifier: backgroundTaskName)
+     //important next lines-> when not registered backgroundtask fails with MissingPluginException
+     WorkmanagerPlugin.setPluginRegistrantCallback { registry in
+     GeneratedPluginRegistrant.register(with: registry)
+     }
+     }*/
     
     override func applicationWillTerminate(_ application: UIApplication) {
         guard let watchSession = self.session, watchSession.isPaired else {
@@ -79,6 +80,20 @@ import WatchConnectivity
         
     }
     
+    private func clearOldWatchTransfers(){
+        guard let watchSession = self.session, watchSession.isPaired else {
+            return
+            
+        }
+        let outStanding = watchSession.outstandingUserInfoTransfers
+        for  item in outStanding{
+            
+            item.cancel()
+            
+        }
+        
+    }
+    
     
     private func initFlutterChannel() {
         if let controller = window?.rootViewController as? FlutterViewController {
@@ -98,7 +113,23 @@ import WatchConnectivity
                         //debugPrint("flutterToWatchTransferUserInfo failed. ")
                         return
                     }
+                    
                     let watchData: [String: Any] = ["method": method, "data": data]
+                    let outStanding = watchSession.outstandingUserInfoTransfers
+                    let hasData = false
+                    
+                    
+                    for  item in outStanding{
+                        let userInfo = item.userInfo
+                        var values = userInfo[method as! String]
+                        if (values != nil){
+                            item.cancel()
+                        }
+                    }
+                    
+                    //if (hasData!=nil){
+                    //   outStanding.removeAll(where: <#T##(WCSessionUserInfoTransfer) throws -> Bool#>)
+                    //}
                     // Pass the receiving message to Apple Watch
                     watchSession.transferUserInfo(watchData)
                     //debugPrint("flutterToWatchTransferUserInfo channel finished \(watchData)")
@@ -124,15 +155,31 @@ import WatchConnectivity
                     result(true)
                     
                 case "flutterToWatch":
-                    guard let watchSession = self?.session, watchSession.isPaired, watchSession.isReachable, let methodData = call.arguments as? [String: Any], let method = methodData["method"], let data = methodData["data"] else {
+                    guard let watchSession = self?.session, watchSession.isPaired,watchSession.isWatchAppInstalled, let methodData = call.arguments as? [String: Any], let method = methodData["method"], let data = methodData["data"] else {
                         result(false)
                         return
                     }
                     
                     let watchData: [String: Any] = ["method": method, "data": data]
-                    
-                    // Pass the receiving message to Apple Watch
-                    watchSession.sendMessage(watchData, replyHandler: nil, errorHandler: nil)
+                    print("flutterToWatch reachable: \(watchSession.isReachable) \(data)")
+                    if (watchSession.isReachable){
+                        
+                        // Pass the receiving message to Apple Watch
+                        watchSession.sendMessage(watchData, replyHandler: {
+                            (replyMessage) in
+                            print("Got a reply from the phone: \(replyMessage)")
+                            
+                            // handle reply message here
+                            
+                        }, errorHandler: { (error) in
+                            print("Got an error sending to the phone: \(error)")
+                            watchSession.transferCurrentComplicationUserInfo(watchData)
+                        })
+                        
+                    }
+                    else {
+                        watchSession.transferCurrentComplicationUserInfo(watchData)
+                    }
                     result(true)
                 default:
                     result(FlutterMethodNotImplemented)
@@ -206,7 +253,7 @@ extension AppDelegate: WCSessionDelegate {
                 let channel = FlutterMethodChannel(
                     name: "bladenightchannel",
                     binaryMessenger: controller.binaryMessenger)
-                channel.invokeMethod("sendWakeupToFlutter", arguments: [])
+                channel.invokeMethod("sendWakeupToFlutter", arguments:  [String : Any]() )
                 channel.invokeMethod(method, arguments: userInfo[method])
             }
         }

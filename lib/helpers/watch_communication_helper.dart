@@ -1,83 +1,40 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:universal_io/io.dart';
 
-import '../generated/l10n.dart';
 import '../models/event.dart';
 import '../models/moving_point.dart';
 import '../models/route.dart';
+import '../models/watchEvent.dart';
 import '../providers/active_event_notifier_provider.dart';
 import '../providers/location_provider.dart';
-import 'timeconverter_helper.dart';
+import 'preferences_helper.dart';
 
 const MethodChannel channel = MethodChannel('bladenightchannel');
 const String flutterToWatch = 'flutterToWatch';
 const String transferUserInfo = 'flutterToWatchTransferUserInfo';
 const String transferApplicationContext =
     'flutterToWatchTransferApplicationContext';
+const String updateApplicationContext =
+    'updateApplicationContext';
+const String updateEventMethod = 'updateEvent';
 
 class SendToWatch {
   static updateEvent(Event event) {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
-    setConfirmationStatus(event.status == EventStatus.confirmed);
-    eventRouteName(event.routeName);
-    var dateString = DateFormatter(Localize.current)
-        .getLocalDayDateTimeRepresentation(event.getUtcIso8601DateTime);
-    eventStartDate(dateString);
-    var eventStateText =
-        '${Localize.current.status}: ${Intl.select(event.status, {
-          EventStatus.pending: Localize.current.pending,
-          EventStatus.confirmed: Localize.current.confirmed,
-          EventStatus.cancelled: Localize.current.canceled,
-          EventStatus.noevent: Localize.current.noEvent,
-          EventStatus.running: Localize.current.running,
-          EventStatus.finished: Localize.current.finished,
-          'other': Localize.current.unknown
-        })}';
-    eventStatusText(eventStateText);
-  }
-
-  static eventRouteName(String routeName) {
-    if (kIsWeb) {
-      return;
-    }
+    //convert to WatchEventModel included translations
+    var watchEvent = WatchEvent.copyFrom(event).toJson();
     channel.invokeMethod(
-        flutterToWatch, {'method': 'setActiveEventName', 'data': routeName});
-  }
-
-  static eventStartDate(String startDate) {
-    if (kIsWeb) {
-      return;
-    }
-    if (kDebugMode) {
-      //not userdata and appcontext in debug transfer
-      channel.invokeMethod(
-          flutterToWatch, {'method': 'eventStartDate', 'data': startDate});
-    } else {
-      channel.invokeMethod(transferUserInfo,
-          {'method': 'setActiveEventDate', 'data': startDate});
-    }
-  }
-
-  static eventStatusText(String statusText) {
-    if (kIsWeb) {
-      return;
-    }
-    channel.invokeMethod(flutterToWatch,
-        {'method': 'setActiveEventStatusText', 'data': statusText});
-  }
-
-  static setConfirmationStatus(bool status) {
-    channel.invokeMethod(
-        flutterToWatch, {'method': 'setConfirmationStatus', 'data': status});
+        flutterToWatch, {'method': updateEventMethod, 'data': watchEvent});
   }
 
   static updateRealtimeData(String? realTimeUpdate) {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
     if (kDebugMode) {
@@ -90,7 +47,7 @@ class SendToWatch {
   }
 
   static setRoutePoints(RoutePoints? routePoints) {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
     if (routePoints == null) {
@@ -103,7 +60,7 @@ class SendToWatch {
   }
 
   static setIsLocationTracking(bool isTracking) {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
     if (kDebugMode) {
@@ -116,7 +73,7 @@ class SendToWatch {
   }
 
   static setElapsedDistanceLength(double distance) {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
     channel.invokeMethod(flutterToWatch,
@@ -124,7 +81,7 @@ class SendToWatch {
   }
 
   static setRunningLength(double rlength) {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
     channel.invokeMethod(
@@ -132,15 +89,15 @@ class SendToWatch {
   }
 
   static setUserSpeed(String uSpeed) {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
     channel.invokeMethod(
-        flutterToWatch, {'method': 'setUserSpeed', 'data': uSpeed});
+        transferUserInfo, {'method': 'setUserSpeed', 'data': uSpeed});
   }
 
   static void updateUserLocationData(MovingPoint userMovingPoint) {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
     channel.invokeMethod(flutterToWatch,
@@ -148,13 +105,13 @@ class SendToWatch {
   }
 
   static void phoneAppWillTerminate() {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
     if (kDebugMode) {
       //no userdata and appcontext in debug transfer
       channel.invokeMethod(
-          flutterToWatch, {'method': 'phoneAppWillTerminate', 'data': ''});
+          transferUserInfo, {'method': 'phoneAppWillTerminate', 'data': ''});
     } else {
       channel.invokeMethod(
           transferUserInfo, {'method': 'phoneAppWillTerminate', 'data': ''});
@@ -162,26 +119,20 @@ class SendToWatch {
   }
 
   static void updateFriends(String friendsJsonsArray) {
-    if (kIsWeb) {
+    if (!Platform.isIOS) {
       return;
     }
     if (kDebugMode) {
       //no userdata and appcontext in debug transfer
-      channel.invokeMethod(flutterToWatch,
+      channel.invokeMethod(transferUserInfo,
           {'method': 'updateFriends', 'data': friendsJsonsArray});
     } else {
-      channel.invokeMethod(transferApplicationContext,
+      channel.invokeMethod(
+          transferUserInfo, //transferApplicationContext
           {'method': 'updateFriends', 'data': friendsJsonsArray});
     }
   }
 }
-
-//class ReceiveFromWatch {
-/* static final ReceiveFromWatch instance = ReceiveFromWatch._();
-
-  ReceiveFromWatch._() {
-    _initFlutterChannel();
-  }*/
 
 Future<void> initFlutterChannel() async {
   channel.setMethodCallHandler((call) async {
@@ -228,6 +179,22 @@ Future<void> initFlutterChannel() async {
             FLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'getLocationIsTracking',
+                text: '$e');
+          }
+        }
+        break;
+      case 'getFriendsDataFromFlutter':
+        print('getFriendsDataFromFlutter received');
+        try {
+          var friendList = await PreferencesHelper.getFriendsFromPrefs();
+          var friendListAsJson = MapperContainer.globals.toJson(friendList);
+          print('send friends to watch $friendListAsJson');
+          SendToWatch.updateFriends(friendListAsJson);
+        } catch (e) {
+          if (!kIsWeb) {
+            FLog.error(
+                className: 'watchCommunication_helper',
+                methodName: 'getFriendsDataFromFlutter',
                 text: '$e');
           }
         }

@@ -14,25 +14,23 @@ struct EventView: View {
     @State private var showingStopAlert = false
     
     var body: some View {
-        
-        if(viewModel.watchReachable){
-            
-            VStack {
-                if(viewModel.activeEventRouteName.isEmpty){
-                    Text("Warte auf Daten vom iPhone ...").onTapGesture(count: 1) {
-                        viewModel.sendDataMessage(for: .getEventDataFromFlutter)
+        ScrollView{
+            if(viewModel.watchReachable){
+                
+                VStack {
+                    if(viewModel.activeEvent.lastUpdate == nil){
+                        Text("Warte auf Daten vom iPhone ...").onTapGesture(count: 1) {
+                            viewModel.sendDataMessage(for: .getEventDataFromFlutter)
+                        }
+                        ProgressView().padding()
+                        
                     }
-                    ProgressView().padding()
+                    Text("\(viewModel.activeEvent.title)")
+                    Text("\(viewModel.activeEvent.routeName)").bold().frame(maxWidth: .infinity, alignment: .center)
+                    Text("\(viewModel.activeEvent.startDate)").multilineTextAlignment(.center).border(.yellow)
+                        .lineLimit(3)
+                    Text("\(viewModel.activeEvent.status)").bold()
                     
-                }
-                else{
-                    Text("nächste Bladenight")
-                    Text("\(viewModel.activeEventRouteName)").bold().frame(maxWidth: .infinity, alignment: .center)
-                    ;
-                    Text("\(viewModel.activeEventRouteDate)").multilineTextAlignment(.center).border(.yellow)
-                    
-                    
-                    Text("\(viewModel.activeEventRouteStatusText)").bold();
                     
                     if(!viewModel.isLocationTracking){
                         Button(action:{
@@ -42,35 +40,43 @@ struct EventView: View {
                             Image(systemName: "play")
                         })
                     }
-                }
-                if(viewModel.isLocationTracking){
-                    Button("Stoppe Tracking") {
-                        showingStopAlert = true
+                    Text("Status vom \(viewModel.activeEvent.lastUpdate ?? "-")")
+                        .frame( alignment: .center)
+                        .font(.system(size: 8));
+                    Text("Daten vom \(viewModel.updateEventDataLastUpdate)")
+                        .frame( alignment: .center)
+                        .font(.system(size: 8));
+                    
+                    
+                    if(viewModel.isLocationTracking){
+                        Button("Stoppe Tracking") {
+                            showingStopAlert = true
+                        }
+                        .alert("Tracking und Unterstützung der Bladenight-Darstellung beenden?", isPresented: $showingStopAlert) {
+                            Button("Ja") {
+                                viewModel.sendDataMessage(for: .sendNavToggleToFlutter)
+                                tabSelection = 1
+                                showingStopAlert = false }
+                            Button("Nein") { showingStopAlert = false}
+                            
+                        }
                     }
-                    .alert("Tracking und Unterstützung der Bladenight-Darstellung beenden?", isPresented: $showingStopAlert) {
-                        Button("Ja") {
-                            viewModel.sendDataMessage(for: .sendNavToggleToFlutter)
-                            tabSelection = 1
-                            showingStopAlert = false }
-                        Button("Nein") { showingStopAlert = false}
-                        
-                    }
+                }.onAppear(){
+                    debugPrint("Eventview onAppear main")
+                    viewModel.sendDataMessage(for: .getEventDataFromFlutter)
                 }
-            }.onAppear(){
-                let ui:[String:Any]=["getEventDataFromFlutter":0.0]
-                _ = viewModel.transferUserInfo(userInfo:ui)
-                viewModel.sendDataMessage(for: .getEventDataFromFlutter)
+                
+                
+            } else{
+                VStack {
+                    Text("Bladenight-App auf Telefon nicht geöffnet oder keine Verbindung").multilineTextAlignment(.leading)
+                    ProgressView().padding()
+                }.onAppear(){
+                    debugPrint("Eventview onAppear no data")
+                    viewModel.sendDataMessage(for: .getEventDataFromFlutter)
+                }
             }
             
-            
-        } else{
-            VStack {
-                Text("Bladenight-App auf Telefon nicht geöffnet oder keine Verbindung zum Telefon").multilineTextAlignment(.leading)
-                ProgressView().padding()
-            }.onAppear(){
-                let _:[String:Any]=["getEventDataFromFlutter":0.0]
-                viewModel.sendDataMessage(for: .getEventDataFromFlutter)
-            }
         }
     }
 }

@@ -16,6 +16,13 @@ extension CommunicationHandler{
             guard let method = message["method"] as? String, let enumMethod = WatchReceiveMessageMethod(rawValue: method) else {
                 return
             }
+            let myFormat = Date.FormatStyle()
+                .year()
+                .day()
+                .month()
+                .hour()
+                .minute()
+                .second()
             switch enumMethod {
             case .setActiveEventDate:
                 self.activeEventRouteDate = (message["data"] as? String) ?? "-"
@@ -69,7 +76,26 @@ extension CommunicationHandler{
                 self.runningLength = (message["data"] as? String) ?? "-"
                 break
             case .setUserSpeed:
-                self.userSpeed = (message["data"] as? String) ?? "-"
+                self.userSpeed = (message["data"] as? String) ?? "- km/h"
+                break
+            case .updateEvent:
+                do{
+                    let jsonString = (message["data"] as? String);
+                    let decoder=JSONDecoder();
+                    if jsonString == nil {break;}
+                    
+                    else{
+                        self.message += (jsonString ?? "--")
+                        let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: false) ?? Data()
+                        let  data = try decoder.decode(WatchEvent.self, from: bytes)
+                        self.activeEvent = data
+                        self.updateEventDataLastUpdate = Date.now.formatted(myFormat)
+                    }
+                }
+                catch {
+                    NSLog("\(Date()) fatalerror updateFriends \(error)")
+                    //self.message += error.localizedDescription
+                }
                 break
             case .updateUserLocationData:
                 let jsonString = (message["data"] as? String);
@@ -125,6 +151,8 @@ extension CommunicationHandler{
                         let headAndTailLoc = self.realTimeData.getLocations();
                         self.locations[1] = headAndTailLoc[0];
                         self.locations[2] = headAndTailLoc[1];
+                        
+                        self.realTimeDataLastUpdate = Date.now.formatted(myFormat)
                     }
                     debugPrint("updateRealtimeData locations received \(self.locations)")
                     
@@ -150,6 +178,7 @@ extension CommunicationHandler{
                         self.friends = data
                         
                     }
+                    self.friendDataLastUpdate = Date.now.formatted(myFormat)
                 }
                 catch {
                     NSLog("\(Date()) fatalerror updateFriends \(error)")

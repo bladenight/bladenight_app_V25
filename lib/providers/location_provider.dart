@@ -203,7 +203,7 @@ class LocationProvider with ChangeNotifier {
     _isInBackground = value;
   }
 
-  ///Initalizes BackgroundLocationPlugin
+  ///Initializes BackgroundLocationPlugin
   Future<bg.State?> _startBackgroundGeolocation() async {
     try {
       bg.BackgroundGeolocation.onLocation(_onLocation, _onLocationError);
@@ -345,7 +345,7 @@ class LocationProvider with ChangeNotifier {
     } else {
       _userTrackingPoints.add(userTrackingPoint);
     }
-    //calculate realspeed
+    //calculate real speed
     var lastFive = _userTrackingPoints.toList().reversed.take(5);
     if (lastFive.isEmpty) {
       _realUserSpeedKmh = 0.0;
@@ -358,9 +358,7 @@ class LocationProvider with ChangeNotifier {
     }
 
     _lastKnownPoint = location;
-    SendToWatch.setUserSpeed('${realSpeedKmH.toStringAsFixed(1)} km/h');
-    SendToWatch.setIsLocationTracking(isTracking);
-
+    SendToWatch.setUserSpeed('${realSpeedKmH.toStringAsFixed(1)} km/h ${odometer.toStringAsFixed(1)} km');
     int maxSize = 250;
     if (_userTrackingPoints.length > maxSize) {
       var smallTrackPointList = <LatLng>[];
@@ -776,17 +774,10 @@ class LocationProvider with ChangeNotifier {
         FLog.trace(
           className: toString(),
           methodName: 'sendLocation',
-          text: 'no Network ignore send location',
+          text: 'no network ignore send location',
         );
       }
       return;
-    }
-    if (!kIsWeb) {
-      FLog.trace(
-        className: toString(),
-        methodName: 'sendLocation',
-        text: 'will sendLocation timeDiff: $timeDiff',
-      );
     }
     //only result of this message contains friend position - requested [RealTimeUpdates] without location
     update = await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
@@ -827,6 +818,8 @@ class LocationProvider with ChangeNotifier {
       if (friendList != null) {
         var friendListAsJson =
             MapperContainer.globals.toJson(friendList.toList());
+
+        print('send Friends to watch $friendListAsJson');
         SendToWatch.updateFriends(friendListAsJson);
       }
     }
@@ -886,9 +879,9 @@ class LocationProvider with ChangeNotifier {
                 methodName: 'refresh',
                 text: update.rpcException.toString());
           }
-          _realUserSpeedKmh = 0.0;
-          SendToWatch.setUserSpeed('0.0 - km/h');
-          SendToWatch.setIsLocationTracking(isTracking);
+          _realUserSpeedKmh = null;
+          SendToWatch.setUserSpeed('- km/h');
+          _updateWatchData();
           if (!_isInBackground) {
             notifyListeners();
           }
@@ -1056,14 +1049,7 @@ class LocationProvider with ChangeNotifier {
   void _updateWatchData() {
     try {
       if (kIsWeb) return;
-      //SendToWatch.setIsLocationTracking(_isTracking);
-      MovingPoint userMovingPoint = MovingPoint(
-          position: -1,
-          speed: (_realUserSpeedKmh ?? 0.0).toInt(),
-          realSpeed: (_realUserSpeedKmh ?? 0.0),
-          latitude: _userLatLng?.latitude,
-          longitude: _userLatLng?.longitude);
-      SendToWatch.updateUserLocationData(userMovingPoint);
+      SendToWatch.setIsLocationTracking(isTracking);
       if (_realtimeUpdate != null) {
         SendToWatch.updateRealtimeData(_realtimeUpdate?.toJson());
       }

@@ -68,6 +68,9 @@ class ActiveEventProvider extends ChangeNotifier {
           _event = rpcEvent.copyWith(status:  EventStatus.finished);
         }*/
         _event = rpcEvent;
+        if (kDebugMode) {
+          print('SendToWatch aep72  update Event $event' );
+        }
         SendToWatch.updateEvent(rpcEvent);
         var oldEventInPrefs =  HiveSettingsDB.getActualEvent;
         //get routepoints on eventupdate to update Map
@@ -87,6 +90,9 @@ class ActiveEventProvider extends ChangeNotifier {
       print(e);
       _event = HiveSettingsDB.getActualEvent;
       _providerLastUpdate = DateTime.now();
+      if (kDebugMode) {
+        print('SendToWatch aep94  update Event $event' );
+      }
       SendToWatch.updateEvent(event);
     }
     notifyListeners();
@@ -104,7 +110,7 @@ class ActiveEventProvider extends ChangeNotifier {
         _startPoint = _routePoints.first;
         _finishPoint = _routePoints.last;
       }
-      SendToWatch.setRoutePoints(route);
+      //SendToWatch.setRoutePoints(route);
     } else {
       _routePoints = <LatLng>[];
     }

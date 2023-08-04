@@ -19,6 +19,11 @@ struct FriendsView: View {
             }
             Text("Freunde aktiv \(viewModel.friends.count)")
             List(viewModel.friends){friend in FriendRow(friend: friend)}
+            Text("Daten am: \(viewModel.friendDataLastUpdate)").frame(maxWidth: .infinity, alignment: .leading)
+            .font(.system(size: 9))
+        }.onAppear(){ viewModel.sendDataMessage(for: .getFriendsDataFromFlutter)
+        } .onTapGesture(count: 1) {
+            viewModel.sendDataMessage(for: .getFriendsDataFromFlutter)
         }
     }
 }
@@ -29,10 +34,26 @@ struct FriendRow: View {
     var body: some View {
         VStack{
             Text("\(friend.name)").bold().frame(maxWidth: .infinity, alignment: .leading)
-            Text("Zeit: \(friend.getTimeDistanceString())").frame(maxWidth: .infinity, alignment: .leading)
-            Text("GPS Distanz:  \(friend.getGpsDistanceString())").frame(maxWidth: .infinity, alignment: .leading)
-            Text("gef. Strecke: \( friend.getDistanceString())").frame(maxWidth: .infinity, alignment: .leading)
-        
+            VStack{
+                HStack{
+                    Text("Entfernung:").frame( alignment: .leading)
+                        .font(.system(size: 10))
+                    Text("\(friend.getTimeDistanceString())").frame(maxWidth: .infinity, alignment: .trailing)
+                    
+                }
+                HStack{
+                    Text("Luftlinie:").frame( alignment: .leading)
+                        .font(.system(size: 10))
+                    Text("\(friend.getGpsDistanceString())").frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                HStack{
+                    Text("gef. im Zug:").frame( alignment: .leading)
+                        .font(.system(size: 10))
+                    Text("\(friend.getDistanceString())").frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                Text("am: \(friend.getLastUpdateString())").frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.system(size: 9))
+            }
         }
     }
 }
