@@ -18,8 +18,8 @@ extension CommunicationHandler{
             }
             let myFormat = Date.FormatStyle()
                 .year()
-                .day()
-                .month()
+                .day(.twoDigits)
+                .month(.twoDigits)
                 .hour()
                 .minute()
                 .second()

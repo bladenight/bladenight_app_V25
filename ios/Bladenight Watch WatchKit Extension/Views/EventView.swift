@@ -43,10 +43,6 @@ struct EventView: View {
                     Text("Status vom \(viewModel.activeEvent.lastUpdate ?? "-")")
                         .frame( alignment: .center)
                         .font(.system(size: 8));
-                    Text("Daten vom \(viewModel.updateEventDataLastUpdate)")
-                        .frame( alignment: .center)
-                        .font(.system(size: 8));
-                    
                     
                     if(viewModel.isLocationTracking){
                         Button("Stoppe Tracking") {
@@ -63,6 +59,9 @@ struct EventView: View {
                     }
                 }.onAppear(){
                     debugPrint("Eventview onAppear main")
+                    viewModel.sendDataMessage(for: .getEventDataFromFlutter)
+                    viewModel.sendDataMessage(for: .getLocationIsTracking)
+                }.onTapGesture(count: 1) {
                     viewModel.sendDataMessage(for: .getEventDataFromFlutter)
                 }
                 

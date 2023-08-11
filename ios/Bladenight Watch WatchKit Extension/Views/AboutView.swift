@@ -8,6 +8,7 @@
 import SwiftUI
 
 extension Bundle {
+     
     public var appName: String           { getInfo("CFBundleName") }
     public var displayName: String       { getInfo("CFBundleDisplayName") }
     public var language: String          { getInfo("CFBundleDevelopmentRegion") }
@@ -22,12 +23,28 @@ extension Bundle {
 }
 
 struct AboutView: View {
+    @EnvironmentObject var viewModel: CommunicationHandler
+  
     @Binding var tabSelection: Int
     var body: some View {
         VStack{
             Text("App Info")
             Text(" \(Bundle.main.displayName)")
             Text("Version \(Bundle.main.appVersionLong) (\(Bundle.main.appBuild))")
+            Divider()
+                .frame(height: 2)
+                .overlay(.yellow)
+                Text("Eventstatus vom \(viewModel.activeEvent.lastUpdate ?? "-")")
+                    .frame( alignment: .leading)
+                    .font(.system(size: 10));
+                Text("Eventdaten vom \(viewModel.updateEventDataLastUpdate)")
+                    .frame( alignment: .leading)
+                    .font(.system(size: 10));
+                Text("Freundedaten vom \(viewModel.friendDataLastUpdate)")
+                    .frame( alignment: .leading)
+                    .font(.system(size: 10))
+                
+        
            
             
         }

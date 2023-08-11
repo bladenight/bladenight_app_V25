@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:f_logs/f_logs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
@@ -40,8 +40,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
       //call on first start
-      context.read(locationProvider).refresh(forceUpdate: true);
-
+      //
     });
   }
 
@@ -61,7 +60,8 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
       initEventUpdates(forceUpdate: true);
       context.read(locationProvider).refresh(forceUpdate: true);
     }
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
       _updateTimer?.cancel();
     }
   }
@@ -70,14 +70,13 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
     // first start
     context.read(activeEventProvider).refresh(forceUpdate: forceUpdate);
     context.refresh(updateImagesAndLinksProvider);
+    //await Future.delayed(const Duration(seconds: 5));
+    LocationProvider.instance.refresh(forceUpdate: true);
     _updateTimer?.cancel();
     _updateTimer = Timer.periodic(
-      const Duration(minutes: 5),
+      const Duration(minutes: 10),
       (timer) {
         if (!mounted) return;
-        if (kDebugMode) {
-          print('refresh active Event periodic');
-        }
         context.read(activeEventProvider).refresh();
       },
     );
@@ -130,21 +129,33 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                               .navLargeTitleTextStyle),
                     ),
                   ),
-                  Text(
-                      '${Localize.of(context).status}: ${Intl.select(nextEventProvider.event.status, {
-                            EventStatus.pending: Localize.of(context).pending,
-                            EventStatus.confirmed:
-                                Localize.of(context).confirmed,
-                            EventStatus.cancelled:
-                                Localize.of(context).canceled,
-                            EventStatus.noevent: Localize.of(context).noEvent,
-                            EventStatus.running: Localize.of(context).running,
-                            EventStatus.finished: Localize.of(context).finished,
-                            'other': Localize.of(context).unknown
-                          })}',
-                      style:
-                          CupertinoTheme.of(context).textTheme.pickerTextStyle),
-                  const SizedBox(height: 1),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: nextEventProvider.event.status ==
+                                EventStatus.cancelled
+                            ? Colors.redAccent
+                            : nextEventProvider.event.status ==
+                                    EventStatus.confirmed
+                                ? Colors.green
+                                : Colors.transparent,
+                        borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
+                            topLeft: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0)),
+                      ),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(nextEventProvider.event.statusText,
+                            style: CupertinoTheme.of(context)
+                                .textTheme
+                                .pickerTextStyle),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

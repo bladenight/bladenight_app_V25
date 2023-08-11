@@ -17,6 +17,7 @@ struct Friend: Codable {
     let requestId: Int
     let isOnline: Bool
     let speed: Double
+    let realSpeed: Double?
     let longitude: Double?
     let latitude: Double?
     let relativeTime: Int?
@@ -86,14 +87,11 @@ extension Friend{
        
     }
     
-    /*func getSpeedString()->String{
-        Double speed = 0;
-        if (realSpeed != nil) {speed = realSpeed!};
-        var s = "- km/h";
-       
-        let spd: Double = Double(speed);
-            s = "\(String(format: "%.1f", spd)) km/h";
-        return s;
-    }*/
+    func getSpeedString()->String{
+        var rSpeed = 0.0;
+        if (realSpeed != nil) {rSpeed = realSpeed!};
+        let spd: Double = Double(rSpeed);
+        return "\(String(format: "%.1f", spd)) km/h";
+    }
 }
 

@@ -69,7 +69,7 @@ class ActiveEventProvider extends ChangeNotifier {
         }*/
         _event = rpcEvent;
         if (kDebugMode) {
-          print('SendToWatch aep72  update Event $event' );
+          print('SendToWatch aep72 update Event $event' );
         }
         SendToWatch.updateEvent(rpcEvent);
         var oldEventInPrefs =  HiveSettingsDB.getActualEvent;
@@ -78,7 +78,7 @@ class ActiveEventProvider extends ChangeNotifier {
            HiveSettingsDB.setActualEvent(rpcEvent);
           await _updateRoutePoints(rpcEvent);
           if ((DateTime.now().difference(_providerLastUpdate)).inSeconds > 30) {
-            //avoid multiple notifications on forceupdate
+            //avoid multiple notifications on force update
             if (!kIsWeb && event.status != EventStatus.finished) {
               NotificationHelper().updateNotifications(oldEventInPrefs, _event);
             }

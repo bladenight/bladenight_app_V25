@@ -125,7 +125,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
       //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
       const Duration(seconds: defaultRealtimeUpdateInterval),
       (timer) {
-        ///TODO subscribe eventprocession
+        ///TODO subscribe event procession
         /* if (ActiveEventProvider.instance.event.status != EventStatus.confirmed && !kIsWeb) {
           return;
         }*/
@@ -133,20 +133,9 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           startFollowingTrainHead();
           _webStartedTrainFollow = true;
         }
-        int lastUpdate = DateTime.now()
-            .difference(LocationProvider.instance.lastUpdate)
-            .inSeconds;
-        if (!LocationProvider.instance.isTracking ||
-            lastUpdate >= defaultRealtimeUpdateInterval) {
-          //refresh only when not tracking
-          if (!kIsWeb) {
-            FLog.trace(
-                className: toString(),
-                methodName: '_updateTime_periodic',
-                text: 'updating because there are no new location data');
-          }
-          context.read(locationProvider).refresh();
-        }
+
+          context.read(locationProvider).refreshRealtimeData();
+
       },
     );
   }
@@ -669,7 +658,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                     ),
                   );
                 } else if (lp.gpsLocationPermissionsStatus ==
-                    LocationPermissionStatus.denied) {
+                    LocationPermissionStatus.denied && HiveSettingsDB.useAlternativeLocationProvider == false) {
                   return FloatingActionButton.extended(
                     onPressed: () async {
                       FlutterPlatformAlert.showAlert(

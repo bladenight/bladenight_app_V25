@@ -22,6 +22,7 @@ class EventsPage extends StatefulWidget {
 
 class _EventsPageState extends State<EventsPage> {
   final dataKey = GlobalKey();
+  bool noActualEventFound = false;
   late ScrollController _controller;
 
   @override
@@ -63,7 +64,7 @@ class _EventsPageState extends State<EventsPage> {
               leading: const Icon(CupertinoIcons.ticket),
               largeTitle: Text(Localize.of(context).events),
               trailing: Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.centerRight,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -93,6 +94,7 @@ class _EventsPageState extends State<EventsPage> {
                   skipLoadingOnReload: false,
                   data: (events) {
                     if (events.rpcException != null) {
+                      noActualEventFound = false;
                       return SliverFillRemaining(
                           child: NoDataWarning(onReload: () {
                         context.refresh(allEventsProvider);
@@ -103,7 +105,7 @@ class _EventsPageState extends State<EventsPage> {
                       if (index % 2 == 0) {
                         var event = events.events[(index / 2).round()];
                         var eventStartState = EventStartState.eventOver;
-                        var eventOver = event.startDateUtc
+                        var eventOver = event.startDateUtc.add(event.duration)
                             .difference(DateTime.now().toUtc())
                             .isNegative;
                         var eventActual = !eventOver &&
@@ -122,7 +124,8 @@ class _EventsPageState extends State<EventsPage> {
                         if (eventFuture) {
                           eventStartState = EventStartState.eventFuture;
                         }
-                        if (eventActual) {
+                        if (eventActual && noActualEventFound) {
+                          noActualEventFound = true;
                           return Container(
                               key: dataKey,
                               child:
@@ -245,8 +248,13 @@ Widget _listTile(
                     color: Colors.greenAccent,
                   ),
                   const Icon(CupertinoIcons.person_2_fill),
-                  const SizedBox(width: 5,),
-                  Text(event.participants.toString(),style: const TextStyle(fontWeight: FontWeight.bold),),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    event.participants.toString(),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             if (event.status == EventStatus.pending)
@@ -259,7 +267,8 @@ Widget _listTile(
                 Icons.cancel_rounded,
                 color: Colors.redAccent,
               ),
-            if (event.status == EventStatus.confirmed && event.participants <=0)
+            if (event.status == EventStatus.confirmed &&
+                event.participants <= 0)
               const Icon(
                 Icons.emoji_events_rounded,
                 color: Colors.greenAccent,

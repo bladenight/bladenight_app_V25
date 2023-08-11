@@ -65,7 +65,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
       Field('distanceToUser', _$distanceToUser, opt: true, def: 0);
   static int _$specialValue(Friend v) => v.specialValue;
   static const Field<Friend, int> _f$specialValue =
-      Field('specialValue', _$specialValue, opt: true, def: 0);
+      Field('specialValue', _$specialValue, key: 'spv', opt: true, def: 0);
   static int? _$timeToUser(Friend v) => v.timeToUser;
   static const Field<Friend, int> _f$timeToUser =
       Field('timeToUser', _$timeToUser, opt: true, def: 0);
@@ -77,7 +77,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
       Field('hasServerEntry', _$hasServerEntry, opt: true, def: true);
   static double _$realSpeed(Friend v) => v.realSpeed;
   static const Field<Friend, double> _f$realSpeed =
-      Field('realSpeed', _$realSpeed, mode: FieldMode.member);
+      Field('realSpeed', _$realSpeed);
 
   @override
   final Map<Symbol, Field<Friend, dynamic>> fields = const {

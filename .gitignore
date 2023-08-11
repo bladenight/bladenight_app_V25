@@ -69,3 +69,4 @@ pubspec.lock
 /firestore.indexes.json
 /firestore.rules
 /assets/images/Thumbs.db
+/assets/iosStore/*.xcf

@@ -3,8 +3,9 @@ import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' hide PermissionStatus;
 import 'package:get/get.dart';
+import 'package:location2/location2.dart' as loc2;
 
 import '../generated/l10n.dart';
 import 'device_info_helper.dart';
@@ -46,10 +47,8 @@ class LocationPermissionDialog {
     if (kIsWeb) {
       return LocationPermissionStatus.locationNotEnabled;
     }
-    var permissionWithService = Permission.location;
-    var locationPermission = await permissionWithService.status;
-
-    if (locationPermission == PermissionStatus.denied) {
+    final locationPermission = await loc2.getLocationPermissionStatus();
+    if (locationPermission.locationPermissionId == loc2.LocationPermission.denied.index) {
       var prominentDisclosureResult =
           await FlutterPlatformAlert.showCustomAlert(
               windowTitle: Localize.current.requestLocationPermissionTitle,
@@ -84,10 +83,9 @@ class LocationPermissionDialog {
         platformVersion != null &&
         platformVersion >= 10;
 
-    var permissionWithService = Permission.location;
-    var locationPermission = await permissionWithService.status;
+    final locationPermission = await loc2.getLocationPermissionStatus();
 
-    if (locationPermission == PermissionStatus.denied) {
+    if (locationPermission == loc2.PermissionStatus.denied) {
       var prominentDisclosureResult =
           await FlutterPlatformAlert.showCustomAlert(
               windowTitle: Localize.current.requestLocationPermissionTitle,
@@ -128,12 +126,11 @@ class LocationPermissionDialog {
     if (prominentDisclosureResult == CustomButton.negativeButton) {
       return getPermissionsStatus();
     } else {
-      var permissionWithService = Permission.locationAlways;
-      var res = await permissionWithService.request();
-      if (res == PermissionStatus.granted) {
+      final res = await loc2.requestLocationPermission(loc2.LocationPermission.authorizedAlways );
+      if (res == loc2.LocationPermission.authorizedAlways) {
         return LocationPermissionStatus.always;
       }
-      if (res == PermissionStatus.permanentlyDenied) {
+      if (res == loc2.LocationPermission.denied) {
         if (!kIsWeb) {
           FLog.warning(
             text: 'requestAlwaysOnAndroid permissions permanentlyDenied');
@@ -192,36 +189,28 @@ class LocationPermissionDialog {
 
   ///Returns [LocationPermissionStatus] of device
   Future<LocationPermissionStatus> getPermissionsStatus() async {
-    var isAlways = await Permission.locationAlways.status;
-    if (isAlways == PermissionStatus.granted) {
+    Stopwatch sw = Stopwatch();
+    sw.start();
+    final permissionStatus = await loc2.getLocationPermissionStatus();
+    //hangs for 9 sec on app start
+    //var isAlways = await Permission.locationAlways.status;
+    if (!kIsWeb) {
+      FLog.info(
+          className: 'locationProvider',
+          methodName: 'init',
+          text: 'init get permissions status ${sw.elapsedMicroseconds}micros');
+    }
+    if (kDebugMode) print('init get permissions status ${sw.elapsedMicroseconds}micros /${sw.elapsedMilliseconds}ms');
+    sw.stop();
+    if (permissionStatus.locationPermissionId == loc2.PermissionStatus.authorizedAlways.index) {
       return LocationPermissionStatus.always;
     }
-    var whenInUse = await Permission.locationWhenInUse.status;
-    if (whenInUse == PermissionStatus.granted) {
+    if (permissionStatus.locationPermissionId == loc2.PermissionStatus.authorizedWhenInUse.index) {
       return LocationPermissionStatus.whenInUse;
     }
     return LocationPermissionStatus.denied;
   }
 
-  Future<MotionSensorPermissionStatus>
-      getMotionSensorPermissionsStatus() async {
-    var isMotionSensorEnabled = await Permission.sensors.status;
-    if (isMotionSensorEnabled == PermissionStatus.granted) {
-      return MotionSensorPermissionStatus.granted;
-    }
-
-    return MotionSensorPermissionStatus.denied;
-  }
-
-  Future<MotionSensorPermissionStatus> requestMotionSensorPermissions() async {
-    var permissionWithService = Permission.activityRecognition;
-    var res = await permissionWithService.request();
-
-    if (res == PermissionStatus.granted) {
-      return MotionSensorPermissionStatus.granted;
-    }
-    return MotionSensorPermissionStatus.denied;
-  }
 
   Future<bool> requestAndOpenAppSettings() async {
     var permanentDeniedResult = await FlutterPlatformAlert.showCustomAlert(

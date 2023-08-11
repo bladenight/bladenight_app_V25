@@ -28,8 +28,8 @@ import '../helpers/notification/toast_notification.dart';
 import '../helpers/preferences_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../models/event.dart';
+import '../models/friends.dart';
 import '../models/location.dart';
-import '../models/moving_point.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
 import '../models/user_trackpoint.dart';
@@ -159,6 +159,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   void init() async {
+
     if (kIsWeb) {
       notifyListeners();
       return;
@@ -172,7 +173,9 @@ class LocationProvider with ChangeNotifier {
         return;
       }
     }
+
     _autoStop = await PreferencesHelper.getAutoStopFromPrefs();
+
     _gpsLocationPermissionsStatus =
         await LocationPermissionDialog().getPermissionsStatus();
 
@@ -189,14 +192,36 @@ class LocationProvider with ChangeNotifier {
     _trackingWasActive = HiveSettingsDB.trackingActive;
     _userIsParticipant = HiveSettingsDB.userIsParticipant;
     _odometer = HiveSettingsDB.odometerValue;
+    if (!kIsWeb) {
+      FLog.trace(
+          className: 'locationProvider',
+          methodName: 'init',
+          text: 'check _trackingWasActive');
+    }
     if (_trackingWasActive &&
         !_isTracking &&
         ActiveEventProvider.instance.event.status == EventStatus.confirmed) {
       //restart tracking on reopen
+      if (!kIsWeb) {
+        FLog.trace(
+            className: 'locationProvider',
+            methodName: 'init',
+            text: 'restart tracking');
+      }
       await toggleProcessionTracking(userIsParticipant: _userIsParticipant);
+      FLog.trace(
+          className: 'locationProvider',
+          methodName: 'init',
+          text: 'restart tracking finished');
       showToast(message: Localize.current.trackingRestarted);
     }
     notifyListeners();
+    if (!kIsWeb) {
+      FLog.trace(
+          className: 'locationProvider',
+          methodName: 'init',
+          text: 'init finished');
+    }
   }
 
   void setToBackground(bool value) {
@@ -358,7 +383,8 @@ class LocationProvider with ChangeNotifier {
     }
 
     _lastKnownPoint = location;
-    SendToWatch.setUserSpeed('${realSpeedKmH.toStringAsFixed(1)} km/h ${odometer.toStringAsFixed(1)} km');
+    SendToWatch.setUserSpeed(
+        '${realSpeedKmH.toStringAsFixed(1)} km/h');
     int maxSize = 250;
     if (_userTrackingPoints.length > maxSize) {
       var smallTrackPointList = <LatLng>[];
@@ -413,7 +439,7 @@ class LocationProvider with ChangeNotifier {
       if (!kIsWeb) {
         FLog.trace(
           className: toString(),
-          methodName: '_subToUpdates',
+          methodName: '_getHeartBeatLocation',
           text: 'started',
         );
       }
@@ -428,7 +454,7 @@ class LocationProvider with ChangeNotifier {
       if (!kIsWeb) {
         FLog.trace(
           className: toString(),
-          methodName: '_subToUpdates',
+          methodName: '_getHeartBeatLocation',
           text: '_subUpdates sent new location $newLocation',
         );
       }
@@ -617,7 +643,7 @@ class LocationProvider with ChangeNotifier {
         HiveSettingsDB.setTrackingActive(_isTracking);
         SendToWatch.setIsLocationTracking(_isTracking);
       }).catchError((error) {
-        if (!kIsWeb) FLog.error(text: 'Starting ERROR: $error');
+        if (!kIsWeb) FLog.error(text: 'LocStarting ERROR: $error');
         HiveSettingsDB.setTrackingActive(false);
         _isTracking = false;
         setUpdateTimer(false);
@@ -738,6 +764,12 @@ class LocationProvider with ChangeNotifier {
             exception: e);
       }
     }
+    if (!kIsWeb) {
+      FLog.trace(
+          className: toString(),
+          methodName: '_subToUpdates',
+          text: '_subUpdates Failed:');
+    }
     if (_lastKnownPoint != null) {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp);
       var localTs = ts.toLocal();
@@ -816,10 +848,10 @@ class LocationProvider with ChangeNotifier {
       var friendList =
           _realtimeUpdate?.updateMapPointFriends(_realtimeUpdate!.friends);
       if (friendList != null) {
+        var friends =  friendList.where((x) => x.specialValue == 0).toList();
         var friendListAsJson =
-            MapperContainer.globals.toJson(friendList.toList());
-
-        print('send Friends to watch $friendListAsJson');
+            MapperContainer.globals.toJson(friends);
+        if (kDebugMode) {print('lp_send Friends to watch $friendListAsJson');}
         SendToWatch.updateFriends(friendListAsJson);
       }
     }
@@ -837,12 +869,18 @@ class LocationProvider with ChangeNotifier {
     if (!_isInBackground) notifyListeners();
   }
 
-  ///Refresh [RealTimeData] when location has no data for 5s with tracking
-  ///30s without tracking
+  ///Refresh [RealTimeData] when location has no data for 4500ms with tracking
+  ///15 s without tracking
   ///[forceUpdate]-Mode to update after resume  default value = false
   ///necessary after app state switching in viewer mode
   Future<void> refresh({bool forceUpdate = false}) async {
     try {
+      if (!kIsWeb) {
+        FLog.trace(
+            className: 'locationProvider',
+            methodName: 'refresh',
+            text: 'start refresh force $forceUpdate');
+      }
       var dtNow = DateTime.now();
       //avoid async re-trigger
       var timeDiff = dtNow.difference(_lastRefreshRequest);
@@ -855,6 +893,7 @@ class LocationProvider with ChangeNotifier {
       /*  var diffSec = DateTime.now().difference(_lastUpdate).inMilliseconds +
           1000; //most time  14 seconds because timer and refresh are async
       if (diffSec >= defaultLocationUpdateInterval * 1000 || forceUpdate) {*/
+
       if (_isTracking) {
         locData = await _subToUpdates();
       }
@@ -976,7 +1015,7 @@ class LocationProvider with ChangeNotifier {
         }
       }
       var maxDuration = ActiveEventProvider.instance.event.duration.inMinutes;
-      if (maxDuration==0) return;
+      if (maxDuration == 0) return;
       if ((ActiveEventProvider.instance.event.status == EventStatus.finished ||
               eventRuntime.inMinutes > maxDuration) &&
           _isTracking &&
@@ -1064,6 +1103,22 @@ class LocationProvider with ChangeNotifier {
   void resetTrackPoints() {
     _userTrackingPoints.clear();
     _userLatLongs.clear();
+  }
+
+  void refreshRealtimeData() {
+    int lastUpdate = DateTime.now()
+        .difference(LocationProvider.instance.lastUpdate)
+        .inSeconds;
+    if (_isTracking || lastUpdate < defaultRealtimeUpdateInterval) {
+      return;
+    }
+    if (!kIsWeb) {
+        FLog.trace(
+            className: toString(),
+            methodName: '_updateTime_periodic',
+            text: 'updating because there are no new location data');
+    }
+    refresh();
   }
 }
 

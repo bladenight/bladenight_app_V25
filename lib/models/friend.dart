@@ -19,13 +19,15 @@ class Friend with FriendMappable {
   late bool isOnline;
   late int requestId = 0;
   late double speed = 0;
+  @MappableField(key: 'rsp')
   late double realSpeed = 0.0;
+  @MappableField(key: 'spv')
   late int specialValue = 0;
   late int? timestamp; // = DateTime.now().millisecondsSinceEpoch;
   late double? latitude = defaultLatitude;
   late double? longitude = defaultLongitude;
 
-  /// relatime time to finish in procession
+  /// real time time to finish in procession
   int? relativeTime;
 
   ///driven distance from start

@@ -86,6 +86,7 @@ import WatchConnectivity
             
         }
         let outStanding = watchSession.outstandingUserInfoTransfers
+        print("Canceling  \(outStanding.count) outstandings" )
         for  item in outStanding{
             
             item.cancel()
@@ -116,10 +117,14 @@ import WatchConnectivity
                     
                     let watchData: [String: Any] = ["method": method, "data": data]
                     let outStanding = watchSession.outstandingUserInfoTransfers
-                    let hasData = false
                     
-                    
+                    var i = 0
+                    let df = DateFormatter()
+                    df.dateFormat = "yyyy-MM-dd H:mm:ss.SSSS"
+                         
                     for  item in outStanding{
+                        i += 1
+                        //print("\(df.string(from:Date())) flutterToWatchTransferUserInfo delete \(i) outstanding \(String(describing: item.userInfo[method as! String]))")
                         let userInfo = item.userInfo
                         var values = userInfo[method as! String]
                         if (values != nil){
@@ -131,9 +136,27 @@ import WatchConnectivity
                     //   outStanding.removeAll(where: <#T##(WCSessionUserInfoTransfer) throws -> Bool#>)
                     //}
                     // Pass the receiving message to Apple Watch
-                    watchSession.transferUserInfo(watchData)
+                    if (watchSession.isReachable){
+                        
+                        // Pass the receiving message to Apple Watch
+                        watchSession.sendMessage(watchData, replyHandler: {
+                            (replyMessage) in
+                            print("Got a reply from the phone: \(replyMessage)")
+                            
+                            // handle reply message here
+                            
+                        }, errorHandler: { (error) in
+                            print("Got an error sending to the phone: \(error)")
+                            watchSession.transferCurrentComplicationUserInfo(watchData)
+                        })
+                        
+                    }
+                    else {
+                        watchSession.transferCurrentComplicationUserInfo(watchData)
+                    }
                     //debugPrint("flutterToWatchTransferUserInfo channel finished \(watchData)")
                     result(true)
+                    break
                     
                 case "flutterToWatchTransferApplicationContext":
                     //debugPrint("flutterToWatchTransferApplicationContext channel called")
@@ -173,12 +196,12 @@ import WatchConnectivity
                             
                         }, errorHandler: { (error) in
                             print("Got an error sending to the phone: \(error)")
-                            watchSession.transferCurrentComplicationUserInfo(watchData)
+                            //watchSession.transferCurrentComplicationUserInfo(watchData)
                         })
                         
                     }
                     else {
-                        watchSession.transferCurrentComplicationUserInfo(watchData)
+                        return; //not interesting // watchSession.transferUserInfo(watchData)
                     }
                     result(true)
                 default:
@@ -234,7 +257,7 @@ extension AppDelegate: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         DispatchQueue.main.async {
             //print("Data applicationContext Received \(applicationContext)")
-            self.initFlutterChannel()
+            //self.initFlutterChannel()
             if let method = applicationContext.keys.first, let controller = self.window?.rootViewController as? FlutterViewController {
                 let channel = FlutterMethodChannel(
                     name: "bladenightchannel",
@@ -248,7 +271,7 @@ extension AppDelegate: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
         DispatchQueue.main.async {
             //print("Data didReceiveUserInfo Received \(userInfo)")
-            self.initFlutterChannel()
+            //self.initFlutterChannel()
             if let method = userInfo.keys.first, let controller = self.window?.rootViewController as? FlutterViewController {
                 let channel = FlutterMethodChannel(
                     name: "bladenightchannel",

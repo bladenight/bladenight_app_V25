@@ -154,7 +154,7 @@ class FriendsLogic with ChangeNotifier {
       f.relativeTime = rtf.eta;
       f.absolutePosition = rtf.position;
       f.speed = rtf.speed;
-      f.realSpeed = rtf.realSpeed ?? 0;
+      f.realSpeed = rtf.realSpeed ?? 0.0;
       int rtfEstimatedTimeOfArrivalOnRoute = rtf.eta ?? 0;
       f.timeToUser = upTime -
           rtfEstimatedTimeOfArrivalOnRoute; //friend eta = 20000ms to finish - up eta(uptime)=> 10000 ms => 10000-20000 -> -10000ms /friend behind = -10000ms

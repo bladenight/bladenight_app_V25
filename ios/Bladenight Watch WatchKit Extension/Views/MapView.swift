@@ -4,7 +4,7 @@
 //
 //  Created by Lars Huth on 21.08.22.
 //
-/*
+
 //https://github.com/WillieWangWei/SwiftUI-Tutorials/blob/master/WatchLandmarks%20Extension/WatchMapView.swift
 
 import Foundation
@@ -12,27 +12,27 @@ import SwiftUI
 import MapKit
 
 
-struct MapView: WKInterfaceObjectRepresentable {
-       func makeWKInterfaceObject(context: WKInterfaceObjectRepresentableContext<MapView>) -> WKInterfaceMap {
-         return WKInterfaceMap()
-     }
-    
-    func updateWKInterfaceObject(_ map: WKInterfaceMap, context: WKInterfaceObjectRepresentableContext<MapView>) {
-            
-            let span = MKCoordinateSpan(latitudeDelta: 0.20,
-                longitudeDelta: 0.20)
-            
-            let region = MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 48.1325, longitude: 11.5438),
-                span: span)
-            
-            map.setRegion(region)
-            //map.userTrackingMode = .follow
-        }
+struct MapView: View {
     @EnvironmentObject var viewModel: CommunicationHandler
     @Binding var tabSelection: Int
+    @State var region = MKCoordinateRegion(
+              center: CLLocationCoordinate2D(latitude: defaultLatitude, longitude: defaultLongitude),
+              span: MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5)
+          )
     
-    @State private var mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: defaultLatitude, longitude: defaultLongitude), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+    var body: some View {
+        var region = MKCoordinateRegion(
+           center: CLLocationCoordinate2D(latitude: viewModel.activeEvent.startPointLatitude ?? defaultLatitude, longitude: viewModel.activeEvent.startPointLongitude ?? defaultLongitude),
+                       span: MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5)
+                   )
+        Map(coordinateRegion: $region).navigationTitle("Bladenight")
+            .onAppear(){
+                
+            }
+        
+    }
+        
+   
     
     //let userTrackingMode: MapUserTrackingMode = .follow
     //var route =  MapKit(polyline:viewModel.routePoints?.routePoints)
@@ -48,4 +48,4 @@ struct MapView_Previews: PreviewProvider {
 }
 
 
-*/
+

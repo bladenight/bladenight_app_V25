@@ -10,6 +10,10 @@ import SwiftUI
 struct EventDetailView: View {
     @EnvironmentObject var viewModel: CommunicationHandler
     @Binding var tabSelection: Int
+    @State var timeElapsed: Int = 0
+    @State var refreshTime:Int = 5
+    
+    @State var  timerOneSec = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         ScrollView{
@@ -24,15 +28,18 @@ struct EventDetailView: View {
                 }
             }else{
                 VStack{
-                    ProgressView("\(DistanceConverter.ConvertMetersToString(distance:(viewModel.realTimeData.user?.pos))) von  \(DistanceConverter.ConvertMetersToString(distance:(viewModel.realTimeData.runningLength)))",value: viewModel.realTimeData.userProgress()).foregroundColor(Color.green)
-                    Label("\(viewModel.userSpeed)", systemImage: "gauge") .frame(maxWidth: .infinity, alignment: .leading).foregroundColor(Color.green)
+                    ProgressView("\(DistanceConverter.ConvertMetersToString(distance:(viewModel.realTimeData.user?.pos))) von  \(DistanceConverter.ConvertMetersToString(distance:(viewModel.realTimeData.runningLength)))",value: viewModel.realTimeData.userProgress()).foregroundColor(Color.yellow)
+                        .tint(.yellow)
+                    Label("\(viewModel.userSpeed)", systemImage: "gauge") .frame(maxWidth: .infinity, alignment: .leading).foregroundColor(Color.yellow)
+                        .font(.system(size: 12))
+
                 }.padding(3)
             }
             
             VStack{
                 HStack{
-                    Text("Zug").bold().frame(alignment: .leading)
-                    Text("Tracker:\(viewModel.realTimeData.getTrackers())").frame(maxWidth: .infinity,alignment: .trailing)
+                    Text("Zug").bold().frame(alignment: .leading)  .font(.system(size: 10))
+                    Text("Tracker:\(viewModel.realTimeData.getTrackers())").frame(maxWidth: .infinity,alignment: .trailing)  .font(.system(size: 10))
                 }.frame(maxWidth: .infinity, alignment: .trailing)
                 
                 HStack{
@@ -59,8 +66,18 @@ struct EventDetailView: View {
                 
             }
          
+        }.onAppear(){
+            debugPrint("EventDetailview onAppear main")
+            viewModel.sendDataMessage(for: .getLocationIsTracking)
+        }.onTapGesture(count: 1) {
+            viewModel.sendDataMessage(for: .getLocationIsTracking)
+        }.onReceive(timerOneSec) { _ in
+            timeElapsed = timeElapsed + 1
+            if (timeElapsed > refreshTime){
+                timeElapsed = 0
+                viewModel.sendDataMessage(for: .getLocationIsTracking)
+            }
         }
-       
     }
 }
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_context/riverpod_context.dart';
@@ -117,17 +118,33 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                         .navLargeTitleTextStyle),
               ),
             ),
-            Text(
-                '${Localize.of(context).status}: ${Intl.select(nextEventProvider.event.status, {
-                      EventStatus.pending: Localize.of(context).pending,
-                      EventStatus.confirmed: Localize.of(context).confirmed,
-                      EventStatus.cancelled: Localize.of(context).canceled,
-                      EventStatus.noevent: Localize.of(context).noEvent,
-                      EventStatus.running: Localize.of(context).running,
-                      EventStatus.finished: Localize.of(context).finished,
-                      'other': Localize.of(context).unknown
-                    })}',
-                style: CupertinoTheme.of(context).textTheme.pickerTextStyle),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: nextEventProvider.event.status ==
+                      EventStatus.cancelled
+                      ? Colors.redAccent
+                      : nextEventProvider.event.status ==
+                      EventStatus.confirmed
+                      ? Colors.green
+                      : Colors.transparent,
+                  borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(10.0),
+                      bottomRight: Radius.circular(10.0),
+                      topLeft: Radius.circular(10.0),
+                      bottomLeft: Radius.circular(10.0)),
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(nextEventProvider.event.statusText,
+                      style: CupertinoTheme.of(context)
+                          .textTheme
+                          .pickerTextStyle),
+                ),
+              ),
+            ),
             const SizedBox(height: 1),
           ],
         ),

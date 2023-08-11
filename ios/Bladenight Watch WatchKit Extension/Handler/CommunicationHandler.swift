@@ -79,6 +79,16 @@ class CommunicationHandler: NSObject, ObservableObject {
             debugPrint("WCSession not active")
         }
     }
+    
+    func transferBgDataMessage(for method: WatchSendMethod, data: [String: Any] = [:]) {
+        if (session.activationState  == WCSessionActivationState.activated){
+            debugPrint("WCSession send \(data.values)")
+           _ = transferUserInfo(for: method.rawValue, data: data)
+        }
+        else{
+            debugPrint("WCSession not active")
+        }
+    }
 }
 
 extension CommunicationHandler: WCSessionDelegate {
@@ -116,12 +126,17 @@ extension CommunicationHandler: WCSessionDelegate {
     
     // Receive a message From AppDelegate.swift that send from iOS devices
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        DispatchQueue.main.async {
         self.handleIncomingMessages(message:message);
+        }
         
     }
     
     public func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
-        self.handleIncomingMessages(message:applicationContext);
+        DispatchQueue.main.async {
+            self.handleIncomingMessages(message:applicationContext);
+            
+        }
     }
     
     
@@ -138,8 +153,10 @@ extension CommunicationHandler: WCSessionDelegate {
     
     
     
-    func transferUserInfo(userInfo: [String : Any]) -> WCSessionUserInfoTransfer? {
-        return session.transferUserInfo(userInfo)
+    func transferUserInfo(for method: String, data: [String: Any] = [:]) -> WCSessionUserInfoTransfer? {
+        let messageData: [String: Any] = ["method": method, "data": data]
+        print("sendMessage: \(messageData)")
+        return session.transferUserInfo(messageData)
     }
     
     private func session(session: WCSession, didFinishUserInfoTransfer userInfoTransfer: WCSessionUserInfoTransfer, error: NSError?) {
