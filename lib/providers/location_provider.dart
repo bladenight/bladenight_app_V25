@@ -28,7 +28,6 @@ import '../helpers/notification/toast_notification.dart';
 import '../helpers/preferences_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../models/event.dart';
-import '../models/friends.dart';
 import '../models/location.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
