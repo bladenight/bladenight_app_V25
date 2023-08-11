@@ -62,7 +62,7 @@ dependencies:
         #path: ../flutter-geolocator/geolocator
   #location: ^4.4.0
 
-  #location2: ^6.0.4
+  location2: ^6.0.4
   #modal_bottom_sheet: ^2.1.2
   maps_toolkit: ^2.0.1
   modal_bottom_sheet:
@@ -109,8 +109,8 @@ dependency_overrides:
   # Remove when firebase_ui_firestore stops relying on 0.17.0.
   # https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_localizations/pubspec.yaml#L18
   intl: ^0.18.0
-  location2:
-    path: ../flutterlocation/packages/location2
+  #location2:
+    #path: ../flutterlocation/packages/location2
   wakelock_macos:
     git:
       url: https://github.com/xunreal75/wakelock.git
