@@ -68,10 +68,11 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
 
   void initEventUpdates({forceUpdate = false}) async {
     // first start
-    context.read(activeEventProvider).refresh(forceUpdate: forceUpdate);
     context.refresh(updateImagesAndLinksProvider);
-    //await Future.delayed(const Duration(seconds: 5));
-    LocationProvider.instance.refresh(forceUpdate: true);
+    await Future.delayed(const Duration(seconds: 2));
+    ActiveEventProvider.instance.refresh(forceUpdate: forceUpdate);
+
+
     _updateTimer?.cancel();
     _updateTimer = Timer.periodic(
       const Duration(minutes: 10),
@@ -80,6 +81,11 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
         context.read(activeEventProvider).refresh();
       },
     );
+  }
+
+  void initLocation()async {
+    await Future.delayed(const Duration(seconds: 5));
+    LocationProvider.instance.refresh(forceUpdate: true);
   }
 
   @override

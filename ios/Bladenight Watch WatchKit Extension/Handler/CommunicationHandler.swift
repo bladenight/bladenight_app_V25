@@ -61,6 +61,7 @@ class CommunicationHandler: NSObject, ObservableObject {
         case getEventDataFromFlutter
         case getLocationIsTracking
         case getFriendsDataFromFlutter
+        case getRealtimeDataFromFlutter
     }
     
     init(session: WCSession = .default) {
@@ -114,6 +115,7 @@ extension CommunicationHandler: WCSessionDelegate {
             sendDataMessage(for: .getEventDataFromFlutter);
             sendDataMessage(for: .getLocationIsTracking);
             sendDataMessage(for: .getFriendsDataFromFlutter);
+            sendDataMessage(for: .getRealtimeDataFromFlutter)
         }
     }
     

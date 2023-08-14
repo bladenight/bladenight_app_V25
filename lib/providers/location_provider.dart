@@ -58,7 +58,7 @@ class LocationProvider with ChangeNotifier {
   get lastUpdate => _lastUpdate;
   DateTime? _userReachedFinishDateTime, _startedTrackingTime;
 
-  Timer? _updateTimer;
+  Timer? _sendLocationToServerTimer;
 
   bool _isMoving = false;
   String _lastRouteName = '';
@@ -104,12 +104,12 @@ class LocationProvider with ChangeNotifier {
 
   LatLng? _userLatLng;
 
-  ///Users position LatLng
+  ///Users position [LatLng]
   LatLng? get userLatLng => _userLatLng;
 
   double? _realUserSpeedKmh;
 
-  ///Userspeed in km/h
+  ///User speed in km/h
   double? get realUserSpeedKmh => _realUserSpeedKmh;
 
   ///odometer in km/h
@@ -158,7 +158,6 @@ class LocationProvider with ChangeNotifier {
   }
 
   void init() async {
-
     if (kIsWeb) {
       notifyListeners();
       return;
@@ -330,21 +329,12 @@ class LocationProvider with ChangeNotifier {
   void _onLocation(bg.Location location) {
     if (!kIsWeb) FLog.trace(text: '_onLocation $location');
     _controller.add(location);
+    _lastKnownPoint = location;
     updateUserLocation(location);
-    sendLocation(location);
   }
 
   ///Update user location and track points list
   void updateUserLocation(bg.Location location) {
-    if (_lastKnownPoint != null) {
-      var ts = DateTime.parse(_lastKnownPoint!.timestamp);
-      var localTs = ts.toLocal();
-      var diff = DateTime.now().difference(localTs);
-      if (diff < const Duration(seconds: 1)) {
-        return;
-      }
-    }
-
     var userLatLng =
         LatLng(location.coords.latitude, location.coords.longitude);
     _userLatLng = userLatLng;
@@ -382,15 +372,13 @@ class LocationProvider with ChangeNotifier {
     }
 
     _lastKnownPoint = location;
-    SendToWatch.setUserSpeed(
-        '${realSpeedKmH.toStringAsFixed(1)} km/h');
+    SendToWatch.setUserSpeed('${realSpeedKmH.toStringAsFixed(1)} km/h');
     int maxSize = 250;
     if (_userTrackingPoints.length > maxSize) {
       var smallTrackPointList = <LatLng>[];
       var divider = _userTrackingPoints.length ~/ maxSize;
-      var counter = 0;
 
-      for (; counter < _userTrackingPoints.length - divider;) {
+      for (var counter = 0; counter < _userTrackingPoints.length - divider;) {
         smallTrackPointList.add(LatLng(_userTrackingPoints[counter].latitude,
             _userTrackingPoints[counter].longitude));
         counter = counter + divider.toInt();
@@ -415,7 +403,7 @@ class LocationProvider with ChangeNotifier {
 
   void _onMotionChange(bg.Location location) {
     if (!kIsWeb) FLog.trace(text: 'OnMotionChange send location');
-    //sendLocation(location); //dont send
+    _lastKnownPoint = location;
   }
 
   void _onActivityChange(bg.ActivityChangeEvent event) {
@@ -433,6 +421,8 @@ class LocationProvider with ChangeNotifier {
     _networkConnected = event.connected;
   }
 
+  /// Send Location all 60sec if no location change triggered
+  /// only working with flutter_background_geolocation
   void _getHeartBeatLocation() async {
     try {
       if (!kIsWeb) {
@@ -442,21 +432,12 @@ class LocationProvider with ChangeNotifier {
           text: 'started',
         );
       }
-      bg.Location? newLocation;
-      newLocation = await bg.BackgroundGeolocation.getCurrentPosition(
-        timeout: 2,
-        maximumAge: 60000,
-        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+      await bg.BackgroundGeolocation.getCurrentPosition(
+        timeout: 3,
+        desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
         samples: 2, // How many location samples to attempt.
       );
       //triggers onLocation
-      if (!kIsWeb) {
-        FLog.trace(
-          className: toString(),
-          methodName: '_getHeartBeatLocation',
-          text: '_subUpdates sent new location $newLocation',
-        );
-      }
       return;
     } catch (e) {
       if (!kIsWeb) {
@@ -467,7 +448,7 @@ class LocationProvider with ChangeNotifier {
             exception: e);
       }
     }
-    refresh();
+    sendLocationToServer();
   }
 
   _onProviderChange(bg.ProviderChangeEvent event) {
@@ -658,28 +639,22 @@ class LocationProvider with ChangeNotifier {
     if (!kIsWeb) {
       FLog.trace(text: 'init setLocationTimer to $enabled');
     }
-    _updateTimer?.cancel();
+    _sendLocationToServerTimer?.cancel();
     if (enabled) {
-      _updateTimer = Timer.periodic(
+      _sendLocationToServerTimer = Timer.periodic(
         //realtimeUpdateProvider reads data on send-location -
         //so it must not updated all 10 secs
         const Duration(seconds: defaultLocationUpdateInterval),
         (timer) {
-          int lastUpdate = DateTime.now().difference(_lastUpdate).inSeconds;
-          if (kDebugMode) {
-            print('update timer internal  lastupdate before ${lastUpdate}s');
+          if (!kIsWeb) {
+            FLog.trace(text: '_sendLocationToServerTimer Refresh');
           }
-          if (lastUpdate >= defaultLocationUpdateInterval) {
-            if (!kIsWeb) {
-              FLog.trace(text: 'setUpdateTimer Refresh');
-            }
-            refresh();
-          }
+          sendLocationToServer();
         },
       );
     } else {
-      _updateTimer?.cancel();
-      _updateTimer = null;
+      _sendLocationToServerTimer?.cancel();
+      _sendLocationToServerTimer = null;
     }
   }
 
@@ -694,9 +669,7 @@ class LocationProvider with ChangeNotifier {
         onLocationChanged(inBackground: true).handleError((dynamic err) {
       if (err is PlatformException) {
         //_onLocationError(bg.LocationError(err));
-        if (_lastKnownPoint != null) {
-          sendLocation(_lastKnownPoint!);
-        }
+        print('_listenLocationWithAlternativePackage error Platform $err');
       }
       _locationSubscription?.cancel();
       _locationSubscription = null;
@@ -721,11 +694,6 @@ class LocationProvider with ChangeNotifier {
 
   ///get location and send to server
   Future<bg.Location?> _subToUpdates() async {
-    var timeDiff = DateTime.now().difference(_lastUpdate);
-    if (timeDiff < const Duration(seconds: defaultSendNewLocationDelay)) {
-      return _lastKnownPoint;
-    }
-
     try {
       if (!kIsWeb) {
         FLog.trace(
@@ -736,24 +704,18 @@ class LocationProvider with ChangeNotifier {
       }
       bg.Location? newLocation;
       if (HiveSettingsDB.useAlternativeLocationProvider) {
-        //getLocation ignored if location is running
+        var newLoc = await getLocation();
+        _lastKnownPoint = newLoc.convertToBGLocation();// ignored if location is running
       } else {
         newLocation = await bg.BackgroundGeolocation.getCurrentPosition(
           timeout: 3,
           maximumAge: 60000,
-          desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+          desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
           samples: 2, // How many location samples to attempt.
         );
+        _lastKnownPoint = newLocation;
       }
-      // double sending by onLocation sendLocation(newLocation);
-      if (!kIsWeb) {
-        FLog.trace(
-          className: toString(),
-          methodName: '_subToUpdates',
-          text: '_subUpdates sent new location $newLocation',
-        );
-      }
-      return newLocation;
+      return _lastKnownPoint;
     } catch (e) {
       if (!kIsWeb) {
         FLog.warning(
@@ -763,65 +725,44 @@ class LocationProvider with ChangeNotifier {
             exception: e);
       }
     }
-    if (!kIsWeb) {
-      FLog.trace(
-          className: toString(),
-          methodName: '_subToUpdates',
-          text: '_subUpdates Failed:');
-    }
-    if (_lastKnownPoint != null) {
-      var ts = DateTime.parse(_lastKnownPoint!.timestamp);
-      var localTs = ts.toLocal();
-      var diff = DateTime.now().difference(localTs);
-      if (diff < const Duration(minutes: 1)) {
-        _lastKnownPoint = null;
-        return null;
-      }
-      sendLocation(_lastKnownPoint!);
-      return _lastKnownPoint;
-    }
-    return null;
+    return _lastKnownPoint;
   }
 
-  void sendLocation(bg.Location location) async {
+  void sendLocationToServer() async {
+    //invalidate lastknownpoint after 2 min
+    if (_lastKnownPoint != null) {
+      var ts = DateTime.parse(_lastKnownPoint!.timestamp);
+      var diff = DateTime.now().toUtc().difference(ts);
+      if (diff > const Duration(minutes: 15)) {
+        _lastKnownPoint = null;
+      }
+    }
     if (!_isTracking) return;
+    if (_lastKnownPoint == null)
+    { _subToUpdates();
+      return;
+    }
+
     RealtimeUpdate? update;
     var dtNow = DateTime.now();
-    var timeDiff = dtNow.difference(_lastRealtimeRequest);
-    if (timeDiff < const Duration(seconds: defaultSendNewLocationDelay)) {
-      return;
-    }
+
     _lastRealtimeRequest = dtNow;
 
-    ///TODO Testing to avoid server traffic
-    /*if (ActiveEventProvider.instance.event.status != EventStatus.confirmed ||
-        ActiveEventProvider.instance.event.status != EventStatus.running) {
-      //no running event - don't send data to server
-      return;
-    }*/
-
-    if (!_networkConnected) {
-      if (!kIsWeb) {
-        FLog.trace(
-          className: toString(),
-          methodName: 'sendLocation',
-          text: 'no network ignore send location',
-        );
-      }
-      return;
-    }
-    //only result of this message contains friend position - requested [RealTimeUpdates] without location
     update = await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
       LocationInfo(
-          coords: LatLng(location.coords.latitude, location.coords.longitude),
+          coords: LatLng(_lastKnownPoint!.coords.latitude,
+              _lastKnownPoint!.coords.longitude),
           deviceId: await DeviceId.getId,
           isParticipating: _userIsParticipant,
           specialFunction: HiveSettingsDB.wantSeeFullOfProcession
               ? HiveSettingsDB.specialCodeValue
               : null,
-          userSpeed: location.coords.speed < 0 ? 0.0 : location.coords.speed,
-          realSpeed:
-              location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6),
+          userSpeed: _lastKnownPoint!.coords.speed < 0
+              ? 0.0
+              : _lastKnownPoint!.coords.speed,
+          realSpeed: _lastKnownPoint!.coords.speed < 0
+              ? 0.0
+              : _lastKnownPoint!.coords.speed * 3.6),
     ));
     if (update.rpcException != null) {
       return;
@@ -847,10 +788,11 @@ class LocationProvider with ChangeNotifier {
       var friendList =
           _realtimeUpdate?.updateMapPointFriends(_realtimeUpdate!.friends);
       if (friendList != null) {
-        var friends =  friendList.where((x) => x.specialValue == 0).toList();
-        var friendListAsJson =
-            MapperContainer.globals.toJson(friends);
-        if (kDebugMode) {print('lp_send Friends to watch $friendListAsJson');}
+        var friends = friendList.where((x) => x.specialValue == 0).toList();
+        var friendListAsJson = MapperContainer.globals.toJson(friends);
+        if (kDebugMode) {
+          print('lp_send Friends to watch $friendListAsJson');
+        }
         SendToWatch.updateFriends(friendListAsJson);
       }
     }
@@ -868,7 +810,7 @@ class LocationProvider with ChangeNotifier {
     if (!_isInBackground) notifyListeners();
   }
 
-  ///Refresh [RealTimeData] when location has no data for 4500ms with tracking
+  ///Refresh [RealTimeData] if no data for
   ///15 s without tracking
   ///[forceUpdate]-Mode to update after resume  default value = false
   ///necessary after app state switching in viewer mode
@@ -883,40 +825,26 @@ class LocationProvider with ChangeNotifier {
       var dtNow = DateTime.now();
       //avoid async re-trigger
       var timeDiff = dtNow.difference(_lastRefreshRequest);
-      if (timeDiff < const Duration(milliseconds: 4500)) {
+      if (timeDiff < const Duration(milliseconds: 9500)) {
         return;
       }
       _lastRefreshRequest = dtNow;
 
-      bg.Location? locData;
       /*  var diffSec = DateTime.now().difference(_lastUpdate).inMilliseconds +
           1000; //most time  14 seconds because timer and refresh are async
       if (diffSec >= defaultLocationUpdateInterval * 1000 || forceUpdate) {*/
 
-      if (_isTracking) {
-        locData = await _subToUpdates();
-      }
-      if (locData == null && _networkConnected) {
+      if (_networkConnected) {
+        _lastRealtimeRequest = DateTime.now();
         //update procession when no location data were sent
         var update = await RealtimeUpdate.wampUpdate();
         if (!kIsWeb) {
           FLog.trace(
               className: 'locationProvider',
               methodName: 'refresh',
-              text: 'send refresh force $forceUpdate');
+              text: 'send refresh force $forceUpdate Network: $networkConnected');
         }
-        /* if (isTesting) {
-            update = Mapper.fromJson<RealtimeUpdate>(
-                '{"hea":{"pos":17281,"spd":20,"eta":440010,"ior":true,"iip":true,"lat":48.12526909151467,"lon":11.549398275972768,"acc":0},"tai":{"pos":16663,"spd":0,"eta":490010,"ior":true,"iip":true,"lat":48.12016726012295,"lon":11.54839572144946,"acc":0},"fri":{"fri":{"9":{"req":0,"fid":0,"onl":false,"pos":16865,"spd":13,"eta":720259,"ior":true,"iip":true,"lat":48.1219677066427,"lon":11.548752403193944,"acc":0}}},"up":{"pos":16963,"spd":0,"eta":470010,"ior":true,"iip":false,"lat":0.0,"lon":0.0,"acc":0},"rle":18452.0,"rna":"Ost","ust":4,"usr":4}');
-          }*/
-
         if (update.rpcException != null) {
-          if (!kIsWeb) {
-            FLog.error(
-                className: 'locationProvider',
-                methodName: 'refresh',
-                text: update.rpcException.toString());
-          }
           _realUserSpeedKmh = null;
           SendToWatch.setUserSpeed('- km/h');
           _updateWatchData();
@@ -1112,10 +1040,10 @@ class LocationProvider with ChangeNotifier {
       return;
     }
     if (!kIsWeb) {
-        FLog.trace(
-            className: toString(),
-            methodName: '_updateTime_periodic',
-            text: 'updating because there are no new location data');
+      FLog.trace(
+          className: toString(),
+          methodName: '_updateTime_periodic',
+          text: 'updating because there are no new location data');
     }
     refresh();
   }

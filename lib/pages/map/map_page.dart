@@ -63,7 +63,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
   late FollowLocationStates followLocationState =
       FollowLocationStates.followOff;
   bool _webStartedTrainFollow = false;
-  Timer? _updateTimer;
+  Timer? _updateRealTimeDataTimer;
   bool _firstRefresh = true;
 
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
@@ -73,7 +73,6 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
     super.initState();
     controller = MapController();
     WidgetsBinding.instance.addObserver(this);
-    //LocationProvider.instance.addListener(resumeUpdates); //on changed resume update
   }
 
   @override
@@ -114,14 +113,14 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
   }
 
   void resumeUpdates({bool force = false}) {
-    _updateTimer?.cancel();
+    _updateRealTimeDataTimer?.cancel();
     if (force || _firstRefresh) {
       print('_firstRefresh resumeUpdates');
       context.read(locationProvider).refresh(forceUpdate: force);
       _firstRefresh = false;
     }
     //update data if not tracking
-    _updateTimer = Timer.periodic(
+    _updateRealTimeDataTimer = Timer.periodic(
       //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
       const Duration(seconds: defaultRealtimeUpdateInterval),
       (timer) {
@@ -134,8 +133,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           _webStartedTrainFollow = true;
         }
 
-          context.read(locationProvider).refreshRealtimeData();
-
+        context.read(locationProvider).refreshRealtimeData();
       },
     );
   }
@@ -147,8 +145,8 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           methodName: 'pauseUpdates',
           text: 'update Paused');
     }
-    _updateTimer?.cancel();
-    _updateTimer = null;
+    _updateRealTimeDataTimer?.cancel();
+    _updateRealTimeDataTimer = null;
   }
 
   void startFollowingMeLocation() {
@@ -658,7 +656,8 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                     ),
                   );
                 } else if (lp.gpsLocationPermissionsStatus ==
-                    LocationPermissionStatus.denied && HiveSettingsDB.useAlternativeLocationProvider == false) {
+                        LocationPermissionStatus.denied &&
+                    HiveSettingsDB.useAlternativeLocationProvider == false) {
                   return FloatingActionButton.extended(
                     onPressed: () async {
                       FlutterPlatformAlert.showAlert(
@@ -1063,14 +1062,16 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           negativeButtonTitle: Localize.current.cancel);
       if (odometerResetResult == CustomButton.positiveButton) {
         lp.resetTrackPoints();
-        bg.BackgroundGeolocation.setOdometer(0.0)
-            .then((value) => setState(() {}))
-            .catchError((error) {
-          showToast(message: Localize.of(context).failed);
-          if (!kIsWeb) {
-            FLog.error(text: '[resetOdometer] ERROR: $error');
-          }
-        });
+        if (!HiveSettingsDB.useAlternativeLocationProvider) {
+          await bg.BackgroundGeolocation.setOdometer(0.0)
+              .then((value) => setState(() {}))
+              .catchError((error) {
+            showToast(message: Localize.of(context).failed);
+            if (!kIsWeb) {
+              FLog.error(text: '[resetOdometer] ERROR: $error');
+            }
+          });
+        }
       }
     }
   }

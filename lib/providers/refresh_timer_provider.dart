@@ -28,7 +28,7 @@ class TimerNotifier extends StateNotifier<TimerModel> {
     return duration;
   }
 
-  ///Start timer by externa
+  ///Start timer by external
   void start() {
     _startTimer();
   }

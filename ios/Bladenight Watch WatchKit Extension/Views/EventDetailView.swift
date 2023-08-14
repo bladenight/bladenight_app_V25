@@ -76,6 +76,8 @@ struct EventDetailView: View {
             if (timeElapsed > refreshTime){
                 timeElapsed = 0
                 viewModel.sendDataMessage(for: .getLocationIsTracking)
+                //request current procession data
+                viewModel.sendDataMessage(for: .getRealtimeDataFromFlutter)
             }
         }
     }

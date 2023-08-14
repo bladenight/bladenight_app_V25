@@ -31,7 +31,7 @@ extension Location2Mapper on LocationData {
       'battery': battery,
       'activity': activity,
       'timestamp':
-          DateTime.fromMillisecondsSinceEpoch(Platform.isIOS?dt*1000:dt) //seconds in ms bug in location differs on android and ios
+          DateTime.fromMillisecondsSinceEpoch(dt) //seconds in ms bug in location differs on android and ios
               .toUtc()
               .toIso8601String(),
       'is_moving': true,
