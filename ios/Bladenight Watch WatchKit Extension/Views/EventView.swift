@@ -15,7 +15,7 @@ struct EventView: View {
     
     var body: some View {
         ScrollView{
-            if(viewModel.watchReachable){
+            if(viewModel.phoneReachable){
                 
                 VStack {
                     if(viewModel.activeEvent.lastUpdate == nil){

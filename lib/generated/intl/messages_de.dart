@@ -372,8 +372,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "nogpsenabled": MessageLookupByLibrary.simpleMessage(
             "Es ist scheinbar kein GPS im Gerät vorhanden oder für die App deaktiviert. Bitte die Einstellungen prüfen."),
         "notAvailable": MessageLookupByLibrary.simpleMessage("nicht verfügbar"),
-        "notKnownOnServer":
-            MessageLookupByLibrary.simpleMessage("Ausgelaufen! Bitte löschen!"),
+        "notKnownOnServer": MessageLookupByLibrary.simpleMessage(
+            "Veralted bitte,neu anlegen/löschen!"),
         "notOnRoute":
             MessageLookupByLibrary.simpleMessage("Nicht auf der Strecke!"),
         "notVisibleOnMap":

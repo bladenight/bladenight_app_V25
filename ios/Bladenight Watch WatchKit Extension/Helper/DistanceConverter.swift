@@ -10,7 +10,7 @@ import Foundation
 class DistanceConverter{
     static func ConvertMetersToString(distance:Int?)->String{
         let dist = Double(distance ?? 0)
-        if dist >= 10000{
+        if dist >= 1000{
             return String(format: "%.2f km", (dist)/1000)
         }
         else {
@@ -19,7 +19,7 @@ class DistanceConverter{
     }
     static func ConvertMetersToString(distance:Double?)->String{
         let dist = Double(distance ?? 0)
-        if dist >= 10000{
+        if dist >= 1000{
             return String(format: "%.2f km", (dist)/1000)
         }
         else {

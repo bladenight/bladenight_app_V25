@@ -20,7 +20,7 @@ class CommunicationHandler: NSObject, ObservableObject {
     @Published var isLocationTracking = false
     @Published var infoText = ""
     @Published var trackingStatus = false
-    @Published var watchReachable = false
+    @Published var phoneReachable = false
     @Published var progress = 0.1
     @Published var elapsedDistanceLength = "-"
     @Published var runningLength = "-"
@@ -100,7 +100,7 @@ extension CommunicationHandler: WCSessionDelegate {
     
     func sessionReachabilityDidChange(_ session: WCSession) {
         print("WCSession sessionReachabilityDidChange sessionReachability:\(session.isReachable)")
-        self.watchReachable=session.isReachable
+        self.phoneReachable=session.isReachable
         if (!session.isReachable){
             self.isLocationTracking=false;
         }
@@ -109,9 +109,9 @@ extension CommunicationHandler: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         debugPrint("WCSession activationDidCompleteWith activationState:\(activationState) error:\(String(describing: error))")
         debugPrint("WCSession.reachable: \(session.isReachable), WCSession.isCompanionAppInstalled: \(session.isCompanionAppInstalled)")
-        watchReachable=session.isReachable;
+        phoneReachable=session.isReachable;
         isCompanionAppInstalled = session.isCompanionAppInstalled;
-        if (watchReachable){
+        if (phoneReachable){
             sendDataMessage(for: .getEventDataFromFlutter);
             sendDataMessage(for: .getLocationIsTracking);
             sendDataMessage(for: .getFriendsDataFromFlutter);
@@ -143,11 +143,11 @@ extension CommunicationHandler: WCSessionDelegate {
     
     
     func sendMessage(for method: String, data: [String: Any] = [:]) {
-        guard session.isReachable else {
-            DispatchQueue.main.async {self.watchReachable=false}
+        guard session.isReachable,session.isCompanionAppInstalled else {
+            DispatchQueue.main.async {self.phoneReachable=false}
             return
         }
-        DispatchQueue.main.async { self.watchReachable=true}
+        DispatchQueue.main.async { self.phoneReachable=true}
         let messageData: [String: Any] = ["method": method, "data": data]
         print("sendMessage: \(messageData)")
         session.sendMessage(messageData, replyHandler: nil, errorHandler: nil)

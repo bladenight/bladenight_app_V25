@@ -59,13 +59,9 @@ class SendToWatch {
     if (!Platform.isIOS) {
       return;
     }
-    if (kDebugMode) {
-      channel.invokeMethod(flutterToWatch,
-          {'method': 'setIsLocationTracking', 'data': isTracking});
-    } else {
-      channel.invokeMethod(transferApplicationContext,
-          {'method': 'setIsLocationTracking', 'data': isTracking});
-    }
+
+    channel.invokeMethod(flutterToWatch,
+        {'method': 'setIsLocationTracking', 'data': isTracking});
   }
 
   static setRunningLength(double rlength) {
@@ -149,7 +145,8 @@ Future<void> initFlutterChannel() async {
       case 'getLocationIsTracking':
         print('getLocationIsTrackingFromFlutter received');
         try {
-          SendToWatch.setIsLocationTracking(LocationProvider.instance.isTracking);
+          SendToWatch.setIsLocationTracking(
+              LocationProvider.instance.isTracking);
         } catch (e) {
           if (!kIsWeb) {
             FLog.error(
@@ -175,9 +172,10 @@ Future<void> initFlutterChannel() async {
       case 'getRealtimeDataFromFlutter':
         print('getRealtimeDataFromFlutter received');
         try {
-          LocationProvider.instance.refresh();
-          if (LocationProvider.instance.realtimeUpdate!=null){
-          SendToWatch.updateRealtimeData(LocationProvider.instance.realtimeUpdate.toJson());
+          LocationProvider.instance.getLastRealtimeData();
+          if (LocationProvider.instance.realtimeUpdate != null) {
+            SendToWatch.updateRealtimeData(
+                LocationProvider.instance.realtimeUpdate.toJson());
           }
         } catch (e) {
           if (!kIsWeb) {

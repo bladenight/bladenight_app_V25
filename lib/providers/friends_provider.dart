@@ -237,6 +237,8 @@ class FriendsLogic with ChangeNotifier {
   }
 
   Future<void> deleteRelationShip(int id) async {
+    friends.remove(id);
+    notifyListeners();
     var deviceId = await DeviceId.getId;
     var getFriendRelationshipResult =
         await RelationshipOutputMessage.getRelationShip(

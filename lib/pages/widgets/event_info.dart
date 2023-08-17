@@ -38,8 +38,10 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+
       initEventUpdates();
-      //call on first start
+      initLocation();
+       //call on first start
       //
     });
   }

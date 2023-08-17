@@ -58,7 +58,7 @@ class TimerNotifier extends StateNotifier<TimerModel> {
   void _reset() {
     _tickerSubscription?.cancel();
     state = _initialState;
-    LocationProvider.instance.refresh();
+    LocationProvider.instance.getLastRealtimeData();
     _startTimer();
   }
 

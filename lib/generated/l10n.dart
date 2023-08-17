@@ -1674,10 +1674,10 @@ class Localize {
     );
   }
 
-  /// `Ausgelaufen! Bitte löschen!`
+  /// `Veralted bitte,neu anlegen/löschen!`
   String get notKnownOnServer {
     return Intl.message(
-      'Ausgelaufen! Bitte löschen!',
+      'Veralted bitte,neu anlegen/löschen!',
       name: 'notKnownOnServer',
       desc: '',
       args: [],

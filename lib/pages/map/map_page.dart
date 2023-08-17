@@ -133,7 +133,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           _webStartedTrainFollow = true;
         }
 
-        context.read(locationProvider).refreshRealtimeData();
+        context.read(locationProvider).getLastRealtimeData();
       },
     );
   }
@@ -197,15 +197,15 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
   }
 
   ///Toggles between location tracking and view without user pos
-  void toggleLocationService() async {
-    await LocationProvider.instance
+  void toggleLocationService() {
+     LocationProvider.instance
         .toggleProcessionTracking(userIsParticipant: true);
   }
 
   ///Toggles between user position and view with user pos
   void toggleViewerLocationService() async {
     if (LocationProvider.instance.isTracking) {
-      await LocationProvider.instance
+       LocationProvider.instance
           .toggleProcessionTracking(userIsParticipant: false);
       return;
     }
@@ -216,7 +216,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
         negativeButtonTitle:
             Localize.of(context).no); //no neutral button on android
     if (clickedButton == CustomButton.positiveButton) {
-      await LocationProvider.instance
+      LocationProvider.instance
           .toggleProcessionTracking(userIsParticipant: false);
     }
   }

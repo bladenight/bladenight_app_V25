@@ -12,8 +12,11 @@ struct EventDetailView: View {
     @Binding var tabSelection: Int
     @State var timeElapsed: Int = 0
     @State var refreshTime:Int = 5
-    
-    @State var  timerOneSec = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State var timediff:Int = 0
+    @State var timediffs:Double = 0
+    @State var warnColor:Color?
+    @State var outDatedData:Bool = false
+    @State var timerOneSec = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         ScrollView{
@@ -31,14 +34,18 @@ struct EventDetailView: View {
                     ProgressView("\(DistanceConverter.ConvertMetersToString(distance:(viewModel.realTimeData.user?.pos))) von  \(DistanceConverter.ConvertMetersToString(distance:(viewModel.realTimeData.runningLength)))",value: viewModel.realTimeData.userProgress()).foregroundColor(Color.yellow)
                         .tint(.yellow)
                     Label("\(viewModel.userSpeed)", systemImage: "gauge") .frame(maxWidth: .infinity, alignment: .leading).foregroundColor(Color.yellow)
-                        .font(.system(size: 12))
-
-                }.padding(3)
+                    if outDatedData {
+                        Label("Warte auf Aktualisierung", systemImage: "timer").frame(maxWidth: .infinity, alignment: .leading).foregroundColor(warnColor)
+                    }
+                }.padding(1)
             }
             
             VStack{
                 HStack{
-                    Text("Zug").bold().frame(alignment: .leading)  .font(.system(size: 10))
+                    Text("Zug")
+                        .bold().frame(alignment: .leading)
+                        .font(.system(size: 10))
+                        .foregroundColor(warnColor)
                     Text("Tracker:\(viewModel.realTimeData.getTrackers())").frame(maxWidth: .infinity,alignment: .trailing)  .font(.system(size: 10))
                 }.frame(maxWidth: .infinity, alignment: .trailing)
                 
@@ -61,8 +68,10 @@ struct EventDetailView: View {
                     Text("entf:\(DistanceConverter.ConvertMetersToString(distance:((viewModel.realTimeData.distanceOfUserToTail())))) | \(DateTimeformatter.formatDuration(d: viewModel.realTimeData.timeUserToTail()))").frame(maxWidth: .infinity, alignment: .trailing)
                 }.frame(maxWidth: .infinity, alignment: .trailing)
                 Text("Daten vom \(viewModel.realTimeDataLastUpdate)")
-                                    .frame( alignment: .center)
-                                    .font(.system(size: 8));
+                                    .frame( alignment: .center )
+                                    .font(.system(size: 8))
+                                    .foregroundColor(warnColor)
+                                
                 
             }
          
@@ -79,6 +88,22 @@ struct EventDetailView: View {
                 //request current procession data
                 viewModel.sendDataMessage(for: .getRealtimeDataFromFlutter)
             }
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yy HH:mm:ss"
+            guard  let date = dateFormatter.date(from: viewModel.realTimeDataLastUpdate) else {
+                return
+            }
+            let ti = date.timeIntervalSinceNow
+            timediffs = ti
+            if ti < -60.0 {
+                warnColor = Color.yellow
+                outDatedData = true
+            }
+            else{
+                warnColor = nil
+                outDatedData = false
+            }
+           
         }
     }
 }

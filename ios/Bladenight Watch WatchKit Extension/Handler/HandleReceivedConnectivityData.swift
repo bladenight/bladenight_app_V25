@@ -16,13 +16,8 @@ extension CommunicationHandler{
             guard let method = message["method"] as? String, let enumMethod = WatchReceiveMessageMethod(rawValue: method) else {
                 return
             }
-            let myFormat = Date.FormatStyle()
-                .year()
-                .day(.twoDigits)
-                .month(.twoDigits)
-                .hour()
-                .minute()
-                .second()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yy HH:mm:ss"
             switch enumMethod {
             case .setActiveEventDate:
                 self.activeEventRouteDate = (message["data"] as? String) ?? "-"
@@ -89,7 +84,7 @@ extension CommunicationHandler{
                         let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: false) ?? Data()
                         let  data = try decoder.decode(WatchEvent.self, from: bytes)
                         self.activeEvent = data
-                        self.updateEventDataLastUpdate = Date.now.formatted(myFormat)
+                        self.updateEventDataLastUpdate = dateFormatter.string(from: Date.now)
                     }
                 }
                 catch {
@@ -152,7 +147,7 @@ extension CommunicationHandler{
                         self.locations[1] = headAndTailLoc[0];
                         self.locations[2] = headAndTailLoc[1];
                         
-                        self.realTimeDataLastUpdate = Date.now.formatted(myFormat)
+                        self.realTimeDataLastUpdate = dateFormatter.string(from: Date.now)
                     }
                     debugPrint("updateRealtimeData locations received \(self.locations)")
                     
@@ -178,7 +173,7 @@ extension CommunicationHandler{
                         self.friends = data
                         
                     }
-                    self.friendDataLastUpdate = Date.now.formatted(myFormat)
+                    self.friendDataLastUpdate = dateFormatter.string(from: Date.now)
                 }
                 catch {
                     NSLog("\(Date()) fatalerror updateFriends \(error)")

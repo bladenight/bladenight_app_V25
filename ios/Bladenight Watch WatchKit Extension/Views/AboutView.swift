@@ -34,14 +34,14 @@ struct AboutView: View {
             Divider()
                 .frame(height: 2)
                 .overlay(.yellow)
-                Text("Eventstatus vom \(viewModel.activeEvent.lastUpdate ?? "-")")
-                    .frame( alignment: .leading)
+            Text("Eventstatus vom \(viewModel.activeEvent.lastUpdate ?? "-")")
+                    .frame( maxWidth: .infinity,alignment: .leading)
                     .font(.system(size: 10));
-                Text("Eventdaten vom \(viewModel.updateEventDataLastUpdate)")
-                    .frame( alignment: .leading)
+            Text("Eventdaten vom \(viewModel.updateEventDataLastUpdate)")
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.system(size: 10));
-                Text("Freundedaten vom \(viewModel.friendDataLastUpdate)")
-                    .frame( alignment: .leading)
+            Text("Freundedaten vom \(viewModel.friendDataLastUpdate)")
+                .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.system(size: 10))
                 
         
