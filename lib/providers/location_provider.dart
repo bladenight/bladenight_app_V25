@@ -730,8 +730,12 @@ class LocationProvider with ChangeNotifier {
       }
     }
     if (!_isTracking) return;
+
+     var newLoc =  await _subToUpdates();
+     if (newLoc !=null){
+       _lastKnownPoint= newLoc;
+     }
     if (_lastKnownPoint == null) {
-      _subToUpdates();
       return;
     }
 

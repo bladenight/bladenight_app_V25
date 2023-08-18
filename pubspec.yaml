@@ -31,7 +31,7 @@ dependencies:
   flutter_device_type: ^0.4.0
   flutter_launcher_icons: ^0.13.1
   flutter_local_notifications: ^15.1.0+1
-  flutter_localization: ^0.1.10
+  flutter_localization: ^0.1.13
   flutter_map: ^5.0.0
   flutter_map_marker_popup: ^5.1.0
   flutter_native_splash: ^2.3.0
