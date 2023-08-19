@@ -18,6 +18,7 @@ import 'events_page.dart';
 import 'friends/friends_page.dart';
 import 'home_page.dart';
 import 'map/map_page.dart';
+import 'settings_page.dart';
 import 'widgets/intro_slider.dart';
 
 bool _initialURILinkHandled = false;
@@ -205,8 +206,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           if (!kIsWeb && !HiveSettingsDB.isBladeGuard)
             BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.shield_lefthalf_fill),
-              label: Localize.of(context).bladeGuard,
+              icon: const Icon(CupertinoIcons.settings_solid),
+              label: Localize.of(context).settings,
             ),
         ],
       ),
@@ -225,10 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
             return Container();
           case 4:
             return Builder(builder: (context) {
-              if (!kIsWeb) {
-                return const BladeGuardPage();
-              }
-              return Container();
+
+                return const SettingsPage();
               /*var ssp = context.watch(BladeguardLinkImageAndLink.provider);
               return ssp.link == null ? Container() : BladeGuardPage();*/
             });

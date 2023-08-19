@@ -218,7 +218,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportUserTracking":
             MessageLookupByLibrary.simpleMessage("Export user tracking"),
         "exportUserTrackingHeader": MessageLookupByLibrary.simpleMessage(
-            "Export recorded locationdata (visble track on map) as json"),
+            "Export recorded location data (visible track on map) as GPX"),
         "exportWarning": MessageLookupByLibrary.simpleMessage(
             "Danger! This will back up all friends and the ID from the device. This may contain sensitive information such as names."),
         "exportWarningTitle":

@@ -174,4 +174,30 @@ extension MapSettings on HiveSettingsDB {
   static void removeOpenStreetMapDarkLink() {
     HiveSettingsDB._hiveBox.delete(_openStreetMapDarkLinkKey);
   }
+
+  static const String _mapMenuVisibleKey = 'mapMenuVisiblePref';
+
+  ///get mapMenuVisible
+  static bool get mapMenuVisible {
+    return HiveSettingsDB._hiveBox.get(_mapMenuVisibleKey, defaultValue: true);
+  }
+
+  ///set mapMenuVisibleString
+  static void setMapMenuVisible(bool val) {
+    HiveSettingsDB._hiveBox.put(_mapMenuVisibleKey, val);
+  }
+
+  static const String showOwnTrackKey = 'showOwnTrackPref';
+
+  /// Get value
+  /// if own driven track should bei shown on map
+  static bool get showOwnTrack {
+    return HiveSettingsDB._hiveBox.get(showOwnTrackKey, defaultValue: true);
+  }
+
+  ///set showOwnTrack
+  static void setShowOwnTrack(bool val) {
+    HiveSettingsDB._hiveBox.put(showOwnTrackKey, val);
+  }
+
 }

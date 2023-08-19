@@ -168,12 +168,13 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
               padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 5.0),
               child: GestureDetector(
                 onTap: () {
-                  var link =
+                  return;//
+                 /* var link =
                       context.read(MainSponsorImageAndLink.provider).link;
                   if (link != null && link != '') {
                     Launch.launchUrlFromString(
                         context.read(MainSponsorImageAndLink.provider).link!);
-                  }
+                  }*/
                 },
                 child: Builder(builder: (context) {
                   var ms = context.watch(MainSponsorImageAndLink.provider);
@@ -198,12 +199,13 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
               padding: const EdgeInsets.fromLTRB(50.0, 1.0, 50, 1.0),
               child: GestureDetector(
                 onTap: () {
-                  var link =
+                  return; //removed because Apple privacy issue
+                  /*var link =
                       context.read(SecondSponsorImageAndLink.provider).link;
                   if (link != null && link != '') {
                     Launch.launchUrlFromString(
                         context.read(SecondSponsorImageAndLink.provider).link!);
-                  }
+                  }*/
                 },
                 child: Builder(builder: (context) {
                   return Image.asset(secondLogoPlaceholder,
@@ -214,13 +216,14 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
           ]),
           GestureDetector(
             onTap: () async {
-              context.read(activeEventProvider).refresh();
+              return; //removed because Apple privacy issue
+              /*context.read(activeEventProvider).refresh();
               context.refresh(updateImagesAndLinksProvider);
               var link = context.read(StartPointImageAndLink.provider).link;
               if (link != null && link != '') {
                 Launch.launchUrlFromString(
                     context.read(StartPointImageAndLink.provider).link!);
-              }
+              }*/
             },
             child: Column(
               children: [

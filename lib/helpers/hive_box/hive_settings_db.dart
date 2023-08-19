@@ -11,8 +11,10 @@ import 'package:latlong2/latlong.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../models/event.dart';
+import '../../models/user_trackpoint.dart';
 
 part 'map_settings.dart';
+part 'location_store.dart';
 
 final hiveDBProvider =
     StateProvider<HiveSettingsDB>((ref) => HiveSettingsDB.instance);
@@ -520,18 +522,6 @@ class HiveSettingsDB {
     _hiveBox.put(_eventsMapKey, val);
   }
 
-
-  static const String _mapMenuVisibleKey = 'mapMenuVisiblePref';
-
-  ///get mapMenuVisible
-  static bool get mapMenuVisible {
-    return _hiveBox.get(_mapMenuVisibleKey, defaultValue: true);
-  }
-
-  ///set mapMenuVisibleString
-  static void setMapMenuVisible(bool val) {
-    _hiveBox.put(_mapMenuVisibleKey, val);
-  }
 
   static const String _themeKey = 'dynamicTheme3Pref';
 

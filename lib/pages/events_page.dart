@@ -105,7 +105,8 @@ class _EventsPageState extends State<EventsPage> {
                       if (index % 2 == 0) {
                         var event = events.events[(index / 2).round()];
                         var eventStartState = EventStartState.eventOver;
-                        var eventOver = event.startDateUtc.add(event.duration)
+                        var eventOver = event.startDateUtc
+                            .add(event.duration)
                             .difference(DateTime.now().toUtc())
                             .isNegative;
                         var eventActual = !eventOver &&
@@ -219,19 +220,23 @@ Widget _listTile(
                         color: color,
                       ),
                     ),*/
-                    Text(
-                      '${event.routeName} ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: color,
+                    Flexible(
+                      child: Text(
+                        '${event.routeName} ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: color,
+                        ),
                       ),
                     ),
                     if (event.formatDistance != '')
-                      Text(
-                        '- ${event.formatDistance}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: color,
+                      Flexible(
+                        child: Text(
+                          '- ${event.formatDistance}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: color,
+                          ),
                         ),
                       ),
                   ],

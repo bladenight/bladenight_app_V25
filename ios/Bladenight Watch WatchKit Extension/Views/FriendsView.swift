@@ -13,24 +13,24 @@ struct FriendsView: View {
     @Binding var tabSelection: Int
     @State var timeElapsed: Int = 0
     @State var refreshTime:Int = 10
-    
+    @State var warnColor:Color?
+    @State var outDatedData:Bool = false
     @State var  timerOneSec = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
+
     var body: some View {
         VStack{
             if(!viewModel.isLocationTracking){
                 Text("Tracking inaktiv").padding()
             }
-            ProgressView(value: (Double(timeElapsed)/Double(refreshTime)))
-                .scaleEffect(x: 1, y: 0.25, anchor: .center)
-                .tint(.yellow).padding(0)
             Text("Freunde aktiv \(viewModel.friends.count)")
                 .frame( alignment: .leading)
-                .font(.system(size: 9))
+                .font(.system(size: 9)).foregroundColor(warnColor)
             List(viewModel.friends){
                 friend in FriendRow(friend: friend)
             }
-           
+            if outDatedData {
+                Label("Warte auf Aktualisierung", systemImage: "timer") .frame(maxWidth: .infinity, alignment: .leading).foregroundColor(warnColor)
+            }
         }.onAppear(){
             timerOneSec = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
             viewModel.sendDataMessage(for: .getFriendsDataFromFlutter)
@@ -39,6 +39,21 @@ struct FriendsView: View {
             if (timeElapsed > refreshTime){
                 timeElapsed = 0
                 viewModel.sendDataMessage(for: .getFriendsDataFromFlutter)
+            }
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yy HH:mm:ss"
+            guard  let date = dateFormatter.date(from: viewModel.realTimeDataLastUpdate) else {
+                return
+            }
+            let ti = date.timeIntervalSinceNow
+
+            if ti < -60.0 {
+                warnColor = Color.yellow
+                outDatedData = true
+            }
+            else{
+                warnColor = nil
+                outDatedData = false
             }
         }
         .onDisappear() {

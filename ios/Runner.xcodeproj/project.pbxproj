@@ -1028,7 +1028,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Debug.plist";
@@ -1040,7 +1040,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1067,14 +1067,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
@@ -1104,7 +1104,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1112,7 +1112,7 @@
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
 				PRODUCT_NAME = Bladenight;
@@ -1141,14 +1141,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
 				PRODUCT_NAME = Bladenight;
@@ -1173,7 +1173,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1191,7 +1191,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
@@ -1218,7 +1218,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1236,7 +1236,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1261,7 +1261,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1279,7 +1279,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1474,7 +1474,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1487,7 +1487,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
@@ -1512,7 +1512,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1525,7 +1525,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1549,7 +1549,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1562,7 +1562,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1695,7 +1695,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Debug.plist";
@@ -1707,7 +1707,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1732,7 +1732,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2365;
+				CURRENT_PROJECT_VERSION = 2368;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Release.plist";
@@ -1744,7 +1744,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.65;
+				MARKETING_VERSION = 1.0.68;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../generated/l10n.dart';
@@ -24,24 +24,24 @@ import '../../../providers/shared_prefs_provider.dart';
 import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
 
-class TrackProgressOverlay extends StatefulWidget {
+class TrackProgressOverlay extends ConsumerStatefulWidget {
   const TrackProgressOverlay({Key? key, required this.mapController})
       : super(key: key);
   final MapController mapController;
 
   @override
-  State<TrackProgressOverlay> createState() => _TrackProgressOverlayState();
+  ConsumerState<TrackProgressOverlay> createState() => _TrackProgressOverlayState();
 }
 
-class _TrackProgressOverlayState extends State<TrackProgressOverlay>
+class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read(locationProvider).refresh(forceUpdate: true); //update in map
-      context.read(activeEventProvider).refresh(forceUpdate: true);
-      context.read(refreshTimerProvider.notifier).start();
+      ref.read(locationProvider).refresh(forceUpdate: true); //update in map
+      ref.read(activeEventProvider).refresh(forceUpdate: true);
+      ref.read(refreshTimerProvider.notifier).start();
     });
   }
 
@@ -54,16 +54,16 @@ class _TrackProgressOverlayState extends State<TrackProgressOverlay>
       }
     }
     if (state == AppLifecycleState.resumed) {
-      context.read(refreshTimerProvider.notifier).start();
+      ref.read(refreshTimerProvider.notifier).start();
     } else if (state == AppLifecycleState.paused) {
-      context.read(refreshTimerProvider.notifier).stop();
+      ref.read(refreshTimerProvider.notifier).stop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var location = context.watch(locationProvider);
-    var activeEvent = context.watch(isActiveEventProvider);
+    var location = ref.watch(locationProvider);
+    var activeEvent = ref.watch(isActiveEventProvider);
     if (activeEvent.status == EventStatus.noevent) {
       return Stack(children: [
         Positioned(
@@ -316,7 +316,7 @@ class _TrackProgressOverlayState extends State<TrackProgressOverlay>
                                             20,
                                         child: CircleAvatar(
                                           backgroundColor:
-                                              context.watch(MeColor.provider),
+                                              ref.watch(MeColor.provider),
                                           child: location.userIsParticipant
                                               ? const ImageIcon(AssetImage(
                                                   'assets/images/skaterIcon_256.png'))
@@ -626,7 +626,7 @@ class _TrackProgressOverlayState extends State<TrackProgressOverlay>
                                   child: CircularProgressIndicator(
                                     color:
                                         CupertinoTheme.of(context).primaryColor,
-                                    value: context.watch(percentLeftProvider),
+                                    value: ref.watch(percentLeftProvider),
                                     strokeWidth: 2,
                                   ),
                                 ),

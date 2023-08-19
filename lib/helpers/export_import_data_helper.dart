@@ -120,7 +120,7 @@ void exportLogs() async {
 void exportUserTracking(List<UserTrackPoint> userTrackPoints) async {
   try {
     if (kIsWeb) return;
-    var trkPts = jsonEncode(userTrackPoints);
+    var trkPts = UserTrackPoints(userTrackPoints).toXML();// jsonEncode(userTrackPoints);
     var tempDir = await getTemporaryDirectory();
     final file = File(
         '${tempDir.path}/BladeNight${DateTime.now().millisecondsSinceEpoch}.json');

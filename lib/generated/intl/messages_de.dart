@@ -225,7 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportUserTracking":
             MessageLookupByLibrary.simpleMessage("Usertracking exportieren"),
         "exportUserTrackingHeader": MessageLookupByLibrary.simpleMessage(
-            "Das aktuell sichtbare gefahrene Routenlinie als Json exportieren"),
+            "Das aktuell sichtbare gefahrene Routenlinie als GPX exportieren"),
         "exportWarning": MessageLookupByLibrary.simpleMessage(
             "Achtung! Dies sichert alle Freunde und die Kennung vom Gerät. Dies kann sensible Daten enthalten, wie zum Beispiel Namen."),
         "exportWarningTitle":
@@ -372,8 +372,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "nogpsenabled": MessageLookupByLibrary.simpleMessage(
             "Es ist scheinbar kein GPS im Gerät vorhanden oder für die App deaktiviert. Bitte die Einstellungen prüfen."),
         "notAvailable": MessageLookupByLibrary.simpleMessage("nicht verfügbar"),
-        "notKnownOnServer":
-            MessageLookupByLibrary.simpleMessage("Ausgelaufen! Bitte löschen!"),
+        "notKnownOnServer": MessageLookupByLibrary.simpleMessage(
+            "Veralted bitte,neu anlegen/löschen!"),
         "notOnRoute":
             MessageLookupByLibrary.simpleMessage("Nicht auf der Strecke!"),
         "notVisibleOnMap":

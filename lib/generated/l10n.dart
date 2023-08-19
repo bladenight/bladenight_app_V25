@@ -1674,10 +1674,10 @@ class Localize {
     );
   }
 
-  /// `Ausgelaufen! Bitte löschen!`
+  /// `Veralted bitte,neu anlegen/löschen!`
   String get notKnownOnServer {
     return Intl.message(
-      'Ausgelaufen! Bitte löschen!',
+      'Veralted bitte,neu anlegen/löschen!',
       name: 'notKnownOnServer',
       desc: '',
       args: [],
@@ -3088,10 +3088,10 @@ class Localize {
     );
   }
 
-  /// `Das aktuell sichtbare gefahrene Routenlinie als Json exportieren`
+  /// `Das aktuell sichtbare gefahrene Routenlinie als GPX exportieren`
   String get exportUserTrackingHeader {
     return Intl.message(
-      'Das aktuell sichtbare gefahrene Routenlinie als Json exportieren',
+      'Das aktuell sichtbare gefahrene Routenlinie als GPX exportieren',
       name: 'exportUserTrackingHeader',
       desc: '',
       args: [],

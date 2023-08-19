@@ -381,7 +381,7 @@
   "dataCouldBeOutdated": "Data could be outdated.",
   "noLocationPermitted": "No location permission, please check device settings",
   "exportUserTracking": "Export user tracking",
-  "exportUserTrackingHeader": "Export recorded locationdata (visble track on map) as json",
+  "exportUserTrackingHeader": "Export recorded location data (visible track on map) as GPX",
   "setRoute": "Set Route",
   "sendData30sec": "Request sent - change need about 30 secs.",
   "noChoiceNoAction": "No choice, no action",

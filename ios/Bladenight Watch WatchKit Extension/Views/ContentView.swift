@@ -21,7 +21,7 @@ struct ContentView: View {
         TabView(selection: $tabSelection) {
             EventView(tabSelection: $tabSelection).environmentObject(viewModel)
                 .tag(0)
-            if(viewModel.watchReachable){
+            if(viewModel.phoneReachable){
                 EventDetailView(tabSelection: $tabSelection).environmentObject(viewModel)
                     .tag(2)
                 //MapView(tabSelection: $tabSelection).environmentObject(connectivityModel).tag(3)

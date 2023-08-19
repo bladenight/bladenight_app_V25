@@ -237,21 +237,21 @@ class FriendsLogic with ChangeNotifier {
   }
 
   Future<void> deleteRelationShip(int id) async {
+    friends.remove(id);
+    notifyListeners();
     var deviceId = await DeviceId.getId;
+    PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
     var getFriendRelationshipResult =
         await RelationshipOutputMessage.getRelationShip(
       RelationshipInputMessage(deviceId: deviceId, friendId: id, requestId: 0),
     );
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
-      await FlutterPlatformAlert.showAlert(
-          windowTitle: Localize.current.deletefriend,
-          text: Localize.current.failed);
+     if(!kIsWeb){
+       FLog.error(text: 'Error deleting friend on Server',exception: getFriendRelationshipResult?.rpcException);
+     }
       return;
     }
-    friends.remove(id);
-    PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
-    notifyListeners();
   }
 
   Future<void> updateFriend(Friend friend) async {

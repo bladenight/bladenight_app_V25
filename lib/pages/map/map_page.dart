@@ -12,8 +12,7 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'
-    show AsyncValue, AsyncValueX, ProviderSubscription;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
@@ -42,11 +41,11 @@ import 'widgets/map_layer.dart';
 import 'widgets/qr_create_page.dart';
 import 'widgets/track_progress_overlay.dart';
 
-class MapPage extends StatefulWidget {
+class MapPage extends ConsumerStatefulWidget {
   const MapPage({Key? key}) : super(key: key);
 
   @override
-  State<MapPage> createState() => _MapPageState();
+  ConsumerState<MapPage> createState() => _MapPageState();
 }
 
 enum FollowLocationStates {
@@ -57,7 +56,7 @@ enum FollowLocationStates {
   followTrainStopped
 }
 
-class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
+class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   late MapController controller;
   late List<Marker> mapMarker = [];
   late FollowLocationStates followLocationState =
@@ -117,7 +116,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
     _updateTimer?.cancel();
     if (force || _firstRefresh) {
       print('_firstRefresh resumeUpdates');
-      context.read(locationProvider).refresh(forceUpdate: force);
+      ref.read(locationProvider).refresh(forceUpdate: force);
       _firstRefresh = false;
     }
     //update data if not tracking
@@ -134,7 +133,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           _webStartedTrainFollow = true;
         }
 
-          context.read(locationProvider).refreshRealtimeData();
+          ref.read(locationProvider).refreshRealtimeData();
 
       },
     );
@@ -169,7 +168,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
     setState(() {
       followLocationState = FollowLocationStates.followMe;
     });
-    context.read(locationProvider).refresh(forceUpdate: true);
+    ref.read(locationProvider).refresh(forceUpdate: true);
   }
 
   void startFollowingTrainHead() {
@@ -185,7 +184,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
       },
       fireImmediately: true,
     );
-    context.read(locationProvider).refresh(forceUpdate: true);
+    ref.read(locationProvider).refresh(forceUpdate: true);
   }
 
   void stopFollowingLocation() async {
@@ -243,8 +242,8 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
         child: Stack(children: [
           Builder(
             builder: (context) {
-              var locationUpdate = context.watch(locationProvider);
-              var activeEvent = context.watch(activeEventProvider);
+              var locationUpdate = ref.watch(locationProvider);
+              var activeEvent = ref.watch(activeEventProvider);
               var runningRoutePoints = locationUpdate.realtimeUpdate
                   ?.runningRoute(activeEvent.activeEventRoutePoints);
               var headingRoutePoints = activeEvent.headingPoints;
@@ -275,12 +274,12 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                   ),
                   //user track
                   if (locationUpdate.userLatLongs.isNotEmpty &&
-                      context.watch(ShowOwnTrack.provider))
+                      ref.watch(ShowOwnTrack.provider))
                     Polyline(
                       points: locationUpdate.userLatLongs,
                       strokeWidth: locationUpdate.isTracking ? 4 : 3,
-                      borderColor: context.watch(MeColor.provider),
-                      color: context.watch(isTrackingProvider)
+                      borderColor: ref.watch(MeColor.provider),
+                      color: ref.watch(isTrackingProvider)
                           ? const CupertinoDynamicColor.withBrightness(
                               color: CupertinoColors.white,
                               darkColor: CupertinoColors.systemBlue)
@@ -293,9 +292,9 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                     Polyline(
                         points: runningRoutePoints,
                         color: CupertinoDynamicColor.withBrightness(
-                            color: context.watch(ThemePrimaryColor.provider),
+                            color: ref.watch(ThemePrimaryColor.provider),
                             darkColor:
-                                context.watch(ThemePrimaryDarkColor.provider)),
+                                ref.watch(ThemePrimaryDarkColor.provider)),
                         strokeWidth: 3,
                         borderStrokeWidth: 5.0,
                         isDotted: true),
@@ -500,7 +499,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                         },
                       ),
                   if (locationUpdate.userLatLng != null &&
-                      context.watch(isTrackingProvider))
+                      ref.watch(isTrackingProvider))
                     //MeMarker
                     BnMapMarker(
                         buildContext: context,
@@ -519,7 +518,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                             '${(TimeConverter.millisecondsToDateTimeString(value: locationUpdate.realtimeUpdate?.timeUserToTail() ?? 0))}',
                         distanceUserToTailText:
                             '${((locationUpdate.realtimeUpdate?.distanceOfUserToTail()) ?? '-')} m',
-                        color: context.watch(MeColor.provider),
+                        color: ref.watch(MeColor.provider),
                         point: locationUpdate.userLatLng!,
                         width: sizeValue,
                         height: sizeValue,
@@ -533,7 +532,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                                 radius: sizeValue - 5,
                                 backgroundImage: const AssetImage(
                                     'assets/images/skaterIcon_256.png'),
-                                backgroundColor: context
+                                backgroundColor: ref
                                     .watch(MeColor.provider)
                                     .withOpacity(0.6),
                               ),
@@ -547,14 +546,14 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                                 radius: sizeValue - 5,
                                 backgroundImage: const AssetImage(
                                     'assets/images/skaterIcon_256.png'),
-                                backgroundColor: context
+                                backgroundColor: ref
                                     .watch(MeColor.provider)
                                     .withOpacity(0.6),
                               ),
                             );
                           }
                           return CircleAvatar(
-                            backgroundColor: context
+                            backgroundColor: ref
                                 .watch(MeColor.provider)
                                 .withOpacity(0.6),
                             child: locationUpdate.userIsParticipant
@@ -578,7 +577,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
               height: 30,
               width: MediaQuery.of(context).size.width * .60,
               child: Builder(builder: (context) {
-                var lp = context.watch(locationProvider);
+                var lp = ref.watch(locationProvider);
                 if (lp.gpsLocationPermissionsStatus !=
                     LocationPermissionStatus.denied) {
                   var alwaysPermissionGranted =
@@ -688,10 +687,10 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
               right: 10,
               bottom: 40,
               child: Builder(builder: (context) {
-                var isTracking = context.watch(isTrackingProvider);
-                var autoStop = context.watch(isAutoStopProvider);
+                var isTracking = ref.watch(isTrackingProvider);
+                var autoStop = ref.watch(isAutoStopProvider);
                 var userParticipating =
-                    context.watch(isUserParticipatingProvider);
+                    ref.watch(isUserParticipatingProvider);
                 //for future implementations - if (isActive == EventStatus.confirmed) {
                 return GestureDetector(
                   onLongPress: () async {
@@ -816,12 +815,12 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
               return FloatingActionButton(
                 onPressed: () {
                   setState(() {
-                    HiveSettingsDB.setMapMenuVisible(
-                        !HiveSettingsDB.mapMenuVisible);
+                    MapSettings.setMapMenuVisible(
+                        !MapSettings.mapMenuVisible);
                   });
                 },
                 heroTag: 'showMenuTag',
-                child: HiveSettingsDB.mapMenuVisible
+                child: MapSettings.mapMenuVisible
                     ? const Icon(Icons.menu_open)
                     : const Icon(Icons.menu),
               );
@@ -830,7 +829,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           if (kIsWeb)
             Positioned(
               left: 10,
-              bottom: HiveSettingsDB.mapMenuVisible ? 250 : 100,
+              bottom: MapSettings.mapMenuVisible ? 250 : 100,
               height: 40,
               child: Builder(builder: (context) {
                 return FloatingActionButton(
@@ -875,7 +874,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
               }),
             ),
           Visibility(
-            visible: HiveSettingsDB.mapMenuVisible,
+            visible: MapSettings.mapMenuVisible,
             child: Stack(
               children: [
                 if (!kIsWeb)
@@ -884,16 +883,16 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                     bottom: 350, //same height as qrcode in web
                     height: 40,
                     child: Builder(builder: (context) {
-                      var isActive = context.watch(
+                      var isActive = ref.watch(
                           isActiveEventProvider.select((ia) => ia.status));
                       if (isActive == EventStatus.confirmed) {
-                        var currentRoute = context.watch(currentRouteProvider);
+                        var currentRoute = ref.watch(currentRouteProvider);
                         return currentRoute.when(data: (data) {
                           return FloatingActionButton(
                               heroTag: 'barcodeBtnTag',
                               backgroundColor: Colors.blue,
                               onPressed: () {
-                                _showLiveMapLink(context
+                                _showLiveMapLink(ref
                                     .read(LiveMapImageAndLink.provider)
                                     .link);
                               },
@@ -914,10 +913,10 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                 if (!kIsWeb)
                   Positioned(
                     left: 10,
-                    bottom: HiveSettingsDB.mapMenuVisible ? 300 : 100,
+                    bottom: MapSettings.mapMenuVisible ? 300 : 100,
                     height: 40,
                     child: Builder(builder: (context) {
-                      var isTracking = context.watch(
+                      var isTracking = ref.watch(
                           locationProvider.select((it) => it.isTracking));
                       if (!isTracking) {
                         return FloatingActionButton(
@@ -930,8 +929,8 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
                               color: CupertinoColors.white),
                           /*CupertinoAdaptiveTheme.of(context).brightness ==
                                 Brightness.light
-                            ? context.watch(ThemePrimaryDarkColor.provider)
-                            : context.watch(ThemePrimaryColor.provider)),*/
+                            ? ref.watch(ThemePrimaryDarkColor.provider)
+                            : ref.watch(ThemePrimaryColor.provider)),*/
                         );
                       } else {
                         return Container();
@@ -1062,15 +1061,9 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
           positiveButtonTitle: Localize.current.yes,
           negativeButtonTitle: Localize.current.cancel);
       if (odometerResetResult == CustomButton.positiveButton) {
-        lp.resetTrackPoints();
-        bg.BackgroundGeolocation.setOdometer(0.0)
-            .then((value) => setState(() {}))
-            .catchError((error) {
-          showToast(message: Localize.of(context).failed);
-          if (!kIsWeb) {
-            FLog.error(text: '[resetOdometer] ERROR: $error');
-          }
-        });
+        await lp.resetTrackPoints();
+        setState(() {});
+
       }
     }
   }

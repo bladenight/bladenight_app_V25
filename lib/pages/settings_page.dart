@@ -482,27 +482,31 @@ class _SettingsPageState extends State<SettingsPage> {
                       height: 15,
                     ),
                   if (!kIsWeb)
-                  CupertinoFormSection(
-                      header: Text(Localize.of(context)
-                          .exportUserTrackingHeader),
-                      children: <Widget>[
-                        CupertinoButton(
-                            child: Text(Localize.of(context)
-                                .exportUserTracking),
-                            onPressed: () => exportUserTracking(
-                                LocationProvider.instance
-                                    .userTrackingPoints)),
-                      ]),
+                    CupertinoFormSection(
+                        header:
+                            Text(Localize.of(context).exportUserTrackingHeader),
+                        children: <Widget>[
+                          CupertinoButton(
+                              child:
+                                  Text(Localize.of(context).exportUserTracking),
+                              onPressed: () => exportUserTracking(
+                                  LocationProvider
+                                      .instance.userTrackingPoints)),
+                        ]),
                   if (!kIsWeb)
                     CupertinoFormSection(
                         header: Text(Localize.of(context).resetOdoMeter),
                         children: <Widget>[
                           CupertinoButton(
+                            child:
+                                Text(Localize.of(context).resetOdoMeterTitle),
+                            onPressed: () async {
+                              await LocationProvider.instance.resetTrackPoints();
+                              setState(() {
 
-                              child: Text(Localize.of(context).resetOdoMeterTitle),
-                              onPressed: () async =>
-                                  await BackgroundGeolocationHelper
-                                      .resetOdoMeter(context)),
+                              });
+                            },
+                          ),
                         ]),
                   const SizedBox(
                     height: 15,
@@ -690,31 +694,30 @@ class _SettingsPageState extends State<SettingsPage> {
                                       ),
                                     ]),
                                 //if (Platform.isAndroid)
-                                  CupertinoFormSection(
-                                      header: Text(Localize.of(context)
-                                          .alternativeLocationProviderTitle),
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 20, right: 20),
-                                          child: DataLeftRightContent(
-                                            descriptionLeft: Localize.of(
-                                                    context)
-                                                .alternativeLocationProvider,
-                                            descriptionRight: '',
-                                            rightWidget: CupertinoSwitch(
-                                              onChanged: (val) {
-                                                HiveSettingsDB
-                                                    .setUseAlternativeLocationProvider(
-                                                        val);
-                                                setState(() {});
-                                              },
-                                              value: HiveSettingsDB
-                                                  .useAlternativeLocationProvider,
-                                            ),
+                                CupertinoFormSection(
+                                    header: Text(Localize.of(context)
+                                        .alternativeLocationProviderTitle),
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 20),
+                                        child: DataLeftRightContent(
+                                          descriptionLeft: Localize.of(context)
+                                              .alternativeLocationProvider,
+                                          descriptionRight: '',
+                                          rightWidget: CupertinoSwitch(
+                                            onChanged: (val) {
+                                              HiveSettingsDB
+                                                  .setUseAlternativeLocationProvider(
+                                                      val);
+                                              setState(() {});
+                                            },
+                                            value: HiveSettingsDB
+                                                .useAlternativeLocationProvider,
                                           ),
                                         ),
-                                      ]),
+                                      ),
+                                    ]),
                                 CupertinoFormSection(
                                     header: Text(
                                         Localize.of(context).openStreetMap),

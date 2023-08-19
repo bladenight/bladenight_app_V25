@@ -39,10 +39,17 @@ class Wamp_V2 {
   var streamController = StreamController<BnWampMessage>();
 
   Wamp_V2._() {
+
     _init();
   }
 
   void _init() async {
+    if (!kIsWeb) {
+      FLog.info(
+          text: 'Wamp Init',
+          methodName: '_init',
+          className: toString());
+    }
     runner();
   }
 
@@ -61,26 +68,12 @@ class Wamp_V2 {
   ///called from App and put to queue
   Future addToWamp<T>(BnWampMessage message) {
     _put(message);
-    if (!kIsWeb) {
-      FLog.debug(
-          className: toString(),
-          methodName: 'addToWamp(put message )',
-          text:
-              'id: ${message.id} target ${message.endpoint} - Message:$message WSRunning:$_isWebsocketRunning');
-    }
     return message.completer.future;
   }
 
   void _put(BnWampMessage message) {
     calls[message.id] = message;
     streamController.sink.add(message);
-    if (!kIsWeb) {
-      FLog.debug(
-          className: toString(),
-          methodName: 'put(add to StreamController)',
-          text:
-              'id: ${message.id} target ${message.endpoint} - Message:$message WSRunning:$_isWebsocketRunning');
-    }
   }
 
   Future<void> _sendToWampFromRunner(BnWampMessage value) async {
@@ -194,11 +187,6 @@ class Wamp_V2 {
     streamController.stream.listen((message) async {
       runZonedGuarded(() async {
         queue.add(message);
-        if (!kIsWeb) {
-          FLog.debug(
-              text:
-                  'runner contains calls ${calls.length} /  qeues:${queue.length}');
-        }
         while (_isWebsocketRunning == false) {
           var res = await _initWamp()
               .timeout(const Duration(seconds: 10))
@@ -218,24 +206,13 @@ class Wamp_V2 {
             await Future.delayed(const Duration(milliseconds: 500));
             continue;
           } else if (res == WampConnectionState.offline) {
-            await Future.delayed(const Duration(milliseconds: 500));
+            await Future.delayed(const Duration(milliseconds: 5000));
             continue;
           }
-        }
-        if (!kIsWeb) {
-          FLog.trace(
-              text: 'wamp connection i.O. running',
-              methodName: 'runner',
-              className: toString());
         }
         if (DateTime.now().difference(_busyTimeStamp) >
             const Duration(seconds: 5)) {
           busy = false;
-          if (!kIsWeb) {
-            FLog.debug(
-                text:
-                    'released busy runner busyTimeStamp:$_busyTimeStamp  isBusy:$busy $message');
-          }
         }
         if (busy == false) {
           busy = true;
@@ -253,11 +230,6 @@ class Wamp_V2 {
             var nextMessage = queue.removeFirst();
             var timeDiff = DateTime.now().difference(nextMessage.dateTime);
             if (timeDiff > const Duration(seconds: 10)) {
-              if (!kIsWeb) {
-                FLog.debug(
-                    text:
-                        'runner timeout:$timeDiff s  isBusy:$busy $message ws_running:$_isWebsocketRunning');
-              }
               if (!message.completer.isCompleted) {
                 message.completer.completeError(TimeoutException(
                     'WampV2_runner not started within 10 secs'));
@@ -266,14 +238,6 @@ class Wamp_V2 {
               busy = true;
               continue;
             }
-            if (!kIsWeb) {
-              FLog.debug(
-                  className: toString(),
-                  methodName: 'sendWampMessage',
-                  text:
-                      'id: ${message.id} target ${message.endpoint} - Message:$message');
-            }
-
             await _sendToWampFromRunner(nextMessage)
                 .timeout(const Duration(seconds: 5));
             if (!kIsWeb) {
