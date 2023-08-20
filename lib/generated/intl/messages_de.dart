@@ -452,6 +452,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Km-Zähler auf 0 setzen und eigene gefahrene Routenpunkte auf Karte (angezeigte gefahrene Route kann vorher in Einstellungen exportiert werden bzw. werden auch beim schließen der App gelöscht) ?"),
         "resetOdoMeterTitle": MessageLookupByLibrary.simpleMessage(
             "Reset km-Zähler und eigene Routenpunkte"),
+        "restartRequired": MessageLookupByLibrary.simpleMessage(
+            "Neustart erforderlich! Bitte App schließen und neu öffnen !!!"),
         "route": MessageLookupByLibrary.simpleMessage("Strecke"),
         "routeoverview": MessageLookupByLibrary.simpleMessage("Routenverlauf"),
         "running": MessageLookupByLibrary.simpleMessage("Wir fahren gerade ⏳"),
@@ -489,7 +491,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "setOpenSystemSettings":
             MessageLookupByLibrary.simpleMessage("Öffne Systemeinstellungen"),
         "setPrimaryColor": MessageLookupByLibrary.simpleMessage(
-            "Text- und Symbolfarben im Normalmodus ändern"),
+            "Text- und Symbolfarben im Normalmodus/Hell ändern"),
         "setPrimaryDarkColor": MessageLookupByLibrary.simpleMessage(
             "Text- und Symbolfarben im Dunkelmodus ändern"),
         "setRoute": MessageLookupByLibrary.simpleMessage("Setze Strecke"),
@@ -520,7 +522,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht."),
         "specialfunction": MessageLookupByLibrary.simpleMessage(
-            "Sondereinstellungen - nur in Sonderfällen ändern!"),
+            "Sondereinstellungen - nur nach Rücksprache ändern!"),
         "speed": MessageLookupByLibrary.simpleMessage("Geschwindigkeit"),
         "start": MessageLookupByLibrary.simpleMessage("Startpunkt"),
         "startLocationWithoutParticipating":

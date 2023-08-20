@@ -18,36 +18,37 @@ dependencies:
   dart_mappable: ^3.1.1
   device_info_plus: ^9.0.2
   encrypt: ^5.0.1
-  f_logs: ^2.0.1
-  #f_logs:
-  # path: ../Flogs/
+  #f_logs: ^2.0.1
+  f_logs:
+   path: ../Flogs/
   fast_color_picker: ^0.1.1
   firebase_core: ^2.13.0
   firebase_crashlytics: ^3.3.1
   flutter:
     sdk: flutter
-  flutter_background_geolocation: ^4.12.0
+  flutter_background_geolocation: ^4.11.1
   flutter_cache_manager: ^3.3.0
   flutter_device_type: ^0.4.0
   flutter_launcher_icons: ^0.13.1
   flutter_local_notifications: ^15.1.0+1
-  flutter_localization: ^0.1.13
+  flutter_localizations:
+    sdk: flutter
   flutter_map: ^5.0.0
   flutter_map_marker_popup: ^5.1.0
   flutter_native_splash: ^2.3.0
   #flutter_platform_alert: ^0.4.0 not working on Android 6 fixed in git - sent pull request
   #to owner waiting for update
   flutter_platform_alert:
-      git:
-        url: https://github.com/xunreal75/flutter_platform_alert.git
-        branch: master
+    git:
+      url: https://github.com/xunreal75/flutter_platform_alert.git
+      branch: master
   flutter_riverpod: ^2.0.2
   fluttertoast: ^8.0.9
   get: ^4.6.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   internet_connection_checker: ^1.0.0+1
-  intl: ^0.17.0
+  intl: any
   intro_slider: ^4.2.0
   latlong2: ^0.9.0
     #location:
@@ -55,11 +56,11 @@ dependencies:
     #url: https://github.com/fairuzmn/flutterlocation.git
     #ref: location-v5.5.0.0-dev.9-fix
     #path: packages/location
-  #geolocator:
-      #git:
-        #url: https://github.com/Baseflow/flutter-geolocator.git
-  #ref: location-v5.5.0.0-dev.9-fix
-        #path: ../flutter-geolocator/geolocator
+    #geolocator:
+    #git:
+    #url: https://github.com/Baseflow/flutter-geolocator.git
+    #ref: location-v5.5.0.0-dev.9-fix
+  #path: ../flutter-geolocator/geolocator
   #location: ^4.4.0
 
   location2: ^6.0.4
@@ -108,9 +109,9 @@ dev_dependencies:
 dependency_overrides:
   # Remove when firebase_ui_firestore stops relying on 0.17.0.
   # https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_localizations/pubspec.yaml#L18
-  intl: ^0.18.0
-  #location2:
-    #path: ../flutterlocation/packages/location2
+  #intl: ^0.18.0
+    #location2:
+  #path: ../flutterlocation/packages/location2
   wakelock_macos:
     git:
       url: https://github.com/xunreal75/wakelock.git

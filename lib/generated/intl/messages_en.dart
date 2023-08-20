@@ -441,6 +441,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Reset ODO meter to 0 and clear driven route?"),
         "resetOdoMeterTitle": MessageLookupByLibrary.simpleMessage(
             "ODO meter reset and driven route"),
+        "restartRequired": MessageLookupByLibrary.simpleMessage(
+            "Restart required! Please close app and reopen !!!"),
         "route": MessageLookupByLibrary.simpleMessage("Route"),
         "routeoverview": MessageLookupByLibrary.simpleMessage("Route overview"),
         "running": MessageLookupByLibrary.simpleMessage("We are on route ⏳"),
@@ -476,7 +478,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "setOpenSystemSettings": MessageLookupByLibrary.simpleMessage(
             "Open Operatingsystem settings"),
         "setPrimaryColor": MessageLookupByLibrary.simpleMessage(
-            "Set primary color (default yellow)"),
+            "Set primary (light) color (default yellow)"),
         "setPrimaryDarkColor": MessageLookupByLibrary.simpleMessage(
             "Set primary Dark-mode color (default yellow)"),
         "setRoute": MessageLookupByLibrary.simpleMessage("Set Route"),

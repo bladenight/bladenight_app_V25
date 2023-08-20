@@ -5,10 +5,10 @@ double mediaSizePercentage = 0.05;
 double mediaSizeTrackProgressIconsPercentage = 0.03;
 
 ///Default update interval to get [RealtimeData] when not tracking in seconds
-const int defaultRealtimeUpdateInterval = 15;
+const int defaultRealtimeUpdateInterval = 14;
 
 ///Default update interval to get [RealtimeData] when tracking in seconds
-const int defaultLocationUpdateInterval = 5;
+const int defaultLocationUpdateInterval = 4;
 
 const Duration wampTimeout = Duration(seconds: 10);
 

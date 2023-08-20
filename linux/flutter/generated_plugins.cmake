@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  flutter_localization
   flutter_platform_alert
   url_launcher_linux
 )

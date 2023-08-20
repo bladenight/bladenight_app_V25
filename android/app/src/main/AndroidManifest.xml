@@ -90,5 +90,8 @@
         <meta-data
                 android:name="flutterEmbedding"
                 android:value="2"/>
+
+        <service android:name="com.transistorsoft.locationmanager.service.LocationRequestService" android:foregroundServiceType="location"
+                 tools:replace="android:foregroundServiceType" />
     </application>
 </manifest>

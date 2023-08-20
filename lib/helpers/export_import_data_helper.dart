@@ -88,7 +88,7 @@ void importData(BuildContext context, String dataString) async {
     ProviderContainer().refresh(friendsProvider);
     ProviderContainer().read(friendsLogicProvider).reloadFriends();
     showToast(
-        message: '${Localize.current.import} ${Localize.current.ok}',
+        message: '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
         backgroundColor: CupertinoColors.activeGreen,
         textColor: CupertinoColors.black);
   } catch (e) {

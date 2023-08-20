@@ -295,7 +295,7 @@
   "setLogData": "Data logger",
   "setMeColor": "Own Color on Map",
   "setOpenSystemSettings": "Open Operatingsystem settings",
-  "setPrimaryColor": "Set primary color (default yellow)",
+  "setPrimaryColor": "Set primary (light) color (default yellow)",
   "setPrimaryDarkColor": "Set primary Dark-mode color (default yellow)",
   "setStartImport": "Start import Id und friends",
   "setSystem": "System",
@@ -410,6 +410,7 @@
   "alternativeLocationProvider": "Use alternative driver",
   "oneSignalIdTitle" : "This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages.",
   "oneSignalId" : "OneSignal-Id: ",
-  "startPointTitle": "Where is the start?"
+  "startPointTitle": "Where is the start?",
+  "restartRequired" : "Restart required! Please close app and reopen !!!"
 
 }

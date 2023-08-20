@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   firebase_core
-  flutter_localization
   flutter_platform_alert
   permission_handler_windows
   share_plus

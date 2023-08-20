@@ -296,7 +296,7 @@
   "setLogData": "Datenlogger",
   "setMeColor": "Eigene Farbe in Karte",
   "setOpenSystemSettings": "Öffne Systemeinstellungen",
-  "setPrimaryColor": "Text- und Symbolfarben im Normalmodus ändern",
+  "setPrimaryColor": "Text- und Symbolfarben im Normalmodus/Hell ändern",
   "setPrimaryDarkColor": "Text- und Symbolfarben im Dunkelmodus ändern",
   "setStartImport": "Import Id und Freunde starten",
   "setSystem": "System",
@@ -374,7 +374,7 @@
   "model": "Modell",
   "allowWakeLockHeader": "App aktiv lassen, heißt, das die App im wake mode ist und das Tracking aktiv ist. Wird bei kleiner 20% Akku deaktiviert.",
   "allowWakeLock": "App im Vordergrund aktiv lassen?",
-  "specialfunction": "Sondereinstellungen - nur in Sonderfällen ändern!",
+  "specialfunction": "Sondereinstellungen - nur nach Rücksprache ändern!",
   "setIconSize": "Icongröße: ",
   "setIconSizeTitle": "Eigene Icongröße sowie die von Freunden, Zuganfang und -ende auf der Karte anpassen",
   "openStreetMapText": "Nutze Openstreetmap",
@@ -411,5 +411,6 @@
   "alternativeLocationProvider": "Nutze Alternative",
   "oneSignalIdTitle" : "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben.",
   "oneSignalId" : "OneSignal-Id: ",
-  "startPointTitle": "Startpunkt"
+  "startPointTitle": "Startpunkt",
+  "restartRequired" : "Neustart erforderlich! Bitte App schließen und neu öffnen !!!"
 }

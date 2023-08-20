@@ -2225,10 +2225,10 @@ class Localize {
     );
   }
 
-  /// `Text- und Symbolfarben im Normalmodus ändern`
+  /// `Text- und Symbolfarben im Normalmodus/Hell ändern`
   String get setPrimaryColor {
     return Intl.message(
-      'Text- und Symbolfarben im Normalmodus ändern',
+      'Text- und Symbolfarben im Normalmodus/Hell ändern',
       name: 'setPrimaryColor',
       desc: '',
       args: [],
@@ -3008,10 +3008,10 @@ class Localize {
     );
   }
 
-  /// `Sondereinstellungen - nur in Sonderfällen ändern!`
+  /// `Sondereinstellungen - nur nach Rücksprache ändern!`
   String get specialfunction {
     return Intl.message(
-      'Sondereinstellungen - nur in Sonderfällen ändern!',
+      'Sondereinstellungen - nur nach Rücksprache ändern!',
       name: 'specialfunction',
       desc: '',
       args: [],
@@ -3383,6 +3383,16 @@ class Localize {
     return Intl.message(
       'Startpunkt',
       name: 'startPointTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Neustart erforderlich! Bitte App schließen und neu öffnen !!!`
+  String get restartRequired {
+    return Intl.message(
+      'Neustart erforderlich! Bitte App schließen und neu öffnen !!!',
+      name: 'restartRequired',
       desc: '',
       args: [],
     );

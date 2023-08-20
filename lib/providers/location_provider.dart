@@ -725,13 +725,14 @@ class LocationProvider with ChangeNotifier {
       }
       bg.Location? newLocation;
       if (HiveSettingsDB.useAlternativeLocationProvider) {
+        return _lastKnownPoint;
         //getLocation ignored if location is running
       } else {
         newLocation = await bg.BackgroundGeolocation.getCurrentPosition(
           timeout: 3,
           maximumAge: 60000,
-          desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-          samples: 2, // How many location samples to attempt.
+          desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
+          samples: 1, // How many location samples to attempt.
         );
       }
       // double sending by onLocation sendLocation(newLocation);
@@ -761,7 +762,7 @@ class LocationProvider with ChangeNotifier {
     if (_lastKnownPoint != null) {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp);
       var diff = DateTime.now().toUtc().difference(ts.toUtc());
-      if (diff < const Duration(minutes: 1)) {
+      if (diff < const Duration(minutes: 10)) {
         _lastKnownPoint = null;
         return null;
       }

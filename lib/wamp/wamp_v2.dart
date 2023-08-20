@@ -217,11 +217,6 @@ class Wamp_V2 {
         if (busy == false) {
           busy = true;
           _busyTimeStamp = DateTime.now();
-          if (!kIsWeb) {
-            FLog.debug(
-                text:
-                    'runner busy is now true :$_busyTimeStamp  isBusy:$busy $message jump to while loop');
-          }
           while (busy) {
             if (queue.isEmpty) {
               busy = false;
