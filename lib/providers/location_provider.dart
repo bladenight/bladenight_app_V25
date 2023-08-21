@@ -59,6 +59,7 @@ class LocationProvider with ChangeNotifier {
   DateTime? _userReachedFinishDateTime, _startedTrackingTime;
 
   Timer? _updateTimer;
+  Timer? _saveLocationsTimer;
 
   bool _isMoving = false;
   String _lastRouteName = '';
@@ -150,6 +151,7 @@ class LocationProvider with ChangeNotifier {
 
   @override
   void dispose() {
+    LocationStore.saveUserTrackPointList(_userTrackingPoints);
     _userTrackPointsController.close();
     _trainHeadController.close();
     _controller.close();
@@ -643,12 +645,36 @@ class LocationProvider with ChangeNotifier {
   }
 
   ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
+  void startSaveLocationsUpdateTimer(bool enabled) {
+    if (!kIsWeb) {
+      FLog.trace(text: 'init startSaveLocationsUpdateTimer to $enabled');
+    }
+    _saveLocationsTimer?.cancel();
+    if (enabled) {
+      _saveLocationsTimer = Timer.periodic(
+        const Duration(minutes: 5),
+        (timer) {
+          if (!_isTracking) {
+            return;
+          }
+          LocationStore.saveUserTrackPointList(_userTrackingPoints);
+        },
+      );
+    } else {
+      _updateTimer?.cancel();
+      _updateTimer = null;
+    }
+  }
+
+  ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
   void setUpdateTimer(bool enabled) {
     if (!kIsWeb) {
       FLog.trace(text: 'init setLocationTimer to $enabled');
     }
     _updateTimer?.cancel();
+    _saveLocationsTimer?.cancel();
     if (enabled) {
+      startSaveLocationsUpdateTimer(true);
       _updateTimer = Timer.periodic(
         //realtimeUpdateProvider reads data on send-location -
         //so it must not updated all 10 secs
@@ -667,8 +693,8 @@ class LocationProvider with ChangeNotifier {
         },
       );
     } else {
-      _updateTimer?.cancel();
       _updateTimer = null;
+      _saveLocationsTimer = null;
     }
   }
 

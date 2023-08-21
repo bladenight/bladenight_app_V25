@@ -7,7 +7,7 @@ extension LocationStore on HiveSettingsDB {
   static List<UserTrackPoint> get userTrackPointsList {
     try {
       var tp = HiveSettingsDB._hiveBox.get(_userTrackPointsKey);
-      if (tp == null) {
+      if (MapSettings.showOwnTrack == false || tp == null) {
         return [];
       }
       var utpPts = MapperContainer.globals.fromJson<UserTrackPoints>(tp);
@@ -19,9 +19,17 @@ extension LocationStore on HiveSettingsDB {
 
   ///set store track points
   static void saveUserTrackPointList(List<UserTrackPoint> val) {
-    UserTrackPoints utp = UserTrackPoints(val);
-    HiveSettingsDB._hiveBox.put(_userTrackPointsKey, utp.toJson());
-    setUserTrackPointsLastUpdate(DateTime.now());
+    try {
+      if (MapSettings.showOwnTrack == false) {
+        return;
+      }
+      print('Save user track points list with an amount of ${val.length}');
+      UserTrackPoints utp = UserTrackPoints(val);
+      HiveSettingsDB._hiveBox.put(_userTrackPointsKey, utp.toJson());
+      setUserTrackPointsLastUpdate(DateTime.now());
+    } catch (e) {
+      print('Error saveUserTrackPointList ${e.toString()}');
+    }
   }
 
   ///helper to clear tp store
