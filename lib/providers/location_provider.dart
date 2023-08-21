@@ -52,7 +52,7 @@ class LocationProvider with ChangeNotifier {
   bool _isInBackground = false;
 
   static DateTime _lastUpdate = DateTime(2022, 1, 1, 0, 0, 0);
-  static DateTime _lastRealtimeRequest = DateTime(2022, 1, 1, 0, 0, 0);
+  static DateTime _lastLocationRealtimeRequest = DateTime(2022, 1, 1, 0, 0, 0);
   static DateTime _lastRefreshRequest = DateTime(2022, 1, 1, 0, 0, 0);
 
   get lastUpdate => _lastUpdate;
@@ -244,7 +244,7 @@ class LocationProvider with ChangeNotifier {
           debug: false,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
           allowIdenticalLocations: true,
-          distanceFilter: 0.5,
+          distanceFilter: 0,
           heartbeatInterval: 60,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
           logMaxDays: 1,
@@ -253,7 +253,13 @@ class LocationProvider with ChangeNotifier {
           preventSuspend: true,
           stopOnTerminate: true,
           startOnBoot: false,
-          logLevel: bgLogLevel,
+          logLevel:  bgLogLevel,//bg.Config.LOG_LEVEL_VERBOSE,//
+          locationUpdateInterval: 1000,
+          stopTimeout: 1000,
+          // <-- a very long stopTimeout
+          disableStopDetection: true,
+          // <-- Don't interrupt location updates when Motion API says "still"
+
           backgroundPermissionRationale: bg.PermissionRationale(
               title: Localize.current.requestAlwaysPermissionTitle,
               message: Localize.current.noBackgroundlocationLeaveAppOpen,
@@ -283,6 +289,12 @@ class LocationProvider with ChangeNotifier {
           allowIdenticalLocations: true,
           showsBackgroundLocationIndicator: true,
           preventSuspend: true,
+          locationUpdateInterval: 1000,
+          stopTimeout: 1000,
+          // <-- a very long stopTimeout
+          disableStopDetection: true,
+          // <-- Don't interrupt location updates when Motion API says "still"
+
           //request Always permissions
           backgroundPermissionRationale: bg.PermissionRationale(
               title: Localize.current.requestAlwaysPermissionTitle,
@@ -623,6 +635,7 @@ class LocationProvider with ChangeNotifier {
               className: 'location_provider',
               methodName: '_startTracking');
         }
+
         _isTracking = state.enabled;
         _startedTrackingTime = DateTime.now();
         _stoppedAfterMaxTime = false;
@@ -641,6 +654,14 @@ class LocationProvider with ChangeNotifier {
         notifyListeners();
         return;
       });
+      await bg.BackgroundGeolocation.setConfig(bg.Config(
+          distanceFilter: 0,
+          locationUpdateInterval: 1000,
+          stopTimeout: 1000, // <-- a very long stopTimeout
+          disableStopDetection:
+              true // <-- Don't interrupt location updates when Motion API says "still"
+          ));
+      await bg.BackgroundGeolocation.changePace(true);
     }
   }
 
@@ -740,7 +761,6 @@ class LocationProvider with ChangeNotifier {
     if (timeDiff < const Duration(seconds: defaultSendNewLocationDelay)) {
       return _lastKnownPoint;
     }
-
     try {
       if (!kIsWeb) {
         FLog.trace(
@@ -749,27 +769,22 @@ class LocationProvider with ChangeNotifier {
           text: 'started',
         );
       }
-      bg.Location? newLocation;
+      bg.Location newLocation;
       if (HiveSettingsDB.useAlternativeLocationProvider) {
         return _lastKnownPoint;
         //getLocation ignored if location is running
-      } else {
+      } else  {
+        if (Platform.isAndroid){
+          return _lastKnownPoint;
+        }
         newLocation = await bg.BackgroundGeolocation.getCurrentPosition(
           timeout: 3,
           maximumAge: 60000,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
           samples: 1, // How many location samples to attempt.
         );
+        _lastKnownPoint = newLocation;
       }
-      // double sending by onLocation sendLocation(newLocation);
-      if (!kIsWeb) {
-        FLog.trace(
-          className: toString(),
-          methodName: '_subToUpdates',
-          text: '_subUpdates sent new location $newLocation',
-        );
-      }
-      return newLocation;
     } catch (e) {
       if (!kIsWeb) {
         FLog.warning(
@@ -802,11 +817,11 @@ class LocationProvider with ChangeNotifier {
     if (!_isTracking) return;
     RealtimeUpdate? update;
     var dtNow = DateTime.now();
-    var timeDiff = dtNow.difference(_lastRealtimeRequest);
+    var timeDiff = dtNow.difference(_lastLocationRealtimeRequest);
     if (timeDiff < const Duration(seconds: defaultSendNewLocationDelay)) {
       return;
     }
-    _lastRealtimeRequest = dtNow;
+    _lastLocationRealtimeRequest = dtNow;
 
     ///TODO Testing to avoid server traffic
     /*if (ActiveEventProvider.instance.event.status != EventStatus.confirmed ||

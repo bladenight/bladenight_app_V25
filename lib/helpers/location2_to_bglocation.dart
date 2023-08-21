@@ -30,6 +30,7 @@ extension Location2Mapper on LocationData {
       'coords': coords,
       'battery': battery,
       'activity': activity,
+      'age': 0,
       'timestamp':
           DateTime.fromMillisecondsSinceEpoch(Platform.isIOS?dt*1000:dt) //seconds in ms bug in location differs on android and ios
               .toUtc()
