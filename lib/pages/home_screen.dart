@@ -17,7 +17,6 @@ import 'events_page.dart';
 import 'friends/friends_page.dart';
 import 'home_page.dart';
 import 'map/map_page.dart';
-import 'messages/messages_page.dart';
 import 'settings_page.dart';
 import 'widgets/intro_slider.dart';
 

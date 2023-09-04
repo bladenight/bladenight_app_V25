@@ -15,7 +15,7 @@ class MessageTest {
         timeStamp: DateTime.now().millisecondsSinceEpoch,
         read: false));
     var messages2 =await MessagesDb.messagesList;
-    var len2 = messages.length;
+    var len2 = messages2.length;
     assert(len != len2-1);
   }
 

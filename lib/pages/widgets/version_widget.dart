@@ -6,7 +6,6 @@ import 'package:universal_io/io.dart';
 
 import '../../generated/l10n.dart';
 import '../../providers/version_provider.dart';
-import 'data_loading_indicator.dart';
 
 class VersionWidget extends ConsumerWidget {
   const VersionWidget({super.key});

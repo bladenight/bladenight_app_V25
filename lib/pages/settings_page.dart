@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -43,16 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _receivePort.listen((dynamic message) {
-        setState(() {
-          _exportUserTrackingProgress = message;
-          if (message >= 100) {
-            _exportTrackingInProgress = true;
-          } else {
-            _exportTrackingInProgress = false;
-          }
-        });
-      });
+      //
     });
   }
 
@@ -61,11 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _openInvisibleSettings = false;
   bool _exportLogInProgress = false;
   bool _exportTrackingInProgress = false;
-  var _exportUserTrackingProgress = 0.0;
   bool _showPushProgressIndicator = false;
   final _textController = TextEditingController();
-
-  final ReceivePort _receivePort = ReceivePort();
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:isolate';
-
 import 'package:archive/archive_io.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/cupertino.dart';

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
@@ -167,7 +166,7 @@ class FLog {
     await _logBox.flush();
     var resString = '';
     for (var key in _logBox.keys) {
-      var val = await _logBox.get(key);
+      var val = _logBox.get(key);
       if (val != null) {
         resString = '$resString$val\n';
       }

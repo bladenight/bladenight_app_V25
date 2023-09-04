@@ -154,7 +154,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                 friendDialogAction: FriendsAction.edit,
                                 friend: friend);
                             if (result == null || !mounted) return false;
-                            context.read(friendsLogicProvider).updateFriend(
+                                context.read(friendsLogicProvider).updateFriend(
                                 friend.copyWith(
                                     name: result.name,
                                     color: result.color,

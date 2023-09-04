@@ -11,8 +11,6 @@ import 'package:logger/logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../models/event.dart';
-import '../../models/message.dart';
-import '../../models/messages.dart';
 import '../../models/user_trackpoint.dart';
 import '../logger.dart';
 
