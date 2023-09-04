@@ -25,6 +25,7 @@
 	<array>
 		<string>en</string>
 		<string>de</string>
+		<string>fr</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>bladenight_app_flutter</string>

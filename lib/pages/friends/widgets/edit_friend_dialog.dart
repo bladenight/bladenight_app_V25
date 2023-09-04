@@ -1,23 +1,22 @@
-import 'package:flutter/foundation.dart';
-import 'package:universal_io/io.dart';
 import 'dart:math';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:universal_io/io.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../app_settings/app_constants.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/device_info_helper.dart';
+import '../../../helpers/logger.dart';
 import '../../../models/friend.dart';
+import '../../../pages/widgets/fast_custom_color_picker.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../wamp/wamp_error.dart';
-import '../../../pages/widgets/fast_custom_color_picker.dart';
 import '../friends_page.dart';
 
 class EditFriendResult {
@@ -278,12 +277,10 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                           });
                         } catch (e) {
                           print(e);
-                          if (!kIsWeb) {
-                            FLog.error(
+                          FLog.error(
                               className: toString(),
                               methodName: 'friendActionDialog',
                               text: e.toString());
-                          }
                           setState(() {
                             errortext = Localize.of(context).unknownerror;
                             isLoading = false;
@@ -293,7 +290,7 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                     : null,
                 child: Text(Localize.of(context).save))
           else
-             const Column(
+            const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

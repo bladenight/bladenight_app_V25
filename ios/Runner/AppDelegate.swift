@@ -293,3 +293,39 @@ extension AppDelegate: WCSessionDelegate {
         //inform sender about successfull tansfer
     }
 }
+
+extension AppDelegate{
+    override func application(
+        _ application: UIApplication,
+        didReceiveRemoteNotification userInfo: [AnyHashable : Any],
+        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
+    ){
+        print(userInfo)
+        var notificationData:NSMutableDictionary
+        if let custom = userInfo["custom"] as? NSDictionary {
+             if let data = custom["a"] as? NSDictionary {
+                 notificationData = data.mutableCopy() as! NSMutableDictionary
+
+                 if(data["category"] as? String == "MESSAGESTATUS"){
+                   //  notificationChannel.invokeMethod("getSilentLastSeenMessage", arguments: notificationData)
+                 }
+
+         }}
+    }
+}
+
+/*override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
+ var notificationData:NSMutableDictionary
+ var isAppInFocus: Bool = false
+
+                if let custom = userInfo["custom"] as? NSDictionary {
+                     if let data = custom["a"] as? NSDictionary {
+                         notificationData = data.mutableCopy() as! NSMutableDictionary
+
+                         if(data["category"] as? String == "MESSAGESTATUS"){
+                             notificationChannel.invokeMethod("getSilentLastSeenMessage", arguments: notificationData)
+                         }
+
+                 }}
+ }*/
+

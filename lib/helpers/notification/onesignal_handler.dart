@@ -1,22 +1,26 @@
 import 'dart:async';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
+import '../../models/message.dart';
+import '../../providers/messages_provider.dart';
 import '../deviceid_helper.dart';
 import '../hive_box/hive_settings_db.dart';
+import '../hive_box/messages_db.dart';
+import '../logger.dart';
 import '../url_launch_helper.dart';
+import '../uuid_helper.dart';
 
 class OnesignalHandler {
   OnesignalHandler._privateConstructor() {
-    OneSignal.shared
-        .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
+    OneSignal.User.pushSubscription.addObserver((changes) {
       //  print(changes.to.userId);
-      String? userId = changes.to.userId ?? '';
+      String? userId = OneSignal.User.pushSubscription.id ?? '';
 
       HiveSettingsDB.setOneSignalId(userId);
     });
@@ -27,56 +31,65 @@ class OnesignalHandler {
 
   static OnesignalHandler get instance => _instance;
 
-  Future<bool> initPushNotifications() async {
+  static Future<bool> initPushNotifications() async {
     try {
       //Remove this method to stop OneSignal Debugging
       if (kDebugMode) {
-        OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.error);
+        OneSignal.Debug.setAlertLevel(OSLogLevel.none);
+        OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
       } else {
-        OneSignal.shared.setLogLevel(OSLogLevel.error, OSLogLevel.none);
+        OneSignal.Debug.setAlertLevel(OSLogLevel.none);
+        OneSignal.Debug.setLogLevel(OSLogLevel.none);
       }
 
-      if (HiveSettingsDB.pushNotificationsEnabled == false) {
-        HiveSettingsDB.setBladeGuardClick(false);
-        await OnesignalHandler.registerPushAsBladeGuard(false, 0);
+      OneSignal.initialize(oneSignalAppId);
+      OneSignal.User.pushSubscription.lifecycleInit();
+      OneSignal.Location.setShared(false);
 
-         HiveSettingsDB.setRcvSkatemunichInfos(false);
-        await OnesignalHandler.registerSkateMunichInfo(false);
+      setOneSignalChannels();
 
-        await OneSignal.shared.disablePush(true);
-
-        return true;
-      } else {
-        //allow onesignal
-        await OneSignal.shared.disablePush(false);
-      }
-
-      await OneSignal.shared.setLocationShared(false);
-      await OneSignal.shared.setAppId(oneSignalAppId).catchError((error) {
-        if (kIsWeb) {
-          FLog.error(
-              text: 'Error OneSignal.shared.setAppId $error', exception: error);
-        }
+      OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+        FLog.info(
+            text: 'OneSignal: notification opened: ${event.notification}');
+        OnesignalHandler.handleNotificationOpenedResult(event);
       });
 
-      OneSignal.shared
-          .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-        print('"OneSignal: notification opened: $result');
-        OnesignalHandler.handleNotificationOpenedResult(result);
+      OneSignal.Notifications.addPermissionObserver((state) {
+        HiveSettingsDB.setPushNotificationsEnabled(state);
+        FLog.info(text: 'Accepted Onesignal permission: $state');
       });
 
-      OneSignal.shared
-          .setInAppMessageClickedHandler((OSInAppMessageAction action) {
+      OneSignal.InAppMessages.addWillDisplayListener((event) {
+        FLog.info(text: 'inAppMessage ${event.message}');
+      });
+
+
+      OneSignal.Notifications.addClickListener((event) {
         //var json = action.jsonRepresentation();
-        var clickName = action.clickName;
-        var clickURL = action.clickUrl;
-        //var firstClick = action.firstClick;
-        /*  OSInAppMessageAction(Map<String, dynamic> json) {
-    this.clickName = json["click_name"];
-    this.clickUrl = json["click_url"];
-    this.firstClick = json["first_click"] as bool;
-    this.closesMessage = json["closes_message"] as bool;
-  }*/
+        var clickName = event.result.actionId;
+        var clickURL = event.notification.launchUrl;
+        var title = event.notification.title;
+        var body = event.notification.body;
+        var message = Message(
+            uid: UUID.createUuid(),
+            title: title ?? '',
+            body: body ?? '',
+            timeStamp: DateTime.now().millisecondsSinceEpoch);
+        message.url = clickURL;
+        if (event.notification.buttons != null &&
+            event.notification.buttons!.length == 1) {
+          var button1 = event.notification.buttons!.first;
+          message.button1Text = button1.text;
+        }
+        if (event.notification.buttons != null &&
+            event.notification.buttons!.length == 2) {
+          var button1 = event.notification.buttons!.first;
+          var button2 = event.notification.buttons!.last;
+          message.button1Text = button1.text;
+          message.button2Text = button2.text;
+        }
+        MessagesDb.addMessage(message);
+        ProviderContainer().read(messagesLogicProvider).reloadMessages();
 
         if (clickName != null &&
             clickName.toLowerCase() == 'yes' &&
@@ -85,72 +98,73 @@ class OnesignalHandler {
           try {
             Launch.launchUrlFromString(clickURL);
           } catch (error) {
-            if (kIsWeb) {
-              FLog.error(
-                  text:
-                      'Error setInAppMessageClickedHandler ${action.jsonRepresentation()}',
-                  exception: error);
-            }
+            FLog.error(
+                text:
+                    'Error setInAppMessageClickedHandler ${event.jsonRepresentation()}',
+                exception: error);
           }
         }
       });
       // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-     await OneSignal.shared
-          .promptUserForPushNotificationPermission()
-          .then((accepted) {
-       HiveSettingsDB.setPushNotificationsEnabled(accepted);
-       print('Accepted Onesignal permission: $accepted');
-      });
-
-
+      OneSignal.Notifications.requestPermission(true);
     } catch (e) {
-      if (!kIsWeb) {
-        FLog.error(text: 'Error initPushNotifications', exception: e);
-      }
+      FLog.error(text: 'Error initPushNotifications', exception: e);
       return false;
     }
     return true;
   }
 
+  static Future<void> setOneSignalChannels() async {
+    if (HiveSettingsDB.pushNotificationsEnabled == false) {
+      HiveSettingsDB.setBladeGuardClick(false);
+      await OnesignalHandler.registerPushAsBladeGuard(false, 0);
+      HiveSettingsDB.setRcvSkatemunichInfos(false);
+      await OnesignalHandler.registerSkateMunichInfo(false);
+      await OneSignal.User.pushSubscription.optOut();
+    } else {
+      //allow onesignal
+      await OneSignal.User.pushSubscription.optIn();
+    }
+    var optedIn = OneSignal.User.pushSubscription.optedIn;
+    FLog.info(text: 'setOneSignalChannels optIn is $optedIn');
+  }
+
   static Future<void> registerPushAsBladeGuard(bool value, int teamId) async {
-    Map<String, dynamic> map = {
-      'IsBladeguard': value ? teamId : 0,
+    Map<String, String> map = {
+      'IsBladeguard': value ? teamId.toString() : '0',
     };
-    await OneSignal.shared.sendTags(map).catchError((err) {
-      if (!kIsWeb) {
-        FLog.error(text: 'register IsBladeguard error $err', exception: err);
-      }
-      return <String, dynamic>{};
+    FLog.info(text: 'register IsBladeguard value $value $teamId');
+    OneSignal.User.addTags(map).catchError((err) {
+      FLog.error(text: 'register IsBladeguard error $err', exception: err);
     });
   }
 
   static Future<void> registerSkateMunichInfo(bool value) async {
-    OneSignal.shared.sendTag('RcvSkateMunichInfos', value).catchError((err) {
-      if (!kIsWeb) {
-        FLog.error(text: 'registerSkateMunichInfo error $err', exception: err);
-      }
-      return <String, dynamic>{};
-    }).then((value) {
-      if (!kIsWeb) {
-        FLog.info(text: 'registerSkateMunichInfo finished  $value');
-      }
+    FLog.info(text: 'registerSkateMunichInfo  $value');
+    OneSignal.User.addTagWithKey('RcvSkateMunichInfos', value.toString())
+        .catchError((err) {
+      FLog.error(text: 'registerSkateMunichInfo error $err', exception: err);
     });
   }
 
-  void addOneSignalNotification(OSNotificationOpenedResult result) {
-    OnesignalHandler.handleNotificationOpenedResult(result);
-  }
-
   static void handleNotificationOpenedResult(
-      OSNotificationOpenedResult result) async {
+      OSNotificationWillDisplayEvent result) async {
     var data = result.notification.additionalData;
     var title = result.notification.title;
     var body = result.notification.body;
     var buttons = result.notification.buttons;
-    CustomButton? buttonres;
+
+    var message = Message(
+        uid: UUID.createUuid(),
+        title: title ?? '',
+        body: body ?? '',
+        timeStamp: DateTime.now().millisecondsSinceEpoch);
+
+    CustomButton? buttonResult;
     if (buttons != null && buttons.length == 1) {
       var button1 = buttons.first;
-      buttonres = await FlutterPlatformAlert.showCustomAlert(
+      message.button1Text = button1.text;
+      buttonResult = await FlutterPlatformAlert.showCustomAlert(
           windowTitle: title ?? Localize.current.notification,
           text: body ?? '',
           positiveButtonTitle: button1.text);
@@ -159,19 +173,23 @@ class OnesignalHandler {
     if (buttons != null && buttons.length == 2) {
       var button1 = buttons.first;
       var button2 = buttons.last;
-      buttonres = await FlutterPlatformAlert.showCustomAlert(
+      message.button1Text = button1.text;
+      message.button2Text = button2.text;
+      buttonResult = await FlutterPlatformAlert.showCustomAlert(
           windowTitle: title ?? Localize.current.notification,
           text: body ?? '',
           positiveButtonTitle: button1.text,
           negativeButtonTitle: button2.text);
     }
-    if (buttonres != null &&
+    if (buttonResult != null &&
         data != null &&
-        buttonres == CustomButton.positiveButton) {
+        buttonResult == CustomButton.positiveButton) {
       var devId = await DeviceId.getId;
       if (data.keys.contains('url')) {
+        message.url = data['url'] + '/?id=$devId';
         Launch.launchUrlFromString(data['url'] + '/?id=$devId');
       }
     }
+    MessagesDb.addMessage(message);
   }
 }

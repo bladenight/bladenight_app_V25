@@ -1,6 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
@@ -8,13 +7,17 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:logger/logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../models/event.dart';
+import '../../models/message.dart';
+import '../../models/messages.dart';
 import '../../models/user_trackpoint.dart';
+import '../logger.dart';
 
-part 'map_settings.dart';
 part 'location_store.dart';
+part 'map_settings.dart';
 
 final hiveDBProvider =
     StateProvider<HiveSettingsDB>((ref) => HiveSettingsDB.instance);
@@ -59,7 +62,7 @@ class HiveSettingsDB {
   }
 
   static void setBackgroundLocationLogLevel(int val) {
-    if (!kIsWeb) FLog.info(text: 'setBackgroundLocationLogLevel to $val');
+    FLog.info(text: 'setBackgroundLocationLogLevel to $val');
     _hiveBox.put(_bgLoglevelKey, val);
   }
 
@@ -111,14 +114,15 @@ class HiveSettingsDB {
   static const String _fLogLevel = 'fLogLevelPref';
 
   ///get loglevel FLog
-  static int get flogLogLevel {
-    return _hiveBox.get(_fLogLevel, defaultValue: 3);
+  static Level get flogLogLevel {
+    var levelIndex = _hiveBox.get(_fLogLevel, defaultValue: Level.info.index);
+    return Level.values[levelIndex];
   }
 
   ///set loglevel
-  static void setFlogLevel(int val) {
-    if (!kIsWeb) FLog.info(text: 'setFlogLevel to $val');
-    _hiveBox.put(_fLogLevel, val);
+  static void setFlogLevel(Level level) {
+    if (!kIsWeb) FLog.info(text: 'setFlogLevel to ${level.index}');
+    _hiveBox.put(_fLogLevel, level.index);
   }
 
   static const String _odometerKey = 'odometerKeyPref';
@@ -521,7 +525,6 @@ class HiveSettingsDB {
   static void setEventsJson(String val) {
     _hiveBox.put(_eventsMapKey, val);
   }
-
 
   static const String _themeKey = 'dynamicTheme3Pref';
 

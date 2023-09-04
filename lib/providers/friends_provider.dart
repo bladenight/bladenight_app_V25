@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../generated/l10n.dart';
 import '../helpers/deviceid_helper.dart';
 import '../helpers/location_bearing_distance.dart';
+import '../helpers/logger.dart';
 import '../helpers/preferences_helper.dart';
 import '../models/friend.dart';
 import '../models/messages/friends.dart';
@@ -54,9 +54,7 @@ class FriendsLogic with ChangeNotifier {
 
       var result = await FriendsMessage.getFriends(deviceId);
       if (result.exception != null) {
-        if (!kIsWeb) {
-          FLog.warning(text: 'refreshFriends read failed ${result.exception}');
-        }
+        FLog.warning(text: 'refreshFriends read failed ${result.exception}');
         return;
       }
 
@@ -247,9 +245,11 @@ class FriendsLogic with ChangeNotifier {
     );
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
-     if(!kIsWeb){
-       FLog.error(text: 'Error deleting friend on Server',exception: getFriendRelationshipResult?.rpcException);
-     }
+      if (!kIsWeb) {
+        FLog.error(
+            text: 'Error deleting friend on Server',
+            exception: getFriendRelationshipResult?.rpcException);
+      }
       return;
     }
   }

@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +12,7 @@ import 'package:universal_io/io.dart';
 
 import '../../generated/l10n.dart';
 import '../../models/event.dart';
+import '../logger.dart';
 import '../timeconverter_helper.dart';
 import 'received_notification.dart';
 
@@ -194,14 +194,15 @@ class NotificationHelper {
     if (kIsWeb) return;
     if (oldEvent.compareTo(newEvent) != 0) {
       NotificationHelper().cancelAllNotifications();
-      if (oldEvent.status != newEvent.status && newEvent.status == EventStatus.cancelled) {
+      if (oldEvent.status != newEvent.status &&
+          newEvent.status == EventStatus.cancelled) {
         showEventUpdated(
             id: newEvent.hashCode,
             event: newEvent,
             title: Localize.current.note_statuschanged);
         return;
       }
-     /* if (newEvent.status == EventStatus.confirmed) {
+      /* if (newEvent.status == EventStatus.confirmed) {
         NotificationHelper().scheduleNotification(
             newEvent.hashCode,
             Localize.current.bladenight,

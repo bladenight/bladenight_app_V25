@@ -1,11 +1,11 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/friend.dart';
 import '../models/image_and_link.dart';
 import '../models/images_and_links.dart';
+import 'logger.dart';
 
 class PreferencesHelper {
   static const String _friendPref = 'friendlist';
@@ -53,7 +53,6 @@ class PreferencesHelper {
     await prefs.setInt(_friendId, finalFriendId);
     return finalFriendId;
   }
-
 
   static Future<bool> getAutoStopFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();

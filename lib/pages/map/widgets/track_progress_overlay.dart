@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
+import '../../../helpers/logger.dart';
 import '../../../helpers/speed_to_color.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/event.dart';
@@ -30,7 +30,8 @@ class TrackProgressOverlay extends ConsumerStatefulWidget {
   final MapController mapController;
 
   @override
-  ConsumerState<TrackProgressOverlay> createState() => _TrackProgressOverlayState();
+  ConsumerState<TrackProgressOverlay> createState() =>
+      _TrackProgressOverlayState();
 }
 
 class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
@@ -48,10 +49,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (Platform.isAndroid || Platform.isIOS) {
-      if (!kIsWeb) {
-        FLog.debug(
-            text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
-      }
+      FLog.debug(
+          text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
     }
     if (state == AppLifecycleState.resumed) {
       ref.read(refreshTimerProvider.notifier).start();
@@ -382,9 +381,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                 ) //Text when Event confirmed
                                               : FittedBox(
                                                   child: Text(
-                                                    '${activeEvent.status ==
-                                                        EventStatus.finished?Localize.of(context).finished: Localize.of(context).nextEvent} ${activeEvent.status ==
-                                                        EventStatus.finished?'':DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(activeEvent.getUtcIso8601DateTime)}',
+                                                    '${activeEvent.status == EventStatus.finished ? Localize.of(context).finished : Localize.of(context).nextEvent} ${activeEvent.status == EventStatus.finished ? '' : DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(activeEvent.getUtcIso8601DateTime)}',
                                                   ),
                                                 )) //empty when not confirmed no viewer mode available
                                           : !location.isTracking

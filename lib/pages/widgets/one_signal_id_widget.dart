@@ -21,16 +21,18 @@ class OneSignalIdWidget extends ConsumerWidget {
               children: [
                 CupertinoFormSection(
                     header: Text(Localize.of(context).oneSignalIdTitle),
-                    children: <Widget>[CupertinoButton(child:
-                      Text(
-                            '${Localize.of(context).oneSignalId}\n$oneSignalInfoData',
-                            textAlign: TextAlign.center), onPressed: (){
-                      if(oneSignalInfoData!=''){
-                      Share.share(oneSignalInfoData);}
-                    })
-
+                    children: <Widget>[
+                      CupertinoButton(
+                          child: Text(
+                              '${Localize.of(context).oneSignalId}\n$oneSignalInfoData',
+                              textAlign: TextAlign.center),
+                          onPressed: () {
+                            if (oneSignalInfoData != '') {
+                              Share.share(oneSignalInfoData);
+                            }
+                          })
                     ]),
-         ]) ;
+              ]);
         });
   }
 }

@@ -1,5 +1,5 @@
 /*import 'package:background_fetch/background_fetch.dart';
-import 'package:f_logs/model/flog/flog.dart';
+import '../logger.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:hive_flutter/adapters.dart';

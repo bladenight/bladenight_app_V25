@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   adaptive_theme: ^3.2.1
+  archive: ^3.3.7
   asset_fill: ^1.1.0
   barcode_widget: ^2.0.2
   cached_network_image: ^3.2.3
@@ -18,9 +19,6 @@ dependencies:
   dart_mappable: ^3.1.1
   device_info_plus: ^9.0.2
   encrypt: ^5.0.1
-  f_logs: ^2.0.1
-  #f_logs:
-   #path: ../Flogs/
   fast_color_picker: ^0.1.1
   firebase_core: ^2.13.0
   firebase_crashlytics: ^3.3.1
@@ -29,6 +27,7 @@ dependencies:
   flutter_background_geolocation: ^4.12.0
   flutter_cache_manager: ^3.3.0
   flutter_device_type: ^0.4.0
+  flutter_email_sender: ^6.0.1
   flutter_launcher_icons: ^0.13.1
   flutter_local_notifications: ^15.1.0+1
   flutter_localizations:
@@ -64,6 +63,7 @@ dependencies:
   #location: ^4.4.0
 
   location2: ^6.0.4
+  logger: ^2.0.1
   #modal_bottom_sheet: ^2.1.2
   maps_toolkit: ^2.0.1
   modal_bottom_sheet:
@@ -71,7 +71,7 @@ dependencies:
       url: https://github.com/followthemoney1/modal_bottom_sheet.git
       ref: main
       path: modal_bottom_sheet
-  onesignal_flutter: ^3.4.1
+  onesignal_flutter: ^5.0.0
   package_info_plus: ^4.0.2
   path_provider: ^2.0.15
   permission_handler: ^10.2.0
@@ -82,7 +82,6 @@ dependencies:
   share_plus: ^7.0.1
   shared_preferences: ^2.1.1
   step_progress_indicator: ^1.0.2
-  test: ^1.22.0
   #uni_links: ^0.5.1
   uni_links2: #Download from https://github.com/xunreal75/uni_links2.git and save to root
     path: ../uni_links/uni_links/
@@ -109,7 +108,7 @@ dev_dependencies:
 dependency_overrides:
   # Remove when firebase_ui_firestore stops relying on 0.17.0.
   # https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_localizations/pubspec.yaml#L18
-  intl: ^0.18.1
+  #intl: ^0.18.1
     #location2:
   #path: ../flutterlocation/packages/location2
   wakelock_macos:
@@ -290,7 +289,7 @@ flutter:
 flutter_intl:
   enabled: true # Required. Must be set to true to activate the plugin. Default: false
   class_name: Localize # Optional. Sets the name for the generated localization class. Default: S
-  main_locale: de
+  main_locale: en
   # arb_dir: l10n # Optional. Sets the main locale used for generating localization files. Provided value should comply with ISO-639-1 and ISO-3166-1 (e.g. "en", "en_GB"). Default: en
 
 flutter_native_splash:

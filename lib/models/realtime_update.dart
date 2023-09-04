@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:f_logs/model/flog/flog.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -10,6 +8,7 @@ import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location_bearing_distance.dart';
+import '../helpers/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../providers/friends_provider.dart';
 import '../providers/location_provider.dart';
@@ -223,13 +222,12 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   }
 
   static Future<RealtimeUpdate> wampUpdate([dynamic message]) async {
-    if (!kIsWeb) {
-      FLog.debug(
-        className: 'Future<RealtimeUpdate>  wampUpdate',
-        methodName: 'sendLocation',
-        text: 'will send:$message',
-      );
-    }
+    FLog.debug(
+      className: 'Future<RealtimeUpdate>  wampUpdate',
+      methodName: 'sendLocation',
+      text: 'will send:$message',
+    );
+
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
         WampEndpoint.getrealtimeupdate, message);

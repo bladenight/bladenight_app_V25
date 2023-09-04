@@ -81,8 +81,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Internetseite"),
         "about_h_impressum": MessageLookupByLibrary.simpleMessage("Impressum"),
         "about_h_licences": MessageLookupByLibrary.simpleMessage("Lizenzen"),
-        "about_h_moreinfo":
-            MessageLookupByLibrary.simpleMessage("Mehr informationen"),
         "about_h_oneSignalPrivacy": MessageLookupByLibrary.simpleMessage(
             "OneSignal Datenschutzerklärung"),
         "about_h_open_street_map": MessageLookupByLibrary.simpleMessage(
@@ -168,6 +166,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Logdaten wirklich löschen?"),
         "clearLogsTitle": MessageLookupByLibrary.simpleMessage(
             "Logdaten sollen gelöscht werden!"),
+        "clearMessages": MessageLookupByLibrary.simpleMessage(
+            "Wirklich alle Nachrichten löschen?"),
+        "clearMessagesTitle":
+            MessageLookupByLibrary.simpleMessage("Nachrichten löschen"),
         "closeApp":
             MessageLookupByLibrary.simpleMessage("App wirklich schließen?"),
         "codecontainsonlydigits": MessageLookupByLibrary.simpleMessage(
@@ -185,6 +187,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "dateTimeIntl": m2,
         "dateTimeSecIntl": m3,
         "delete": MessageLookupByLibrary.simpleMessage("Löschen"),
+        "deleteMessage":
+            MessageLookupByLibrary.simpleMessage("Nachricht löschen"),
         "deletefriend":
             MessageLookupByLibrary.simpleMessage("Freund:in löschen"),
         "deny": MessageLookupByLibrary.simpleMessage("Ablehnen"),
@@ -222,6 +226,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "entername": MessageLookupByLibrary.simpleMessage("Name:"),
         "events": MessageLookupByLibrary.simpleMessage("Termine"),
         "export": MessageLookupByLibrary.simpleMessage("Exportieren"),
+        "exportLogData": MessageLookupByLibrary.simpleMessage(
+            "Sende Logdaten für Support oder Featureanfrage"),
         "exportUserTracking":
             MessageLookupByLibrary.simpleMessage("Usertracking exportieren"),
         "exportUserTrackingHeader": MessageLookupByLibrary.simpleMessage(
@@ -328,6 +334,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "markMeAsTail": MessageLookupByLibrary.simpleMessage(
             "Markiere meine Position als Zugende"),
         "me": MessageLookupByLibrary.simpleMessage("Ich"),
+        "message": MessageLookupByLibrary.simpleMessage("Nachricht"),
+        "messages": MessageLookupByLibrary.simpleMessage("Nachrichten"),
         "metersOnRoute": MessageLookupByLibrary.simpleMessage("gef.Strecke"),
         "model": MessageLookupByLibrary.simpleMessage("Modell"),
         "mustentername": MessageLookupByLibrary.simpleMessage(
@@ -397,7 +405,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onRoute": MessageLookupByLibrary.simpleMessage("auf der Strecke"),
         "oneSignalId": MessageLookupByLibrary.simpleMessage("OneSignal-Id: "),
         "oneSignalIdTitle": MessageLookupByLibrary.simpleMessage(
-            "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben."),
+            "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Du Probleme beim Empfang von Push-Nachrichten haben."),
         "online": MessageLookupByLibrary.simpleMessage("Online"),
         "onlyWhenInUseEnabled": MessageLookupByLibrary.simpleMessage(
             "Standortfreigabe nur \'Zugriff nur während der Nutzung der App zulassen\'"),
@@ -434,8 +442,6 @@ class MessageLookup extends MessageLookupByLibrary {
             "Infos von SkateMunich per Push über Veranstaltungen empfangen?"),
         "qrcoderouteinfoheader": MessageLookupByLibrary.simpleMessage(
             "QRCode - Link zum teilen der aktuellen BladeNight-Daten ohne App"),
-        "receiveBladeGuardInfos":
-            MessageLookupByLibrary.simpleMessage("Empfange Bladeguard Infos"),
         "received": MessageLookupByLibrary.simpleMessage("empfangen"),
         "reload": MessageLookupByLibrary.simpleMessage("Neu laden"),
         "reltime": MessageLookupByLibrary.simpleMessage("rel. Zeitdiff."),

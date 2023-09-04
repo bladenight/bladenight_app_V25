@@ -1,4 +1,3 @@
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/deviceid_helper.dart';
+import '../../helpers/logger.dart';
 import '../../models/event.dart';
 import '../../models/messages/kill_server.dart';
 import '../../models/messages/set_active_route.dart';
@@ -74,10 +74,8 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                       ).toMap(),
                     );
                   } catch (e) {
-                    if (!kIsWeb) {
-                      FLog.error(
-                          text: 'SetActiveStatusMessage failed', exception: e);
-                    }
+                    FLog.error(
+                        text: 'SetActiveStatusMessage failed', exception: e);
                   }
                   setState(() => _activityVisible = false);
                   Future.delayed(const Duration(seconds: 1), () {

@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import 'logger.dart';
 
 class Launch {
   static void launchUrlFromString(String url) {
@@ -17,7 +18,8 @@ class Launch {
       }
     }, (error, stack) {
       FLog.error(
-          className: 'Guarded launchUrlFromString', text: 'Could not launch $url');
+          className: 'Guarded launchUrlFromString',
+          text: 'Could not launch $url');
     });
   }
 

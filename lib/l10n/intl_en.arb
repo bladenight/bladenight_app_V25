@@ -411,6 +411,14 @@
   "oneSignalIdTitle" : "This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages.",
   "oneSignalId" : "OneSignal-Id: ",
   "startPointTitle": "Where is the start?",
-  "restartRequired" : "Restart required! Please close app and reopen !!!"
+  "restartRequired" : "Restart required! Please close app and reopen !!!",
+  "exportLogData": "Send logger data for support oder feature purposes",
+  "message": "Message",
+  "messages": "Messages",
+  "deleteMessage": "Delete Message",
+  "unreadMessage": "Unread",
+  "readMessage": "Read",
+  "clearMessagesTitle": "Clear messages",
+  "clearMessages": "Clear all messages really?"
 
 }

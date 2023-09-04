@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -11,13 +10,14 @@ import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/export_import_data_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../providers/get_images_and_links_provider.dart';
-import 'bladeguard_page.dart';
 import 'events_page.dart';
 import 'friends/friends_page.dart';
 import 'home_page.dart';
 import 'map/map_page.dart';
+import 'messages/messages_page.dart';
 import 'settings_page.dart';
 import 'widgets/intro_slider.dart';
 
@@ -41,12 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    if (!kIsWeb) {
-      FLog.info(
-          className: 'home_screen',
-          methodName: 'initState ',
-          text: 'App started');
-    }
+    FLog.info(
+        className: 'home_screen',
+        methodName: 'initState ',
+        text: 'App started');
     super.initState();
     if (kIsWeb) {
       tabController = CupertinoTabController(initialIndex: 1)
@@ -204,11 +202,10 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(CupertinoIcons.group),
               label: Localize.of(context).friends,
             ),
-          if (!kIsWeb && !HiveSettingsDB.isBladeGuard)
-            BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.settings_solid),
-              label: Localize.of(context).settings,
-            ),
+          BottomNavigationBarItem(
+            icon: const Icon(CupertinoIcons.settings_solid),
+            label: Localize.of(context).settings,
+          ),
         ],
       ),
       tabBuilder: (context, index) {
@@ -223,14 +220,14 @@ class _HomeScreenState extends State<HomeScreen> {
             if (!kIsWeb) {
               return const FriendsPage();
             }
-            return Container();
+            return const SettingsPage();
           case 4:
-            return Builder(builder: (context) {
-
-                return const SettingsPage();
-              /*var ssp = context.watch(BladeguardLinkImageAndLink.provider);
+            if (!kIsWeb) {
+              return const SettingsPage();
+            }
+            return Container();
+          /*var ssp = context.watch(BladeguardLinkImageAndLink.provider);
               return ssp.link == null ? Container() : BladeGuardPage();*/
-            });
           default:
             return Container();
         }

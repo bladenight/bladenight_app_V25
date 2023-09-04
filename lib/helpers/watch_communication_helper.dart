@@ -1,4 +1,3 @@
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +9,7 @@ import '../models/route.dart';
 import '../models/watchEvent.dart';
 import '../providers/active_event_notifier_provider.dart';
 import '../providers/location_provider.dart';
+import 'logger.dart';
 
 const MethodChannel channel = MethodChannel('bladenightchannel');
 const String flutterToWatch = 'flutterToWatch';
@@ -33,10 +33,6 @@ class SendToWatch {
   static updateRealtimeData(String? realTimeUpdate) {
     if (!Platform.isIOS) {
       return;
-    }
-
-    if (kDebugMode) {
-      print('updateRealtimeData $realTimeUpdate');
     }
     channel.invokeMethod(flutterToWatch,
         {'method': 'updateRealtimeData', 'data': realTimeUpdate});

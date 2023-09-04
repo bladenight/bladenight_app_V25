@@ -50,90 +50,90 @@ class Localize {
     return Localizations.of<Localize>(context, Localize);
   }
 
-  /// `am`
+  /// `at`
   String get at {
     return Intl.message(
-      'am',
+      'at',
       name: 'at',
       desc: '',
       args: [],
     );
   }
 
-  /// `Firebase Crashlytics`
+  /// `Firebase Crashlytics privacy`
   String get about_h_crashlytics {
     return Intl.message(
-      'Firebase Crashlytics',
+      'Firebase Crashlytics privacy',
       name: 'about_h_crashlytics',
       desc: '',
       args: [],
     );
   }
 
-  /// `Um die Stabilität und Zuverlässigkeit dieser App zu verbessern, sind wir auf anonymisierte Absturzberichte angewiesen. Wir nutzen hierzu „Firebase Crashlytics“, ein Dienst der Google Ireland Ltd., Google Building Gordon House, Barrow Street, Dublin 4, Ireland.\nIm Falle eines Absturzes werden anonyme Informationen an die Server von Google in die USA übertragen (Zustand der App zum Zeitpunkt des Absturzes, Installation UUID, Crash-Trace, Hersteller und Betriebssystem des Handys, letzte Log-Meldungen). Diese Informationen enthalten keine personenbezogenen Daten.\n\nAbsturzberichte werden nur mit Ihrer ausdrücklichen Zustimmung versendet. Bei der Verwendung von iOS-Apps können Sie die Zustimmung in den Einstellungen der App oder nach einem Absturz erteilen. Bei Android-Apps besteht bei der Einrichtung des mobilen Endgeräts die Möglichkeit, generell der Übermittlung von Absturzbenachrichtigungen an Google und App-Entwickler zuzustimmen.\n\nRechtsgrundlage für die Datenübermittlung ist Art. 6 Abs. 1 lit. a DSGVO.\n\nSie können Ihre Einwilligung jederzeit widerrufen indem Sie in den Einstellungen der iOS-Apps die Funktion „Absturzberichte“ deaktivieren (in den Magazin-Apps befindet sich der Eintrag im Menüpunkt „Kommunikation“).\n\nBei den Android-Apps erfolgt die Deaktivierung grundlegend in den Android-Einstellungen. Öffnen Sie hierzu die Einstellungen App, wählen den Punkt „Google“ und dort im Dreipunkt-Menü oben rechts den Menüpunkt „Nutzung & Diagnose“. Hier können Sie das Senden der entsprechenden Daten deaktivieren. Weitere Informationen finden Sie in der Hilfe zu Ihrem Google-Konto.\n\nWeitere Informationen zum Datenschutz erhalten Sie in den Datenschutzhinweisen von Firebase Crashlytics unter https://firebase.google.com/support/privacy sowie https://docs.fabric.io/apple/fabric/data-privacy.html#data-collection-policies`
+  /// `To improve the stability and reliability of this app, we rely on anonymized crash reports. For this we use "Firebase Crashlytics", a service of Google Ireland Ltd., Google Building Gordon House, Barrow Street, Dublin 4, Ireland.\nIn the event of a crash, anonymous information is sent to the Google servers in the USA (status of the app at the time of the crash, installation UUID, crash trace, cell phone manufacturer and operating system, last log messages). This information does not contain any personal data.\n\nCrash reports are only sent with your express consent. When using iOS apps, you can give consent in the app's settings or after a crash. With Android apps, when setting up the mobile device, you have the option of generally agreeing to the transmission of crash notifications to Google and the app developer.\n\nThe legal basis for data transmission is Article 6 (1) (a) GDPR.\n\nYou can revoke your consent at any time by deactivating the "Crash reports" function in the settings of the iOS apps (in the magazine apps the entry is in the "Communication" menu item).\n\nWith the Android apps, the deactivation is basically done in the Android settings.To do this, open the Settings app, select "Google" and there in the three-point menu at the top right the menu item "Usage & Diagnostics". Here you can deactivate the sending of the corresponding data. For more information, see your Google Account Help.\n\nFurther information on data protection can be found in the Firebase Crashlytics data protection information at https://firebase.google.com/support/privacy and https://docs.fabric.io/apple/fabric/data-privacy.html#data-collection-policies`
   String get about_crashlytics {
     return Intl.message(
-      'Um die Stabilität und Zuverlässigkeit dieser App zu verbessern, sind wir auf anonymisierte Absturzberichte angewiesen. Wir nutzen hierzu „Firebase Crashlytics“, ein Dienst der Google Ireland Ltd., Google Building Gordon House, Barrow Street, Dublin 4, Ireland.\nIm Falle eines Absturzes werden anonyme Informationen an die Server von Google in die USA übertragen (Zustand der App zum Zeitpunkt des Absturzes, Installation UUID, Crash-Trace, Hersteller und Betriebssystem des Handys, letzte Log-Meldungen). Diese Informationen enthalten keine personenbezogenen Daten.\n\nAbsturzberichte werden nur mit Ihrer ausdrücklichen Zustimmung versendet. Bei der Verwendung von iOS-Apps können Sie die Zustimmung in den Einstellungen der App oder nach einem Absturz erteilen. Bei Android-Apps besteht bei der Einrichtung des mobilen Endgeräts die Möglichkeit, generell der Übermittlung von Absturzbenachrichtigungen an Google und App-Entwickler zuzustimmen.\n\nRechtsgrundlage für die Datenübermittlung ist Art. 6 Abs. 1 lit. a DSGVO.\n\nSie können Ihre Einwilligung jederzeit widerrufen indem Sie in den Einstellungen der iOS-Apps die Funktion „Absturzberichte“ deaktivieren (in den Magazin-Apps befindet sich der Eintrag im Menüpunkt „Kommunikation“).\n\nBei den Android-Apps erfolgt die Deaktivierung grundlegend in den Android-Einstellungen. Öffnen Sie hierzu die Einstellungen App, wählen den Punkt „Google“ und dort im Dreipunkt-Menü oben rechts den Menüpunkt „Nutzung & Diagnose“. Hier können Sie das Senden der entsprechenden Daten deaktivieren. Weitere Informationen finden Sie in der Hilfe zu Ihrem Google-Konto.\n\nWeitere Informationen zum Datenschutz erhalten Sie in den Datenschutzhinweisen von Firebase Crashlytics unter https://firebase.google.com/support/privacy sowie https://docs.fabric.io/apple/fabric/data-privacy.html#data-collection-policies',
+      'To improve the stability and reliability of this app, we rely on anonymized crash reports. For this we use "Firebase Crashlytics", a service of Google Ireland Ltd., Google Building Gordon House, Barrow Street, Dublin 4, Ireland.\nIn the event of a crash, anonymous information is sent to the Google servers in the USA (status of the app at the time of the crash, installation UUID, crash trace, cell phone manufacturer and operating system, last log messages). This information does not contain any personal data.\n\nCrash reports are only sent with your express consent. When using iOS apps, you can give consent in the app\'s settings or after a crash. With Android apps, when setting up the mobile device, you have the option of generally agreeing to the transmission of crash notifications to Google and the app developer.\n\nThe legal basis for data transmission is Article 6 (1) (a) GDPR.\n\nYou can revoke your consent at any time by deactivating the "Crash reports" function in the settings of the iOS apps (in the magazine apps the entry is in the "Communication" menu item).\n\nWith the Android apps, the deactivation is basically done in the Android settings.To do this, open the Settings app, select "Google" and there in the three-point menu at the top right the menu item "Usage & Diagnostics". Here you can deactivate the sending of the corresponding data. For more information, see your Google Account Help.\n\nFurther information on data protection can be found in the Firebase Crashlytics data protection information at https://firebase.google.com/support/privacy and https://docs.fabric.io/apple/fabric/data-privacy.html#data-collection-policies',
       name: 'about_crashlytics',
       desc: '',
       args: [],
     );
   }
 
-  /// `OneSignal Datenschutzerklärung`
+  /// `OneSignal privacy`
   String get about_h_oneSignalPrivacy {
     return Intl.message(
-      'OneSignal Datenschutzerklärung',
+      'OneSignal privacy',
       name: 'about_h_oneSignalPrivacy',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wir verwenden für unsere Website OneSignal, eine Mobile-Marketing-Plattform. Dienstanbieter ist das amerikanische Unternehmen OneSignal, 2850 S Delaware St #201, San Mateo, CA 94403, USA.\n\nOneSignal verarbeitet Daten u.a. auch in den USA. Wir weisen darauf hin, dass nach Meinung des Europäischen Gerichtshofs derzeit kein angemessenes Schutzniveau für den Datentransfer in die USA besteht. Dies kann mit verschiedenen Risiken für die Rechtmäßigkeit und Sicherheit der Datenverarbeitung einhergehen.\n\nAls Grundlage der Datenverarbeitung bei Empfängern mit Sitz in Drittstaaten (außerhalb der Europäischen Union, Island, Liechtenstein, Norwegen, also insbesondere in den USA) oder einer Datenweitergabe dorthin verwendet OneSignal von der EU-Kommission genehmigte Standardvertragsklauseln (= Art. 46. Abs. 2 und 3 DSGVO). Diese Klauseln verpflichten OneSignal, das EU-Datenschutzniveau bei der Verarbeitung relevanter Daten auch außerhalb der EU einzuhalten. Diese Klauseln basieren auf einem Durchführungsbeschluss der EU-Kommission. Sie finden den Beschluss sowie die Klauseln u.a. hier: https://germany.representation.ec.europa.eu/index_de.\n\nMehr über die Daten, die durch die Verwendung von OneSignal verarbeitet werden, erfahren Sie in der Privacy Policy auf https://onesignal.com/privacy.\n\nAlle Texte sind urheberrechtlich geschützt.\n\nQuelle: Erstellt mit dem Datenschutz Generator von AdSimple`
+  /// `We use OneSignal, a mobile marketing platform, for our website. Service provider is the American company OneSignal, 2850 S Delaware St #201, San Mateo, CA 94403, USA.\n\nOneSignal also processes data in the USA, among other places. We would like to point out that, according to the European Court of Justice, there is currently no adequate level of protection for data transfer to the USA. This can be associated with various risks for the legality and security of data processing.\n\nOneSignal uses standard contractual clauses approved by the EU Commission (= Art. 46. Para. 2 and 3 GDPR). These clauses oblige OneSignal to comply with the EU data protection level when processing relevant data outside of the EU. These clauses are based on an implementation decision of the EU Commission. You can find the decision and the clauses here: https://germany.representation.ec.europa.eu/index_de.\n\nTo learn more about the data processed using OneSignal, see the Privacy Policy at https://onesignal.com/privacy.\n\nAll texts are copyrighted.\n\nSource: Created with the Privacy Generator by AdSimple`
   String get about_oneSignalPrivacy {
     return Intl.message(
-      'Wir verwenden für unsere Website OneSignal, eine Mobile-Marketing-Plattform. Dienstanbieter ist das amerikanische Unternehmen OneSignal, 2850 S Delaware St #201, San Mateo, CA 94403, USA.\n\nOneSignal verarbeitet Daten u.a. auch in den USA. Wir weisen darauf hin, dass nach Meinung des Europäischen Gerichtshofs derzeit kein angemessenes Schutzniveau für den Datentransfer in die USA besteht. Dies kann mit verschiedenen Risiken für die Rechtmäßigkeit und Sicherheit der Datenverarbeitung einhergehen.\n\nAls Grundlage der Datenverarbeitung bei Empfängern mit Sitz in Drittstaaten (außerhalb der Europäischen Union, Island, Liechtenstein, Norwegen, also insbesondere in den USA) oder einer Datenweitergabe dorthin verwendet OneSignal von der EU-Kommission genehmigte Standardvertragsklauseln (= Art. 46. Abs. 2 und 3 DSGVO). Diese Klauseln verpflichten OneSignal, das EU-Datenschutzniveau bei der Verarbeitung relevanter Daten auch außerhalb der EU einzuhalten. Diese Klauseln basieren auf einem Durchführungsbeschluss der EU-Kommission. Sie finden den Beschluss sowie die Klauseln u.a. hier: https://germany.representation.ec.europa.eu/index_de.\n\nMehr über die Daten, die durch die Verwendung von OneSignal verarbeitet werden, erfahren Sie in der Privacy Policy auf https://onesignal.com/privacy.\n\nAlle Texte sind urheberrechtlich geschützt.\n\nQuelle: Erstellt mit dem Datenschutz Generator von AdSimple',
+      'We use OneSignal, a mobile marketing platform, for our website. Service provider is the American company OneSignal, 2850 S Delaware St #201, San Mateo, CA 94403, USA.\n\nOneSignal also processes data in the USA, among other places. We would like to point out that, according to the European Court of Justice, there is currently no adequate level of protection for data transfer to the USA. This can be associated with various risks for the legality and security of data processing.\n\nOneSignal uses standard contractual clauses approved by the EU Commission (= Art. 46. Para. 2 and 3 GDPR). These clauses oblige OneSignal to comply with the EU data protection level when processing relevant data outside of the EU. These clauses are based on an implementation decision of the EU Commission. You can find the decision and the clauses here: https://germany.representation.ec.europa.eu/index_de.\n\nTo learn more about the data processed using OneSignal, see the Privacy Policy at https://onesignal.com/privacy.\n\nAll texts are copyrighted.\n\nSource: Created with the Privacy Generator by AdSimple',
       name: 'about_oneSignalPrivacy',
       desc: '',
       args: [],
     );
   }
 
-  /// `Die App wird kostenfrei vom Herausgeber zur Information zur Münchener Bladnight, für Skatemunich e.V. und dessen Sponsoren bereitgestellt.\nDie App bietet allen BladeNight Teilnehmern folgende Funktionen an:\n\t-Übersicht der kommenden und vergangenen Termine\n- Anzeige der Strecken auf der Karte\n- Live Anzeige des Zuges während der BladeNight\n- Live Anzeige der eigenen Position auf der Strecke und innerhalb des Zuges\n- Freunde hinzufügen und Live verfolgen`
+  /// `The app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live",\nThe app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live`
   String get about_appinfo {
     return Intl.message(
-      'Die App wird kostenfrei vom Herausgeber zur Information zur Münchener Bladnight, für Skatemunich e.V. und dessen Sponsoren bereitgestellt.\nDie App bietet allen BladeNight Teilnehmern folgende Funktionen an:\n\t-Übersicht der kommenden und vergangenen Termine\n- Anzeige der Strecken auf der Karte\n- Live Anzeige des Zuges während der BladeNight\n- Live Anzeige der eigenen Position auf der Strecke und innerhalb des Zuges\n- Freunde hinzufügen und Live verfolgen',
+      'The app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live",\nThe app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live',
       name: 'about_appinfo',
       desc: '',
       args: [],
     );
   }
 
-  /// `Diese App benutzt eine eindeutige Id die beim ersten Start der App lokal gespeichert wird.\nDiese Id wird auf dem Server benutzt um Freunde zu verknüpfen und die Position zu teilen. Diese wird nur zwischen der eigenen App und Server übertragen.\nWeiterhin wird die App-Versionsnummer und Telefonhersteller (Apple oder Android) zur Prüfung der korrekten Kommunikation übermittelt.\nDie Id ist auf dem Server mit den verknüpften Freunden gespeichert.\nDas Löschen und Neuinstallieren der App löscht die Id und die Freunde müssen neu verknüpft werden, da die Id nicht wiederhergestellt werden kann.\nDie Daten werden nicht an Dritte weitergegeben oder anderweitig verwendet.\nDeine Standortdaten werden während der Veranstaltung benutzt um Start und Ende des Zuges auf der Strecke zu berechnen und darzustellen und die Entfernung zu Freunden und zum Ziel zu berechnen.\nEs werden keine persönlichen Daten erfasst. Die Namen der Freunde sind nur lokal in der App gespeichert.\nDas Benutzen der Emailfunktion und Webseite von Skatemunich unterliegt den Datenschutzbestimmungen von Skatemunich (https://www.skatemunich.de/datenschutzerklaerung/)\nDer Quellcode ist Opensource und kann jederzeit eingesehen werden.`
+  /// `This app uses a unique id, which is created on first start. This id is used to share your position with your friends. Further we transfer your buildnumber and manufacturer to collect the correct version for server-communication. We store your id on server and locally for next events and reopen the app. On deleting this app all linked friends are lost and can't restore. We don't share any data with other providers. Your data are only to track the actual event. Your position data are used to calculate and show start and end position of skatertrain and distances to friends and finish. When you leave the track or the event is finished you are disappearing in the app. Sourcecode is opensource.`
   String get about_appprivacy {
     return Intl.message(
-      'Diese App benutzt eine eindeutige Id die beim ersten Start der App lokal gespeichert wird.\nDiese Id wird auf dem Server benutzt um Freunde zu verknüpfen und die Position zu teilen. Diese wird nur zwischen der eigenen App und Server übertragen.\nWeiterhin wird die App-Versionsnummer und Telefonhersteller (Apple oder Android) zur Prüfung der korrekten Kommunikation übermittelt.\nDie Id ist auf dem Server mit den verknüpften Freunden gespeichert.\nDas Löschen und Neuinstallieren der App löscht die Id und die Freunde müssen neu verknüpft werden, da die Id nicht wiederhergestellt werden kann.\nDie Daten werden nicht an Dritte weitergegeben oder anderweitig verwendet.\nDeine Standortdaten werden während der Veranstaltung benutzt um Start und Ende des Zuges auf der Strecke zu berechnen und darzustellen und die Entfernung zu Freunden und zum Ziel zu berechnen.\nEs werden keine persönlichen Daten erfasst. Die Namen der Freunde sind nur lokal in der App gespeichert.\nDas Benutzen der Emailfunktion und Webseite von Skatemunich unterliegt den Datenschutzbestimmungen von Skatemunich (https://www.skatemunich.de/datenschutzerklaerung/)\nDer Quellcode ist Opensource und kann jederzeit eingesehen werden.',
+      'This app uses a unique id, which is created on first start. This id is used to share your position with your friends. Further we transfer your buildnumber and manufacturer to collect the correct version for server-communication. We store your id on server and locally for next events and reopen the app. On deleting this app all linked friends are lost and can\'t restore. We don\'t share any data with other providers. Your data are only to track the actual event. Your position data are used to calculate and show start and end position of skatertrain and distances to friends and finish. When you leave the track or the event is finished you are disappearing in the app. Sourcecode is opensource.',
       name: 'about_appprivacy',
       desc: '',
       args: [],
     );
   }
 
-  /// `Über die BladeNight App`
+  /// `About BladeNight App`
   String get about_bnapp {
     return Intl.message(
-      'Über die BladeNight App',
+      'About BladeNight App',
       name: 'about_bnapp',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dein Feedback ist willkommen.\nSende uns eine E-Mail an:`
+  /// `Your feedback is welcome.\nSend us an email:\nservice@skatemunich.de`
   String get about_feedback {
     return Intl.message(
-      'Dein Feedback ist willkommen.\nSende uns eine E-Mail an:',
+      'Your feedback is welcome.\nSend us an email:\nservice@skatemunich.de',
       name: 'about_feedback',
       desc: '',
       args: [],
@@ -190,91 +190,71 @@ class Localize {
     );
   }
 
-  /// `Lars Huth`
-  String get about_lars {
-    return Intl.message(
-      'Lars Huth',
-      name: 'about_lars',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Wofür ist die App`
+  /// `What is the application for`
   String get about_h_bnapp {
     return Intl.message(
-      'Wofür ist die App',
+      'What is the application for',
       name: 'about_h_bnapp',
       desc: '',
       args: [],
     );
   }
 
-  /// `Feedback zur BladeNight`
+  /// `Feedback about BladeNight`
   String get about_h_feedback {
     return Intl.message(
-      'Feedback zur BladeNight',
+      'Feedback about BladeNight',
       name: 'about_h_feedback',
       desc: '',
       args: [],
     );
   }
 
-  /// `Internetseite`
+  /// `Homepage`
   String get about_h_homepage {
     return Intl.message(
-      'Internetseite',
+      'Homepage',
       name: 'about_h_homepage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Impressum`
+  /// `Imprint`
   String get about_h_impressum {
     return Intl.message(
-      'Impressum',
+      'Imprint',
       name: 'about_h_impressum',
       desc: '',
       args: [],
     );
   }
 
-  /// `Lizenzen`
+  /// `Licence`
   String get about_h_licences {
     return Intl.message(
-      'Lizenzen',
+      'Licence',
       name: 'about_h_licences',
       desc: '',
       args: [],
     );
   }
 
-  /// `Open Street Map Datenschutzerklärung`
+  /// `Open Street Map Privacy`
   String get about_h_open_street_map {
     return Intl.message(
-      'Open Street Map Datenschutzerklärung',
+      'Open Street Map Privacy',
       name: 'about_h_open_street_map',
       desc: '',
       args: [],
     );
   }
 
-  /// `Daten, die wir automatisch erhalten\n\nDie OSMF betreibt eine Reihe von Diensten für die OpenStreetMap-Gemeinschaft, z. B. die Website openstreetmap.org, die Online-Karte im "Standard"-Stil, die OSM-API und die Nominatim-Suchfunktion.\n\nWenn Sie eine OSMF-Website besuchen, über einen Browser oder über Anwendungen, die die bereitgestellten APIs nutzen, auf einen der Dienste zugreifen, werden Aufzeichnungen über diese Nutzung erstellt, wir sammeln Informationen über Ihren Browser oder Ihre Anwendung und Ihre Interaktion mit unserer Website, einschließlich (a) IP-Adresse, (b) Browser- und Gerätetyp, (c) Betriebssystem, (d) verweisende Webseite, (e) Datum und Uhrzeit der Seitenbesuche und (f) die auf unseren Websites aufgerufenen Seiten.\n\nDarüber hinaus können wir Software zur Verfolgung der Benutzerinteraktion einsetzen, die zusätzliche Aufzeichnungen über die Benutzeraktivität erstellt, z. B. Piwik.\n\nDienste, die Geo-DNS oder ähnliche Mechanismen verwenden, um die Last auf geografisch verteilte Server zu verteilen, erzeugen möglicherweise eine Aufzeichnung Ihres Standorts in großem Umfang (z. B. ermittelt das OSMF-Kachel-Cache-Netzwerk das Land, in dem Sie sich wahrscheinlich befinden, und leitet Ihre Anfragen an einen entsprechenden Server weiter).\n\nDiese Aufzeichnungen werden auf folgende Weise verwendet oder können verwendet werden:\n\nzur Unterstützung des Betriebs der Dienste aus technischer, sicherheitstechnischer und planerischer Sicht.\nals anonymisierte, zusammengefasste Daten für Forschungs- und andere Zwecke. Solche Daten können über https://planet.openstreetmap.org oder andere Kanäle öffentlich angeboten und von Dritten genutzt werden.\num den OpenStreetMap-Datensatz zu verbessern. Zum Beispiel durch die Analyse von Nominatim-Abfragen auf fehlende Adressen und Postleitzahlen und die Bereitstellung solcher Daten für die OSM-Community.\nDie auf den Systemen gesammelten Daten sind für die Systemadministratoren und die entsprechenden OSMF-Arbeitsgruppen, z. B. die Datenarbeitsgruppe, zugänglich. Es werden keine persönlichen Informationen oder Informationen, die mit einer Person in Verbindung gebracht werden können, an Dritte weitergegeben, es sei denn, dies ist gesetzlich vorgeschrieben.\n\nDie von Piwik gespeicherten IP-Adressen werden auf zwei Bytes gekürzt und die detaillierten Nutzungsdaten werden 180 Tage lang aufbewahrt.\n\nDa diese Speicherung nur vorübergehend erfolgt, ist es uns im Allgemeinen nicht möglich, Zugang zu IP-Adressen oder den damit verbundenen Protokollen zu gewähren.\n\nDie oben genannten Daten werden auf der Grundlage eines berechtigten Interesses verarbeitet (siehe Artikel 6 Absatz 1 Buchstabe f der DSGVO).`
+  /// `Data we receive automatically\n\nThe OSMF operates a number of services for the OpenStreetMap community, examples are the openstreetmap.org website, the "Standard" style online map, the OSM API and the nominatim search facility.\n\nWhen you visit an OSMF website, access any of the services via a browser or via applications that utilize the provided APIs, records of that use are produced, we collect information about your browser or application and your interaction with our website, including (a) IP address, (b) browser and device type, (c) operating system, (d) referring web page, (e) the date and time of page visits, and (f) the pages accessed on our websites.\n\nFurther we may operate user interaction tracking software that will generate additional records of user activity, for example Piwik.\n\nServices that use Geo-DNS or similar mechanisms to distribute load to geographically distributed servers will potentially generate a record of your location at a large scale (for example the OSMF tile cache network determines the country you are likely to be located in and directs your requests to an appropriate server).\n\nThese records are used or can be used in the following ways:\n\nin support of the operation of the services from a technical, security and planning point of view.\nas anonymised, summarised data for research and other purposes. Such data may be offered publicly via https://planet.openstreetmap.org or other channels and used by 3rd parties.\nto improve the OpenStreetMap dataset. For example by analysing nominatim queries for missing addresses and postcodes and providing such data to the OSM community.\nThe data collected on the systems will be accessible by the system administrators and the appropriate OSMF working groups, for example the Data Working Group. No personal information or information that is linked to an individual will be released to third parties, except as required by law.\n\nIP addresses stored by Piwik are shortened to two bytes and detailed usage information is retained for 180 days.\n\nGiven the temporary nature of this storage, it is generally not feasible for us to provide access to IP addresses or the logs associated with them.\n\nThe above mentioned data is processed on a legitimate interest basis (see GDPR article 6.1f ).`
   String get about_open_street_map {
     return Intl.message(
-      'Daten, die wir automatisch erhalten\n\nDie OSMF betreibt eine Reihe von Diensten für die OpenStreetMap-Gemeinschaft, z. B. die Website openstreetmap.org, die Online-Karte im "Standard"-Stil, die OSM-API und die Nominatim-Suchfunktion.\n\nWenn Sie eine OSMF-Website besuchen, über einen Browser oder über Anwendungen, die die bereitgestellten APIs nutzen, auf einen der Dienste zugreifen, werden Aufzeichnungen über diese Nutzung erstellt, wir sammeln Informationen über Ihren Browser oder Ihre Anwendung und Ihre Interaktion mit unserer Website, einschließlich (a) IP-Adresse, (b) Browser- und Gerätetyp, (c) Betriebssystem, (d) verweisende Webseite, (e) Datum und Uhrzeit der Seitenbesuche und (f) die auf unseren Websites aufgerufenen Seiten.\n\nDarüber hinaus können wir Software zur Verfolgung der Benutzerinteraktion einsetzen, die zusätzliche Aufzeichnungen über die Benutzeraktivität erstellt, z. B. Piwik.\n\nDienste, die Geo-DNS oder ähnliche Mechanismen verwenden, um die Last auf geografisch verteilte Server zu verteilen, erzeugen möglicherweise eine Aufzeichnung Ihres Standorts in großem Umfang (z. B. ermittelt das OSMF-Kachel-Cache-Netzwerk das Land, in dem Sie sich wahrscheinlich befinden, und leitet Ihre Anfragen an einen entsprechenden Server weiter).\n\nDiese Aufzeichnungen werden auf folgende Weise verwendet oder können verwendet werden:\n\nzur Unterstützung des Betriebs der Dienste aus technischer, sicherheitstechnischer und planerischer Sicht.\nals anonymisierte, zusammengefasste Daten für Forschungs- und andere Zwecke. Solche Daten können über https://planet.openstreetmap.org oder andere Kanäle öffentlich angeboten und von Dritten genutzt werden.\num den OpenStreetMap-Datensatz zu verbessern. Zum Beispiel durch die Analyse von Nominatim-Abfragen auf fehlende Adressen und Postleitzahlen und die Bereitstellung solcher Daten für die OSM-Community.\nDie auf den Systemen gesammelten Daten sind für die Systemadministratoren und die entsprechenden OSMF-Arbeitsgruppen, z. B. die Datenarbeitsgruppe, zugänglich. Es werden keine persönlichen Informationen oder Informationen, die mit einer Person in Verbindung gebracht werden können, an Dritte weitergegeben, es sei denn, dies ist gesetzlich vorgeschrieben.\n\nDie von Piwik gespeicherten IP-Adressen werden auf zwei Bytes gekürzt und die detaillierten Nutzungsdaten werden 180 Tage lang aufbewahrt.\n\nDa diese Speicherung nur vorübergehend erfolgt, ist es uns im Allgemeinen nicht möglich, Zugang zu IP-Adressen oder den damit verbundenen Protokollen zu gewähren.\n\nDie oben genannten Daten werden auf der Grundlage eines berechtigten Interesses verarbeitet (siehe Artikel 6 Absatz 1 Buchstabe f der DSGVO).',
+      'Data we receive automatically\n\nThe OSMF operates a number of services for the OpenStreetMap community, examples are the openstreetmap.org website, the "Standard" style online map, the OSM API and the nominatim search facility.\n\nWhen you visit an OSMF website, access any of the services via a browser or via applications that utilize the provided APIs, records of that use are produced, we collect information about your browser or application and your interaction with our website, including (a) IP address, (b) browser and device type, (c) operating system, (d) referring web page, (e) the date and time of page visits, and (f) the pages accessed on our websites.\n\nFurther we may operate user interaction tracking software that will generate additional records of user activity, for example Piwik.\n\nServices that use Geo-DNS or similar mechanisms to distribute load to geographically distributed servers will potentially generate a record of your location at a large scale (for example the OSMF tile cache network determines the country you are likely to be located in and directs your requests to an appropriate server).\n\nThese records are used or can be used in the following ways:\n\nin support of the operation of the services from a technical, security and planning point of view.\nas anonymised, summarised data for research and other purposes. Such data may be offered publicly via https://planet.openstreetmap.org or other channels and used by 3rd parties.\nto improve the OpenStreetMap dataset. For example by analysing nominatim queries for missing addresses and postcodes and providing such data to the OSM community.\nThe data collected on the systems will be accessible by the system administrators and the appropriate OSMF working groups, for example the Data Working Group. No personal information or information that is linked to an individual will be released to third parties, except as required by law.\n\nIP addresses stored by Piwik are shortened to two bytes and detailed usage information is retained for 180 days.\n\nGiven the temporary nature of this storage, it is generally not feasible for us to provide access to IP addresses or the logs associated with them.\n\nThe above mentioned data is processed on a legitimate interest basis (see GDPR article 6.1f ).',
       name: 'about_open_street_map',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Mehr informationen`
-  String get about_h_moreinfo {
-    return Intl.message(
-      'Mehr informationen',
-      name: 'about_h_moreinfo',
       desc: '',
       args: [],
     );
@@ -290,10 +270,10 @@ class Localize {
     );
   }
 
-  /// `Serverprogrammierung`
+  /// `Server application`
   String get about_h_serverapp {
     return Intl.message(
-      'Serverprogrammierung',
+      'Server application',
       name: 'about_h_serverapp',
       desc: '',
       args: [],
@@ -310,10 +290,10 @@ class Localize {
     );
   }
 
-  /// `Betreiber und Veranstalter der Münchener BladeNight:\n\nSportverein SkateMunich! e.V.\nOberföhringer Straße 230\n81925 München\n\nVereinsregister: VR 200139\nRegistergericht: Amtsgericht München\n\nVertreten durch:\nChristian Reith, Rudolf Sedlmayr\n\nE-Mail: service@skatemunich.de`
+  /// `Operator and organizer of Münchener BladeNight is:\n\nSportverein SkateMunich! e.V.\nOberföhringer Straße 230\n81925 München\n\nVereinsregister: VR 200139\nRegistergericht: Amtsgericht München\n\nRepresented by:\nChristian Reith, Rudolf Sedlmayr\n\nE-Mail: service@skatemunich.de`
   String get about_impressum {
     return Intl.message(
-      'Betreiber und Veranstalter der Münchener BladeNight:\n\nSportverein SkateMunich! e.V.\nOberföhringer Straße 230\n81925 München\n\nVereinsregister: VR 200139\nRegistergericht: Amtsgericht München\n\nVertreten durch:\nChristian Reith, Rudolf Sedlmayr\n\nE-Mail: service@skatemunich.de',
+      'Operator and organizer of Münchener BladeNight is:\n\nSportverein SkateMunich! e.V.\nOberföhringer Straße 230\n81925 München\n\nVereinsregister: VR 200139\nRegistergericht: Amtsgericht München\n\nRepresented by:\nChristian Reith, Rudolf Sedlmayr\n\nE-Mail: service@skatemunich.de',
       name: 'about_impressum',
       desc: '',
       args: [],
@@ -350,6 +330,16 @@ class Localize {
     );
   }
 
+  /// `Lars Huth`
+  String get about_lars {
+    return Intl.message(
+      'Lars Huth',
+      name: 'about_lars',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Benjamin Uekermann\nOlivier Croquette`
   String get about_olivierandbenjamin {
     return Intl.message(
@@ -360,80 +350,80 @@ class Localize {
     );
   }
 
-  /// `Aktuelle Informationen`
+  /// `Actual informations`
   String get actualInformations {
     return Intl.message(
-      'Aktuelle Informationen',
+      'Actual informations',
       name: 'actualInformations',
       desc: '',
       args: [],
     );
   }
 
-  /// `Freund:in mit Code hinzufügen`
+  /// `Add friend with Code`
   String get addfriendwithcode {
     return Intl.message(
-      'Freund:in mit Code hinzufügen',
+      'Add friend with Code',
       name: 'addfriendwithcode',
       desc: '',
       args: [],
     );
   }
 
-  /// `Freund:in neu anlegen`
+  /// `Add new friend.`
   String get addnewfriend {
     return Intl.message(
-      'Freund:in neu anlegen',
+      'Add new friend.',
       name: 'addnewfriend',
       desc: '',
       args: [],
     );
   }
 
-  /// `vor mir`
+  /// `ahead of me`
   String get aheadOfMe {
     return Intl.message(
-      'vor mir',
+      'ahead of me',
       name: 'aheadOfMe',
       desc: '',
       args: [],
     );
   }
 
-  /// `Standortfreigabe permanent verweigert oder im System gesperrt!`
+  /// `Location permission always denied in System.!`
   String get alwaysPermanentlyDenied {
     return Intl.message(
-      'Standortfreigabe permanent verweigert oder im System gesperrt!',
+      'Location permission always denied in System.!',
       name: 'alwaysPermanentlyDenied',
       desc: '',
       args: [],
     );
   }
 
-  /// `Standortfreigabe für 'Immer erlauben' scheint permanent verboten!`
+  /// `Location permission for always seems permanently denied!`
   String get alwaysPermantlyDenied {
     return Intl.message(
-      'Standortfreigabe für \'Immer erlauben\' scheint permanent verboten!',
+      'Location permission for always seems permanently denied!',
       name: 'alwaysPermantlyDenied',
       desc: '',
       args: [],
     );
   }
 
-  /// `Appversion veralted!\nBitte im Store aktualisieren.`
+  /// `App is outdated!\nPlease update in Appstore.`
   String get appOutDated {
     return Intl.message(
-      'Appversion veralted!\nBitte im Store aktualisieren.',
+      'App is outdated!\nPlease update in Appstore.',
       name: 'appOutDated',
       desc: '',
       args: [],
     );
   }
 
-  /// `App-Support/ Feedback/ Vorschläge`
+  /// `Application support`
   String get appsupport {
     return Intl.message(
-      'App-Support/ Feedback/ Vorschläge',
+      'Application support',
       name: 'appsupport',
       desc: '',
       args: [],
@@ -450,60 +440,60 @@ class Localize {
     );
   }
 
-  /// `Wir schützen uns um Ihre Privatsphäre und Datensicherheit.\nUm uns dabei zu helfen, das BladeNight-Erlebnis zu verbessern, übertragen wir Ihren Standort auf unseren Server. Dies Information beinhaltet eine beim ersten Start der App erstellte eindeutige ID, um die Zuordnung der Freunde zu ermöglichen. Diese Daten werden niemals an Dritte weitergegeben oder für Werbezwecke verwendet.`
+  /// `We care about your privacy and data security.\nTo help us improve the BladeNight experience, we transfer your location to our server. This information includes a unique ID created when you first start the app to enable friends to be assigned. This data is never passed on to third parties or used for advertising purposes.`
   String get apptrackingtransparancy {
     return Intl.message(
-      'Wir schützen uns um Ihre Privatsphäre und Datensicherheit.\nUm uns dabei zu helfen, das BladeNight-Erlebnis zu verbessern, übertragen wir Ihren Standort auf unseren Server. Dies Information beinhaltet eine beim ersten Start der App erstellte eindeutige ID, um die Zuordnung der Freunde zu ermöglichen. Diese Daten werden niemals an Dritte weitergegeben oder für Werbezwecke verwendet.',
+      'We care about your privacy and data security.\nTo help us improve the BladeNight experience, we transfer your location to our server. This information includes a unique ID created when you first start the app to enable friends to be assigned. This data is never passed on to third parties or used for advertising purposes.',
       name: 'apptrackingtransparancy',
       desc: '',
       args: [],
     );
   }
 
-  /// `Durch langes drücken auf ▶️ wird der automatische Trackingstopp aktiviert. Das heißt, solange die App geöffnet ist, wird nach dem erreichen des Zieles der BladeNight das Tracking und Freundefreigabe automatisch gestoppt.\nWiederholt langes drücken auf  ▶️,⏸︎,⏹︎ stellt auf manuell Stopp oder Autostopp um.`
+  /// `On long press at ▶️ automatic tracking stop will activated. This means, as long the app is active and tracking on reaching finish BladeNight the tracking stops automatic.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and locationsharing with autostop.`
   String get automatedStopInfo {
     return Intl.message(
-      'Durch langes drücken auf ▶️ wird der automatische Trackingstopp aktiviert. Das heißt, solange die App geöffnet ist, wird nach dem erreichen des Zieles der BladeNight das Tracking und Freundefreigabe automatisch gestoppt.\nWiederholt langes drücken auf  ▶️,⏸︎,⏹︎ stellt auf manuell Stopp oder Autostopp um.',
+      'On long press at ▶️ automatic tracking stop will activated. This means, as long the app is active and tracking on reaching finish BladeNight the tracking stops automatic.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and locationsharing with autostop.',
       name: 'automatedStopInfo',
       desc: '',
       args: [],
     );
   }
 
-  /// `Stoppe Tracking automatisch`
+  /// `Info - please read - Stop automatic on finish`
   String get autoStopTracking {
     return Intl.message(
-      'Stoppe Tracking automatisch',
+      'Info - please read - Stop automatic on finish',
       name: 'autoStopTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `hinter mir`
+  /// `behind me`
   String get behindMe {
     return Intl.message(
-      'hinter mir',
+      'behind me',
       name: 'behindMe',
       desc: '',
       args: [],
     );
   }
 
-  /// `Das Hintergrundstandortupdate ist aktiv. Danke fürs mitmachen.`
+  /// `Background location update is active. Thank you for participating.`
   String get bgNotificationText {
     return Intl.message(
-      'Das Hintergrundstandortupdate ist aktiv. Danke fürs mitmachen.',
+      'Background location update is active. Thank you for participating.',
       name: 'bgNotificationText',
       desc: '',
       args: [],
     );
   }
 
-  /// `BladeNight Hintergrundstandortupdate`
+  /// `BladeNight background tracking`
   String get bgNotificationTitle {
     return Intl.message(
-      'BladeNight Hintergrundstandortupdate',
+      'BladeNight background tracking',
       name: 'bgNotificationTitle',
       desc: '',
       args: [],
@@ -520,10 +510,10 @@ class Localize {
     );
   }
 
-  /// `Zuschauermodus, Teilnehmer ▶️ drücken.`
+  /// `Viewermode, Participant push ▶ please`
   String get bladenighttracking {
     return Intl.message(
-      'Zuschauermodus, Teilnehmer ▶️ drücken.',
+      'Viewermode, Participant push ▶ please',
       name: 'bladenighttracking',
       desc: '',
       args: [],
@@ -540,130 +530,130 @@ class Localize {
     );
   }
 
-  /// `Zuschauermodus mit GPS`
+  /// `Viewermode with GPS`
   String get bladenightViewerTracking {
     return Intl.message(
-      'Zuschauermodus mit GPS',
+      'Viewermode with GPS',
       name: 'bladenightViewerTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Abbruch`
+  /// `Cancel`
   String get cancel {
     return Intl.message(
-      'Abbruch',
+      'Cancel',
       name: 'cancel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Abgesagt 😞`
+  /// `Canceled 😞`
   String get canceled {
     return Intl.message(
-      'Abgesagt 😞',
+      'Canceled 😞',
       name: 'canceled',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ändern`
+  /// `Change it.`
   String get change {
     return Intl.message(
-      'Ändern',
+      'Change it.',
       name: 'change',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zu 'Immer zulassen' ändern`
+  /// `Change it to 'Allow all time'`
   String get changetoalways {
     return Intl.message(
-      'Zu \'Immer zulassen\' ändern',
+      'Change it to \'Allow all time\'',
       name: 'changetoalways',
       desc: '',
       args: [],
     );
   }
 
-  /// `Logdaten wirklich löschen?`
+  /// `Clear logs really?`
   String get clearLogsQuestion {
     return Intl.message(
-      'Logdaten wirklich löschen?',
+      'Clear logs really?',
       name: 'clearLogsQuestion',
       desc: '',
       args: [],
     );
   }
 
-  /// `Logdaten sollen gelöscht werden!`
+  /// `Logdata will be deleted permanently!`
   String get clearLogsTitle {
     return Intl.message(
-      'Logdaten sollen gelöscht werden!',
+      'Logdata will be deleted permanently!',
       name: 'clearLogsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `App wirklich schließen?`
+  /// `Close app really?`
   String get closeApp {
     return Intl.message(
-      'App wirklich schließen?',
+      'Close app really?',
       name: 'closeApp',
       desc: '',
       args: [],
     );
   }
 
-  /// `Fehler, Code darf nur Ziffern enthalten!`
+  /// `Error, code contains only numbers`
   String get codecontainsonlydigits {
     return Intl.message(
-      'Fehler, Code darf nur Ziffern enthalten!',
+      'Error, code contains only numbers',
       name: 'codecontainsonlydigits',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wir fahren 😃`
+  /// `Confirmed 😃`
   String get confirmed {
     return Intl.message(
-      'Wir fahren 😃',
+      'Confirmed 😃',
       name: 'confirmed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Code in Zwischenablage kopiert`
+  /// `Copied to clipboard`
   String get copiedtoclipboard {
     return Intl.message(
-      'Code in Zwischenablage kopiert',
+      'Copied to clipboard',
       name: 'copiedtoclipboard',
       desc: '',
       args: [],
     );
   }
 
-  /// `Code kopieren`
+  /// `Copy code`
   String get copy {
     return Intl.message(
-      'Code kopieren',
+      'Copy code',
       name: 'copy',
       desc: '',
       args: [],
     );
   }
 
-  /// `Konnte App-Einstellung nicht öffnen!`
+  /// `Could not open application settings!`
   String get couldNotOpenAppSettings {
     return Intl.message(
-      'Konnte App-Einstellung nicht öffnen!',
+      'Could not open application settings!',
       name: 'couldNotOpenAppSettings',
       desc: '',
       args: [],
@@ -683,7 +673,7 @@ class Localize {
     );
   }
 
-  /// `{date} {time}Uhr`
+  /// `{date} at {time}`
   String dateTimeDayIntl(DateTime date, DateTime time) {
     final DateFormat dateDateFormat =
         DateFormat('E d.MMM y', Intl.getCurrentLocale());
@@ -693,24 +683,24 @@ class Localize {
     final String timeString = timeDateFormat.format(time);
 
     return Intl.message(
-      '$dateString ${timeString}Uhr',
+      '$dateString at $timeString',
       name: 'dateTimeDayIntl',
       desc: '',
       args: [dateString, timeString],
     );
   }
 
-  /// `{date} {time}Uhr`
+  /// `{date} {time}`
   String dateTimeIntl(DateTime date, DateTime time) {
     final DateFormat dateDateFormat =
-        DateFormat('dd.MM.yyyy', Intl.getCurrentLocale());
+        DateFormat('d.M.y', Intl.getCurrentLocale());
     final String dateString = dateDateFormat.format(date);
 
     final DateFormat timeDateFormat = DateFormat.Hm(Intl.getCurrentLocale());
     final String timeString = timeDateFormat.format(time);
 
     return Intl.message(
-      '$dateString ${timeString}Uhr',
+      '$dateString $timeString',
       name: 'dateTimeIntl',
       desc: '',
       args: [dateString, timeString],
@@ -734,140 +724,140 @@ class Localize {
     );
   }
 
-  /// `Freund:in löschen`
+  /// `Remove friend`
   String get deletefriend {
     return Intl.message(
-      'Freund:in löschen',
+      'Remove friend',
       name: 'deletefriend',
       desc: '',
       args: [],
     );
   }
 
-  /// `Löschen`
+  /// `Delete`
   String get delete {
     return Intl.message(
-      'Löschen',
+      'Delete',
       name: 'delete',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ablehnen`
+  /// `Deny`
   String get deny {
     return Intl.message(
-      'Ablehnen',
+      'Deny',
       name: 'deny',
       desc: '',
       args: [],
     );
   }
 
-  /// `Entfernung`
+  /// `distance`
   String get distance {
     return Intl.message(
-      'Entfernung',
+      'distance',
       name: 'distance',
       desc: '',
       args: [],
     );
   }
 
-  /// `Position auf Strecke`
+  /// `Distance moved`
   String get distanceDriven {
     return Intl.message(
-      'Position auf Strecke',
+      'Distance moved',
       name: 'distanceDriven',
       desc: '',
       args: [],
     );
   }
 
-  /// `Entfernung zum Ziel`
+  /// `Distance to finish`
   String get distanceToFinish {
     return Intl.message(
-      'Entfernung zum Ziel',
+      'Distance to finish',
       name: 'distanceToFinish',
       desc: '',
       args: [],
     );
   }
 
-  /// `Entfernung zum Freund`
+  /// `Distance to friend`
   String get distanceToFriend {
     return Intl.message(
-      'Entfernung zum Freund',
+      'Distance to friend',
       name: 'distanceToFriend',
       desc: '',
       args: [],
     );
   }
 
-  /// `Entfernung zum Zugkopf`
+  /// `Distance to head`
   String get distanceToHead {
     return Intl.message(
-      'Entfernung zum Zugkopf',
+      'Distance to head',
       name: 'distanceToHead',
       desc: '',
       args: [],
     );
   }
 
-  /// `Entfernung von mir`
+  /// `Distance to me`
   String get distanceToMe {
     return Intl.message(
-      'Entfernung von mir',
+      'Distance to me',
       name: 'distanceToMe',
       desc: '',
       args: [],
     );
   }
 
-  /// `Entfernung zum Zugende`
+  /// `Distance to tail`
   String get distanceToTail {
     return Intl.message(
-      'Entfernung zum Zugende',
+      'Distance to tail',
       name: 'distanceToTail',
       desc: '',
       args: [],
     );
   }
 
-  /// `Fertig`
+  /// `Done`
   String get done {
     return Intl.message(
-      'Fertig',
+      'Done',
       name: 'done',
       desc: '',
       args: [],
     );
   }
 
-  /// `Freund:in ändern`
+  /// `Edit friend`
   String get editfriend {
     return Intl.message(
-      'Freund:in ändern',
+      'Edit friend',
       name: 'editfriend',
       desc: '',
       args: [],
     );
   }
 
-  /// `Um die BladeNight-App auch im Hintergrund (Standort mit Freunden teilen und Zuggenauigkeit zu erhöhen) ohne das der Bildschirm an ist, sollte die Standortfunktion 'Immer zulassen' aktiviert werden.\nWeiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.`
+  /// `To use BladeNight-App also in the background (Share location with friends and increase train accuracy) without screen on, should location settings changed to 'Allow all time'.`
   String get enableAlwaysLocationInfotext {
     return Intl.message(
-      'Um die BladeNight-App auch im Hintergrund (Standort mit Freunden teilen und Zuggenauigkeit zu erhöhen) ohne das der Bildschirm an ist, sollte die Standortfunktion \'Immer zulassen\' aktiviert werden.\nWeiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.',
+      'To use BladeNight-App also in the background (Share location with friends and increase train accuracy) without screen on, should location settings changed to \'Allow all time\'.',
       name: 'enableAlwaysLocationInfotext',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bitte 6-stelligen Code eingeben`
+  /// `You must enter a 6-digit-code`
   String get enter6digitcode {
     return Intl.message(
-      'Bitte 6-stelligen Code eingeben',
+      'You must enter a 6-digit-code',
       name: 'enter6digitcode',
       desc: '',
       args: [],
@@ -884,840 +874,840 @@ class Localize {
     );
   }
 
-  /// `Name eingeben.`
+  /// `Enter your friends name`
   String get enterfriendname {
     return Intl.message(
-      'Name eingeben.',
+      'Enter your friends name',
       name: 'enterfriendname',
       desc: '',
       args: [],
     );
   }
 
-  /// `Name:`
+  /// `Enter Name`
   String get entername {
     return Intl.message(
-      'Name:',
+      'Enter Name',
       name: 'entername',
       desc: '',
       args: [],
     );
   }
 
-  /// `Termine`
+  /// `Events`
   String get events {
     return Intl.message(
-      'Termine',
+      'Events',
       name: 'events',
       desc: '',
       args: [],
     );
   }
 
-  /// `Exportieren`
+  /// `Export`
   String get export {
     return Intl.message(
-      'Exportieren',
+      'Export',
       name: 'export',
       desc: '',
       args: [],
     );
   }
 
-  /// `Achtung! Dies sichert alle Freunde und die Kennung vom Gerät. Dies kann sensible Daten enthalten, wie zum Beispiel Namen.`
+  /// `Danger! This will back up all friends and the ID from the device. This may contain sensitive information such as names.`
   String get exportWarning {
     return Intl.message(
-      'Achtung! Dies sichert alle Freunde und die Kennung vom Gerät. Dies kann sensible Daten enthalten, wie zum Beispiel Namen.',
+      'Danger! This will back up all friends and the ID from the device. This may contain sensitive information such as names.',
       name: 'exportWarning',
       desc: '',
       args: [],
     );
   }
 
-  /// `Export Freunde und Id.`
+  /// `Export friends und ID.`
   String get exportWarningTitle {
     return Intl.message(
-      'Export Freunde und Id.',
+      'Export friends und ID.',
       name: 'exportWarningTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Fehlgeschlagen!`
+  /// `Failed!`
   String get failed {
     return Intl.message(
-      'Fehlgeschlagen!',
+      'Failed!',
       name: 'failed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ziel / Ende`
+  /// `Finish`
   String get finish {
     return Intl.message(
-      'Ziel / Ende',
+      'Finish',
       name: 'finish',
       desc: '',
       args: [],
     );
   }
 
-  /// `Beendet`
+  /// `Finished`
   String get finished {
     return Intl.message(
-      'Beendet',
+      'Finished',
       name: 'finished',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tracking gestoppt - Zeitüberschreitung`
+  /// `Tracking stopped - Timeout`
   String get finishForceStopTimeoutTitle {
     return Intl.message(
-      'Tracking gestoppt - Zeitüberschreitung',
+      'Tracking stopped - Timeout',
       name: 'finishForceStopTimeoutTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tracking gestoppt - Ende der BladeNight`
+  /// `Tracking stopped - BladeNight finished`
   String get finishForceStopEventOverTitle {
     return Intl.message(
-      'Tracking gestoppt - Ende der BladeNight',
+      'Tracking stopped - BladeNight finished',
       name: 'finishForceStopEventOverTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ziel erreicht - Tracking beendet.`
+  /// `Finish reached - location tracking stopped.`
   String get finishReachedStopedTracking {
     return Intl.message(
-      'Ziel erreicht - Tracking beendet.',
+      'Finish reached - location tracking stopped.',
       name: 'finishReachedStopedTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ziel erreicht - Tracking bitte Tracking anhalten.`
+  /// `Finish reached - Please stop location tracking.`
   String get finishReachedtargetReachedPleaseStopTracking {
     return Intl.message(
-      'Ziel erreicht - Tracking bitte Tracking anhalten.',
+      'Finish reached - Please stop location tracking.',
       name: 'finishReachedtargetReachedPleaseStopTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ziel erreicht`
+  /// `Finish reached`
   String get finishReachedTitle {
     return Intl.message(
-      'Ziel erreicht',
+      'Finish reached',
       name: 'finishReachedTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Weiter`
-  String get forward {
-    return Intl.message(
-      'Weiter',
-      name: 'forward',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Automatischer Trackingstopp nach max. {timeout}min. BladeNight beendet. (Lange drücken auf ▶️ deaktiviert Autostop)`
+  /// `Location tracking after {timeout} min of BladeNight automatic stopped. (Press long on ▶️ to deactivate Automatic tracking stop)`
   String finishStopTrackingTimeout(Object timeout) {
     return Intl.message(
-      'Automatischer Trackingstopp nach max. ${timeout}min. BladeNight beendet. (Lange drücken auf ▶️ deaktiviert Autostop)',
+      'Location tracking after $timeout min of BladeNight automatic stopped. (Press long on ▶️ to deactivate Automatic tracking stop)',
       name: 'finishStopTrackingTimeout',
       desc: '',
       args: [timeout],
     );
   }
 
-  /// `Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.(Standard inaktiv)`
+  /// `Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. (Default inactive)`
   String get fitnessPermissionSettingsText {
     return Intl.message(
-      'Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.(Standard inaktiv)',
+      'Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. (Default inactive)',
       name: 'fitnessPermissionSettingsText',
       desc: '',
       args: [],
     );
   }
 
-  /// `Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren. Die Abfrage erfolgt in den nächsten Schritten.`
+  /// `Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps.`
   String get fitnessPermissionInfoText {
     return Intl.message(
-      'Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren. Die Abfrage erfolgt in den nächsten Schritten.',
+      'Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps.',
       name: 'fitnessPermissionInfoText',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bewegungssensor / Körperliche Aktivität`
+  /// `Fitness Activity`
   String get fitnessPermissionInfoTextTitle {
     return Intl.message(
-      'Bewegungssensor / Körperliche Aktivität',
+      'Fitness Activity',
       name: 'fitnessPermissionInfoTextTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bewegungssensor deaktiviert`
+  /// `Fitness Activity disabled`
   String get fitnessPermissionSwitchSettingsText {
     return Intl.message(
-      'Bewegungssensor deaktiviert',
+      'Fitness Activity disabled',
       name: 'fitnessPermissionSwitchSettingsText',
       desc: '',
       args: [],
     );
   }
 
-  /// `Freund:in`
+  /// `Forward`
+  String get forward {
+    return Intl.message(
+      'Forward',
+      name: 'forward',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Friend`
   String get friend {
     return Intl.message(
-      'Freund:in',
+      'Friend',
       name: 'friend',
       desc: '',
       args: [],
     );
   }
 
-  /// `Freund:in ist`
+  /// `Friend is`
   String get friendIs {
     return Intl.message(
-      'Freund:in ist',
+      'Friend is',
       name: 'friendIs',
       desc: '',
       args: [],
     );
   }
 
-  /// `Freunde`
+  /// `Friends`
   String get friends {
     return Intl.message(
-      'Freunde',
+      'Friends',
       name: 'friends',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bitte unterstütze weiter die genaue Darstellung des BladeNightzuges.\nAusserdem werden deine Freunde dich vermissen!`
+  /// `Please support the exact presentation of BladeNight skater train.\nYour friends will miss you!`
   String get friendswillmissyou {
     return Intl.message(
-      'Bitte unterstütze weiter die genaue Darstellung des BladeNightzuges.\nAusserdem werden deine Freunde dich vermissen!',
+      'Please support the exact presentation of BladeNight skater train.\nYour friends will miss you!',
       name: 'friendswillmissyou',
       desc: '',
       args: [],
     );
   }
 
-  /// `von`
+  /// `by`
   String get from {
     return Intl.message(
-      'von',
+      'by',
       name: 'from',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nicht geplant`
+  /// `Nothing planned`
   String get noEvent {
     return Intl.message(
-      'Nicht geplant',
+      'Nothing planned',
       name: 'noEvent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wir fahren gerade ⏳`
+  /// `We are on route ⏳`
   String get running {
     return Intl.message(
-      'Wir fahren gerade ⏳',
+      'We are on route ⏳',
       name: 'running',
       desc: '',
       args: [],
     );
   }
 
-  /// `Lade Serverdaten ...`
+  /// `Loading data from server ...`
   String get getwebdata {
     return Intl.message(
-      'Lade Serverdaten ...',
+      'Loading data from server ...',
       name: 'getwebdata',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zugkopf`
+  /// `Head`
   String get head {
     return Intl.message(
-      'Zugkopf',
+      'Head',
       name: 'head',
       desc: '',
       args: [],
     );
   }
 
-  /// `Info`
+  /// `Home`
   String get home {
     return Intl.message(
-      'Info',
+      'Home',
       name: 'home',
       desc: '',
       args: [],
     );
   }
 
-  /// `Importieren`
+  /// `Import`
   String get import {
     return Intl.message(
-      'Importieren',
+      'Import',
       name: 'import',
       desc: '',
       args: [],
     );
   }
 
-  /// `Achtung dies überschreibt alle Freunde und die Kennung. Vorher Daten exportieren! Achtung die App auf dem Gerät von dessen exportiert wurde löschen!`
+  /// `Attention this overwrites all friends and the ID. Export data beforehand! Be careful, delete the app on the device from which it was exported!`
   String get importWarning {
     return Intl.message(
-      'Achtung dies überschreibt alle Freunde und die Kennung. Vorher Daten exportieren! Achtung die App auf dem Gerät von dessen exportiert wurde löschen!',
+      'Attention this overwrites all friends and the ID. Export data beforehand! Be careful, delete the app on the device from which it was exported!',
       name: 'importWarning',
       desc: '',
       args: [],
     );
   }
 
-  /// `Import Freunde und Id.`
+  /// `Import friends and ID.`
   String get importWarningTitle {
     return Intl.message(
-      'Import Freunde und Id.',
+      'Import friends and ID.',
       name: 'importWarningTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Entwicklung in Arbeit ...`
+  /// `not implemented. We are working ...`
   String get inprogress {
     return Intl.message(
-      'Entwicklung in Arbeit ...',
+      'not implemented. We are working ...',
       name: 'inprogress',
       desc: '',
       args: [],
     );
   }
 
-  /// `ungültiger Code`
+  /// `Invalid Code`
   String get internalerror_invalidcode {
     return Intl.message(
-      'ungültiger Code',
+      'Invalid Code',
       name: 'internalerror_invalidcode',
       desc: '',
       args: [],
     );
   }
 
-  /// `Fehler - Freund:in schon verlinkt?`
+  /// `Error - Is friend linked?`
   String get internalerror_seemslinked {
     return Intl.message(
-      'Fehler - Freund:in schon verlinkt?',
+      'Error - Is friend linked?',
       name: 'internalerror_seemslinked',
       desc: '',
       args: [],
     );
   }
 
-  /// `Code unbekannt`
+  /// `invalid code`
   String get invalidcode {
     return Intl.message(
-      'Code unbekannt',
+      'invalid code',
       name: 'invalidcode',
       desc: '',
       args: [],
     );
   }
 
-  /// `{name} einladen`
+  /// `invite {name}`
   String invitebyname(Object name) {
     return Intl.message(
-      '$name einladen',
+      'invite $name',
       name: 'invitebyname',
-      desc: 'Lade eine(n) Freund:in ein.',
+      desc: 'Invite {name}',
       args: [name],
     );
   }
 
-  /// `Freund:in einladen`
+  /// `Invite friend`
   String get invitenewfriend {
     return Intl.message(
-      'Freund:in einladen',
+      'Invite friend',
       name: 'invitenewfriend',
       desc: '',
       args: [],
     );
   }
 
-  /// `ist`
+  /// `is`
   String get ist {
     return Intl.message(
-      'ist',
+      'is',
       name: 'ist',
       desc: '',
       args: [],
     );
   }
 
-  /// `In Karte anzeigen?`
+  /// `Show in map`
   String get isuseractive {
     return Intl.message(
-      'In Karte anzeigen?',
+      'Show in map',
       name: 'isuseractive',
       desc: '',
       args: [],
     );
   }
 
-  /// `Letztes Update`
+  /// `Last update`
   String get lastupdate {
     return Intl.message(
-      'Letztes Update',
+      'Last update',
       name: 'lastupdate',
       desc: '',
       args: [],
     );
   }
 
-  /// `Lasse Einstellung`
+  /// `Leave settings`
   String get leavewheninuse {
     return Intl.message(
-      'Lasse Einstellung',
+      'Leave settings',
       name: 'leavewheninuse',
       desc: '',
       args: [],
     );
   }
 
-  /// `Länge`
+  /// `Length`
   String get length {
     return Intl.message(
-      'Länge',
+      'Length',
       name: 'length',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verfolgt die Bladnight ohne App im Browser`
+  /// `Follow Bladnight-train without app`
   String get liveMapInBrowser {
     return Intl.message(
-      'Verfolgt die Bladnight ohne App im Browser',
+      'Follow Bladnight-train without app',
       name: 'liveMapInBrowser',
       desc: '',
       args: [],
     );
   }
 
-  /// `Livekarte im Browser`
+  /// `Livemap in browser`
   String get liveMapInBrowserInfoHeader {
     return Intl.message(
-      'Livekarte im Browser',
+      'Livemap in browser',
       name: 'liveMapInBrowserInfoHeader',
       desc: '',
       args: [],
     );
   }
 
-  /// `Lade ...`
+  /// `Loading ...`
   String get loading {
     return Intl.message(
-      'Lade ...',
+      'Loading ...',
       name: 'loading',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bitte Start ▶️ drücken! Standortübertragung ist in den Einstellungen deaktiviert oder noch nie gestartet! Tracking nicht möglich.`
+  /// `Location is turned off in settings. Tracking not possible. Press Play ▶️ or go to OS-Settings.`
   String get locationServiceOff {
     return Intl.message(
-      'Bitte Start ▶️ drücken! Standortübertragung ist in den Einstellungen deaktiviert oder noch nie gestartet! Tracking nicht möglich.',
+      'Location is turned off in settings. Tracking not possible. Press Play ▶️ or go to OS-Settings.',
       name: 'locationServiceOff',
       desc: '',
       args: [],
     );
   }
 
-  /// `Standortübertragung gestartet und aktiv.`
+  /// `Locationsharing was started and is active.`
   String get locationServiceRunning {
     return Intl.message(
-      'Standortübertragung gestartet und aktiv.',
+      'Locationsharing was started and is active.',
       name: 'locationServiceRunning',
       desc: '',
       args: [],
     );
   }
 
-  /// `Karte`
+  /// `Map`
   String get map {
     return Intl.message(
-      'Karte',
+      'Map',
       name: 'map',
       desc: '',
       args: [],
     );
   }
 
-  /// `Karte folgt meiner Position.`
+  /// `Map follows my position`
   String get mapFollowLocation {
     return Intl.message(
-      'Karte folgt meiner Position.',
+      'Map follows my position',
       name: 'mapFollowLocation',
       desc: '',
       args: [],
     );
   }
 
-  /// `Karte folgt mir gestoppt!`
+  /// `Map follows me stopped!`
   String get mapFollowStopped {
     return Intl.message(
-      'Karte folgt mir gestoppt!',
+      'Map follows me stopped!',
       name: 'mapFollowStopped',
       desc: '',
       args: [],
     );
   }
 
-  /// `Karte folgt Zugkopfposition.`
+  /// `Map follows train head position.`
   String get mapFollowTrain {
     return Intl.message(
-      'Karte folgt Zugkopfposition.',
+      'Map follows train head position.',
       name: 'mapFollowTrain',
       desc: '',
       args: [],
     );
   }
 
-  /// `Karte folgt Zugkopf gestoppt.`
+  /// `Map follows train head stopped.`
   String get mapFollowTrainStopped {
     return Intl.message(
-      'Karte folgt Zugkopf gestoppt.',
+      'Map follows train head stopped.',
       name: 'mapFollowTrainStopped',
       desc: '',
       args: [],
     );
   }
 
-  /// `Karte auf Start. Kein verfolgen.`
+  /// `Move map to start, no following`
   String get mapToStartNoFollowing {
     return Intl.message(
-      'Karte auf Start. Kein verfolgen.',
+      'Move map to start, no following',
       name: 'mapToStartNoFollowing',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ich`
+  /// `Me`
   String get me {
     return Intl.message(
-      'Ich',
+      'Me',
       name: 'me',
       desc: '',
       args: [],
     );
   }
 
-  /// `gef.Strecke`
+  /// `Driven route`
   String get metersOnRoute {
     return Intl.message(
-      'gef.Strecke',
+      'Driven route',
       name: 'metersOnRoute',
       desc: '',
       args: [],
     );
   }
 
-  /// `Du musst einen Namen eingeben!`
+  /// `You must enter a name!`
   String get mustentername {
     return Intl.message(
-      'Du musst einen Namen eingeben!',
+      'You must enter a name!',
       name: 'mustentername',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sorry, Name schon vergeben!`
+  /// `Sorry, name exists`
   String get nameexists {
     return Intl.message(
-      'Sorry, Name schon vergeben!',
+      'Sorry, name exists',
       name: 'nameexists',
       desc: '',
       args: [],
     );
   }
 
-  /// `Netzwerkfehler - Keine Daten!`
+  /// `Network error! No data!`
   String get networkerror {
     return Intl.message(
-      'Netzwerkfehler - Keine Daten!',
+      'Network error! No data!',
       name: 'networkerror',
       desc: '',
       args: [],
     );
   }
 
-  /// `Neue GPS Daten`
+  /// `New GPS data received`
   String get newGPSDatareceived {
     return Intl.message(
-      'Neue GPS Daten',
+      'New GPS data received',
       name: 'newGPSDatareceived',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nächste BladeNight`
+  /// `Next BladeNight`
   String get nextEvent {
     return Intl.message(
-      'Nächste BladeNight',
+      'Next BladeNight',
       name: 'nextEvent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nein`
+  /// `No`
   String get no {
     return Intl.message(
-      'Nein',
+      'No',
       name: 'no',
       desc: '',
       args: [],
     );
   }
 
-  /// `Standort 'Während der Benutzung' ist eingestellt. Daher ist keine Hintergrundaktualisierung aktiviert. Um die Darstellung des BladeNight-Zuges so genau wie möglich zu bekommen und deine Postion ohne Einschränkung mit Freunden zu teilen, bitten wir Dich die App offen halten oder die Einstellung auf 'Immer zulassen' zu ändern. Danke.`
+  /// `Location 'When in use' is selected. Warning, there is no background update enabled. Your position data to show exact Bladnight train and share your position with your friends is only possible when the app is open in foreground. Please confirm it or change your settings to 'Allow all time'.\nFurthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.`
   String get noBackgroundlocationLeaveAppOpen {
     return Intl.message(
-      'Standort \'Während der Benutzung\' ist eingestellt. Daher ist keine Hintergrundaktualisierung aktiviert. Um die Darstellung des BladeNight-Zuges so genau wie möglich zu bekommen und deine Postion ohne Einschränkung mit Freunden zu teilen, bitten wir Dich die App offen halten oder die Einstellung auf \'Immer zulassen\' zu ändern. Danke.',
+      'Location \'When in use\' is selected. Warning, there is no background update enabled. Your position data to show exact Bladnight train and share your position with your friends is only possible when the app is open in foreground. Please confirm it or change your settings to \'Allow all time\'.\nFurthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.',
       name: 'noBackgroundlocationLeaveAppOpen',
       desc: '',
       args: [],
     );
   }
 
-  /// `Hinweis, keine Hintergrundaktualisierung.`
+  /// `No background update possible.`
   String get noBackgroundlocationTitle {
     return Intl.message(
-      'Hinweis, keine Hintergrundaktualisierung.',
+      'No background update possible.',
       name: 'noBackgroundlocationTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Keine Daten empfangen!`
+  /// `No Data received !`
   String get nodatareceived {
     return Intl.message(
-      'Keine Daten empfangen!',
+      'No Data received !',
       name: 'nodatareceived',
       desc: '',
       args: [],
     );
   }
 
-  /// `Aktuell keine Veranstaltung.`
+  /// `No Event`
   String get noEventStarted {
     return Intl.message(
-      'Aktuell keine Veranstaltung.',
+      'No Event',
       name: 'noEventStarted',
       desc: '',
       args: [],
     );
   }
 
-  /// `Autostop - da keine Veranstaltung`
+  /// `No Event - Autostop`
   String get noEventStartedAutoStop {
     return Intl.message(
-      'Autostop - da keine Veranstaltung',
+      'No Event - Autostop',
       name: 'noEventStartedAutoStop',
       desc: '',
       args: [],
     );
   }
 
-  /// `Keine Veranstaltung seit mindestens {timeout} min. aktiv - Tracking automatisch beendet`
+  /// `No Event active since more than {timeout} min. - Tracking stopped automatically.`
   String noEventTimeOut(Object timeout) {
     return Intl.message(
-      'Keine Veranstaltung seit mindestens $timeout min. aktiv - Tracking automatisch beendet',
+      'No Event active since more than $timeout min. - Tracking stopped automatically.',
       name: 'noEventTimeOut',
       desc: '',
       args: [timeout],
     );
   }
 
-  /// `Kein GPS`
+  /// `No GPS`
   String get nogps {
     return Intl.message(
-      'Kein GPS',
+      'No GPS',
       name: 'nogps',
       desc: '',
       args: [],
     );
   }
 
-  /// `GPS nicht aktiviert`
+  /// `GPS not active`
   String get noGpsAllowed {
     return Intl.message(
-      'GPS nicht aktiviert',
+      'GPS not active',
       name: 'noGpsAllowed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Es ist scheinbar kein GPS im Gerät vorhanden oder für die App deaktiviert. Bitte die Einstellungen prüfen.`
+  /// `Sorry, no GPS in device found or denied. Please check your privacy and location settings.`
   String get nogpsenabled {
     return Intl.message(
-      'Es ist scheinbar kein GPS im Gerät vorhanden oder für die App deaktiviert. Bitte die Einstellungen prüfen.',
+      'Sorry, no GPS in device found or denied. Please check your privacy and location settings.',
       name: 'nogpsenabled',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bitte System-Einstellungen (Einstellungen -> Standort -> Standortzugriff von Apps -> BladeNight) prüfen, da keine Standortfreigabe.`
+  /// `Please check location-permissions in Settings.`
   String get noLocationPermissionGrantedAlertAndroid {
     return Intl.message(
-      'Bitte System-Einstellungen (Einstellungen -> Standort -> Standortzugriff von Apps -> BladeNight) prüfen, da keine Standortfreigabe.',
+      'Please check location-permissions in Settings.',
       name: 'noLocationPermissionGrantedAlertAndroid',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bitte iOS Einstellunge prüfen, da keine Standortfreigabe. Diese müsste in den Telefon-Einstellungen unter Datenschutz - Ortungsdienste - BladnightApp freigegeben werden.`
+  /// `Please check location-permissions in iOS Settings. Look at Privacy - Location - BladnightApp. Set it to always or when in use!`
   String get noLocationPermissionGrantedAlertiOS {
     return Intl.message(
-      'Bitte iOS Einstellunge prüfen, da keine Standortfreigabe. Diese müsste in den Telefon-Einstellungen unter Datenschutz - Ortungsdienste - BladnightApp freigegeben werden.',
+      'Please check location-permissions in iOS Settings. Look at Privacy - Location - BladnightApp. Set it to always or when in use!',
       name: 'noLocationPermissionGrantedAlertiOS',
       desc: '',
       args: [],
     );
   }
 
-  /// `Info Standortfreigabe`
+  /// `Info location permissions`
   String get noLocationPermissionGrantedAlertTitle {
     return Intl.message(
-      'Info Standortfreigabe',
+      'Info location permissions',
       name: 'noLocationPermissionGrantedAlertTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Die BladeNight wurde leider abgesagt.`
+  /// `The BladeNight was canceled.`
   String get note_bladenightCanceled {
     return Intl.message(
-      'Die BladeNight wurde leider abgesagt.',
+      'The BladeNight was canceled.',
       name: 'note_bladenightCanceled',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nächste BladeNight startet in 5 minuten. Tracking einschalten nicht vergessen !!`
+  /// `Next BladeNight will start in 5 minutes. Don't forget to turn tracking on !`
   String get note_bladenightStartInFiveMinutesStartTracking {
     return Intl.message(
-      'Nächste BladeNight startet in 5 minuten. Tracking einschalten nicht vergessen !!',
+      'Next BladeNight will start in 5 minutes. Don\'t forget to turn tracking on !',
       name: 'note_bladenightStartInFiveMinutesStartTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nächste BladeNight startet in 6 Stunden.`
+  /// `Next BladeNight will start in 6 hours.`
   String get note_bladenightStartInSixHoursStartTracking {
     return Intl.message(
-      'Nächste BladeNight startet in 6 Stunden.',
+      'Next BladeNight will start in 6 hours.',
       name: 'note_bladenightStartInSixHoursStartTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `BladeNight Status geändert - Bitte in App prüfen`
+  /// `BladeNight Status was changed - Please check in app`
   String get note_statuschanged {
     return Intl.message(
-      'BladeNight Status geändert - Bitte in App prüfen',
+      'BladeNight Status was changed - Please check in app',
       name: 'note_statuschanged',
       desc: '',
       args: [],
     );
   }
 
-  /// `Veralted bitte,neu anlegen/löschen!`
+  /// `Obsolete! Delete it!`
   String get notKnownOnServer {
     return Intl.message(
-      'Veralted bitte,neu anlegen/löschen!',
+      'Obsolete! Delete it!',
       name: 'notKnownOnServer',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nicht auf der Strecke!`
+  /// `Not on route!`
   String get notOnRoute {
     return Intl.message(
-      'Nicht auf der Strecke!',
+      'Not on route!',
       name: 'notOnRoute',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kein Tracking!`
+  /// `No tracking!`
   String get notracking {
     return Intl.message(
-      'Kein Tracking!',
+      'No tracking!',
       name: 'notracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Auf Karte nicht angezeigt`
+  /// `Not visible on map!`
   String get notVisibleOnMap {
     return Intl.message(
-      'Auf Karte nicht angezeigt',
+      'Not visible on map!',
       name: 'notVisibleOnMap',
       desc: '',
       args: [],
     );
   }
 
-  /// `Jetzt`
+  /// `Now`
   String get now {
     return Intl.message(
-      'Jetzt',
+      'Now',
       name: 'now',
       desc: '',
       args: [],
@@ -1744,10 +1734,10 @@ class Localize {
     );
   }
 
-  /// `am`
+  /// `at`
   String get on {
     return Intl.message(
-      'am',
+      'at',
       name: 'on',
       desc: '',
       args: [],
@@ -1764,70 +1754,80 @@ class Localize {
     );
   }
 
-  /// `GPS nur wenn App im Vordergrund freigegeben. Bitte Systemeinstellungen prüfen`
+  /// `GPS WhileInUse - app works only in foreground. Please change Operating Systems settings`
   String get onlyWhileInUse {
     return Intl.message(
-      'GPS nur wenn App im Vordergrund freigegeben. Bitte Systemeinstellungen prüfen',
+      'GPS WhileInUse - app works only in foreground. Please change Operating Systems settings',
       name: 'onlyWhileInUse',
       desc: '',
       args: [],
     );
   }
 
-  /// `Standortfreigabe nur 'Zugriff nur während der Nutzung der App zulassen'`
+  /// `Location only 'Allow only while using the app' set.`
   String get onlyWhenInUseEnabled {
     return Intl.message(
-      'Standortfreigabe nur \'Zugriff nur während der Nutzung der App zulassen\'',
+      'Location only \'Allow only while using the app\' set.',
       name: 'onlyWhenInUseEnabled',
       desc: '',
       args: [],
     );
   }
 
-  /// `auf der Strecke`
+  /// `on route`
   String get onRoute {
     return Intl.message(
-      'auf der Strecke',
+      'on route',
       name: 'onRoute',
       desc: '',
       args: [],
     );
   }
 
-  /// `Öffne Systemeinstellungen`
+  /// `Open operating system settings`
   String get openOperatingSystemSettings {
     return Intl.message(
-      'Öffne Systemeinstellungen',
+      'Open operating system settings',
       name: 'openOperatingSystemSettings',
       desc: '',
       args: [],
     );
   }
 
-  /// `Eigene`
+  /// `Own`
   String get own {
     return Intl.message(
-      'Eigene',
+      'Own',
       name: 'own',
       desc: '',
       args: [],
     );
   }
 
-  /// `Geplant ⏰`
+  /// `Participant`
+  String get participant {
+    return Intl.message(
+      'Participant',
+      name: 'participant',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending ⏰`
   String get pending {
     return Intl.message(
-      'Geplant ⏰',
+      'Pending ⏰',
       name: 'pending',
       desc: '',
       args: [],
     );
   }
 
-  /// `Farbe wählen`
+  /// `Pick a color.`
   String get pickcolor {
     return Intl.message(
-      'Farbe wählen',
+      'Pick a color.',
       name: 'pickcolor',
       desc: '',
       args: [],
@@ -1844,311 +1844,301 @@ class Localize {
     );
   }
 
-  /// `Reset in Einstellungen`
-  String get resetInSettings {
-    return Intl.message(
-      'Reset in Einstellungen',
-      name: 'resetInSettings',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `ges. GPS gefahren`
-  String get distanceDrivenOdo {
-    return Intl.message(
-      'ges. GPS gefahren',
-      name: 'distanceDrivenOdo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Tachometer lange drücken zum Reset des km Zählers (ODO-Meter)`
-  String get resetLongPress {
-    return Intl.message(
-      'Tachometer lange drücken zum Reset des km Zählers (ODO-Meter)',
-      name: 'resetLongPress',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Teilnehmer`
-  String get participant {
-    return Intl.message(
-      'Teilnehmer',
-      name: 'participant',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Positiv vor mir, Negativ hinter mir.`
+  /// `Positive if in front, negative if behind me.`
   String get positiveInFront {
     return Intl.message(
-      'Positiv vor mir, Negativ hinter mir.',
+      'Positive if in front, negative if behind me.',
       name: 'positiveInFront',
       desc: '',
       args: [],
     );
   }
 
-  /// `Weiter`
+  /// `Proceed`
   String get proceed {
     return Intl.message(
-      'Weiter',
+      'Proceed',
       name: 'proceed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNightzuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben.Hier sollte  'Bei der Nutzung der App zulassen' gewählt werden. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung "Immer zulassen" die zu einem späteren Zeitpunkt (2.Schritt über Systemeinstellungen) erfolgt. Dies ermöglicht das Tracking auch wenn du eine andere App im Vordergrund geöffnet hast. Mit "Während der Benutzung" musst du die BladeNight immer im Vordergrund offen halten um uns zu unterstützen und deinen Standort zu teilen.Weiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.`
+  /// `The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select 'While using the App'. Later we will ask you again, prefered is 'Allow all time'. When you select 'When in use' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much.`
   String get prominentdisclosuretrackingprealertandroidFromAndroid_V11 {
     return Intl.message(
-      'Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNightzuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben.Hier sollte  \'Bei der Nutzung der App zulassen\' gewählt werden. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung "Immer zulassen" die zu einem späteren Zeitpunkt (2.Schritt über Systemeinstellungen) erfolgt. Dies ermöglicht das Tracking auch wenn du eine andere App im Vordergrund geöffnet hast. Mit "Während der Benutzung" musst du die BladeNight immer im Vordergrund offen halten um uns zu unterstützen und deinen Standort zu teilen.Weiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.',
+      'The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select \'While using the App\'. Later we will ask you again, prefered is \'Allow all time\'. When you select \'When in use\' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much.',
       name: 'prominentdisclosuretrackingprealertandroidFromAndroid_V11',
       desc: '',
       args: [],
     );
   }
 
-  /// `Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNightzuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung "Bei der Nutzung der App zulassen".`
+  /// `The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step.You should select 'While using the App'. If you deny locationaccess, only the BladeNight skater train can be watched without location sharing. Please support the accuracy of the train`
   String get prominentdisclosuretrackingprealertandroidToAndroid_V10x {
     return Intl.message(
-      'Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNightzuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung "Bei der Nutzung der App zulassen".',
+      'The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step.You should select \'While using the App\'. If you deny locationaccess, only the BladeNight skater train can be watched without location sharing. Please support the accuracy of the train',
       name: 'prominentdisclosuretrackingprealertandroidToAndroid_V10x',
       desc: '',
       args: [],
     );
   }
 
-  /// `QRCode - Link zum teilen der aktuellen BladeNight-Daten ohne App`
+  /// `QRCode to show event info without app in browser`
   String get qrcoderouteinfoheader {
     return Intl.message(
-      'QRCode - Link zum teilen der aktuellen BladeNight-Daten ohne App',
+      'QRCode to show event info without app in browser',
       name: 'qrcoderouteinfoheader',
       desc: '',
       args: [],
     );
   }
 
-  /// `empfangen`
+  /// `received`
   String get received {
     return Intl.message(
-      'empfangen',
+      'received',
       name: 'received',
       desc: '',
       args: [],
     );
   }
 
-  /// `Neu laden`
-  String get reload {
-    return Intl.message(
-      'Neu laden',
-      name: 'reload',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `rel. Zeitdiff.`
-  String get reltime {
-    return Intl.message(
-      'rel. Zeitdiff.',
-      name: 'reltime',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Reset km-Zähler und eigene Routenpunkte`
+  /// `ODO meter reset and driven route`
   String get resetOdoMeterTitle {
     return Intl.message(
-      'Reset km-Zähler und eigene Routenpunkte',
+      'ODO meter reset and driven route',
       name: 'resetOdoMeterTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Km-Zähler auf 0 setzen und eigene gefahrene Routenpunkte auf Karte (angezeigte gefahrene Route kann vorher in Einstellungen exportiert werden bzw. werden auch beim schließen der App gelöscht) ?`
+  /// `Reset ODO meter to 0 and clear driven route?`
   String get resetOdoMeter {
     return Intl.message(
-      'Km-Zähler auf 0 setzen und eigene gefahrene Routenpunkte auf Karte (angezeigte gefahrene Route kann vorher in Einstellungen exportiert werden bzw. werden auch beim schließen der App gelöscht) ?',
+      'Reset ODO meter to 0 and clear driven route?',
       name: 'resetOdoMeter',
       desc: '',
       args: [],
     );
   }
 
-  /// `Information, warum die Standortfreigeben notwendig wäre.`
-  String get requestLocationPermissionTitle {
+  /// `Reset in settings-page`
+  String get resetInSettings {
     return Intl.message(
-      'Information, warum die Standortfreigeben notwendig wäre.',
-      name: 'requestLocationPermissionTitle',
+      'Reset in settings-page',
+      name: 'resetInSettings',
       desc: '',
       args: [],
     );
   }
 
-  /// `Standort - Immer zulassen`
-  String get requestAlwaysPermissionTitle {
+  /// `GPS total driven`
+  String get distanceDrivenOdo {
     return Intl.message(
-      'Standort - Immer zulassen',
-      name: 'requestAlwaysPermissionTitle',
+      'GPS total driven',
+      name: 'distanceDrivenOdo',
       desc: '',
       args: [],
     );
   }
 
-  /// `Strecke`
-  String get route {
+  /// `Press gauge long to reset the ODO meter`
+  String get resetLongPress {
     return Intl.message(
-      'Strecke',
-      name: 'route',
+      'Press gauge long to reset the ODO meter',
+      name: 'resetLongPress',
       desc: '',
       args: [],
     );
   }
 
-  /// `Routenverlauf`
-  String get routeoverview {
+  /// `Reload`
+  String get reload {
     return Intl.message(
-      'Routenverlauf',
-      name: 'routeoverview',
+      'Reload',
+      name: 'reload',
       desc: '',
       args: [],
     );
   }
 
-  /// `Entfernen`
+  /// `rel. timediff.`
+  String get reltime {
+    return Intl.message(
+      'rel. timediff.',
+      name: 'reltime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove`
   String get remove {
     return Intl.message(
-      'Entfernen',
+      'Remove',
       name: 'remove',
       desc: '',
       args: [],
     );
   }
 
-  /// `nicht verfügbar`
-  String get notAvailable {
+  /// `Information why location sharing would be necessary.`
+  String get requestLocationPermissionTitle {
     return Intl.message(
-      'nicht verfügbar',
-      name: 'notAvailable',
+      'Information why location sharing would be necessary.',
+      name: 'requestLocationPermissionTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Daten vorhanden`
-  String get tracking {
+  /// `Location always permissions`
+  String get requestAlwaysPermissionTitle {
     return Intl.message(
-      'Daten vorhanden',
-      name: 'tracking',
+      'Location always permissions',
+      name: 'requestAlwaysPermissionTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Speichern`
+  /// `Route`
+  String get route {
+    return Intl.message(
+      'Route',
+      name: 'route',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Route overview`
+  String get routeoverview {
+    return Intl.message(
+      'Route overview',
+      name: 'routeoverview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
   String get save {
     return Intl.message(
-      'Speichern',
+      'Save',
       name: 'save',
       desc: '',
       args: [],
     );
   }
 
-  /// `Scrolle Karte zu ...`
+  /// `not available`
+  String get notAvailable {
+    return Intl.message(
+      'not available',
+      name: 'notAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `data ok`
+  String get tracking {
+    return Intl.message(
+      'data ok',
+      name: 'tracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scroll map to ...`
   String get scrollMapTo {
     return Intl.message(
-      'Scrolle Karte zu ...',
+      'Scroll map to ...',
       name: 'scrollMapTo',
       desc: '',
       args: [],
     );
   }
 
-  /// `Warte auf Internetverbindung ...`
+  /// ` Waiting for internet connection ...`
   String get seemsoffline {
     return Intl.message(
-      'Warte auf Internetverbindung ...',
+      ' Waiting for internet connection ...',
       name: 'seemsoffline',
       desc: '',
       args: [],
     );
   }
 
-  /// `Link senden`
+  /// `Send link`
   String get sendlink {
     return Intl.message(
-      'Link senden',
+      'Send link',
       name: 'sendlink',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dies ist die Einladung um deine(n) Freund:in (Absender der Nachricht) in der BladeNightApp zu sehen und euch im Skaterzug wiederzufinden. Wenn du das möchtest lade Dir die Baldenigthapp und gib den Code: {requestid} ein.\nWenn die App schon installiert ist benutze den link  'bna://bladenight.app?code={requestid}' oder 'https://bladenight.app?code={requestid}'auf dem Telefon. \nViel Spass beim skaten.\nDie App ist verfügbar im Playstore \n{playStoreLink} und im Apple App Store \n{iosAppStoreLink}`
+  /// `Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the Baldenightapp from AppStore end enter the code: {requestid} in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: bna://bladenight.app?code={requestid} on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n{playStoreLink} and on Apple App Store \n{iosAppStoreLink}`
   String sendlinkdescription(
       Object requestid, Object playStoreLink, Object iosAppStoreLink) {
     return Intl.message(
-      'Dies ist die Einladung um deine(n) Freund:in (Absender der Nachricht) in der BladeNightApp zu sehen und euch im Skaterzug wiederzufinden. Wenn du das möchtest lade Dir die Baldenigthapp und gib den Code: $requestid ein.\nWenn die App schon installiert ist benutze den link  \'bna://bladenight.app?code=$requestid\' oder \'https://bladenight.app?code=$requestid\'auf dem Telefon. \nViel Spass beim skaten.\nDie App ist verfügbar im Playstore \n$playStoreLink und im Apple App Store \n$iosAppStoreLink',
+      'Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the Baldenightapp from AppStore end enter the code: $requestid in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: bna://bladenight.app?code=$requestid on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n$playStoreLink and on Apple App Store \n$iosAppStoreLink',
       name: 'sendlinkdescription',
-      desc: 'Sende den Code {requestid} an deine(n) Freund:in',
+      desc: 'Please send code {requestid} to your friend',
       args: [requestid, playStoreLink, iosAppStoreLink],
     );
   }
 
-  /// `Sende link an BladeNight-App. Ihr könnt euch gegenseitig sehen.`
+  /// `Send link to BladeNight-App. You can see each other.`
   String get sendlinksubject {
     return Intl.message(
-      'Sende link an BladeNight-App. Ihr könnt euch gegenseitig sehen.',
+      'Send link to BladeNight-App. You can see each other.',
       name: 'sendlinksubject',
       desc: '',
       args: [],
     );
   }
 
-  /// `Warte auf Server ... !`
+  /// `Waiting for server connection ....`
   String get serverNotReachable {
     return Intl.message(
-      'Warte auf Server ... !',
+      'Waiting for server connection ....',
       name: 'serverNotReachable',
       desc: '',
       args: [],
     );
   }
 
-  /// `Fehler beim Verbinden`
+  /// `Error negotiate session connection`
   String get sessionConnectionError {
     return Intl.message(
-      'Fehler beim Verbinden',
+      'Error negotiate session connection',
       name: 'sessionConnectionError',
       desc: '',
       args: [],
     );
   }
 
-  /// `Logdateien löschen`
+  /// `Clear log data`
   String get setClearLogs {
     return Intl.message(
-      'Logdateien löschen',
+      'Clear log data',
       name: 'setClearLogs',
       desc: '',
       args: [],
     );
   }
 
-  /// `Farbe ändern`
+  /// `Change color`
   String get setcolor {
     return Intl.message(
-      'Farbe ändern',
+      'Change color',
       name: 'setcolor',
       desc: '',
       args: [],
@@ -2165,90 +2155,90 @@ class Localize {
     );
   }
 
-  /// `Export Id und Freunde`
+  /// `Export Id and friends`
   String get setexportIdAndFriends {
     return Intl.message(
-      'Export Id und Freunde',
+      'Export Id and friends',
       name: 'setexportIdAndFriends',
       desc: '',
       args: [],
     );
   }
 
-  /// `Export Logdaten (Support) it@huth.app`
+  /// `Export Log data (Support) it@huth.app`
   String get setExportLogSupport {
     return Intl.message(
-      'Export Logdaten (Support) it@huth.app',
+      'Export Log data (Support) it@huth.app',
       name: 'setExportLogSupport',
       desc: '',
       args: [],
     );
   }
 
-  /// `Hier Datensatz einfügen incl. bna:`
+  /// `Insert dataset incl. bna:`
   String get setInsertImportDataset {
     return Intl.message(
-      'Hier Datensatz einfügen incl. bna:',
+      'Insert dataset incl. bna:',
       name: 'setInsertImportDataset',
       desc: '',
       args: [],
     );
   }
 
-  /// `Datenlogger`
+  /// `Data logger`
   String get setLogData {
     return Intl.message(
-      'Datenlogger',
+      'Data logger',
       name: 'setLogData',
       desc: '',
       args: [],
     );
   }
 
-  /// `Eigene Farbe in Karte`
+  /// `Own Color on Map`
   String get setMeColor {
     return Intl.message(
-      'Eigene Farbe in Karte',
+      'Own Color on Map',
       name: 'setMeColor',
       desc: '',
       args: [],
     );
   }
 
-  /// `Öffne Systemeinstellungen`
+  /// `Open Operatingsystem settings`
   String get setOpenSystemSettings {
     return Intl.message(
-      'Öffne Systemeinstellungen',
+      'Open Operatingsystem settings',
       name: 'setOpenSystemSettings',
       desc: '',
       args: [],
     );
   }
 
-  /// `Text- und Symbolfarben im Normalmodus/Hell ändern`
+  /// `Set primary (light) color (default yellow)`
   String get setPrimaryColor {
     return Intl.message(
-      'Text- und Symbolfarben im Normalmodus/Hell ändern',
+      'Set primary (light) color (default yellow)',
       name: 'setPrimaryColor',
       desc: '',
       args: [],
     );
   }
 
-  /// `Text- und Symbolfarben im Dunkelmodus ändern`
+  /// `Set primary Dark-mode color (default yellow)`
   String get setPrimaryDarkColor {
     return Intl.message(
-      'Text- und Symbolfarben im Dunkelmodus ändern',
+      'Set primary Dark-mode color (default yellow)',
       name: 'setPrimaryDarkColor',
       desc: '',
       args: [],
     );
   }
 
-  /// `Import Id und Freunde starten`
+  /// `Start import Id und friends`
   String get setStartImport {
     return Intl.message(
-      'Import Id und Freunde starten',
+      'Start import Id und friends',
       name: 'setStartImport',
       desc: '',
       args: [],
@@ -2265,130 +2255,130 @@ class Localize {
     );
   }
 
-  /// `Einstellungen`
+  /// `Settings`
   String get settings {
     return Intl.message(
-      'Einstellungen',
+      'Settings',
       name: 'settings',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nur Anzeige`
-  String get showonly {
-    return Intl.message(
-      'Nur Anzeige',
-      name: 'showonly',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Zeige Teilnehmer`
+  /// `Show procession participants`
   String get showFullProcession {
     return Intl.message(
-      'Zeige Teilnehmer',
+      'Show procession participants',
       name: 'showFullProcession',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zeige Teilnehmer (auf 100 aus dem Zug limitiert) in der Karte. Funktioniert nur bei eigener Standortfreigabe.`
+  /// `Show procession participants (limited to 100 in procession) on map. Works only if self-tracking.`
   String get showFullProcessionTitle {
     return Intl.message(
-      'Zeige Teilnehmer (auf 100 aus dem Zug limitiert) in der Karte. Funktioniert nur bei eigener Standortfreigabe.',
+      'Show procession participants (limited to 100 in procession) on map. Works only if self-tracking.',
       name: 'showFullProcessionTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darstellung aktueller Verlauf der Münchener BladeNight`
+  /// `Showing actual procession of Münchener BladeNight`
   String get showProcession {
     return Intl.message(
-      'Darstellung aktueller Verlauf der Münchener BladeNight',
+      'Showing actual procession of Münchener BladeNight',
       name: 'showProcession',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zeige QRCode zum Weblink`
+  /// `Show only`
+  String get showonly {
+    return Intl.message(
+      'Show only',
+      name: 'showonly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show weblink to route`
   String get showWeblinkToRoute {
     return Intl.message(
-      'Zeige QRCode zum Weblink',
+      'Show weblink to route',
       name: 'showWeblinkToRoute',
       desc: '',
       args: [],
     );
   }
 
-  /// `Geschwindigkeit`
+  /// `Speed`
   String get speed {
     return Intl.message(
-      'Geschwindigkeit',
+      'Speed',
       name: 'speed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Startpunkt`
+  /// `Start point`
   String get start {
     return Intl.message(
-      'Startpunkt',
+      'Start point',
       name: 'start',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tracking ohne Teilnahme`
+  /// `Start location without participating`
   String get startLocationWithoutParticipating {
     return Intl.message(
-      'Tracking ohne Teilnahme',
+      'Start location without participating',
       name: 'startLocationWithoutParticipating',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bitte Aufmerksam lesen.\nDies startet die Standortdarstellung auf der Karte ohne Teilnahme an der BladeNight und überträgt zur Berechnung der Zeiten deinen Standort auf den Server. Deine Freunde im Zug werden Dir angezeigt. Die Zeit zum Zuganfang /-ende von deinem Standort werden berechnet. Weiterhin, werden deine Geschwindigkeit und Trackingdaten aufgezeichnet die du speichern kannst. Bitte diese Funktion nicht verwenden, wenn du an der BladeNight teilnimmst. Der Modus muss manuell beendet werden. \nSoll dies gestartet werden?`
+  /// `Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and tracking data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?`
   String get startLocationWithoutParticipatingInfo {
     return Intl.message(
-      'Bitte Aufmerksam lesen.\nDies startet die Standortdarstellung auf der Karte ohne Teilnahme an der BladeNight und überträgt zur Berechnung der Zeiten deinen Standort auf den Server. Deine Freunde im Zug werden Dir angezeigt. Die Zeit zum Zuganfang /-ende von deinem Standort werden berechnet. Weiterhin, werden deine Geschwindigkeit und Trackingdaten aufgezeichnet die du speichern kannst. Bitte diese Funktion nicht verwenden, wenn du an der BladeNight teilnimmst. Der Modus muss manuell beendet werden. \nSoll dies gestartet werden?',
+      'Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and tracking data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?',
       name: 'startLocationWithoutParticipatingInfo',
       desc: '',
       args: [],
     );
   }
 
-  /// `Teilnahme an BladeNight starten`
+  /// `Start participation`
   String get startParticipationTracking {
     return Intl.message(
-      'Teilnahme an BladeNight starten',
+      'Start participation',
       name: 'startParticipationTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Startpunkt\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe München`
+  /// `Start point\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe Munich`
   String get startPoint {
     return Intl.message(
-      'Startpunkt\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe München',
+      'Start point\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe Munich',
       name: 'startPoint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Startzeit`
+  /// `Start time`
   String get startTime {
     return Intl.message(
-      'Startzeit',
+      'Start time',
       name: 'startTime',
       desc: '',
       args: [],
@@ -2405,80 +2395,80 @@ class Localize {
     );
   }
 
-  /// `Aktiv`
+  /// `active`
   String get status_active {
     return Intl.message(
-      'Aktiv',
+      'active',
       name: 'status_active',
       desc: '',
       args: [],
     );
   }
 
-  /// `Inaktiv`
+  /// `inactive`
   String get status_inactive {
     return Intl.message(
-      'Inaktiv',
+      'inactive',
       name: 'status_inactive',
       desc: '',
       args: [],
     );
   }
 
-  /// `Veraltet`
+  /// `obsolete`
   String get status_obsolete {
     return Intl.message(
-      'Veraltet',
+      'obsolete',
       name: 'status_obsolete',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ausstehend`
+  /// `pending`
   String get status_pending {
     return Intl.message(
-      'Ausstehend',
+      'pending',
       name: 'status_pending',
       desc: '',
       args: [],
     );
   }
 
-  /// `Stoppe Standort wirklich?`
+  /// `Stop location sharing?`
   String get stopLocationTracking {
     return Intl.message(
-      'Stoppe Standort wirklich?',
+      'Stop location sharing?',
       name: 'stopLocationTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Stoppe Position ohne Teilnahme`
+  /// `Stop location without participating`
   String get stopLocationWithoutParticipating {
     return Intl.message(
-      'Stoppe Position ohne Teilnahme',
+      'Stop location without participating',
       name: 'stopLocationWithoutParticipating',
       desc: '',
       args: [],
     );
   }
 
-  /// `Stoppe Teilnahme/ Tracking`
+  /// `Stop participation tracking`
   String get stopParticipationTracking {
     return Intl.message(
-      'Stoppe Teilnahme/ Tracking',
+      'Stop participation tracking',
       name: 'stopParticipationTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Eventzeit ({timeout} min) überzogen. Tracking abschalten nicht vergessen!`
+  /// `Event timed out ({timeout} min). Don't forget to stop tracking.`
   String stopTrackingTimeOut(Object timeout) {
     return Intl.message(
-      'Eventzeit ($timeout min) überzogen. Tracking abschalten nicht vergessen!',
+      'Event timed out ($timeout min). Don\'t forget to stop tracking.',
       name: 'stopTrackingTimeOut',
       desc: '',
       args: [timeout],
@@ -2495,153 +2485,153 @@ class Localize {
     );
   }
 
-  /// `Setze Status`
+  /// `Set Status`
   String get setState {
     return Intl.message(
-      'Setze Status',
+      'Set Status',
       name: 'setState',
       desc: '',
       args: [],
     );
   }
 
-  /// `Symbole`
+  /// `Symbols`
   String get symbols {
     return Intl.message(
-      'Symbole',
+      'Symbols',
       name: 'symbols',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zugende`
+  /// `Tail`
   String get tail {
     return Intl.message(
-      'Zugende',
+      'Tail',
       name: 'tail',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sende an '{name}' den Code \n\n{requestid}\nEr/Sie/es muss den Code in dessen BladeNight App bestätigen. \nDer Code ist 60 min gültig!\nBitte über ↻ den Status manuell aktualisieren.`
+  /// `Please tell '{name}' this code \n\n{requestid}\nHe/she/it has to confirm this in his/her/it 'BladeNight-App'.\nThe Code is only 60 minutes valid!\nPlease update with ↻ button the status manually.`
   String tellcode(Object name, Object requestid) {
     return Intl.message(
-      'Sende an \'$name\' den Code \n\n$requestid\nEr/Sie/es muss den Code in dessen BladeNight App bestätigen. \nDer Code ist 60 min gültig!\nBitte über ↻ den Status manuell aktualisieren.',
+      'Please tell \'$name\' this code \n\n$requestid\nHe/she/it has to confirm this in his/her/it \'BladeNight-App\'.\nThe Code is only 60 minutes valid!\nPlease update with ↻ button the status manually.',
       name: 'tellcode',
-      desc: 'Sende den Code an deine(n) Freund:in',
+      desc: 'transfer code to friend',
       args: [name, requestid],
     );
   }
 
-  /// `Danke fürs Teilnehmen.`
+  /// `Thank you for participating.`
   String get thanksForParticipating {
     return Intl.message(
-      'Danke fürs Teilnehmen.',
+      'Thank you for participating.',
       name: 'thanksForParticipating',
       desc: '',
       args: [],
     );
   }
 
-  /// `{time} Uhr`
+  /// `{time}`
   String timeIntl(DateTime time) {
     final DateFormat timeDateFormat = DateFormat.Hm(Intl.getCurrentLocale());
     final String timeString = timeDateFormat.format(time);
 
     return Intl.message(
-      '$timeString Uhr',
+      '$timeString',
       name: 'timeIntl',
       desc: '',
       args: [timeString],
     );
   }
 
-  /// `Zeitüberschreitung Dauer der BladeNight`
+  /// `Timeout - duration of BladeNight exceed`
   String get timeOutDurationExceedTitle {
     return Intl.message(
-      'Zeitüberschreitung Dauer der BladeNight',
+      'Timeout - duration of BladeNight exceed',
       name: 'timeOutDurationExceedTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Stand von`
+  /// `Timestamp`
   String get timeStamp {
     return Intl.message(
-      'Stand von',
+      'Timestamp',
       name: 'timeStamp',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dauer bis zum Ziel (ca.)`
+  /// `to finish (est.)`
   String get timeToFinish {
     return Intl.message(
-      'Dauer bis zum Ziel (ca.)',
+      'to finish (est.)',
       name: 'timeToFinish',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dauer zum Freund (ca.)`
+  /// `Time to friend`
   String get timeToFriend {
     return Intl.message(
-      'Dauer zum Freund (ca.)',
+      'Time to friend',
       name: 'timeToFriend',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dauer zum Zugkopf (ca.)`
+  /// `Time to head`
   String get timeToHead {
     return Intl.message(
-      'Dauer zum Zugkopf (ca.)',
+      'Time to head',
       name: 'timeToHead',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dauer von mir (ca.)`
+  /// `Time to me`
   String get timeToMe {
     return Intl.message(
-      'Dauer von mir (ca.)',
+      'Time to me',
       name: 'timeToMe',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dauer zum Zugende (ca).`
+  /// `Time to tail`
   String get timeToTail {
     return Intl.message(
-      'Dauer zum Zugende (ca).',
+      'Time to tail',
       name: 'timeToTail',
       desc: '',
       args: [],
     );
   }
 
-  /// `Heute`
+  /// `Today`
   String get today {
     return Intl.message(
-      'Heute',
+      'Today',
       name: 'today',
       desc: '',
       args: [],
     );
   }
 
-  /// `Morgen`
+  /// `Tomorrow`
   String get tomorrow {
     return Intl.message(
-      'Morgen',
+      'Tomorrow',
       name: 'tomorrow',
       desc: '',
       args: [],
@@ -2658,90 +2648,90 @@ class Localize {
     );
   }
 
-  /// `Tracking wieder gestartet`
+  /// `Tracking restartet`
   String get trackingRestarted {
     return Intl.message(
-      'Tracking wieder gestartet',
+      'Tracking restartet',
       name: 'trackingRestarted',
       desc: '',
       args: [],
     );
   }
 
-  /// `Skater-Zug`
+  /// `Train`
   String get train {
     return Intl.message(
-      'Skater-Zug',
+      'Train',
       name: 'train',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zuglänge`
+  /// `Trainlength`
   String get trainlength {
     return Intl.message(
-      'Zuglänge',
+      'Trainlength',
       name: 'trainlength',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dies kann nur in den Systemeinstellungen geändert werden! Versuche Systemeinstellungen zu öffnen?`
+  /// `This can only be changed in the system settings! Try opening system settings?`
   String get tryOpenAppSettings {
     return Intl.message(
-      'Dies kann nur in den Systemeinstellungen geändert werden! Versuche Systemeinstellungen zu öffnen?',
+      'This can only be changed in the system settings! Try opening system settings?',
       name: 'tryOpenAppSettings',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verstanden`
+  /// `Understood`
   String get understand {
     return Intl.message(
-      'Verstanden',
+      'Understood',
       name: 'understand',
       desc: '',
       args: [],
     );
   }
 
-  /// `unbekannt`
+  /// `unknown`
   String get unknown {
     return Intl.message(
-      'unbekannt',
+      'unknown',
       name: 'unknown',
       desc: '',
       args: [],
     );
   }
 
-  /// `unbek. Fehler`
+  /// `unknown error`
   String get unknownerror {
     return Intl.message(
-      'unbek. Fehler',
+      'unknown error',
       name: 'unknownerror',
       desc: '',
       args: [],
     );
   }
 
-  /// `Meine GPS-Geschwindigkeit.`
+  /// `This is my GPS-speed.`
   String get userSpeed {
     return Intl.message(
-      'Meine GPS-Geschwindigkeit.',
+      'This is my GPS-speed.',
       name: 'userSpeed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Freund:in verknüpfen`
+  /// `Validate friend`
   String get validatefriend {
     return Intl.message(
-      'Freund:in verknüpfen',
+      'Validate friend',
       name: 'validatefriend',
       desc: '',
       args: [],
@@ -2758,60 +2748,60 @@ class Localize {
     );
   }
 
-  /// `Auf Karte angezeigt.`
+  /// `Shown on map.`
   String get visibleOnMap {
     return Intl.message(
-      'Auf Karte angezeigt.',
+      'Shown on map.',
       name: 'visibleOnMap',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wartezeit`
+  /// `Waittime`
   String get waittime {
     return Intl.message(
-      'Wartezeit',
+      'Waittime',
       name: 'waittime',
       desc: '',
       args: [],
     );
   }
 
-  /// `wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de`
+  /// `is canceled! Please check this on https://bladenight-muenchen.de`
   String get wasCanceledPleaseCheck {
     return Intl.message(
-      'wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de',
+      'is canceled! Please check this on https://bladenight-muenchen.de',
       name: 'wasCanceledPleaseCheck',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ja`
+  /// `Yes`
   String get yes {
     return Intl.message(
-      'Ja',
+      'Yes',
       name: 'yes',
       desc: '',
       args: [],
     );
   }
 
-  /// `war gestern`
+  /// `was yesterday`
   String get yesterday {
     return Intl.message(
-      'war gestern',
+      'was yesterday',
       name: 'yesterday',
       desc: '',
       args: [],
     );
   }
 
-  /// `Aktuell ist keine Veranstaltung geplant.`
+  /// `No Event planned`
   String get noEventPlanned {
     return Intl.message(
-      'Aktuell ist keine Veranstaltung geplant.',
+      'No Event planned',
       name: 'noEventPlanned',
       desc: '',
       args: [],
@@ -2828,400 +2818,390 @@ class Localize {
     );
   }
 
-  /// `Eigene Fahrlinie zeigen`
+  /// `Show own track in map`
   String get showOwnTrack {
     return Intl.message(
-      'Eigene Fahrlinie zeigen',
+      'Show own track in map',
       name: 'showOwnTrack',
       desc: '',
       args: [],
     );
   }
 
-  /// `Werde Bladeguard`
+  /// `Become a Bladeguard`
   String get becomeBladeguard {
     return Intl.message(
-      'Werde Bladeguard',
+      'Become a Bladeguard',
       name: 'becomeBladeguard',
       desc: '',
       args: [],
     );
   }
 
-  /// `Passwort vergessen`
+  /// `Forgot password`
   String get forgotPassword {
     return Intl.message(
-      'Passwort vergessen',
+      'Forgot password',
       name: 'forgotPassword',
       desc: '',
       args: [],
     );
   }
 
-  /// `Email eingeben`
+  /// `Enter email`
   String get enterEmail {
     return Intl.message(
-      'Email eingeben',
+      'Enter email',
       name: 'enterEmail',
       desc: '',
       args: [],
     );
   }
 
-  /// `Anmelden`
+  /// `login`
   String get login {
     return Intl.message(
-      'Anmelden',
+      'login',
       name: 'login',
       desc: '',
       args: [],
     );
   }
 
-  /// `Passwort eingeben`
+  /// `Enter password`
   String get enterPassword {
     return Intl.message(
-      'Passwort eingeben',
+      'Enter password',
       name: 'enterPassword',
       desc: '',
       args: [],
     );
   }
 
-  /// `Batterieoptimierung ändern`
-  String get ignoreBatteriesOptimisationTitle {
-    return Intl.message(
-      'Batterieoptimierung ändern',
-      name: 'ignoreBatteriesOptimisationTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Hinweis - manche Hersteller schalten die Apps durch ungünstige Batterieoptimierungen ab oder schließen die App. In dem Falle bitte versuchen die Batterieoptimierung für die App zu deaktivieren. Einstellung keine Beschränkung.`
+  /// `Note - some manufacturers switch off the apps due to unfavorable battery optimization or close the app. If so, please try disabling battery optimization for the app. Set to No restrictions.`
   String get ignoreBatteriesOptimisation {
     return Intl.message(
-      'Hinweis - manche Hersteller schalten die Apps durch ungünstige Batterieoptimierungen ab oder schließen die App. In dem Falle bitte versuchen die Batterieoptimierung für die App zu deaktivieren. Einstellung keine Beschränkung.',
+      'Note - some manufacturers switch off the apps due to unfavorable battery optimization or close the app. If so, please try disabling battery optimization for the app. Set to No restrictions.',
       name: 'ignoreBatteriesOptimisation',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ich bin`
+  /// `Change Battery Optimizations`
+  String get ignoreBatteriesOptimisationTitle {
+    return Intl.message(
+      'Change Battery Optimizations',
+      name: 'ignoreBatteriesOptimisationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I am`
   String get iam {
     return Intl.message(
-      'Ich bin',
+      'I am',
       name: 'iam',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zuletzt gesehen`
+  /// `Last seen`
   String get lastseen {
     return Intl.message(
-      'Zuletzt gesehen',
+      'Last seen',
       name: 'lastseen',
       desc: '',
       args: [],
     );
   }
 
-  /// `nie`
+  /// `never`
   String get never {
     return Intl.message(
-      'nie',
+      'never',
       name: 'never',
       desc: '',
       args: [],
     );
   }
 
-  /// `Testimplementierung, da MIUI Xiaomi Handys durch agressives Speichermanagemant die Apps killen und diese somit nicht mehr funktioniert. Wenn die App in den Hintergrund wechselt oder gekillt wird, wird trotzdem weiter der Standort übermittelt (BETA) `
+  /// `Test implementation, since MIUI Xiaomi cell phones kill the apps through aggressive memory management and they no longer work. If the app is in the background or killed, the location is still transmitted (BETA).`
   String get allowHeadlessHeader {
     return Intl.message(
-      'Testimplementierung, da MIUI Xiaomi Handys durch agressives Speichermanagemant die Apps killen und diese somit nicht mehr funktioniert. Wenn die App in den Hintergrund wechselt oder gekillt wird, wird trotzdem weiter der Standort übermittelt (BETA) ',
+      'Test implementation, since MIUI Xiaomi cell phones kill the apps through aggressive memory management and they no longer work. If the app is in the background or killed, the location is still transmitted (BETA).',
       name: 'allowHeadlessHeader',
       desc: '',
       args: [],
     );
   }
 
-  /// `Hintergrund update aktiv`
+  /// `Background update activ`
   String get allowHeadless {
     return Intl.message(
-      'Hintergrund update aktiv',
+      'Background update activ',
       name: 'allowHeadless',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wird ignoriert`
+  /// `Is ignored`
   String get isIgnoring {
     return Intl.message(
-      'Wird ignoriert',
+      'Is ignored',
       name: 'isIgnoring',
       desc: '',
       args: [],
     );
   }
 
-  /// `Hersteller`
+  /// `Manufacturer`
   String get manufacturer {
     return Intl.message(
-      'Hersteller',
+      'Manufacturer',
       name: 'manufacturer',
       desc: '',
       args: [],
     );
   }
 
-  /// `Modell`
+  /// `Model`
   String get model {
     return Intl.message(
-      'Modell',
+      'Model',
       name: 'model',
       desc: '',
       args: [],
     );
   }
 
-  /// `App aktiv lassen, heißt, das die App im wake mode ist und das Tracking aktiv ist. Wird bei kleiner 20% Akku deaktiviert.`
+  /// `App stays on while the app is open and tracking is active. Disables at 20% battery level. Leave switched on.`
   String get allowWakeLockHeader {
     return Intl.message(
-      'App aktiv lassen, heißt, das die App im wake mode ist und das Tracking aktiv ist. Wird bei kleiner 20% Akku deaktiviert.',
+      'App stays on while the app is open and tracking is active. Disables at 20% battery level. Leave switched on.',
       name: 'allowWakeLockHeader',
       desc: '',
       args: [],
     );
   }
 
-  /// `App im Vordergrund aktiv lassen?`
+  /// `Leave app waked up?`
   String get allowWakeLock {
     return Intl.message(
-      'App im Vordergrund aktiv lassen?',
+      'Leave app waked up?',
       name: 'allowWakeLock',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sondereinstellungen - nur nach Rücksprache ändern!`
+  /// `Special functions - change only when you know what you do!`
   String get specialfunction {
     return Intl.message(
-      'Sondereinstellungen - nur nach Rücksprache ändern!',
+      'Special functions - change only when you know what you do!',
       name: 'specialfunction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Icongröße: `
+  /// `Icon size: `
   String get setIconSize {
     return Intl.message(
-      'Icongröße: ',
+      'Icon size: ',
       name: 'setIconSize',
       desc: '',
       args: [],
     );
   }
 
-  /// `Eigene Icongröße sowie die von Freunden, Zuganfang und -ende auf der Karte anpassen`
+  /// `Set size of me, friend and procession icons on the map`
   String get setIconSizeTitle {
     return Intl.message(
-      'Eigene Icongröße sowie die von Freunden, Zuganfang und -ende auf der Karte anpassen',
+      'Set size of me, friend and procession icons on the map',
       name: 'setIconSizeTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nutze Openstreetmap`
+  /// `Use Openstreetmap`
   String get openStreetMapText {
     return Intl.message(
-      'Nutze Openstreetmap',
+      'Use Openstreetmap',
       name: 'openStreetMapText',
       desc: '',
       args: [],
     );
   }
 
-  /// `Openstreetmap Kartenteile laden / Neustart erforderlich`
+  /// `load Openstreetmap  / App restart necessary`
   String get openStreetMap {
     return Intl.message(
-      'Openstreetmap Kartenteile laden / Neustart erforderlich',
+      'load Openstreetmap  / App restart necessary',
       name: 'openStreetMap',
       desc: '',
       args: [],
     );
   }
 
-  /// `Daten könnten nicht aktuell sein.`
+  /// `Data could be outdated.`
   String get dataCouldBeOutdated {
     return Intl.message(
-      'Daten könnten nicht aktuell sein.',
+      'Data could be outdated.',
       name: 'dataCouldBeOutdated',
       desc: '',
       args: [],
     );
   }
 
-  /// `Keine Standortfreigabe, Bitte Einstellungen des Gerätes prüfen`
+  /// `No location permission, please check device settings`
   String get noLocationPermitted {
     return Intl.message(
-      'Keine Standortfreigabe, Bitte Einstellungen des Gerätes prüfen',
+      'No location permission, please check device settings',
       name: 'noLocationPermitted',
       desc: '',
       args: [],
     );
   }
 
-  /// `Usertracking exportieren`
+  /// `Export user tracking`
   String get exportUserTracking {
     return Intl.message(
-      'Usertracking exportieren',
+      'Export user tracking',
       name: 'exportUserTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Das aktuell sichtbare gefahrene Routenlinie als GPX exportieren`
+  /// `Export recorded location data (visible track on map) as GPX`
   String get exportUserTrackingHeader {
     return Intl.message(
-      'Das aktuell sichtbare gefahrene Routenlinie als GPX exportieren',
+      'Export recorded location data (visible track on map) as GPX',
       name: 'exportUserTrackingHeader',
       desc: '',
       args: [],
     );
   }
 
-  /// `Setze Strecke`
+  /// `Set Route`
   String get setRoute {
     return Intl.message(
-      'Setze Strecke',
+      'Set Route',
       name: 'setRoute',
       desc: '',
       args: [],
     );
   }
 
-  /// `Anfrage gesendet - Dauert ca. 30s.`
+  /// `Request sent - change need about 30 secs.`
   String get sendData30sec {
     return Intl.message(
-      'Anfrage gesendet - Dauert ca. 30s.',
+      'Request sent - change need about 30 secs.',
       name: 'sendData30sec',
       desc: '',
       args: [],
     );
   }
 
-  /// `Keine Auswahl da keine Aktion`
+  /// `No choice, no action`
   String get noChoiceNoAction {
     return Intl.message(
-      'Keine Auswahl da keine Aktion',
+      'No choice, no action',
       name: 'noChoiceNoAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Autostopp Tracking, da die BladeNight Veranstaltung beendet ist. (Lange drücken auf ▶️ deaktiviert Autostopp)`
+  /// `Automatic tracking stop, because this BladeNight event is finished. (Press long on ▶️ to deactivate Automatic tracking stop)`
   String get finishStopTrackingEventOver {
     return Intl.message(
-      'Autostopp Tracking, da die BladeNight Veranstaltung beendet ist. (Lange drücken auf ▶️ deaktiviert Autostopp)',
+      'Automatic tracking stop, because this BladeNight event is finished. (Press long on ▶️ to deactivate Automatic tracking stop)',
       name: 'finishStopTrackingEventOver',
       desc: '',
       args: [],
     );
   }
 
-  /// `Empfange Bladeguard Infos`
-  String get receiveBladeGuardInfos {
-    return Intl.message(
-      'Empfange Bladeguard Infos',
-      name: 'receiveBladeGuardInfos',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Ich bin aktiver Bladeguard und möchte Infos erhalten. Passwort bitte beim Teamleiter oder Skatemunich mit Teamnummer erfragen (anonym d.h. Es werden keine Daten verknüpft)`
+  /// `I am an active bladeguard and would like to receive info. Please ask the team leader or Skatemunich with team number for password (anonymous - i.e. no personal data like email etc. will be linked).`
   String get iAmBladeGuardTitle {
     return Intl.message(
-      'Ich bin aktiver Bladeguard und möchte Infos erhalten. Passwort bitte beim Teamleiter oder Skatemunich mit Teamnummer erfragen (anonym d.h. Es werden keine Daten verknüpft)',
+      'I am an active bladeguard and would like to receive info. Please ask the team leader or Skatemunich with team number for password (anonymous - i.e. no personal data like email etc. will be linked).',
       name: 'iAmBladeGuardTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ich bin Bladeguard`
+  /// `I am a Bladeguard`
   String get iAmBladeGuard {
     return Intl.message(
-      'Ich bin Bladeguard',
+      'I am a Bladeguard',
       name: 'iAmBladeGuard',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bladeguard--Teilnahme-Abfrage per Push-Mitteilung durchführen?`
+  /// `Bladeguard-participate via push-message?`
   String get pushMessageParticipateAsBladeGuardTitle {
     return Intl.message(
-      'Bladeguard--Teilnahme-Abfrage per Push-Mitteilung durchführen?',
+      'Bladeguard-participate via push-message?',
       name: 'pushMessageParticipateAsBladeGuardTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bladeguard-Abfrage Push`
+  /// `Participate push req.`
   String get pushMessageParticipateAsBladeGuard {
     return Intl.message(
-      'Bladeguard-Abfrage Push',
+      'Participate push req.',
       name: 'pushMessageParticipateAsBladeGuard',
       desc: '',
       args: [],
     );
   }
 
-  /// `Infos von SkateMunich per Push über Veranstaltungen empfangen?`
+  /// `Receive SkateMunich infos via push message about events?`
   String get pushMessageSkateMunichInfosTitle {
     return Intl.message(
-      'Infos von SkateMunich per Push über Veranstaltungen empfangen?',
+      'Receive SkateMunich infos via push message about events?',
       name: 'pushMessageSkateMunichInfosTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Skatemunich Infos`
+  /// `Get Skatemunich Infos`
   String get pushMessageSkateMunichInfos {
     return Intl.message(
-      'Skatemunich Infos',
+      'Get Skatemunich Infos',
       name: 'pushMessageSkateMunichInfos',
       desc: '',
       args: [],
     );
   }
 
-  /// `Markiere meine Position als Zugkopf`
+  /// `Mark me as head of procession`
   String get markMeAsHead {
     return Intl.message(
-      'Markiere meine Position als Zugkopf',
+      'Mark me as head of procession',
       name: 'markMeAsHead',
       desc: '',
       args: [],
     );
   }
 
-  /// `Markiere meine Position als Zugende`
+  /// `Mark me as tail of procession`
   String get markMeAsTail {
     return Intl.message(
-      'Markiere meine Position als Zugende',
+      'Mark me as tail of procession',
       name: 'markMeAsTail',
       desc: '',
       args: [],
@@ -3238,130 +3218,140 @@ class Localize {
     );
   }
 
-  /// `App-Id `
+  /// `App-Id`
   String get appId {
     return Intl.message(
-      'App-Id ',
+      'App-Id',
       name: 'appId',
       desc: '',
       args: [],
     );
   }
 
-  /// `App-Id `
+  /// `Push-Message-Id`
+  String get OneSignalId {
+    return Intl.message(
+      'Push-Message-Id',
+      name: 'OneSignalId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unique application identification string`
   String get appIdTitle {
     return Intl.message(
-      'App-Id ',
+      'Unique application identification string',
       name: 'appIdTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `App zwischen Hell- und Dunkelmodus unabhängig der Systemeinstellungen ändern.`
+  /// `Switch between light- and dark-mode independent of OS-setting.`
   String get setDarkModeTitle {
     return Intl.message(
-      'App zwischen Hell- und Dunkelmodus unabhängig der Systemeinstellungen ändern.',
+      'Switch between light- and dark-mode independent of OS-setting.',
       name: 'setDarkModeTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dunkelmodus aktivieren`
+  /// `Activate Dark Mode`
   String get setDarkMode {
     return Intl.message(
-      'Dunkelmodus aktivieren',
+      'Activate Dark Mode',
       name: 'setDarkMode',
       desc: '',
       args: [],
     );
   }
 
-  /// `seit`
+  /// `since`
   String get since {
     return Intl.message(
-      'seit',
+      'since',
       name: 'since',
       desc: '',
       args: [],
     );
   }
 
-  /// `Welches Team bist du?`
+  /// `Choose your team!`
   String get setTeam {
     return Intl.message(
-      'Welches Team bist du?',
+      'Choose your team!',
       name: 'setTeam',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bladeguard Team`
+  /// `Bladeguard team`
   String get bgTeam {
     return Intl.message(
-      'Bladeguard Team',
+      'Bladeguard team',
       name: 'bgTeam',
       desc: '',
       args: [],
     );
   }
 
-  /// `Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht.`
+  /// `Some settings are not available because there is no internet connection`
   String get someSettingsNotAvailableBecauseOffline {
     return Intl.message(
-      'Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht.',
+      'Some settings are not available because there is no internet connection',
       name: 'someSettingsNotAvailableBecauseOffline',
       desc: '',
       args: [],
     );
   }
 
-  /// `Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die Bladenight stattfindet empfangen werden. Empfohlene Einstellung 'Ein'.`
+  /// `Enable Onesignal Push Notifications. Herewith general information can be received via push notification e.g. if the bladenight takes place. Recommended setting is 'On'`
   String get enableOnesignalPushMessageTitle {
     return Intl.message(
-      'Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die Bladenight stattfindet empfangen werden. Empfohlene Einstellung \'Ein\'.',
+      'Enable Onesignal Push Notifications. Herewith general information can be received via push notification e.g. if the bladenight takes place. Recommended setting is \'On\'',
       name: 'enableOnesignalPushMessageTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Push Mitteilung aktiv`
+  /// `Push message active`
   String get enableOnesignalPushMessage {
     return Intl.message(
-      'Push Mitteilung aktiv',
+      'Push message active',
       name: 'enableOnesignalPushMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang`
+  /// `Use alternative location driver in case of problems with GPS data`
   String get alternativeLocationProviderTitle {
     return Intl.message(
-      'Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang',
+      'Use alternative location driver in case of problems with GPS data',
       name: 'alternativeLocationProviderTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nutze Alternative`
+  /// `Use alternative driver`
   String get alternativeLocationProvider {
     return Intl.message(
-      'Nutze Alternative',
+      'Use alternative driver',
       name: 'alternativeLocationProvider',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben.`
+  /// `This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages.`
   String get oneSignalIdTitle {
     return Intl.message(
-      'Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben.',
+      'This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages.',
       name: 'oneSignalIdTitle',
       desc: '',
       args: [],
@@ -3378,21 +3368,101 @@ class Localize {
     );
   }
 
-  /// `Startpunkt`
+  /// `Where is the start?`
   String get startPointTitle {
     return Intl.message(
-      'Startpunkt',
+      'Where is the start?',
       name: 'startPointTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Neustart erforderlich! Bitte App schließen und neu öffnen !!!`
+  /// `Restart required! Please close app and reopen !!!`
   String get restartRequired {
     return Intl.message(
-      'Neustart erforderlich! Bitte App schließen und neu öffnen !!!',
+      'Restart required! Please close app and reopen !!!',
       name: 'restartRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send logger data for support oder feature purposes`
+  String get exportLogData {
+    return Intl.message(
+      'Send logger data for support oder feature purposes',
+      name: 'exportLogData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Message`
+  String get message {
+    return Intl.message(
+      'Message',
+      name: 'message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Messages`
+  String get messages {
+    return Intl.message(
+      'Messages',
+      name: 'messages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Message`
+  String get deleteMessage {
+    return Intl.message(
+      'Delete Message',
+      name: 'deleteMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unread`
+  String get unreadMessage {
+    return Intl.message(
+      'Unread',
+      name: 'unreadMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read`
+  String get readMessage {
+    return Intl.message(
+      'Read',
+      name: 'readMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear messages`
+  String get clearMessagesTitle {
+    return Intl.message(
+      'Clear messages',
+      name: 'clearMessagesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear all messages really?`
+  String get clearMessages {
+    return Intl.message(
+      'Clear all messages really?',
+      name: 'clearMessages',
       desc: '',
       args: [],
     );
@@ -3404,8 +3474,9 @@ class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'de'),
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'de'),
+      Locale.fromSubtags(languageCode: 'fr'),
     ];
   }
 

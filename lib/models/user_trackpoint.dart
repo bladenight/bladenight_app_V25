@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:intl/intl.dart';
 
@@ -43,8 +45,12 @@ class UserTrackPoints with UserTrackPointsMappable {
         '<trk>\n'
         '\t<name>Bladenight Aufzeichnung vom ${DateTime.now().toIso8601String()}</name>\n'
         '\t\t<trkseg>\n';
+    var len = utps.length;
+    var count = 0;
     for (var tp in utps) {
       str = '$str${tp.toXML()}';
+      count++;
+     // sendPort.send(100 * count / len);
     }
     str = '$str\t\t</trkseg>\n'
         '\t</trk>\n'

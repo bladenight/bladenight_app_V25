@@ -3,12 +3,9 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
@@ -23,6 +20,7 @@ import '../../helpers/background_location_helper.dart';
 import '../../helpers/distance_converter.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/location_permission_dialogs.dart';
+import '../../helpers/logger.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../helpers/speed_to_color.dart';
 import '../../helpers/timeconverter_helper.dart';
@@ -93,13 +91,11 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       resumeUpdates(force: true);
       LocationProvider.instance.setToBackground(false);
-      if (!kIsWeb) {
-        FLog.trace(
-          className: toString(),
-          methodName: 'didChangeAppLifecycleState',
-          text: 'resume updates calling',
-        );
-      }
+      FLog.trace(
+        className: toString(),
+        methodName: 'didChangeAppLifecycleState',
+        text: 'resume updates calling',
+      );
     } else if (state == AppLifecycleState.paused) {
       LocationProvider.instance.setToBackground(true);
       if (!kIsWeb) {
@@ -133,8 +129,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
           _webStartedTrainFollow = true;
         }
 
-          ref.read(locationProvider).refreshRealtimeData();
-
+        ref.read(locationProvider).refreshRealtimeData();
       },
     );
   }
@@ -553,9 +548,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                             );
                           }
                           return CircleAvatar(
-                            backgroundColor: ref
-                                .watch(MeColor.provider)
-                                .withOpacity(0.6),
+                            backgroundColor:
+                                ref.watch(MeColor.provider).withOpacity(0.6),
                             child: locationUpdate.userIsParticipant
                                 ? const ImageIcon(AssetImage(
                                     'assets/images/skaterIcon_256.png'))
@@ -657,7 +651,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     ),
                   );
                 } else if (lp.gpsLocationPermissionsStatus ==
-                    LocationPermissionStatus.denied && HiveSettingsDB.useAlternativeLocationProvider == false) {
+                        LocationPermissionStatus.denied &&
+                    HiveSettingsDB.useAlternativeLocationProvider == false) {
                   return FloatingActionButton.extended(
                     onPressed: () async {
                       FlutterPlatformAlert.showAlert(
@@ -689,8 +684,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               child: Builder(builder: (context) {
                 var isTracking = ref.watch(isTrackingProvider);
                 var autoStop = ref.watch(isAutoStopProvider);
-                var userParticipating =
-                    ref.watch(isUserParticipatingProvider);
+                var userParticipating = ref.watch(isUserParticipatingProvider);
                 //for future implementations - if (isActive == EventStatus.confirmed) {
                 return GestureDetector(
                   onLongPress: () async {
@@ -815,8 +809,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               return FloatingActionButton(
                 onPressed: () {
                   setState(() {
-                    MapSettings.setMapMenuVisible(
-                        !MapSettings.mapMenuVisible);
+                    MapSettings.setMapMenuVisible(!MapSettings.mapMenuVisible);
                   });
                 },
                 heroTag: 'showMenuTag',
@@ -1063,7 +1056,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       if (odometerResetResult == CustomButton.positiveButton) {
         await lp.resetTrackPoints();
         setState(() {});
-
       }
     }
   }

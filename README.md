@@ -129,8 +129,9 @@ Known issues
     ```bash 
     flutter clean
     flutter pub get
-    flutter packages pub run build_runner build --delete-conflicting-outputs
+    dart run build_runner build --delete-conflicting-outputs
     ```
+    
 ### Error (Xcode): unable to resolve product type 'com.apple.product-type.application.watchapp2' for platform 'iphonesimulator'</br>
   * Error (Xcode): Couldn't look up product type 'com.apple.product-type.watchkit2-extension' in domain 'iphonesimulator': Couldn't load spec with identifier 'com.apple.product-type.watchkit2-extension' in domain 'iphonesimulator' when run in DebugMode  
     Add following two lines to Watchkit Extension \

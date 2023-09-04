@@ -2,25 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../helpers/device_info_helper.dart';
 import '../helpers/deviceid_helper.dart';
-
-class AppVersion {
-  AppVersion(this.appName, this.packageName, this.version, this.buildNumber);
-
-  final String appName;
-  final String packageName;
-  final String version;
-  final String buildNumber;
-}
+import '../models/app_version.dart';
 
 final versionProvider = FutureProvider((ref) async {
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-  var appName = packageInfo.appName;
-  var packageName = packageInfo.packageName;
-  var version = packageInfo.version;
-  var buildNumber = packageInfo.buildNumber;
-  return AppVersion(appName, packageName, version, buildNumber);
+  return  await DeviceHelper.getAppVersionsData();
 });
 
 final appIdProvider = FutureProvider((ref) async {
@@ -28,7 +15,7 @@ final appIdProvider = FutureProvider((ref) async {
 });
 
 final oneSignalIdProvider = FutureProvider((ref) async {
-  final status = await OneSignal.shared.getDeviceState();
-  final String osUserID = status?.userId ?? '-';
+  final status =  OneSignal.User.pushSubscription;
+  final String osUserID = status.id ?? '';
   return osUserID;
 });

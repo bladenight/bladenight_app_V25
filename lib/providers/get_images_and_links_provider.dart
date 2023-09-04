@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app_settings/app_configuration_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger.dart';
 import '../models/image_and_link.dart';
 import '../models/images_and_links.dart';
 import 'images_and_links/bladeguard_link_image_and_link_provider.dart';
@@ -29,7 +29,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
   } else {
     ial = await ImageAndLinkList.getImagesAndLinks();
     if (ial.imagesAndLinks == null || ial.rpcException != null) {
-      if (!kIsWeb) FLog.warning(text: 'Error retrieving ${ial.rpcException}');
+      FLog.warning(text: 'Error retrieving ${ial.rpcException}');
       return false;
     }
     resultValue = true;
@@ -87,6 +87,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
             }
           }
         }
+
         ///Image contains subdomains for osm link
         if (ial.image != null && ial.image!.isNotEmpty) {
           MapSettings.setMapLinkSubdomains(ial.image!.trim());

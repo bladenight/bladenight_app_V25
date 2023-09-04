@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +22,7 @@ import '../helpers/deviceid_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
+import '../helpers/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/toast_notification.dart';
 import '../helpers/preferences_helper.dart';
@@ -253,7 +253,8 @@ class LocationProvider with ChangeNotifier {
           preventSuspend: true,
           stopOnTerminate: true,
           startOnBoot: false,
-          logLevel:  bgLogLevel,//bg.Config.LOG_LEVEL_VERBOSE,//
+          logLevel: bgLogLevel,
+          //bg.Config.LOG_LEVEL_VERBOSE,//
           locationUpdateInterval: 1000,
           stopTimeout: 1000,
           // <-- a very long stopTimeout
@@ -387,8 +388,11 @@ class LocationProvider with ChangeNotifier {
             _userTrackingPoints[counter].longitude));
         counter = counter + divider.toInt();
       }
-      smallTrackPointList.add(LatLng(_userTrackingPoints.last.latitude,
-          _userTrackingPoints.last.longitude));
+      //avoid jumping of tracking if list is large
+      var last5 = _userTrackingPoints.reversed.take(maxSize ~/10);
+      for (var last in last5) {
+        smallTrackPointList.add(LatLng(last.latitude, last.longitude));
+      }
       _userLatLongs = smallTrackPointList;
     } else {
       _userLatLongs.add(userLatLng);
@@ -773,8 +777,8 @@ class LocationProvider with ChangeNotifier {
       if (HiveSettingsDB.useAlternativeLocationProvider) {
         return _lastKnownPoint;
         //getLocation ignored if location is running
-      } else  {
-        if (Platform.isAndroid){
+      } else {
+        if (Platform.isAndroid) {
           return _lastKnownPoint;
         }
         newLocation = await bg.BackgroundGeolocation.getCurrentPosition(
@@ -786,20 +790,18 @@ class LocationProvider with ChangeNotifier {
         _lastKnownPoint = newLocation;
       }
     } catch (e) {
-      if (!kIsWeb) {
-        FLog.warning(
-            className: toString(),
-            methodName: '_subToUpdates',
-            text: '_subUpdates Failed:',
-            exception: e);
-      }
-    }
-    if (!kIsWeb) {
-      FLog.trace(
+      FLog.warning(
           className: toString(),
           methodName: '_subToUpdates',
-          text: '_subUpdates Failed:');
+          text: '_subUpdates Failed:',
+          exception: e);
     }
+
+    FLog.trace(
+        className: toString(),
+        methodName: '_subToUpdates',
+        text: '_subUpdates Failed:');
+
     if (_lastKnownPoint != null) {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp);
       var diff = DateTime.now().toUtc().difference(ts.toUtc());
@@ -879,9 +881,6 @@ class LocationProvider with ChangeNotifier {
       if (friendList != null) {
         var friends = friendList.where((x) => x.specialValue == 0).toList();
         var friendListAsJson = MapperContainer.globals.toJson(friends);
-        if (kDebugMode) {
-          print('lp_send Friends to watch $friendListAsJson');
-        }
         SendToWatch.updateFriends(friendListAsJson);
       }
     }

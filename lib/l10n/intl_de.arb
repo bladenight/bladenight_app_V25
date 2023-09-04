@@ -409,8 +409,16 @@
   "enableOnesignalPushMessage": "Push Mitteilung aktiv",
   "alternativeLocationProviderTitle": "Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang",
   "alternativeLocationProvider": "Nutze Alternative",
-  "oneSignalIdTitle" : "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Sie Probleme beim Empfang von Push-Nachrichten haben.",
+  "oneSignalIdTitle" : "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Du Probleme beim Empfang von Push-Nachrichten haben.",
   "oneSignalId" : "OneSignal-Id: ",
   "startPointTitle": "Startpunkt",
-  "restartRequired" : "Neustart erforderlich! Bitte App schließen und neu öffnen !!!"
+  "restartRequired" : "Neustart erforderlich! Bitte App schließen und neu öffnen !!!",
+  "exportLogData": "Sende Logdaten für Support oder Featureanfrage",
+  "message": "Nachricht",
+  "messages": "Nachrichten",
+  "deleteMessage": "Nachricht löschen",
+  "unread": "Ungelesen",
+  "read": "Gelesen",
+  "clearMessagesTitle": "Nachrichten löschen",
+  "clearMessages": "Wirklich alle Nachrichten löschen?"
 }

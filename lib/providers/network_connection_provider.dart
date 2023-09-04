@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:universal_io/io.dart';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../helpers/logger.dart';
 import '../wamp/wamp_v2.dart';
 
 enum ConnectivityStatus { unknown, online, offline, error, serverNotReachable }
@@ -19,8 +19,6 @@ class NetworkStateModel {
 }
 
 class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
-
-
   static const _initialNetworkState = NetworkStateModel(
       connectivityStatus: ConnectivityStatus.online, serverAvailable: true);
 
@@ -34,7 +32,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   StreamSubscription? _icCheckerSubscription;
 
   final StreamController<InternetConnectionStatus> _currentState =
-  StreamController.broadcast();
+      StreamController.broadcast();
 
   Stream<InternetConnectionStatus> get updates => _currentState.stream;
 
@@ -77,10 +75,10 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     } on SocketException catch (e) {
       if (!kIsWeb) {
         FLog.error(
-          text:
-              'Error on NetworkConnection ${e.message},${e.address},${e.osError}',
-          methodName: '_checkStatus',
-          className: toString());
+            text:
+                'Error on NetworkConnection ${e.message},${e.address},${e.osError}',
+            methodName: '_checkStatus',
+            className: toString());
       }
       isOnline = false;
     }
@@ -108,7 +106,6 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
         connectivityStatus: state.connectivityStatus, serverAvailable: value);
   }
 }
-
 
 final networkAwareProvider =
     StateNotifierProvider<NetworkDetectorNotifier, NetworkStateModel>(

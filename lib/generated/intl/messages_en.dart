@@ -49,6 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "OneSignalId": MessageLookupByLibrary.simpleMessage("Push-Message-Id"),
         "about_appinfo": MessageLookupByLibrary.simpleMessage(
             "The app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live\",\nThe app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live"),
         "about_appprivacy": MessageLookupByLibrary.simpleMessage(
@@ -165,6 +166,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Clear logs really?"),
         "clearLogsTitle": MessageLookupByLibrary.simpleMessage(
             "Logdata will be deleted permanently!"),
+        "clearMessages":
+            MessageLookupByLibrary.simpleMessage("Clear all messages really?"),
+        "clearMessagesTitle":
+            MessageLookupByLibrary.simpleMessage("Clear messages"),
         "closeApp": MessageLookupByLibrary.simpleMessage("Close app really?"),
         "codecontainsonlydigits": MessageLookupByLibrary.simpleMessage(
             "Error, code contains only numbers"),
@@ -181,6 +186,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dateTimeIntl": m2,
         "dateTimeSecIntl": m3,
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "deleteMessage": MessageLookupByLibrary.simpleMessage("Delete Message"),
         "deletefriend": MessageLookupByLibrary.simpleMessage("Remove friend"),
         "deny": MessageLookupByLibrary.simpleMessage("Deny"),
         "distance": MessageLookupByLibrary.simpleMessage("distance"),
@@ -215,6 +221,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "entername": MessageLookupByLibrary.simpleMessage("Enter Name"),
         "events": MessageLookupByLibrary.simpleMessage("Events"),
         "export": MessageLookupByLibrary.simpleMessage("Export"),
+        "exportLogData": MessageLookupByLibrary.simpleMessage(
+            "Send logger data for support oder feature purposes"),
         "exportUserTracking":
             MessageLookupByLibrary.simpleMessage("Export user tracking"),
         "exportUserTrackingHeader": MessageLookupByLibrary.simpleMessage(
@@ -321,6 +329,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "markMeAsTail": MessageLookupByLibrary.simpleMessage(
             "Mark me as tail of procession"),
         "me": MessageLookupByLibrary.simpleMessage("Me"),
+        "message": MessageLookupByLibrary.simpleMessage("Message"),
+        "messages": MessageLookupByLibrary.simpleMessage("Messages"),
         "metersOnRoute": MessageLookupByLibrary.simpleMessage("Driven route"),
         "model": MessageLookupByLibrary.simpleMessage("Model"),
         "mustentername":
@@ -425,6 +435,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Receive SkateMunich infos via push message about events?"),
         "qrcoderouteinfoheader": MessageLookupByLibrary.simpleMessage(
             "QRCode to show event info without app in browser"),
+        "readMessage": MessageLookupByLibrary.simpleMessage("Read"),
         "received": MessageLookupByLibrary.simpleMessage("received"),
         "reload": MessageLookupByLibrary.simpleMessage("Reload"),
         "reltime": MessageLookupByLibrary.simpleMessage("rel. timediff."),
@@ -566,6 +577,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "understand": MessageLookupByLibrary.simpleMessage("Understood"),
         "unknown": MessageLookupByLibrary.simpleMessage("unknown"),
         "unknownerror": MessageLookupByLibrary.simpleMessage("unknown error"),
+        "unreadMessage": MessageLookupByLibrary.simpleMessage("Unread"),
         "userSpeed":
             MessageLookupByLibrary.simpleMessage("This is my GPS-speed."),
         "validatefriend":

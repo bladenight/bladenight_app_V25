@@ -19,11 +19,6 @@ class AboutPage extends StatefulWidget {
   }
 }
 
-String appName = '';
-String packageName = '';
-String version = '';
-String buildNumber = '';
-
 class _AboutPageState extends State<AboutPage> {
   @override
   void initState() {

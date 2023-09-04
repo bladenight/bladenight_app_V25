@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:universal_io/io.dart';
@@ -12,6 +11,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/server_connections.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../models/shake_hand_result.dart';
 import '../providers/active_event_notifier_provider.dart';
@@ -39,17 +39,11 @@ class Wamp_V2 {
   var streamController = StreamController<BnWampMessage>();
 
   Wamp_V2._() {
-
     _init();
   }
 
   void _init() async {
-    if (!kIsWeb) {
-      FLog.info(
-          text: 'Wamp Init',
-          methodName: '_init',
-          className: toString());
-    }
+    FLog.info(text: 'Wamp Init', methodName: '_init', className: toString());
     runner();
   }
 

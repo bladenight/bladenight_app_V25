@@ -1,6 +1,6 @@
+import 'dart:isolate';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:f_logs/f_logs.dart';
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ import '../generated/l10n.dart';
 import '../helpers/background_location_helper.dart';
 import '../helpers/export_import_data_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/logger_helper.dart';
+import '../helpers/logger.dart';
 import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/notification/toast_notification.dart';
 import '../pages/widgets/app_id_widget.dart';
@@ -39,10 +39,33 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _receivePort.listen((dynamic message) {
+        setState(() {
+          _exportUserTrackingProgress = message;
+          if (message >= 100) {
+            _exportTrackingInProgress = true;
+          } else {
+            _exportTrackingInProgress = false;
+          }
+        });
+      });
+    });
+  }
+
   var inputText = '';
   var _iconSize = HiveSettingsDB.iconSizeValue;
   bool _openInvisibleSettings = false;
+  bool _exportLogInProgress = false;
+  bool _exportTrackingInProgress = false;
+  var _exportUserTrackingProgress = 0.0;
+  bool _showPushProgressIndicator = false;
   final _textController = TextEditingController();
+
+  final ReceivePort _receivePort = ReceivePort();
 
   @override
   Widget build(BuildContext context) {
@@ -216,15 +239,27 @@ class _SettingsPageState extends State<SettingsPage> {
                       ]),
                 if (!kIsWeb)
                   CupertinoFormSection(
-                      header:
-                          Text(Localize.of(context).exportUserTrackingHeader),
-                      children: <Widget>[
-                        CupertinoButton(
-                            child:
-                                Text(Localize.of(context).exportUserTracking),
-                            onPressed: () => exportUserTracking(
-                                LocationProvider.instance.userTrackingPoints)),
-                      ]),
+                    header: Text(Localize.of(context).exportUserTrackingHeader),
+                    children: <Widget>[
+                      CupertinoButton(
+                          child: _exportTrackingInProgress
+                              ? const CircularProgressIndicator()
+                              : Text(Localize.of(context).exportUserTracking),
+                          onPressed: () async {
+                            if (_exportTrackingInProgress) return;
+                            setState(() {
+                              _exportTrackingInProgress = true;
+                            });
+                            await compute(exportUserTracking,
+                              LocationProvider.instance.userTrackingPoints,
+                            ).then((value) =>
+                                shareExportedTrackingData(value));
+                            _exportTrackingInProgress = false;
+
+                            setState(() {});
+                          }),
+                    ],
+                  ),
                 if (!kIsWeb)
                   CupertinoFormSection(
                       header: Text(Localize.of(context).resetOdoMeter),
@@ -239,7 +274,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       ]),
                 settingsInvisibleOfflineWidget(context),
                 if (networkConnected.connectivityStatus ==
-                    ConnectivityStatus.online)
+                        ConnectivityStatus.online &&
+                    !kIsWeb)
                   CupertinoFormSection(
                     header: Text(
                         Localize.of(context).enableOnesignalPushMessageTitle),
@@ -250,22 +286,36 @@ class _SettingsPageState extends State<SettingsPage> {
                           descriptionLeft:
                               Localize.of(context).enableOnesignalPushMessage,
                           descriptionRight: '',
-                          rightWidget: CupertinoSwitch(
-                            onChanged: (val) async {
-                              HiveSettingsDB.setPushNotificationsEnabled(val);
-                              await OnesignalHandler.instance
-                                  .initPushNotifications();
-                              setState(() {});
-                            },
-                            value: HiveSettingsDB.pushNotificationsEnabled,
-                          ),
+                          rightWidget: _showPushProgressIndicator
+                              ? const CircularProgressIndicator()
+                              : CupertinoSwitch(
+                                  onChanged: (val) async {
+                                    HiveSettingsDB.setPushNotificationsEnabled(
+                                        val);
+                                    setState(() {
+                                      _showPushProgressIndicator = true;
+                                    });
+                                    await OnesignalHandler
+                                            .setOneSignalChannels()
+                                        .timeout(const Duration(seconds: 20))
+                                        .catchError((error) {
+                                      FLog.error(
+                                          text: 'error deactivating Push');
+                                    });
+                                    _showPushProgressIndicator = false;
+                                    setState(() {});
+                                  },
+                                  value:
+                                      HiveSettingsDB.pushNotificationsEnabled,
+                                ),
                         ),
                       ),
                     ],
                   ),
                 if (networkConnected.connectivityStatus ==
                         ConnectivityStatus.online &&
-                    HiveSettingsDB.pushNotificationsEnabled)
+                    HiveSettingsDB.pushNotificationsEnabled &&
+                    !kIsWeb)
                   Column(
                     children: [
                       const OneSignalIdWidget(),
@@ -362,7 +412,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                           ],
                         ),
-                      if (HiveSettingsDB.isBladeGuard &&
+                      if (!kIsWeb &&
+                          HiveSettingsDB.isBladeGuard &&
                           (HiveSettingsDB.bgSettingVisible ||
                               HiveSettingsDB.bgLeaderSettingVisible ||
                               Globals.adminPass != null))
@@ -396,7 +447,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       const SizedBox(
                         height: 15,
                       ),
-                      if (HiveSettingsDB.bgLeaderSettingVisible ||
+                      if (!kIsWeb && HiveSettingsDB.bgLeaderSettingVisible ||
                           Globals.adminPass != null)
                         CupertinoFormSection(
                           header: Text(Localize.of(context).markMeAsHead),
@@ -422,7 +473,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                           ],
                         ),
-                      if (HiveSettingsDB.bgLeaderSettingVisible ||
+                      if (!kIsWeb && HiveSettingsDB.bgLeaderSettingVisible ||
                           Globals.adminPass != null)
                         CupertinoFormSection(
                           header: Text(Localize.of(context).markMeAsTail),
@@ -497,10 +548,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(
                     height: 15,
                   ),
-
-                const SizedBox(
-                  height: 5,
-                ),
                 GestureDetector(
                   onDoubleTap: () {
                     if (kIsWeb) return;
@@ -518,6 +565,26 @@ class _SettingsPageState extends State<SettingsPage> {
                     children: [
                       const AppIdWidget(),
                       const SizedBox(height: 5),
+                      CupertinoFormSection(
+                        header: Text(Localize.of(context).exportLogData),
+                        children: <Widget>[
+                          _exportLogInProgress
+                              ? const CircularProgressIndicator()
+                              : CupertinoButton(
+                                  child: Text(
+                                      Localize.of(context).setExportLogSupport),
+                                  onPressed: () async {
+                                    if (_exportLogInProgress) return;
+                                    setState(() {
+                                      _exportLogInProgress = true;
+                                    });
+                                    await exportLogs();
+                                    setState(() {
+                                      _exportLogInProgress = false;
+                                    });
+                                  }),
+                        ],
+                      ),
                       Visibility(
                         visible: _openInvisibleSettings,
                         child: Column(
@@ -527,16 +594,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                 children: <Widget>[
                                   CupertinoButton(
                                       child: Text(
-                                          'Loglevel ${LoggerHelper().getActiveLogLevel().name}'),
+                                          'Loglevel ${FLog.getActiveLogLevel().name}'),
                                       onPressed: () async {
-                                        await LoggerHelper()
-                                            .showLogLevelDialog(context);
+                                        await FLog.showLogLevelDialog(context);
                                         setState(() {});
                                       }),
-                                  CupertinoButton(
-                                      child: Text(Localize.of(context)
-                                          .setExportLogSupport),
-                                      onPressed: () => exportLogs()),
                                   CupertinoButton(
                                       child: Text(
                                           Localize.of(context).setClearLogs),
@@ -562,7 +624,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                             true));
                                         if (clickedButton ==
                                             CustomButton.positiveButton) {
-                                          if (!kIsWeb) FLog.clearLogs();
+                                          FLog.clearLogs();
                                           showToast(
                                               message:
                                                   Localize.current.finished);
@@ -613,8 +675,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   ]),
                             const SizedBox(height: 10),
                             Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(0, 1, 0, 1),
+                              padding: const EdgeInsets.fromLTRB(0, 1, 0, 1),
                               child: Container(
                                 width: double.infinity,
                                 decoration: const BoxDecoration(

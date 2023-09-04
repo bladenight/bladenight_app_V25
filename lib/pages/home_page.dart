@@ -1,19 +1,22 @@
 //import 'dart:io' if (dart.library.html) 'dart.html' if (dart.library.io) 'dart.io';
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/device_info_helper.dart';
+import '../helpers/logger.dart';
 import '../helpers/notification/onesignal_handler.dart';
 import '../pages/widgets/event_info.dart';
 import '../pages/widgets/event_info_web.dart';
 import '../pages/widgets/intro_slider.dart';
 import '../providers/active_event_notifier_provider.dart';
+import '../providers/messages_provider.dart';
 import '../providers/route_providers.dart';
 import 'about_page.dart';
+import 'messages/messages_page.dart';
 import 'settings_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,8 +32,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    clearLog();
     if (!kIsWeb) {
-      clearLog();
       initOneSignal();
     }
   }
@@ -50,13 +53,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   ///Clean up log file and delete data's older than a week
   void clearLog() async {
-    if (!kIsWeb) return;
     try {
-      var date = DateTime.now().millisecondsSinceEpoch;
-      var weekBefore = date - 604800000;
-      var filters =
-          Filters.generateFilters(endTimeInMillis: weekBefore); //691200000);
-      await FLog.deleteAllLogsByFilter(filters: filters);
+      await FLog.cleanUpLogsByFilter(const Duration(days: 8));
     } catch (e) {
       FLog.warning(text: 'Error clearing logs');
     }
@@ -64,32 +62,30 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   void initOneSignal() async {
     if (kIsWeb) return;
+    await Future.delayed(const Duration(seconds: 3)); //delay and wait
     if (Platform.isIOS) {
       if (!kIsWeb) {
         FLog.info(
             text: ' iOS - init OneSignal PushNotifications permissions OK');
       }
-      await OnesignalHandler.instance.initPushNotifications();
+      await OnesignalHandler.initPushNotifications();
       return;
     }
     //workaround for android 8.1 Nexus
     if (Platform.isAndroid &&
         await DeviceHelper.isAndroidGreaterOrEqualVersion(9)) {
-      if (!kIsWeb) {
-        FLog.info(
-            text:
-                ' Android is greater than V9 OneSignal  PushNotifications permissions OK');
-      }
-      await OnesignalHandler.instance.initPushNotifications();
+      FLog.info(
+          text:
+              'Android is greater than V9 OneSignal  PushNotifications permissions OK');
+      await OnesignalHandler.initPushNotifications();
       return;
     }
-    if (!kIsWeb) {
-      FLog.info(text: 'Onesignal not available ${Platform.version}  ');
-    }
+    FLog.info(text: 'Onesignal not available ${Platform.version}');
   }
 
   @override
   Widget build(BuildContext context) {
+    var messageProvider = context.watch(messagesLogicProvider);
     return WillPopScope(
       onWillPop: () {
         var tabIndex = widget.tabController.index;
@@ -113,6 +109,27 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (messageProvider.messages.isNotEmpty)
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      minSize: 0,
+                      onPressed: () async {
+                        Navigator.of(context).push(
+                          CupertinoPageRoute(
+                            builder: (context) => const MessagesPage(),
+                            fullscreenDialog: false,
+                          ),
+                        );
+                      },
+                      child: Badge(
+                        label: Text(messageProvider.readMessages.toString()),
+                        child: const Icon(Icons.mark_email_unread),
+                      ),
+                    ),
+                    if (messageProvider.messages.isNotEmpty)
+                    const SizedBox(
+                      width: 10,
+                    ),
                     CupertinoButton(
                       padding: EdgeInsets.zero,
                       minSize: 0,
