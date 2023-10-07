@@ -74,7 +74,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                       ).toMap(),
                     );
                   } catch (e) {
-                    FLog.error(
+                    BnLog.error(
                         text: 'SetActiveStatusMessage failed', exception: e);
                   }
                   setState(() => _activityVisible = false);
@@ -128,7 +128,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                     );
                   } catch (e) {
                     if (!kIsWeb) {
-                      FLog.error(
+                      BnLog.error(
                           text: 'Error setroute',
                           className: toString(),
                           methodName: 'Adminpage Setroute');
@@ -143,7 +143,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   var routeRes = ref.read(currentRouteProvider);
                   var eventRes = ref.read(activeEventProvider);
                   if (!kIsWeb) {
-                    FLog.info(
+                    BnLog.info(
                         text: 'Admin set route $routeRes,event $eventRes');
                   }
                 } else {
@@ -172,7 +172,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                     ).toMap());
                   } catch (e) {
                     if (!kIsWeb) {
-                      FLog.error(
+                      BnLog.error(
                           text: 'Error KillServer',
                           className: toString(),
                           methodName: 'Adminpage KillServer');

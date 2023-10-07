@@ -115,7 +115,7 @@ Future<void> initFlutterChannel() async {
               .toggleProcessionTracking(userIsParticipant: true);
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'sendNavToggleToFlutter',
                 text: '$e');
@@ -131,7 +131,7 @@ Future<void> initFlutterChannel() async {
           ProviderContainer().read(locationProvider).refresh(forceUpdate: true);
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'getEventDataFromFlutter',
                 text: '$e');
@@ -145,7 +145,7 @@ Future<void> initFlutterChannel() async {
               LocationProvider.instance.isTracking);
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'getLocationIsTracking',
                 text: '$e');
@@ -158,7 +158,7 @@ Future<void> initFlutterChannel() async {
           LocationProvider.instance.refresh(forceUpdate: true);
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'getFriendsDataFromFlutter',
                 text: '$e');
@@ -175,7 +175,7 @@ Future<void> initFlutterChannel() async {
           }
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'getFriendsDataFromFlutter',
                 text: '$e');

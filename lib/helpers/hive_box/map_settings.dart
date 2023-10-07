@@ -109,7 +109,7 @@ extension MapSettings on HiveSettingsDB {
       );
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(text: 'LatLngBounds could not converted', exception: e);
+        BnLog.error(text: 'LatLngBounds could not converted', exception: e);
       }
     }
     return mapOnlineDefaultBoundaries;

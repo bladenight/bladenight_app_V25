@@ -81,7 +81,7 @@ void main() async {
         //FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }
 
-      FLog.error(
+      BnLog.error(
           className: 'main',
           methodName: 'runZonedGuarded',
           text: '$error\n$stackTrace');
@@ -91,8 +91,8 @@ void main() async {
 
 Future<bool> initLogger() async {
   try {
-    await FLog.init();
-    FLog.info(text: 'logger initialized');
+    await BnLog.init();
+    BnLog.info(text: 'logger initialized');
   } catch (e) {
     print(e);
     return false;

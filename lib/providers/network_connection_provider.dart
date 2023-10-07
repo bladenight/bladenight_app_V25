@@ -74,7 +74,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
           .hasConnection; //; await InternetAddress.lookup('skatemunich.de');
     } on SocketException catch (e) {
       if (!kIsWeb) {
-        FLog.error(
+        BnLog.error(
             text:
                 'Error on NetworkConnection ${e.message},${e.address},${e.osError}',
             methodName: '_checkStatus',

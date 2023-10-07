@@ -14,14 +14,14 @@ import 'logger/bn_log_output.dart';
 import 'logger/console_output.dart';
 import 'logger/log_printer.dart';
 
-class FLog {
-  static final FLog _instance = FLog._();
+class BnLog {
+  static final BnLog _instance = BnLog._();
   static Logger _logger = Logger();
   static bool _isInitialized = false;
   static final List<LogOutput> _logOutputs = [];
   static late Box<List<String>> _logBox;
 
-  FLog._(){
+  BnLog._(){
     if (_isInitialized == false){
       init();
     }
@@ -178,7 +178,7 @@ class FLog {
     for (var key in _logBox.keys) {
       await _logBox.delete(key);
     }
-    FLog.info(text: 'Cleared logs');
+    BnLog.info(text: 'Cleared logs');
     return Future(() => true);
   }
 
@@ -193,7 +193,7 @@ class FLog {
         await _logBox.delete(key);
       }
     }
-    FLog.info(text: 'Cleared logs before $leftDate');
+    BnLog.info(text: 'Cleared logs before $leftDate');
     return Future(() => true);
   }
 
@@ -242,9 +242,9 @@ class FLog {
               child: Text(Localize.of(context).save),
               onPressed: () {
                 if (logLevel != null) {
-                  FLog.setActiveLogLevel(logLevel!);
+                  BnLog.setActiveLogLevel(logLevel!);
                   if (!kIsWeb) {
-                    FLog.info(
+                    BnLog.info(
                       text: 'Loglevel changed to ${logLevel?.name}',
                     );
                   }

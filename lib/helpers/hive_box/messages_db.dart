@@ -45,7 +45,7 @@ class MessagesDb {
         _messagesDbBox!.put(message.uid, message.toJson());
       }
     } catch (e) {
-      FLog.error(text: 'Error saveMessages ${e.toString()}', exception: e);
+      BnLog.error(text: 'Error saveMessages ${e.toString()}', exception: e);
     }
   }
 
@@ -53,9 +53,9 @@ class MessagesDb {
     _messagesDbBox ??= await Hive.openBox(dbName);
     try {
       _messagesDbBox!.put(message.uid, message.toJson());
-      ProviderContainer().refresh(messagesProvider);
+
     } catch (e) {
-      FLog.error(text: 'Error addMessage ${e.toString()}', exception: e);
+      BnLog.error(text: 'Error addMessage ${e.toString()}', exception: e);
     }
   }
 
@@ -65,7 +65,7 @@ class MessagesDb {
       var messageCopy = message.copyWith(read: read);
       return _messagesDbBox!.put(message.uid, messageCopy.toJson());
     } catch (e) {
-      FLog.error(text: 'Error addMessage ${e.toString()}', exception: e);
+      BnLog.error(text: 'Error addMessage ${e.toString()}', exception: e);
     }
   }
 

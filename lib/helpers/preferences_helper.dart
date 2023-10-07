@@ -66,7 +66,7 @@ class PreferencesHelper {
   }
 
   static Future<ImageAndLinkList> getImagesAndLinksPref() async {
-    if (!kIsWeb) FLog.trace(text: 'Prefs get images and links');
+    if (!kIsWeb) BnLog.trace(text: 'Prefs get images and links');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       var val = prefs.getString(_imagesAndLinksPref);
@@ -80,7 +80,7 @@ class PreferencesHelper {
       return Future.value(links);
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(text: 'Error Prefs get images and links', exception: e);
+        BnLog.error(text: 'Error Prefs get images and links', exception: e);
       }
     }
     return ImageAndLinkList(<ImageAndLink>[]);
@@ -93,7 +93,7 @@ class PreferencesHelper {
       prefs.setString(_imagesAndLinksPref, prefString);
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(text: 'Error Prefs set images and links', exception: e);
+        BnLog.error(text: 'Error Prefs set images and links', exception: e);
       }
     }
   }

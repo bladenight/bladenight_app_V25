@@ -43,13 +43,13 @@ class Wamp_V2 {
   }
 
   void _init() async {
-    FLog.info(text: 'Wamp Init', methodName: '_init', className: toString());
+    BnLog.info(text: 'Wamp Init', methodName: '_init', className: toString());
     runner();
   }
 
   void refresh() {
     if (!kIsWeb) {
-      FLog.info(
+      BnLog.info(
           text: 'Wamp refresh after offline',
           methodName: 'refresh',
           className: toString());
@@ -93,7 +93,7 @@ class Wamp_V2 {
     if (_isConnecting == true) {
       await Future.delayed(const Duration(milliseconds: 500));
       if (!kIsWeb) {
-        FLog.trace(
+        BnLog.trace(
             text: 'is connecting',
             methodName: '_initWamp',
             className: toString());
@@ -132,7 +132,7 @@ class Wamp_V2 {
     if (_hadShakeHands == false) {
       _startShakeHands = true;
       if (!kIsWeb) {
-        FLog.debug(
+        BnLog.debug(
             text: 'shakeHands',
             methodName: 'shakeHands',
             className: toString());
@@ -143,7 +143,7 @@ class Wamp_V2 {
       if (shkRes.rpcException != null) {
         _startShakeHandsRetryCounter++;
         if (!kIsWeb) {
-          FLog.warning(
+          BnLog.warning(
               text: 'shakeHands failed',
               methodName: '_shakeHands',
               className: toString());
@@ -153,7 +153,7 @@ class Wamp_V2 {
           _shakeHands();
         } else {
           if (!kIsWeb) {
-            FLog.warning(
+            BnLog.warning(
                 text:
                     'shakeHands failed after 3 attempts ${shkRes.rpcException}',
                 methodName: '_shakeHands',
@@ -163,7 +163,7 @@ class Wamp_V2 {
         return;
       } else {
         if (!kIsWeb) {
-          FLog.info(
+          BnLog.info(
               text:
                   'shakeHands = ${shkRes.status}, minBuild:${shkRes.minBuild}',
               methodName: '_shakeHands',
@@ -188,7 +188,7 @@ class Wamp_V2 {
             return WampConnectionState.failed;
           });
           if (!kIsWeb) {
-            FLog.trace(
+            BnLog.trace(
                 text: 'wampRes init ${res.toString()}',
                 methodName: 'runner',
                 className: toString());
@@ -230,7 +230,7 @@ class Wamp_V2 {
             await _sendToWampFromRunner(nextMessage)
                 .timeout(const Duration(seconds: 5));
             if (!kIsWeb) {
-              FLog.debug(
+              BnLog.debug(
                   className: toString(),
                   methodName: 'send message finished ',
                   text:
@@ -245,7 +245,7 @@ class Wamp_V2 {
         }
       }, (error, stack) {
         if (!kIsWeb) {
-          FLog.error(text: 'Error in WampV2 Stream', exception: error);
+          BnLog.error(text: 'Error in WampV2 Stream', exception: error);
         }
       });
     });
@@ -277,7 +277,7 @@ class Wamp_V2 {
             //session.calls.remove([message[1]]);
           } else if (wampMessageType == WampMessageType.result) {
             // [RESULT, CALL.Request|id, Details|dict, YIELD.Arguments|list, YIELD.ArgumentsKw|dict]
-            if (!kIsWeb) FLog.debug(text: 'channel result $wampMessage');
+            if (!kIsWeb) BnLog.debug(text: 'channel result $wampMessage');
             //print('channel runner $wampMessage');
             var messageResult = wampMessage[2];
             calls[wampMessage[1]]?.completer.complete(messageResult);
@@ -290,26 +290,26 @@ class Wamp_V2 {
             calls.remove(wampMessage[2]);
           } else if (wampMessageType == WampMessageType.subscribe) {
             // [SUBSCRIBE, Request|id, Options|dict, Topic|uri]
-            if (!kIsWeb) FLog.debug(text: 'subscribe $wampMessage');
+            if (!kIsWeb) BnLog.debug(text: 'subscribe $wampMessage');
           } else if (wampMessageType == WampMessageType.subscribed) {
             // [SUBSCRIBED, SUBSCRIBE.Request|id, Subscription|id]
             //    [33, 713845233, 5512315355]
             calls.remove(wampMessage[1]);
-            if (!kIsWeb) FLog.debug(text: 'subscribed $wampMessage');
+            if (!kIsWeb) BnLog.debug(text: 'subscribed $wampMessage');
           } else if (wampMessageType == WampMessageType.unsubscribe) {
             // [UNSUBSCRIBE, Request|id, SUBSCRIBED.Subscription|id]
             //  [34, 85346237, 5512315355]
             calls.remove(wampMessage[1]);
-            if (!kIsWeb) FLog.debug(text: 'unsubscribe $wampMessage');
+            if (!kIsWeb) BnLog.debug(text: 'unsubscribe $wampMessage');
           } else if (wampMessageType == WampMessageType.unsubscribed) {
             //[UNSUBSCRIBED, UNSUBSCRIBE.Request|id]
             //[35, 85346237]
             calls.remove(wampMessage[1]);
-            if (!kIsWeb) FLog.debug(text: 'unsubscribed $wampMessage');
+            if (!kIsWeb) BnLog.debug(text: 'unsubscribed $wampMessage');
           } else if (wampMessageType == WampMessageType.publish) {
             //    [PUBLISH, Request|id, Options|dict, Topic|uri]
             calls.remove(wampMessage[1]);
-            if (!kIsWeb) FLog.debug(text: 'publish $wampMessage');
+            if (!kIsWeb) BnLog.debug(text: 'publish $wampMessage');
           } else if (wampMessageType == WampMessageType.event) {
             // [EVENT, SUBSCRIBED.Subscription|id, PUBLISHED.Publication|id, Details|dict]
             //or     [EVENT, SUBSCRIBED.Subscription|id, PUBLISHED.Publication|id, Details|dict,
@@ -319,7 +319,7 @@ class Wamp_V2 {
           } else {
             var typeId = wampMessage[0];
             if (!kIsWeb) {
-              FLog.error(
+              BnLog.error(
                   text:
                       'WAMP unknown messageType typeId: $typeId $wampMessage');
             }
@@ -337,7 +337,7 @@ class Wamp_V2 {
             await Future.delayed(const Duration(milliseconds: 500));
             _retryLimit--;
             if (!kIsWeb) {
-              FLog.trace(
+              BnLog.trace(
                   text: 'WampStream error ${err.toString()} restart Stream',
                   methodName: 'startStream',
                   className: toString());
@@ -345,7 +345,7 @@ class Wamp_V2 {
             _startStream();
           } else {
             if (!kIsWeb) {
-              FLog.trace(
+              BnLog.trace(
                   text: 'WampStream error ${err.toString()} too much fails',
                   methodName: 'startStream',
                   className: toString());
@@ -367,7 +367,7 @@ class Wamp_V2 {
       _hadShakeHands = false;
       _isConnecting = false;
     })?.catchError((error) {
-      if (!kIsWeb) FLog.error(text: 'error wamp ->$error');
+      if (!kIsWeb) BnLog.error(text: 'error wamp ->$error');
       _isConnecting = false;
       return false;
     });
@@ -409,7 +409,7 @@ class Wamp_V2 {
     var actualServerHost =
         'http$hostAppend://${linkUri.host}:${linkUri.port}/www/';
     if (!kIsWeb) {
-      FLog.debug(
+      BnLog.debug(
           className: 'Wamp_V2',
           text: 'Will open new Session $actualServerHost',
           methodName: 'getSession');

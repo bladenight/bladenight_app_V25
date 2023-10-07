@@ -49,7 +49,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (Platform.isAndroid || Platform.isIOS) {
-      FLog.debug(
+      BnLog.debug(
           text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
     }
     if (state == AppLifecycleState.resumed) {

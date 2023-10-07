@@ -54,7 +54,7 @@ class FriendsLogic with ChangeNotifier {
 
       var result = await FriendsMessage.getFriends(deviceId);
       if (result.exception != null) {
-        FLog.warning(text: 'refreshFriends read failed ${result.exception}');
+        BnLog.warning(text: 'refreshFriends read failed ${result.exception}');
         return;
       }
 
@@ -68,7 +68,7 @@ class FriendsLogic with ChangeNotifier {
           // dont update when not seen friend.timestamp = DateTime.now().millisecondsSinceEpoch;
         }
         if (!kIsWeb) {
-          FLog.info(
+          BnLog.info(
               className: 'friendsProvider',
               methodName: 'refreshFriends',
               text: 'Friendlist is empty');
@@ -115,14 +115,14 @@ class FriendsLogic with ChangeNotifier {
       }*/
     } on WampError catch (e) {
       if (!kIsWeb) {
-        FLog.error(
+        BnLog.error(
             className: 'friendsProvider',
             methodName: 'refreshFriends_WampError',
             text: e.toString());
       }
     } on Exception catch (e) {
       if (!kIsWeb) {
-        FLog.error(
+        BnLog.error(
             className: 'friendsProvider',
             methodName: 'refreshFriends_exception',
             text: e.toString());
@@ -246,7 +246,7 @@ class FriendsLogic with ChangeNotifier {
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
       if (!kIsWeb) {
-        FLog.error(
+        BnLog.error(
             text: 'Error deleting friend on Server',
             exception: getFriendRelationshipResult?.rpcException);
       }

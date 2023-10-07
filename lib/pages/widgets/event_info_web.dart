@@ -172,7 +172,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                             fadeOutDuration: const Duration(milliseconds: 150),
                             fadeInDuration: const Duration(milliseconds: 150),
                             imageErrorBuilder: (context, error, stackTrace) {
-                              FLog.error(
+                              BnLog.error(
                                   text:
                                       'mainSponsorPlaceholder ${ms.image}) could not been loaded',
                                   exception: error);
@@ -208,7 +208,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                             fadeInDuration: const Duration(milliseconds: 150),
                             imageErrorBuilder: (context, error, stackTrace) {
                               if (!kIsWeb) {
-                                FLog.error(
+                                BnLog.error(
                                     text:
                                         'secondSponsorPlaceholder ${ssp.image} could not been loaded',
                                     exception: error);

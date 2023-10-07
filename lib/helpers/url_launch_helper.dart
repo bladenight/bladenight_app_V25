@@ -13,11 +13,11 @@ class Launch {
         await launchUrlString(url);
       } else {
         if (!kIsWeb) {
-          FLog.error(className: 'Launch', text: 'Could not launch $url');
+          BnLog.error(className: 'Launch', text: 'Could not launch $url');
         }
       }
     }, (error, stack) {
-      FLog.error(
+      BnLog.error(
           className: 'Guarded launchUrlFromString',
           text: 'Could not launch $url');
     });
@@ -29,11 +29,11 @@ class Launch {
         await launchUrl(url);
       } else {
         if (!kIsWeb) {
-          FLog.error(className: 'Launch', text: 'Could not launch $url');
+          BnLog.error(className: 'Launch', text: 'Could not launch $url');
         }
       }
     }, (error, stack) {
-      FLog.error(
+      BnLog.error(
           className: 'Guarded launchUrlFromUrl', text: 'Could not launch $url');
     });
   }

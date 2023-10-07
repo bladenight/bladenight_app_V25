@@ -107,7 +107,7 @@ class LocationPermissionDialog {
   }
 
   Future<LocationPermissionStatus> requestAlwaysLocationPermissions() async {
-    FLog.info(
+    BnLog.info(
         text: 'requesting always permissions',
         className: toString(),
         methodName: 'requestAlwaysLocationPermission');
@@ -132,7 +132,7 @@ class LocationPermissionDialog {
       }
       if (res == loc2.LocationPermission.denied) {
         if (!kIsWeb) {
-          FLog.warning(
+          BnLog.warning(
               text: 'requestAlwaysOnAndroid permissions permanentlyDenied');
         }
 
@@ -148,7 +148,7 @@ class LocationPermissionDialog {
             Fluttertoast.showToast(
                 msg: Localize.current.couldNotOpenAppSettings);
             if (!kIsWeb) {
-              FLog.warning(
+              BnLog.warning(
                   text:
                       'App settings could not opened while always location permissions are permanentlyDenied');
             }
@@ -195,7 +195,7 @@ class LocationPermissionDialog {
     //hangs for 9 sec on app start
     //var isAlways = await Permission.locationAlways.status;
     if (!kIsWeb) {
-      FLog.info(
+      BnLog.info(
           className: 'locationProvider',
           methodName: 'init',
           text: 'init get permissions status ${sw.elapsedMicroseconds}micros');
@@ -227,7 +227,7 @@ class LocationPermissionDialog {
       if (res == false) {
         Fluttertoast.showToast(msg: Localize.current.couldNotOpenAppSettings);
         if (!kIsWeb) {
-          FLog.warning(
+          BnLog.warning(
               text:
                   'App settings could not opened while location permissions are permanently denied');
         }
@@ -243,7 +243,7 @@ class LocationPermissionDialog {
     if (res == false) {
       Fluttertoast.showToast(msg: Localize.current.couldNotOpenAppSettings);
       if (!kIsWeb) {
-        FLog.warning(
+        BnLog.warning(
             text:
                 'App settings could not opened while location permissions are permanently denied');
       }

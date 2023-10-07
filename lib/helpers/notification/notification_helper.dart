@@ -108,7 +108,7 @@ class NotificationHelper {
         scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes;
     if (timeDiff < 1) {
       if (!kIsWeb) {
-        FLog.warning(
+        BnLog.warning(
             className: 'flutterLocalNotificationsPlugin',
             methodName: 'zonedSchedule',
             text: 'no notification set:$scheduledDate is not in future');
@@ -121,7 +121,7 @@ class NotificationHelper {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
     if (!kIsWeb) {
-      FLog.info(
+      BnLog.info(
           className: 'flutterLocalNotificationsPlugin',
           methodName: 'zonedSchedule',
           text: 'Set notification:$tzTime');

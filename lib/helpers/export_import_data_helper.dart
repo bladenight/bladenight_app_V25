@@ -58,7 +58,7 @@ void exportData(BuildContext context) async {
         timeInSecForIosWeb: 1,
         backgroundColor: CupertinoColors.systemRed,
         textColor: CupertinoColors.black);
-    FLog.error(methodName: 'exportData', text: 'failed to export $e');
+    BnLog.error(methodName: 'exportData', text: 'failed to export $e');
   }
 }
 
@@ -94,7 +94,7 @@ void importData(BuildContext context, String dataString) async {
         textColor: CupertinoColors.black);
   } catch (e) {
     if (!kIsWeb) {
-      FLog.error(methodName: 'exportData', text: 'failed to export $e');
+      BnLog.error(methodName: 'exportData', text: 'failed to export $e');
     }
     showToast(
         message: '${Localize.current.import} ${Localize.current.failed}',
@@ -111,7 +111,7 @@ Future<void> _deleteFile(String path) async {
   try {
     await File(path).delete();
   } catch (e) {
-    FLog.error(text: 'Error deleting file $path', exception: e);
+    BnLog.error(text: 'Error deleting file $path', exception: e);
   }
 }
 
@@ -139,7 +139,7 @@ Future<File> _createLogFile(String fileName) async {
 Future<void> exportLogs() async {
   try {
     var fileContent =
-        await FLog.exportLogs().timeout(const Duration(seconds: 30));
+        await BnLog.exportLogs().timeout(const Duration(seconds: 30));
     if (kIsWeb) {
       print(fileContent);
       showToast(message: 'siehe Console');

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -11,10 +12,11 @@ import '../../models/message.dart';
 import '../../providers/messages_provider.dart';
 import '../deviceid_helper.dart';
 import '../hive_box/hive_settings_db.dart';
-import '../hive_box/messages_db.dart';
 import '../logger.dart';
 import '../url_launch_helper.dart';
 import '../uuid_helper.dart';
+
+const MethodChannel channel = MethodChannel('bladenightbgnotificationchannel');
 
 class OnesignalHandler {
   OnesignalHandler._privateConstructor() {
@@ -49,20 +51,19 @@ class OnesignalHandler {
       setOneSignalChannels();
 
       OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-        FLog.info(
+        BnLog.info(
             text: 'OneSignal: notification opened: ${event.notification}');
         OnesignalHandler.handleNotificationOpenedResult(event);
       });
 
       OneSignal.Notifications.addPermissionObserver((state) {
         HiveSettingsDB.setPushNotificationsEnabled(state);
-        FLog.info(text: 'Accepted Onesignal permission: $state');
+        BnLog.info(text: 'Accepted Onesignal permission: $state');
       });
 
       OneSignal.InAppMessages.addWillDisplayListener((event) {
-        FLog.info(text: 'inAppMessage ${event.message}');
+        BnLog.info(text: 'inAppMessage ${event.message}');
       });
-
 
       OneSignal.Notifications.addClickListener((event) {
         //var json = action.jsonRepresentation();
@@ -88,8 +89,7 @@ class OnesignalHandler {
           message.button1Text = button1.text;
           message.button2Text = button2.text;
         }
-        MessagesDb.addMessage(message);
-        ProviderContainer().read(messagesLogicProvider).reloadMessages();
+        ProviderContainer().read(messagesLogicProvider).addMessage(message);
 
         if (clickName != null &&
             clickName.toLowerCase() == 'yes' &&
@@ -98,7 +98,7 @@ class OnesignalHandler {
           try {
             Launch.launchUrlFromString(clickURL);
           } catch (error) {
-            FLog.error(
+            BnLog.error(
                 text:
                     'Error setInAppMessageClickedHandler ${event.jsonRepresentation()}',
                 exception: error);
@@ -107,8 +107,12 @@ class OnesignalHandler {
       });
       // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
       OneSignal.Notifications.requestPermission(true);
+      //Handler for silent notifications
+      channel.setMethodCallHandler((call) async {
+        receivedBgRemoteMessage(call);
+      });
     } catch (e) {
-      FLog.error(text: 'Error initPushNotifications', exception: e);
+      BnLog.error(text: 'Error initPushNotifications', exception: e);
       return false;
     }
     return true;
@@ -126,24 +130,24 @@ class OnesignalHandler {
       await OneSignal.User.pushSubscription.optIn();
     }
     var optedIn = OneSignal.User.pushSubscription.optedIn;
-    FLog.info(text: 'setOneSignalChannels optIn is $optedIn');
+    BnLog.info(text: 'setOneSignalChannels optIn is $optedIn');
   }
 
   static Future<void> registerPushAsBladeGuard(bool value, int teamId) async {
     Map<String, String> map = {
       'IsBladeguard': value ? teamId.toString() : '0',
     };
-    FLog.info(text: 'register IsBladeguard value $value $teamId');
+    BnLog.info(text: 'register IsBladeguard value $value $teamId');
     OneSignal.User.addTags(map).catchError((err) {
-      FLog.error(text: 'register IsBladeguard error $err', exception: err);
+      BnLog.error(text: 'register IsBladeguard error $err', exception: err);
     });
   }
 
   static Future<void> registerSkateMunichInfo(bool value) async {
-    FLog.info(text: 'registerSkateMunichInfo  $value');
+    BnLog.info(text: 'registerSkateMunichInfo  $value');
     OneSignal.User.addTagWithKey('RcvSkateMunichInfos', value.toString())
         .catchError((err) {
-      FLog.error(text: 'registerSkateMunichInfo error $err', exception: err);
+      BnLog.error(text: 'registerSkateMunichInfo error $err', exception: err);
     });
   }
 
@@ -190,6 +194,23 @@ class OnesignalHandler {
         Launch.launchUrlFromString(data['url'] + '/?id=$devId');
       }
     }
-    MessagesDb.addMessage(message);
+    ProviderContainer().read(messagesLogicProvider).addMessage(message);
+  }
+
+  @pragma('vm:entry-point')
+  static void receivedBgRemoteMessage(MethodCall call) async {
+    try {
+      print('remote notification received');
+      ProviderContainer().read(messagesLogicProvider).addMessage(Message(
+          uid: UUID.createUuid(),
+          title: call.arguments,
+          body: "Test",
+          timeStamp: DateTime.now().millisecondsSinceEpoch));
+    } catch (e) {
+      BnLog.error(
+          className: 'onesignal_handler',
+          methodName: 'receivedBgRemoteMessage',
+          text: '$e');
+    }
   }
 }

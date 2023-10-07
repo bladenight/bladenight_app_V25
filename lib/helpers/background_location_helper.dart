@@ -19,7 +19,7 @@ class BackgroundGeolocationHelper {
       bg.BackgroundGeolocation.setOdometer(0.0)
           .then((value) => true)
           .catchError((error) {
-        if (!kIsWeb) FLog.error(text: '[resetOdometer] ERROR: $error');
+        if (!kIsWeb) BnLog.error(text: '[resetOdometer] ERROR: $error');
         return false;
       });
     }
@@ -41,7 +41,7 @@ class BackgroundGeolocationHelper {
         return await bg.DeviceSettings.show(request);
       }
     }).catchError((dynamic error) {
-      FLog.error(text: 'Batterieoptimierung fehlgeschlagen $error');
+      BnLog.error(text: 'Batterieoptimierung fehlgeschlagen $error');
       return false;
     });
     return false;

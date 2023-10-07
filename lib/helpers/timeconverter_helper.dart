@@ -105,7 +105,7 @@ class DateFormatter {
         .dateTimeDayIntl(dateTime.toLocal(), dateTime.toLocal());
     if (res.contains('19:00')) {
       print('current locale ${Intl.getCurrentLocale()}');
-      FLog.warning(text: 'wrong date');
+      BnLog.warning(text: 'wrong date');
       return Localize.current.dateTimeIntl(dateTime.toLocal(), _startTime2100);
     }
     return res;

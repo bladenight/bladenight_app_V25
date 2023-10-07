@@ -51,7 +51,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    FLog.debug(text: 'event_info - didChangeAppLifecycleState $state');
+    BnLog.debug(text: 'event_info - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       initEventUpdates(forceUpdate: true);
       context.read(locationProvider).refresh(forceUpdate: true);

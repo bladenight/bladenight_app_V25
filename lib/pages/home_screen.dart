@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    FLog.info(
+    BnLog.info(
         className: 'home_screen',
         methodName: 'initState ',
         text: 'App started');
@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       tabController = CupertinoTabController(initialIndex: 1)
         ..addListener(() {
           if (!kIsWeb) {
-            FLog.info(
+            BnLog.info(
                 className: 'home_screen',
                 methodName: 'tabControllerListener',
                 text: 'tabController selected index ${tabController.index}');
@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
       tabController = CupertinoTabController(initialIndex: 0)
         ..addListener(() {
           if (!kIsWeb) {
-            FLog.debug(
+            BnLog.debug(
                 className: 'home_screen',
                 methodName: 'tabControllerListener',
                 text: 'tabController selected index ${tabController.index}');
@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _openIntroScreenFirstTime() async {
     if (!kIsWeb && !HiveSettingsDB.hasShownIntro) {
-      FLog.info(
+      BnLog.info(
           className: 'home_screen',
           methodName: 'openIntroScreenFirstTime',
           text: 'Will open IntroScreen');
@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
       try {
         Uri? initUri = await getInitialUri();
         print('Invoked _initURIHandler');
-        if (!kIsWeb) FLog.info(text: 'Invoked _initURIHandler $initUri');
+        if (!kIsWeb) BnLog.info(text: 'Invoked _initURIHandler $initUri');
         if (initUri == null) return;
         _handleIncomingUriResult(initUri.toString());
         // Use the initialURI and warn the user if it is not correct,
@@ -133,10 +133,10 @@ class _HomeScreenState extends State<HomeScreen> {
       } on PlatformException catch (ex) {
         // Platform messages may fail but we ignore the exception
         if (!kIsWeb) {
-          FLog.error(text: 'Platform exception failed to get initial uri $ex');
+          BnLog.error(text: 'Platform exception failed to get initial uri $ex');
         }
       } on FormatException catch (err) {
-        if (!kIsWeb) FLog.error(text: 'malformed initial uri $err');
+        if (!kIsWeb) BnLog.error(text: 'malformed initial uri $err');
       }
     }
   }
@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // It will handle app links while the app is already started - be it in
     // the foreground or in the background.
     _uniLinkStreamSubscription = uriLinkStream.listen((Uri? uri) async {
-      if (!kIsWeb) FLog.info(text: 'Received URI: $uri');
+      if (!kIsWeb) BnLog.info(text: 'Received URI: $uri');
       _handleIncomingUriResult(uri.toString());
 
       //uri received

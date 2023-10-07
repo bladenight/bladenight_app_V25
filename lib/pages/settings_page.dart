@@ -285,7 +285,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                             .setOneSignalChannels()
                                         .timeout(const Duration(seconds: 20))
                                         .catchError((error) {
-                                      FLog.error(
+                                      BnLog.error(
                                           text: 'error deactivating Push');
                                     });
                                     _showPushProgressIndicator = false;
@@ -580,9 +580,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                 children: <Widget>[
                                   CupertinoButton(
                                       child: Text(
-                                          'Loglevel ${FLog.getActiveLogLevel().name}'),
+                                          'Loglevel ${BnLog.getActiveLogLevel().name}'),
                                       onPressed: () async {
-                                        await FLog.showLogLevelDialog(context);
+                                        await BnLog.showLogLevelDialog(context);
                                         setState(() {});
                                       }),
                                   CupertinoButton(
@@ -610,7 +610,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                             true));
                                         if (clickedButton ==
                                             CustomButton.positiveButton) {
-                                          FLog.clearLogs();
+                                          BnLog.clearLogs();
                                           showToast(
                                               message:
                                                   Localize.current.finished);

@@ -277,7 +277,7 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                           });
                         } catch (e) {
                           print(e);
-                          FLog.error(
+                          BnLog.error(
                               className: toString(),
                               methodName: 'friendActionDialog',
                               text: e.toString());

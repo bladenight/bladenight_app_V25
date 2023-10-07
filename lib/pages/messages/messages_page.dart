@@ -68,7 +68,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                   CupertinoButton(
                       padding: EdgeInsets.zero,
                       minSize: 0,
-                      child: const Icon(CupertinoIcons.clear_circled),
+                      child: const Icon(CupertinoIcons.trash),
                       onPressed: () async {
                         final clickedButton =
                             await FlutterPlatformAlert.showCustomAlert(

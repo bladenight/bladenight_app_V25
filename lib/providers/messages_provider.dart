@@ -60,6 +60,11 @@ class MessagesLogic with ChangeNotifier {
     return count;
   }
 
+  Future<void> addMessage(Message message) async {
+    await MessagesDb.addMessage(message);
+    _loadMessages();
+  }
+
   Future<void> setReadMessage(Message message, bool read) async {
     MessagesDb.setReadMessage(message, read);
     _loadMessages();

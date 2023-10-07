@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 
@@ -9,6 +10,8 @@ import '../generated/l10n.dart';
 import '../helpers/device_info_helper.dart';
 import '../helpers/logger.dart';
 import '../helpers/notification/onesignal_handler.dart';
+import '../helpers/uuid_helper.dart';
+import '../models/message.dart';
 import '../pages/widgets/event_info.dart';
 import '../pages/widgets/event_info_web.dart';
 import '../pages/widgets/intro_slider.dart';
@@ -54,9 +57,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   ///Clean up log file and delete data's older than a week
   void clearLog() async {
     try {
-      await FLog.cleanUpLogsByFilter(const Duration(days: 8));
+      await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
     } catch (e) {
-      FLog.warning(text: 'Error clearing logs');
+      BnLog.warning(text: 'Error clearing logs');
     }
   }
 
@@ -65,7 +68,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     await Future.delayed(const Duration(seconds: 3)); //delay and wait
     if (Platform.isIOS) {
       if (!kIsWeb) {
-        FLog.info(
+        BnLog.info(
             text: ' iOS - init OneSignal PushNotifications permissions OK');
       }
       await OnesignalHandler.initPushNotifications();
@@ -74,13 +77,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     //workaround for android 8.1 Nexus
     if (Platform.isAndroid &&
         await DeviceHelper.isAndroidGreaterOrEqualVersion(9)) {
-      FLog.info(
+      BnLog.info(
           text:
               'Android is greater than V9 OneSignal  PushNotifications permissions OK');
       await OnesignalHandler.initPushNotifications();
       return;
     }
-    FLog.info(text: 'Onesignal not available ${Platform.version}');
+    BnLog.info(text: 'Onesignal not available ${Platform.version}');
   }
 
   @override
@@ -110,26 +113,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (messageProvider.messages.isNotEmpty)
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      onPressed: () async {
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => const MessagesPage(),
-                            fullscreenDialog: false,
-                          ),
-                        );
-                      },
-                      child: Badge(
-                        label: Text(messageProvider.readMessages.toString()),
-                        child: const Icon(Icons.mark_email_unread),
+                      CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        minSize: 0,
+                        onPressed: () async {
+                          Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (context) => const MessagesPage(),
+                              fullscreenDialog: false,
+                            ),
+                          );
+                        },
+                        child: Badge(
+                          label: Text(messageProvider.readMessages.toString()),
+                          child: const Icon(Icons.mark_email_unread),
+                        ),
                       ),
-                    ),
                     if (messageProvider.messages.isNotEmpty)
-                    const SizedBox(
-                      width: 10,
-                    ),
+                      const SizedBox(
+                        width: 10,
+                      ),
                     CupertinoButton(
                       padding: EdgeInsets.zero,
                       minSize: 0,
@@ -176,7 +179,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ),
             CupertinoSliverRefreshControl(
               onRefresh: () async {
-                context.refresh(currentRouteProvider);
+             context.refresh(currentRouteProvider);
                 context.read(activeEventProvider).refresh(forceUpdate: true);
               },
             ),

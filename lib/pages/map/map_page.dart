@@ -85,13 +85,13 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (Platform.isAndroid || Platform.isIOS) {
       if (!kIsWeb) {
-        FLog.debug(text: 'map_page - didChangeAppLifecycleState $state');
+        BnLog.debug(text: 'map_page - didChangeAppLifecycleState $state');
       }
     }
     if (state == AppLifecycleState.resumed) {
       resumeUpdates(force: true);
       LocationProvider.instance.setToBackground(false);
-      FLog.trace(
+      BnLog.trace(
         className: toString(),
         methodName: 'didChangeAppLifecycleState',
         text: 'resume updates calling',
@@ -99,7 +99,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.paused) {
       LocationProvider.instance.setToBackground(true);
       if (!kIsWeb) {
-        FLog.trace(
+        BnLog.trace(
             className: 'resumeUpdates',
             methodName: 'timer',
             text: 'LocProvider instance pause updates calling');
@@ -136,7 +136,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   void pauseUpdates() {
     if (!kIsWeb) {
-      FLog.trace(
+      BnLog.trace(
           className: toString(),
           methodName: 'pauseUpdates',
           text: 'update Paused');

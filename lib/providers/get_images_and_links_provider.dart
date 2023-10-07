@@ -29,7 +29,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
   } else {
     ial = await ImageAndLinkList.getImagesAndLinks();
     if (ial.imagesAndLinks == null || ial.rpcException != null) {
-      FLog.warning(text: 'Error retrieving ${ial.rpcException}');
+      BnLog.warning(text: 'Error retrieving ${ial.rpcException}');
       return false;
     }
     resultValue = true;
@@ -81,7 +81,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
             MapSettings.setOpenStreetMapLink(decodedLink);
           } catch (e) {
             if (!kIsWeb) {
-              FLog.error(
+              BnLog.error(
                   text:
                       'Could not decode open street map link. Must be base64encoded $e');
             }
@@ -125,7 +125,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
             MapSettings.setMapBoundaries(ial.link!);
           } catch (e) {
             if (!kIsWeb) {
-              FLog.error(
+              BnLog.error(
                   text: 'Could not decode setTileServerMapBoundsAndZoom.$e');
             }
           }
@@ -144,7 +144,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
             }
           } catch (e) {
             if (!kIsWeb) {
-              FLog.error(
+              BnLog.error(
                   text: 'Could not decode setTileServerMapBoundsAndZoom. $e');
             }
           }

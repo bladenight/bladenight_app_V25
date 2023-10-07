@@ -167,7 +167,7 @@ class LocationProvider with ChangeNotifier {
     if (!HiveSettingsDB.useAlternativeLocationProvider) {
       _state = await _startBackgroundGeolocation();
       if (_state == null) {
-        if (!kIsWeb) FLog.error(text: 'bg-locationState is null');
+        if (!kIsWeb) BnLog.error(text: 'bg-locationState is null');
         _gpsGranted = false;
         notifyListeners();
         return;
@@ -193,7 +193,7 @@ class LocationProvider with ChangeNotifier {
     _userIsParticipant = HiveSettingsDB.userIsParticipant;
     _odometer = HiveSettingsDB.odometerValue;
     if (!kIsWeb) {
-      FLog.trace(
+      BnLog.trace(
           className: 'locationProvider',
           methodName: 'init',
           text: 'check _trackingWasActive');
@@ -203,7 +203,7 @@ class LocationProvider with ChangeNotifier {
         ActiveEventProvider.instance.event.status == EventStatus.confirmed) {
       //restart tracking on reopen
       if (!kIsWeb) {
-        FLog.info(
+        BnLog.info(
             className: 'locationProvider',
             methodName: 'init',
             text: 'restart tracking');
@@ -213,7 +213,7 @@ class LocationProvider with ChangeNotifier {
     }
     notifyListeners();
     if (!kIsWeb) {
-      FLog.trace(
+      BnLog.trace(
           className: 'locationProvider',
           methodName: 'init',
           text: 'init finished');
@@ -323,11 +323,11 @@ class LocationProvider with ChangeNotifier {
       }
     } catch (error) {
       if (!kIsWeb) {
-        FLog.error(text: '_startBackgroundGeolocation', exception: error);
+        BnLog.error(text: '_startBackgroundGeolocation', exception: error);
       }
     }
     if (!kIsWeb) {
-      FLog.warning(
+      BnLog.warning(
           text: 'No Valid device for bg.BackgroundGeolocation',
           className: toString(),
           methodName: '_startBackgroundGeolocation');
@@ -336,7 +336,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onLocation(bg.Location location) {
-    if (!kIsWeb) FLog.trace(text: '_onLocation $location');
+    if (!kIsWeb) BnLog.trace(text: '_onLocation $location');
     _controller.add(location);
     updateUserLocation(location);
     sendLocation(location);
@@ -403,36 +403,36 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onLocationError(bg.LocationError error) {
-    if (!kIsWeb) FLog.trace(text: 'Location error reason:$error');
+    if (!kIsWeb) BnLog.trace(text: 'Location error reason:$error');
     if (_lastKnownPoint != null) {
       //sendLocation(_lastKnownPoint!);
     }
   }
 
   void _onMotionChange(bg.Location location) {
-    if (!kIsWeb) FLog.trace(text: 'OnMotionChange send location');
+    if (!kIsWeb) BnLog.trace(text: 'OnMotionChange send location');
     //sendLocation(location); //dont send
   }
 
   void _onActivityChange(bg.ActivityChangeEvent event) {
-    if (!kIsWeb) FLog.trace(text: 'On ActivityChangeEvent $event');
+    if (!kIsWeb) BnLog.trace(text: 'On ActivityChangeEvent $event');
     //_subToUpdates();
   }
 
   void _onHeartBeat(bg.HeartbeatEvent event) {
-    if (!kIsWeb) FLog.trace(text: 'On Heartbeat  $event');
+    if (!kIsWeb) BnLog.trace(text: 'On Heartbeat  $event');
     _getHeartBeatLocation();
   }
 
   _onConnectionChange(bg.ConnectivityChangeEvent event) {
-    if (!kIsWeb) FLog.debug(text: 'On ConnectivityChange  $event');
+    if (!kIsWeb) BnLog.debug(text: 'On ConnectivityChange  $event');
     _networkConnected = event.connected;
   }
 
   void _getHeartBeatLocation() async {
     try {
       if (!kIsWeb) {
-        FLog.trace(
+        BnLog.trace(
           className: toString(),
           methodName: '_getHeartBeatLocation',
           text: 'started',
@@ -447,7 +447,7 @@ class LocationProvider with ChangeNotifier {
       );
       //triggers onLocation
       if (!kIsWeb) {
-        FLog.trace(
+        BnLog.trace(
           className: toString(),
           methodName: '_getHeartBeatLocation',
           text: '_subUpdates sent new location $newLocation',
@@ -456,7 +456,7 @@ class LocationProvider with ChangeNotifier {
       return;
     } catch (e) {
       if (!kIsWeb) {
-        FLog.warning(
+        BnLog.warning(
             className: toString(),
             methodName: '_subToUpdates',
             text: '_subUpdates Failed:',
@@ -467,7 +467,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   _onProviderChange(bg.ProviderChangeEvent event) {
-    if (!kIsWeb) FLog.info(text: 'onProviderChangeEvent  $event');
+    if (!kIsWeb) BnLog.info(text: 'onProviderChangeEvent  $event');
     switch (event.status) {
       case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_NOT_DETERMINED:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.notDetermined;
@@ -521,7 +521,7 @@ class LocationProvider with ChangeNotifier {
     Wakelock.disable();
     bg.BackgroundGeolocation.stop().then((bg.State state) {
       if (!kIsWeb) {
-        FLog.info(
+        BnLog.info(
             text: 'location tracking stopped ${state.enabled}',
             className: 'location_provider',
             methodName: '_stopTracking');
@@ -540,7 +540,7 @@ class LocationProvider with ChangeNotifier {
       LocationStore.saveUserTrackPointList(_userTrackingPoints);
       notifyListeners();
     }).catchError((error) {
-      if (!kIsWeb) FLog.error(text: 'Stopping ERROR: $error');
+      if (!kIsWeb) BnLog.error(text: 'Stopping ERROR: $error');
     });
   }
 
@@ -564,7 +564,7 @@ class LocationProvider with ChangeNotifier {
 
       if (!acceptLocation) {
         if (!kIsWeb) {
-          FLog.warning(
+          BnLog.warning(
               text: 'No positive prominent disclosure or always denied');
         }
         return;
@@ -580,7 +580,7 @@ class LocationProvider with ChangeNotifier {
           msg: Localize.current.noLocationPermitted,
           backgroundColor: Colors.orange);
       if (!kIsWeb) {
-        FLog.warning(
+        BnLog.warning(
             text: 'location permanentlyDenied by os',
             className: 'location_provider',
             methodName: '_startTracking');
@@ -603,7 +603,7 @@ class LocationProvider with ChangeNotifier {
 
     if (HiveSettingsDB.useAlternativeLocationProvider) {
       if (!kIsWeb) {
-        FLog.info(
+        BnLog.info(
             text: 'alternative location tracking started',
             className: 'location_provider',
             methodName: '_startTracking');
@@ -634,7 +634,7 @@ class LocationProvider with ChangeNotifier {
     } else {
       await bg.BackgroundGeolocation.start().then((bg.State state) {
         if (!kIsWeb) {
-          FLog.info(
+          BnLog.info(
               text: 'location tracking started',
               className: 'location_provider',
               methodName: '_startTracking');
@@ -650,7 +650,7 @@ class LocationProvider with ChangeNotifier {
         HiveSettingsDB.setTrackingActive(_isTracking);
         SendToWatch.setIsLocationTracking(_isTracking);
       }).catchError((error) {
-        if (!kIsWeb) FLog.error(text: 'LocStarting ERROR: $error');
+        if (!kIsWeb) BnLog.error(text: 'LocStarting ERROR: $error');
         HiveSettingsDB.setTrackingActive(false);
         _isTracking = false;
         setUpdateTimer(false);
@@ -672,7 +672,7 @@ class LocationProvider with ChangeNotifier {
   ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
   void startSaveLocationsUpdateTimer(bool enabled) {
     if (!kIsWeb) {
-      FLog.trace(text: 'init startSaveLocationsUpdateTimer to $enabled');
+      BnLog.trace(text: 'init startSaveLocationsUpdateTimer to $enabled');
     }
     _saveLocationsTimer?.cancel();
     if (enabled) {
@@ -694,7 +694,7 @@ class LocationProvider with ChangeNotifier {
   ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
   void setUpdateTimer(bool enabled) {
     if (!kIsWeb) {
-      FLog.trace(text: 'init setLocationTimer to $enabled');
+      BnLog.trace(text: 'init setLocationTimer to $enabled');
     }
     _updateTimer?.cancel();
     _saveLocationsTimer?.cancel();
@@ -711,7 +711,7 @@ class LocationProvider with ChangeNotifier {
           }
           if (lastUpdate >= defaultLocationUpdateInterval) {
             if (!kIsWeb) {
-              FLog.trace(text: 'setUpdateTimer Refresh');
+              BnLog.trace(text: 'setUpdateTimer Refresh');
             }
             refresh();
           }
@@ -767,7 +767,7 @@ class LocationProvider with ChangeNotifier {
     }
     try {
       if (!kIsWeb) {
-        FLog.trace(
+        BnLog.trace(
           className: toString(),
           methodName: '_subToUpdates',
           text: 'started',
@@ -790,14 +790,14 @@ class LocationProvider with ChangeNotifier {
         _lastKnownPoint = newLocation;
       }
     } catch (e) {
-      FLog.warning(
+      BnLog.warning(
           className: toString(),
           methodName: '_subToUpdates',
           text: '_subUpdates Failed:',
           exception: e);
     }
 
-    FLog.trace(
+    BnLog.trace(
         className: toString(),
         methodName: '_subToUpdates',
         text: '_subUpdates Failed:');
@@ -834,7 +834,7 @@ class LocationProvider with ChangeNotifier {
 
     if (!_networkConnected) {
       if (!kIsWeb) {
-        FLog.trace(
+        BnLog.trace(
           className: toString(),
           methodName: 'sendLocation',
           text: 'no network ignore send location',
@@ -863,7 +863,7 @@ class LocationProvider with ChangeNotifier {
     _lastUpdate = DateTime.now();
     _realtimeUpdate = update;
     if (!kIsWeb) {
-      FLog.trace(
+      BnLog.trace(
           className: 'locationProvider',
           methodName: 'sendLocation',
           text: 'sent loc update with result  $update');
@@ -905,7 +905,7 @@ class LocationProvider with ChangeNotifier {
   Future<void> refresh({bool forceUpdate = false}) async {
     try {
       if (!kIsWeb) {
-        FLog.trace(
+        BnLog.trace(
             className: 'locationProvider',
             methodName: 'refresh',
             text: 'start refresh force $forceUpdate');
@@ -932,7 +932,7 @@ class LocationProvider with ChangeNotifier {
         //update procession when no location data were sent
         var update = await RealtimeUpdate.wampUpdate();
         if (!kIsWeb) {
-          FLog.trace(
+          BnLog.trace(
               className: 'locationProvider',
               methodName: 'refresh',
               text: 'send refresh force $forceUpdate');
@@ -944,7 +944,7 @@ class LocationProvider with ChangeNotifier {
 
         if (update.rpcException != null) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'locationProvider',
                 methodName: 'refresh',
                 text: update.rpcException.toString());
@@ -985,7 +985,7 @@ class LocationProvider with ChangeNotifier {
       }
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(
+        BnLog.error(
             className: 'locationProvider',
             methodName: 'refresh',
             text: e.toString());
@@ -1020,7 +1020,7 @@ class LocationProvider with ChangeNotifier {
                 windowTitle: Localize.current.finishReachedTitle,
                 text: Localize.current.finishReachedStopedTracking);
             if (!kIsWeb) {
-              FLog.info(
+              BnLog.info(
                   className: 'locationProvider',
                   methodName: 'checkUserFinishedOrEndEvent',
                   text: 'User reached finish - auto stop');
@@ -1037,7 +1037,7 @@ class LocationProvider with ChangeNotifier {
                     .current.finishReachedtargetReachedPleaseStopTracking);
 
             if (!kIsWeb) {
-              FLog.info(
+              BnLog.info(
                   className: 'locationProvider',
                   methodName: 'checkUserFinishedOrEndEvent',
                   text: 'User reached finish');
@@ -1079,7 +1079,7 @@ class LocationProvider with ChangeNotifier {
           }
         }
         if (!kIsWeb) {
-          FLog.info(
+          BnLog.info(
               className: 'locationProvider',
               methodName: 'checkUserFinishedOrEndEvent',
               text:
@@ -1099,7 +1099,7 @@ class LocationProvider with ChangeNotifier {
               text: Localize.current.stopTrackingTimeOut(maxDuration));
         }
         if (!kIsWeb) {
-          FLog.info(
+          BnLog.info(
               className: 'locationProvider',
               methodName: 'checkUserFinishedOrEndEvent',
               text: 'remember tracking stop');
@@ -1107,7 +1107,7 @@ class LocationProvider with ChangeNotifier {
       }
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(
+        BnLog.error(
           text: e.toString(),
           className: 'locationProvider',
           methodName: 'checkUserFinishedOrEndEvent',
@@ -1125,7 +1125,7 @@ class LocationProvider with ChangeNotifier {
       }
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(text: 'Error on _updateWatchData ${e.toString()}');
+        BnLog.error(text: 'Error on _updateWatchData ${e.toString()}');
       }
     }
   }
@@ -1145,7 +1145,7 @@ class LocationProvider with ChangeNotifier {
         _odometer = value.odometer;
       }).catchError((error) {
         if (!kIsWeb) {
-          FLog.error(text: '[resetOdometer] ERROR: $error');
+          BnLog.error(text: '[resetOdometer] ERROR: $error');
         }
         return null;
       });
@@ -1162,7 +1162,7 @@ class LocationProvider with ChangeNotifier {
       return odoResetResult == null ? false : true;
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(
+        BnLog.error(
             text: 'Error on resetTrackPoints ${e.toString()}', exception: e);
       }
       return false;
@@ -1177,7 +1177,7 @@ class LocationProvider with ChangeNotifier {
       return;
     }
     if (!kIsWeb) {
-      FLog.trace(
+      BnLog.trace(
           className: toString(),
           methodName: '_updateTime_periodic',
           text: 'updating because there are no new location data');
@@ -1196,7 +1196,7 @@ class LocationProvider with ChangeNotifier {
       return;
     }
     if (!kIsWeb) {
-      FLog.trace(
+      BnLog.trace(
           className: toString(),
           methodName: 'getLastRealtimeData',
           text: 'updating because there are no new location data');

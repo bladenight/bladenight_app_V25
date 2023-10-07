@@ -222,7 +222,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   }
 
   static Future<RealtimeUpdate> wampUpdate([dynamic message]) async {
-    FLog.debug(
+    BnLog.debug(
       className: 'Future<RealtimeUpdate>  wampUpdate',
       methodName: 'sendLocation',
       text: 'will send:$message',

@@ -60,7 +60,7 @@ class HiveSettingsDB {
   }
 
   static void setBackgroundLocationLogLevel(int val) {
-    FLog.info(text: 'setBackgroundLocationLogLevel to $val');
+    BnLog.info(text: 'setBackgroundLocationLogLevel to $val');
     _hiveBox.put(_bgLoglevelKey, val);
   }
 
@@ -74,7 +74,7 @@ class HiveSettingsDB {
 
   ///set if motion detection is disabled
   static void setIsMotionDetectionDisabled(bool val) {
-    if (!kIsWeb) FLog.info(text: 'setisMotionDetectionDisabled to $val');
+    if (!kIsWeb) BnLog.info(text: 'setisMotionDetectionDisabled to $val');
     _hiveBox.put(_disableMotionDetection, val);
   }
 
@@ -90,7 +90,7 @@ class HiveSettingsDB {
 
   ///set if motion detection is disabled
   static void setUseAlternativeLocationProvider(bool val) {
-    if (!kIsWeb) FLog.info(text: 'setUseAlternativeLocationProvider to $val');
+    if (!kIsWeb) BnLog.info(text: 'setUseAlternativeLocationProvider to $val');
     _hiveBox.put(_useAlternativeLocationProvider, val);
   }
 
@@ -105,7 +105,7 @@ class HiveSettingsDB {
 
   ///set if motion detection is disabled
   static void setHasShownProminentDisclosure(bool val) {
-    if (!kIsWeb) FLog.info(text: 'set hasShownProminentDisclosure to $val');
+    if (!kIsWeb) BnLog.info(text: 'set hasShownProminentDisclosure to $val');
     _hiveBox.put(_hasShownProminentDisclosure, val);
   }
 
@@ -119,7 +119,7 @@ class HiveSettingsDB {
 
   ///set loglevel
   static void setFlogLevel(Level level) {
-    if (!kIsWeb) FLog.info(text: 'setFlogLevel to ${level.index}');
+    if (!kIsWeb) BnLog.info(text: 'setFlogLevel to ${level.index}');
     _hiveBox.put(_fLogLevel, level.index);
   }
 
