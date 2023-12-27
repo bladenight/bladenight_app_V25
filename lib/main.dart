@@ -120,8 +120,9 @@ class BladeNightApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
         final shouldPop = await showDialog<bool>(
           context: context,
           builder: (context) {
@@ -145,7 +146,7 @@ class BladeNightApp extends StatelessWidget {
             );
           },
         );
-        return shouldPop!;
+        return ;
       },
       child: MediaQuery.fromView(
         view: View.of(context),

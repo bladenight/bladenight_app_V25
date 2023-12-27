@@ -89,14 +89,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var messageProvider = context.watch(messagesLogicProvider);
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
         var tabIndex = widget.tabController.index;
         if (tabIndex == 0) {
           widget.tabController.index = 4;
         }
         widget.tabController.index -= 1;
-        return Future(() => false);
+        return;
       },
       child: CupertinoPageScaffold(
         child: CustomScrollView(

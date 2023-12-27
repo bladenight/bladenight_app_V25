@@ -242,8 +242,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               var runningRoutePoints = locationUpdate.realtimeUpdate
                   ?.runningRoute(activeEvent.activeEventRoutePoints);
               var headingRoutePoints = activeEvent.headingPoints;
-              var sizeValue = MediaQuery.of(context).textScaleFactor *
-                  HiveSettingsDB.iconSizeValue;
+              var sizeValue = MediaQuery.textScalerOf(context).scale(
+                  HiveSettingsDB.iconSizeValue);
               return MapLayer(
                 event: activeEvent.event,
                 startPoint: activeEvent.startPoint,

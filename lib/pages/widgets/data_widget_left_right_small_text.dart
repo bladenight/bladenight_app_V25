@@ -20,7 +20,7 @@ class DataWidgetLeftRightSmallTextContent extends StatelessWidget {
           descriptionLeft,
           overflow: TextOverflow.fade,
           style: TextStyle(
-              fontSize: _textSize * MediaQuery.textScaleFactorOf(context),
+              fontSize: MediaQuery.textScalerOf(context).scale(_textSize),
               color: CupertinoTheme.of(context).primaryColor),
           maxLines: 1,
         ),
@@ -30,7 +30,7 @@ class DataWidgetLeftRightSmallTextContent extends StatelessWidget {
           Text(
             descriptionRight,
             style: TextStyle(
-                fontSize: _textSize * MediaQuery.textScaleFactorOf(context),
+                fontSize: MediaQuery.textScalerOf(context).scale(_textSize),
                 color: CupertinoTheme.of(context).primaryColor),
           ),
           const SizedBox(

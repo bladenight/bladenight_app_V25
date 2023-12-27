@@ -188,8 +188,8 @@ class BnLog {
     var leftDate =
         DateTime.now().subtract(deleteOlderThan).millisecondsSinceEpoch;
     for (var key in _logBox.keys) {
-      var intVal = int.parse(key);
-      if (intVal < leftDate) {
+      var intVal = int.tryParse(key);
+      if (intVal!=null && intVal < leftDate) {
         await _logBox.delete(key);
       }
     }

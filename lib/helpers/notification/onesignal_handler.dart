@@ -204,7 +204,7 @@ class OnesignalHandler {
       ProviderContainer().read(messagesLogicProvider).addMessage(Message(
           uid: UUID.createUuid(),
           title: call.arguments,
-          body: "Test",
+          body: 'Test',
           timeStamp: DateTime.now().millisecondsSinceEpoch));
     } catch (e) {
       BnLog.error(

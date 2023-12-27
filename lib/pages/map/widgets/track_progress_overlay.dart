@@ -247,12 +247,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                       rtu.runningLength)
                                           as AlignmentGeometry,
                                       child: SizedBox(
-                                        height: MediaQuery.of(context)
-                                                .textScaleFactor *
-                                            20,
-                                        width: MediaQuery.of(context)
-                                                .textScaleFactor *
-                                            20,
+                                        height: MediaQuery.textScalerOf(context).scale(20),
+                                        width: MediaQuery.textScalerOf(context).scale(20),
                                         child: const Center(
                                           child: CircleAvatar(
                                             child: Image(
@@ -275,23 +271,15 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                       rtu.runningLength)
                                           as AlignmentGeometry,
                                       child: SizedBox(
-                                        height: MediaQuery.of(context)
-                                                .textScaleFactor *
-                                            20,
-                                        width: MediaQuery.of(context)
-                                                .textScaleFactor *
-                                            20,
+                                        height: MediaQuery.textScalerOf(context).scale(20),
+                                        width: MediaQuery.textScalerOf(context).scale(20),
                                         child: Image(
                                           image: const AssetImage(
                                             'assets/images/skatechildmunichgreen.png',
                                           ),
                                           fit: BoxFit.fill,
-                                          height: MediaQuery.of(context)
-                                                  .textScaleFactor *
-                                              20,
-                                          width: MediaQuery.of(context)
-                                                  .textScaleFactor *
-                                              20,
+                                          height: MediaQuery.textScalerOf(context).scale(20),
+                                          width: MediaQuery.textScalerOf(context).scale(20),
                                         ),
                                       ),
                                     ),
@@ -307,12 +295,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                   0.015) as AlignmentGeometry,
                                       //need correction of center
                                       child: SizedBox(
-                                        width: MediaQuery.of(context)
-                                                .textScaleFactor *
-                                            20,
-                                        height: MediaQuery.of(context)
-                                                .textScaleFactor *
-                                            20,
+                                        width: MediaQuery.textScalerOf(context).scale(20),
+                                        height: MediaQuery.textScalerOf(context).scale(20),
                                         child: CircleAvatar(
                                           backgroundColor:
                                               ref.watch(MeColor.provider),
@@ -344,12 +328,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                       rtu.runningLength
                                                   : 0.0) as AlignmentGeometry,
                                           child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .textScaleFactor *
-                                                20,
-                                            height: MediaQuery.of(context)
-                                                    .textScaleFactor *
-                                                20,
+                                            width:MediaQuery.textScalerOf(context).scale(20),
+                                            height: MediaQuery.textScalerOf(context).scale(20),
                                             child: CircleAvatar(
                                               backgroundColor: friend.color,
                                               child: Text(
@@ -582,8 +562,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                 Expanded(
                                   child: SizedBox(
                                     height:
-                                        MediaQuery.textScaleFactorOf(context) *
-                                            25,
+                                    MediaQuery.textScalerOf(context).scale(25),
                                     child: ClipRRect(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(5)),

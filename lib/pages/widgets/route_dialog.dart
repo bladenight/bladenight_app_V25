@@ -39,8 +39,7 @@ class RouteDialog extends ConsumerWidget {
               Text('${Localize.of(context).routeoverview}: ${event.routeName}'),
         ),
         child: Builder(builder: (context) {
-          var sizeValue = MediaQuery.of(context).textScaleFactor *
-              HiveSettingsDB.iconSizeValue;
+          var sizeValue = MediaQuery.textScalerOf(context).scale(HiveSettingsDB.iconSizeValue);
           var asyncRoute = ref.watch(routeProvider(event.routeName));
           return asyncRoute.maybeWhen(
               skipLoadingOnRefresh: false,
