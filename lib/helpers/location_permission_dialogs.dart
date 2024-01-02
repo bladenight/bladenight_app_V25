@@ -86,7 +86,7 @@ class LocationPermissionDialog {
 
     final locationPermission = await loc2.getLocationPermissionStatus();
 
-    if (locationPermission == loc2.PermissionStatus.denied) {
+    if (locationPermission.locationPermission == loc2.LocationPermission.denied) {
       var prominentDisclosureResult =
           await FlutterPlatformAlert.showCustomAlert(
               windowTitle: Localize.current.requestLocationPermissionTitle,
@@ -200,9 +200,10 @@ class LocationPermissionDialog {
           methodName: 'init',
           text: 'init get permissions status ${sw.elapsedMicroseconds}micros');
     }
-    if (kDebugMode)
+    if (kDebugMode) {
       print(
           'init get permissions status ${sw.elapsedMicroseconds}micros /${sw.elapsedMilliseconds}ms');
+    }
     sw.stop();
     if (permissionStatus.locationPermissionId ==
         loc2.PermissionStatus.authorizedAlways.index) {

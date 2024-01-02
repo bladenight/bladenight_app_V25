@@ -15,7 +15,6 @@ import 'logger/console_output.dart';
 import 'logger/log_printer.dart';
 
 class BnLog {
-  static final BnLog _instance = BnLog._();
   static Logger _logger = Logger();
   static bool _isInitialized = false;
   static final List<LogOutput> _logOutputs = [];

@@ -817,7 +817,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       descriptionRight: '',
                                       rightWidget: CupertinoSwitch(
                                         onChanged: (val) {
-                                          Wamp_V2.instance.closeAndReconnect();
+                                          WampV2.instance.closeAndReconnect();
                                           HiveSettingsDB.setUseCustomServer(
                                               val);
                                           setState(() {});

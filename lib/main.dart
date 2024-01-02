@@ -123,7 +123,7 @@ class BladeNightApp extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
-        final shouldPop = await showDialog<bool>(
+         await showDialog<bool>(
           context: context,
           builder: (context) {
             return AlertDialog(

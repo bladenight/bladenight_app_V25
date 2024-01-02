@@ -84,7 +84,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     }
     if (isOnline == true) {
       if (_wasOffline == true) {
-        Wamp_V2.instance.refresh();
+        WampV2.instance.refresh();
         _wasOffline = false;
       }
       state = const NetworkStateModel(

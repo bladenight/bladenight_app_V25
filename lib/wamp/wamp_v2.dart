@@ -21,8 +21,8 @@ import 'wamp_error.dart';
 
 enum WampConnectionState { unknown, connecting, connected, failed, offline }
 
-class Wamp_V2 {
-  static final Wamp_V2 instance = Wamp_V2._();
+class WampV2 {
+  static final WampV2 instance = WampV2._();
 
   var _busyTimeStamp = DateTime.now();
 
@@ -38,7 +38,7 @@ class Wamp_V2 {
   Queue<BnWampMessage> queue = Queue();
   var streamController = StreamController<BnWampMessage>();
 
-  Wamp_V2._() {
+  WampV2._() {
     _init();
   }
 

@@ -1,7 +1,6 @@
 import 'package:bladenight_app_flutter/helpers/hive_box/messages_db.dart';
 import 'package:bladenight_app_flutter/helpers/uuid_helper.dart';
 import 'package:bladenight_app_flutter/models/message.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 class MessageTest {
   void main() async {

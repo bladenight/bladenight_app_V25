@@ -1,8 +1,9 @@
 //import 'dart:io' if (dart.library.html) 'dart.html' if (dart.library.io) 'dart.io';
+import 'widgets/event_info_web.dart';
+import 'widgets/intro_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 
@@ -10,11 +11,7 @@ import '../generated/l10n.dart';
 import '../helpers/device_info_helper.dart';
 import '../helpers/logger.dart';
 import '../helpers/notification/onesignal_handler.dart';
-import '../helpers/uuid_helper.dart';
-import '../models/message.dart';
 import '../pages/widgets/event_info.dart';
-import '../pages/widgets/event_info_web.dart';
-import '../pages/widgets/intro_slider.dart';
 import '../providers/active_event_notifier_provider.dart';
 import '../providers/messages_provider.dart';
 import '../providers/route_providers.dart';

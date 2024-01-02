@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../../models/message.dart';
 import '../../models/messages.dart';
-import '../../providers/messages_provider.dart';
 import '../logger.dart';
 
 class MessagesDb {

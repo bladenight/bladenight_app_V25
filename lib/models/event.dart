@@ -201,7 +201,7 @@ class Event with EventMappable implements Comparable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getActiveEvent);
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp<Event>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => Event.rpcError(error));
@@ -244,7 +244,7 @@ class Events with EventsMappable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getallevents);
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp<Events>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => Events.rpcError(error));

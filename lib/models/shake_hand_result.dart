@@ -42,7 +42,7 @@ class ShakeHandResult with ShakeHandResultMappable{
         'rel': await DeviceId.getOSVersion
       },
     );
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp<ShakeHand>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) =>

@@ -231,7 +231,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
         WampEndpoint.getrealtimeupdate, message);
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp<RealtimeUpdate>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => RealtimeUpdate.rpcError(error));
