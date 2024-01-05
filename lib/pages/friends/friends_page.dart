@@ -14,7 +14,7 @@ import '../../providers/friends_provider.dart';
 import 'widgets/edit_friend_dialog.dart';
 
 class FriendsPage extends ConsumerStatefulWidget {
-  const FriendsPage({Key? key}) : super(key: key);
+  const FriendsPage({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _FriendsPage();
@@ -45,7 +45,6 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabView(builder: (context) {
       return CupertinoPageScaffold(
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -192,7 +191,6 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
           ],
         ),
       );
-    });
   }
 
   _friendRow(BuildContext context, Friend friend) {
@@ -349,7 +347,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
 enum FriendsAction { addNew, addWithCode, edit, delete }
 
 class FriendsActionModal extends StatelessWidget {
-  const FriendsActionModal({Key? key}) : super(key: key);
+  const FriendsActionModal({super.key});
 
   static Future<FriendsAction?> show(BuildContext context) {
     return showCupertinoModalPopup(

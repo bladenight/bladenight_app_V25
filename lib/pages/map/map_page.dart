@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
@@ -150,12 +149,12 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     locationSubscription = null;
 
     controller.move(
-        LocationProvider.instance.userLatLng ?? defaultLatLng, controller.zoom);
+        LocationProvider.instance.userLatLng ?? defaultLatLng, controller.camera.zoom);
     locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
       locationUpdateProvider,
       (_, value) {
         if (value.value != null) {
-          controller.move(value.value!, controller.zoom);
+          controller.move(value.value!, controller.camera.zoom);
         }
       },
       fireImmediately: true,
@@ -169,12 +168,12 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   void startFollowingTrainHead() {
     locationSubscription?.close();
     locationSubscription = null;
-    controller.move(defaultLatLng, controller.zoom);
+    controller.move(defaultLatLng, controller.camera.zoom);
     locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
       locationTrainHeadUpdateProvider,
       (_, value) {
         if (value.value != null) {
-          controller.move(value.value!, controller.zoom);
+          controller.move(value.value!, controller.camera.zoom);
         }
       },
       fireImmediately: true,
@@ -189,7 +188,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   }
 
   void moveMapToDefault() {
-    controller.move(defaultLatLng, controller.zoom);
+    controller.move(defaultLatLng, controller.camera.zoom);
   }
 
   ///Toggles between location tracking and view without user pos
@@ -302,7 +301,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         width: 20,
                         height: 20,
                         point: hp.latLng,
-                        builder: (context) => Transform.rotate(
+                        child: Builder(
+              builder: (context) => Transform.rotate(
                           angle: hp.bearing,
                           child: const Image(
                             image: AssetImage(
@@ -312,7 +312,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                  ],
+                      ),],
                   // RoutePoints
                   if (runningRoutePoints != null) ...[
                     if (runningRoutePoints.isNotEmpty)
@@ -335,14 +335,15 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         point: runningRoutePoints.last,
                         width: sizeValue,
                         height: sizeValue,
-                        builder: (context) => const Image(
+                        child: Builder(
+              builder: (context) => const Image(
                           image: AssetImage(
                             'assets/images/skatechildmunichred.png',
                           ),
                           fit: BoxFit.cover,
                         ),
                       ),
-                  ], //end tail marker
+                      ),], //end tail marker
                   //arrows for drive Direction
                   //end heading marker
                   if (runningRoutePoints != null) ...[
@@ -367,13 +368,14 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         point: runningRoutePoints.first,
                         width: sizeValue,
                         height: sizeValue,
-                        builder: (context) => const Image(
+                        child:Builder(
+              builder:  (context) => const Image(
                           image: AssetImage(
                             'assets/images/skatechildmunich.png',
                           ),
                         ),
                       ),
-                  ],
+                      ), ],
                   //End SkaterHeadMarker
                   //finishMarker
                   if (runningRoutePoints != null &&
@@ -381,12 +383,12 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     BnMapMarker(
                       buildContext: context,
                       headerText: Localize.of(context).finish,
-                      anchorPosition: AnchorPos.align(AnchorAlign.bottom),
                       color: Colors.red,
                       width: 35.0,
                       height: 35.0,
                       point: activeEvent.activeEventRoutePoints.last,
-                      builder: (context) => const Stack(
+                      child:Builder(
+              builder:  (context) => const Stack(
                         children: [
                           Image(
                             image: AssetImage(
@@ -397,19 +399,20 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
-                  ],
+                    ),],
                   //StartMarker
                   if (runningRoutePoints != null &&
                       runningRoutePoints.isNotEmpty) ...[
                     BnMapMarker(
                       buildContext: context,
                       headerText: Localize.of(context).start,
-                      anchorPosition: AnchorPos.align(AnchorAlign.top),
+                      //anchorPosition: AnchorPos.align(AnchorAlign.top),
                       color: Colors.transparent,
                       width: 35.0,
                       height: 35.0,
                       point: activeEvent.activeEventRoutePoints.first,
-                      builder: (context) => const Stack(
+                      child:Builder(
+              builder:  (context) => const Stack(
                         children: [
                           Image(
                             image: AssetImage(
@@ -420,7 +423,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
-                  ],
+                    ),],
                   if (locationUpdate.realtimeUpdate != null &&
                       locationUpdate.userLatLng != null)
                     for (var friend in locationUpdate.realtimeUpdate!
@@ -440,7 +443,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         height: friend.specialValue == 99
                             ? sizeValue - 8
                             : sizeValue,
-                        builder: (context) {
+                        child: (context) {
                           if (HiveSettingsDB.wantSeeFullOfProcession &&
                               friend.specialValue == 1) {
                             return Container(
@@ -517,7 +520,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         point: locationUpdate.userLatLng!,
                         width: sizeValue,
                         height: sizeValue,
-                        builder: (context) {
+                        child: Builder(
+              builder: (context) {
                           if (locationUpdate.isHead) {
                             return Container(
                               padding: const EdgeInsets.all(5),
@@ -556,7 +560,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                                 : const Icon(Icons.gps_fixed_sharp),
                           );
                         }),
-                ],
+                    ),],
                 //Markers end
                 controller: controller,
               );
@@ -956,8 +960,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                   child: Builder(builder: (context) {
                     return FloatingActionButton(
                       onPressed: () {
-                        var zoom = controller.zoom;
-                        controller.move(controller.center, zoom - 0.5);
+                        var zoom = controller.camera.zoom;
+                        controller.move(controller.camera.center, zoom - 0.5);
                       },
                       heroTag: 'zoominTag',
                       child: const Icon(CupertinoIcons.zoom_out),
@@ -971,8 +975,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                   child: Builder(builder: (context) {
                     return FloatingActionButton(
                       onPressed: () {
-                        var zoom = controller.zoom;
-                        controller.move(controller.center, zoom + 0.5);
+                        var zoom = controller.camera.zoom;
+                        controller.move(controller.camera.center, zoom + 0.5);
                       },
                       heroTag: 'zoomOutTag',
                       child: const Icon(CupertinoIcons.zoom_in),

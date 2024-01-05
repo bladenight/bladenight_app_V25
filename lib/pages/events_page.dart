@@ -52,7 +52,6 @@ class _EventsPageState extends State<EventsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabView(builder: (context) {
       return CupertinoPageScaffold(
         child: CustomScrollView(
           controller: _controller,
@@ -159,7 +158,6 @@ class _EventsPageState extends State<EventsPage> {
           ],
         ),
       );
-    });
   }
 }
 

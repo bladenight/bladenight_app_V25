@@ -16,20 +16,18 @@ class BnMapMarker extends Marker {
       this.distanceTailText,
       this.timeToTailText,
       this.rightWidget,
-      this.anchorPosition,
-      required this.buildContext,
+        required this.buildContext,
+
       required height,
       required width,
       required LatLng point,
-      required WidgetBuilder builder,
+      required Widget child,
       required this.color})
       : super(
             point: point,
-            builder: builder,
-            anchorPos: anchorPosition,
+            child: child,
             width: width,
             height: height);
-
   final Color color;
   final String headerText;
   final String? speedText;
@@ -43,6 +41,5 @@ class BnMapMarker extends Marker {
   final String? distanceTailText;
   final String? timeToTailText;
   final Widget? rightWidget;
-  final AnchorPos? anchorPosition;
   final BuildContext? buildContext;
 }

@@ -28,8 +28,6 @@ import 'pages/home_screen.dart';
 import 'pages/widgets/intro_slider.dart';
 import 'providers/shared_prefs_provider.dart';
 
-const bnUpdateEventTaskKey = 'workmanager.background.task';
-
 void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
     print('FlutterError.onError main $details');
@@ -42,7 +40,7 @@ void main() async {
           FlutterError.presentError(details);
         };
       }
-      if (!kIsWeb) {
+      if (!kDebugMode && !kIsWeb)  {
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
@@ -123,6 +121,7 @@ class BladeNightApp extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
+
          await showDialog<bool>(
           context: context,
           builder: (context) {

@@ -6,10 +6,10 @@ class BnMapFriendMarker extends Marker {
   BnMapFriendMarker({
     required width,
     required point,
-    required builder,
+    required child,
     required height,
     required this.friend,
-  }) : super(width: width, point: point, builder: builder, height: height);
+  }) : super(width: width, point: point, child: child, height: height);
 
   final Friend friend; //to update friend informations
 

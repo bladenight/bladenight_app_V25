@@ -8,7 +8,7 @@ import '../../../pages/widgets/data_widget_left_right.dart';
 class MapMarkerPopup extends StatefulWidget {
   final BnMapMarker marker;
 
-  const MapMarkerPopup(this.marker, {Key? key}) : super(key: key);
+  const MapMarkerPopup(this.marker, {super.key});
 
   @override
   State<StatefulWidget> createState() => _MapMarkerPopupState();
@@ -46,7 +46,7 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
                     constraints: const BoxConstraints(maxHeight: 30),
                     child: Row(
                       children: [
-                        Builder(builder: widget.marker.builder),
+                        widget.marker.child,
                         const SizedBox(
                           width: 10,
                         ),

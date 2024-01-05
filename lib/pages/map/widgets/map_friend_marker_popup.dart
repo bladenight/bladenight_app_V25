@@ -46,7 +46,7 @@ class _MapFriendMarkerPopupState extends State<MapFriendMarkerPopup> {
                     constraints: const BoxConstraints(maxHeight: 30),
                     child: Row(
                       children: [
-                        Builder(builder: widget.marker.builder),
+                        widget.marker.child,
                         const SizedBox(
                           width: 5,
                         ),

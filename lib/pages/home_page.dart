@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
+        if (didPop) return;
         var tabIndex = widget.tabController.index;
         if (tabIndex == 0) {
           widget.tabController.index = 4;
