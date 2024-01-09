@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'friend.dart';
 
@@ -15,11 +16,6 @@ class FriendMapper extends ClassMapperBase<Friend> {
       MapperContainer.globals.useAll([ColorMapper()]);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -77,10 +73,10 @@ class FriendMapper extends ClassMapperBase<Friend> {
       Field('hasServerEntry', _$hasServerEntry, opt: true, def: true);
   static double _$realSpeed(Friend v) => v.realSpeed;
   static const Field<Friend, double> _f$realSpeed =
-      Field('realSpeed', _$realSpeed);
+      Field('realSpeed', _$realSpeed, key: 'rsp');
 
   @override
-  final Map<Symbol, Field<Friend, dynamic>> fields = const {
+  final MappableFields<Friend> fields = const {
     #name: _f$name,
     #friendId: _f$friendId,
     #color: _f$color,
@@ -126,40 +122,41 @@ class FriendMapper extends ClassMapperBase<Friend> {
   final Function instantiate = _instantiate;
 
   static Friend fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Friend>(map));
+    return ensureInitialized().decodeMap<Friend>(map);
   }
 
   static Friend fromJson(String json) {
-    return _guard((c) => c.fromJson<Friend>(json));
+    return ensureInitialized().decodeJson<Friend>(json);
   }
 }
 
 mixin FriendMappable {
   String toJson() {
-    return FriendMapper._guard((c) => c.toJson(this as Friend));
+    return FriendMapper.ensureInitialized().encodeJson<Friend>(this as Friend);
   }
 
   Map<String, dynamic> toMap() {
-    return FriendMapper._guard((c) => c.toMap(this as Friend));
+    return FriendMapper.ensureInitialized().encodeMap<Friend>(this as Friend);
   }
 
   FriendCopyWith<Friend, Friend, Friend> get copyWith =>
       _FriendCopyWithImpl(this as Friend, $identity, $identity);
   @override
   String toString() {
-    return FriendMapper._guard((c) => c.asString(this));
+    return FriendMapper.ensureInitialized().stringifyValue(this as Friend);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            FriendMapper._guard((c) => c.isEqual(this, other)));
+            FriendMapper.ensureInitialized()
+                .isValueEqual(this as Friend, other));
   }
 
   @override
   int get hashCode {
-    return FriendMapper._guard((c) => c.hash(this));
+    return FriendMapper.ensureInitialized().hashValue(this as Friend);
   }
 }
 

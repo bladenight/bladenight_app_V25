@@ -22,7 +22,7 @@ import 'hidden_admin_button.dart';
 import 'no_connection_warning.dart';
 
 class EventInfo extends StatefulWidget {
-  const EventInfo({Key? key}) : super(key: key);
+  const EventInfo({super.key});
 
   @override
   State<EventInfo> createState() => _EventInfoState();

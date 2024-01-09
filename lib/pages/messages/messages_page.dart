@@ -6,7 +6,7 @@ import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/url_launch_helper.dart';
-import '../../models/message.dart';
+import '../../models/external_app_message.dart';
 import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/messages_provider.dart';
@@ -72,7 +72,8 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                       onPressed: () async {
                         final clickedButton =
                             await FlutterPlatformAlert.showCustomAlert(
-                                windowTitle: Localize.current.clearMessagesTitle,
+                                windowTitle:
+                                    Localize.current.clearMessagesTitle,
                                 text: Localize.current.clearMessages,
                                 positiveButtonTitle: Localize.current.yes,
                                 neutralButtonTitle: Localize.current.cancel,
@@ -110,7 +111,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
           ),
           CupertinoSliverRefreshControl(
             onRefresh: () async {
-              return context.read(messagesLogicProvider).reloadMessages();
+              return context.read(messagesLogicProvider).updateServerMessages();
             },
           ),
           const SliverToBoxAdapter(child: ConnectionWarning()),
@@ -223,7 +224,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
     );
   }
 
-  _messageRow(BuildContext context, Message message) {
+  _messageRow(BuildContext context, ExternalAppMessage message) {
     return Container(
       color: message.read ? null : Colors.grey,
       padding: const EdgeInsets.only(left: 5, top: 8, bottom: 8, right: 5),
@@ -240,6 +241,12 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(width: 5),
+                DataWidgetLeftRightSmallTextContent(
+                    descriptionRight: Localize.of(context).dateTimeSecIntl(
+                        DateTime.fromMillisecondsSinceEpoch(message.timeStamp),
+                        DateTime.fromMillisecondsSinceEpoch(message.timeStamp)),
+                    descriptionLeft: Localize.of(context).on,
+                    rightWidget: Container()),
                 Text(message.title,
                     style: const TextStyle(
                         fontSize: 16.0, fontWeight: FontWeight.bold)),
@@ -250,24 +257,73 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                 Text(
                   message.body,
                 ),
-                DataWidgetLeftRightSmallTextContent(
-                    descriptionRight: Localize.of(context).dateTimeSecIntl(
-                        DateTime.fromMillisecondsSinceEpoch(message.timeStamp),
-                        DateTime.fromMillisecondsSinceEpoch(message.timeStamp)),
-                    descriptionLeft: Localize.of(context).on,
-                    rightWidget: Container()),
+                if (message.button1Text != null)
+                  Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: CupertinoButton.filled(
+                        padding: const EdgeInsets.all(2),
+                        minSize: 0,
+                        onPressed: () async {
+                          if (message.button1Link != null &&
+                              message.button1Link != '') {
+                            Launch.launchUrlFromString(message.button1Link!);
+                          }
+                        },
+                        child: Text(message.button1Text!),
+                      ),
+                    ),
+                  ),
+                if (message.button2Text != null)
+                  Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: CupertinoButton.filled(
+                        padding: const EdgeInsets.all(2),
+                        minSize: 0,
+                        onPressed: () async {
+                          if (message.button2Link != null &&
+                              message.button2Link != '') {
+                            Launch.launchUrlFromString(message.button2Link!);
+                          }
+                        },
+                        child: Text(message.button2Text!),
+                      ),
+                    ),
+                  ),
+                if (message.button3Text != null)
+                  Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: CupertinoButton.filled(
+                        padding: const EdgeInsets.all(2),
+                        minSize: 0,
+                        onPressed: () async {
+                          if (message.button3Link != null &&
+                              message.button3Link != '') {
+                            Launch.launchUrlFromString(message.button3Link!);
+                          }
+                        },
+                        child: Text(message.button3Text!),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
           const SizedBox(width: 5),
-          CupertinoButton(
-            child: const Icon(CupertinoIcons.info_circle_fill),
-            onPressed: () async {
-              if (message.url != null) {
-                Launch.launchUrlFromString(message.url!);
-              }
-            },
-          ),
+          if (message.url != null)
+            CupertinoButton(
+              child: const Icon(CupertinoIcons.globe),
+              onPressed: () async {
+                if (message.url != null) {
+                  Launch.launchUrlFromString(message.url!);
+                }
+              },
+            ),
         ],
       ),
     );

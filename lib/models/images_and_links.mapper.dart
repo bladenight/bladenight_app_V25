@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'images_and_links.dart';
 
@@ -17,11 +18,6 @@ class ImageAndLinkListMapper extends ClassMapperBase<ImageAndLinkList> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'ImageAndLinkList';
 
@@ -34,7 +30,7 @@ class ImageAndLinkListMapper extends ClassMapperBase<ImageAndLinkList> {
       Field('rpcException', _$rpcException, opt: true);
 
   @override
-  final Map<Symbol, Field<ImageAndLinkList, dynamic>> fields = const {
+  final MappableFields<ImageAndLinkList> fields = const {
     #imagesAndLinks: _f$imagesAndLinks,
     #rpcException: _f$rpcException,
   };
@@ -48,23 +44,23 @@ class ImageAndLinkListMapper extends ClassMapperBase<ImageAndLinkList> {
   final Function instantiate = _instantiate;
 
   static ImageAndLinkList fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<ImageAndLinkList>(map));
+    return ensureInitialized().decodeMap<ImageAndLinkList>(map);
   }
 
   static ImageAndLinkList fromJson(String json) {
-    return _guard((c) => c.fromJson<ImageAndLinkList>(json));
+    return ensureInitialized().decodeJson<ImageAndLinkList>(json);
   }
 }
 
 mixin ImageAndLinkListMappable {
   String toJson() {
-    return ImageAndLinkListMapper._guard(
-        (c) => c.toJson(this as ImageAndLinkList));
+    return ImageAndLinkListMapper.ensureInitialized()
+        .encodeJson<ImageAndLinkList>(this as ImageAndLinkList);
   }
 
   Map<String, dynamic> toMap() {
-    return ImageAndLinkListMapper._guard(
-        (c) => c.toMap(this as ImageAndLinkList));
+    return ImageAndLinkListMapper.ensureInitialized()
+        .encodeMap<ImageAndLinkList>(this as ImageAndLinkList);
   }
 
   ImageAndLinkListCopyWith<ImageAndLinkList, ImageAndLinkList, ImageAndLinkList>
@@ -72,19 +68,22 @@ mixin ImageAndLinkListMappable {
           this as ImageAndLinkList, $identity, $identity);
   @override
   String toString() {
-    return ImageAndLinkListMapper._guard((c) => c.asString(this));
+    return ImageAndLinkListMapper.ensureInitialized()
+        .stringifyValue(this as ImageAndLinkList);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ImageAndLinkListMapper._guard((c) => c.isEqual(this, other)));
+            ImageAndLinkListMapper.ensureInitialized()
+                .isValueEqual(this as ImageAndLinkList, other));
   }
 
   @override
   int get hashCode {
-    return ImageAndLinkListMapper._guard((c) => c.hash(this));
+    return ImageAndLinkListMapper.ensureInitialized()
+        .hashValue(this as ImageAndLinkList);
   }
 }
 

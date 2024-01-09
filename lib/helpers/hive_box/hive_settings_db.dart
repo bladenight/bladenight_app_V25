@@ -243,7 +243,7 @@ class HiveSettingsDB {
 
   ///get oneSignalId
   static String get oneSignalId {
-    return _hiveBox.get(_oneSignalIdKey, defaultValue: true);
+    return _hiveBox.get(_oneSignalIdKey, defaultValue: 'noId');
   }
 
   ///set if  setOneSignalId were shown

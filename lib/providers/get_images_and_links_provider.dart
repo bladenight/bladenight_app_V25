@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app_settings/app_configuration_helper.dart';
+import '../app_settings/server_connections.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
 import '../models/image_and_link.dart';
@@ -45,6 +46,9 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
         break;
       case 'bladeguardLink':
         ref.read(BladeguardLinkImageAndLink.provider.notifier).setValue(ial);
+        break;
+      case 'bnMessage':
+        bladenightMessageServerLink = (ial.link ?? '').trim();
         break;
       case 'startPoint':
         ref.read(StartPointImageAndLink.provider.notifier).setValue(ial);

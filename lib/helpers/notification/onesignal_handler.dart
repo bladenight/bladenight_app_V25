@@ -8,7 +8,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
-import '../../models/message.dart';
+import '../../models/external_app_message.dart';
 import '../../providers/messages_provider.dart';
 import '../deviceid_helper.dart';
 import '../hive_box/hive_settings_db.dart';
@@ -71,11 +71,12 @@ class OnesignalHandler {
         var clickURL = event.notification.launchUrl;
         var title = event.notification.title;
         var body = event.notification.body;
-        var message = Message(
+        var message = ExternalAppMessage(
             uid: UUID.createUuid(),
             title: title ?? '',
             body: body ?? '',
-            timeStamp: DateTime.now().millisecondsSinceEpoch);
+            timeStamp: DateTime.now().millisecondsSinceEpoch,
+            lastChange: DateTime.now().millisecondsSinceEpoch);
         message.url = clickURL;
         if (event.notification.buttons != null &&
             event.notification.buttons!.length == 1) {
@@ -158,11 +159,12 @@ class OnesignalHandler {
     var body = result.notification.body;
     var buttons = result.notification.buttons;
 
-    var message = Message(
+    var message = ExternalAppMessage(
         uid: UUID.createUuid(),
         title: title ?? '',
         body: body ?? '',
-        timeStamp: DateTime.now().millisecondsSinceEpoch);
+        timeStamp: DateTime.now().millisecondsSinceEpoch,
+        lastChange: DateTime.now().millisecondsSinceEpoch);
 
     CustomButton? buttonResult;
     if (buttons != null && buttons.length == 1) {
@@ -201,11 +203,13 @@ class OnesignalHandler {
   static void receivedBgRemoteMessage(MethodCall call) async {
     try {
       print('remote notification received');
-      ProviderContainer().read(messagesLogicProvider).addMessage(Message(
+      ProviderContainer().read(messagesLogicProvider).addMessage(ExternalAppMessage(
           uid: UUID.createUuid(),
           title: call.arguments,
           body: 'Test',
-          timeStamp: DateTime.now().millisecondsSinceEpoch));
+          timeStamp: DateTime.now().millisecondsSinceEpoch,
+          lastChange: DateTime.now().millisecondsSinceEpoch
+      ));
     } catch (e) {
       BnLog.error(
           className: 'onesignal_handler',

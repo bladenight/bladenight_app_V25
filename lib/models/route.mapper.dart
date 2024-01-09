@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'route.dart';
 
@@ -15,11 +16,6 @@ class RoutePointsMapper extends ClassMapperBase<RoutePoints> {
       MapperContainer.globals.useAll([LatLngMapper()]);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -39,7 +35,7 @@ class RoutePointsMapper extends ClassMapperBase<RoutePoints> {
       Field('lastUpdate', _$lastUpdate, mode: FieldMode.member);
 
   @override
-  final Map<Symbol, Field<RoutePoints, dynamic>> fields = const {
+  final MappableFields<RoutePoints> fields = const {
     #name: _f$name,
     #points: _f$points,
     #rpcException: _f$rpcException,
@@ -55,40 +51,44 @@ class RoutePointsMapper extends ClassMapperBase<RoutePoints> {
   final Function instantiate = _instantiate;
 
   static RoutePoints fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<RoutePoints>(map));
+    return ensureInitialized().decodeMap<RoutePoints>(map);
   }
 
   static RoutePoints fromJson(String json) {
-    return _guard((c) => c.fromJson<RoutePoints>(json));
+    return ensureInitialized().decodeJson<RoutePoints>(json);
   }
 }
 
 mixin RoutePointsMappable {
   String toJson() {
-    return RoutePointsMapper._guard((c) => c.toJson(this as RoutePoints));
+    return RoutePointsMapper.ensureInitialized()
+        .encodeJson<RoutePoints>(this as RoutePoints);
   }
 
   Map<String, dynamic> toMap() {
-    return RoutePointsMapper._guard((c) => c.toMap(this as RoutePoints));
+    return RoutePointsMapper.ensureInitialized()
+        .encodeMap<RoutePoints>(this as RoutePoints);
   }
 
   RoutePointsCopyWith<RoutePoints, RoutePoints, RoutePoints> get copyWith =>
       _RoutePointsCopyWithImpl(this as RoutePoints, $identity, $identity);
   @override
   String toString() {
-    return RoutePointsMapper._guard((c) => c.asString(this));
+    return RoutePointsMapper.ensureInitialized()
+        .stringifyValue(this as RoutePoints);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            RoutePointsMapper._guard((c) => c.isEqual(this, other)));
+            RoutePointsMapper.ensureInitialized()
+                .isValueEqual(this as RoutePoints, other));
   }
 
   @override
   int get hashCode {
-    return RoutePointsMapper._guard((c) => c.hash(this));
+    return RoutePointsMapper.ensureInitialized().hashValue(this as RoutePoints);
   }
 }
 

@@ -226,7 +226,7 @@ extension AppDelegate: WCSessionDelegate {
                 let notificationChannel = FlutterMethodChannel(name: "bladenightbgnotificationchannel",
                                                          binaryMessenger: controller.binaryMessenger)
          
-         print(userInfo)
+         //print(userInfo)
          var notificationData:NSMutableDictionary
          if let custom = userInfo["custom"] as? NSDictionary {
               if let data = custom["a"] as? NSDictionary {

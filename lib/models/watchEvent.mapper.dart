@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'watchEvent.dart';
 
@@ -14,11 +15,6 @@ class WatchEventMapper extends ClassMapperBase<WatchEvent> {
       MapperContainer.globals.use(_instance = WatchEventMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -63,7 +59,7 @@ class WatchEventMapper extends ClassMapperBase<WatchEvent> {
       Field('startPoint', _$startPoint, key: 'stp', opt: true);
 
   @override
-  final Map<Symbol, Field<WatchEvent, dynamic>> fields = const {
+  final MappableFields<WatchEvent> fields = const {
     #title: _f$title,
     #startDate: _f$startDate,
     #routeName: _f$routeName,
@@ -98,40 +94,44 @@ class WatchEventMapper extends ClassMapperBase<WatchEvent> {
   final Function instantiate = _instantiate;
 
   static WatchEvent fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<WatchEvent>(map));
+    return ensureInitialized().decodeMap<WatchEvent>(map);
   }
 
   static WatchEvent fromJson(String json) {
-    return _guard((c) => c.fromJson<WatchEvent>(json));
+    return ensureInitialized().decodeJson<WatchEvent>(json);
   }
 }
 
 mixin WatchEventMappable {
   String toJson() {
-    return WatchEventMapper._guard((c) => c.toJson(this as WatchEvent));
+    return WatchEventMapper.ensureInitialized()
+        .encodeJson<WatchEvent>(this as WatchEvent);
   }
 
   Map<String, dynamic> toMap() {
-    return WatchEventMapper._guard((c) => c.toMap(this as WatchEvent));
+    return WatchEventMapper.ensureInitialized()
+        .encodeMap<WatchEvent>(this as WatchEvent);
   }
 
   WatchEventCopyWith<WatchEvent, WatchEvent, WatchEvent> get copyWith =>
       _WatchEventCopyWithImpl(this as WatchEvent, $identity, $identity);
   @override
   String toString() {
-    return WatchEventMapper._guard((c) => c.asString(this));
+    return WatchEventMapper.ensureInitialized()
+        .stringifyValue(this as WatchEvent);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            WatchEventMapper._guard((c) => c.isEqual(this, other)));
+            WatchEventMapper.ensureInitialized()
+                .isValueEqual(this as WatchEvent, other));
   }
 
   @override
   int get hashCode {
-    return WatchEventMapper._guard((c) => c.hash(this));
+    return WatchEventMapper.ensureInitialized().hashValue(this as WatchEvent);
   }
 }
 
@@ -232,11 +232,6 @@ class WatchEventsMapper extends ClassMapperBase<WatchEvents> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'WatchEvents';
 
@@ -248,7 +243,7 @@ class WatchEventsMapper extends ClassMapperBase<WatchEvents> {
       Field('rpcException', _$rpcException, opt: true);
 
   @override
-  final Map<Symbol, Field<WatchEvents, dynamic>> fields = const {
+  final MappableFields<WatchEvents> fields = const {
     #events: _f$events,
     #rpcException: _f$rpcException,
   };
@@ -261,40 +256,44 @@ class WatchEventsMapper extends ClassMapperBase<WatchEvents> {
   final Function instantiate = _instantiate;
 
   static WatchEvents fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<WatchEvents>(map));
+    return ensureInitialized().decodeMap<WatchEvents>(map);
   }
 
   static WatchEvents fromJson(String json) {
-    return _guard((c) => c.fromJson<WatchEvents>(json));
+    return ensureInitialized().decodeJson<WatchEvents>(json);
   }
 }
 
 mixin WatchEventsMappable {
   String toJson() {
-    return WatchEventsMapper._guard((c) => c.toJson(this as WatchEvents));
+    return WatchEventsMapper.ensureInitialized()
+        .encodeJson<WatchEvents>(this as WatchEvents);
   }
 
   Map<String, dynamic> toMap() {
-    return WatchEventsMapper._guard((c) => c.toMap(this as WatchEvents));
+    return WatchEventsMapper.ensureInitialized()
+        .encodeMap<WatchEvents>(this as WatchEvents);
   }
 
   WatchEventsCopyWith<WatchEvents, WatchEvents, WatchEvents> get copyWith =>
       _WatchEventsCopyWithImpl(this as WatchEvents, $identity, $identity);
   @override
   String toString() {
-    return WatchEventsMapper._guard((c) => c.asString(this));
+    return WatchEventsMapper.ensureInitialized()
+        .stringifyValue(this as WatchEvents);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            WatchEventsMapper._guard((c) => c.isEqual(this, other)));
+            WatchEventsMapper.ensureInitialized()
+                .isValueEqual(this as WatchEvents, other));
   }
 
   @override
   int get hashCode {
-    return WatchEventsMapper._guard((c) => c.hash(this));
+    return WatchEventsMapper.ensureInitialized().hashValue(this as WatchEvents);
   }
 }
 

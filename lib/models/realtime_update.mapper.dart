@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'realtime_update.dart';
 
@@ -17,11 +18,6 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
       EventStatusMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -62,7 +58,7 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
       Field('eventState', _$eventState, key: 'sts', opt: true);
 
   @override
-  final Map<Symbol, Field<RealtimeUpdate, dynamic>> fields = const {
+  final MappableFields<RealtimeUpdate> fields = const {
     #head: _f$head,
     #tail: _f$tail,
     #user: _f$user,
@@ -95,21 +91,23 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
   final Function instantiate = _instantiate;
 
   static RealtimeUpdate fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<RealtimeUpdate>(map));
+    return ensureInitialized().decodeMap<RealtimeUpdate>(map);
   }
 
   static RealtimeUpdate fromJson(String json) {
-    return _guard((c) => c.fromJson<RealtimeUpdate>(json));
+    return ensureInitialized().decodeJson<RealtimeUpdate>(json);
   }
 }
 
 mixin RealtimeUpdateMappable {
   String toJson() {
-    return RealtimeUpdateMapper._guard((c) => c.toJson(this as RealtimeUpdate));
+    return RealtimeUpdateMapper.ensureInitialized()
+        .encodeJson<RealtimeUpdate>(this as RealtimeUpdate);
   }
 
   Map<String, dynamic> toMap() {
-    return RealtimeUpdateMapper._guard((c) => c.toMap(this as RealtimeUpdate));
+    return RealtimeUpdateMapper.ensureInitialized()
+        .encodeMap<RealtimeUpdate>(this as RealtimeUpdate);
   }
 
   RealtimeUpdateCopyWith<RealtimeUpdate, RealtimeUpdate, RealtimeUpdate>
@@ -117,19 +115,22 @@ mixin RealtimeUpdateMappable {
           this as RealtimeUpdate, $identity, $identity);
   @override
   String toString() {
-    return RealtimeUpdateMapper._guard((c) => c.asString(this));
+    return RealtimeUpdateMapper.ensureInitialized()
+        .stringifyValue(this as RealtimeUpdate);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            RealtimeUpdateMapper._guard((c) => c.isEqual(this, other)));
+            RealtimeUpdateMapper.ensureInitialized()
+                .isValueEqual(this as RealtimeUpdate, other));
   }
 
   @override
   int get hashCode {
-    return RealtimeUpdateMapper._guard((c) => c.hash(this));
+    return RealtimeUpdateMapper.ensureInitialized()
+        .hashValue(this as RealtimeUpdate);
   }
 }
 

@@ -2,9 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 
+import '../app_settings/server_connections.dart';
+import '../helpers/crypt_helper.dart';
+import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/hive_box/messages_db.dart';
-import '../models/message.dart';
+import '../helpers/logger.dart';
+import '../models/external_app_message.dart';
+import '../models/external_app_messages.dart';
 
 final messagesProvider = Provider(
     (ref) => ref.watch(messagesLogicProvider).messages.values.toList());
@@ -13,12 +19,7 @@ final messagesReadProvider = FutureProvider<int>((ref) async {
   return await MessagesLogic.instance.readCount();
 });
 
-final messagesProvider1 = Provider(
-        (ref) => ref.watch(messagesReadProvider));
-
-
-final messageByIdProvider = Provider.family((ref, int id) =>
-    ref.watch(messagesLogicProvider.select((l) => l.messages[id])));
+final messagesProvider1 = Provider((ref) => ref.watch(messagesReadProvider));
 
 final messagesLogicProvider =
     ChangeNotifierProvider((ref) => MessagesLogic.instance);
@@ -30,7 +31,7 @@ class MessagesLogic with ChangeNotifier {
     _loadMessages();
   }
 
-  final Map<String, Message> messages = {};
+  final Map<String, ExternalAppMessage> messages = {};
   int readMessages = 0;
 
   Future<void> _loadMessages() async {
@@ -60,17 +61,17 @@ class MessagesLogic with ChangeNotifier {
     return count;
   }
 
-  Future<void> addMessage(Message message) async {
+  Future<void> addMessage(ExternalAppMessage message) async {
     await MessagesDb.addMessage(message);
     _loadMessages();
   }
 
-  Future<void> setReadMessage(Message message, bool read) async {
+  Future<void> setReadMessage(ExternalAppMessage message, bool read) async {
     MessagesDb.setReadMessage(message, read);
     _loadMessages();
   }
 
-  Future<void> deleteMessage(Message message) async {
+  Future<void> deleteMessage(ExternalAppMessage message) async {
     MessagesDb.deleteMessage(message);
     messages.remove(message.uid);
     _loadMessages();
@@ -79,9 +80,38 @@ class MessagesLogic with ChangeNotifier {
   Future<void> reloadMessages() async {
     await _loadMessages();
   }
+
+  Future<void> updateServerMessages() async {
+    try {
+      var lastTimeStamp = await MessagesDb.getLastMessagesUpdateTimestamp;
+      var isBladeGuard = HiveSettingsDB.isBladeGuard;
+      var teamId = HiveSettingsDB.teamId;
+      var skmMember = HiveSettingsDB.rcvSkatemunichInfos;
+      var oneSignalID = HiveSettingsDB.oneSignalId;
+      var parameter = EncryptData.encryptAES(
+          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$oneSignalID',
+          messagePassword);
+      if (parameter == null) {
+        BnLog.error(text: "Couldn't encrypt Parameter");
+        return;
+      }
+      var result = await http
+          .get(Uri.parse('$bladenightMessageServerLink/?$parameter'));
+      if (result.statusCode != 200) {
+        await _loadMessages();
+        return;
+      }
+      var messages = ExternalAppMessagesMapper.fromJson(result.body);
+      await MessagesDb.updateMessages(messages);
+      await _loadMessages();
+      //var result = await http.get(Uri.parse("https://bladenight.app/api/?results=20"));
+    } catch (ex) {
+      BnLog.error(text: 'Error updateServerMessages', exception: ex);
+    }
+  }
 }
 
-final filteredMessages = Provider<List<Message>>((ref) {
+final filteredMessages = Provider<List<ExternalAppMessage>>((ref) {
   final messages = ref.watch(messagesProvider);
   final searchStringProvider = ref.watch(messageNameProvider);
 

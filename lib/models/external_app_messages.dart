@@ -1,16 +1,17 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'message.dart';
+import 'external_app_message.dart';
 
-part 'messages.mapper.dart';
+part 'external_app_messages.mapper.dart';
 
 @MappableClass()
-class Messages with MessagesMappable {
-  final List<Message> messages;
+class ExternalAppMessages with ExternalAppMessagesMappable {
+  @MappableField(key: 'messages')
+  final List<ExternalAppMessage> messages;
 
-  Messages({required this.messages});
+  ExternalAppMessages({required this.messages});
 
-  static bool messageExists(Messages messages, Message message) {
+  static bool messageExists(ExternalAppMessages messages, ExternalAppMessage message) {
     for (var message in messages.messages) {
       if (message.uid.compareTo(message.uid) == 0) {
         return true;
@@ -20,7 +21,7 @@ class Messages with MessagesMappable {
   }
 
   static bool messageExistsInList(
-      List<Message> messagesList, String messageName) {
+      List<ExternalAppMessage> messagesList, String messageName) {
     for (var element in messagesList) {
       if (element.uid.compareTo(messageName.toLowerCase()) == 0) {
         return true;

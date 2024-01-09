@@ -3,14 +3,15 @@ import 'dart:async';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import '../../models/message.dart';
-import '../../models/messages.dart';
+import '../../models/external_app_message.dart';
+import '../../models/external_app_messages.dart';
 import '../logger.dart';
 
 class MessagesDb {
   static final MessagesDb instance = MessagesDb._();
   static Box? _messagesDbBox;
   static const String dbName = 'OneSignalMessagesDb';
+  static const String _messagesUpdateTimeStampKey = 'MessagesUpdateTimeStampKey';
 
   MessagesDb._() {
     init();
@@ -21,14 +22,14 @@ class MessagesDb {
   }
 
   ///get stored messages
-  static Future<List<Message>> get messagesList async {
+  static Future<List<ExternalAppMessage>> get messagesList async {
     try {
       _messagesDbBox ??= await Hive.openBox(dbName);
-      List<Message> messageList = [];
+      List<ExternalAppMessage> messageList = [];
       for (var key in _messagesDbBox!.keys) {
         var messageJson = _messagesDbBox!.get(key);
         if (messageJson == null) continue;
-        messageList.add(MapperContainer.globals.fromJson<Message>(messageJson));
+        messageList.add(MapperContainer.globals.fromJson<ExternalAppMessage>(messageJson));
       }
       return messageList;
     } catch (e) {
@@ -36,7 +37,7 @@ class MessagesDb {
     }
   }
 
-  static Future<void> saveMessages(Messages messages) async {
+  static Future<void> saveMessages(ExternalAppMessages messages) async {
     try {
       _messagesDbBox ??= await Hive.openBox(dbName);
       for (var message in messages.messages) {
@@ -47,17 +48,18 @@ class MessagesDb {
     }
   }
 
-  static Future<void> addMessage(Message message) async {
+  static Future<void> addMessage(ExternalAppMessage message) async {
+    if (message.deleted) return;
     _messagesDbBox ??= await Hive.openBox(dbName);
     try {
-      _messagesDbBox!.put(message.uid, message.toJson());
+      await _messagesDbBox!.put(message.uid, message.toJson());
 
     } catch (e) {
       BnLog.error(text: 'Error addMessage ${e.toString()}', exception: e);
     }
   }
 
-  static Future<void> setReadMessage(Message message, bool read) async {
+  static Future<void> setReadMessage(ExternalAppMessage message, bool read) async {
     _messagesDbBox ??= await Hive.openBox(dbName);
     try {
       var messageCopy = message.copyWith(read: read);
@@ -67,13 +69,63 @@ class MessagesDb {
     }
   }
 
+
+  static Future<bool> updateMessages(ExternalAppMessages messages) async {
+    _messagesDbBox ??= await Hive.openBox(dbName);
+    try {
+      int lastUpdateTimestamp = 0;
+      for (var message in messages.messages){
+        updateMessage(message);
+        //log last update
+        if (message.lastChange > lastUpdateTimestamp){
+          lastUpdateTimestamp = message.lastChange;
+        }
+      }
+      //update timestamp
+      setLastMessagesUpdateTimestamp(lastUpdateTimestamp);
+      return true;
+
+    } catch (e) {
+      BnLog.error(text: 'Error addMessage ${e.toString()}', exception: e);
+    }
+    return false;
+  }
+
+  static Future<void> updateMessage(ExternalAppMessage message) async {
+    if (message.deleted) {
+      deleteMessage(message);
+    }
+    else{
+      addMessage(message);
+    }
+  }
+
+  static Future<int> get getLastMessagesUpdateTimestamp async {
+    try {
+      _messagesDbBox ??= await Hive.openBox(dbName);
+      return await _messagesDbBox!.get(_messagesUpdateTimeStampKey,defaultValue: 0);
+    } catch (e) {
+      BnLog.error(text: 'Error getLastMessagesUpdateTimestamp ${e.toString()}', exception: e);
+    }
+    return 0;
+  }
+
+  static Future<void>  setLastMessagesUpdateTimestamp(int lastUpdateTimestamp) async {
+    try {
+      _messagesDbBox ??= await Hive.openBox(dbName);
+      return await _messagesDbBox!.put(_messagesUpdateTimeStampKey,lastUpdateTimestamp);
+    } catch (e) {
+      BnLog.error(text: 'Error setLastMessagesUpdateTimestamp ${e.toString()}', exception: e);
+    }
+  }
+
   ///helper to clear message store
   static Future<int> clearMessagesStore() async {
     _messagesDbBox ??= await Hive.openBox(dbName);
     return _messagesDbBox!.clear();
   }
 
-  static Future<void> deleteMessage(Message message) async {
+  static Future<void> deleteMessage(ExternalAppMessage message) async {
     _messagesDbBox ??= await Hive.openBox(dbName);
     return _messagesDbBox!.delete(message.uid);
   }

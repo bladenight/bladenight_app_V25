@@ -47,6 +47,7 @@ dependencies:
   get: ^4.6.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  http: any
   internet_connection_checker: ^1.0.0+1
   intl: any
   intro_slider: ^4.2.0
@@ -96,7 +97,7 @@ dependencies:
       path: wakelock/
       ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
       #path: ../wakelock/wakelock
-  web_socket_channel: ^2.3.0
+  web_socket_channel: ^2.4.0
   webview_flutter: ^4.0.7
 
 dev_dependencies:

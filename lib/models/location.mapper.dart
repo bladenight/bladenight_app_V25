@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'location.dart';
 
@@ -15,11 +16,6 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
       MapperContainer.globals.useAll([LatLngMapper()]);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -45,7 +41,7 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
       Field('realSpeed', _$realSpeed, key: 'rsp', opt: true);
 
   @override
-  final Map<Symbol, Field<LocationInfo, dynamic>> fields = const {
+  final MappableFields<LocationInfo> fields = const {
     #coords: _f$coords,
     #isParticipating: _f$isParticipating,
     #deviceId: _f$deviceId,
@@ -68,40 +64,45 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
   final Function instantiate = _instantiate;
 
   static LocationInfo fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<LocationInfo>(map));
+    return ensureInitialized().decodeMap<LocationInfo>(map);
   }
 
   static LocationInfo fromJson(String json) {
-    return _guard((c) => c.fromJson<LocationInfo>(json));
+    return ensureInitialized().decodeJson<LocationInfo>(json);
   }
 }
 
 mixin LocationInfoMappable {
   String toJson() {
-    return LocationInfoMapper._guard((c) => c.toJson(this as LocationInfo));
+    return LocationInfoMapper.ensureInitialized()
+        .encodeJson<LocationInfo>(this as LocationInfo);
   }
 
   Map<String, dynamic> toMap() {
-    return LocationInfoMapper._guard((c) => c.toMap(this as LocationInfo));
+    return LocationInfoMapper.ensureInitialized()
+        .encodeMap<LocationInfo>(this as LocationInfo);
   }
 
   LocationInfoCopyWith<LocationInfo, LocationInfo, LocationInfo> get copyWith =>
       _LocationInfoCopyWithImpl(this as LocationInfo, $identity, $identity);
   @override
   String toString() {
-    return LocationInfoMapper._guard((c) => c.asString(this));
+    return LocationInfoMapper.ensureInitialized()
+        .stringifyValue(this as LocationInfo);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            LocationInfoMapper._guard((c) => c.isEqual(this, other)));
+            LocationInfoMapper.ensureInitialized()
+                .isValueEqual(this as LocationInfo, other));
   }
 
   @override
   int get hashCode {
-    return LocationInfoMapper._guard((c) => c.hash(this));
+    return LocationInfoMapper.ensureInitialized()
+        .hashValue(this as LocationInfo);
   }
 }
 

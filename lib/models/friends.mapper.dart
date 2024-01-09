@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'friends.dart';
 
@@ -17,11 +18,6 @@ class FriendsMapper extends ClassMapperBase<Friends> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Friends';
 
@@ -30,7 +26,7 @@ class FriendsMapper extends ClassMapperBase<Friends> {
       Field('friends', _$friends);
 
   @override
-  final Map<Symbol, Field<Friends, dynamic>> fields = const {
+  final MappableFields<Friends> fields = const {
     #friends: _f$friends,
   };
 
@@ -42,40 +38,43 @@ class FriendsMapper extends ClassMapperBase<Friends> {
   final Function instantiate = _instantiate;
 
   static Friends fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Friends>(map));
+    return ensureInitialized().decodeMap<Friends>(map);
   }
 
   static Friends fromJson(String json) {
-    return _guard((c) => c.fromJson<Friends>(json));
+    return ensureInitialized().decodeJson<Friends>(json);
   }
 }
 
 mixin FriendsMappable {
   String toJson() {
-    return FriendsMapper._guard((c) => c.toJson(this as Friends));
+    return FriendsMapper.ensureInitialized()
+        .encodeJson<Friends>(this as Friends);
   }
 
   Map<String, dynamic> toMap() {
-    return FriendsMapper._guard((c) => c.toMap(this as Friends));
+    return FriendsMapper.ensureInitialized()
+        .encodeMap<Friends>(this as Friends);
   }
 
   FriendsCopyWith<Friends, Friends, Friends> get copyWith =>
       _FriendsCopyWithImpl(this as Friends, $identity, $identity);
   @override
   String toString() {
-    return FriendsMapper._guard((c) => c.asString(this));
+    return FriendsMapper.ensureInitialized().stringifyValue(this as Friends);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            FriendsMapper._guard((c) => c.isEqual(this, other)));
+            FriendsMapper.ensureInitialized()
+                .isValueEqual(this as Friends, other));
   }
 
   @override
   int get hashCode {
-    return FriendsMapper._guard((c) => c.hash(this));
+    return FriendsMapper.ensureInitialized().hashValue(this as Friends);
   }
 }
 

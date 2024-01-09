@@ -4,13 +4,13 @@
 // ignore_for_file: unused_element
 
 import 'models/event.dart' as p0;
-import 'models/friend.dart' as p1;
-import 'models/friends.dart' as p2;
-import 'models/image_and_link.dart' as p3;
-import 'models/images_and_links.dart' as p4;
-import 'models/location.dart' as p5;
-import 'models/message.dart' as p6;
-import 'models/messages.dart' as p7;
+import 'models/external_app_message.dart' as p1;
+import 'models/external_app_messages.dart' as p2;
+import 'models/friend.dart' as p3;
+import 'models/friends.dart' as p4;
+import 'models/image_and_link.dart' as p5;
+import 'models/images_and_links.dart' as p6;
+import 'models/location.dart' as p7;
 import 'models/messages/admin.dart' as p8;
 import 'models/messages/friend.dart' as p9;
 import 'models/messages/friends.dart' as p10;
@@ -32,13 +32,13 @@ void initializeMappers() {
   p0.EventMapper.ensureInitialized();
   p0.EventsMapper.ensureInitialized();
   p0.EventStatusMapper.ensureInitialized();
-  p1.FriendMapper.ensureInitialized();
-  p2.FriendsMapper.ensureInitialized();
-  p3.ImageAndLinkMapper.ensureInitialized();
-  p4.ImageAndLinkListMapper.ensureInitialized();
-  p5.LocationInfoMapper.ensureInitialized();
-  p6.MessageMapper.ensureInitialized();
-  p7.MessagesMapper.ensureInitialized();
+  p1.ExternalAppMessageMapper.ensureInitialized();
+  p2.ExternalAppMessagesMapper.ensureInitialized();
+  p3.FriendMapper.ensureInitialized();
+  p4.FriendsMapper.ensureInitialized();
+  p5.ImageAndLinkMapper.ensureInitialized();
+  p6.ImageAndLinkListMapper.ensureInitialized();
+  p7.LocationInfoMapper.ensureInitialized();
   p8.AdminMessageMapper.ensureInitialized();
   p9.FriendMessageMapper.ensureInitialized();
   p10.FriendsMessageMapper.ensureInitialized();

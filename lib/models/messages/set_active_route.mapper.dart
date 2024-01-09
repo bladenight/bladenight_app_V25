@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'set_active_route.dart';
 
@@ -16,11 +17,6 @@ class SetActiveRouteMessageMapper
       AdminMessageMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -39,11 +35,12 @@ class SetActiveRouteMessageMapper
   static const Field<SetActiveRouteMessage, int> _f$noise =
       Field('noise', _$noise, key: 'noi');
   static String _$deviceId(SetActiveRouteMessage v) => v.deviceId;
+  static dynamic _arg$deviceId(f) => f<String>();
   static const Field<SetActiveRouteMessage, dynamic> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did');
+      Field('deviceId', _$deviceId, key: 'did', arg: _arg$deviceId);
 
   @override
-  final Map<Symbol, Field<SetActiveRouteMessage, dynamic>> fields = const {
+  final MappableFields<SetActiveRouteMessage> fields = const {
     #route: _f$route,
     #timestamp: _f$timestamp,
     #checksum: _f$checksum,
@@ -64,23 +61,23 @@ class SetActiveRouteMessageMapper
   final Function instantiate = _instantiate;
 
   static SetActiveRouteMessage fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<SetActiveRouteMessage>(map));
+    return ensureInitialized().decodeMap<SetActiveRouteMessage>(map);
   }
 
   static SetActiveRouteMessage fromJson(String json) {
-    return _guard((c) => c.fromJson<SetActiveRouteMessage>(json));
+    return ensureInitialized().decodeJson<SetActiveRouteMessage>(json);
   }
 }
 
 mixin SetActiveRouteMessageMappable {
   String toJson() {
-    return SetActiveRouteMessageMapper._guard(
-        (c) => c.toJson(this as SetActiveRouteMessage));
+    return SetActiveRouteMessageMapper.ensureInitialized()
+        .encodeJson<SetActiveRouteMessage>(this as SetActiveRouteMessage);
   }
 
   Map<String, dynamic> toMap() {
-    return SetActiveRouteMessageMapper._guard(
-        (c) => c.toMap(this as SetActiveRouteMessage));
+    return SetActiveRouteMessageMapper.ensureInitialized()
+        .encodeMap<SetActiveRouteMessage>(this as SetActiveRouteMessage);
   }
 
   SetActiveRouteMessageCopyWith<SetActiveRouteMessage, SetActiveRouteMessage,
@@ -89,19 +86,22 @@ mixin SetActiveRouteMessageMappable {
           this as SetActiveRouteMessage, $identity, $identity);
   @override
   String toString() {
-    return SetActiveRouteMessageMapper._guard((c) => c.asString(this));
+    return SetActiveRouteMessageMapper.ensureInitialized()
+        .stringifyValue(this as SetActiveRouteMessage);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            SetActiveRouteMessageMapper._guard((c) => c.isEqual(this, other)));
+            SetActiveRouteMessageMapper.ensureInitialized()
+                .isValueEqual(this as SetActiveRouteMessage, other));
   }
 
   @override
   int get hashCode {
-    return SetActiveRouteMessageMapper._guard((c) => c.hash(this));
+    return SetActiveRouteMessageMapper.ensureInitialized()
+        .hashValue(this as SetActiveRouteMessage);
   }
 }
 

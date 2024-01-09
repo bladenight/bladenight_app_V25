@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'admin.dart';
 
@@ -14,11 +15,6 @@ class AdminMessageMapper extends ClassMapperBase<AdminMessage> {
       MapperContainer.globals.use(_instance = AdminMessageMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -38,7 +34,7 @@ class AdminMessageMapper extends ClassMapperBase<AdminMessage> {
       Field('deviceId', _$deviceId, key: 'did');
 
   @override
-  final Map<Symbol, Field<AdminMessage, dynamic>> fields = const {
+  final MappableFields<AdminMessage> fields = const {
     #timestamp: _f$timestamp,
     #checksum: _f$checksum,
     #noise: _f$noise,
@@ -57,40 +53,45 @@ class AdminMessageMapper extends ClassMapperBase<AdminMessage> {
   final Function instantiate = _instantiate;
 
   static AdminMessage fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<AdminMessage>(map));
+    return ensureInitialized().decodeMap<AdminMessage>(map);
   }
 
   static AdminMessage fromJson(String json) {
-    return _guard((c) => c.fromJson<AdminMessage>(json));
+    return ensureInitialized().decodeJson<AdminMessage>(json);
   }
 }
 
 mixin AdminMessageMappable {
   String toJson() {
-    return AdminMessageMapper._guard((c) => c.toJson(this as AdminMessage));
+    return AdminMessageMapper.ensureInitialized()
+        .encodeJson<AdminMessage>(this as AdminMessage);
   }
 
   Map<String, dynamic> toMap() {
-    return AdminMessageMapper._guard((c) => c.toMap(this as AdminMessage));
+    return AdminMessageMapper.ensureInitialized()
+        .encodeMap<AdminMessage>(this as AdminMessage);
   }
 
   AdminMessageCopyWith<AdminMessage, AdminMessage, AdminMessage> get copyWith =>
       _AdminMessageCopyWithImpl(this as AdminMessage, $identity, $identity);
   @override
   String toString() {
-    return AdminMessageMapper._guard((c) => c.asString(this));
+    return AdminMessageMapper.ensureInitialized()
+        .stringifyValue(this as AdminMessage);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            AdminMessageMapper._guard((c) => c.isEqual(this, other)));
+            AdminMessageMapper.ensureInitialized()
+                .isValueEqual(this as AdminMessage, other));
   }
 
   @override
   int get hashCode {
-    return AdminMessageMapper._guard((c) => c.hash(this));
+    return AdminMessageMapper.ensureInitialized()
+        .hashValue(this as AdminMessage);
   }
 }
 

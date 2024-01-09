@@ -20,7 +20,7 @@ import 'messages/messages_page.dart';
 import 'settings_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.tabController}) : super(key: key);
+  const HomePage({super.key, required this.tabController});
   final CupertinoTabController tabController;
 
   @override
@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (messageProvider.messages.isNotEmpty)
+
                       CupertinoButton(
                         padding: EdgeInsets.zero,
                         minSize: 0,
@@ -123,13 +123,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             ),
                           );
                         },
-                        child: Badge(
+                        child: messageProvider.messages.isNotEmpty?
+                        Badge(
                           label: Text(messageProvider.readMessages.toString()),
                           child: const Icon(Icons.mark_email_unread),
-                        ),
+                        ):const Icon(CupertinoIcons.envelope),
                       ),
-                    if (messageProvider.messages.isNotEmpty)
-                      const SizedBox(
+                    const SizedBox(
                         width: 10,
                       ),
                     CupertinoButton(
@@ -178,8 +178,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ),
             CupertinoSliverRefreshControl(
               onRefresh: () async {
+                context.read(messagesLogicProvider).updateServerMessages();
              context.refresh(currentRouteProvider);
-                context.read(activeEventProvider).refresh(forceUpdate: true);
+             context.read(activeEventProvider).refresh(forceUpdate: true);
               },
             ),
             Builder(builder: (context) {

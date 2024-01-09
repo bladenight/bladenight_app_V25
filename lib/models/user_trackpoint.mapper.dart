@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'user_trackpoint.dart';
 
@@ -14,11 +15,6 @@ class UserTrackPointMapper extends ClassMapperBase<UserTrackPoint> {
       MapperContainer.globals.use(_instance = UserTrackPointMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -47,7 +43,7 @@ class UserTrackPointMapper extends ClassMapperBase<UserTrackPoint> {
       Field('timeStamp', _$timeStamp);
 
   @override
-  final Map<Symbol, Field<UserTrackPoint, dynamic>> fields = const {
+  final MappableFields<UserTrackPoint> fields = const {
     #latitude: _f$latitude,
     #longitude: _f$longitude,
     #realSpeedKmh: _f$realSpeedKmh,
@@ -72,21 +68,23 @@ class UserTrackPointMapper extends ClassMapperBase<UserTrackPoint> {
   final Function instantiate = _instantiate;
 
   static UserTrackPoint fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<UserTrackPoint>(map));
+    return ensureInitialized().decodeMap<UserTrackPoint>(map);
   }
 
   static UserTrackPoint fromJson(String json) {
-    return _guard((c) => c.fromJson<UserTrackPoint>(json));
+    return ensureInitialized().decodeJson<UserTrackPoint>(json);
   }
 }
 
 mixin UserTrackPointMappable {
   String toJson() {
-    return UserTrackPointMapper._guard((c) => c.toJson(this as UserTrackPoint));
+    return UserTrackPointMapper.ensureInitialized()
+        .encodeJson<UserTrackPoint>(this as UserTrackPoint);
   }
 
   Map<String, dynamic> toMap() {
-    return UserTrackPointMapper._guard((c) => c.toMap(this as UserTrackPoint));
+    return UserTrackPointMapper.ensureInitialized()
+        .encodeMap<UserTrackPoint>(this as UserTrackPoint);
   }
 
   UserTrackPointCopyWith<UserTrackPoint, UserTrackPoint, UserTrackPoint>
@@ -94,19 +92,22 @@ mixin UserTrackPointMappable {
           this as UserTrackPoint, $identity, $identity);
   @override
   String toString() {
-    return UserTrackPointMapper._guard((c) => c.asString(this));
+    return UserTrackPointMapper.ensureInitialized()
+        .stringifyValue(this as UserTrackPoint);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            UserTrackPointMapper._guard((c) => c.isEqual(this, other)));
+            UserTrackPointMapper.ensureInitialized()
+                .isValueEqual(this as UserTrackPoint, other));
   }
 
   @override
   int get hashCode {
-    return UserTrackPointMapper._guard((c) => c.hash(this));
+    return UserTrackPointMapper.ensureInitialized()
+        .hashValue(this as UserTrackPoint);
   }
 }
 
@@ -184,11 +185,6 @@ class UserTrackPointsMapper extends ClassMapperBase<UserTrackPoints> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'UserTrackPoints';
 
@@ -197,7 +193,7 @@ class UserTrackPointsMapper extends ClassMapperBase<UserTrackPoints> {
       Field('utps', _$utps);
 
   @override
-  final Map<Symbol, Field<UserTrackPoints, dynamic>> fields = const {
+  final MappableFields<UserTrackPoints> fields = const {
     #utps: _f$utps,
   };
 
@@ -209,23 +205,23 @@ class UserTrackPointsMapper extends ClassMapperBase<UserTrackPoints> {
   final Function instantiate = _instantiate;
 
   static UserTrackPoints fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<UserTrackPoints>(map));
+    return ensureInitialized().decodeMap<UserTrackPoints>(map);
   }
 
   static UserTrackPoints fromJson(String json) {
-    return _guard((c) => c.fromJson<UserTrackPoints>(json));
+    return ensureInitialized().decodeJson<UserTrackPoints>(json);
   }
 }
 
 mixin UserTrackPointsMappable {
   String toJson() {
-    return UserTrackPointsMapper._guard(
-        (c) => c.toJson(this as UserTrackPoints));
+    return UserTrackPointsMapper.ensureInitialized()
+        .encodeJson<UserTrackPoints>(this as UserTrackPoints);
   }
 
   Map<String, dynamic> toMap() {
-    return UserTrackPointsMapper._guard(
-        (c) => c.toMap(this as UserTrackPoints));
+    return UserTrackPointsMapper.ensureInitialized()
+        .encodeMap<UserTrackPoints>(this as UserTrackPoints);
   }
 
   UserTrackPointsCopyWith<UserTrackPoints, UserTrackPoints, UserTrackPoints>
@@ -233,19 +229,22 @@ mixin UserTrackPointsMappable {
           this as UserTrackPoints, $identity, $identity);
   @override
   String toString() {
-    return UserTrackPointsMapper._guard((c) => c.asString(this));
+    return UserTrackPointsMapper.ensureInitialized()
+        .stringifyValue(this as UserTrackPoints);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            UserTrackPointsMapper._guard((c) => c.isEqual(this, other)));
+            UserTrackPointsMapper.ensureInitialized()
+                .isValueEqual(this as UserTrackPoints, other));
   }
 
   @override
   int get hashCode {
-    return UserTrackPointsMapper._guard((c) => c.hash(this));
+    return UserTrackPointsMapper.ensureInitialized()
+        .hashValue(this as UserTrackPoints);
   }
 }
 
