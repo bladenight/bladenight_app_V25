@@ -434,15 +434,16 @@ class BnLogPrinter extends LogPrinter {
     List<String> buffer = [];
     var verticalLineAtLevel = (_includeBox[level]!) ? ('$verticalLine ') : '';
     var color = _getLevelColor(level);
-    if (_includeBox[level]!) buffer.add(color(_topBorder));
+    //if (_includeBox[level]!) buffer.add(color(_topBorder));
 
     if (time != null) {
       buffer.add(color('$verticalLineAtLevel$time'));
-      if (_includeBox[level]!) buffer.add(color(_middleBorder));
+      //if (_includeBox[level]!) buffer.add(color(_middleBorder));
     }
     var emoji = _getEmoji(level);
     for (var line in message.split('\n')) {
-      buffer.add(color('$verticalLineAtLevel$emoji$line'));
+      if (line == 'null') continue;
+      buffer.add(color('$verticalLineAtLevel$emoji$message'));
     }
     if (_includeBox[level]!) buffer.add(color(_middleBorder));
 
@@ -457,7 +458,7 @@ class BnLogPrinter extends LogPrinter {
       for (var line in stacktrace.split('\n')) {
         buffer.add(color('$verticalLineAtLevel$line'));
       }
-      if (_includeBox[level]!) buffer.add(color(_middleBorder));
+      //if (_includeBox[level]!) buffer.add(color(_middleBorder));
     }
     if (_includeBox[level]!) buffer.add(color(_bottomBorder));
 

@@ -19,7 +19,6 @@ dependencies:
   dart_mappable: ^4.2.0
   device_info_plus: ^9.0.2
   encrypt: ^5.0.1
-  fast_color_picker: ^0.1.1
   firebase_core: ^2.13.0
   firebase_crashlytics: ^3.3.1
   flutter:
@@ -97,7 +96,7 @@ dependencies:
       path: wakelock/
       ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
       #path: ../wakelock/wakelock
-  web_socket_channel: ^2.4.0
+  web_socket_channel: ^2.4.3
   webview_flutter: ^4.0.7
 
 dev_dependencies:
@@ -135,7 +134,7 @@ dependency_overrides:
       ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
 
 
-# can't compile mapper while generate is set to true --> solve it by set to false , clean and rebuild
+# can't compile mapper if generate is set to true --> solve it by set to false , clean and rebuild
 flutter:
   generate: false
   uses-material-design: true

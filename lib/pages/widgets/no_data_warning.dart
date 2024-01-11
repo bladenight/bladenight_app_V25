@@ -8,7 +8,7 @@ import 'no_network_warning.dart';
 import 'no_server_reachable_warning.dart';
 
 class NoDataWarning extends ConsumerWidget {
-  const NoDataWarning({Key? key, required this.onReload}) : super(key: key);
+  const NoDataWarning({super.key, required this.onReload});
 
   final VoidCallback onReload;
 
