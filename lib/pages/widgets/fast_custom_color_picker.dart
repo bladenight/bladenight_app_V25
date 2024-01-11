@@ -1,12 +1,9 @@
-import 'package:bladenight_app_flutter/pages/widgets/spring_button.dart';
+import 'spring_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_constants.dart';
-import '../../providers/shared_prefs_provider.dart';
 
 final Map<int, double> _correctSizes = {};
 final PageController _pageController = PageController(keepPage: true);
@@ -134,7 +131,7 @@ class _FastCustomColorPicker extends State<FastCustomColorPicker> {
     return [
       for (var c in colors)
         SpringButton(
-          SpringButtonType.OnlyScale,
+          SpringButtonType.onlyScale,
           Padding(
             padding: EdgeInsets.all(size * 0.1),
             child: AnimatedContainer(

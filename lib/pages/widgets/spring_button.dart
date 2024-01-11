@@ -2,13 +2,15 @@
 // All material used in the making of this code, project, program, application, software et cetera (the "Intellectual Property")                     /
 // belongs completely and solely to Ali Yigit Bireroglu. This includes but is not limited to the source code, the multimedia and                     /
 // other asset files. If you were granted this Intellectual Property for personal use, you are obligated to include this copyright                   /
-// text at all times.                                                                                                                                /
+// text at all times.
+//
+// LHuth - tuned code 11.01.2024
 
 import 'package:flutter/material.dart';
 
 enum SpringButtonType {
-  OnlyScale,
-  WithOpacity,
+  onlyScale,
+  withOpacity,
 }
 
 class SpringButton extends StatefulWidget {
@@ -181,20 +183,11 @@ class SpringButton extends StatefulWidget {
       })  : assert(scaleCoefficient >= 0.0 && scaleCoefficient <= 1.0);
 
   @override
-  SpringButtonState createState() => SpringButtonState(
-    springButtonType,
-    useCache,
-    alignment,
-    scaleCoefficient,
-  );
+  SpringButtonState createState() => SpringButtonState();
 }
 
 class SpringButtonState extends State<SpringButton> with SingleTickerProviderStateMixin {
-  final SpringButtonType springButtonType;
   Widget? uiChild;
-  final bool useCache;
-  final Alignment alignment;
-  final double scaleCoefficient;
 
   ///The [AnimationController] used to create the spring effect.
   late AnimationController animationController;
@@ -207,18 +200,12 @@ class SpringButtonState extends State<SpringButton> with SingleTickerProviderSta
   ///Use this value to determine the depth of debug logging that is actually only here for myself and the Swiss scientists.
   final int _debugLevel = 0;
 
-  SpringButtonState(
-      this.springButtonType,
-      this.useCache,
-      this.alignment,
-      this.scaleCoefficient,
-      );
 
   @override
   void initState() {
     super.initState();
 
-    if (useCache) uiChild = wrapper();
+    if (widget.useCache) uiChild = wrapper();
 
     animationController = AnimationController(
       vsync: this,
@@ -228,7 +215,7 @@ class SpringButtonState extends State<SpringButton> with SingleTickerProviderSta
     );
     animationController.value = 1;
     animation = Tween(
-      begin: scaleCoefficient,
+      begin: widget.scaleCoefficient,
       end: 1.0,
     ).animate(
       CurvedAnimation(
@@ -520,17 +507,17 @@ class SpringButtonState extends State<SpringButton> with SingleTickerProviderSta
 
   @override
   Widget build(BuildContext context) {
-    if (springButtonType == SpringButtonType.WithOpacity) {
+    if (widget.springButtonType == SpringButtonType.withOpacity) {
       return AnimatedBuilder(
         animation: animation,
-        child: useCache ? uiChild : null,
+        child: widget.useCache ? uiChild : null,
         builder: (BuildContext context, Widget? cachedChild) {
           return Opacity(
             opacity: animation.value.clamp(0.5, 1.0),
             child: Transform.scale(
               scale: animation.value,
-              alignment: alignment,
-              child: useCache ? cachedChild : wrapper(),
+              alignment: widget.alignment,
+              child: widget.useCache ? cachedChild : wrapper(),
             ),
           );
         },
@@ -538,11 +525,11 @@ class SpringButtonState extends State<SpringButton> with SingleTickerProviderSta
     }
     return AnimatedBuilder(
       animation: animation,
-      child: useCache ? uiChild : null,
+      child: widget.useCache ? uiChild : null,
       builder: (BuildContext context, Widget? cachedChild) {
         return Transform.scale(
           scale: animation.value,
-          child: useCache ? cachedChild : wrapper(),
+          child: widget.useCache ? cachedChild : wrapper(),
         );
       },
     );
