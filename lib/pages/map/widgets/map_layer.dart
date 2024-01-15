@@ -22,8 +22,7 @@ class MapLayer extends StatefulWidget {
       this.markers = const [],
       this.polyLines = const [],
       this.controller,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final LatLng? location;
   final Event event;
@@ -48,19 +47,22 @@ class _MapLayerState extends State<MapLayer> {
       mapController: widget.controller,
       options: MapOptions(
         keepAlive: true,
-        zoom: 12.0,
+        initialZoom: 12.0,
         minZoom: HiveSettingsDB.openStreetMapEnabled
             ? MapSettings.minZoom
             : MapSettings.minZoomDefault,
         maxZoom: HiveSettingsDB.openStreetMapEnabled
             ? MapSettings.maxZoom
             : MapSettings.maxZoomDefault,
-        center: widget.startPoint,
-        maxBounds: HiveSettingsDB.openStreetMapEnabled ||
+        initialCenter: widget.startPoint,
+        cameraConstraint:HiveSettingsDB.openStreetMapEnabled ||
                 widget.event.hasSpecialStartPoint
-            ? MapSettings.mapOnlineBoundaries
-            : MapSettings.mapOfflineBoundaries,
-        interactiveFlags: InteractiveFlag.all ^ InteractiveFlag.rotate,
+            ? CameraConstraint.contain(bounds: MapSettings.mapOnlineBoundaries)
+            : CameraConstraint.contain(bounds: MapSettings.mapOfflineBoundaries),
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.all,
+          enableMultiFingerGestureRace: true,
+        ),
         onTap: (_, __) => _popupLayerController.hideAllPopups(),
       ),
       children: [

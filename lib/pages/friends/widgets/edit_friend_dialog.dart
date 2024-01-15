@@ -30,8 +30,7 @@ class EditFriendResult {
 
 class EditFriendDialog extends StatefulWidget {
   const EditFriendDialog(
-      {this.friend, this.action = FriendsAction.edit, Key? key})
-      : super(key: key);
+      {this.friend, this.action = FriendsAction.edit, super.key});
 
   final Friend? friend;
   final FriendsAction action;

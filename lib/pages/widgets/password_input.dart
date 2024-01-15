@@ -6,7 +6,7 @@ import '../../app_settings/server_connections.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 
 class InputPasswordDialog extends StatefulWidget {
-  const InputPasswordDialog({Key? key}) : super(key: key);
+  const InputPasswordDialog({super.key});
 
   @override
   State<InputPasswordDialog> createState() => _InputPasswordDialogState();

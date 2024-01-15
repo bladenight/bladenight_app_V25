@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/src/layer/tile_layer/tile_image.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 typedef TileBuilder = Widget Function(
     BuildContext context, Widget tileWidget, TileImage tile);

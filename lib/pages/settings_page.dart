@@ -30,7 +30,7 @@ import 'widgets/one_signal_id_widget.dart';
 import 'widgets/settings_invisible_offline.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();

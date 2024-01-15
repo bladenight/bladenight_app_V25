@@ -434,7 +434,7 @@ class BnLogPrinter extends LogPrinter {
     List<String> buffer = [];
     var verticalLineAtLevel = (_includeBox[level]!) ? ('$verticalLine ') : '';
     var color = _getLevelColor(level);
-    //if (_includeBox[level]!) buffer.add(color(_topBorder));
+    if (_includeBox[level]!) buffer.add(color(_topBorder));
 
     if (time != null) {
       buffer.add(color('$verticalLineAtLevel$time'));

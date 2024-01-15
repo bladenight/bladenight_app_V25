@@ -25,8 +25,7 @@ import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
 
 class TrackProgressOverlay extends ConsumerStatefulWidget {
-  const TrackProgressOverlay({Key? key, required this.mapController})
-      : super(key: key);
+  const TrackProgressOverlay({super.key, required this.mapController});
   final MapController mapController;
 
   @override

@@ -6,7 +6,7 @@ import 'package:universal_io/io.dart';
 import '../models/event.dart';
 import '../models/moving_point.dart';
 import '../models/route.dart';
-import '../models/watchEvent.dart';
+import '../models/watch_event.dart';
 import '../providers/active_event_notifier_provider.dart';
 import '../providers/location_provider.dart';
 import 'logger.dart';

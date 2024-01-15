@@ -25,7 +25,7 @@ bool _initialURILinkHandled = false;
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/homeScreen';
 
-  const HomeScreen({Key? key, int tabIndex = 0}) : super(key: key);
+  const HomeScreen({super.key, int tabIndex = 0});
 
   @override
   State<StatefulWidget> createState() => _HomeScreenState();

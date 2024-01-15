@@ -3,13 +3,17 @@ import 'dart:math';
 class UUID {
   /// Create unique string generator
   static String createUuid() {
-
     String randomString = '${_generateRandom(8)}-'
         '${_generateRandom(4)}-'
         '${_generateRandom(4)}-'
         '${_generateRandom(12)}';
 
     return randomString;
+  }
+  ///Create a short random id with 8 chars
+  /// for example g6rt48g8
+  static String createShortUuid() {
+    return _generateRandom(8);
   }
 
   static String _generateRandom(int length) {

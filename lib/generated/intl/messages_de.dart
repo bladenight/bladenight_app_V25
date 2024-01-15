@@ -33,19 +33,22 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(name) => "${name} einladen";
 
-  static String m6(timeout) =>
+  static String m6(deviceName) =>
+      "Dein Freund muss in max. 2 m Entfernung von Dir sein!\n- Bitte bei deinem Freund in der Bladenight-App den Tab Freunde öffnen lassen.\n- Dort Plus oben rechts wählen\n- Freund:in neben Dir annehmen wählen\n- Nun mit diesem Gerät ${deviceName} koppeln.\n- Du kannst deinen übermittelten Namen im Textfeld oben ändern.";
+
+  static String m7(timeout) =>
       "Keine Veranstaltung seit mindestens ${timeout} min. aktiv - Tracking automatisch beendet";
 
-  static String m7(requestid, playStoreLink, iosAppStoreLink) =>
+  static String m8(requestid, playStoreLink, iosAppStoreLink) =>
       "Dies ist die Einladung um deine(n) Freund:in (Absender der Nachricht) in der BladeNightApp zu sehen und euch im Skaterzug wiederzufinden. Wenn du das möchtest lade Dir die Baldenigthapp und gib den Code: ${requestid} ein.\nWenn die App schon installiert ist benutze den link  \'bna://bladenight.app?code=${requestid}\' oder \'https://bladenight.app?code=${requestid}\'auf dem Telefon. \nViel Spass beim skaten.\nDie App ist verfügbar im Playstore \n${playStoreLink} und im Apple App Store \n${iosAppStoreLink}";
 
-  static String m8(timeout) =>
+  static String m9(timeout) =>
       "Eventzeit (${timeout} min) überzogen. Tracking abschalten nicht vergessen!";
 
-  static String m9(name, requestid) =>
+  static String m10(name, requestid) =>
       "Sende an \'${name}\' den Code \n\n${requestid}\nEr/Sie/es muss den Code in dessen BladeNight App bestätigen. \nDer Code ist 60 min gültig!\nBitte über ↻ den Status manuell aktualisieren.";
 
-  static String m10(time) => "${time} Uhr";
+  static String m11(time) => "${time} Uhr";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -106,6 +109,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Daten, die wir automatisch erhalten\n\nDie OSMF betreibt eine Reihe von Diensten für die OpenStreetMap-Gemeinschaft, z. B. die Website openstreetmap.org, die Online-Karte im \"Standard\"-Stil, die OSM-API und die Nominatim-Suchfunktion.\n\nWenn Sie eine OSMF-Website besuchen, über einen Browser oder über Anwendungen, die die bereitgestellten APIs nutzen, auf einen der Dienste zugreifen, werden Aufzeichnungen über diese Nutzung erstellt, wir sammeln Informationen über Ihren Browser oder Ihre Anwendung und Ihre Interaktion mit unserer Website, einschließlich (a) IP-Adresse, (b) Browser- und Gerätetyp, (c) Betriebssystem, (d) verweisende Webseite, (e) Datum und Uhrzeit der Seitenbesuche und (f) die auf unseren Websites aufgerufenen Seiten.\n\nDarüber hinaus können wir Software zur Verfolgung der Benutzerinteraktion einsetzen, die zusätzliche Aufzeichnungen über die Benutzeraktivität erstellt, z. B. Piwik.\n\nDienste, die Geo-DNS oder ähnliche Mechanismen verwenden, um die Last auf geografisch verteilte Server zu verteilen, erzeugen möglicherweise eine Aufzeichnung Ihres Standorts in großem Umfang (z. B. ermittelt das OSMF-Kachel-Cache-Netzwerk das Land, in dem Sie sich wahrscheinlich befinden, und leitet Ihre Anfragen an einen entsprechenden Server weiter).\n\nDiese Aufzeichnungen werden auf folgende Weise verwendet oder können verwendet werden:\n\nzur Unterstützung des Betriebs der Dienste aus technischer, sicherheitstechnischer und planerischer Sicht.\nals anonymisierte, zusammengefasste Daten für Forschungs- und andere Zwecke. Solche Daten können über https://planet.openstreetmap.org oder andere Kanäle öffentlich angeboten und von Dritten genutzt werden.\num den OpenStreetMap-Datensatz zu verbessern. Zum Beispiel durch die Analyse von Nominatim-Abfragen auf fehlende Adressen und Postleitzahlen und die Bereitstellung solcher Daten für die OSM-Community.\nDie auf den Systemen gesammelten Daten sind für die Systemadministratoren und die entsprechenden OSMF-Arbeitsgruppen, z. B. die Datenarbeitsgruppe, zugänglich. Es werden keine persönlichen Informationen oder Informationen, die mit einer Person in Verbindung gebracht werden können, an Dritte weitergegeben, es sei denn, dies ist gesetzlich vorgeschrieben.\n\nDie von Piwik gespeicherten IP-Adressen werden auf zwei Bytes gekürzt und die detaillierten Nutzungsdaten werden 180 Tage lang aufbewahrt.\n\nDa diese Speicherung nur vorübergehend erfolgt, ist es uns im Allgemeinen nicht möglich, Zugang zu IP-Adressen oder den damit verbundenen Protokollen zu gewähren.\n\nDie oben genannten Daten werden auf der Grundlage eines berechtigten Interesses verarbeitet (siehe Artikel 6 Absatz 1 Buchstabe f der DSGVO)."),
         "actualInformations":
             MessageLookupByLibrary.simpleMessage("Aktuelle Informationen"),
+        "addNearBy": MessageLookupByLibrary.simpleMessage(
+            "Freund:in neben Dir hinzufügen"),
         "addfriendwithcode": MessageLookupByLibrary.simpleMessage(
             "Freund:in mit Code hinzufügen"),
         "addnewfriend":
@@ -127,6 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Standortfreigabe permanent verweigert oder im System gesperrt!"),
         "alwaysPermantlyDenied": MessageLookupByLibrary.simpleMessage(
             "Standortfreigabe für \'Immer erlauben\' scheint permanent verboten!"),
+        "anonymous": MessageLookupByLibrary.simpleMessage("Anonym"),
         "appId": MessageLookupByLibrary.simpleMessage("App-Id "),
         "appIdTitle": MessageLookupByLibrary.simpleMessage("App-Id "),
         "appOutDated": MessageLookupByLibrary.simpleMessage(
@@ -162,6 +168,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "change": MessageLookupByLibrary.simpleMessage("Ändern"),
         "changetoalways": MessageLookupByLibrary.simpleMessage(
             "Zu \'Immer zulassen\' ändern"),
+        "chooseDeviceToLink": MessageLookupByLibrary.simpleMessage(
+            "Bitte Gerät zum koppeln wählen !"),
         "clearLogsQuestion":
             MessageLookupByLibrary.simpleMessage("Logdaten wirklich löschen?"),
         "clearLogsTitle": MessageLookupByLibrary.simpleMessage(
@@ -175,6 +183,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "codecontainsonlydigits": MessageLookupByLibrary.simpleMessage(
             "Fehler, Code darf nur Ziffern enthalten!"),
         "confirmed": MessageLookupByLibrary.simpleMessage("Wir fahren 😃"),
+        "connected": MessageLookupByLibrary.simpleMessage("Verbunden"),
+        "connecting": MessageLookupByLibrary.simpleMessage("Koppeln"),
         "copiedtoclipboard": MessageLookupByLibrary.simpleMessage(
             "Code in Zwischenablage kopiert"),
         "copy": MessageLookupByLibrary.simpleMessage("Code kopieren"),
@@ -192,6 +202,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deletefriend":
             MessageLookupByLibrary.simpleMessage("Freund:in löschen"),
         "deny": MessageLookupByLibrary.simpleMessage("Ablehnen"),
+        "disconnect": MessageLookupByLibrary.simpleMessage("Verb. trennen"),
+        "disconnected": MessageLookupByLibrary.simpleMessage("Nicht verbunden"),
         "distance": MessageLookupByLibrary.simpleMessage("Entfernung"),
         "distanceDriven":
             MessageLookupByLibrary.simpleMessage("Position auf Strecke"),
@@ -237,6 +249,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportWarningTitle":
             MessageLookupByLibrary.simpleMessage("Export Freunde und Id."),
         "failed": MessageLookupByLibrary.simpleMessage("Fehlgeschlagen!"),
+        "failedAddNearbyTryCode": MessageLookupByLibrary.simpleMessage(
+            "Bitte versuche die Verbindung mit einem Code herzustellen. Fragen dazu deinen Freund nach dem angezeigten Code in seiner \'Freunde\'-Übersicht. Du kannst dich nur einmal mit demselben Freund verbinden."),
         "finish": MessageLookupByLibrary.simpleMessage("Ziel / Ende"),
         "finishForceStopEventOverTitle": MessageLookupByLibrary.simpleMessage(
             "Tracking gestoppt - Ende der BladeNight"),
@@ -307,6 +321,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "leavewheninuse":
             MessageLookupByLibrary.simpleMessage("Lasse Einstellung"),
         "length": MessageLookupByLibrary.simpleMessage("Länge"),
+        "linkNearBy": MessageLookupByLibrary.simpleMessage(
+            "Freund:in neben Dir annehmen"),
+        "linkOnOtherDevice": m6,
+        "linkingFailed":
+            MessageLookupByLibrary.simpleMessage("Kopplung fehlgeschlagen"),
+        "linkingSuccessful":
+            MessageLookupByLibrary.simpleMessage("Kopplung erfolgreich"),
         "liveMapInBrowser": MessageLookupByLibrary.simpleMessage(
             "Verfolgt die Bladnight ohne App im Browser"),
         "liveMapInBrowserInfoHeader":
@@ -340,6 +361,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "model": MessageLookupByLibrary.simpleMessage("Modell"),
         "mustentername": MessageLookupByLibrary.simpleMessage(
             "Du musst einen Namen eingeben!"),
+        "myName": MessageLookupByLibrary.simpleMessage("Mein Name lautet"),
         "nameexists":
             MessageLookupByLibrary.simpleMessage("Sorry, Name schon vergeben!"),
         "networkerror": MessageLookupByLibrary.simpleMessage(
@@ -362,9 +384,11 @@ class MessageLookup extends MessageLookupByLibrary {
             "Aktuell keine Veranstaltung."),
         "noEventStartedAutoStop": MessageLookupByLibrary.simpleMessage(
             "Autostop - da keine Veranstaltung"),
-        "noEventTimeOut": m6,
+        "noEventTimeOut": m7,
         "noGpsAllowed":
             MessageLookupByLibrary.simpleMessage("GPS nicht aktiviert"),
+        "noLocationAvailable":
+            MessageLookupByLibrary.simpleMessage("Kein Standort bekannt"),
         "noLocationPermissionGrantedAlertAndroid":
             MessageLookupByLibrary.simpleMessage(
                 "Bitte System-Einstellungen (Einstellungen -> Standort -> Standortzugriff von Apps -> BladeNight) prüfen, da keine Standortfreigabe."),
@@ -471,7 +495,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Anfrage gesendet - Dauert ca. 30s."),
         "sendlink": MessageLookupByLibrary.simpleMessage("Link senden"),
-        "sendlinkdescription": m7,
+        "sendlinkdescription": m8,
         "sendlinksubject": MessageLookupByLibrary.simpleMessage(
             "Sende link an BladeNight-App. Ihr könnt euch gegenseitig sehen."),
         "serverNotReachable":
@@ -554,14 +578,14 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Stoppe Position ohne Teilnahme"),
         "stopParticipationTracking":
             MessageLookupByLibrary.simpleMessage("Stoppe Teilnahme/ Tracking"),
-        "stopTrackingTimeOut": m8,
+        "stopTrackingTimeOut": m9,
         "submit": MessageLookupByLibrary.simpleMessage("Senden"),
         "symbols": MessageLookupByLibrary.simpleMessage("Symbole"),
         "tail": MessageLookupByLibrary.simpleMessage("Zugende"),
-        "tellcode": m9,
+        "tellcode": m10,
         "thanksForParticipating":
             MessageLookupByLibrary.simpleMessage("Danke fürs Teilnehmen."),
-        "timeIntl": m10,
+        "timeIntl": m11,
         "timeOutDurationExceedTitle": MessageLookupByLibrary.simpleMessage(
             "Zeitüberschreitung Dauer der BladeNight"),
         "timeStamp": MessageLookupByLibrary.simpleMessage("Stand von"),
@@ -594,6 +618,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "version": MessageLookupByLibrary.simpleMessage("Version:"),
         "visibleOnMap":
             MessageLookupByLibrary.simpleMessage("Auf Karte angezeigt."),
+        "waiting": MessageLookupByLibrary.simpleMessage("Wartend..."),
         "waittime": MessageLookupByLibrary.simpleMessage("Wartezeit"),
         "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
             "wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de"),

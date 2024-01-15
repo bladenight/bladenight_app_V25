@@ -20,7 +20,7 @@ import '../../providers/location_provider.dart';
 import 'app_outdated.dart';
 
 class EventInfoWeb extends ConsumerStatefulWidget {
-  const EventInfoWeb({Key? key}) : super(key: key);
+  const EventInfoWeb({super.key});
 
   @override
   ConsumerState<EventInfoWeb> createState() => _EventInfoWebState();

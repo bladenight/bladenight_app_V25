@@ -6,7 +6,7 @@ import '../generated/l10n.dart';
 import '../helpers/timeconverter_helper.dart';
 import 'event.dart';
 
-part 'watchEvent.mapper.dart';
+part 'watch_event.mapper.dart';
 
 //Helper class for watch communication
 @MappableClass()

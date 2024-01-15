@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 
 class DataLeftRightContent extends StatelessWidget {
   const DataLeftRightContent(
-      {Key? key,
+      {super.key,
       required this.descriptionLeft,
       required this.descriptionRight,
-      required this.rightWidget})
-      : super(key: key);
+      required this.rightWidget});
   final String descriptionLeft;
   final String descriptionRight;
   final Widget rightWidget;

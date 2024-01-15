@@ -11,12 +11,15 @@ part 'friend.mapper.dart';
 
 @MappableClass(includeCustomMappers: [ColorMapper()])
 class Friend with FriendMappable {
+  @MappableField(key: 'nam')
   late String name;
   @MappableField(key: 'friendid')
   late int friendId;
   late bool isActive;
+  @MappableField(key: 'col')
   late Color color;
   late bool isOnline;
+  @MappableField(key: 'rid')
   late int requestId = 0;
   late double speed = 0;
   @MappableField(key: 'rsp')
@@ -88,7 +91,7 @@ class Friend with FriendMappable {
     if (isOnline) {
       statustext += ' | ${Localize.current.tracking}';
     } else {
-      statustext += ' | ${Localize.current.notAvailable}';
+      statustext += ' | ${Localize.current.noLocationAvailable}';
     }
     return statustext;
   }

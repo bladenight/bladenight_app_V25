@@ -254,13 +254,26 @@ class FriendsLogic with ChangeNotifier {
     }
   }
 
-  Future<void> updateFriend(Friend friend) async {
+  Future<bool> updateFriendName(int friendId, String name) async {
+    var currFriend = friends[friendId];
+    if (currFriend != null) {
+      currFriend.name = name;
+      PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> updateFriend(Friend friend) async {
     var currFriend = friends[friend.friendId];
     if (currFriend != null) {
       friends[friend.friendId] = friend;
       PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
       notifyListeners();
+      return true;
     }
+    return false;
   }
 }
 

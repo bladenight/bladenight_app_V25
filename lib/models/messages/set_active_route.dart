@@ -11,13 +11,13 @@ class SetActiveRouteMessage extends AdminMessage with SetActiveRouteMessageMappa
 
   SetActiveRouteMessage({
     required this.route,
-    required int timestamp,
-    required String checksum,
-    required int noise,
-    required deviceId
-  }) : super(timestamp: timestamp, checksum: checksum, noise: noise,deviceId: deviceId);
+    required super.timestamp,
+    required super.checksum,
+    required super.noise,
+    required super.deviceId
+  });
 
   SetActiveRouteMessage.authenticate(
-      {required this.route, required String password, required deviceId})
-      : super.authenticate(password: password,deviceId: deviceId);
+      {required this.route, required super.password, required deviceId})
+      : super.authenticate(deviceId: deviceId);
 }

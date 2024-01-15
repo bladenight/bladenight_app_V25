@@ -114,6 +114,8 @@
   "about_olivierandbenjamin": "Benjamin Uekermann\nOlivier Croquette",
   "actualInformations": "Aktuelle Informationen",
   "addfriendwithcode": "Freund:in mit Code hinzufügen",
+  "addNearBy": "Freund:in neben Dir hinzufügen",
+  "linkNearBy": "Freund:in neben Dir annehmen",
   "addnewfriend": "Freund:in neu anlegen",
   "aheadOfMe": "vor mir",
   "alwaysPermanentlyDenied": "Standortfreigabe permanent verweigert oder im System gesperrt!",
@@ -420,5 +422,19 @@
   "unread": "Ungelesen",
   "read": "Gelesen",
   "clearMessagesTitle": "Nachrichten löschen",
-  "clearMessages": "Wirklich alle Nachrichten löschen?"
+  "clearMessages": "Wirklich alle Nachrichten löschen?",
+  "noLocationAvailable" :"Kein Standort bekannt",
+  "disconnected": "Nicht verbunden",
+  "disconnect": "Verb. trennen",
+  "connected": "Verbunden",
+  "connecting": "Koppeln",
+  "waiting": "Wartend...",
+  "anonymous": "Anonym",
+  "chooseDeviceToLink":"Bitte Gerät zum koppeln wählen !",
+  "myName":"Mein Name lautet",
+  "linkingSuccessful": "Kopplung erfolgreich",
+  "linkingFailed": "Kopplung fehlgeschlagen",
+  "linkOnOtherDevice": "Dein Freund muss in max. 2 m Entfernung von Dir sein!\n- Bitte bei deinem Freund in der Bladenight-App den Tab Freunde öffnen lassen.\n- Dort Plus oben rechts wählen\n- Freund:in neben Dir annehmen wählen\n- Nun mit diesem Gerät {deviceName} koppeln.\n- Du kannst deinen übermittelten Namen im Textfeld oben ändern.",
+  "failedAddNearbyTryCode": "Bitte versuche die Verbindung mit einem Code herzustellen. Fragen dazu deinen Freund nach dem angezeigten Code in seiner 'Freunde'-Übersicht. Du kannst dich nur einmal mit demselben Freund verbinden."
+
 }

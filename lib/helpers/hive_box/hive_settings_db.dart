@@ -13,6 +13,7 @@ import '../../app_settings/app_configuration_helper.dart';
 import '../../models/event.dart';
 import '../../models/user_trackpoint.dart';
 import '../logger.dart';
+import '../uuid_helper.dart';
 
 part 'location_store.dart';
 part 'map_settings.dart';
@@ -38,6 +39,7 @@ class HiveSettingsDB {
   }
 
   void init() async {
+    setSessionShortUUID(UUID.createShortUuid());
     //not working here
     //await Hive.initFlutter();
     //await Hive.openBox('settings');
@@ -62,6 +64,19 @@ class HiveSettingsDB {
   static void setBackgroundLocationLogLevel(int val) {
     BnLog.info(text: 'setBackgroundLocationLogLevel to $val');
     _hiveBox.put(_bgLoglevelKey, val);
+  }
+
+  static const String _sessionShortUUIDKey = 'sessionShortUUIDPref';
+
+  ///get RoutePointsAsString
+  static String get sessionShortUUID {
+    return _hiveBox.get(_sessionShortUUIDKey,
+        defaultValue: UUID.createShortUuid());
+  }
+
+  ///set SessionShortUUID
+  static void setSessionShortUUID(String val) {
+    _hiveBox.put(_sessionShortUUIDKey, val);
   }
 
   static const String _disableMotionDetection = 'disableMotionDetectionPref';
@@ -426,6 +441,18 @@ class HiveSettingsDB {
 
   static void setUserIsParticipant(bool isParticipant) {
     _hiveBox.put(_getUserIsParticipantKey, isParticipant);
+  }
+
+  static const String _myNameKey = 'myNamePref';
+
+  ///get RoutePointsAsString
+  static String get myName {
+    return _hiveBox.get(_myNameKey, defaultValue: 'Anonym');
+  }
+
+  ///set MyName
+  static void setMyName(String val) {
+    _hiveBox.put(_myNameKey, val);
   }
 
   static const String _routePointsLastUpdate =

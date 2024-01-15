@@ -4,7 +4,7 @@
 // ignore_for_file: unused_element, unnecessary_cast
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
-part of 'watchEvent.dart';
+part of 'watch_event.dart';
 
 class WatchEventMapper extends ClassMapperBase<WatchEvent> {
   WatchEventMapper._();

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../generated/l10n.dart';
 
 class DataLoadingIndicator extends StatelessWidget {
-  const DataLoadingIndicator({Key? key}) : super(key: key);
+  const DataLoadingIndicator({super.key});
 
   @override
   Widget build(BuildContext context) {

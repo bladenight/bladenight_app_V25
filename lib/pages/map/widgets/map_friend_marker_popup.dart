@@ -9,7 +9,7 @@ import '../../../pages/widgets/data_widget_left_right.dart';
 class MapFriendMarkerPopup extends StatefulWidget {
   final BnMapFriendMarker marker;
 
-  const MapFriendMarkerPopup(this.marker, {Key? key}) : super(key: key);
+  const MapFriendMarkerPopup(this.marker, {super.key});
 
   @override
   State<StatefulWidget> createState() => _MapFriendMarkerPopupState();

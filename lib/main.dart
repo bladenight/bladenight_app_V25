@@ -114,7 +114,7 @@ void initSettings() async {
 }
 
 class BladeNightApp extends StatelessWidget {
-  const BladeNightApp({Key? key}) : super(key: key);
+  const BladeNightApp({super.key});
 
   @override
   Widget build(BuildContext context) {

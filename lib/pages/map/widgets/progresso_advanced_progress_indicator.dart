@@ -62,7 +62,7 @@ class Progresso extends StatefulWidget {
   final double pointInnerRadius;
 
   const Progresso(
-      {Key? key,
+      {super.key,
       this.start = 0.0,
       this.progress = 0.0,
       this.progressColor = Colors.blue,
@@ -75,8 +75,7 @@ class Progresso extends StatefulWidget {
       this.pointInnerColor = Colors.white,
       this.pointRadius = 7.5,
       this.pointInnerRadius = 2.5,
-      this.points = const []})
-      : super(key: key);
+      this.points = const []});
 
   @override
   State<Progresso> createState() => _ProgressoState();

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class BladeGuardPage extends StatefulWidget {
-  const BladeGuardPage({Key? key}) : super(key: key);
+  const BladeGuardPage({super.key});
 
   @override
   State<BladeGuardPage> createState() => _BladeGuardPage();

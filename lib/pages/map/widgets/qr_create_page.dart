@@ -7,11 +7,10 @@ import '../../../helpers/url_launch_helper.dart';
 
 class QRCreatePage extends StatefulWidget {
   const QRCreatePage(
-      {Key? key,
+      {super.key,
       required this.qrcodetext,
       required this.headertext,
-      required this.infotext})
-      : super(key: key);
+      required this.infotext});
   final String headertext;
   final String infotext;
   final String qrcodetext;

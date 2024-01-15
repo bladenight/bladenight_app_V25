@@ -9,11 +9,11 @@ class KillServerMessage extends AdminMessage with KillServerMessageMappable{
 
 
   KillServerMessage({
-    required int timestamp,
-    required String checksum,
-    required int noise,
-    required String deviceId,
-  }) : super(timestamp: timestamp, checksum: checksum, noise: noise,deviceId: deviceId);
+    required super.timestamp,
+    required super.checksum,
+    required super.noise,
+    required super.deviceId,
+  });
 
   KillServerMessage.authenticate(
       { required String password, required deviceId,})

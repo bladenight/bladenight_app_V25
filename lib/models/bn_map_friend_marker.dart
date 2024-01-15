@@ -3,14 +3,13 @@ import 'package:flutter_map/flutter_map.dart';
 import 'friend.dart';
 
 class BnMapFriendMarker extends Marker {
-  BnMapFriendMarker({
-    required width,
-    required point,
+  const BnMapFriendMarker({
+    required super.width,
+    required super.point,
     required child,
-    required height,
+    required super.height,
     required this.friend,
-  }) : super(width: width, point: point, child: child, height: height);
+  }) : super(child: child);
 
-  final Friend friend; //to update friend informations
-
+  final Friend friend; //to update friend information
 }

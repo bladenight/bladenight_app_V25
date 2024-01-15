@@ -16,7 +16,7 @@ import 'data_loading_indicator.dart';
 import 'no_data_warning.dart';
 
 class RouteDialog extends ConsumerWidget {
-  const RouteDialog({required this.event, Key? key}) : super(key: key);
+  const RouteDialog({required this.event, super.key});
 
   final Event event;
 

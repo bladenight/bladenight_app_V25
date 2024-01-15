@@ -6,8 +6,7 @@ import '../../pages/map/map_page.dart';
 import '../../providers/location_provider.dart';
 
 class FollowingLocationIcon extends StatelessWidget {
-  const FollowingLocationIcon({required this.followLocationStatus, Key? key})
-      : super(key: key);
+  const FollowingLocationIcon({required this.followLocationStatus, super.key});
   final FollowLocationStates followLocationStatus;
   @override
   Widget build(BuildContext context) {

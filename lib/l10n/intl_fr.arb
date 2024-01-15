@@ -114,6 +114,8 @@
   "actualInformations": "Informations actuelles",
   "addfriendwithcode": "Ajouter un ami avec un code",
   "addnewfriend": "Ajouter un nouvel ami",
+  "addNearBy" : "Ajouter un ami à proximité",
+  "linkNearBy" : "Accepter un ami à proximité",
   "aheadOfMe": "en avance sur moi",
   "alwaysPermanentlyDenied": "Permission de localisation toujours refusée dans le système !",
   "alwaysPermantlyDenied": "L'autorisation de localisation pour toujours semble refusée en permanence !",
@@ -419,5 +421,18 @@
   "unreadMessage": "Message non lu",
   "readMessage": "Message lu",
   "clearMessagesTitle": "Effacer les messages",
-  "clearMessages": "Effacer tous les messages, vraiment ?"
+  "clearMessages": "Effacer tous les messages, vraiment ?",
+  "noLocationAvailable" : "Pas de localisation connue",
+  "disconnected" : "non connecté",
+  "disconnect" : "Se déconnecter",
+  "connected" : "Connecté",
+  "connecting" : "Connecter...",
+  "waiting" : "En attente...",
+  "anonymous" : "Anonyme",
+  "chooseDeviceToLink" : "Veuillez choisir l'appareil à coupler !",
+  "myName" : "Mon nom est",
+  "linkingSuccessful" : "Couplage réussi",
+  "linkingFailed" : "Échec du couplage",
+  "linkOnOtherDevice" : "Veuillez sélectionner chez votre ami sous Amis, Plus en haut à droite,puis sélectionner Accepter un ami:dans à côté de vous et coupler avec l'appareil {deviceName}",
+  "failedAddNearbyTryCode" : "Veuillez essayer d'établir la connexion avec un code. Demandez à votre ami le code affiché dans sa liste d'amis. Vous ne pouvez vous connecter qu'une seule fois avec le même ami."
 }

@@ -16,8 +16,7 @@ import '../../../providers/refresh_timer_provider.dart';
 import '../../widgets/data_widget_left_right.dart';
 
 class MapEventInformations extends StatelessWidget {
-  const MapEventInformations({Key? key, required this.mapController})
-      : super(key: key);
+  const MapEventInformations({super.key, required this.mapController});
   final MapController mapController;
 
   @override

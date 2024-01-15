@@ -20,7 +20,7 @@ import '../../providers/route_providers.dart';
 import '../../wamp/admin_calls.dart';
 
 class AdminPage extends ConsumerStatefulWidget {
-  const AdminPage({required this.password, Key? key}) : super(key: key);
+  const AdminPage({required this.password, super.key});
   final String password;
 
   @override

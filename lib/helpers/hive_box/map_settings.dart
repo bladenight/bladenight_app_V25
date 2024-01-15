@@ -70,7 +70,7 @@ extension MapSettings on HiveSettingsDB {
   }
 
   ///Returns map boundaries for static asset offline map tiles
-  static LatLngBounds? get mapOfflineBoundaries {
+  static LatLngBounds get mapOfflineBoundaries {
     return LatLngBounds(
       const LatLng(kIsWeb ? 47.9579 : 48.0570, kIsWeb ? 11.8213 : 11.4416),
       const LatLng(48.2349, kIsWeb ? 11.2816 : 11.6213),
@@ -78,7 +78,7 @@ extension MapSettings on HiveSettingsDB {
   }
 
   ///Returns map boundaries for static asset offline map tiles
-  static LatLngBounds? get mapOnlineDefaultBoundaries {
+  static LatLngBounds get mapOnlineDefaultBoundaries {
     return LatLngBounds(
       const LatLng(81.47299, 46.75348),
       const LatLng(29.735139, -34.49296),
@@ -91,7 +91,7 @@ extension MapSettings on HiveSettingsDB {
   ///were served
   ///
   /// Returns [mapOnlineDefaultBoundaries] if no parameters given or failed
-  static LatLngBounds? get mapOnlineBoundaries {
+  static LatLngBounds get mapOnlineBoundaries {
     var val = HiveSettingsDB._hiveBox
         .get(_mapOnlineBoundariesKey, defaultValue: null);
 

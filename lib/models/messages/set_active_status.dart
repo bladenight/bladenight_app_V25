@@ -12,13 +12,13 @@ class SetActiveStatusMessage extends AdminMessage  with SetActiveStatusMessageMa
 
   SetActiveStatusMessage({
     required this.status,
-    required int timestamp,
-    required String checksum,
-    required int noise,
-    required String deviceId,
-  }) : super(timestamp: timestamp, checksum: checksum, noise: noise, deviceId: deviceId);
+    required super.timestamp,
+    required super.checksum,
+    required super.noise,
+    required super.deviceId,
+  });
 
   SetActiveStatusMessage.authenticate(
-      {required this.status, required String password,required String deviceId})
-      : super.authenticate(password: password,deviceId: deviceId);
+      {required this.status, required super.password,required super.deviceId})
+      : super.authenticate();
 }

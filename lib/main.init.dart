@@ -26,7 +26,7 @@ import 'models/route_names.dart' as p19;
 import 'models/shake_hand_result.dart' as p20;
 import 'models/shake_hands.dart' as p21;
 import 'models/user_trackpoint.dart' as p22;
-import 'models/watchEvent.dart' as p23;
+import 'models/watch_event.dart' as p23;
 
 void initializeMappers() {
   p0.EventMapper.ensureInitialized();

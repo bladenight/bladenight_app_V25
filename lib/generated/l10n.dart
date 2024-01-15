@@ -380,6 +380,26 @@ class Localize {
     );
   }
 
+  /// `Add friend nearby`
+  String get addNearBy {
+    return Intl.message(
+      'Add friend nearby',
+      name: 'addNearBy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept friend nearby`
+  String get linkNearBy {
+    return Intl.message(
+      'Accept friend nearby',
+      name: 'linkNearBy',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `ahead of me`
   String get aheadOfMe {
     return Intl.message(
@@ -3463,6 +3483,136 @@ class Localize {
     return Intl.message(
       'Clear all messages really?',
       name: 'clearMessages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No location known`
+  String get noLocationAvailable {
+    return Intl.message(
+      'No location known',
+      name: 'noLocationAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not connected`
+  String get disconnected {
+    return Intl.message(
+      'Not connected',
+      name: 'disconnected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disconnect`
+  String get disconnect {
+    return Intl.message(
+      'Disconnect',
+      name: 'disconnect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connected`
+  String get connected {
+    return Intl.message(
+      'Connected',
+      name: 'connected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connecting...`
+  String get connecting {
+    return Intl.message(
+      'Connecting...',
+      name: 'connecting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Waiting...`
+  String get waiting {
+    return Intl.message(
+      'Waiting...',
+      name: 'waiting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Anonymous`
+  String get anonymous {
+    return Intl.message(
+      'Anonymous',
+      name: 'anonymous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select your friend's device to link !`
+  String get chooseDeviceToLink {
+    return Intl.message(
+      'Please select your friend\'s device to link !',
+      name: 'chooseDeviceToLink',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My name is`
+  String get myName {
+    return Intl.message(
+      'My name is',
+      name: 'myName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Linking successful`
+  String get linkingSuccessful {
+    return Intl.message(
+      'Linking successful',
+      name: 'linkingSuccessful',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Linking failed`
+  String get linkingFailed {
+    return Intl.message(
+      'Linking failed',
+      name: 'linkingFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please go to your friend under Friends, select Plus at the top right, then select Accept friend:in next to you and pair with the device {deviceName}.`
+  String linkOnOtherDevice(Object deviceName) {
+    return Intl.message(
+      'Please go to your friend under Friends, select Plus at the top right, then select Accept friend:in next to you and pair with the device $deviceName.',
+      name: 'linkOnOtherDevice',
+      desc: '',
+      args: [deviceName],
+    );
+  }
+
+  /// `Please try to establish the connection with a code. Ask your friend for the code displayed in their 'Friends' overview. You can only connect to the same friend once.`
+  String get failedAddNearbyTryCode {
+    return Intl.message(
+      'Please try to establish the connection with a code. Ask your friend for the code displayed in their \'Friends\' overview. You can only connect to the same friend once.',
+      name: 'failedAddNearbyTryCode',
       desc: '',
       args: [],
     );

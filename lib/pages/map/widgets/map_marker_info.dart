@@ -10,14 +10,13 @@ class MapPinWidget extends StatefulWidget {
   final Icon? leftIcon;
 
   const MapPinWidget(
-      {Key? key,
+      {super.key,
       required this.color,
       required this.row1Text,
       required this.row2Text,
       required this.row3Text,
       required this.row4Text,
-      this.leftIcon})
-      : super(key: key);
+      this.leftIcon});
 
   @override
   State<StatefulWidget> createState() => _MapPinWidgetState();

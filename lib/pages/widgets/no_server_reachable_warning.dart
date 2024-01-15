@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../generated/l10n.dart';
 
 class ServerNotReachableWarning extends ConsumerWidget {
-  const ServerNotReachableWarning({Key? key, this.reason}) : super(key: key);
+  const ServerNotReachableWarning({super.key, this.reason});
 
   final Exception? reason;
 

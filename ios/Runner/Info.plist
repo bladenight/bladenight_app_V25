@@ -47,5 +47,13 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSBonjourServices</key>
+    <array>
+        <string>_mp-connection._tcp</string>
+    </array>
+    <key>UIRequiresPersistentWiFi</key>
+    <true/>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Um Freunde zu direkt zu koppeln wird Bluetooth benötigt</string>
 </dict>
 </plist>

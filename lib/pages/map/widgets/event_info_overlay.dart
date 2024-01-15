@@ -10,8 +10,7 @@ import '../../../models/route.dart' hide Path;
 
 class EventInfoOverlay extends StatefulWidget {
   const EventInfoOverlay(
-      {Key? key, required this.event, required this.routePoints})
-      : super(key: key);
+      {super.key, required this.event, required this.routePoints});
   final Event event;
   final RoutePoints? routePoints;
 

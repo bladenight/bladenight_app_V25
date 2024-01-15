@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import '../../pages/admin/widgets/admin_password_dialog.dart';
 
 class HiddenAdminButton extends StatefulWidget {
-  const HiddenAdminButton({required this.child, Key? key}) : super(key: key);
+  const HiddenAdminButton({required this.child, super.key});
 
   final Widget child;
 

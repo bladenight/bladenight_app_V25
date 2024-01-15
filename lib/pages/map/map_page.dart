@@ -39,7 +39,7 @@ import 'widgets/qr_create_page.dart';
 import 'widgets/track_progress_overlay.dart';
 
 class MapPage extends ConsumerStatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
+  const MapPage({super.key});
 
   @override
   ConsumerState<MapPage> createState() => _MapPageState();

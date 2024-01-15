@@ -19,7 +19,7 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-    <key>CFBundleLocalizations</key>
+	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en</string>
 		<string>de</string>
@@ -64,14 +64,14 @@
 	<false/>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_dartobservatory._tcp</string>
+		<string>_mp-connection._tcp</string>
 	</array>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung "Immer zulassen " erlauben</string>
+	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung &quot;Immer zulassen &quot; erlauben</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung "Immer zulassen " erlauben</string>
+	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung &quot;Immer zulassen &quot; erlauben</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung "Immer zulassen " erlauben</string>
+	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung &quot;Immer zulassen &quot; erlauben</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Die Bewegungsaktivitätserkennung erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.</string>
 	<key>OneSignal_app_groups_key</key>
@@ -108,5 +108,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIRequiresPersistentWiFi</key>
+	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Um Freunde zu direkt zu koppeln wird Bluetooth benötigt</string>
 </dict>
 </plist>

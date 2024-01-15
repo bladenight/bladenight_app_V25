@@ -1,3 +1,4 @@
+import 'widgets/nearby_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
@@ -6,7 +7,6 @@ import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/timeconverter_helper.dart';
-
 import '../../models/friend.dart';
 import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
@@ -45,152 +45,166 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-      return CupertinoPageScaffold(
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
-          slivers: [
-            CupertinoSliverNavigationBar(
-              leading: const Icon(CupertinoIcons.group),
-              largeTitle: Text(Localize.of(context).friends),
-              trailing: Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      onPressed: () async {
-                        context.read(friendsLogicProvider).refreshFriends();
-                      },
-                      child: const Icon(CupertinoIcons.refresh),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      onPressed: () async {
-                        var action = await FriendsActionModal.show(context);
-                        if (action != null) {
-                          if (!mounted) return;
-                          var result = await EditFriendDialog.show(
-                            context,
-                            friendDialogAction: action,
-                          );
-                          if (result != null) {}
-                        }
-                      },
-                      child: const Icon(CupertinoIcons.plus_circle),
-                    ),
-                  ],
-                ),
+    return CupertinoPageScaffold(
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        slivers: [
+          CupertinoSliverNavigationBar(
+            leading: const Icon(CupertinoIcons.group),
+            largeTitle: Text(Localize.of(context).friends),
+            trailing: Align(
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minSize: 0,
+                    onPressed: () async {
+                      context.read(friendsLogicProvider).refreshFriends();
+                    },
+                    child: const Icon(CupertinoIcons.refresh),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minSize: 0,
+                    onPressed: () async {
+                      var action = await FriendsActionModal.show(context);
+                      if (action == null || !mounted) return;
+                      if (action == FriendsAction.addNearby){
+                        Navigator.of(context).push(
+                          CupertinoPageRoute(
+                            builder: (context) => const LinkFriendDevicePage(deviceType: DeviceType.advertiser, friendsAction: FriendsAction.addNearby,),
+                            fullscreenDialog: false,
+                          ),
+                        );
+                      return;
+                      }
+                      if (action == FriendsAction.acceptNearby){
+                        Navigator.of(context).push(
+                          CupertinoPageRoute(
+                            builder: (context) => const LinkFriendDevicePage(deviceType: DeviceType.browser, friendsAction: FriendsAction.acceptNearby,),
+                            fullscreenDialog: false,
+                          ),
+                        );
+                        return;
+                      }
+                      var result = await EditFriendDialog.show(
+                        context,
+                        friendDialogAction: action,
+                      );
+                      if (result != null) {}
+                    },
+                    child: const Icon(CupertinoIcons.plus_circle),
+                  ),
+                ],
               ),
             ),
-            CupertinoSliverRefreshControl(
-              onRefresh: () async {
-                return context.read(friendsLogicProvider).refreshFriends();
-              },
-            ),
-            const SliverToBoxAdapter(child: ConnectionWarning()),
-            SliverToBoxAdapter(
-              child: FractionallySizedBox(
-                widthFactor: 0.9,
-                child: ClipRect(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: CupertinoSearchTextField(
-                      controller: _searchTextController,
-                      onChanged: (value) {
-                        context.read(friendNameProvider.notifier).state = value;
-                      },
-                      onSubmitted: (value) {
-                        context.read(friendNameProvider.notifier).state = value;
-                      },
-                      onSuffixTap: () {
-                        context.read(friendNameProvider.notifier).state = '';
-                        _searchTextController.text = '';
-                      },
-                    ),
+          ),
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+              return context.read(friendsLogicProvider).refreshFriends();
+            },
+          ),
+          const SliverToBoxAdapter(child: ConnectionWarning()),
+          SliverToBoxAdapter(
+            child: FractionallySizedBox(
+              widthFactor: 0.9,
+              child: ClipRect(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: CupertinoSearchTextField(
+                    controller: _searchTextController,
+                    onChanged: (value) {
+                      context.read(friendNameProvider.notifier).state = value;
+                    },
+                    onSubmitted: (value) {
+                      context.read(friendNameProvider.notifier).state = value;
+                    },
+                    onSuffixTap: () {
+                      context.read(friendNameProvider.notifier).state = '';
+                      _searchTextController.text = '';
+                    },
                   ),
                 ),
               ),
             ),
-            Builder(builder: (context) {
-              var friends = context.watch(filteredFriends);
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    if (index % 2 == 0) {
-                      var friend = friends[(index / 2).round()];
-                      return Dismissible(
-                        key: ObjectKey(friend.hashCode),
-                        child: _friendRow(context, friend),
-                        confirmDismiss: (DismissDirection direction) async {
-                          if (direction == DismissDirection.endToStart) {
-                            var deleteResult =
-                                await FlutterPlatformAlert.showCustomAlert(
-                                    windowTitle:
-                                        Localize.of(context).deletefriend,
-                                    text:
-                                        '${Localize.of(context).delete}: ${friend.name}',
-                                    iconStyle: IconStyle.warning,
-                                    positiveButtonTitle:
-                                        Localize.current.delete,
-                                    negativeButtonTitle:
-                                        Localize.current.cancel);
-                            if (deleteResult == CustomButton.positiveButton) {
-                              if (!mounted) return false;
-                              context
-                                  .read(friendsLogicProvider)
-                                  .deleteRelationShip(friend.friendId);
-                            }
-                          } else {
-                            var result = await EditFriendDialog.show(context,
-                                friendDialogAction: FriendsAction.edit,
-                                friend: friend);
-                            if (result == null || !mounted) return false;
-                                context.read(friendsLogicProvider).updateFriend(
-                                friend.copyWith(
-                                    name: result.name,
-                                    color: result.color,
-                                    isActive: result.active));
+          ),
+          Builder(builder: (context) {
+            var friends = context.watch(filteredFriends);
+            return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  if (index % 2 == 0) {
+                    var friend = friends[(index / 2).round()];
+                    return Dismissible(
+                      key: ObjectKey(friend.hashCode),
+                      child: _friendRow(context, friend),
+                      confirmDismiss: (DismissDirection direction) async {
+                        if (direction == DismissDirection.endToStart) {
+                          var deleteResult =
+                              await FlutterPlatformAlert.showCustomAlert(
+                                  windowTitle:
+                                      Localize.of(context).deletefriend,
+                                  text:
+                                      '${Localize.of(context).delete}: ${friend.name}',
+                                  iconStyle: IconStyle.warning,
+                                  positiveButtonTitle: Localize.current.delete,
+                                  negativeButtonTitle: Localize.current.cancel);
+                          if (deleteResult == CustomButton.positiveButton) {
+                            if (!mounted) return false;
+                            context
+                                .read(friendsLogicProvider)
+                                .deleteRelationShip(friend.friendId);
                           }
-                          setState(() {});
-                          return false; //always return true when list not changed
-                        },
-                        background: Container(
-                            color: Colors.greenAccent,
-                            child: CupertinoListTile(
-                                title: Text(Localize.of(context).editfriend),
-                                leading: const Icon(Icons.edit,
-                                    color: Colors.white, size: 36.0))),
-                        secondaryBackground: Container(
-                            color: Colors.redAccent,
-                            child: CupertinoListTile(
-                                title: Text(Localize.of(context).deletefriend),
-                                trailing: const Icon(Icons.delete,
-                                    color: Colors.white, size: 36.0))),
-                      );
-                    } else {
-                      return Divider(
-                        color: CupertinoTheme.of(context).primaryColor,
-                        height: 1,
-                        indent: 16,
-                        endIndent: 16,
-                      );
-                    }
-                  },
-                  childCount: (friends.length * 2) - 1,
-                ),
-              );
-            }),
-          ],
-        ),
-      );
+                        } else {
+                          var result = await EditFriendDialog.show(context,
+                              friendDialogAction: FriendsAction.edit,
+                              friend: friend);
+                          if (result == null || !mounted) return false;
+                          context.read(friendsLogicProvider).updateFriend(
+                              friend.copyWith(
+                                  name: result.name,
+                                  color: result.color,
+                                  isActive: result.active));
+                        }
+                        setState(() {});
+                        return false; //always return true when list not changed
+                      },
+                      background: Container(
+                          color: Colors.greenAccent,
+                          child: CupertinoListTile(
+                              title: Text(Localize.of(context).editfriend),
+                              leading: const Icon(Icons.edit,
+                                  color: Colors.white, size: 36.0))),
+                      secondaryBackground: Container(
+                          color: Colors.redAccent,
+                          child: CupertinoListTile(
+                              title: Text(Localize.of(context).deletefriend),
+                              trailing: const Icon(Icons.delete,
+                                  color: Colors.white, size: 36.0))),
+                    );
+                  } else {
+                    return Divider(
+                      color: CupertinoTheme.of(context).primaryColor,
+                      height: 1,
+                      indent: 16,
+                      endIndent: 16,
+                    );
+                  }
+                },
+                childCount: (friends.length * 2) - 1,
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 
   _friendRow(BuildContext context, Friend friend) {
@@ -344,7 +358,14 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
   }
 }
 
-enum FriendsAction { addNew, addWithCode, edit, delete }
+enum FriendsAction {
+  addNew,
+  addWithCode,
+  addNearby,
+  acceptNearby,
+  edit,
+  delete
+}
 
 class FriendsActionModal extends StatelessWidget {
   const FriendsActionModal({super.key});
@@ -360,6 +381,18 @@ class FriendsActionModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoActionSheet(
       actions: [
+        CupertinoActionSheetAction(
+          child: Text(Localize.of(context).addNearBy),
+          onPressed: () {
+            Navigator.pop(context, FriendsAction.addNearby);
+          },
+        ),
+        CupertinoActionSheetAction(
+          child: Text(Localize.of(context).linkNearBy),
+          onPressed: () {
+            Navigator.pop(context, FriendsAction.acceptNearby);
+          },
+        ),
         CupertinoActionSheetAction(
           child: Text(Localize.of(context).addnewfriend),
           onPressed: () {

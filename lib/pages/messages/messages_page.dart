@@ -13,7 +13,7 @@ import '../../providers/messages_provider.dart';
 //import 'widgets/show_message_dialog.dart';
 
 class MessagesPage extends ConsumerStatefulWidget {
-  const MessagesPage({Key? key}) : super(key: key);
+  const MessagesPage({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MessagesPage();
@@ -333,7 +333,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
 enum MessagesAction { edit, delete }
 
 class MessagesActionModal extends StatelessWidget {
-  const MessagesActionModal({Key? key}) : super(key: key);
+  const MessagesActionModal({super.key});
 
   static Future<MessagesAction?> show(BuildContext context) {
     return showCupertinoModalPopup(

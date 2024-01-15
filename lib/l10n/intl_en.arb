@@ -114,6 +114,8 @@
   "actualInformations": "Actual informations",
   "addfriendwithcode": "Add friend with Code",
   "addnewfriend": "Add new friend.",
+  "addNearBy": "Add friend nearby",
+  "linkNearBy": "Accept friend nearby",
   "aheadOfMe": "ahead of me",
   "alwaysPermanentlyDenied": "Location permission always denied in System.!",
   "alwaysPermantlyDenied": "Location permission for always seems permanently denied!",
@@ -419,6 +421,19 @@
   "unreadMessage": "Unread",
   "readMessage": "Read",
   "clearMessagesTitle": "Clear messages",
-  "clearMessages": "Clear all messages really?"
+  "clearMessages": "Clear all messages really?",
+  "noLocationAvailable" : "No location known",
+  "disconnected": "Not connected",
+  "disconnect": "Disconnect",
+  "connected": "Connected",
+  "connecting": "Connecting...",
+  "waiting": "Waiting...",
+  "anonymous": "Anonymous",
+  "chooseDeviceToLink": "Please select your friend's device to link !",
+  "myName": "My name is",
+  "linkingSuccessful": "Linking successful",
+  "linkingFailed": "Linking failed",
+  "linkOnOtherDevice": "Please go to your friend under Friends, select Plus at the top right, then select Accept friend:in next to you and pair with the device {deviceName}.",
+  "failedAddNearbyTryCode": "Please try to establish the connection with a code. Ask your friend for the code displayed in their 'Friends' overview. You can only connect to the same friend once."
 
 }

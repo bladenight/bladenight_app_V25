@@ -14,7 +14,7 @@ import '../pages/widgets/route_dialog.dart';
 import '../providers/event_providers.dart';
 
 class EventsPage extends StatefulWidget {
-  const EventsPage({Key? key}) : super(key: key);
+  const EventsPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _EventsPageState();
