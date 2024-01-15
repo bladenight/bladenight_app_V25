@@ -3578,6 +3578,16 @@ class Localize {
     );
   }
 
+  /// `The specified name is transferred to the 2nd device when you connect to your friend. The name is only saved locally and is used for simplified linking via the local connection.`
+  String get myNameHeader {
+    return Intl.message(
+      'The specified name is transferred to the 2nd device when you connect to your friend. The name is only saved locally and is used for simplified linking via the local connection.',
+      name: 'myNameHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Linking successful`
   String get linkingSuccessful {
     return Intl.message(

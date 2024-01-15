@@ -78,22 +78,25 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
       child: SafeArea(
         child: Column(
           children: [
-            CupertinoFormSection(
-                header: Text(Localize.of(context).myName),
-                children: <Widget>[
-                  CupertinoTextFormFieldRow(
-                      placeholder: Localize.of(context).anonymous,
-                      showCursor: true,
-                      initialValue: HiveSettingsDB.myName,
-                      autocorrect: false,
-                      onChanged: (value) {
-                        HiveSettingsDB.setMyName(value);
-                      },
-                      onSaved: (inputText) {
-                        HiveSettingsDB.setMyName(
-                            inputText ?? Localize.of(context).anonymous);
-                      }),
-                ]),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: CupertinoFormSection(
+                  header: Text(Localize.of(context).myNameHeader),
+                  children: <Widget>[
+                    CupertinoTextFormFieldRow(
+                        placeholder: Localize.of(context).anonymous,
+                        showCursor: true,
+                        initialValue: HiveSettingsDB.myName,
+                        autocorrect: false,
+                        onChanged: (value) {
+                          HiveSettingsDB.setMyName(value);
+                        },
+                        onSaved: (inputText) {
+                          HiveSettingsDB.setMyName(
+                              inputText ?? Localize.of(context).anonymous);
+                        }),
+                  ]),
+            ),
             if (widget.deviceType == DeviceType.browser)
               Text(Localize.of(context).chooseDeviceToLink),
             if (widget.deviceType == DeviceType.advertiser)
@@ -131,23 +134,23 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                               )),
                               // Request connect
                               if (widget.deviceType == DeviceType.browser)
-                              CupertinoButton(
-                                onPressed: () => _onButtonClicked(device),
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  padding: const EdgeInsets.all(8.0),
-                                  color: getButtonColor(device.state),
-                                  child: Center(
-                                    child: Text(
-                                      getButtonStateName(device.state),
-                                      style: const TextStyle(
+                                CupertinoButton(
+                                  onPressed: () => _onButtonClicked(device),
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    padding: const EdgeInsets.all(8.0),
+                                    color: getButtonColor(device.state),
+                                    child: Center(
+                                      child: Text(
+                                        getButtonStateName(device.state),
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              )
+                                )
                             ],
                           ),
                           const SizedBox(

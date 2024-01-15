@@ -431,6 +431,7 @@
   "anonymous" : "Anonyme",
   "chooseDeviceToLink" : "Veuillez choisir l'appareil à coupler !",
   "myName" : "Mon nom est",
+  "myNameHeader" : "Le nom spécifié est transféré au deuxième appareil lorsque vous vous connectez à votre ami. Le nom n'est sauvegardé que localement et est utilisé pour simplifier la liaison via la connexion locale.",
   "linkingSuccessful" : "Couplage réussi",
   "linkingFailed" : "Échec du couplage",
   "linkOnOtherDevice" : "Veuillez sélectionner chez votre ami sous Amis, Plus en haut à droite,puis sélectionner Accepter un ami:dans à côté de vous et coupler avec l'appareil {deviceName}",

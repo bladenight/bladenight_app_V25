@@ -355,6 +355,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mustentername":
             MessageLookupByLibrary.simpleMessage("You must enter a name!"),
         "myName": MessageLookupByLibrary.simpleMessage("My name is"),
+        "myNameHeader": MessageLookupByLibrary.simpleMessage(
+            "The specified name is transferred to the 2nd device when you connect to your friend. The name is only saved locally and is used for simplified linking via the local connection."),
         "nameexists":
             MessageLookupByLibrary.simpleMessage("Sorry, name exists"),
         "networkerror":

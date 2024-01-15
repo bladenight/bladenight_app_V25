@@ -373,6 +373,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mustentername":
             MessageLookupByLibrary.simpleMessage("Vous devez entrer un nom !"),
         "myName": MessageLookupByLibrary.simpleMessage("Mon nom est"),
+        "myNameHeader": MessageLookupByLibrary.simpleMessage(
+            "Le nom spécifié est transféré au deuxième appareil lorsque vous vous connectez à votre ami. Le nom n\'est sauvegardé que localement et est utilisé pour simplifier la liaison via la connexion locale."),
         "nameexists":
             MessageLookupByLibrary.simpleMessage("Désolé, le nom existe"),
         "networkerror": MessageLookupByLibrary.simpleMessage(

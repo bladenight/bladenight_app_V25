@@ -445,7 +445,7 @@ class HiveSettingsDB {
 
   static const String _myNameKey = 'myNamePref';
 
-  ///get RoutePointsAsString
+  ///get name to transfer vie lokal link
   static String get myName {
     return _hiveBox.get(_myNameKey, defaultValue: 'Anonym');
   }

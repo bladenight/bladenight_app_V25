@@ -35,9 +35,8 @@ class SetActiveRouteMessageMapper
   static const Field<SetActiveRouteMessage, int> _f$noise =
       Field('noise', _$noise, key: 'noi');
   static String _$deviceId(SetActiveRouteMessage v) => v.deviceId;
-  static dynamic _arg$deviceId(f) => f<String>();
-  static const Field<SetActiveRouteMessage, dynamic> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did', arg: _arg$deviceId);
+  static const Field<SetActiveRouteMessage, String> _f$deviceId =
+      Field('deviceId', _$deviceId, key: 'did');
 
   @override
   final MappableFields<SetActiveRouteMessage> fields = const {
@@ -122,7 +121,7 @@ abstract class SetActiveRouteMessageCopyWith<
       int? timestamp,
       String? checksum,
       int? noise,
-      dynamic deviceId});
+      String? deviceId});
   SetActiveRouteMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -141,13 +140,13 @@ class _SetActiveRouteMessageCopyWithImpl<$R, $Out>
           int? timestamp,
           String? checksum,
           int? noise,
-          Object? deviceId = $none}) =>
+          String? deviceId}) =>
       $apply(FieldCopyWithData({
         if (route != null) #route: route,
         if (timestamp != null) #timestamp: timestamp,
         if (checksum != null) #checksum: checksum,
         if (noise != null) #noise: noise,
-        if (deviceId != $none) #deviceId: deviceId
+        if (deviceId != null) #deviceId: deviceId
       }));
   @override
   SetActiveRouteMessage $make(CopyWithData data) => SetActiveRouteMessage(

@@ -258,7 +258,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     style: const TextStyle(
                         fontSize: 18.0, fontWeight: FontWeight.bold)),
                 Divider(
-                  indent: 20,
+                  indent: 0,
                   endIndent: 20,
                   color: CupertinoTheme.of(context).primaryColor,
                   height: 1,

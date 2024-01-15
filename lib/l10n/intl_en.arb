@@ -431,6 +431,7 @@
   "anonymous": "Anonymous",
   "chooseDeviceToLink": "Please select your friend's device to link !",
   "myName": "My name is",
+  "myNameHeader": "The specified name is transferred to the 2nd device when you connect to your friend. The name is only saved locally and is used for simplified linking via the local connection.",
   "linkingSuccessful": "Linking successful",
   "linkingFailed": "Linking failed",
   "linkOnOtherDevice": "Please go to your friend under Friends, select Plus at the top right, then select Accept friend:in next to you and pair with the device {deviceName}.",

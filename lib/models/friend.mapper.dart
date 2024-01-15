@@ -22,20 +22,19 @@ class FriendMapper extends ClassMapperBase<Friend> {
   final String id = 'Friend';
 
   static String _$name(Friend v) => v.name;
-  static const Field<Friend, String> _f$name =
-      Field('name', _$name, key: 'nam');
+  static const Field<Friend, String> _f$name = Field('name', _$name);
   static int _$friendId(Friend v) => v.friendId;
   static const Field<Friend, int> _f$friendId =
       Field('friendId', _$friendId, key: 'friendid');
   static Color _$color(Friend v) => v.color;
   static const Field<Friend, Color> _f$color =
-      Field('color', _$color, key: 'col', opt: true, def: Colors.white24);
+      Field('color', _$color, opt: true, def: Colors.white24);
   static bool _$isActive(Friend v) => v.isActive;
   static const Field<Friend, bool> _f$isActive =
       Field('isActive', _$isActive, opt: true, def: false);
   static int _$requestId(Friend v) => v.requestId;
   static const Field<Friend, int> _f$requestId =
-      Field('requestId', _$requestId, key: 'rid', opt: true, def: 0);
+      Field('requestId', _$requestId, opt: true, def: 0);
   static bool _$isOnline(Friend v) => v.isOnline;
   static const Field<Friend, bool> _f$isOnline =
       Field('isOnline', _$isOnline, opt: true, def: false);

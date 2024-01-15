@@ -11,15 +11,15 @@ part 'friend.mapper.dart';
 
 @MappableClass(includeCustomMappers: [ColorMapper()])
 class Friend with FriendMappable {
-  @MappableField(key: 'nam')
+  @MappableField()
   late String name;
   @MappableField(key: 'friendid')
   late int friendId;
   late bool isActive;
-  @MappableField(key: 'col')
+  @MappableField()
   late Color color;
   late bool isOnline;
-  @MappableField(key: 'rid')
+  @MappableField()
   late int requestId = 0;
   late double speed = 0;
   @MappableField(key: 'rsp')

@@ -325,9 +325,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Freund:in neben Dir annehmen"),
         "linkOnOtherDevice": m6,
         "linkingFailed":
-            MessageLookupByLibrary.simpleMessage("Kopplung fehlgeschlagen"),
+            MessageLookupByLibrary.simpleMessage("Verknüpfung fehlgeschlagen"),
         "linkingSuccessful":
-            MessageLookupByLibrary.simpleMessage("Kopplung erfolgreich"),
+            MessageLookupByLibrary.simpleMessage("Verknüpfung erfolgreich"),
         "liveMapInBrowser": MessageLookupByLibrary.simpleMessage(
             "Verfolgt die Bladnight ohne App im Browser"),
         "liveMapInBrowserInfoHeader":
@@ -362,6 +362,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mustentername": MessageLookupByLibrary.simpleMessage(
             "Du musst einen Namen eingeben!"),
         "myName": MessageLookupByLibrary.simpleMessage("Mein Name lautet"),
+        "myNameHeader": MessageLookupByLibrary.simpleMessage(
+            "Der angegebene Name wird bei der Verknüpfung mit deinem Freund an das 2. Gerät übertragen. Der Name ist nur lokal gespeichert und dient der vereinfachten Verknüpfung per lokaler Verbindung.Es muss auf beiden Geräten eine Internetverbindung bestehen um den Code vom Server abzuholen. Alternativ kann auch ohne Name per Code verknüpft werden."),
         "nameexists":
             MessageLookupByLibrary.simpleMessage("Sorry, Name schon vergeben!"),
         "networkerror": MessageLookupByLibrary.simpleMessage(
