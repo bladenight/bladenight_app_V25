@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 
@@ -51,6 +52,8 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
 
   bool isInit = false;
 
+  final GlobalKey webViewKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -78,29 +81,67 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
       child: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: CupertinoFormSection(
-                  header: Text(Localize.of(context).myNameHeader),
-                  children: <Widget>[
-                    CupertinoTextFormFieldRow(
-                        placeholder: Localize.of(context).anonymous,
-                        showCursor: true,
-                        initialValue: HiveSettingsDB.myName,
-                        autocorrect: false,
-                        onChanged: (value) {
-                          HiveSettingsDB.setMyName(value);
-                        },
-                        onSaved: (inputText) {
-                          HiveSettingsDB.setMyName(
-                              inputText ?? Localize.of(context).anonymous);
-                        }),
-                  ]),
-            ),
             if (widget.deviceType == DeviceType.browser)
               Text(Localize.of(context).chooseDeviceToLink),
+            /*if (widget.deviceType == DeviceType.advertiser)
+              Text(
+                Localize.of(context).linkOnOtherDevice(devInfo),
+              ),*/
             if (widget.deviceType == DeviceType.advertiser)
-              Text(Localize.of(context).linkOnOtherDevice(devInfo)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 5, 10, 5),
+                child: HtmlWidget(
+                  Localize.of(context).linkOnOtherDevice(devInfo),
+                  customWidgetBuilder: (element) {
+                    if (element.className.contains('icon')) {
+                      for (var node in element.nodes) {
+                        if (node.text != null && node.text!.contains('plus')) {
+                          return const Icon(CupertinoIcons.plus_circle);
+                        }
+                      }
+
+                      return null;
+                    }
+
+                    return null;
+                  },
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 5),
+              child: CupertinoFormRow(
+                prefix: Text(Localize.of(context).myName),
+                child: CupertinoTextFormFieldRow(
+                    autofocus: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    placeholder: Localize.of(context).anonymous,
+                    showCursor: true,
+                    initialValue: HiveSettingsDB.myName,
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return Localize.of(context).missingName;
+                      }
+                      return null;
+                    },
+                    autocorrect: false,
+                    decoration: BoxDecoration(
+                        color: CupertinoTheme.of(context).barBackgroundColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    onChanged: (value) {
+                      if (value.isEmpty) return;
+                      HiveSettingsDB.setMyName(value);
+                    },
+                    onSaved: (inputText) {
+                      HiveSettingsDB.setMyName(
+                          inputText ?? Localize.of(context).anonymous);
+                    }),
+              ),
+            ),
+            Divider(
+              height: 1,
+              color: CupertinoTheme.of(context).primaryColor,
+            ),
             const SizedBox(
               height: 5,
             ),

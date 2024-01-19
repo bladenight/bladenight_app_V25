@@ -34,7 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m5(name) => "${name} einladen";
 
   static String m6(deviceName) =>
-      "Dein Freund muss in max. 2 m Entfernung von Dir sein!\n- Bitte bei deinem Freund in der Bladenight-App den Tab Freunde öffnen lassen.\n- Dort Plus oben rechts wählen\n- Freund:in neben Dir annehmen wählen\n- Nun mit diesem Gerät ${deviceName} koppeln.\n- Du kannst deinen übermittelten Namen im Textfeld oben ändern.";
+      "Dein Freund muss in max. 2 m Entfernung von Dir sein!<ul><li>Bitte bei deinem Freund in der Bladenight-App den Tab Freunde öffnen lassen.</li><li>Dort Plus oben rechts wählen<span class=\"icon\">plus</span></li><li>Freund:in neben Dir annehmen wählen</li><li>Nun mit diesem Gerät <b><em>${deviceName}</em></b> koppeln.</li></ul>Du kannst deinen übermittelten Namen im Textfeld ändern. Dieser ist nur ausschließlich zum übertragen per Direktverbindung ohne Code.";
 
   static String m7(timeout) =>
       "Keine Veranstaltung seit mindestens ${timeout} min. aktiv - Tracking automatisch beendet";
@@ -358,10 +358,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "message": MessageLookupByLibrary.simpleMessage("Nachricht"),
         "messages": MessageLookupByLibrary.simpleMessage("Nachrichten"),
         "metersOnRoute": MessageLookupByLibrary.simpleMessage("gef.Strecke"),
+        "missingName": MessageLookupByLibrary.simpleMessage(
+            "Feld muss min. 1 Zeichen enthalten"),
         "model": MessageLookupByLibrary.simpleMessage("Modell"),
         "mustentername": MessageLookupByLibrary.simpleMessage(
             "Du musst einen Namen eingeben!"),
-        "myName": MessageLookupByLibrary.simpleMessage("Mein Name lautet"),
+        "myName": MessageLookupByLibrary.simpleMessage("Mein Name:"),
         "myNameHeader": MessageLookupByLibrary.simpleMessage(
             "Der angegebene Name wird bei der Verknüpfung mit deinem Freund an das 2. Gerät übertragen. Der Name ist nur lokal gespeichert und dient der vereinfachten Verknüpfung per lokaler Verbindung.Es muss auf beiden Geräten eine Internetverbindung bestehen um den Code vom Server abzuholen. Alternativ kann auch ohne Name per Code verknüpft werden."),
         "nameexists":

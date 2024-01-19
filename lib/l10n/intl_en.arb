@@ -434,7 +434,8 @@
   "myNameHeader": "The specified name is transferred to the 2nd device when you connect to your friend. The name is only saved locally and is used for simplified linking via the local connection.",
   "linkingSuccessful": "Linking successful",
   "linkingFailed": "Linking failed",
-  "linkOnOtherDevice": "Please go to your friend under Friends, select Plus at the top right, then select Accept friend:in next to you and pair with the device {deviceName}.",
-  "failedAddNearbyTryCode": "Please try to establish the connection with a code. Ask your friend for the code displayed in their 'Friends' overview. You can only connect to the same friend once."
+  "linkOnOtherDevice": "Your friend must be within a maximum of 2 m of you!<ul><li>Please open the Friends tab for your friend in the Bladenight app.</li><li>Select Plus at the top right<span class= \"icon\">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>{deviceName}</em></b> Pair.</li></ul>You can change your submitted name in the text field. This is only for transferring via direct connection without code.",
+  "failedAddNearbyTryCode": "Please try to establish the connection with a code. Ask your friend for the code displayed in their 'Friends' overview. You can only connect to the same friend once.",
+  "missingName": "Field must contain at least 1 character"
 
 }

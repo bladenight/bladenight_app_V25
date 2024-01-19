@@ -19,6 +19,7 @@ dependencies:
   dart_mappable: ^4.2.0
   device_info_plus: ^9.0.2
   encrypt: ^5.0.1
+  extended_text: ^12.0.1
   firebase_core: ^2.13.0
   firebase_crashlytics: ^3.3.1
   flutter:
@@ -42,6 +43,7 @@ dependencies:
       url: https://github.com/xunreal75/flutter_platform_alert.git
       branch: master
   flutter_riverpod: ^2.0.2
+  flutter_widget_from_html: ^0.14.11
   fluttertoast: ^8.0.9
   get: ^4.6.5
   hive: ^2.2.3

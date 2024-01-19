@@ -3608,10 +3608,10 @@ class Localize {
     );
   }
 
-  /// `Please go to your friend under Friends, select Plus at the top right, then select Accept friend:in next to you and pair with the device {deviceName}.`
+  /// `Your friend must be within a maximum of 2 m of you!<ul><li>Please open the Friends tab for your friend in the Bladenight app.</li><li>Select Plus at the top right<span class= "icon">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>{deviceName}</em></b> Pair.</li></ul>You can change your submitted name in the text field. This is only for transferring via direct connection without code.`
   String linkOnOtherDevice(Object deviceName) {
     return Intl.message(
-      'Please go to your friend under Friends, select Plus at the top right, then select Accept friend:in next to you and pair with the device $deviceName.',
+      'Your friend must be within a maximum of 2 m of you!<ul><li>Please open the Friends tab for your friend in the Bladenight app.</li><li>Select Plus at the top right<span class= "icon">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>$deviceName</em></b> Pair.</li></ul>You can change your submitted name in the text field. This is only for transferring via direct connection without code.',
       name: 'linkOnOtherDevice',
       desc: '',
       args: [deviceName],
@@ -3623,6 +3623,16 @@ class Localize {
     return Intl.message(
       'Please try to establish the connection with a code. Ask your friend for the code displayed in their \'Friends\' overview. You can only connect to the same friend once.',
       name: 'failedAddNearbyTryCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Field must contain at least 1 character`
+  String get missingName {
+    return Intl.message(
+      'Field must contain at least 1 character',
+      name: 'missingName',
       desc: '',
       args: [],
     );

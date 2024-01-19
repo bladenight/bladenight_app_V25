@@ -34,7 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m5(name) => "inviter ${name}";
 
   static String m6(deviceName) =>
-      "Veuillez sélectionner chez votre ami sous Amis, Plus en haut à droite,puis sélectionner Accepter un ami:dans à côté de vous et coupler avec l\'appareil ${deviceName}";
+      "Votre ami doit se trouver à moins de 2 m de vous !<ul><li>Veuillez ouvrir l\'onglet Amis de votre ami dans l\'application Bladenight.</li><li>Sélectionnez Plus en haut à droite<span class= \" icon\">plus</span></li><li>Choisissez d\'accepter un ami à côté de vous</li><li>Maintenant avec cet appareil <b><em>${deviceName}</em></b > Paire.</li></ul>Vous pouvez modifier votre nom soumis dans le champ de texte. Ceci concerne uniquement le transfert via une connexion directe sans code.";
 
   static String m7(timeout) =>
       "Aucun événement n\'est actif depuis plus de ${timeout} min - le suivi s\'est arrêté automatiquement";
@@ -369,6 +369,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "messages": MessageLookupByLibrary.simpleMessage("Messages"),
         "metersOnRoute":
             MessageLookupByLibrary.simpleMessage("Itinéraire conduit"),
+        "missingName": MessageLookupByLibrary.simpleMessage(
+            "Le champ doit contenir au moins 1 caractère"),
         "model": MessageLookupByLibrary.simpleMessage("Modèle"),
         "mustentername":
             MessageLookupByLibrary.simpleMessage("Vous devez entrer un nom !"),
