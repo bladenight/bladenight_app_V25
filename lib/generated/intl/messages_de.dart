@@ -46,7 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Eventzeit (${timeout} min) überzogen. Tracking abschalten nicht vergessen!";
 
   static String m10(name, requestid) =>
-      "Sende an \'${name}\' den Code \n\n${requestid}\nEr/Sie/es muss den Code in dessen BladeNight App bestätigen. \nDer Code ist 60 min gültig!\nBitte über ↻ den Status manuell aktualisieren.";
+      "Sende an \'${name}\' den Code \n${requestid}\nDein(e) Freund:in muss den Code in dessen BladeNight-App bestätigen.\nDer Code ist 60 min gültig!\nBitte über ↻ den Status manuell aktualisieren.";
 
   static String m11(time) => "${time} Uhr";
 
@@ -180,6 +180,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nachrichten löschen"),
         "closeApp":
             MessageLookupByLibrary.simpleMessage("App wirklich schließen?"),
+        "codeExpired": MessageLookupByLibrary.simpleMessage(
+            "Code zu alt! Eintrag bitte löschen und Freund:in neu einladen!"),
         "codecontainsonlydigits": MessageLookupByLibrary.simpleMessage(
             "Fehler, Code darf nur Ziffern enthalten!"),
         "confirmed": MessageLookupByLibrary.simpleMessage("Wir fahren 😃"),
@@ -392,7 +394,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noGpsAllowed":
             MessageLookupByLibrary.simpleMessage("GPS nicht aktiviert"),
         "noLocationAvailable":
-            MessageLookupByLibrary.simpleMessage("Kein Standort bekannt"),
+            MessageLookupByLibrary.simpleMessage("Kein Standort"),
         "noLocationPermissionGrantedAlertAndroid":
             MessageLookupByLibrary.simpleMessage(
                 "Bitte System-Einstellungen (Einstellungen -> Standort -> Standortzugriff von Apps -> BladeNight) prüfen, da keine Standortfreigabe."),

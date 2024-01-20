@@ -1,11 +1,12 @@
 import 'dart:convert';
+
 import 'package:archive/archive_io.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
+as bg;
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,8 +18,8 @@ import 'package:universal_io/io.dart';
 import '../generated/l10n.dart';
 import '../models/friend.dart';
 import '../models/user_trackpoint.dart';
-import '../pages/friends/friends_page.dart';
 import '../pages/friends/widgets/edit_friend_dialog.dart';
+import '../pages/friends/widgets/friends_action_sheet.dart';
 import '../providers/friends_provider.dart';
 import 'device_info_helper.dart';
 import 'deviceid_helper.dart';
@@ -190,11 +191,10 @@ Future<void> exportLogs() async {
   }
 }
 
-String exportUserTracking(
-    List<UserTrackPoint> userTrackPoints) {
+String exportUserTracking(List<UserTrackPoint> userTrackPoints) {
   if (kIsWeb) return '';
-  var trkPts = UserTrackPoints(userTrackPoints)
-      .toXML(); // jsonEncode(userTrackPoints);
+  var trkPts =
+      UserTrackPoints(userTrackPoints).toXML(); // jsonEncode(userTrackPoints);
   return trkPts;
 }
 

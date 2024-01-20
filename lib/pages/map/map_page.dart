@@ -148,8 +148,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     locationSubscription?.close();
     locationSubscription = null;
 
-    controller.move(
-        LocationProvider.instance.userLatLng ?? defaultLatLng, controller.camera.zoom);
+    controller.move(LocationProvider.instance.userLatLng ?? defaultLatLng,
+        controller.camera.zoom);
     locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
       locationUpdateProvider,
       (_, value) {
@@ -241,8 +241,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               var runningRoutePoints = locationUpdate.realtimeUpdate
                   ?.runningRoute(activeEvent.activeEventRoutePoints);
               var headingRoutePoints = activeEvent.headingPoints;
-              var sizeValue = MediaQuery.textScalerOf(context).scale(
-                  HiveSettingsDB.iconSizeValue);
+              var sizeValue = MediaQuery.textScalerOf(context)
+                  .scale(HiveSettingsDB.iconSizeValue);
               return MapLayer(
                 event: activeEvent.event,
                 startPoint: activeEvent.startPoint,
@@ -302,17 +302,18 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         height: 20,
                         point: hp.latLng,
                         child: Builder(
-              builder: (context) => Transform.rotate(
-                          angle: hp.bearing,
-                          child: const Image(
-                            image: AssetImage(
-                              'assets/images/arrow_up.png',
+                          builder: (context) => Transform.rotate(
+                            angle: hp.bearing,
+                            child: const Image(
+                              image: AssetImage(
+                                'assets/images/arrow_up.png',
+                              ),
+                              fit: BoxFit.cover,
                             ),
-                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      ),],
+                  ],
                   // RoutePoints
                   if (runningRoutePoints != null) ...[
                     if (runningRoutePoints.isNotEmpty)
@@ -336,14 +337,16 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         width: sizeValue,
                         height: sizeValue,
                         child: Builder(
-              builder: (context) => const Image(
-                          image: AssetImage(
-                            'assets/images/skatechildmunichred.png',
+                          builder: (context) => const Image(
+                            image: AssetImage(
+                              'assets/images/skatechildmunichred.png',
+                            ),
+                            fit: BoxFit.cover,
                           ),
-                          fit: BoxFit.cover,
                         ),
                       ),
-                      ),], //end tail marker
+                  ],
+                  //end tail marker
                   //arrows for drive Direction
                   //end heading marker
                   if (runningRoutePoints != null) ...[
@@ -368,14 +371,15 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         point: runningRoutePoints.first,
                         width: sizeValue,
                         height: sizeValue,
-                        child:Builder(
-              builder:  (context) => const Image(
-                          image: AssetImage(
-                            'assets/images/skatechildmunich.png',
+                        child: Builder(
+                          builder: (context) => const Image(
+                            image: AssetImage(
+                              'assets/images/skatechildmunich.png',
+                            ),
                           ),
                         ),
                       ),
-                      ), ],
+                  ],
                   //End SkaterHeadMarker
                   //finishMarker
                   if (runningRoutePoints != null &&
@@ -387,19 +391,20 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                       width: 35.0,
                       height: 35.0,
                       point: activeEvent.activeEventRoutePoints.last,
-                      child:Builder(
-              builder:  (context) => const Stack(
-                        children: [
-                          Image(
-                            image: AssetImage(
-                              'assets/images/finishMarker.png',
+                      child: Builder(
+                        builder: (context) => const Stack(
+                          children: [
+                            Image(
+                              image: AssetImage(
+                                'assets/images/finishMarker.png',
+                              ),
+                              fit: BoxFit.cover,
                             ),
-                            fit: BoxFit.cover,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    ),],
+                  ],
                   //StartMarker
                   if (runningRoutePoints != null &&
                       runningRoutePoints.isNotEmpty) ...[
@@ -411,28 +416,25 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                       width: 35.0,
                       height: 35.0,
                       point: activeEvent.activeEventRoutePoints.first,
-                      child:Builder(
-              builder:  (context) => const Stack(
-                        children: [
-                          Image(
-                            image: AssetImage(
-                              'assets/images/startMarker.png',
+                      child: Builder(
+                        builder: (context) => const Stack(
+                          children: [
+                            Image(
+                              image: AssetImage(
+                                'assets/images/startMarker.png',
+                              ),
+                              fit: BoxFit.cover,
                             ),
-                            fit: BoxFit.cover,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    ),],
+                  ],
                   if (locationUpdate.realtimeUpdate != null &&
                       locationUpdate.userLatLng != null)
                     for (var friend in locationUpdate.realtimeUpdate!
                         .mapPointFriends(
                             locationUpdate.realtimeUpdate!.friends))
-
-                      //Friends are only in [RealTimeData] available when we send an new user position to server.
-                      //Friend has to stay visible when online - replace on offline message after send location
-                      //collect friend list to check where online is, leave it in Marker list
                       BnMapFriendMarker(
                         friend: friend,
                         point: LatLng(friend.latitude ?? defaultLatitude,
@@ -443,124 +445,130 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         height: friend.specialValue == 99
                             ? sizeValue - 8
                             : sizeValue,
-                        child: (context) {
-                          if (HiveSettingsDB.wantSeeFullOfProcession &&
-                              friend.specialValue == 1) {
-                            return Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  color: SpeedToColor.getColorFromSpeed(
-                                      friend.realSpeed),
-                                  shape: BoxShape.circle),
-                              child: const CircleAvatar(
-                                backgroundImage: AssetImage(
-                                    'assets/images/skatechildmunichgreen.png'),
-                              ),
+                        child: Builder(
+                          builder: (context) {
+                            if (HiveSettingsDB.wantSeeFullOfProcession &&
+                                friend.specialValue == 1) {
+                              return Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    color: SpeedToColor.getColorFromSpeed(
+                                        friend.realSpeed),
+                                    shape: BoxShape.circle),
+                                child: const CircleAvatar(
+                                  backgroundImage: AssetImage(
+                                      'assets/images/skatechildmunichgreen.png'),
+                                ),
+                              );
+                            }
+                            if (HiveSettingsDB.wantSeeFullOfProcession &&
+                                friend.specialValue == 2) {
+                              return Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    color: SpeedToColor.getColorFromSpeed(
+                                        friend.realSpeed),
+                                    shape: BoxShape.circle),
+                                child: CircleAvatar(
+                                  radius: sizeValue - 6,
+                                  backgroundImage: const AssetImage(
+                                      'assets/images/skatechildmunichred.png'),
+                                ),
+                              );
+                            }
+                            if (HiveSettingsDB.wantSeeFullOfProcession &&
+                                friend.specialValue == 99) {
+                              return Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle),
+                                child: CircleAvatar(
+                                  radius: sizeValue - 6,
+                                  backgroundColor:
+                                      SpeedToColor.getColorFromSpeed(
+                                              friend.realSpeed)
+                                          .withOpacity(0.4),
+                                  child: Container(),
+                                ),
+                              );
+                            }
+                            return CircleAvatar(
+                              radius: sizeValue,
+                              backgroundColor: friend.color,
+                              child: Center(
+                                  child: Text(friend.name.substring(0, 1))),
                             );
-                          }
-                          if (HiveSettingsDB.wantSeeFullOfProcession &&
-                              friend.specialValue == 2) {
-                            return Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  color: SpeedToColor.getColorFromSpeed(
-                                      friend.realSpeed),
-                                  shape: BoxShape.circle),
-                              child: CircleAvatar(
-                                radius: sizeValue - 6,
-                                backgroundImage: const AssetImage(
-                                    'assets/images/skatechildmunichred.png'),
-                              ),
-                            );
-                          }
-                          if (HiveSettingsDB.wantSeeFullOfProcession &&
-                              friend.specialValue == 99) {
-                            return Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: const BoxDecoration(
-                                  color: Colors.white, shape: BoxShape.circle),
-                              child: CircleAvatar(
-                                radius: sizeValue - 6,
-                                backgroundColor: SpeedToColor.getColorFromSpeed(
-                                        friend.realSpeed)
-                                    .withOpacity(0.4),
-                                child: Container(),
-                              ),
-                            );
-                          }
-                          return CircleAvatar(
-                            radius: sizeValue,
-                            backgroundColor: friend.color,
-                            child: Center(
-                                child: Text(friend.name.substring(0, 1))),
-                          );
-                        },
+                          },
+                        ),
                       ),
+                  //Friends are only in [RealTimeData] available when we send an new user position to server.
+                  //Friend has to stay visible when online - replace on offline message after send location
+                  //collect friend list to check where online is, leave it in Marker list
+
                   if (locationUpdate.userLatLng != null &&
                       ref.watch(isTrackingProvider))
                     //MeMarker
                     BnMapMarker(
-                        buildContext: context,
-                        headerText: '${Localize.of(context).me} '
-                            '${locationUpdate.isHead ? "${Localize.of(context).iam} ${Localize.of(context).head}" : ''} '
-                            '${locationUpdate.isTail ? "${Localize.of(context).iam} ${Localize.of(context).tail}" : ''} ',
-                        speedText:
-                            '${locationUpdate.realUserSpeedKmh == null ? '- km/h' : locationUpdate.realUserSpeedKmh.formatSpeedKmH()} ∑${locationUpdate.odometer.toStringAsFixed(1)} km',
-                        drivenDistanceText:
-                            '${((locationUpdate.realtimeUpdate?.user.position) ?? '-')} m',
-                        timeUserToHeadText:
-                            '${(TimeConverter.millisecondsToDateTimeString(value: locationUpdate.realtimeUpdate?.timeUserToHead() ?? 0))}',
-                        distanceUserToHeadText:
-                            '${((locationUpdate.realtimeUpdate?.distanceOfUserToHead()) ?? '-')} m',
-                        timeUserToTailText:
-                            '${(TimeConverter.millisecondsToDateTimeString(value: locationUpdate.realtimeUpdate?.timeUserToTail() ?? 0))}',
-                        distanceUserToTailText:
-                            '${((locationUpdate.realtimeUpdate?.distanceOfUserToTail()) ?? '-')} m',
-                        color: ref.watch(MeColor.provider),
-                        point: locationUpdate.userLatLng!,
-                        width: sizeValue,
-                        height: sizeValue,
-                        child: Builder(
-              builder: (context) {
-                          if (locationUpdate.isHead) {
-                            return Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: const BoxDecoration(
-                                  color: Colors.red, shape: BoxShape.circle),
-                              child: CircleAvatar(
-                                radius: sizeValue - 5,
-                                backgroundImage: const AssetImage(
-                                    'assets/images/skaterIcon_256.png'),
-                                backgroundColor: ref
-                                    .watch(MeColor.provider)
-                                    .withOpacity(0.6),
-                              ),
-                            );
-                          } else if (locationUpdate.isTail) {
-                            return Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: const BoxDecoration(
-                                  color: Colors.purple, shape: BoxShape.circle),
-                              child: CircleAvatar(
-                                radius: sizeValue - 5,
-                                backgroundImage: const AssetImage(
-                                    'assets/images/skaterIcon_256.png'),
-                                backgroundColor: ref
-                                    .watch(MeColor.provider)
-                                    .withOpacity(0.6),
-                              ),
-                            );
-                          }
-                          return CircleAvatar(
-                            backgroundColor:
-                                ref.watch(MeColor.provider).withOpacity(0.6),
-                            child: locationUpdate.userIsParticipant
-                                ? const ImageIcon(AssetImage(
-                                    'assets/images/skaterIcon_256.png'))
-                                : const Icon(Icons.gps_fixed_sharp),
+                      buildContext: context,
+                      headerText: '${Localize.of(context).me} '
+                          '${locationUpdate.isHead ? "${Localize.of(context).iam} ${Localize.of(context).head}" : ''} '
+                          '${locationUpdate.isTail ? "${Localize.of(context).iam} ${Localize.of(context).tail}" : ''} ',
+                      speedText:
+                          '${locationUpdate.realUserSpeedKmh == null ? '- km/h' : locationUpdate.realUserSpeedKmh.formatSpeedKmH()} ∑${locationUpdate.odometer.toStringAsFixed(1)} km',
+                      drivenDistanceText:
+                          '${((locationUpdate.realtimeUpdate?.user.position) ?? '-')} m',
+                      timeUserToHeadText:
+                          '${(TimeConverter.millisecondsToDateTimeString(value: locationUpdate.realtimeUpdate?.timeUserToHead() ?? 0))}',
+                      distanceUserToHeadText:
+                          '${((locationUpdate.realtimeUpdate?.distanceOfUserToHead()) ?? '-')} m',
+                      timeUserToTailText:
+                          '${(TimeConverter.millisecondsToDateTimeString(value: locationUpdate.realtimeUpdate?.timeUserToTail() ?? 0))}',
+                      distanceUserToTailText:
+                          '${((locationUpdate.realtimeUpdate?.distanceOfUserToTail()) ?? '-')} m',
+                      color: ref.watch(MeColor.provider),
+                      point: locationUpdate.userLatLng!,
+                      width: sizeValue,
+                      height: sizeValue,
+                      child: Builder(builder: (context) {
+                        if (locationUpdate.isHead) {
+                          return Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: const BoxDecoration(
+                                color: Colors.red, shape: BoxShape.circle),
+                            child: CircleAvatar(
+                              radius: sizeValue - 5,
+                              backgroundImage: const AssetImage(
+                                  'assets/images/skaterIcon_256.png'),
+                              backgroundColor:
+                                  ref.watch(MeColor.provider).withOpacity(0.6),
+                            ),
                           );
-                        }),
-                    ),],
+                        } else if (locationUpdate.isTail) {
+                          return Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: const BoxDecoration(
+                                color: Colors.purple, shape: BoxShape.circle),
+                            child: CircleAvatar(
+                              radius: sizeValue - 5,
+                              backgroundImage: const AssetImage(
+                                  'assets/images/skaterIcon_256.png'),
+                              backgroundColor:
+                                  ref.watch(MeColor.provider).withOpacity(0.6),
+                            ),
+                          );
+                        }
+                        return CircleAvatar(
+                          backgroundColor:
+                              ref.watch(MeColor.provider).withOpacity(0.6),
+                          child: locationUpdate.userIsParticipant
+                              ? const ImageIcon(AssetImage(
+                                  'assets/images/skaterIcon_256.png'))
+                              : const Icon(Icons.gps_fixed_sharp),
+                        );
+                      }),
+                    ),
+                ],
                 //Markers end
                 controller: controller,
               );

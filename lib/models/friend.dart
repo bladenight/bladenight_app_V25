@@ -27,6 +27,7 @@ class Friend with FriendMappable {
   @MappableField(key: 'spv')
   late int specialValue = 0;
   late int? timestamp; // = DateTime.now().millisecondsSinceEpoch;
+  late int? codeTimestamp;
   late double? latitude = defaultLatitude;
   late double? longitude = defaultLongitude;
 
@@ -64,6 +65,7 @@ class Friend with FriendMappable {
       this.specialValue = 0,
       this.timeToUser = 0,
       this.timestamp = 0,
+      this.codeTimestamp = 0,
       this.hasServerEntry = true}) {
     resetPositionData();
   }
@@ -76,8 +78,21 @@ class Friend with FriendMappable {
     longitude = null;
   }
 
+  bool get codeExpired {
+    if (codeTimestamp == null) return false;
+    var codeDtTimeDiff = DateTime.now()
+        .difference(DateTime.fromMillisecondsSinceEpoch(codeTimestamp!));
+    if (codeTimestamp! > 0 && codeDtTimeDiff > const Duration(minutes: 59)) {
+      return true;
+    }
+    return false;
+  }
+
   String getFriendStatusText(BuildContext context) {
     String statustext = Localize.of(context).status_active;
+    if (requestId > 0 && codeExpired) {
+      return Localize.of(context).codeExpired;
+    }
     if (requestId > 0) {
       return '${Localize.of(context).status_pending} ( Code: $requestId )';
     } else if (!isActive && hasServerEntry) {

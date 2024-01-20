@@ -178,6 +178,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "clearMessagesTitle":
             MessageLookupByLibrary.simpleMessage("Clear messages"),
         "closeApp": MessageLookupByLibrary.simpleMessage("Close app really?"),
+        "codeExpired": MessageLookupByLibrary.simpleMessage(
+            "Code too old! Please delete entry and re-invite friend!"),
         "codecontainsonlydigits": MessageLookupByLibrary.simpleMessage(
             "Error, code contains only numbers"),
         "confirmed": MessageLookupByLibrary.simpleMessage("Confirmed 😃"),

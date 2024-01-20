@@ -68,6 +68,9 @@ class FriendMapper extends ClassMapperBase<Friend> {
   static int? _$timestamp(Friend v) => v.timestamp;
   static const Field<Friend, int> _f$timestamp =
       Field('timestamp', _$timestamp, opt: true, def: 0);
+  static int? _$codeTimestamp(Friend v) => v.codeTimestamp;
+  static const Field<Friend, int> _f$codeTimestamp =
+      Field('codeTimestamp', _$codeTimestamp, opt: true, def: 0);
   static bool _$hasServerEntry(Friend v) => v.hasServerEntry;
   static const Field<Friend, bool> _f$hasServerEntry =
       Field('hasServerEntry', _$hasServerEntry, opt: true, def: true);
@@ -93,6 +96,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
     #specialValue: _f$specialValue,
     #timeToUser: _f$timeToUser,
     #timestamp: _f$timestamp,
+    #codeTimestamp: _f$codeTimestamp,
     #hasServerEntry: _f$hasServerEntry,
     #realSpeed: _f$realSpeed,
   };
@@ -115,6 +119,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
         specialValue: data.dec(_f$specialValue),
         timeToUser: data.dec(_f$timeToUser),
         timestamp: data.dec(_f$timestamp),
+        codeTimestamp: data.dec(_f$codeTimestamp),
         hasServerEntry: data.dec(_f$hasServerEntry));
   }
 
@@ -184,6 +189,7 @@ abstract class FriendCopyWith<$R, $In extends Friend, $Out>
       int? specialValue,
       int? timeToUser,
       int? timestamp,
+      int? codeTimestamp,
       bool? hasServerEntry});
   FriendCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -212,6 +218,7 @@ class _FriendCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Friend, $Out>
           int? specialValue,
           Object? timeToUser = $none,
           Object? timestamp = $none,
+          Object? codeTimestamp = $none,
           bool? hasServerEntry}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
@@ -230,6 +237,7 @@ class _FriendCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Friend, $Out>
         if (specialValue != null) #specialValue: specialValue,
         if (timeToUser != $none) #timeToUser: timeToUser,
         if (timestamp != $none) #timestamp: timestamp,
+        if (codeTimestamp != $none) #codeTimestamp: codeTimestamp,
         if (hasServerEntry != null) #hasServerEntry: hasServerEntry
       }));
   @override
@@ -252,6 +260,7 @@ class _FriendCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Friend, $Out>
       specialValue: data.get(#specialValue, or: $value.specialValue),
       timeToUser: data.get(#timeToUser, or: $value.timeToUser),
       timestamp: data.get(#timestamp, or: $value.timestamp),
+      codeTimestamp: data.get(#codeTimestamp, or: $value.codeTimestamp),
       hasServerEntry: data.get(#hasServerEntry, or: $value.hasServerEntry));
 
   @override

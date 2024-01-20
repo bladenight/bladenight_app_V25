@@ -9,6 +9,7 @@ import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
 import '../../../models/event.dart';
 import '../../../models/route.dart';
+import '../tiles_provider.dart';
 import 'bn_dark_container.dart';
 import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
@@ -47,7 +48,7 @@ class _MapLayerState extends State<MapLayer> {
       mapController: widget.controller,
       options: MapOptions(
         keepAlive: true,
-        initialZoom: 12.0,
+        initialZoom: 13.0,
         minZoom: HiveSettingsDB.openStreetMapEnabled
             ? MapSettings.minZoom
             : MapSettings.minZoomDefault,
@@ -143,21 +144,3 @@ class _MapLayerState extends State<MapLayer> {
   }
 }
 
-class CachedTileProvider extends TileProvider {
-  CachedTileProvider({required Null Function() errorListener});
-
-  @override
-  ImageProvider getImage(coordinates, TileLayer options) {
-    return CachedNetworkImageProvider(getTileUrl(coordinates, options));
-  }
-}
-
-class CachedAssetProvider extends TileProvider {
-  CachedAssetProvider(
-      {required BuildContext context, required Null Function() errorListener});
-
-  @override
-  ImageProvider getImage(coordinates, TileLayer options) {
-    return AssetImage(getTileUrl(coordinates, options));
-  }
-}

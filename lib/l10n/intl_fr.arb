@@ -436,5 +436,6 @@
   "linkingFailed" : "Échec du couplage",
   "linkOnOtherDevice" : "Votre ami doit se trouver à moins de 2 m de vous !<ul><li>Veuillez ouvrir l'onglet Amis de votre ami dans l'application Bladenight.</li><li>Sélectionnez Plus en haut à droite<span class= \" icon\">plus</span></li><li>Choisissez d'accepter un ami à côté de vous</li><li>Maintenant avec cet appareil <b><em>{deviceName}</em></b > Paire.</li></ul>Vous pouvez modifier votre nom soumis dans le champ de texte. Ceci concerne uniquement le transfert via une connexion directe sans code.",
   "failedAddNearbyTryCode" : "Veuillez essayer d'établir la connexion avec un code. Demandez à votre ami le code affiché dans sa liste d'amis. Vous ne pouvez vous connecter qu'une seule fois avec le même ami.",
-  "missingName" : "Le champ doit contenir au moins 1 caractère"
+  "missingName" : "Le champ doit contenir au moins 1 caractère",
+  "codeExpired": "Code trop ancien ! Veuillez supprimer l'entrée et réinviter un ami !"
 }

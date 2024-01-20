@@ -981,6 +981,7 @@ class LocationProvider with ChangeNotifier {
         if (!kIsWeb) _updateWatchData();
       }
       if (!_isInBackground) {
+        BnLog.trace(text: 'Refresh forces map rebuild');
         notifyListeners();
       }
     } catch (e) {
@@ -1213,7 +1214,7 @@ final isAutoStopProvider = Provider((ref) {
 });
 
 ///true when location is ready
-final bgLocationIsReadyProvider = Provider((ref) {
+final isMovingProvider = Provider((ref) {
   return ref.watch(locationProvider.select((l) => l.isMoving));
 });
 
@@ -1223,6 +1224,14 @@ final bgNetworkConnectedProvider = Provider((ref) {
 
 final odometerProvider = Provider((ref) {
   return ref.watch(locationProvider.select((l) => l.odometer));
+});
+
+final realUserSpeedProvider = Provider((ref) {
+  return ref.watch(locationProvider.select((l) => l.realUserSpeedKmh));
+});
+
+final userLatLongProvider = Provider((ref) {
+  return ref.watch(locationProvider.select((l) => l.userLatLongs));
 });
 
 final isTrackingProvider = Provider((ref) {

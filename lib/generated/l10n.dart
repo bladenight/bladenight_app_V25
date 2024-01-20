@@ -3637,6 +3637,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Code too old! Please delete entry and re-invite friend!`
+  String get codeExpired {
+    return Intl.message(
+      'Code too old! Please delete entry and re-invite friend!',
+      name: 'codeExpired',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

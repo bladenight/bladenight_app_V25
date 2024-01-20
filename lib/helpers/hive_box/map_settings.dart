@@ -146,7 +146,7 @@ extension MapSettings on HiveSettingsDB {
   ///get openStreetMapLinkAsString
   static String get openStreetMapLinkString {
     return HiveSettingsDB._hiveBox.get(_openStreetMapLinkKey,
-        defaultValue: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        defaultValue: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png');
   }
 
   ///set openStreetMapLinkString

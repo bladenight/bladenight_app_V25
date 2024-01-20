@@ -17,7 +17,7 @@ import '../../../models/friend.dart';
 import '../../../pages/widgets/fast_custom_color_picker.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../wamp/wamp_error.dart';
-import '../friends_page.dart';
+import 'friends_action_sheet.dart';
 
 class EditFriendResult {
   final String name;
@@ -56,7 +56,7 @@ class EditFriendDialog extends StatefulWidget {
 class _EditFriendDialogState extends State<EditFriendDialog> {
   late final TextEditingController nameController;
   late final TextEditingController codeController;
-  String? errortext;
+  String? errorText;
   String name = '';
   String? code;
   Color? color;
@@ -146,10 +146,10 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                 },
               ),
             ],
-            if (errortext != null)
+            if (errorText != null)
               FittedBox(
                 child: Text(
-                  errortext!,
+                  errorText!,
                   style: const TextStyle(
                     fontSize: 18.0,
                     color: CupertinoColors.destructiveRed,
@@ -266,12 +266,12 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                           }
                         } on SocketException {
                           setState(() {
-                            errortext = Localize.of(context).networkerror;
+                            errorText = Localize.of(context).networkerror;
                             isLoading = false;
                           });
                         } on WampError {
                           setState(() {
-                            errortext = Localize.of(context).invalidcode;
+                            errorText = Localize.of(context).invalidcode;
                             isLoading = false;
                           });
                         } catch (e) {
@@ -281,7 +281,7 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                               methodName: 'friendActionDialog',
                               text: e.toString());
                           setState(() {
-                            errortext = Localize.of(context).unknownerror;
+                            errorText = Localize.of(context).unknownerror;
                             isLoading = false;
                           });
                         }

@@ -33,6 +33,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_map: ^6.1.0
+  flutter_map_cancellable_tile_provider: ^2.0.0
   flutter_map_marker_popup: ^6.1.2
   flutter_native_splash: ^2.3.0
   flutter_nearby_connections: ^1.1.2

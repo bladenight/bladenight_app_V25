@@ -1,4 +1,3 @@
-import 'widgets/nearby_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
@@ -12,6 +11,8 @@ import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/friends_provider.dart';
 import 'widgets/edit_friend_dialog.dart';
+import 'widgets/friends_action_sheet.dart';
+import 'widgets/nearby_widget.dart';
 
 class FriendsPage extends ConsumerStatefulWidget {
   const FriendsPage({super.key});
@@ -43,6 +44,15 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
     }
   }
 
+  _dismissKeyboard(BuildContext context) {
+    if (!mounted) return;
+    //Dismiss keyboard
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -58,37 +68,36 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
               alignment: Alignment.centerRight,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CupertinoButton(
                     padding: EdgeInsets.zero,
                     minSize: 0,
                     onPressed: () async {
-                      context.read(friendsLogicProvider).refreshFriends();
-                    },
-                    child: const Icon(CupertinoIcons.refresh),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minSize: 0,
-                    onPressed: () async {
+                      if(mounted){
+                        _dismissKeyboard(context);
+                      }
                       var action = await FriendsActionModal.show(context);
                       if (action == null || !mounted) return;
-                      if (action == FriendsAction.addNearby){
+                      if (action == FriendsAction.addNearby) {
                         Navigator.of(context).push(
                           CupertinoPageRoute(
-                            builder: (context) => const LinkFriendDevicePage(deviceType: DeviceType.advertiser, friendsAction: FriendsAction.addNearby,),
+                            builder: (context) => const LinkFriendDevicePage(
+                              deviceType: DeviceType.advertiser,
+                              friendsAction: FriendsAction.addNearby,
+                            ),
                             fullscreenDialog: false,
                           ),
                         );
-                      return;
+                        return;
                       }
-                      if (action == FriendsAction.acceptNearby){
+                      if (action == FriendsAction.acceptNearby) {
                         Navigator.of(context).push(
                           CupertinoPageRoute(
-                            builder: (context) => const LinkFriendDevicePage(deviceType: DeviceType.browser, friendsAction: FriendsAction.acceptNearby,),
+                            builder: (context) => const LinkFriendDevicePage(
+                              deviceType: DeviceType.browser,
+                              friendsAction: FriendsAction.acceptNearby,
+                            ),
                             fullscreenDialog: false,
                           ),
                         );
@@ -102,12 +111,26 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     },
                     child: const Icon(CupertinoIcons.plus_circle),
                   ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minSize: 0,
+                    onPressed: () async {
+                      context.read(friendsLogicProvider).refreshFriends();
+                    },
+                    child: const Icon(CupertinoIcons.refresh),
+                  ),
                 ],
               ),
             ),
           ),
           CupertinoSliverRefreshControl(
             onRefresh: () async {
+              if(mounted){
+                _dismissKeyboard(context);
+              }
               return context.read(friendsLogicProvider).refreshFriends();
             },
           ),
@@ -264,45 +287,69 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                   height: 1,
                 ),
                 //Status and online
-                Text(
-                    '${Localize.of(context).status}: ${friend.getFriendStatusText(context)}'),
-                DataWidgetLeftRightSmallTextContent(
-                    descriptionRight:
-                        friend.timestamp == null || friend.timestamp == 0
-                            ? Localize.of(context).never
-                            : Localize.of(context).dateTimeSecIntl(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    friend.timestamp!),
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    friend.timestamp!)),
-                    descriptionLeft: Localize.of(context).lastseen,
-                    rightWidget: Container()),
-                Divider(
-                  height: 1,
-                  color: CupertinoTheme.of(context).primaryColor,
-                  endIndent: 20,
-                ),
-                //Speed
-                DataWidgetLeftRightSmallTextContent(
-                    descriptionLeft: Localize.of(context).speed,
-                    descriptionRight:
-                        '${friend.realSpeed.toStringAsFixed(1)} km/h',
-                    rightWidget: Container()),
-                //driven meters
-                DataWidgetLeftRightSmallTextContent(
-                    descriptionRight: friend.formatDistance(),
-                    descriptionLeft: Localize.of(context).metersOnRoute,
-                    rightWidget: Container()),
+                if (friend.requestId == 0)
+                  DataWidgetLeftRightSmallTextContent(
+                      descriptionRight: friend.getFriendStatusText(context),
+                      descriptionLeft: Localize.of(context).status,
+                      rightWidget: Container()),
+                if (friend.requestId > 0 && !friend.codeExpired)
+                  Text(
+                    Localize.of(context)
+                        .tellcode(friend.name, friend.requestId),
+                    style: TextStyle(
+                        fontSize: MediaQuery.textScalerOf(context).scale(14),
+                        color: CupertinoTheme.of(context).primaryColor),
+                  ),
+                if (friend.requestId > 0 && friend.codeExpired)
+                  Text(
+                    Localize.of(context).codeExpired,
+                    style: TextStyle(
+                        fontSize: MediaQuery.textScalerOf(context).scale(14),
+                        color: CupertinoTheme.of(context).primaryColor),
+                  ),
 
-                DataWidgetLeftRightSmallTextContent(
-                    descriptionRight:
-                        '${friend.timeToUser != null ? TimeConverter.millisecondsToDateTimeString(value: friend.timeToUser ?? 0) : '0 s'} ${(friend.timeToUser ?? 0).isNegative ? Localize.of(context).behindMe : Localize.of(context).aheadOfMe}',
-                    descriptionLeft: Localize.of(context).timeToMe,
-                    rightWidget: Container()),
-                DataWidgetLeftRightSmallTextContent(
-                    descriptionRight: '${friend.distanceToUser ?? 0} m ',
-                    descriptionLeft: Localize.of(context).distanceToMe,
-                    rightWidget: Container()),
+                if (friend.requestId == 0)
+                  DataWidgetLeftRightSmallTextContent(
+                      descriptionRight:
+                          friend.timestamp == null || friend.timestamp == 0
+                              ? Localize.of(context).never
+                              : Localize.of(context).dateTimeSecIntl(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      friend.timestamp!),
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      friend.timestamp!)),
+                      descriptionLeft: Localize.of(context).lastseen,
+                      rightWidget: Container()),
+                if (friend.requestId == 0)
+                  Divider(
+                    height: 1,
+                    color: CupertinoTheme.of(context).primaryColor,
+                    endIndent: 20,
+                  ),
+                //Speed
+                if (friend.requestId == 0)
+                  DataWidgetLeftRightSmallTextContent(
+                      descriptionLeft: Localize.of(context).speed,
+                      descriptionRight:
+                          '${friend.realSpeed.toStringAsFixed(1)} km/h',
+                      rightWidget: Container()),
+                //driven meters
+                if (friend.requestId == 0)
+                  DataWidgetLeftRightSmallTextContent(
+                      descriptionRight: friend.formatDistance(),
+                      descriptionLeft: Localize.of(context).metersOnRoute,
+                      rightWidget: Container()),
+                if (friend.requestId == 0)
+                  DataWidgetLeftRightSmallTextContent(
+                      descriptionRight:
+                          '${friend.timeToUser != null ? TimeConverter.millisecondsToDateTimeString(value: friend.timeToUser ?? 0) : '0 s'} ${(friend.timeToUser ?? 0).isNegative ? Localize.of(context).behindMe : Localize.of(context).aheadOfMe}',
+                      descriptionLeft: Localize.of(context).timeToMe,
+                      rightWidget: Container()),
+                if (friend.requestId == 0)
+                  DataWidgetLeftRightSmallTextContent(
+                      descriptionRight: '${friend.distanceToUser ?? 0} m ',
+                      descriptionLeft: Localize.of(context).distanceToMe,
+                      rightWidget: Container()),
               ],
             ),
           ),
@@ -350,67 +397,12 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     .read(friendsLogicProvider)
                     .deleteRelationShip(friend.friendId);
               }
+              if(mounted){
+              _dismissKeyboard(context);
+              }
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-enum FriendsAction {
-  addNew,
-  addWithCode,
-  addNearby,
-  acceptNearby,
-  edit,
-  delete
-}
-
-class FriendsActionModal extends StatelessWidget {
-  const FriendsActionModal({super.key});
-
-  static Future<FriendsAction?> show(BuildContext context) {
-    return showCupertinoModalPopup(
-      context: context,
-      builder: (context) => const FriendsActionModal(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoActionSheet(
-      actions: [
-        CupertinoActionSheetAction(
-          child: Text(Localize.of(context).addNearBy),
-          onPressed: () {
-            Navigator.pop(context, FriendsAction.addNearby);
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text(Localize.of(context).linkNearBy),
-          onPressed: () {
-            Navigator.pop(context, FriendsAction.acceptNearby);
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text(Localize.of(context).addnewfriend),
-          onPressed: () {
-            Navigator.pop(context, FriendsAction.addNew);
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text(Localize.of(context).addfriendwithcode),
-          onPressed: () {
-            Navigator.pop(context, FriendsAction.addWithCode);
-          },
-        ),
-      ],
-      cancelButton: CupertinoActionSheetAction(
-        child: Text(Localize.of(context).cancel),
-        onPressed: () {
-          Navigator.pop(context);
-        },
       ),
     );
   }

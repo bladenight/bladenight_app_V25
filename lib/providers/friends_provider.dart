@@ -198,6 +198,7 @@ class FriendsLogic with ChangeNotifier {
       return null;
     }
     friend.requestId = getFriendRelationshipResult.requestId;
+    friend.codeTimestamp = DateTime.now().millisecondsSinceEpoch;
     friends[friend.friendId] = friend;
     PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
     notifyListeners();

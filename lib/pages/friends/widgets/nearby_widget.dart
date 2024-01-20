@@ -19,7 +19,7 @@ import '../../../helpers/notification/toast_notification.dart';
 import '../../../helpers/uuid_helper.dart';
 import '../../../models/friend.dart';
 import '../../../providers/friends_provider.dart';
-import '../friends_page.dart';
+import 'friends_action_sheet.dart';
 
 enum DeviceType { advertiser, browser }
 
