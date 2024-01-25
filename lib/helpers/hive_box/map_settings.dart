@@ -141,7 +141,7 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.put(_mapLinkSubdomainsKey, val);
   }
 
-  static const String _openStreetMapLinkKey = 'openStreetMapLinkPref';
+  static const String _openStreetMapLinkKey = 'osmLightLinkPref';
 
   ///get openStreetMapLinkAsString
   static String get openStreetMapLinkString {
@@ -158,12 +158,12 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.delete(_openStreetMapLinkKey);
   }
 
-  static const String _openStreetMapDarkLinkKey = 'openStreetMapDarkLinkPref';
+  static const String _openStreetMapDarkLinkKey = 'osmDarkLinkPref';
 
   ///get openStreetMapDarkLinkAsString
   static String get openStreetMapDarkLinkString {
     return HiveSettingsDB._hiveBox.get(_openStreetMapDarkLinkKey,
-        defaultValue: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        defaultValue: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png');
   }
 
   ///set openStreetMapDarkLinkString

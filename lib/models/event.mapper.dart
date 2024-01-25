@@ -57,6 +57,8 @@ class EventStatusMapper extends EnumMapper<EventStatus> {
         return 'RUN';
       case EventStatus.finished:
         return 'FIN';
+      case EventStatus.unknown:
+        return 'UKN';
     }
   }
 }

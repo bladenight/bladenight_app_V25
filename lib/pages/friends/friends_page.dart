@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
@@ -51,6 +52,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
   @override

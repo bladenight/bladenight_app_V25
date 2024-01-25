@@ -26,6 +26,7 @@ import 'progresso_advanced_progress_indicator.dart';
 
 class TrackProgressOverlay extends ConsumerStatefulWidget {
   const TrackProgressOverlay({super.key, required this.mapController});
+
   final MapController mapController;
 
   @override
@@ -61,7 +62,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   @override
   Widget build(BuildContext context) {
     var location = ref.watch(locationProvider);
-    var activeEvent = ref.watch(isActiveEventProvider);
+    var activeEvent = ref.watch(eventStatusProvider);
     if (activeEvent.status == EventStatus.noevent) {
       return Stack(children: [
         Positioned(
@@ -246,8 +247,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                       rtu.runningLength)
                                           as AlignmentGeometry,
                                       child: SizedBox(
-                                        height: MediaQuery.textScalerOf(context).scale(20),
-                                        width: MediaQuery.textScalerOf(context).scale(20),
+                                        height: MediaQuery.textScalerOf(context)
+                                            .scale(20),
+                                        width: MediaQuery.textScalerOf(context)
+                                            .scale(20),
                                         child: const Center(
                                           child: CircleAvatar(
                                             child: Image(
@@ -270,15 +273,21 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                       rtu.runningLength)
                                           as AlignmentGeometry,
                                       child: SizedBox(
-                                        height: MediaQuery.textScalerOf(context).scale(20),
-                                        width: MediaQuery.textScalerOf(context).scale(20),
+                                        height: MediaQuery.textScalerOf(context)
+                                            .scale(20),
+                                        width: MediaQuery.textScalerOf(context)
+                                            .scale(20),
                                         child: Image(
                                           image: const AssetImage(
                                             'assets/images/skatechildmunichgreen.png',
                                           ),
                                           fit: BoxFit.fill,
-                                          height: MediaQuery.textScalerOf(context).scale(20),
-                                          width: MediaQuery.textScalerOf(context).scale(20),
+                                          height:
+                                              MediaQuery.textScalerOf(context)
+                                                  .scale(20),
+                                          width:
+                                              MediaQuery.textScalerOf(context)
+                                                  .scale(20),
                                         ),
                                       ),
                                     ),
@@ -294,8 +303,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                   0.015) as AlignmentGeometry,
                                       //need correction of center
                                       child: SizedBox(
-                                        width: MediaQuery.textScalerOf(context).scale(20),
-                                        height: MediaQuery.textScalerOf(context).scale(20),
+                                        width: MediaQuery.textScalerOf(context)
+                                            .scale(20),
+                                        height: MediaQuery.textScalerOf(context)
+                                            .scale(20),
                                         child: CircleAvatar(
                                           backgroundColor:
                                               ref.watch(MeColor.provider),
@@ -327,8 +338,12 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                       rtu.runningLength
                                                   : 0.0) as AlignmentGeometry,
                                           child: SizedBox(
-                                            width:MediaQuery.textScalerOf(context).scale(20),
-                                            height: MediaQuery.textScalerOf(context).scale(20),
+                                            width:
+                                                MediaQuery.textScalerOf(context)
+                                                    .scale(20),
+                                            height:
+                                                MediaQuery.textScalerOf(context)
+                                                    .scale(20),
                                             child: CircleAvatar(
                                               backgroundColor: friend.color,
                                               child: Text(
@@ -368,15 +383,24 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                   .bladenighttracking)
                                               : location
                                                       .userIsParticipant //tracking in viewer mode not participating
-                                                  ? activeEvent.status ==
+                                                  ? (activeEvent.status ==
                                                               EventStatus
                                                                   .confirmed ||
                                                           activeEvent.status ==
                                                               EventStatus
-                                                                  .running
-                                                      ? Text(
-                                                          Localize.of(context)
+                                                                  .running)
+                                                      ? location.eventIsActive
+                                                          ? Text(Localize.of(
+                                                                  context)
                                                               .notOnRoute)
+                                                          : Text(
+                                                              DateFormatter(
+                                                                      Localize.of(
+                                                                          context))
+                                                                  .getLocalDayDateTimeRepresentation(
+                                                                      activeEvent
+                                                                          .getUtcIso8601DateTime),
+                                                            )
                                                       : Container()
                                                   : Text(Localize.of(context)
                                                       .bladenightViewerTracking),
@@ -560,8 +584,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               children: ([
                                 Expanded(
                                   child: SizedBox(
-                                    height:
-                                    MediaQuery.textScalerOf(context).scale(25),
+                                    height: MediaQuery.textScalerOf(context)
+                                        .scale(25),
                                     child: ClipRRect(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(5)),

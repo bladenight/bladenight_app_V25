@@ -438,5 +438,6 @@
   "linkOnOtherDevice": "Dein Freund muss in max. 2 m Entfernung von Dir sein!<ul><li>Bitte bei deinem Freund in der Bladenight-App den Tab Freunde öffnen lassen.</li><li>Dort Plus oben rechts wählen<span class=\"icon\">plus</span></li><li>Freund:in neben Dir annehmen wählen</li><li>Nun mit diesem Gerät <b><em>{deviceName}</em></b> koppeln.</li></ul>Du kannst deinen übermittelten Namen im Textfeld ändern. Dieser ist nur ausschließlich zum übertragen per Direktverbindung ohne Code.",
   "failedAddNearbyTryCode": "Bitte versuche die Verbindung mit einem Code herzustellen. Fragen dazu deinen Freund nach dem angezeigten Code in seiner 'Freunde'-Übersicht. Du kannst dich nur einmal mit demselben Freund verbinden.",
   "missingName": "Feld muss min. 1 Zeichen enthalten",
-  "codeExpired": "Code zu alt! Eintrag bitte löschen und Freund:in neu einladen!"
+  "codeExpired": "Code zu alt! Eintrag bitte löschen und Freund:in neu einladen!",
+  "eventNotStarted": "Noch nicht gestartet"
 }

@@ -889,7 +889,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     height: 40,
                     child: Builder(builder: (context) {
                       var isActive = ref.watch(
-                          isActiveEventProvider.select((ia) => ia.status));
+                          eventStatusProvider.select((ia) => ia.status));
                       if (isActive == EventStatus.confirmed) {
                         var currentRoute = ref.watch(currentRouteProvider);
                         return currentRoute.when(data: (data) {

@@ -20,7 +20,7 @@ You need the bladenight-server written in java to communicate routes, friends, p
 * Install Dart plugin in Intellij Plugins or Android Studio
 * Install Flutter plugin to Intellij or Android Studio
 * Install Flutter-Intl-plugin to Intellij or Android Studio <a href="https://plugins.jetbrains.com/plugin/13666-flutter-intl/versions">See external link</a>
-* On Mac install CocoaPods 
+* On Mac install CocoaPods
   for Intel based Mac
 
   ```bash
@@ -28,6 +28,7 @@ You need the bladenight-server written in java to communicate routes, friends, p
   ```
 
   for M1/M2 based Mac
+
   ```bash
   sudo gem uninstall ffi && sudo gem install ffi -- --enable-libffi-alloc
   ```
@@ -62,7 +63,7 @@ You need the bladenight-server written in java to communicate routes, friends, p
   ```
 * for Web
   ```bash
-  flutter build web --no-tree-shake-icons 
+  flutter build web --no-tree-shake-icons
   ```
 
 ---
@@ -114,7 +115,6 @@ add basic auth credentials to [server_connections.dart](lib%2Fapp_settings%2Fser
   ```bash
   flutter pub get
   flutter run
-
   ```
 
 ---
@@ -138,12 +138,13 @@ Known issues
 
 cd FLUTTER SDK DIRECTORY/flutter/bin/cache/artifacts/usbmuxd
 sudo xattr -d com.apple.quarantine iproxy
+
 ### flutter packages pub run build_runner build --delete-conflicting-outputs
 
 * Stops with Unhandled exception: Bad state: Unable to generate package graph, no `...bladenightapp-flutter/.dart_tool/flutter_gen/pubspec.yaml` found.
-  Problem appears because Mapperfiles can't created. 
-  Reason in pubspec.yaml is 
-  set to true -->set it to false 
+  Problem appears because Mapperfiles can't created.
+  Reason in pubspec.yaml is
+  set to true -->set it to false
   flutter: generate: false
   then in terminal enter:
   ```bash
@@ -155,13 +156,18 @@ sudo xattr -d com.apple.quarantine iproxy
 ### Error (Xcode): unable to resolve product type 'com.apple.product-type.application.watchapp2' for platform 'iphonesimulator'</br>
 
 * Error (Xcode): Couldn't look up product type 'com.apple.product-type.watchkit2-extension' in domain 'iphonesimulator': Couldn't load spec with identifier 'com.apple.product-type.watchkit2-extension' in domain 'iphonesimulator' when run in DebugMode
-  Add following two lines to Watchkit Extension 
+  Add following two lines to Watchkit Extension
   [Info.plist](ios%2FRunner%2FInfo.plist)
   before last &lt;/dict&gt;
+
   ```
   <key>WKCompanionAppBundleIdentifier</key>
   <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
   ```
+
+### Rebuilding Flutter map
+
+* during locationprovider notifylistener() executen Flutter map will rebuilding entire map_page
 
 ### Error Crash
 

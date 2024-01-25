@@ -39,6 +39,9 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
   static double? _$realSpeed(LocationInfo v) => v.realSpeed;
   static const Field<LocationInfo, double> _f$realSpeed =
       Field('realSpeed', _$realSpeed, key: 'rsp', opt: true);
+  static double? _$accuracy(LocationInfo v) => v.accuracy;
+  static const Field<LocationInfo, double> _f$accuracy =
+      Field('accuracy', _$accuracy, key: 'acc', opt: true);
 
   @override
   final MappableFields<LocationInfo> fields = const {
@@ -48,6 +51,7 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
     #specialFunction: _f$specialFunction,
     #userSpeed: _f$userSpeed,
     #realSpeed: _f$realSpeed,
+    #accuracy: _f$accuracy,
   };
 
   static LocationInfo _instantiate(DecodingData data) {
@@ -57,7 +61,8 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
         deviceId: data.dec(_f$deviceId),
         specialFunction: data.dec(_f$specialFunction),
         userSpeed: data.dec(_f$userSpeed),
-        realSpeed: data.dec(_f$realSpeed));
+        realSpeed: data.dec(_f$realSpeed),
+        accuracy: data.dec(_f$accuracy));
   }
 
   @override
@@ -120,7 +125,8 @@ abstract class LocationInfoCopyWith<$R, $In extends LocationInfo, $Out>
       String? deviceId,
       int? specialFunction,
       double? userSpeed,
-      double? realSpeed});
+      double? realSpeed,
+      double? accuracy});
   LocationInfoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -139,14 +145,16 @@ class _LocationInfoCopyWithImpl<$R, $Out>
           String? deviceId,
           Object? specialFunction = $none,
           Object? userSpeed = $none,
-          Object? realSpeed = $none}) =>
+          Object? realSpeed = $none,
+          Object? accuracy = $none}) =>
       $apply(FieldCopyWithData({
         if (coords != null) #coords: coords,
         if (isParticipating != null) #isParticipating: isParticipating,
         if (deviceId != null) #deviceId: deviceId,
         if (specialFunction != $none) #specialFunction: specialFunction,
         if (userSpeed != $none) #userSpeed: userSpeed,
-        if (realSpeed != $none) #realSpeed: realSpeed
+        if (realSpeed != $none) #realSpeed: realSpeed,
+        if (accuracy != $none) #accuracy: accuracy
       }));
   @override
   LocationInfo $make(CopyWithData data) => LocationInfo(
@@ -155,7 +163,8 @@ class _LocationInfoCopyWithImpl<$R, $Out>
       deviceId: data.get(#deviceId, or: $value.deviceId),
       specialFunction: data.get(#specialFunction, or: $value.specialFunction),
       userSpeed: data.get(#userSpeed, or: $value.userSpeed),
-      realSpeed: data.get(#realSpeed, or: $value.realSpeed));
+      realSpeed: data.get(#realSpeed, or: $value.realSpeed),
+      accuracy: data.get(#accuracy, or: $value.accuracy));
 
   @override
   LocationInfoCopyWith<$R2, LocationInfo, $Out2> $chain<$R2, $Out2>(

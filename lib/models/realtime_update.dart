@@ -24,6 +24,11 @@ import 'moving_point.dart';
 
 part 'realtime_update.mapper.dart';
 
+/*[50,"FPWAUWMKX33D64BN",{"hea":{"pos":0,"spd":0,"rsp":0.0,"eta":0,"ior":false,"iip":false,"lat":0.0,"lon":0.0,"acc":0},
+"tai":{"pos":0,"spd":0,"rsp":0.0,"eta":0,"ior":false,"iip":false,"lat":0.0,"lon":0.0,"acc":0},"fri":{"fri":{}},
+"up":{"pos":0,"spd":0,"rsp":0.0,"eta":0,"ior":false,"iip":false,"lat":0.0,"lon":0.0,"acc":0},
+"rle":15926.0,"rna":"West_test","sts":"CON","isa":true,"ust":1,"usr":0,"sht":false,"startTimeStamp":0}]*/
+
 @MappableClass()
 class RealtimeUpdate with RealtimeUpdateMappable {
   @MappableField(key: 'hea')
@@ -40,6 +45,9 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   ///State of event == EventStatus new feature 06_23
   @MappableField(key: 'sts')
   final EventStatus? eventState;
+  ///Event == Event is active new feature 01_24 - default true for older Server
+  @MappableField(key: 'isa')
+  final bool eventIsActive;
   @MappableField(key: 'ust')
   final String usersTracking;
   @MappableField(key: 'usr')
@@ -65,7 +73,8 @@ class RealtimeUpdate with RealtimeUpdateMappable {
       required this.friends,
       this.specialFunction,
       this.rpcException,
-      this.eventState});
+      this.eventState,
+      this.eventIsActive = true});
 
   static RealtimeUpdate rpcError(Exception exception) {
     return RealtimeUpdate(

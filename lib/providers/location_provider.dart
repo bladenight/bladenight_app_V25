@@ -19,6 +19,7 @@ import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/device_info_helper.dart';
 import '../helpers/deviceid_helper.dart';
+import '../helpers/double_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
@@ -64,6 +65,10 @@ class LocationProvider with ChangeNotifier {
   bool _isMoving = false;
   String _lastRouteName = '';
   EventStatus? _eventState;
+
+  bool _eventIsActive = false;
+
+  bool get eventIsActive => _eventIsActive;
 
   bool get isMoving => _isMoving;
 
@@ -389,7 +394,7 @@ class LocationProvider with ChangeNotifier {
         counter = counter + divider.toInt();
       }
       //avoid jumping of tracking if list is large
-      var last5 = _userTrackingPoints.reversed.take(maxSize ~/10);
+      var last5 = _userTrackingPoints.reversed.take(maxSize ~/ 10);
       for (var last in last5) {
         smallTrackPointList.add(LatLng(last.latitude, last.longitude));
       }
@@ -845,15 +850,20 @@ class LocationProvider with ChangeNotifier {
     //only result of this message contains friend position - requested [RealTimeUpdates] without location
     update = await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
       LocationInfo(
-          coords: LatLng(location.coords.latitude, location.coords.longitude),
+        //6 digits => 1 m location accuracy
+          coords: LatLng(location.coords.latitude.toShortenedDouble(6), location.coords.longitude.toShortenedDouble(6)),
           deviceId: await DeviceId.getId,
           isParticipating: _userIsParticipant,
           specialFunction: HiveSettingsDB.wantSeeFullOfProcession
               ? HiveSettingsDB.specialCodeValue
               : null,
-          userSpeed: location.coords.speed < 0 ? 0.0 : location.coords.speed,
-          realSpeed:
-              location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6),
+          userSpeed: location.coords.speed < 0 ? 0.0 : location.coords.speed.toShortenedDouble(1),
+          realSpeed: location.coords.speed < 0
+              ? 0.0
+              : (location.coords.speed * 3.6).toShortenedDouble(1),
+          accuracy: location.coords.accuracy),
+
+
     ));
     if (update.rpcException != null) {
       return;
@@ -870,9 +880,11 @@ class LocationProvider with ChangeNotifier {
     }
     if (realtimeUpdate != null &&
         (_lastRouteName != _realtimeUpdate?.routeName ||
-            _eventState != _realtimeUpdate?.eventState)) {
+            _eventState != _realtimeUpdate?.eventState||
+            _eventIsActive != _realtimeUpdate?.eventIsActive)) {
       _lastRouteName = _realtimeUpdate!.routeName;
       _eventState = _realtimeUpdate!.eventState;
+      _eventIsActive = _realtimeUpdate!.eventIsActive;
       await ActiveEventProvider.instance.refresh(forceUpdate: true);
     }
     if (_realtimeUpdate != null && _realtimeUpdate?.friends != null) {
@@ -1257,8 +1269,13 @@ final hasNewRealtimeData = Provider((ref) {
 
 ///Watch active [Event] and turn off Navigation when [Event] ist not running
 ///or finished (userPos == length ??)
-final isActiveEventProvider = Provider((ref) {
+final eventStatusProvider = Provider((ref) {
   return ref.watch(activeEventProvider.select((ae) => ae.event));
+});
+
+///Watch active [Event]
+final isActiveEventProvider = Provider((ref) {
+  return ref.watch(locationProvider.select((lp) => lp.eventIsActive));
 });
 
 final locationUpdateProvider = StreamProvider<LatLng?>((ref) {

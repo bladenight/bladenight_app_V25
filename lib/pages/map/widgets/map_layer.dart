@@ -1,15 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
+
 
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
 import '../../../models/event.dart';
 import '../../../models/route.dart';
-import '../tiles_provider.dart';
 import 'bn_dark_container.dart';
 import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
@@ -89,9 +89,7 @@ class _MapLayerState extends State<MapLayer> {
                 EvictErrorTileStrategy.notVisibleRespectMargin,
             tileProvider: HiveSettingsDB.openStreetMapEnabled ||
                     widget.event.hasSpecialStartPoint
-                ? CachedTileProvider(errorListener: () {
-                    print('CachedTileProvider errorListener');
-                  })
+                ? CancellableNetworkTileProvider()
                 : AssetTileProvider(),
             subdomains: HiveSettingsDB.openStreetMapEnabled ||
                     widget.event.hasSpecialStartPoint

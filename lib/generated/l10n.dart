@@ -3647,6 +3647,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Event not started`
+  String get eventNotStarted {
+    return Intl.message(
+      'Event not started',
+      name: 'eventNotStarted',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

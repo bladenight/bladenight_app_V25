@@ -56,6 +56,9 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
   static EventStatus? _$eventState(RealtimeUpdate v) => v.eventState;
   static const Field<RealtimeUpdate, EventStatus> _f$eventState =
       Field('eventState', _$eventState, key: 'sts', opt: true);
+  static bool _$eventIsActive(RealtimeUpdate v) => v.eventIsActive;
+  static const Field<RealtimeUpdate, bool> _f$eventIsActive =
+      Field('eventIsActive', _$eventIsActive, key: 'isa', opt: true, def: true);
 
   @override
   final MappableFields<RealtimeUpdate> fields = const {
@@ -70,6 +73,7 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
     #specialFunction: _f$specialFunction,
     #rpcException: _f$rpcException,
     #eventState: _f$eventState,
+    #eventIsActive: _f$eventIsActive,
   };
 
   static RealtimeUpdate _instantiate(DecodingData data) {
@@ -84,7 +88,8 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
         friends: data.dec(_f$friends),
         specialFunction: data.dec(_f$specialFunction),
         rpcException: data.dec(_f$rpcException),
-        eventState: data.dec(_f$eventState));
+        eventState: data.dec(_f$eventState),
+        eventIsActive: data.dec(_f$eventIsActive));
   }
 
   @override
@@ -157,7 +162,8 @@ abstract class RealtimeUpdateCopyWith<$R, $In extends RealtimeUpdate, $Out>
       FriendsMessage? friends,
       int? specialFunction,
       Exception? rpcException,
-      EventStatus? eventState});
+      EventStatus? eventState,
+      bool? eventIsActive});
   RealtimeUpdateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -194,7 +200,8 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
           FriendsMessage? friends,
           Object? specialFunction = $none,
           Object? rpcException = $none,
-          Object? eventState = $none}) =>
+          Object? eventState = $none,
+          bool? eventIsActive}) =>
       $apply(FieldCopyWithData({
         if (head != null) #head: head,
         if (tail != null) #tail: tail,
@@ -206,7 +213,8 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
         if (friends != null) #friends: friends,
         if (specialFunction != $none) #specialFunction: specialFunction,
         if (rpcException != $none) #rpcException: rpcException,
-        if (eventState != $none) #eventState: eventState
+        if (eventState != $none) #eventState: eventState,
+        if (eventIsActive != null) #eventIsActive: eventIsActive
       }));
   @override
   RealtimeUpdate $make(CopyWithData data) => RealtimeUpdate(
@@ -220,7 +228,8 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
       friends: data.get(#friends, or: $value.friends),
       specialFunction: data.get(#specialFunction, or: $value.specialFunction),
       rpcException: data.get(#rpcException, or: $value.rpcException),
-      eventState: data.get(#eventState, or: $value.eventState));
+      eventState: data.get(#eventState, or: $value.eventState),
+      eventIsActive: data.get(#eventIsActive, or: $value.eventIsActive));
 
   @override
   RealtimeUpdateCopyWith<$R2, RealtimeUpdate, $Out2> $chain<$R2, $Out2>(

@@ -232,6 +232,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "enterfriendname":
             MessageLookupByLibrary.simpleMessage("Enter your friends name"),
         "entername": MessageLookupByLibrary.simpleMessage("Enter Name"),
+        "eventNotStarted":
+            MessageLookupByLibrary.simpleMessage("Event not started"),
         "events": MessageLookupByLibrary.simpleMessage("Events"),
         "export": MessageLookupByLibrary.simpleMessage("Export"),
         "exportLogData": MessageLookupByLibrary.simpleMessage(

@@ -19,6 +19,8 @@ class LocationInfo with LocationInfoMappable{
   final double? userSpeed;
   @MappableField(key: 'rsp')
   final double? realSpeed;
+  @MappableField(key: 'acc')
+  final double? accuracy;
 
   LocationInfo(
       {required this.coords,
@@ -26,5 +28,6 @@ class LocationInfo with LocationInfoMappable{
       required this.deviceId,
       this.specialFunction,
       this.userSpeed,
-      this.realSpeed});
+      this.realSpeed,
+      this.accuracy});
 }
