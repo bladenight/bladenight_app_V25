@@ -124,23 +124,6 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.delete(_mapOnlineBoundariesKey);
   }
 
-  static const String _mapLinkSubdomainsKey = 'mapLinkSubdomainsPref';
-
-  ///get mapLinkSubdomains level for map
-  static List<String> get mapLinkSubdomains {
-    var value =
-        HiveSettingsDB._hiveBox.get(_mapLinkSubdomainsKey, defaultValue: null);
-    if (value == null) {
-      return ['a', 'b', 'c'];
-    }
-    return value.split(',');
-  }
-
-  ///set mapLinkSubdomains level for map
-  static void setMapLinkSubdomains(String val) {
-    HiveSettingsDB._hiveBox.put(_mapLinkSubdomainsKey, val);
-  }
-
   static const String _openStreetMapLinkKey = 'osmLightLinkPref';
 
   ///get openStreetMapLinkAsString

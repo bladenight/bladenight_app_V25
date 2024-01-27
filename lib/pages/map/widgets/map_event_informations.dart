@@ -14,15 +14,21 @@ import '../../../providers/friends_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 import '../../widgets/data_widget_left_right.dart';
+import '../../widgets/no_data_warning.dart';
 
-class MapEventInformations extends StatelessWidget {
-  const MapEventInformations({super.key, required this.mapController});
+class MapEventInformation extends StatelessWidget {
+  const MapEventInformation({super.key, required this.mapController});
+
   final MapController mapController;
 
   @override
   Widget build(BuildContext context) {
     var location = context.watch(locationProvider);
-    var rtu = location.realtimeUpdate as RealtimeUpdate;
+    RealtimeUpdate rtu;
+    if (location.realtimeUpdate == null) {
+      return NoDataWarning(onReload: () {});
+    }
+    rtu = location.realtimeUpdate as RealtimeUpdate;
     var friends = context.watch(friendsProvider.select(
         (fr) => fr.where((element) => element.isOnline && element.isActive)));
     var event = context.watch(activeEventProvider);

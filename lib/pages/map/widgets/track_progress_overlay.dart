@@ -25,9 +25,7 @@ import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
 
 class TrackProgressOverlay extends ConsumerStatefulWidget {
-  const TrackProgressOverlay({super.key, required this.mapController});
-
-  final MapController mapController;
+  const TrackProgressOverlay({super.key});
 
   @override
   ConsumerState<TrackProgressOverlay> createState() =>
@@ -119,14 +117,18 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                         CupertinoColors.systemBackground, context),
                     context: context,
                     builder: (context) {
+                      var mapController = MapController.maybeOf(context);
+                      if (mapController == null) {
+                        return Container();
+                      }
                       return Container(
                         constraints: BoxConstraints(
                           maxHeight: kIsWeb
                               ? MediaQuery.of(context).size.height * 0.5
                               : MediaQuery.of(context).size.height * 0.7,
                         ),
-                        child: MapEventInformations(
-                          mapController: widget.mapController,
+                        child: MapEventInformation(
+                          mapController: mapController,
                         ),
                       );
                     });

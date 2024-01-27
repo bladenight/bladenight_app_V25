@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,6 +20,7 @@ import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/device_info_helper.dart';
 import '../helpers/deviceid_helper.dart';
+import '../helpers/distance_converter.dart';
 import '../helpers/double_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location2_to_bglocation.dart';
@@ -138,28 +140,41 @@ class LocationProvider with ChangeNotifier {
   List<LatLng> _userLatLongs = <LatLng>[];
 
   List<UserTrackPoint> get userTrackingPoints => _userTrackingPoints;
+
   final _userTrackingPoints = <UserTrackPoint>[];
 
-  final _controller = StreamController<bg.Location>.broadcast();
-  final _trainHeadController = StreamController<LatLng>.broadcast();
-  final _userTrackPointsController =
+  //Stream controllers private
+  final _userPositionStreamController = StreamController<bg.Location>.broadcast();
+  final _trainHeadStreamController = StreamController<LatLng>.broadcast();
+  final _userTrackPointsStreamController =
       StreamController<UserTrackPoint>.broadcast();
+  final _userLocationMarkerPositionStreamController =
+      StreamController<LocationMarkerPosition>.broadcast();
+  final _userLocationMarkerHeadingStreamController =
+      StreamController<LocationMarkerHeading>.broadcast();
+
+  //Stream controllers public
+  Stream<bg.Location> get userBgLocationStream => _userPositionStreamController.stream;
+
+  Stream<LatLng> get trainHeadUpdateStream => _trainHeadStreamController.stream;
+
+  Stream<UserTrackPoint> get userTrackPointsControllerStream =>
+      _userTrackPointsStreamController.stream;
+
+  Stream<LocationMarkerPosition> get userLocationMarkerPositionStream =>
+      _userLocationMarkerPositionStreamController.stream;
+
+  Stream<LocationMarkerHeading> get userLocationMarkerHeadingStream =>
+      _userLocationMarkerHeadingStreamController.stream;
 
   StreamSubscription<ConnectivityStatus>? _internetConnectionSubscription;
-
-  Stream<bg.Location> get updates => _controller.stream;
-
-  Stream<LatLng> get trainHeadUpdates => _trainHeadController.stream;
-
-  Stream<UserTrackPoint> get userTrackPointsController =>
-      _userTrackPointsController.stream;
 
   @override
   void dispose() {
     LocationStore.saveUserTrackPointList(_userTrackingPoints);
-    _userTrackPointsController.close();
-    _trainHeadController.close();
-    _controller.close();
+    _userTrackPointsStreamController.close();
+    _trainHeadStreamController.close();
+    _userPositionStreamController.close();
     _internetConnectionSubscription?.cancel();
     super.dispose();
   }
@@ -342,13 +357,20 @@ class LocationProvider with ChangeNotifier {
 
   void _onLocation(bg.Location location) {
     if (!kIsWeb) BnLog.trace(text: '_onLocation $location');
-    _controller.add(location);
     updateUserLocation(location);
     sendLocation(location);
   }
 
   ///Update user location and track points list
   void updateUserLocation(bg.Location location) {
+    _userPositionStreamController.add(location);
+    _userLocationMarkerPositionStreamController.sink.add(LocationMarkerPosition(
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        accuracy: location.coords.accuracy));
+    _userLocationMarkerHeadingStreamController.sink.add(LocationMarkerHeading(
+        heading: location.coords.heading, accuracy: location.coords.accuracy));
+
     if (_lastKnownPoint != null) {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp).toUtc();
       var diff = DateTime.now().toUtc().difference(ts);
@@ -359,6 +381,7 @@ class LocationProvider with ChangeNotifier {
 
     var userLatLng =
         LatLng(location.coords.latitude, location.coords.longitude);
+
     _userLatLng = userLatLng;
     _realUserSpeedKmh =
         location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6;
@@ -403,7 +426,7 @@ class LocationProvider with ChangeNotifier {
       _userLatLongs.add(userLatLng);
     }
     if (!_isInBackground) {
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
@@ -850,20 +873,21 @@ class LocationProvider with ChangeNotifier {
     //only result of this message contains friend position - requested [RealTimeUpdates] without location
     update = await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
       LocationInfo(
-        //6 digits => 1 m location accuracy
-          coords: LatLng(location.coords.latitude.toShortenedDouble(6), location.coords.longitude.toShortenedDouble(6)),
+          //6 digits => 1 m location accuracy
+          coords: LatLng(location.coords.latitude.toShortenedDouble(6),
+              location.coords.longitude.toShortenedDouble(6)),
           deviceId: await DeviceId.getId,
           isParticipating: _userIsParticipant,
           specialFunction: HiveSettingsDB.wantSeeFullOfProcession
               ? HiveSettingsDB.specialCodeValue
               : null,
-          userSpeed: location.coords.speed < 0 ? 0.0 : location.coords.speed.toShortenedDouble(1),
+          userSpeed: location.coords.speed < 0
+              ? 0.0
+              : location.coords.speed.toShortenedDouble(1),
           realSpeed: location.coords.speed < 0
               ? 0.0
               : (location.coords.speed * 3.6).toShortenedDouble(1),
           accuracy: location.coords.accuracy),
-
-
     ));
     if (update.rpcException != null) {
       return;
@@ -880,7 +904,7 @@ class LocationProvider with ChangeNotifier {
     }
     if (realtimeUpdate != null &&
         (_lastRouteName != _realtimeUpdate?.routeName ||
-            _eventState != _realtimeUpdate?.eventState||
+            _eventState != _realtimeUpdate?.eventState ||
             _eventIsActive != _realtimeUpdate?.eventIsActive)) {
       _lastRouteName = _realtimeUpdate!.routeName;
       _eventState = _realtimeUpdate!.eventState;
@@ -903,11 +927,13 @@ class LocationProvider with ChangeNotifier {
       double lat = _realtimeUpdate?.head.latitude ?? defaultLatitude;
       double lon = _realtimeUpdate?.head.longitude ?? defaultLongitude;
 
-      _trainHeadController.add(LatLng(lat, lon));
+      _trainHeadStreamController.add(LatLng(lat, lon));
     }
     if (!kIsWeb) _updateWatchData();
     checkUserFinishedOrEndEvent();
-    if (!_isInBackground) notifyListeners();
+    if (!_isInBackground) {
+      //notifyListeners();
+    }
   }
 
   ///Refresh [RealTimeData] when location has no data for 4500ms with tracking
@@ -979,7 +1005,7 @@ class LocationProvider with ChangeNotifier {
         double lat = _realtimeUpdate?.head.latitude ?? defaultLatitude;
         double lon = _realtimeUpdate?.head.longitude ?? defaultLongitude;
 
-        _trainHeadController.add(LatLng(lat, lon));
+        _trainHeadStreamController.add(LatLng(lat, lon));
         if (_lastRouteName != _realtimeUpdate?.routeName ||
             _eventState != _realtimeUpdate?.eventState) {
           _lastRouteName = _realtimeUpdate!.routeName;
@@ -994,7 +1020,7 @@ class LocationProvider with ChangeNotifier {
       }
       if (!_isInBackground) {
         BnLog.trace(text: 'Refresh forces map rebuild');
-        notifyListeners();
+        //notifyListeners();
       }
     } catch (e) {
       if (!kIsWeb) {
@@ -1216,6 +1242,27 @@ class LocationProvider with ChangeNotifier {
     }
     refresh();
   }
+
+  Future resetOdoMeterAndRoutePoints() async {
+    var alwaysPermissionGranted =
+        (gpsLocationPermissionsStatus == LocationPermissionStatus.always);
+    var whenInusePermissionGranted =
+        (gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse);
+    if (alwaysPermissionGranted || whenInusePermissionGranted) {
+      var odometerResetResult = await FlutterPlatformAlert.showCustomAlert(
+          windowTitle: Localize.current.resetOdoMeterTitle,
+          text:
+              '${Localize.current.userSpeed}  ${realUserSpeedKmh == null ? '- km/h' : realUserSpeedKmh?.formatSpeedKmH()}\n'
+              '${Localize.current.distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${odometer.toStringAsFixed(1)} km'} \n '
+              '${Localize.current.resetOdoMeter}',
+          iconStyle: IconStyle.warning,
+          positiveButtonTitle: Localize.current.yes,
+          negativeButtonTitle: Localize.current.cancel);
+      if (odometerResetResult == CustomButton.positiveButton) {
+        return resetTrackPoints();
+      }
+    }
+  }
 }
 
 final locationProvider =
@@ -1279,13 +1326,13 @@ final isActiveEventProvider = Provider((ref) {
 });
 
 final locationUpdateProvider = StreamProvider<LatLng?>((ref) {
-  return LocationProvider.instance.updates.map((location) {
+  return LocationProvider.instance.userBgLocationStream.map((location) {
     return LatLng(location.coords.latitude, location.coords.longitude);
   });
 });
 
 final locationTrainHeadUpdateProvider = StreamProvider<LatLng?>((ref) {
-  return LocationProvider.instance.trainHeadUpdates.map((location) {
+  return LocationProvider.instance.trainHeadUpdateStream.map((location) {
     return LatLng(location.latitude, location.longitude);
   });
 });

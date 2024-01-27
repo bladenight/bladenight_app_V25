@@ -91,11 +91,6 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
             }
           }
         }
-
-        ///Image contains subdomains for osm link
-        if (ial.image != null && ial.image!.isNotEmpty) {
-          MapSettings.setMapLinkSubdomains(ial.image!.trim());
-        }
         break;
       /*case 'openStreetMapDark': //disable OSM via remote
         if (ial.link != null && ial.link!.trim().isEmpty) {

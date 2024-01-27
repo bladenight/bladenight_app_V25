@@ -91,10 +91,6 @@ class _MapLayerState extends State<MapLayer> {
                     widget.event.hasSpecialStartPoint
                 ? CancellableNetworkTileProvider()
                 : AssetTileProvider(),
-            subdomains: HiveSettingsDB.openStreetMapEnabled ||
-                    widget.event.hasSpecialStartPoint
-                ? MapSettings.mapLinkSubdomains
-                : <String>[],
             errorImage: const AssetImage(
               'assets/images/skatemunichmaperror.png',
             ),
