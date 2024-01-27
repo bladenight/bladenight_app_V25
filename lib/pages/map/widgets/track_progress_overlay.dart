@@ -19,6 +19,7 @@ import '../../../models/realtime_update.dart';
 import '../../../pages/widgets/no_connection_warning.dart';
 import '../../../providers/active_event_notifier_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 import '../../../providers/shared_prefs_provider.dart';
 import 'map_event_informations.dart';
@@ -59,8 +60,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
 
   @override
   Widget build(BuildContext context) {
-    var location = ref.watch(locationProvider);
+    var rtu = ref.watch(realtimeDataProvider);
     var activeEvent = ref.watch(eventStatusProvider);
+    var lp = ref.watch(isTrackingProvider);
+    return  Container();
     if (activeEvent.status == EventStatus.noevent) {
       return Stack(children: [
         Positioned(
@@ -139,7 +142,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                   BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Builder(builder: (context) {
-                      if (location.realtimeUpdate == null) {
+                      if (rtu == null) {
                         return Container(
                           color: CupertinoDynamicColor.resolve(
                               CupertinoColors.systemBackground.withOpacity(0.2),
@@ -174,14 +177,14 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                           ),
                         );
                       }
-                      var rtu = location.realtimeUpdate as RealtimeUpdate;
+
                       return Container(
                         color: CupertinoDynamicColor.resolve(
                             CupertinoColors.systemBackground.withOpacity(0.1),
                             context),
                         padding: const EdgeInsets.all(10),
                         child: Column(children: [
-                          if (location.isTracking && rtu.user.isOnRoute)
+                          if (ref.watch(isTrackingProvider) && rtu.user.isOnRoute)
                             ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(5)),
@@ -312,7 +315,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         child: CircleAvatar(
                                           backgroundColor:
                                               ref.watch(MeColor.provider),
-                                          child: location.userIsParticipant
+                                          child: ref.watch(isUserParticipatingProvider)
                                               ? const ImageIcon(AssetImage(
                                                   'assets/images/skaterIcon_256.png'))
                                               : const Icon(
@@ -321,16 +324,12 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                       ),
                                     ),
                                     //friends
-                                    if (location.isTracking &&
+                                    if (ref.watch(isTrackingProvider) &&
                                         rtu.rpcException != null &&
                                         rtu.user.isOnRoute &&
-                                        location.realtimeUpdate != null &&
-                                        location.realtimeUpdate.friends !=
-                                            null &&
                                         !HiveSettingsDB.wantSeeFullOfProcession)
-                                      for (var friend in location.realtimeUpdate
-                                          .mapPointFriends(
-                                              location.realtimeUpdate.friends))
+                                      for (var friend in rtu
+                                          .mapPointFriends(rtu.friends))
                                         Align(
                                           alignment: Alignment.lerp(
                                               Alignment.topLeft,
@@ -356,7 +355,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                   ]),
                               ]),
                             ),
-                          if (!location.isTracking || !rtu.user.isOnRoute)
+                          if (!ref.watch(isTrackingProvider) || !rtu.user.isOnRoute)
                             ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(5)),
@@ -365,7 +364,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                   SizedBox(
                                     child: Center(
                                       child: (!rtu.user.isOnRoute &&
-                                              !location.isTracking)
+                                              !ref.watch(isTrackingProvider))
                                           ? ((activeEvent.status ==
                                                       EventStatus.confirmed ||
                                                   activeEvent.status ==
@@ -380,18 +379,18 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                     '${activeEvent.status == EventStatus.finished ? Localize.of(context).finished : Localize.of(context).nextEvent} ${activeEvent.status == EventStatus.finished ? '' : DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(activeEvent.getUtcIso8601DateTime)}',
                                                   ),
                                                 )) //empty when not confirmed no viewer mode available
-                                          : !location.isTracking
+                                          : !ref.watch(isTrackingProvider)
                                               ? Text(Localize.of(context)
                                                   .bladenighttracking)
-                                              : location
-                                                      .userIsParticipant //tracking in viewer mode not participating
+                                              : ref.watch(isUserParticipatingProvider)
+                                                       //tracking in viewer mode not participating
                                                   ? (activeEvent.status ==
                                                               EventStatus
                                                                   .confirmed ||
                                                           activeEvent.status ==
                                                               EventStatus
                                                                   .running)
-                                                      ? location.eventIsActive
+                                                      ? ref.watch(isActiveEventProvider)
                                                           ? Text(Localize.of(
                                                                   context)
                                                               .notOnRoute)
@@ -416,7 +415,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                   activeEvent.status ==
                                                       EventStatus.running)
                                               ? Text(
-                                                  '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(location.lastUpdate)}') //Text when Event confirmed
+                                                  '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(ref.watch(locationLastUpdateProvider))}') //Text when Event confirmed
                                               : (activeEvent.status !=
                                                           EventStatus
                                                               .confirmed ||
@@ -536,7 +535,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                   const SizedBox(
                                     width: 5,
                                   ),
-                                  if (location.isTracking)
+                                  if (ref.watch(isTrackingProvider))
                                     Flexible(
                                       fit: FlexFit.tight,
                                       child: Text(

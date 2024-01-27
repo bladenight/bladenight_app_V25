@@ -439,5 +439,7 @@
   "failedAddNearbyTryCode": "Bitte versuche die Verbindung mit einem Code herzustellen. Fragen dazu deinen Freund nach dem angezeigten Code in seiner 'Freunde'-Übersicht. Du kannst dich nur einmal mit demselben Freund verbinden.",
   "missingName": "Feld muss min. 1 Zeichen enthalten",
   "codeExpired": "Code zu alt! Eintrag bitte löschen und Freund:in neu einladen!",
-  "eventNotStarted": "Noch nicht gestartet"
+  "eventNotStarted": "Noch nicht gestartet",
+  "trackPointsExporting": "Folgende Routenpunkte werden exportiert: ",
+  "trackingPoints": "Aufgezeichnet Routenpunkte"
 }

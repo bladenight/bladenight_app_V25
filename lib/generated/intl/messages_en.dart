@@ -596,8 +596,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "timeToTail": MessageLookupByLibrary.simpleMessage("Time to tail"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
         "tomorrow": MessageLookupByLibrary.simpleMessage("Tomorrow"),
+        "trackPointsExporting": MessageLookupByLibrary.simpleMessage(
+            "The following route points will be exported: "),
         "trackers": MessageLookupByLibrary.simpleMessage("Tracker"),
         "tracking": MessageLookupByLibrary.simpleMessage("data ok"),
+        "trackingPoints":
+            MessageLookupByLibrary.simpleMessage("Recorded route points"),
         "trackingRestarted":
             MessageLookupByLibrary.simpleMessage("Tracking restartet"),
         "train": MessageLookupByLibrary.simpleMessage("Train"),

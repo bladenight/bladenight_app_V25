@@ -244,7 +244,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "entername":
             MessageLookupByLibrary.simpleMessage("Entrez le nom de votre ami"),
         "eventNotStarted":
-            MessageLookupByLibrary.simpleMessage("Event not started"),
+            MessageLookupByLibrary.simpleMessage("Événement non démarré"),
         "events": MessageLookupByLibrary.simpleMessage("Événements"),
         "export": MessageLookupByLibrary.simpleMessage("Exporter"),
         "exportLogData": MessageLookupByLibrary.simpleMessage(
@@ -627,8 +627,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Le temps de fin du train"),
         "today": MessageLookupByLibrary.simpleMessage("Aujourd\'hui"),
         "tomorrow": MessageLookupByLibrary.simpleMessage("Demain"),
+        "trackPointsExporting": MessageLookupByLibrary.simpleMessage(
+            "Les points d\'itinéraire suivants seront exportés : "),
         "trackers": MessageLookupByLibrary.simpleMessage("Traceur"),
         "tracking": MessageLookupByLibrary.simpleMessage("data ok"),
+        "trackingPoints": MessageLookupByLibrary.simpleMessage(
+            "Points d\'itinéraire enregistrés"),
         "trackingRestarted":
             MessageLookupByLibrary.simpleMessage("Suivi du redémarrage"),
         "train": MessageLookupByLibrary.simpleMessage("train"),

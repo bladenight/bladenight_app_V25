@@ -3657,6 +3657,26 @@ class Localize {
       args: [],
     );
   }
+
+  /// `The following route points will be exported: `
+  String get trackPointsExporting {
+    return Intl.message(
+      'The following route points will be exported: ',
+      name: 'trackPointsExporting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recorded route points`
+  String get trackingPoints {
+    return Intl.message(
+      'Recorded route points',
+      name: 'trackingPoints',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

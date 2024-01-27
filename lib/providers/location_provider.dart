@@ -13,6 +13,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location2/location2.dart' hide PermissionStatus;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:universal_io/io.dart';
+import 'package:vector_math/vector_math.dart' show radians;
 import 'package:wakelock/wakelock.dart';
 
 import '../app_settings/app_configuration_helper.dart';
@@ -58,15 +59,14 @@ class LocationProvider with ChangeNotifier {
   static DateTime _lastLocationRealtimeRequest = DateTime(2022, 1, 1, 0, 0, 0);
   static DateTime _lastRefreshRequest = DateTime(2022, 1, 1, 0, 0, 0);
 
-  get lastUpdate => _lastUpdate;
   DateTime? _userReachedFinishDateTime, _startedTrackingTime;
-
-  Timer? _updateTimer;
-  Timer? _saveLocationsTimer;
+  Timer? _updateTimer, _saveLocationsTimer;
 
   bool _isMoving = false;
   String _lastRouteName = '';
   EventStatus? _eventState;
+
+  DateTime get lastUpdate => _lastUpdate;
 
   bool _eventIsActive = false;
 
@@ -96,7 +96,7 @@ class LocationProvider with ChangeNotifier {
   LocationPermissionStatus get gpsLocationPermissionsStatus =>
       _gpsLocationPermissionsStatus;
 
-  ///flag for user is in Procession or not
+  ///flag for user is participant or not
   bool get userIsParticipant => _userIsParticipant;
 
   bool _userIsParticipant = false;
@@ -144,7 +144,8 @@ class LocationProvider with ChangeNotifier {
   final _userTrackingPoints = <UserTrackPoint>[];
 
   //Stream controllers private
-  final _userPositionStreamController = StreamController<bg.Location>.broadcast();
+  final _userPositionStreamController =
+      StreamController<bg.Location>.broadcast();
   final _trainHeadStreamController = StreamController<LatLng>.broadcast();
   final _userTrackPointsStreamController =
       StreamController<UserTrackPoint>.broadcast();
@@ -154,7 +155,8 @@ class LocationProvider with ChangeNotifier {
       StreamController<LocationMarkerHeading>.broadcast();
 
   //Stream controllers public
-  Stream<bg.Location> get userBgLocationStream => _userPositionStreamController.stream;
+  Stream<bg.Location> get userBgLocationStream =>
+      _userPositionStreamController.stream;
 
   Stream<LatLng> get trainHeadUpdateStream => _trainHeadStreamController.stream;
 
@@ -369,8 +371,8 @@ class LocationProvider with ChangeNotifier {
         longitude: location.coords.longitude,
         accuracy: location.coords.accuracy));
     _userLocationMarkerHeadingStreamController.sink.add(LocationMarkerHeading(
-        heading: location.coords.heading, accuracy: location.coords.accuracy));
-
+        heading: radians(location.coords.heading),
+        accuracy: location.coords.accuracy));
     if (_lastKnownPoint != null) {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp).toUtc();
       var diff = DateTime.now().toUtc().difference(ts);
@@ -426,7 +428,7 @@ class LocationProvider with ChangeNotifier {
       _userLatLongs.add(userLatLng);
     }
     if (!_isInBackground) {
-      // notifyListeners();
+      //notifyListeners();
     }
   }
 
@@ -853,13 +855,6 @@ class LocationProvider with ChangeNotifier {
     }
     _lastLocationRealtimeRequest = dtNow;
 
-    ///TODO Testing to avoid server traffic
-    /*if (ActiveEventProvider.instance.event.status != EventStatus.confirmed ||
-        ActiveEventProvider.instance.event.status != EventStatus.running) {
-      //no running event - don't send data to server
-      return;
-    }*/
-
     if (!_networkConnected) {
       if (!kIsWeb) {
         BnLog.trace(
@@ -932,7 +927,8 @@ class LocationProvider with ChangeNotifier {
     if (!kIsWeb) _updateWatchData();
     checkUserFinishedOrEndEvent();
     if (!_isInBackground) {
-      //notifyListeners();
+      BnLog.debug(text: 'location notify');
+      notifyListeners();
     }
   }
 
@@ -1020,7 +1016,7 @@ class LocationProvider with ChangeNotifier {
       }
       if (!_isInBackground) {
         BnLog.trace(text: 'Refresh forces map rebuild');
-        //notifyListeners();
+        notifyListeners();
       }
     } catch (e) {
       if (!kIsWeb) {
@@ -1265,20 +1261,22 @@ class LocationProvider with ChangeNotifier {
   }
 }
 
+//Providers
+
 final locationProvider =
     ChangeNotifierProvider((ref) => LocationProvider.instance);
 
 final isAutoStopProvider = Provider((ref) {
-  return ref.watch(locationProvider.select((a) => a.autoStop));
+  return ref.watch(locationProvider.select((l) => l.autoStop));
+});
+
+final locationLastUpdateProvider = Provider((ref) {
+  return ref.watch(locationProvider.select((l) => l.lastUpdate));
 });
 
 ///true when location is ready
 final isMovingProvider = Provider((ref) {
   return ref.watch(locationProvider.select((l) => l.isMoving));
-});
-
-final bgNetworkConnectedProvider = Provider((ref) {
-  return ref.watch(locationProvider.select((nw) => nw.networkConnected));
 });
 
 final odometerProvider = Provider((ref) {
@@ -1314,15 +1312,19 @@ final hasNewRealtimeData = Provider((ref) {
   return ref.watch(locationProvider.select((l) => l.realtimeUpdate));
 });
 
+///Watch active [Event]
+final isActiveEventProvider = Provider((ref) {
+  return ref.watch(locationProvider.select((l) => l.eventIsActive));
+});
+
+final bgNetworkConnectedProvider = Provider((ref) {
+  return ref.watch(locationProvider.select((nw) => nw.networkConnected));
+});
+
 ///Watch active [Event] and turn off Navigation when [Event] ist not running
 ///or finished (userPos == length ??)
 final eventStatusProvider = Provider((ref) {
   return ref.watch(activeEventProvider.select((ae) => ae.event));
-});
-
-///Watch active [Event]
-final isActiveEventProvider = Provider((ref) {
-  return ref.watch(locationProvider.select((lp) => lp.eventIsActive));
 });
 
 final locationUpdateProvider = StreamProvider<LatLng?>((ref) {

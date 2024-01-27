@@ -608,8 +608,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Dauer zum Zugende (ca)."),
         "today": MessageLookupByLibrary.simpleMessage("Heute"),
         "tomorrow": MessageLookupByLibrary.simpleMessage("Morgen"),
+        "trackPointsExporting": MessageLookupByLibrary.simpleMessage(
+            "Folgende Routenpunkte werden exportiert: "),
         "trackers": MessageLookupByLibrary.simpleMessage("Tracker"),
         "tracking": MessageLookupByLibrary.simpleMessage("Daten vorhanden"),
+        "trackingPoints":
+            MessageLookupByLibrary.simpleMessage("Aufgezeichnet Routenpunkte"),
         "trackingRestarted":
             MessageLookupByLibrary.simpleMessage("Tracking wieder gestartet"),
         "train": MessageLookupByLibrary.simpleMessage("Skater-Zug"),

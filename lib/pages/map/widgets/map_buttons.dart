@@ -24,14 +24,14 @@ import '../../../providers/location_provider.dart';
 import '../../../providers/route_providers.dart';
 import '../widgets/qr_create_page.dart';
 
-class MapButtonsOverlay extends ConsumerStatefulWidget {
-  const MapButtonsOverlay({super.key});
+class MapButtonsLayer extends ConsumerStatefulWidget {
+  const MapButtonsLayer({super.key});
 
   @override
-  ConsumerState<MapButtonsOverlay> createState() => _MapButtonsOverlay();
+  ConsumerState<MapButtonsLayer> createState() => _MapButtonsOverlay();
 }
 
-class _MapButtonsOverlay extends ConsumerState<MapButtonsOverlay> {
+class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
 
   late FollowLocationStates followLocationState =

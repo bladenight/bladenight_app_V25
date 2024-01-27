@@ -438,5 +438,7 @@
   "failedAddNearbyTryCode" : "Veuillez essayer d'établir la connexion avec un code. Demandez à votre ami le code affiché dans sa liste d'amis. Vous ne pouvez vous connecter qu'une seule fois avec le même ami.",
   "missingName" : "Le champ doit contenir au moins 1 caractère",
   "codeExpired": "Code trop ancien ! Veuillez supprimer l'entrée et réinviter un ami !",
-  "eventNotStarted": "Event not started"
+  "eventNotStarted": "Événement non démarré",
+  "trackPointsExporting": "Les points d'itinéraire suivants seront exportés : ",
+  "trackingPoints": "Points d'itinéraire enregistrés"
 }

@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-as bg;
+    as bg;
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -202,22 +202,24 @@ Future<void> shareExportedTrackingData(String trkPts) async {
   try {
     var tempDir = await getTemporaryDirectory();
     final file = File(
-        '${tempDir.path}/BladeNight${DateTime.now().millisecondsSinceEpoch}.json');
+        '${tempDir.path}/BladeNight${DateTime.now().millisecondsSinceEpoch}.gpx');
     var tempFile = await file.writeAsString(trkPts, flush: true);
     showToast(message: Localize.current.ok);
     Share.shareXFiles([XFile(tempFile.path)],
-        subject: 'TrackPoints', text: 'Folgende Trackdaten wurden erfasst:');
-    print('TrackPoints exported to: \nPath: ${file.path.toString()}');
+        subject: Localize.current.trackingPoints,
+        text: Localize.current.trackPointsExporting);
+    BnLog.info(
+        text: 'TrackPoints exported to: \nPath: ${file.path.toString()}');
   } catch (e) {
-    showToast(message: 'Export fail $e');
+    showToast(message: 'GPX export failed $e');
   }
 }
 
 void exportBgLocationLogs() async {
   bg.Logger.emailLog('it@huth.app').then((bool success) {
     showToast(message: Localize.current.ok);
-  }).catchError((error) {
-    showToast(message: 'Log export fail $error');
+  }).catchError((e) {
+    showToast(message: 'Log export failed $e');
   });
 }
 

@@ -438,6 +438,8 @@
   "failedAddNearbyTryCode": "Please try to establish the connection with a code. Ask your friend for the code displayed in their 'Friends' overview. You can only connect to the same friend once.",
   "missingName": "Field must contain at least 1 character",
   "codeExpired": "Code too old! Please delete entry and re-invite friend!",
-  "eventNotStarted": "Event not started"
+  "eventNotStarted": "Event not started",
+  "trackPointsExporting": "The following route points will be exported: ",
+  "trackingPoints": "Recorded route points"
 
 }

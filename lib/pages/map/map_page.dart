@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,11 +22,13 @@ import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../providers/active_event_notifier_provider.dart';
 import '../../providers/location_provider.dart';
-import '../../providers/shared_prefs_provider.dart';
 import '../widgets/user_speed_odometer.dart';
 import 'widgets/bn_dark_container.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/map_buttons.dart';
+import 'widgets/markers_layer.dart';
+import 'widgets/poly_lines.dart';
+import 'widgets/track_progress_overlay.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
@@ -221,12 +222,17 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                   ? MapSettings.maxZoom
                   : MapSettings.maxZoomDefault,
               initialCenter: ref.watch(activeEventProvider).startPoint,
-              cameraConstraint: HiveSettingsDB.openStreetMapEnabled ||
-                      ref.watch(activeEventProvider).event.hasSpecialStartPoint
-                  ? CameraConstraint.contain(
-                      bounds: MapSettings.mapOnlineBoundaries)
-                  : CameraConstraint.contain(
-                      bounds: MapSettings.mapOfflineBoundaries),
+              cameraConstraint: kDebugMode
+                  ? null
+                  : HiveSettingsDB.openStreetMapEnabled ||
+                          ref
+                              .watch(activeEventProvider)
+                              .event
+                              .hasSpecialStartPoint
+                      ? CameraConstraint.contain(
+                          bounds: MapSettings.mapOnlineBoundaries)
+                      : CameraConstraint.contain(
+                          bounds: MapSettings.mapOfflineBoundaries),
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all,
                 enableMultiFingerGestureRace: true,
@@ -269,62 +275,14 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                   ),
                 ),
               ),
-              PolylineLayer(polylines: [
-                Polyline(
-                  //active route points
-                  points: ref.watch(activeEventProvider).activeEventRoutePoints,
-                  strokeWidth: ref.watch(isTrackingProvider) ? 5 : 3,
-                  borderColor: ref.watch(isTrackingProvider)
-                      ? const CupertinoDynamicColor.withBrightness(
-                          color: CupertinoColors.activeGreen,
-                          darkColor: CupertinoColors.white)
-                      : CupertinoTheme.of(context).primaryColor,
-                  color: ref.watch(isTrackingProvider)
-                      ? const CupertinoDynamicColor.withBrightness(
-                          color: CupertinoColors.white,
-                          darkColor: CupertinoColors.lightBackgroundGray)
-                      : Colors.transparent,
-                  useStrokeWidthInMeter: true,
-                  borderStrokeWidth: ref.watch(isTrackingProvider) ? 4 : 7,
-                  isDotted: false, //ref.watch(isTrackingProvider),
-                ),
-                //user track
-                if (ref.watch(userLatLongProvider).isNotEmpty &&
-                    ref.watch(ShowOwnTrack.provider))
-                  Polyline(
-                    points: ref.watch(userLatLongProvider),
-                    strokeWidth: ref.watch(isTrackingProvider) ? 4 : 3,
-                    borderColor: ref.watch(MeColor.provider),
-                    color: ref.watch(isTrackingProvider)
-                        ? const CupertinoDynamicColor.withBrightness(
-                            color: CupertinoColors.white,
-                            darkColor: CupertinoColors.systemBlue)
-                        : CupertinoColors.white,
-                    borderStrokeWidth: 3.0,
-                    isDotted: false, // ref.watch(isTrackingProvider),
-                  ),
-                if (context
-                    .watch(activeEventProvider)
-                    .activeEventRoutePoints
-                    .isNotEmpty)
-                  Polyline(
-                      points: context
-                          .watch(activeEventProvider)
-                          .activeEventRoutePoints,
-                      color: CupertinoDynamicColor.withBrightness(
-                          color: ref.watch(ThemePrimaryColor.provider),
-                          darkColor: ref.watch(ThemePrimaryDarkColor.provider)),
-                      strokeWidth: 3,
-                      borderStrokeWidth: 5.0,
-                      isDotted: true),
-              ]),
-
-              //const TrackProgressOverlay(),
-              const MapButtonsOverlay(),
+              const PolyLinesLayer(),
+              const MapButtonsLayer(),
               const CustomLocationLayer(),
+              const MarkersLayer(),
             ],
           ),
-          const UserSpeedAndOdometer(),
+          const UserSpeedAndOdometerOverlay(),
+          const TrackProgressOverlay(),
         ]),
       ),
     );

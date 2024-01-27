@@ -35,8 +35,8 @@ class Friend with FriendMappable {
   int? relativeTime;
 
   ///driven distance from start
-  int? relativeDistance;
-  int? absolutePosition;
+  int relativeDistance=0;
+  int absolutePosition=0;
 
   ///positive when in front //negative when behind
   int? timeToUser;
@@ -72,8 +72,8 @@ class Friend with FriendMappable {
 
   void resetPositionData() {
     relativeTime = null;
-    relativeDistance = null;
-    absolutePosition = null;
+    relativeDistance = 0;
+    absolutePosition = 0;
     latitude = null;
     longitude = null;
   }

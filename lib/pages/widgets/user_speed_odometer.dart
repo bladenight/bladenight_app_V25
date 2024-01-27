@@ -13,17 +13,17 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/location_permission_dialogs.dart';
 import '../../providers/location_provider.dart';
 
-class UserSpeedAndOdometer extends StatefulWidget {
-  const UserSpeedAndOdometer({super.key});
+class UserSpeedAndOdometerOverlay extends StatefulWidget {
+  const UserSpeedAndOdometerOverlay({super.key});
 
   @override
   State<StatefulWidget> createState() => _UserSpeedOdometer();
 }
 
-class _UserSpeedOdometer extends State<UserSpeedAndOdometer> {
+class _UserSpeedOdometer extends State<UserSpeedAndOdometerOverlay> {
   late final Stream<bg.Location?> _locationStream;
-  late double currentUserSpeed;
-  late double currentUserOdoDriven;
+  late double currentUserSpeed = -1;
+  late double currentUserOdoDriven = 0.0;
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _UserSpeedOdometer extends State<UserSpeedAndOdometer> {
           return;
         }
         currentUserSpeed = location.coords.speed;
-        currentUserOdoDriven = location.odometer;
+        currentUserOdoDriven = location.odometer/1000;
       });
     });
   }
