@@ -8,6 +8,7 @@ import '../models/moving_point.dart';
 import '../models/route.dart';
 import '../models/watch_event.dart';
 import '../providers/active_event_notifier_provider.dart';
+import '../providers/is_tracking_provider.dart';
 import '../providers/location_provider.dart';
 import 'logger.dart';
 
@@ -110,9 +111,8 @@ Future<void> initFlutterChannel() async {
       case 'sendNavToggleToFlutter':
         print('sendNavToggleToFlutter received');
         try {
-          ProviderContainer()
-              .read(locationProvider)
-              .toggleProcessionTracking(userIsParticipant: true);
+          ProviderContainer().read(isTrackingProvider.notifier)
+              .toggleTracking(true);
         } catch (e) {
           if (!kIsWeb) {
             BnLog.error(
@@ -141,8 +141,7 @@ Future<void> initFlutterChannel() async {
       case 'getLocationIsTracking':
         print('getLocationIsTrackingFromFlutter received');
         try {
-          SendToWatch.setIsLocationTracking(
-              LocationProvider.instance.isTracking);
+          SendToWatch.setIsLocationTracking(ProviderContainer().read(isTrackingProvider));
         } catch (e) {
           if (!kIsWeb) {
             BnLog.error(

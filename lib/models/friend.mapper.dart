@@ -50,10 +50,10 @@ class FriendMapper extends ClassMapperBase<Friend> {
   static int? _$relativeTime(Friend v) => v.relativeTime;
   static const Field<Friend, int> _f$relativeTime =
       Field('relativeTime', _$relativeTime, opt: true, def: 0);
-  static int? _$relativeDistance(Friend v) => v.relativeDistance;
+  static int _$relativeDistance(Friend v) => v.relativeDistance;
   static const Field<Friend, int> _f$relativeDistance =
       Field('relativeDistance', _$relativeDistance, opt: true, def: 0);
-  static int? _$absolutePosition(Friend v) => v.absolutePosition;
+  static int _$absolutePosition(Friend v) => v.absolutePosition;
   static const Field<Friend, int> _f$absolutePosition =
       Field('absolutePosition', _$absolutePosition, opt: true, def: 0);
   static int? _$distanceToUser(Friend v) => v.distanceToUser;
@@ -212,8 +212,8 @@ class _FriendCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Friend, $Out>
           Object? longitude = $none,
           Object? latitude = $none,
           Object? relativeTime = $none,
-          Object? relativeDistance = $none,
-          Object? absolutePosition = $none,
+          int? relativeDistance,
+          int? absolutePosition,
           Object? distanceToUser = $none,
           int? specialValue,
           Object? timeToUser = $none,
@@ -231,8 +231,8 @@ class _FriendCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Friend, $Out>
         if (longitude != $none) #longitude: longitude,
         if (latitude != $none) #latitude: latitude,
         if (relativeTime != $none) #relativeTime: relativeTime,
-        if (relativeDistance != $none) #relativeDistance: relativeDistance,
-        if (absolutePosition != $none) #absolutePosition: absolutePosition,
+        if (relativeDistance != null) #relativeDistance: relativeDistance,
+        if (absolutePosition != null) #absolutePosition: absolutePosition,
         if (distanceToUser != $none) #distanceToUser: distanceToUser,
         if (specialValue != null) #specialValue: specialValue,
         if (timeToUser != $none) #timeToUser: timeToUser,

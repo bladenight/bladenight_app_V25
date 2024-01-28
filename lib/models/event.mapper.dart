@@ -37,6 +37,8 @@ class EventStatusMapper extends EnumMapper<EventStatus> {
         return EventStatus.running;
       case 'FIN':
         return EventStatus.finished;
+      case 'UKN':
+        return EventStatus.unknown;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -121,6 +123,9 @@ class EventMapper extends ClassMapperBase<Event> {
   static String? _$startPoint(Event v) => v.startPoint;
   static const Field<Event, String> _f$startPoint =
       Field('startPoint', _$startPoint, key: 'stp', opt: true);
+  static bool _$isActive(Event v) => v.isActive;
+  static const Field<Event, bool> _f$isActive =
+      Field('isActive', _$isActive, key: 'isa', opt: true, def: true);
 
   @override
   final MappableFields<Event> fields = const {
@@ -135,6 +140,7 @@ class EventMapper extends ClassMapperBase<Event> {
     #startPointLatitude: _f$startPointLatitude,
     #startPointLongitude: _f$startPointLongitude,
     #startPoint: _f$startPoint,
+    #isActive: _f$isActive,
   };
 
   static Event _instantiate(DecodingData data) {
@@ -149,7 +155,8 @@ class EventMapper extends ClassMapperBase<Event> {
         rpcException: data.dec(_f$rpcException),
         startPointLatitude: data.dec(_f$startPointLatitude),
         startPointLongitude: data.dec(_f$startPointLongitude),
-        startPoint: data.dec(_f$startPoint));
+        startPoint: data.dec(_f$startPoint),
+        isActive: data.dec(_f$isActive));
   }
 
   @override
@@ -211,7 +218,8 @@ abstract class EventCopyWith<$R, $In extends Event, $Out>
       Exception? rpcException,
       double? startPointLatitude,
       double? startPointLongitude,
-      String? startPoint});
+      String? startPoint,
+      bool? isActive});
   EventCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -233,7 +241,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
           Object? rpcException = $none,
           Object? startPointLatitude = $none,
           Object? startPointLongitude = $none,
-          Object? startPoint = $none}) =>
+          Object? startPoint = $none,
+          bool? isActive}) =>
       $apply(FieldCopyWithData({
         if (startDate != null) #startDate: startDate,
         if (routeName != null) #routeName: routeName,
@@ -247,7 +256,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
           #startPointLatitude: startPointLatitude,
         if (startPointLongitude != $none)
           #startPointLongitude: startPointLongitude,
-        if (startPoint != $none) #startPoint: startPoint
+        if (startPoint != $none) #startPoint: startPoint,
+        if (isActive != null) #isActive: isActive
       }));
   @override
   Event $make(CopyWithData data) => Event(
@@ -263,7 +273,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
           data.get(#startPointLatitude, or: $value.startPointLatitude),
       startPointLongitude:
           data.get(#startPointLongitude, or: $value.startPointLongitude),
-      startPoint: data.get(#startPoint, or: $value.startPoint));
+      startPoint: data.get(#startPoint, or: $value.startPoint),
+      isActive: data.get(#isActive, or: $value.isActive));
 
   @override
   EventCopyWith<$R2, Event, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

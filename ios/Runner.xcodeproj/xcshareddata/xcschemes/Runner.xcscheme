@@ -63,7 +63,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <LocationScenarioReference
-         identifier = "../BladeNight1706346771696.gpx"
+         identifier = "../../../../development/tesplan_xcode/BladeNight1706346771696.gpx"
          referenceType = "0">
       </LocationScenarioReference>
    </LaunchAction>

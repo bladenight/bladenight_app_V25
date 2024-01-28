@@ -6,12 +6,13 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
-import '../../generated/l10n.dart';
-import '../../helpers/background_location_helper.dart';
-import '../../helpers/distance_converter.dart';
-import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/location_permission_dialogs.dart';
-import '../../providers/location_provider.dart';
+import '../../../generated/l10n.dart';
+import '../../../helpers/background_location_helper.dart';
+import '../../../helpers/distance_converter.dart';
+import '../../../helpers/hive_box/hive_settings_db.dart';
+import '../../../helpers/location_permission_dialogs.dart';
+import '../../../providers/is_tracking_provider.dart';
+import '../../../providers/location_provider.dart';
 
 class UserSpeedAndOdometerOverlay extends StatefulWidget {
   const UserSpeedAndOdometerOverlay({super.key});
@@ -34,8 +35,8 @@ class _UserSpeedOdometer extends State<UserSpeedAndOdometerOverlay> {
         if (location == null) {
           return;
         }
-        currentUserSpeed = location.coords.speed;
-        currentUserOdoDriven = location.odometer/1000;
+        currentUserSpeed = location.coords.speed * 3.6;
+        currentUserOdoDriven = location.odometer / 1000;
       });
     });
   }
@@ -102,7 +103,7 @@ class _UserSpeedOdometer extends State<UserSpeedAndOdometerOverlay> {
                     label: FittedBox(
                       fit: BoxFit.fill,
                       child: Text(
-                        '${currentUserSpeed == -1 ? '- km/h' : currentUserSpeed.formatSpeedKmH()}  ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${currentUserOdoDriven.toStringAsFixed(1)} km'} ${alwaysPermissionGranted ? "" : "!"}',
+                        '${currentUserSpeed == -1 || !context.watch(isTrackingProvider) ? '- km/h' : currentUserSpeed.formatSpeedKmH()}  ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${currentUserOdoDriven.toStringAsFixed(1)} km'} ${alwaysPermissionGranted ? "" : "!"}',
                         style: CupertinoTheme.of(context)
                             .textTheme
                             .navTitleTextStyle,

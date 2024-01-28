@@ -21,14 +21,15 @@ import '../../helpers/logger.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../providers/active_event_notifier_provider.dart';
+import '../../providers/is_tracking_provider.dart';
 import '../../providers/location_provider.dart';
-import '../widgets/user_speed_odometer.dart';
 import 'widgets/bn_dark_container.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/map_buttons.dart';
 import 'widgets/markers_layer.dart';
 import 'widgets/poly_lines.dart';
 import 'widgets/track_progress_overlay.dart';
+import 'widgets/user_speed_odometer.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
@@ -176,15 +177,13 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   ///Toggles between location tracking and view without user pos
   void toggleLocationService() async {
-    await LocationProvider.instance
-        .toggleProcessionTracking(userIsParticipant: true);
+    ref.read(isTrackingProvider.notifier).toggleTracking(true);
   }
 
   ///Toggles between user position and view with user pos
   void toggleViewerLocationService() async {
-    if (LocationProvider.instance.isTracking) {
-      await LocationProvider.instance
-          .toggleProcessionTracking(userIsParticipant: false);
+    if (ref.read(isTrackingProvider)) {
+      ref.read(isTrackingProvider.notifier).toggleTracking(false);
       return;
     }
     final clickedButton = await FlutterPlatformAlert.showCustomAlert(
@@ -194,8 +193,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
         negativeButtonTitle:
             Localize.of(context).no); //no neutral button on android
     if (clickedButton == CustomButton.positiveButton) {
-      await LocationProvider.instance
-          .toggleProcessionTracking(userIsParticipant: false);
+      ref.read(isTrackingProvider.notifier).toggleTracking(false);
     }
   }
 

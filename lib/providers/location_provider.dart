@@ -37,6 +37,7 @@ import '../models/realtime_update.dart';
 import '../models/route.dart';
 import '../models/user_trackpoint.dart';
 import 'active_event_notifier_provider.dart';
+import 'is_tracking_provider.dart';
 import 'network_connection_provider.dart';
 
 ///[LocationProvider] gets actual procession of Bladenight
@@ -78,9 +79,8 @@ class LocationProvider with ChangeNotifier {
 
   bool get networkConnected => _networkConnected;
 
-  bool _isTracking = false;
-
   bool get isTracking => _isTracking;
+  bool _isTracking = false;
 
   bool _gpsGranted = false;
 
@@ -230,8 +230,12 @@ class LocationProvider with ChangeNotifier {
             methodName: 'init',
             text: 'restart tracking');
       }
-      await toggleProcessionTracking(userIsParticipant: _userIsParticipant);
-      showToast(message: Localize.current.trackingRestarted);
+      var state = await ProviderContainer()
+          .read(isTrackingProvider.notifier)
+          .startTracking(_userIsParticipant);
+      if (state) {
+        showToast(message: Localize.current.trackingRestarted);
+      }
     }
     notifyListeners();
     if (!kIsWeb) {
@@ -507,7 +511,7 @@ class LocationProvider with ChangeNotifier {
         break;
       case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_DENIED:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.denied;
-        _stopTracking();
+        stopTracking();
         break;
       case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_ALWAYS:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.always;
@@ -521,29 +525,13 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  ///toggles tracking when user is in procession
-  ///set [userIsParticipant] to true if participant
-  ///set [userIsParticipant] to false if only in viewer-mode
-  Future<void> toggleProcessionTracking({bool userIsParticipant = true}) async {
-    if (kIsWeb) {
-      return;
-    }
-    _userIsParticipant = userIsParticipant;
-    HiveSettingsDB.setUserIsParticipant(userIsParticipant);
-    if (_isTracking) {
-      _stopTracking();
-    } else {
-      _startTracking();
-    }
-  }
-
   void toggleAutoStop() async {
     _autoStop = !_autoStop;
     notifyListeners();
     PreferencesHelper.saveAutoStopToPrefs(_autoStop);
   }
 
-  void _stopTracking() {
+  Future<bool> stopTracking() async {
     _locationSubscription?.cancel();
     _locationSubscription = null;
     _isTracking = false;
@@ -572,10 +560,12 @@ class LocationProvider with ChangeNotifier {
     }).catchError((error) {
       if (!kIsWeb) BnLog.error(text: 'Stopping ERROR: $error');
     });
+    return _isTracking;
   }
 
-  void _startTracking() async {
-    if (kIsWeb) return;
+  Future<bool> startTracking(bool userIsParticipant) async {
+    if (kIsWeb) return false;
+    _userIsParticipant = userIsParticipant;
     _isHead = HiveSettingsDB.specialCodeValue == 1 ||
         HiveSettingsDB.specialCodeValue == 5;
     _isTail = HiveSettingsDB.specialCodeValue == 2 ||
@@ -597,7 +587,7 @@ class LocationProvider with ChangeNotifier {
           BnLog.warning(
               text: 'No positive prominent disclosure or always denied');
         }
-        return;
+        return false;
       }
       if (Platform.isAndroid && await DeviceHelper.isAndroidGreaterVNine()) {
         await LocationPermissionDialog().showMotionSensorProminentDisclosure();
@@ -616,7 +606,7 @@ class LocationProvider with ChangeNotifier {
             methodName: '_startTracking');
       }
       await LocationPermissionDialog().requestAndOpenAppSettings();
-      return;
+      return false;
     }
 
     _userReachedFinishDateTime == null;
@@ -662,7 +652,7 @@ class LocationProvider with ChangeNotifier {
       SendToWatch.setIsLocationTracking(_isTracking);
       HiveSettingsDB.setTrackingActive(_isTracking);
     } else {
-      await bg.BackgroundGeolocation.start().then((bg.State state) {
+      await bg.BackgroundGeolocation.start().then((bg.State bgGeoLocState) {
         if (!kIsWeb) {
           BnLog.info(
               text: 'location tracking started',
@@ -670,7 +660,7 @@ class LocationProvider with ChangeNotifier {
               methodName: '_startTracking');
         }
 
-        _isTracking = state.enabled;
+        _isTracking = bgGeoLocState.enabled;
         _startedTrackingTime = DateTime.now();
         _stoppedAfterMaxTime = false;
         setUpdateTimer(true);
@@ -680,13 +670,13 @@ class LocationProvider with ChangeNotifier {
         HiveSettingsDB.setTrackingActive(_isTracking);
         SendToWatch.setIsLocationTracking(_isTracking);
       }).catchError((error) {
-        if (!kIsWeb) BnLog.error(text: 'LocStarting ERROR: $error');
+        BnLog.error(text: 'LocStarting ERROR: $error');
         HiveSettingsDB.setTrackingActive(false);
         _isTracking = false;
         setUpdateTimer(false);
         SendToWatch.setIsLocationTracking(false);
         notifyListeners();
-        return;
+        return false;
       });
       await bg.BackgroundGeolocation.setConfig(bg.Config(
           distanceFilter: 0,
@@ -697,6 +687,7 @@ class LocationProvider with ChangeNotifier {
           ));
       await bg.BackgroundGeolocation.changePace(true);
     }
+    return _isTracking;
   }
 
   ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
@@ -1060,7 +1051,7 @@ class LocationProvider with ChangeNotifier {
                   methodName: 'checkUserFinishedOrEndEvent',
                   text: 'User reached finish - auto stop');
             }
-            _stopTracking();
+            stopTracking();
           } else {
             NotificationHelper().showString(
                 id: DateTime.now().hashCode,
@@ -1089,7 +1080,7 @@ class LocationProvider with ChangeNotifier {
           !_stoppedAfterMaxTime) {
         _stoppedAfterMaxTime = true;
         _userReachedFinishDateTime == null;
-        _stopTracking();
+        stopTracking();
 
         //Alert for overtime or finish event
         if (ActiveEventProvider.instance.event.status == EventStatus.finished) {
@@ -1154,7 +1145,7 @@ class LocationProvider with ChangeNotifier {
   void _updateWatchData() {
     try {
       if (kIsWeb) return;
-      SendToWatch.setIsLocationTracking(isTracking);
+      SendToWatch.setIsLocationTracking(_isTracking);
       if (_realtimeUpdate != null) {
         SendToWatch.updateRealtimeData(_realtimeUpdate?.toJson());
       }
@@ -1187,8 +1178,8 @@ class LocationProvider with ChangeNotifier {
 
       if (!_isTracking) {
         //#issue 1102
-        var state = await bg.BackgroundGeolocation.stop();
-        _isTracking = state.enabled;
+        var bgGeoLocState = await bg.BackgroundGeolocation.stop();
+        _isTracking = bgGeoLocState.enabled;
         notifyListeners();
       }
       _userTrackingPoints.clear();
@@ -1289,10 +1280,6 @@ final realUserSpeedProvider = Provider((ref) {
 
 final userLatLongProvider = Provider((ref) {
   return ref.watch(locationProvider.select((l) => l.userLatLongs));
-});
-
-final isTrackingProvider = Provider((ref) {
-  return ref.watch(locationProvider.select((l) => l.isTracking));
 });
 
 final isGPSGrantedProvider = Provider((ref) {

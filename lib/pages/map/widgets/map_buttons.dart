@@ -20,6 +20,7 @@ import '../../../models/follow_location_state.dart';
 import '../../../models/route.dart';
 import '../../../pages/widgets/following_location_icon.dart';
 import '../../../providers/images_and_links/live_map_image_and_link_provider.dart';
+import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/route_providers.dart';
 import '../widgets/qr_create_page.dart';
@@ -81,8 +82,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
           bottom: MapSettings.mapMenuVisible ? 300 : 100,
           height: 40,
           child: Builder(builder: (context) {
-            var isTracking =
-                ref.watch(locationProvider.select((it) => it.isTracking));
+            var isTracking = ref.watch(isTrackingProvider);
             if (!isTracking) {
               return FloatingActionButton(
                 heroTag: 'viewerBtnTag',
@@ -408,15 +408,13 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
 
   ///Toggles between location tracking and view without user pos
   void _toggleLocationService() async {
-    await LocationProvider.instance
-        .toggleProcessionTracking(userIsParticipant: true);
+    ref.read(isTrackingProvider.notifier).toggleTracking(true);
   }
 
   ///Toggles between user position and view with user pos
   void toggleViewerLocationService() async {
-    if (LocationProvider.instance.isTracking) {
-      await LocationProvider.instance
-          .toggleProcessionTracking(userIsParticipant: false);
+    if (context.watch(isTrackingProvider)) {
+      ref.read(isTrackingProvider.notifier).toggleTracking(false);
       return;
     }
     final clickedButton = await FlutterPlatformAlert.showCustomAlert(
@@ -426,8 +424,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
         negativeButtonTitle:
             Localize.of(context).no); //no neutral button on android
     if (clickedButton == CustomButton.positiveButton) {
-      await LocationProvider.instance
-          .toggleProcessionTracking(userIsParticipant: false);
+      ref.read(isTrackingProvider.notifier).toggleTracking(false);
     }
   }
 

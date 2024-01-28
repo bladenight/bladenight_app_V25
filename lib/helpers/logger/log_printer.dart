@@ -34,13 +34,21 @@ class BnLogPrinter extends LogPrinter {
   };
 
   static final Map<Level, String> defaultLevelEmojis = {
-    Level.trace: '☊ ',
-    Level.debug: '🐛',
-    Level.info: '💡',
-    Level.warning: '⚠️',
-    Level.error: '⛔',
-    Level.fatal: '👾',
+    Level.trace: '🦉Trace:',
+    Level.debug: '⏳Debug:',
+    Level.info: 'ℹ ',
+    Level.warning: '⚠️ ',
+    Level.error: '‼️ ',
+    Level.fatal: '💀 ',
   };
+
+  /// Matches a stacktrace line as generated on Android/iOS devices.
+  ///
+  /// For example:
+  /// BnLogPrinter.log (package:bladenight_app_flutter/helpers/logger/log_printer.dart:237:40)
+  /// #1      Logger.log (package:logger/src/logger.dart:177:29)
+  /// #2      Logger.i
+  static final _loggerStackTraceRegex = RegExp(r'#[0-9]+\s+(.+) \((\S+)\)');
 
   /// Matches a stacktrace line as generated on Android/iOS devices.
   ///
@@ -263,6 +271,7 @@ class BnLogPrinter extends LogPrinter {
         .split('\n')
         .where(
           (line) =>
+              !_discardSelfLoggerStacktraceLine(line) &&
               !_discardDeviceStacktraceLine(line) &&
               !_discardWebStacktraceLine(line) &&
               !_discardBrowserStacktraceLine(line) &&
@@ -295,6 +304,18 @@ class BnLogPrinter extends LogPrinter {
       }
     }
     return false;
+  }
+
+  bool _discardSelfLoggerStacktraceLine(String line) {
+    var match = _loggerStackTraceRegex.matchAsPrefix(line);
+    if (match == null) {
+      return false;
+    }
+    final segment = match.group(2)!;
+    if (segment.startsWith('package:bladenight_app_flutter/helpers/logger')) {
+      return true;
+    }
+    return _isInExcludePaths(segment);
   }
 
   bool _discardDeviceStacktraceLine(String line) {
@@ -443,20 +464,20 @@ class BnLogPrinter extends LogPrinter {
     var emoji = _getEmoji(level);
     for (var line in message.split('\n')) {
       if (line == 'null') continue;
-      buffer.add(color('$verticalLineAtLevel$emoji$message'));
+      buffer.add(color('$verticalLineAtLevel $emoji $line'));
     }
     if (_includeBox[level]!) buffer.add(color(_middleBorder));
 
     if (error != null) {
       for (var line in error.split('\n')) {
-        buffer.add(color('$verticalLineAtLevel$line'));
+        buffer.add(color('$verticalLineAtLevel $line'));
       }
       if (_includeBox[level]!) buffer.add(color(_middleBorder));
     }
 
     if (stacktrace != null) {
       for (var line in stacktrace.split('\n')) {
-        buffer.add(color('$verticalLineAtLevel$line'));
+        buffer.add(color('$verticalLineAtLevel $line'));
       }
       //if (_includeBox[level]!) buffer.add(color(_middleBorder));
     }

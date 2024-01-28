@@ -15,9 +15,9 @@ import '../../../helpers/logger.dart';
 import '../../../helpers/speed_to_color.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/event.dart';
-import '../../../models/realtime_update.dart';
 import '../../../pages/widgets/no_connection_warning.dart';
 import '../../../providers/active_event_notifier_provider.dart';
+import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
@@ -62,8 +62,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   Widget build(BuildContext context) {
     var rtu = ref.watch(realtimeDataProvider);
     var activeEvent = ref.watch(eventStatusProvider);
-    var lp = ref.watch(isTrackingProvider);
-    return  Container();
     if (activeEvent.status == EventStatus.noevent) {
       return Stack(children: [
         Positioned(
@@ -184,7 +182,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                             context),
                         padding: const EdgeInsets.all(10),
                         child: Column(children: [
-                          if (ref.watch(isTrackingProvider) && rtu.user.isOnRoute)
+                          if (ref.watch(isTrackingProvider) &&
+                              rtu.user.isOnRoute)
                             ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(5)),
@@ -315,7 +314,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         child: CircleAvatar(
                                           backgroundColor:
                                               ref.watch(MeColor.provider),
-                                          child: ref.watch(isUserParticipatingProvider)
+                                          child: ref.watch(
+                                                  isUserParticipatingProvider)
                                               ? const ImageIcon(AssetImage(
                                                   'assets/images/skaterIcon_256.png'))
                                               : const Icon(
@@ -328,8 +328,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         rtu.rpcException != null &&
                                         rtu.user.isOnRoute &&
                                         !HiveSettingsDB.wantSeeFullOfProcession)
-                                      for (var friend in rtu
-                                          .mapPointFriends(rtu.friends))
+                                      for (var friend
+                                          in rtu.mapPointFriends(rtu.friends))
                                         Align(
                                           alignment: Alignment.lerp(
                                               Alignment.topLeft,
@@ -355,7 +355,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                   ]),
                               ]),
                             ),
-                          if (!ref.watch(isTrackingProvider) || !rtu.user.isOnRoute)
+                          if (!ref.watch(isTrackingProvider) ||
+                              !rtu.user.isOnRoute)
                             ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(5)),
@@ -382,15 +383,17 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                           : !ref.watch(isTrackingProvider)
                                               ? Text(Localize.of(context)
                                                   .bladenighttracking)
-                                              : ref.watch(isUserParticipatingProvider)
-                                                       //tracking in viewer mode not participating
+                                              : ref.watch(
+                                                      isUserParticipatingProvider)
+                                                  //tracking in viewer mode not participating
                                                   ? (activeEvent.status ==
                                                               EventStatus
                                                                   .confirmed ||
                                                           activeEvent.status ==
                                                               EventStatus
                                                                   .running)
-                                                      ? ref.watch(isActiveEventProvider)
+                                                      ? ref.watch(
+                                                              isActiveEventProvider)
                                                           ? Text(Localize.of(
                                                                   context)
                                                               .notOnRoute)
@@ -617,25 +620,27 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               ),
                             ),
                           ),
-                          Align(
-                            child: SizedBox(
-                              width: 25,
-                              height: 25,
-                              child: Stack(children: [
-                                Align(
-                                  child: CircularProgressIndicator(
-                                    color:
-                                        CupertinoTheme.of(context).primaryColor,
-                                    value: ref.watch(percentLeftProvider),
-                                    strokeWidth: 2,
-                                  ),
-                                ),
-                                Align(
-                                  child: Icon(CupertinoIcons.info_circle_fill,
+                          Builder(
+                            builder: (context) => Align(
+                              child: SizedBox(
+                                width: 25,
+                                height: 25,
+                                child: Stack(children: [
+                                  Align(
+                                    child: CircularProgressIndicator(
                                       color: CupertinoTheme.of(context)
-                                          .primaryColor),
-                                ),
-                              ]),
+                                          .primaryColor,
+                                      value: ref.watch(percentLeftProvider),
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                  Align(
+                                    child: Icon(CupertinoIcons.info_circle_fill,
+                                        color: CupertinoTheme.of(context)
+                                            .primaryColor),
+                                  ),
+                                ]),
+                              ),
                             ),
                           ),
                         ]),

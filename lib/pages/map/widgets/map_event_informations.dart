@@ -11,6 +11,7 @@ import '../../../models/realtime_update.dart';
 import '../../../models/route.dart';
 import '../../../providers/active_event_notifier_provider.dart';
 import '../../../providers/friends_provider.dart';
+import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 import '../../widgets/data_widget_left_right.dart';
@@ -144,7 +145,7 @@ class MapEventInformation extends StatelessWidget {
                                 width: 20,
                               ),
                             ),
-                            if (location.isTracking)
+                            if (context.watch(isTrackingProvider))
                               DataLeftRightContent(
                                 descriptionLeft:
                                     Localize.of(context).timeToHead,
@@ -161,7 +162,7 @@ class MapEventInformation extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            if (location.isTracking)
+                            if (context.watch(isTrackingProvider))
                               DataLeftRightContent(
                                 descriptionLeft:
                                     Localize.of(context).timeToTail,
@@ -243,7 +244,7 @@ class MapEventInformation extends StatelessWidget {
                       child: Text(Localize.of(context).me,
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
-                  if (location.isTracking)
+                  if (context.watch(isTrackingProvider))
                     GestureDetector(
                       child: Container(
                         color: CupertinoDynamicColor.resolve(

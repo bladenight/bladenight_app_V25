@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../models/follow_location_state.dart';
-import '../../pages/map/map_page_original.dart';
 import '../../providers/location_provider.dart';
 
 class FollowingLocationIcon extends StatelessWidget {

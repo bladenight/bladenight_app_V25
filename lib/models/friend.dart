@@ -113,7 +113,7 @@ class Friend with FriendMappable {
 
   String formatDistance() {
     int meters = 0;
-    if (relativeDistance != null) meters = relativeDistance!;
+    meters = relativeDistance;
     String s = '- m';
     if (meters.abs() == 0) {
       return s;

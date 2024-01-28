@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../providers/active_event_notifier_provider.dart';
+import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/shared_prefs_provider.dart';
 
@@ -43,7 +44,7 @@ class _PolyLines extends State<PolyLinesLayer> {
           context.watch(ShowOwnTrack.provider))
         Polyline(
           points: locationUpdate.userLatLongs,
-          strokeWidth: locationUpdate.isTracking ? 4 : 3,
+          strokeWidth: context.watch(isTrackingProvider) ? 4 : 3,
           borderColor: context.watch(MeColor.provider),
           color: context.watch(isTrackingProvider)
               ? const CupertinoDynamicColor.withBrightness(
