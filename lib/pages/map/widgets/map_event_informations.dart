@@ -7,12 +7,12 @@ import 'package:riverpod_context/riverpod_context.dart';
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/timeconverter_helper.dart';
-import '../../../models/realtime_update.dart';
 import '../../../models/route.dart';
 import '../../../providers/active_event_notifier_provider.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_data_warning.dart';
@@ -24,12 +24,10 @@ class MapEventInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var location = context.watch(locationProvider);
-    RealtimeUpdate rtu;
-    if (location.realtimeUpdate == null) {
+    var rtu = context.watch(realtimeDataProvider);
+    if (rtu == null) {
       return NoDataWarning(onReload: () {});
     }
-    rtu = location.realtimeUpdate as RealtimeUpdate;
     var friends = context.watch(friendsProvider.select(
         (fr) => fr.where((element) => element.isOnline && element.isActive)));
     var event = context.watch(activeEventProvider);
@@ -70,7 +68,8 @@ class MapEventInformation extends StatelessWidget {
                           DataLeftRightContent(
                             descriptionLeft: Localize.of(context).lastupdate,
                             descriptionRight: DateFormatter(Localize.current)
-                                .getFullDateTimeString(location.lastUpdate),
+                                .getFullDateTimeString(
+                                    context.watch(locationLastUpdateProvider)),
                             rightWidget: Align(
                               child: SizedBox(
                                 width: 20,
@@ -266,13 +265,13 @@ class MapEventInformation extends StatelessWidget {
                                     '⇥ ${((rtu.runningLength - rtu.user.position) / 1000).toStringAsFixed(1)} km',
                                 rightWidget: GestureDetector(
                                   onTap: () {
-                                    mapController.move(
-                                        LatLng(
+                                    /* mapController.move(
+                                        LatLng(context.watch(userLatLongProvider).
                                             location.userLatLng?.latitude ??
                                                 defaultLatitude,
                                             location.userLatLng?.longitude ??
                                                 defaultLongitude),
-                                        15);
+                                        15);*/
                                     Navigator.of(context).pop();
                                   },
                                   child: Icon(Icons.gps_fixed_sharp,

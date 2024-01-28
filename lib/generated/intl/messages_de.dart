@@ -562,7 +562,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "specialfunction": MessageLookupByLibrary.simpleMessage(
             "Sondereinstellungen - nur nach Rücksprache ändern!"),
         "speed": MessageLookupByLibrary.simpleMessage("Geschwindigkeit"),
-        "start": MessageLookupByLibrary.simpleMessage("Startpunkt"),
+        "start": MessageLookupByLibrary.simpleMessage("Start"),
         "startLocationWithoutParticipating":
             MessageLookupByLibrary.simpleMessage("Tracking ohne Teilnahme"),
         "startLocationWithoutParticipatingInfo":

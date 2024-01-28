@@ -579,7 +579,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "specialfunction": MessageLookupByLibrary.simpleMessage(
             "Fonctions spéciales - ne changez que si vous savez ce que vous faites !"),
         "speed": MessageLookupByLibrary.simpleMessage("vitesse"),
-        "start": MessageLookupByLibrary.simpleMessage("Point de départ"),
+        "start": MessageLookupByLibrary.simpleMessage("Commence le"),
         "startLocationWithoutParticipating":
             MessageLookupByLibrary.simpleMessage(
                 "Lieu de départ sans participation"),

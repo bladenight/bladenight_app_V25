@@ -26,7 +26,9 @@ import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
 
 class TrackProgressOverlay extends ConsumerStatefulWidget {
-  const TrackProgressOverlay({super.key});
+  const TrackProgressOverlay(this.controller, {super.key});
+
+  final MapController controller;
 
   @override
   ConsumerState<TrackProgressOverlay> createState() =>
@@ -65,7 +67,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     if (activeEvent.status == EventStatus.noevent) {
       return Stack(children: [
         Positioned(
-          top: MediaQuery.of(context).padding.top + 10,
+          top: MediaQuery
+              .of(context)
+              .padding
+              .top + 10,
           left: 15,
           right: 15,
           child: ClipPath(
@@ -82,8 +87,11 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                     child: Center(
                       child: Column(children: [
                         Text(
-                          Localize.of(context).noEventPlanned,
-                          style: CupertinoTheme.of(context)
+                          Localize
+                              .of(context)
+                              .noEventPlanned,
+                          style: CupertinoTheme
+                              .of(context)
                               .textTheme
                               .navTitleTextStyle,
                         ),
@@ -91,7 +99,9 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                           height: 30,
                         ),
                         if (activeEvent.rpcException != null)
-                          Text(Localize.of(context).dataCouldBeOutdated),
+                          Text(Localize
+                              .of(context)
+                              .dataCouldBeOutdated),
                         if (activeEvent.rpcException != null)
                           const ConnectionWarning(),
                       ]),
@@ -107,7 +117,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
       return Stack(
         children: [
           Positioned(
-            top: MediaQuery.of(context).padding.top + 10,
+            top: MediaQuery
+                .of(context)
+                .padding
+                .top + 10,
             left: 15,
             right: 15,
             child: GestureDetector(
@@ -118,18 +131,20 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                         CupertinoColors.systemBackground, context),
                     context: context,
                     builder: (context) {
-                      var mapController = MapController.maybeOf(context);
-                      if (mapController == null) {
-                        return Container();
-                      }
                       return Container(
                         constraints: BoxConstraints(
                           maxHeight: kIsWeb
-                              ? MediaQuery.of(context).size.height * 0.5
-                              : MediaQuery.of(context).size.height * 0.7,
+                              ? MediaQuery
+                              .of(context)
+                              .size
+                              .height * 0.5
+                              : MediaQuery
+                              .of(context)
+                              .size
+                              .height * 0.7,
                         ),
                         child: MapEventInformation(
-                          mapController: mapController,
+                          mapController: widget.controller,
                         ),
                       );
                     });
@@ -149,8 +164,11 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                           child: Center(
                             child: Column(children: [
                               Text(
-                                Localize.of(context).nodatareceived,
-                                style: CupertinoTheme.of(context)
+                                Localize
+                                    .of(context)
+                                    .nodatareceived,
+                                style: CupertinoTheme
+                                    .of(context)
                                     .textTheme
                                     .navTitleTextStyle,
                               ),
@@ -162,7 +180,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     child: Stack(children: [
                                       Align(
                                         child: CircularProgressIndicator(
-                                          color: CupertinoTheme.of(context)
+                                          color: CupertinoTheme
+                                              .of(context)
                                               .primaryColor,
                                           strokeWidth: 2,
                                         ),
@@ -186,13 +205,18 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               rtu.user.isOnRoute)
                             ClipRRect(
                               borderRadius:
-                                  const BorderRadius.all(Radius.circular(5)),
+                              const BorderRadius.all(Radius.circular(5)),
                               child: Column(children: <Widget>[
                                 SizedBox(
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '↦${((rtu.user.position) / 1000).toStringAsFixed(1)} km   ${((rtu.user.position) / rtu.runningLength * 100).toStringAsFixed(1)} %  ⇥${((rtu.runningLength - rtu.user.position) / 1000).toStringAsFixed(1)} km',
+                                      '↦${((rtu.user.position) / 1000)
+                                          .toStringAsFixed(1)} km   ${((rtu.user
+                                          .position) / rtu.runningLength * 100)
+                                          .toStringAsFixed(1)} %  ⇥${((rtu
+                                          .runningLength - rtu.user.position) /
+                                          1000).toStringAsFixed(1)} km',
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -205,51 +229,52 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                           rtu.runningLength == 0
                                               ? 0
                                               : rtu.tail.position /
-                                                  rtu.runningLength,
+                                              rtu.runningLength,
                                           rtu.runningLength == 0
                                               ? 0
                                               : rtu.user.position /
-                                                  rtu.runningLength,
+                                              rtu.runningLength,
                                           rtu.runningLength == 0
                                               ? 0
                                               : rtu.head.position /
-                                                  rtu.runningLength
+                                              rtu.runningLength
                                         ],
                                         backgroundColor:
-                                            Colors.grey.withOpacity(0.2),
-                                        pointColor: CupertinoTheme.of(context)
+                                        Colors.grey.withOpacity(0.2),
+                                        pointColor: CupertinoTheme
+                                            .of(context)
                                             .primaryColor
                                             .withOpacity(0.8),
                                         progressColor:
-                                            CupertinoColors.activeGreen,
+                                        CupertinoColors.activeGreen,
                                         start: rtu.runningLength == 0
                                             ? 0
                                             : rtu.tail.position /
-                                                (rtu.runningLength),
+                                            (rtu.runningLength),
                                         progress: rtu.runningLength == 0
                                             ? 0
                                             : rtu.head.position <
-                                                    rtu.user.position
-                                                ? rtu.user.position /
-                                                    rtu.runningLength
-                                                : rtu.head.position /
-                                                    rtu.runningLength),
+                                            rtu.user.position
+                                            ? rtu.user.position /
+                                            rtu.runningLength
+                                            : rtu.head.position /
+                                            rtu.runningLength),
                                   ),
                                 ]),
                                 if (activeEvent.status ==
-                                        EventStatus.confirmed ||
+                                    EventStatus.confirmed ||
                                     activeEvent.status == EventStatus.running)
                                   Stack(children: [
                                     //tail
                                     Align(
                                       alignment: Alignment.lerp(
-                                              Alignment.topLeft,
-                                              Alignment.topRight,
-                                              rtu.runningLength == 0
-                                                  ? 0
-                                                  : rtu.tail.position /
-                                                      rtu.runningLength)
-                                          as AlignmentGeometry,
+                                          Alignment.topLeft,
+                                          Alignment.topRight,
+                                          rtu.runningLength == 0
+                                              ? 0
+                                              : rtu.tail.position /
+                                              rtu.runningLength)
+                                      as AlignmentGeometry,
                                       child: SizedBox(
                                         height: MediaQuery.textScalerOf(context)
                                             .scale(20),
@@ -269,13 +294,13 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     //head
                                     Align(
                                       alignment: Alignment.lerp(
-                                              Alignment.topLeft,
-                                              Alignment.topRight,
-                                              rtu.runningLength == 0
-                                                  ? 0
-                                                  : rtu.head.position /
-                                                      rtu.runningLength)
-                                          as AlignmentGeometry,
+                                          Alignment.topLeft,
+                                          Alignment.topRight,
+                                          rtu.runningLength == 0
+                                              ? 0
+                                              : rtu.head.position /
+                                              rtu.runningLength)
+                                      as AlignmentGeometry,
                                       child: SizedBox(
                                         height: MediaQuery.textScalerOf(context)
                                             .scale(20),
@@ -287,11 +312,11 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                           ),
                                           fit: BoxFit.fill,
                                           height:
-                                              MediaQuery.textScalerOf(context)
-                                                  .scale(20),
+                                          MediaQuery.textScalerOf(context)
+                                              .scale(20),
                                           width:
-                                              MediaQuery.textScalerOf(context)
-                                                  .scale(20),
+                                          MediaQuery.textScalerOf(context)
+                                              .scale(20),
                                         ),
                                       ),
                                     ),
@@ -303,8 +328,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                           rtu.runningLength == 0
                                               ? 0
                                               : (rtu.user.position /
-                                                      rtu.runningLength) -
-                                                  0.015) as AlignmentGeometry,
+                                              rtu.runningLength) -
+                                              0.015) as AlignmentGeometry,
                                       //need correction of center
                                       child: SizedBox(
                                         width: MediaQuery.textScalerOf(context)
@@ -313,13 +338,13 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                             .scale(20),
                                         child: CircleAvatar(
                                           backgroundColor:
-                                              ref.watch(MeColor.provider),
+                                          ref.watch(MeColor.provider),
                                           child: ref.watch(
-                                                  isUserParticipatingProvider)
+                                              isUserParticipatingProvider)
                                               ? const ImageIcon(AssetImage(
-                                                  'assets/images/skaterIcon_256.png'))
+                                              'assets/images/skaterIcon_256.png'))
                                               : const Icon(
-                                                  Icons.gps_fixed_sharp),
+                                              Icons.gps_fixed_sharp),
                                         ),
                                       ),
                                     ),
@@ -329,22 +354,22 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         rtu.user.isOnRoute &&
                                         !HiveSettingsDB.wantSeeFullOfProcession)
                                       for (var friend
-                                          in rtu.mapPointFriends(rtu.friends))
+                                      in rtu.mapPointFriends(rtu.friends))
                                         Align(
                                           alignment: Alignment.lerp(
                                               Alignment.topLeft,
                                               Alignment.topRight,
                                               rtu.runningLength > 0.0
                                                   ? friend.relativeDistance /
-                                                      rtu.runningLength
+                                                  rtu.runningLength
                                                   : 0.0) as AlignmentGeometry,
                                           child: SizedBox(
                                             width:
-                                                MediaQuery.textScalerOf(context)
-                                                    .scale(20),
+                                            MediaQuery.textScalerOf(context)
+                                                .scale(20),
                                             height:
-                                                MediaQuery.textScalerOf(context)
-                                                    .scale(20),
+                                            MediaQuery.textScalerOf(context)
+                                                .scale(20),
                                             child: CircleAvatar(
                                               backgroundColor: friend.color,
                                               child: Text(
@@ -359,137 +384,168 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               !rtu.user.isOnRoute)
                             ClipRRect(
                               borderRadius:
-                                  const BorderRadius.all(Radius.circular(5)),
+                              const BorderRadius.all(Radius.circular(5)),
                               child: Column(children: <Widget>[
                                 if (!kIsWeb)
                                   SizedBox(
                                     child: Center(
                                       child: (!rtu.user.isOnRoute &&
-                                              !ref.watch(isTrackingProvider))
+                                          !ref.watch(isTrackingProvider))
                                           ? ((activeEvent.status ==
-                                                      EventStatus.confirmed ||
-                                                  activeEvent.status ==
-                                                      EventStatus.running)
-                                              ? FittedBox(
-                                                  child: Text(
-                                                      Localize.of(context)
-                                                          .bladenighttracking),
-                                                ) //Text when Event confirmed
-                                              : FittedBox(
-                                                  child: Text(
-                                                    '${activeEvent.status == EventStatus.finished ? Localize.of(context).finished : Localize.of(context).nextEvent} ${activeEvent.status == EventStatus.finished ? '' : DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(activeEvent.getUtcIso8601DateTime)}',
-                                                  ),
-                                                )) //empty when not confirmed no viewer mode available
+                                          EventStatus.confirmed ||
+                                          activeEvent.status ==
+                                              EventStatus.running)
+                                          ? FittedBox(
+                                        child: Text(
+                                            Localize
+                                                .of(context)
+                                                .bladenighttracking),
+                                      ) //Text when Event confirmed
+                                          : FittedBox(
+                                        child: Text(
+                                          '${activeEvent.status ==
+                                              EventStatus.finished ? Localize
+                                              .of(context)
+                                              .finished : Localize
+                                              .of(context)
+                                              .nextEvent} ${activeEvent
+                                              .status == EventStatus.finished
+                                              ? ''
+                                              : DateFormatter(
+                                              Localize.of(context))
+                                              .getLocalDayDateTimeRepresentation(
+                                              activeEvent
+                                                  .getUtcIso8601DateTime)}',
+                                        ),
+                                      )) //empty when not confirmed no viewer mode available
                                           : !ref.watch(isTrackingProvider)
-                                              ? Text(Localize.of(context)
-                                                  .bladenighttracking)
-                                              : ref.watch(
-                                                      isUserParticipatingProvider)
-                                                  //tracking in viewer mode not participating
-                                                  ? (activeEvent.status ==
-                                                              EventStatus
-                                                                  .confirmed ||
-                                                          activeEvent.status ==
-                                                              EventStatus
-                                                                  .running)
-                                                      ? ref.watch(
-                                                              isActiveEventProvider)
-                                                          ? Text(Localize.of(
-                                                                  context)
-                                                              .notOnRoute)
-                                                          : Text(
-                                                              DateFormatter(
-                                                                      Localize.of(
-                                                                          context))
-                                                                  .getLocalDayDateTimeRepresentation(
-                                                                      activeEvent
-                                                                          .getUtcIso8601DateTime),
-                                                            )
-                                                      : Container()
-                                                  : Text(Localize.of(context)
-                                                      .bladenightViewerTracking),
+                                          ? Text(Localize
+                                          .of(context)
+                                          .bladenighttracking)
+                                          : ref.watch(
+                                          isUserParticipatingProvider)
+                                      //tracking in viewer mode not participating
+                                          ? (activeEvent.status ==
+                                          EventStatus
+                                              .confirmed ||
+                                          activeEvent.status ==
+                                              EventStatus
+                                                  .running)
+                                          ? ref.watch(
+                                          isActiveEventProvider)
+                                          ? Text(Localize
+                                          .of(
+                                          context)
+                                          .notOnRoute)
+                                          : Text('${Localize.of(context).start} ${DateFormatter(
+                                            Localize.of(
+                                                context))
+                                            .getLocalDayDateTimeRepresentation(
+                                            activeEvent
+                                                .getUtcIso8601DateTime)}',
+                                      )
+                                          : Container()
+                                          : Text(Localize
+                                          .of(context)
+                                          .bladenightViewerTracking),
                                     ),
                                   ),
                                 if (kIsWeb)
                                   SizedBox(
                                       child: Center(
                                           child: (activeEvent.status ==
-                                                      EventStatus.confirmed ||
-                                                  activeEvent.status ==
-                                                      EventStatus.running)
+                                              EventStatus.confirmed ||
+                                              activeEvent.status ==
+                                                  EventStatus.running)
                                               ? Text(
-                                                  '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(ref.watch(locationLastUpdateProvider))}') //Text when Event confirmed
+                                              '${Localize
+                                                  .of(context)
+                                                  .showProcession} ${Localize
+                                                  .of(context)
+                                                  .lastupdate} ${DateFormatter(
+                                                  Localize.of(context))
+                                                  .getFullDateTimeString(
+                                                  ref.watch(
+                                                      locationLastUpdateProvider))}') //Text when Event confirmed
                                               : (activeEvent.status !=
-                                                          EventStatus
-                                                              .confirmed ||
-                                                      activeEvent.status ==
-                                                          EventStatus.running)
-                                                  ? kIsWeb
-                                                      ? FittedBox(
-                                                          child: Text(
-                                                            '${Localize.of(context).nextEvent} ${DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(activeEvent.getUtcIso8601DateTime)}',
-                                                          ),
-                                                        )
-                                                      : FittedBox(
-                                                          child: Text(
-                                                            DateFormatter(
-                                                                    Localize.of(
-                                                                        context))
-                                                                .getLocalDayDateTimeRepresentation(
-                                                                    activeEvent
-                                                                        .getUtcIso8601DateTime),
-                                                          ),
-                                                        )
-                                                  : Container()) //empty when not confirmed no viewermode available
-                                      ),
+                                              EventStatus
+                                                  .confirmed ||
+                                              activeEvent.status ==
+                                                  EventStatus.running)
+                                              ? kIsWeb
+                                              ? FittedBox(
+                                            child: Text(
+                                              '${Localize
+                                                  .of(context)
+                                                  .nextEvent} ${DateFormatter(
+                                                  Localize.of(context))
+                                                  .getLocalDayDateTimeRepresentation(
+                                                  activeEvent
+                                                      .getUtcIso8601DateTime)}',
+                                            ),
+                                          )
+                                              : FittedBox(
+                                            child: Text(
+                                              DateFormatter(
+                                                  Localize.of(
+                                                      context))
+                                                  .getLocalDayDateTimeRepresentation(
+                                                  activeEvent
+                                                      .getUtcIso8601DateTime),
+                                            ),
+                                          )
+                                              : Container()) //empty when not confirmed no viewermode available
+                                  ),
                                 if (activeEvent.status ==
-                                        EventStatus.confirmed ||
+                                    EventStatus.confirmed ||
                                     activeEvent.status == EventStatus.running)
                                   Stack(children: [
                                     SizedBox(
                                       height: 20,
                                       child: Progresso(
                                           backgroundColor:
-                                              Colors.grey.withOpacity(0.2),
+                                          Colors.grey.withOpacity(0.2),
                                           points: [
                                             rtu.runningLength == 0
                                                 ? 0
                                                 : rtu.tail.position /
-                                                    rtu.runningLength,
+                                                rtu.runningLength,
                                             rtu.runningLength == 0
                                                 ? 0
                                                 : rtu.head.position /
-                                                    rtu.runningLength
+                                                rtu.runningLength
                                           ],
-                                          pointColor: CupertinoTheme.of(context)
+                                          pointColor: CupertinoTheme
+                                              .of(context)
                                               .primaryColor
                                               .withOpacity(0.8),
                                           progressColor:
-                                              CupertinoTheme.of(context)
-                                                  .primaryColor,
+                                          CupertinoTheme
+                                              .of(context)
+                                              .primaryColor,
                                           start: rtu.runningLength == 0
                                               ? 0
                                               : rtu.tail.position /
-                                                  (rtu.runningLength),
+                                              (rtu.runningLength),
                                           progress: rtu.runningLength == 0
                                               ? 0
                                               : rtu.head.position /
-                                                  rtu.runningLength),
+                                              rtu.runningLength),
                                     ),
                                   ]),
                                 if (activeEvent.status ==
-                                        EventStatus.confirmed ||
+                                    EventStatus.confirmed ||
                                     activeEvent.status == EventStatus.running)
                                   Stack(children: [
                                     Align(
                                       alignment: Alignment.lerp(
-                                              Alignment.topLeft,
-                                              Alignment.topRight,
-                                              rtu.runningLength == 0
-                                                  ? 0
-                                                  : rtu.head.position /
-                                                      rtu.runningLength)
-                                          as AlignmentGeometry,
+                                          Alignment.topLeft,
+                                          Alignment.topRight,
+                                          rtu.runningLength == 0
+                                              ? 0
+                                              : rtu.head.position /
+                                              rtu.runningLength)
+                                      as AlignmentGeometry,
                                       child: const Image(
                                         image: AssetImage(
                                           'assets/images/skatechildmunichgreen.png',
@@ -500,13 +556,13 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     ),
                                     Align(
                                       alignment: Alignment.lerp(
-                                              Alignment.topLeft,
-                                              Alignment.topRight,
-                                              rtu.runningLength == 0
-                                                  ? 0
-                                                  : rtu.tail.position /
-                                                      rtu.runningLength)
-                                          as AlignmentGeometry,
+                                          Alignment.topLeft,
+                                          Alignment.topRight,
+                                          rtu.runningLength == 0
+                                              ? 0
+                                              : rtu.tail.position /
+                                              rtu.runningLength)
+                                      as AlignmentGeometry,
                                       child: const Image(
                                         image: AssetImage(
                                           'assets/images/skatechildmunichred.png',
@@ -522,13 +578,16 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               activeEvent.status == EventStatus.running)
                             Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: [
                                   // estimated time of arrival is time from start
                                   Flexible(
                                     fit: FlexFit.tight,
                                     child: Text(
-                                      '⏱ Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 120 * 60 * 1000)}',
+                                      '⏱ Σ ${TimeConverter
+                                          .millisecondsToDateTimeString(
+                                          value: rtu.timeTrainComplete(),
+                                          maxvalue: 120 * 60 * 1000)}',
                                       maxLines: 1,
                                       overflow: TextOverflow.clip,
                                       softWrap: false,
@@ -542,7 +601,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     Flexible(
                                       fit: FlexFit.tight,
                                       child: Text(
-                                        '⇥ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail(), maxvalue: 120 * 60 * 1000)}',
+                                        '⇥ ${TimeConverter
+                                            .millisecondsToDateTimeString(
+                                            value: rtu.timeUserToTail(),
+                                            maxvalue: 120 * 60 * 1000)}',
                                         maxLines: 1,
                                         softWrap: false,
                                         overflow: TextOverflow.fade,
@@ -554,7 +616,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                   Flexible(
                                     fit: FlexFit.tight,
                                     child: Text(
-                                      '📏 ${(rtu.distanceOfTrainComplete() / 1000).toStringAsFixed(1)} km',
+                                      '📏 ${(rtu.distanceOfTrainComplete() /
+                                          1000).toStringAsFixed(1)} km',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.end,
@@ -595,12 +658,19 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                           Radius.circular(5)),
                                       child: ColoredBox(
                                         color: activeEvent.status ==
-                                                EventStatus.cancelled
+                                            EventStatus.cancelled
                                             ? Colors.redAccent
                                             : Colors.blueGrey,
                                         child: FittedBox(
                                           child: Text(
-                                            '${Localize.of(context).status} ${activeEvent.status == EventStatus.cancelled ? Localize.of(context).canceled : Localize.of(context).pending}',
+                                            '${Localize
+                                                .of(context)
+                                                .status} ${activeEvent.status ==
+                                                EventStatus.cancelled ? Localize
+                                                .of(context)
+                                                .canceled : Localize
+                                                .of(context)
+                                                .pending}',
                                           ),
                                         ),
                                       ),
@@ -612,36 +682,52 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                           Center(
                             child: FittedBox(
                               child: Text(
-                                '${Localize.of(context).route}: ${rtu.routeName}  '
-                                '${Localize.of(context).length}: ${((rtu.runningLength) / 1000).toStringAsFixed(1)} km  '
-                                '${activeEvent.status == EventStatus.confirmed || activeEvent.status == EventStatus.running ? "${rtu.usersTracking.toString()} ${Localize.of(context).trackers}" : ""}',
+                                '${Localize
+                                    .of(context)
+                                    .route}: ${rtu.routeName}  '
+                                    '${Localize
+                                    .of(context)
+                                    .length}: ${((rtu.runningLength) / 1000)
+                                    .toStringAsFixed(1)} km  '
+                                    '${activeEvent.status ==
+                                    EventStatus.confirmed ||
+                                    activeEvent.status == EventStatus.running
+                                    ? "${rtu.usersTracking
+                                    .toString()} ${Localize
+                                    .of(context)
+                                    .trackers}"
+                                    : ""}',
                                 overflow: TextOverflow.fade,
                                 maxLines: 1,
                               ),
                             ),
                           ),
                           Builder(
-                            builder: (context) => Align(
-                              child: SizedBox(
-                                width: 25,
-                                height: 25,
-                                child: Stack(children: [
-                                  Align(
-                                    child: CircularProgressIndicator(
-                                      color: CupertinoTheme.of(context)
-                                          .primaryColor,
-                                      value: ref.watch(percentLeftProvider),
-                                      strokeWidth: 2,
-                                    ),
+                            builder: (context) =>
+                                Align(
+                                  child: SizedBox(
+                                    width: 25,
+                                    height: 25,
+                                    child: Stack(children: [
+                                      Align(
+                                        child: CircularProgressIndicator(
+                                          color: CupertinoTheme
+                                              .of(context)
+                                              .primaryColor,
+                                          value: ref.watch(percentLeftProvider),
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                      Align(
+                                        child: Icon(
+                                            CupertinoIcons.info_circle_fill,
+                                            color: CupertinoTheme
+                                                .of(context)
+                                                .primaryColor),
+                                      ),
+                                    ]),
                                   ),
-                                  Align(
-                                    child: Icon(CupertinoIcons.info_circle_fill,
-                                        color: CupertinoTheme.of(context)
-                                            .primaryColor),
-                                  ),
-                                ]),
-                              ),
-                            ),
+                                ),
                           ),
                         ]),
                       );
@@ -678,12 +764,12 @@ class InfoClipper extends CustomClipper<Path> {
       )
       ..lineTo(width / 2 - nozzleHeight / 2, height - nozzleHeight)
 
-      //nozzle
+    //nozzle
       ..arcToPoint(Offset(width / 2, height - 5),
+          radius: Radius.circular(nozzleHeight), clockwise: false)..arcToPoint(
+          Offset(width / 2 + nozzleHeight / 2, height - nozzleHeight),
           radius: Radius.circular(nozzleHeight), clockwise: false)
-      ..arcToPoint(Offset(width / 2 + nozzleHeight / 2, height - nozzleHeight),
-          radius: Radius.circular(nozzleHeight), clockwise: false)
-      //end nozzle
+    //end nozzle
       ..lineTo(width - r, height - nozzleHeight)
       ..quadraticBezierTo(
         width - r * rfactor,
@@ -692,8 +778,8 @@ class InfoClipper extends CustomClipper<Path> {
         height - r - nozzleHeight,
       )
 
-      //path.quadraticBezierTo(20, height - 20, 30, height);
-      // path.lineTo(width, height - r - 30);
+    //path.quadraticBezierTo(20, height - 20, 30, height);
+    // path.lineTo(width, height - r - 30);
       ..lineTo(width, r * rfactor)
       ..quadraticBezierTo(
         //corner right top

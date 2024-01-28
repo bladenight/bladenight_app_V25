@@ -5,7 +5,8 @@ class MessageTest {
   void main() {
     testWidgets('formatting text ', (WidgetTester tester) async {
       var text = 'await <b>MessagesDb</b>.messagesList';
-      var result = await tester.pumpWidget(FormatedText(text));
+      await tester.pumpWidget(FormatedText(text));
+
       final titleFinder = find.text('T');
       assert(titleFinder.hasFound == true);
     });

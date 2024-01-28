@@ -2345,10 +2345,10 @@ class Localize {
     );
   }
 
-  /// `Start point`
+  /// `Start`
   String get start {
     return Intl.message(
-      'Start point',
+      'Start',
       name: 'start',
       desc: '',
       args: [],

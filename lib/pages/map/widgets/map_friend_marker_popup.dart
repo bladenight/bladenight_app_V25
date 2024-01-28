@@ -106,7 +106,7 @@ class _MapFriendMarkerPopupState extends State<MapFriendMarkerPopup> {
           DataLeftRightContent(
               descriptionLeft: Localize.of(context).metersOnRoute,
               descriptionRight:
-                  '${widget.marker.friend.specialValue > 0 ? widget.marker.friend.absolutePosition ?? '-' : widget.marker.friend.relativeDistance ?? '-'} m',
+                  '${widget.marker.friend.specialValue > 0 ? widget.marker.friend.absolutePosition : widget.marker.friend.relativeDistance} m',
               rightWidget: Container()),
           Divider(
             height: 2,

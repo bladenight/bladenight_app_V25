@@ -348,8 +348,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                       ),
                   ],
                   //end tail marker
-                  //arrows for drive Direction
-                  //end heading marker
+
+                  //begin skater head marker
                   if (runningRoutePoints != null) ...[
                     if (runningRoutePoints.isNotEmpty)
                       //Skater head marker -set as 2nd because tail overlay drawn first
@@ -381,7 +381,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         ),
                       ),
                   ],
-                  //End SkaterHeadMarker
+                  //end skater head marker
                   //finishMarker
                   if (runningRoutePoints != null &&
                       runningRoutePoints.isNotEmpty) ...[

@@ -309,7 +309,7 @@
   "showProcession": "Darstellung aktueller Verlauf der Münchener BladeNight",
   "showWeblinkToRoute": "Zeige QRCode zum Weblink",
   "speed": "Geschwindigkeit",
-  "start": "Startpunkt",
+  "start": "Start",
   "startLocationWithoutParticipating": "Tracking ohne Teilnahme",
   "startLocationWithoutParticipatingInfo": "Bitte Aufmerksam lesen.\nDies startet die Standortdarstellung auf der Karte ohne Teilnahme an der BladeNight und überträgt zur Berechnung der Zeiten deinen Standort auf den Server. Deine Freunde im Zug werden Dir angezeigt. Die Zeit zum Zuganfang /-ende von deinem Standort werden berechnet. Weiterhin, werden deine Geschwindigkeit und Trackingdaten aufgezeichnet die du speichern kannst. Bitte diese Funktion nicht verwenden, wenn du an der BladeNight teilnimmst. Der Modus muss manuell beendet werden. \nSoll dies gestartet werden?",
   "startParticipationTracking": "Teilnahme an BladeNight starten",

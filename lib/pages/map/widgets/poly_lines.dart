@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../providers/active_event_notifier_provider.dart';
@@ -8,17 +9,21 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/shared_prefs_provider.dart';
 
-class PolyLinesLayer extends StatefulWidget {
+class PolyLinesLayer extends ConsumerStatefulWidget {
   const PolyLinesLayer({super.key});
 
   @override
-  State<StatefulWidget> createState() => _PolyLines();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PolyLines();
 }
 
-class _PolyLines extends State<PolyLinesLayer> {
+class _PolyLines extends ConsumerState<PolyLinesLayer> {
   @override
   Widget build(BuildContext context) {
-    var locationUpdate = context.watch(locationProvider);
+    var locationUpdate = ref.watch(locationProvider);
+    var activeEvent = ref.watch(activeEventProvider);
+    var runningRoutePoints = locationUpdate.realtimeUpdate
+        ?.runningRoute(activeEvent.activeEventRoutePoints);
+
     return PolylineLayer(polylines: [
       if (context.watch(activeEventProvider).activeEventRoutePoints.isNotEmpty)
         Polyline(
@@ -39,6 +44,16 @@ class _PolyLines extends State<PolyLinesLayer> {
           borderStrokeWidth: context.watch(isTrackingProvider) ? 4 : 7,
           isDotted: false, //ref.watch(isTrackingProvider),
         ),
+
+      if (runningRoutePoints != null && runningRoutePoints.isNotEmpty)
+        Polyline(
+            points: runningRoutePoints,
+            color: CupertinoDynamicColor.withBrightness(
+                color: context.watch(ThemePrimaryColor.provider),
+                darkColor: ref.watch(ThemePrimaryDarkColor.provider)),
+            strokeWidth: 3,
+            borderStrokeWidth: 5.0,
+            isDotted: true),
       //user track
       if (locationUpdate.userLatLongs.isNotEmpty &&
           context.watch(ShowOwnTrack.provider))

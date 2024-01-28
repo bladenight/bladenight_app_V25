@@ -39,6 +39,7 @@ import '../models/user_trackpoint.dart';
 import 'active_event_notifier_provider.dart';
 import 'is_tracking_provider.dart';
 import 'network_connection_provider.dart';
+import 'realtime_data_provider.dart';
 
 ///[LocationProvider] gets actual procession of Bladenight
 ///when tracking is active is result included users position and friends
@@ -362,7 +363,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onLocation(bg.Location location) {
-    if (!kIsWeb) BnLog.trace(text: '_onLocation $location');
+    //BnLog.trace(text: '_onLocation $location');
     updateUserLocation(location);
     sendLocation(location);
   }
@@ -432,7 +433,7 @@ class LocationProvider with ChangeNotifier {
       _userLatLongs.add(userLatLng);
     }
     if (!_isInBackground) {
-      //notifyListeners();
+      notifyListeners();
     }
   }
 
@@ -660,7 +661,6 @@ class LocationProvider with ChangeNotifier {
               methodName: '_startTracking');
         }
 
-        _isTracking = bgGeoLocState.enabled;
         _startedTrackingTime = DateTime.now();
         _stoppedAfterMaxTime = false;
         setUpdateTimer(true);
@@ -882,6 +882,7 @@ class LocationProvider with ChangeNotifier {
 
     _lastUpdate = DateTime.now();
     _realtimeUpdate = update;
+    ProviderContainer().read(realtimeDataProvider.notifier).update((state) => update);
     if (!kIsWeb) {
       BnLog.trace(
           className: 'locationProvider',
@@ -983,6 +984,7 @@ class LocationProvider with ChangeNotifier {
           return;
         }
         _realtimeUpdate = update;
+        ProviderContainer().read(realtimeDataProvider.notifier).update((state) => update);
       }
 
       _lastUpdate = dtNow;
@@ -1293,10 +1295,6 @@ final gpsLocationPermissionsStatusProvider = Provider((ref) {
 
 final isUserParticipatingProvider = Provider((ref) {
   return ref.watch(locationProvider.select((l) => l.userIsParticipant));
-});
-
-final hasNewRealtimeData = Provider((ref) {
-  return ref.watch(locationProvider.select((l) => l.realtimeUpdate));
 });
 
 ///Watch active [Event]

@@ -274,13 +274,14 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                 ),
               ),
               const PolyLinesLayer(),
-              const MapButtonsLayer(),
-              const CustomLocationLayer(),
               const MarkersLayer(),
+              const CustomLocationLayer(),
+              //needs map controller
+              TrackProgressOverlay(controller),
+              const MapButtonsLayer(),
             ],
           ),
           const UserSpeedAndOdometerOverlay(),
-          const TrackProgressOverlay(),
         ]),
       ),
     );

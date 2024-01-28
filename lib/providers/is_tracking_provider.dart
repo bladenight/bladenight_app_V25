@@ -6,7 +6,7 @@ import 'location_provider.dart';
 
 part 'is_tracking_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true) //important not auto disposing when tracking is restarted
 class IsTracking extends _$IsTracking {
   @override
   bool build() {
