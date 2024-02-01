@@ -43,7 +43,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   late FollowLocationStates followLocationState =
       FollowLocationStates.followOff;
   bool _webStartedTrainFollow = false;
-  Timer? _updateTimer;
+  Timer? _updateRealTimeDataTimer;
   bool _firstRefresh = true;
 
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
@@ -91,14 +91,14 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   }
 
   void resumeUpdates({bool force = false}) {
-    _updateTimer?.cancel();
+    _updateRealTimeDataTimer?.cancel();
     if (force || _firstRefresh) {
       print('_firstRefresh resumeUpdates');
       ref.read(locationProvider).refresh(forceUpdate: force);
       _firstRefresh = false;
     }
     //update data if not tracking
-    _updateTimer = Timer.periodic(
+    _updateRealTimeDataTimer = Timer.periodic(
       //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
       const Duration(seconds: defaultRealtimeUpdateInterval),
       (timer) {
@@ -123,8 +123,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
           methodName: 'pauseUpdates',
           text: 'update Paused');
     }
-    _updateTimer?.cancel();
-    _updateTimer = null;
+    _updateRealTimeDataTimer?.cancel();
+    _updateRealTimeDataTimer = null;
   }
 
   void startFollowingMeLocation() {
@@ -175,12 +175,14 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   }
 
   ///Toggles between location tracking and view without user pos
+
   void toggleLocationService() async {
     ref.read(isTrackingProvider.notifier).toggleTracking(true);
   }
 
   ///Toggles between user position and view with user pos
   void toggleViewerLocationService() async {
+
     if (ref.read(isTrackingProvider)) {
       ref.read(isTrackingProvider.notifier).toggleTracking(false);
       return;
@@ -192,6 +194,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
         negativeButtonTitle:
             Localize.of(context).no); //no neutral button on android
     if (clickedButton == CustomButton.positiveButton) {
+
       ref.read(isTrackingProvider.notifier).toggleTracking(false);
     }
   }
@@ -207,6 +210,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       key: scaffoldMessengerKey,
       child: CupertinoPageScaffold(
         child: Stack(children: [
+
           FlutterMap(
             mapController: controller,
             options: MapOptions(

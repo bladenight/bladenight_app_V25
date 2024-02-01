@@ -68,9 +68,6 @@ class ActiveEventProvider extends ChangeNotifier {
           _event = rpcEvent.copyWith(status:  EventStatus.finished);
         }*/
         _event = rpcEvent;
-        if (kDebugMode) {
-          print('SendToWatch aep72 update Event $event' );
-        }
         SendToWatch.updateEvent(rpcEvent);
         var oldEventInPrefs =  HiveSettingsDB.getActualEvent;
         //get routepoints on eventupdate to update Map

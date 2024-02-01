@@ -67,7 +67,7 @@ class _MapLayerState extends State<MapLayer> {
       children: [
         const MapTileLayer(),
         PolylineLayer(
-          polylines: widget.polyLines,
+          polylines:widget.polyLines,// context.watch(polyLinesProvider),// widget.polyLines,
         ),
         PopupMarkerLayer(
           options: PopupMarkerLayerOptions(

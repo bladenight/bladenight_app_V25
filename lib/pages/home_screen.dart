@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:riverpod_context/riverpod_context.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uni_links2/uni_links.dart';
 
 import '../app_settings/server_connections.dart';
@@ -22,16 +22,16 @@ import 'widgets/intro_slider.dart';
 
 bool _initialURILinkHandled = false;
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   static const String routeName = '/homeScreen';
 
   const HomeScreen({super.key, int tabIndex = 0});
 
   @override
-  State<StatefulWidget> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   //added deep links bna.bladenight.app
 
   StreamSubscription? _uniLinkStreamSubscription;
@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _initImages() async {
     var imagesLoaded = false;
     if (mounted) {
-      imagesLoaded = await context.refresh(updateImagesAndLinksProvider.future);
+      imagesLoaded = await ref.refresh(updateImagesAndLinksProvider.future);
     }
     if (!imagesLoaded) {
       await Future.delayed(const Duration(seconds: 5));

@@ -28,7 +28,7 @@ class TimerNotifier extends StateNotifier<TimerModel> {
     return duration;
   }
 
-  ///Start timer by externa
+  ///Start timer by external
   void start() {
     _startTimer();
   }
@@ -58,7 +58,7 @@ class TimerNotifier extends StateNotifier<TimerModel> {
   void _reset() {
     _tickerSubscription?.cancel();
     state = _initialState;
-    LocationProvider.instance.refresh();
+    LocationProvider.instance.getLastRealtimeData();
     _startTimer();
   }
 
