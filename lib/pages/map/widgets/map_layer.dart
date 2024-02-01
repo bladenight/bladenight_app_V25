@@ -1,18 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
-import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
-
 
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
 import '../../../models/event.dart';
 import '../../../models/route.dart';
-import 'bn_dark_container.dart';
 import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
+import 'map_tile_layer.dart';
 
 class MapLayer extends StatefulWidget {
   const MapLayer(
@@ -39,7 +36,7 @@ class MapLayer extends StatefulWidget {
 
 class _MapLayerState extends State<MapLayer> {
   /// Used to trigger showing/hiding of popups.
-  final PopupController _popupLayerController = PopupController();
+  final PopupController _popupMarkerController = PopupController();
 
   @override
   Widget build(BuildContext context) {
@@ -56,46 +53,19 @@ class _MapLayerState extends State<MapLayer> {
             ? MapSettings.maxZoom
             : MapSettings.maxZoomDefault,
         initialCenter: widget.startPoint,
-        cameraConstraint:HiveSettingsDB.openStreetMapEnabled ||
+        cameraConstraint: HiveSettingsDB.openStreetMapEnabled ||
                 widget.event.hasSpecialStartPoint
             ? CameraConstraint.contain(bounds: MapSettings.mapOnlineBoundaries)
-            : CameraConstraint.contain(bounds: MapSettings.mapOfflineBoundaries),
+            : CameraConstraint.contain(
+                bounds: MapSettings.mapOfflineBoundaries),
         interactionOptions: const InteractionOptions(
           flags: InteractiveFlag.all,
           enableMultiFingerGestureRace: true,
         ),
-        onTap: (_, __) => _popupLayerController.hideAllPopups(),
+        onTap: (_, __) => _popupMarkerController.hideAllPopups(),
       ),
       children: [
-        _darkModeContainerIfEnabled(
-          TileLayer(
-            minNativeZoom: HiveSettingsDB.openStreetMapEnabled
-                ? MapSettings.minNativeZoom
-                : MapSettings.minNativeZoomDefault,
-            maxNativeZoom: HiveSettingsDB.openStreetMapEnabled
-                ? MapSettings.maxNativeZoom
-                : MapSettings.maxNativeZoomDefault,
-            minZoom: HiveSettingsDB.openStreetMapEnabled
-                ? MapSettings.minZoom
-                : MapSettings.minZoomDefault,
-            maxZoom: HiveSettingsDB.openStreetMapEnabled
-                ? MapSettings.maxZoom
-                : MapSettings.maxZoomDefault,
-            urlTemplate: HiveSettingsDB.openStreetMapEnabled ||
-                    widget.event.hasSpecialStartPoint
-                ? MapSettings.openStreetMapLinkString //use own ts
-                : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
-            evictErrorTileStrategy:
-                EvictErrorTileStrategy.notVisibleRespectMargin,
-            tileProvider: HiveSettingsDB.openStreetMapEnabled ||
-                    widget.event.hasSpecialStartPoint
-                ? CancellableNetworkTileProvider()
-                : AssetTileProvider(),
-            errorImage: const AssetImage(
-              'assets/images/skatemunichmaperror.png',
-            ),
-          ),
-        ),
+        const MapTileLayer(),
         PolylineLayer(
           polylines: widget.polyLines,
         ),
@@ -116,7 +86,7 @@ class _MapLayerState extends State<MapLayer> {
             ),
             markerCenterAnimation: const MarkerCenterAnimation(),
             markers: widget.markers,
-            popupController: _popupLayerController,
+            popupController: _popupMarkerController,
 
             markerTapBehavior: MarkerTapBehavior.togglePopup(),
             // : MarkerTapBehavior.togglePopupAndHideRest(),
@@ -128,13 +98,4 @@ class _MapLayerState extends State<MapLayer> {
       ],
     );
   }
-
-  Widget _darkModeContainerIfEnabled(Widget child) {
-    if (CupertinoTheme.brightnessOf(context) == Brightness.light) {
-      return child;
-    }
-
-    return bnDarkModeTilesContainerBuilder(context, child);
-  }
 }
-

@@ -59,7 +59,7 @@ class Event with EventMappable implements Comparable {
   final double? startPointLongitude;
   @MappableField(key: 'stp') //startPointInfo
   final String? startPoint;
-  @MappableField(key: 'isa') //startPointInfo
+  @MappableField(key: 'isa') //event is running - means it't after start time or manual active
   final bool isActive;
 
   @MappableField(key: 'lastupdate')

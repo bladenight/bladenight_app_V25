@@ -170,7 +170,7 @@ Future<void> initFlutterChannel() async {
           LocationProvider.instance.getLastRealtimeData();
           if (LocationProvider.instance.realtimeUpdate != null) {
             SendToWatch.updateRealtimeData(
-                LocationProvider.instance.realtimeUpdate.toJson());
+                LocationProvider.instance.realtimeUpdate!.toJson());
           }
         } catch (e) {
           if (!kIsWeb) {

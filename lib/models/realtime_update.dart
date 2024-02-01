@@ -177,6 +177,15 @@ class RealtimeUpdate with RealtimeUpdateMappable {
       } else {
         if (length + segmentLength >= headPos) {
           running.add(a);
+          //calculate missing part
+          double missingLength = headPos - length;
+          if (missingLength <= segmentLength) {
+            double relativePositionOnSegment = missingLength / segmentLength;
+            double lat = a.latitude + relativePositionOnSegment * (b.latitude - a.latitude);
+            double lon = a.longitude + relativePositionOnSegment * (b.longitude - a.longitude);
+            var endLatLong = LatLng(lat,lon);
+            running.add(endLatLong);
+          }
           break;
         } else {
           length += segmentLength;

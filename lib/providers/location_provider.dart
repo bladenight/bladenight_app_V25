@@ -127,7 +127,7 @@ class LocationProvider with ChangeNotifier {
 
   RealtimeUpdate? _realtimeUpdate;
 
-  get realtimeUpdate => _realtimeUpdate;
+  RealtimeUpdate? get realtimeUpdate => _realtimeUpdate;
 
   bool _isHead = false;
   bool _isTail = false;
@@ -512,7 +512,7 @@ class LocationProvider with ChangeNotifier {
         break;
       case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_DENIED:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.denied;
-        stopTracking();
+        ProviderContainer().read(locationProvider.notifier).stopTracking();
         break;
       case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_ALWAYS:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.always;
@@ -663,6 +663,7 @@ class LocationProvider with ChangeNotifier {
 
         _startedTrackingTime = DateTime.now();
         _stoppedAfterMaxTime = false;
+        _isTracking = bgGeoLocState.enabled;
         setUpdateTimer(true);
         ActiveEventProvider.instance.refresh(forceUpdate: true);
         notifyListeners();
@@ -882,7 +883,6 @@ class LocationProvider with ChangeNotifier {
 
     _lastUpdate = DateTime.now();
     _realtimeUpdate = update;
-    ProviderContainer().read(realtimeDataProvider.notifier).update((state) => update);
     if (!kIsWeb) {
       BnLog.trace(
           className: 'locationProvider',
@@ -923,6 +923,8 @@ class LocationProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  int _maxFails = 3;
 
   ///Refresh [RealTimeData] when location has no data for 4500ms with tracking
   ///15 s without tracking
@@ -978,16 +980,22 @@ class LocationProvider with ChangeNotifier {
           _realUserSpeedKmh = null;
           SendToWatch.setUserSpeed('- km/h');
           _updateWatchData();
+          _maxFails--;
+          if (_maxFails <= 0) {
+            _realtimeUpdate = null;
+            ;
+            _maxFails = 3;
+          }
           if (!_isInBackground) {
             notifyListeners();
           }
           return;
         }
         _realtimeUpdate = update;
-        ProviderContainer().read(realtimeDataProvider.notifier).update((state) => update);
       }
 
       _lastUpdate = dtNow;
+      _maxFails = 3;
       if (_realtimeUpdate != null &&
           _realtimeUpdate?.head != null &&
           _realtimeUpdate?.head.longitude != 0.0) {
@@ -1021,7 +1029,7 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  void checkUserFinishedOrEndEvent() {
+  void checkUserFinishedOrEndEvent() async {
     try {
       //Check for 'user reached finish' event and inform user
       Duration eventRuntime = DateTime.now()
@@ -1053,7 +1061,9 @@ class LocationProvider with ChangeNotifier {
                   methodName: 'checkUserFinishedOrEndEvent',
                   text: 'User reached finish - auto stop');
             }
-            stopTracking();
+            await ProviderContainer()
+                .read(locationProvider.notifier)
+                .stopTracking();
           } else {
             NotificationHelper().showString(
                 id: DateTime.now().hashCode,
@@ -1082,7 +1092,9 @@ class LocationProvider with ChangeNotifier {
           !_stoppedAfterMaxTime) {
         _stoppedAfterMaxTime = true;
         _userReachedFinishDateTime == null;
-        stopTracking();
+        await ProviderContainer()
+            .read(locationProvider.notifier)
+            .stopTracking();
 
         //Alert for overtime or finish event
         if (ActiveEventProvider.instance.event.status == EventStatus.finished) {
@@ -1167,7 +1179,7 @@ class LocationProvider with ChangeNotifier {
         LocationStore.clearTrackPointStore();
         return true;
       }
-      //Triggers startlocation
+      //Triggers start location service
       var odoResetResult =
           await bg.BackgroundGeolocation.setOdometer(0.0).then((value) {
         _odometer = value.odometer;
@@ -1299,7 +1311,8 @@ final isUserParticipatingProvider = Provider((ref) {
 
 ///Watch active [Event]
 final isActiveEventProvider = Provider((ref) {
-  return ref.watch(locationProvider.select((l) => l.eventIsActive));
+  return ref.watch(
+      realtimeDataProvider.select((l) => l == null ? false : l.eventIsActive));
 });
 
 final bgNetworkConnectedProvider = Provider((ref) {

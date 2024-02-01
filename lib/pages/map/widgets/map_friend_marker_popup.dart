@@ -41,7 +41,7 @@ class _MapFriendMarkerPopupState extends State<MapFriendMarkerPopup> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
+                  padding: const EdgeInsets.only(top: 5, left: 20, right: 20),
                   child: Container(
                     constraints: const BoxConstraints(maxHeight: 30),
                     child: Row(
@@ -92,7 +92,7 @@ class _MapFriendMarkerPopupState extends State<MapFriendMarkerPopup> {
 
   Widget _cardDescription(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 00, left: 20, right: 20),
+      padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -108,6 +108,12 @@ class _MapFriendMarkerPopupState extends State<MapFriendMarkerPopup> {
               descriptionRight:
                   '${widget.marker.friend.specialValue > 0 ? widget.marker.friend.absolutePosition : widget.marker.friend.relativeDistance} m',
               rightWidget: Container()),
+          DataLeftRightContent(
+              descriptionLeft: Localize.of(context).position,
+              descriptionRight:
+              'Lat:${widget.marker.point.latitude.toStringAsFixed(6)} Lon:${widget.marker.point.longitude.toStringAsFixed(6)}',
+              rightWidget: Container()),
+
           Divider(
             height: 2,
             color: CupertinoTheme.of(context).primaryColor,

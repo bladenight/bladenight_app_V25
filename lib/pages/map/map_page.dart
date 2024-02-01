@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,9 +23,10 @@ import '../../models/route.dart';
 import '../../providers/active_event_notifier_provider.dart';
 import '../../providers/is_tracking_provider.dart';
 import '../../providers/location_provider.dart';
-import 'widgets/bn_dark_container.dart';
+import '../../providers/realtime_data_provider.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/map_buttons.dart';
+import 'widgets/map_tile_layer.dart';
 import 'widgets/markers_layer.dart';
 import 'widgets/poly_lines.dart';
 import 'widgets/track_progress_overlay.dart';
@@ -60,7 +61,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   void dispose() {
     pauseUpdates();
     WidgetsBinding.instance.removeObserver(this);
-    _popupLayerController.dispose();
+    _popupController.dispose();
     super.dispose();
   }
 
@@ -199,7 +200,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
-  final PopupController _popupLayerController = PopupController();
+  final PopupController _popupController = PopupController();
 
   @override
   Widget build(BuildContext context) {
@@ -235,48 +236,20 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                 flags: InteractiveFlag.all,
                 enableMultiFingerGestureRace: true,
               ),
-              onTap: (_, __) => _popupLayerController.hideAllPopups(),
+              onTap: (_, __) => _popupController.hideAllPopups(),
             ),
             children: [
-              _darkModeContainerIfEnabled(
-                TileLayer(
-                  minNativeZoom: HiveSettingsDB.openStreetMapEnabled
-                      ? MapSettings.minNativeZoom
-                      : MapSettings.minNativeZoomDefault,
-                  maxNativeZoom: HiveSettingsDB.openStreetMapEnabled
-                      ? MapSettings.maxNativeZoom
-                      : MapSettings.maxNativeZoomDefault,
-                  minZoom: HiveSettingsDB.openStreetMapEnabled
-                      ? MapSettings.minZoom
-                      : MapSettings.minZoomDefault,
-                  maxZoom: HiveSettingsDB.openStreetMapEnabled
-                      ? MapSettings.maxZoom
-                      : MapSettings.maxZoomDefault,
-                  urlTemplate: HiveSettingsDB.openStreetMapEnabled ||
-                          ref
-                              .watch(activeEventProvider)
-                              .event
-                              .hasSpecialStartPoint
-                      ? MapSettings.openStreetMapLinkString //use own ts
-                      : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
-                  evictErrorTileStrategy:
-                      EvictErrorTileStrategy.notVisibleRespectMargin,
-                  tileProvider: HiveSettingsDB.openStreetMapEnabled ||
-                          ref
-                              .watch(activeEventProvider)
-                              .event
-                              .hasSpecialStartPoint
-                      ? CancellableNetworkTileProvider()
-                      : AssetTileProvider(),
-                  errorImage: const AssetImage(
-                    'assets/images/skatemunichmaperror.png',
-                  ),
-                ),
-              ),
+              const MapTileLayerWidget(),
               const PolyLinesLayer(),
-              const MarkersLayer(),
+              AnimatedLocationMarkerLayer(
+                position: LocationMarkerPosition(
+                    latitude: ref.watch(realtimeDataProvider)!.head.latitude!,
+                    longitude: ref.watch(realtimeDataProvider)!.head.longitude!,
+                    accuracy: 1.0),
+              ),
               const CustomLocationLayer(),
               //needs map controller
+              MarkersLayer(_popupController),
               TrackProgressOverlay(controller),
               const MapButtonsLayer(),
             ],
@@ -285,13 +258,5 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
         ]),
       ),
     );
-  }
-
-  Widget _darkModeContainerIfEnabled(Widget child) {
-    if (CupertinoTheme.brightnessOf(context) == Brightness.light) {
-      return child;
-    }
-
-    return bnDarkModeTilesContainerBuilder(context, child);
   }
 }

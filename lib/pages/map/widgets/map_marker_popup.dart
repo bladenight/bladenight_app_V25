@@ -97,6 +97,11 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
                 descriptionLeft: Localize.of(context).distanceDriven,
                 descriptionRight: widget.marker.drivenDistanceText ?? '',
                 rightWidget: Container()),
+          DataLeftRightContent(
+              descriptionLeft: Localize.of(context).position,
+              descriptionRight:
+                  'Lat:${widget.marker.point.latitude.toStringAsFixed(6)} Lon:${widget.marker.point.longitude.toStringAsFixed(6)}',
+              rightWidget: Container()),
           if (widget.marker.timeUserToHeadText != null)
             Divider(
               height: 2,

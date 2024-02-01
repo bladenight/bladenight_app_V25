@@ -1,11 +1,14 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../helpers/logger.dart';
 import '../models/realtime_update.dart';
 import 'location_provider.dart';
 
-final realtimeDataProvider = StateProvider<RealtimeUpdate?>((ref) {
- var lp =ref.watch(locationProvider.select((lp) => lp.realtimeUpdate));
- BnLog.debug(text: 'update realtimeData');
- return lp;
-});
+part 'realtime_data_provider.g.dart';
+
+@Riverpod(keepAlive: true)
+class RealtimeData extends _$RealtimeData {
+  @override
+  RealtimeUpdate? build() {
+    return ref.watch(locationProvider.select((lp) => lp.realtimeUpdate));
+  }
+}

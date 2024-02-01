@@ -49,9 +49,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
             bottom: 190, //same height as qrcode in web
             height: 40,
             child: Builder(builder: (context) {
-              var isActive =
-                  ref.watch(isActiveEventProvider.select((ia) => ia));
-              if (isActive) {
+              if (ref.watch(isActiveEventProvider)) {
                 var currentRoute = ref.watch(currentRouteProvider);
                 return currentRoute.when(data: (data) {
                   return FloatingActionButton(
