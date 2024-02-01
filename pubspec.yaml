@@ -108,6 +108,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.5
+  custom_lint:
   dart_mappable_builder: ^4.2.0
   flutter_lints: ^3.0.1
   flutter_test:
@@ -116,7 +117,7 @@ dev_dependencies:
 # riverpod_lint makes it easier to work with Riverpod
   riverpod_lint:
 # import custom_lint too as riverpod_lint depends on it
-  custom_lint:
+
 
 dependency_overrides:
   # Remove when firebase_ui_firestore stops relying on 0.17.0.

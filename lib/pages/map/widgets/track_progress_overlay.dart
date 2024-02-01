@@ -70,7 +70,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     var actualOrNextEvent = ref.watch(eventStatusProvider);
     var eventIsActive = actualOrNextEvent.status == EventStatus.running ||
         (rtu != null && rtu.eventIsActive);
-    var eventConfirmed = actualOrNextEvent.status == EventStatus.confirmed;
     if (actualOrNextEvent.status == EventStatus.noevent) {
       return Stack(children: [
         Positioned(

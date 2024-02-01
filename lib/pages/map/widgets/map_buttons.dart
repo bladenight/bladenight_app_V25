@@ -175,7 +175,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
                   CupertinoAdaptiveTheme.of(context).setLight();
                   HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.light);
                 }
-              },
+                },
               heroTag: 'darkLightTag',
               child: CupertinoAdaptiveTheme.of(context).theme.brightness ==
                       Brightness.light

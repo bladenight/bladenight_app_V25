@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +22,6 @@ import '../../models/route.dart';
 import '../../providers/active_event_notifier_provider.dart';
 import '../../providers/is_tracking_provider.dart';
 import '../../providers/location_provider.dart';
-import '../../providers/realtime_data_provider.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/map_buttons.dart';
 import 'widgets/map_tile_layer.dart';
@@ -239,14 +237,14 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               onTap: (_, __) => _popupController.hideAllPopups(),
             ),
             children: [
-              const MapTileLayerWidget(),
+              const MapTileLayer(),
               const PolyLinesLayer(),
-              AnimatedLocationMarkerLayer(
+              /*AnimatedLocationMarkerLayer(
                 position: LocationMarkerPosition(
                     latitude: ref.watch(realtimeDataProvider)!.head.latitude!,
                     longitude: ref.watch(realtimeDataProvider)!.head.longitude!,
                     accuracy: 1.0),
-              ),
+              ),*/
               const CustomLocationLayer(),
               //needs map controller
               MarkersLayer(_popupController),

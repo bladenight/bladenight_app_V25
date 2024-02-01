@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../helpers/hive_box/hive_settings_db.dart';
+import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/shared_prefs_provider.dart';
 
-class CustomLocationLayer extends StatefulWidget {
+class CustomLocationLayer extends ConsumerStatefulWidget {
   const CustomLocationLayer({super.key});
 
   @override
-  State<StatefulWidget> createState() => _CustomLocationLayer();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CustomLocationLayer();
 }
 
-class _CustomLocationLayer extends State<CustomLocationLayer> {
+class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
   late final Stream<LocationMarkerPosition?> _positionStream;
   late final Stream<LocationMarkerHeading?> _headingStream;
 
@@ -27,12 +29,16 @@ class _CustomLocationLayer extends State<CustomLocationLayer> {
 
   @override
   Widget build(BuildContext context) {
-    return CurrentLocationLayer(
+    var isTracking = ref.watch(isTrackingProvider);
+    return !isTracking?Container():
+     CurrentLocationLayer(
       positionStream: _positionStream,
       headingStream: _headingStream,
       alignPositionOnUpdate: AlignOnUpdate.never,
       alignDirectionOnUpdate: AlignOnUpdate.never,
       style: LocationMarkerStyle(
+        showAccuracyCircle: false,
+        headingSectorColor: context.watch(MeColor.provider),
         marker: DefaultLocationMarker(
           child: CircleAvatar(
             backgroundColor: context.watch(MeColor.provider).withOpacity(0.6),

@@ -91,14 +91,14 @@ class WampV2 {
 
   Future<WampConnectionState> _initWamp() async {
     if (_isConnecting == true) {
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 5000));
       if (!kIsWeb) {
         BnLog.trace(
             text: 'is connecting',
             methodName: '_initWamp',
             className: toString());
       }
-      return WampConnectionState.connecting;
+      return WampConnectionState.failed;
     }
     if (!kIsWeb) {
       var connectedState = await InternetConnectionChecker().connectionStatus;

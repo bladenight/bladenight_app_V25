@@ -9,11 +9,7 @@ void main() {
 }
 
 List<InlineSpan> _createWidgetList(String text) {
-  const regexBold = '<b>(.*?)</b>';
-  const regexList = '<ul>(.*?)</ul>';
-  const regexItalic = '<i>(.*?)</i>';
-  const regexStrong = '<strong>(.*?)</strong>';
-  const regexEmoji = '<emoji>(.*?)</emoji>';
+
 
   final widgets = <InlineSpan>[];
   final regexAll = RegExp('<([a-z]+)(?![^>]*/>)[^>]*>');
@@ -67,7 +63,6 @@ List<InlineSpan> _createWidgetListParts(String text) {
   const regexList = '<ul>(.*?)</ul>';
   const regexItalic = '<i>(.*?)</i>';
   const regexStrong = '<strong>(.*?)</strong>';
-  const regexEmoji = '<emoji>(.*?)</emoji>';
 
   final widgets = <InlineSpan>[];
   final regexAll = RegExp('$regexBold|$regexList|$regexItalic|$regexStrong');

@@ -677,7 +677,7 @@ class LocationProvider with ChangeNotifier {
         setUpdateTimer(false);
         SendToWatch.setIsLocationTracking(false);
         notifyListeners();
-        return false;
+        return null;
       });
       await bg.BackgroundGeolocation.setConfig(bg.Config(
           distanceFilter: 0,
@@ -983,7 +983,6 @@ class LocationProvider with ChangeNotifier {
           _maxFails--;
           if (_maxFails <= 0) {
             _realtimeUpdate = null;
-            ;
             _maxFails = 3;
           }
           if (!_isInBackground) {
