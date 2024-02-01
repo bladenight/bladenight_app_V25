@@ -1,85 +1,123 @@
+import 'spring_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:spring_button/spring_button.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../app_settings/app_constants.dart';
 
 final Map<int, double> _correctSizes = {};
-final PageController pageController = PageController(keepPage: true);
+final PageController _pageController = PageController(keepPage: true);
 
-//FastCustomColorPicker for custom colors because yellow is 'me' color. Grays are not useful
-//No customisation of selectable colors
-class FastCustomColorPicker extends StatelessWidget {
+class FastCustomColorPicker extends StatefulWidget {
+  @override
+  State<FastCustomColorPicker> createState() => _FastCustomColorPicker();
+
   final Color selectedColor;
   final IconData? icon;
   final Function(Color) onColorSelected;
 
   const FastCustomColorPicker({
-    Key? key,
+    super.key,
     this.icon,
     this.selectedColor = Colors.white,
     required this.onColorSelected,
-  }) : super(key: key);
+  });
+}
+
+//FastCustomColorPicker for custom colors because yellow is 'me' color. Grays are not useful
+//No customisation of selectable colors
+class _FastCustomColorPicker extends State<FastCustomColorPicker> {
+  int _activePage = 0;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 66,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                ),
-                child: SelectedColor(
-                  icon: icon,
-                  selectedColor: selectedColor,
-                ),
-              ),
-              Expanded(
-                //TODO resize on iPad - it's very small inside sized box on friendsEditWidget
-                child: SizedBox(
-                  height: 52,
-                  child: PageView(
-                    controller: pageController,
-                    physics: const BouncingScrollPhysics(),
-                    children: [
-                      Row(
-                        children: createColors(context, ColorConstants.colors1),
-                      ),
-                      Row(
-                        children: createColors(context, ColorConstants.colors2),
-                      ),
-                      Row(
-                        children: createColors(context, ColorConstants.colors3),
-                      ),
-                    ],
+    return CupertinoScaffold(
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                  ),
+                  child: SelectedColor(
+                    icon: widget.icon,
+                    selectedColor: widget.selectedColor,
                   ),
                 ),
-              )
-            ],
-          ),
-          SmoothPageIndicator(
-            controller: pageController, // PageController
-            count: 3,
-            effect: ScrollingDotsEffect(
-              spacing: 8,
-              activeDotColor: CupertinoTheme.of(context).primaryColor,
-              dotColor:
-                  CupertinoTheme.of(context).primaryColor.withOpacity(0.3),
-              dotHeight: 8,
-              dotWidth: 8,
-              activeDotScale: 1,
+                Expanded(
+                    //TODO resize on iPad - it's very small inside sized box on friendsEditWidget
+                    child: SizedBox(
+                  height: 52,
+                  child: PageView.builder(
+                    itemCount: 3,
+                    onPageChanged: (int page) {
+                      setState(() {
+                        _activePage = page;
+                      });
+                    },
+                    controller: _pageController,
+                    physics: const PageScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      switch (index) {
+                        case 0:
+                          return Row(
+                            children:
+                                createColors(context, ColorConstants.colors1),
+                          );
+                        case 1:
+                          return Row(
+                            children:
+                                createColors(context, ColorConstants.colors2),
+                          );
+                        case 2:
+                          return Row(
+                            children:
+                                createColors(context, ColorConstants.colors3),
+                          );
+                        default:
+                          return Row(
+                            children:
+                                createColors(context, ColorConstants.colors1),
+                          );
+                      }
+                    },
+                  ),
+                ))
+              ],
             ),
-          ),
-          const SizedBox(height: 6)
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                3,
+                (index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      //not working _
+                       /* _pageController.animateToPage(index,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeIn);*/
+                    },
+                    child: CircleAvatar(
+                      radius: 4,
+                      backgroundColor:
+                          _activePage == index ?  CupertinoTheme.of(context).primaryColor :
+                          CupertinoTheme.of(context).barBackgroundColor ,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -93,7 +131,7 @@ class FastCustomColorPicker extends StatelessWidget {
     return [
       for (var c in colors)
         SpringButton(
-          SpringButtonType.OnlyScale,
+          SpringButtonType.onlyScale,
           Padding(
             padding: EdgeInsets.all(size * 0.1),
             child: AnimatedContainer(
@@ -104,7 +142,7 @@ class FastCustomColorPicker extends StatelessWidget {
                 color: c,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  width: c == selectedColor ? 4 : 2,
+                  width: c == widget.selectedColor ? 4 : 2,
                   color: Colors.white,
                 ),
                 boxShadow: [
@@ -117,7 +155,7 @@ class FastCustomColorPicker extends StatelessWidget {
             ),
           ),
           onTap: () {
-            onColorSelected.call(c);
+            widget.onColorSelected.call(c);
           },
           useCache: false,
           scaleCoefficient: 0.9,
@@ -146,8 +184,7 @@ class SelectedColor extends StatelessWidget {
   final Color selectedColor;
   final IconData? icon;
 
-  const SelectedColor({Key? key, required this.selectedColor, this.icon})
-      : super(key: key);
+  const SelectedColor({super.key, required this.selectedColor, this.icon});
 
   @override
   Widget build(BuildContext context) {

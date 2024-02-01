@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'location.dart';
 
@@ -15,11 +16,6 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
       MapperContainer.globals.useAll([LatLngMapper()]);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -43,15 +39,19 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
   static double? _$realSpeed(LocationInfo v) => v.realSpeed;
   static const Field<LocationInfo, double> _f$realSpeed =
       Field('realSpeed', _$realSpeed, key: 'rsp', opt: true);
+  static double? _$accuracy(LocationInfo v) => v.accuracy;
+  static const Field<LocationInfo, double> _f$accuracy =
+      Field('accuracy', _$accuracy, key: 'acc', opt: true);
 
   @override
-  final Map<Symbol, Field<LocationInfo, dynamic>> fields = const {
+  final MappableFields<LocationInfo> fields = const {
     #coords: _f$coords,
     #isParticipating: _f$isParticipating,
     #deviceId: _f$deviceId,
     #specialFunction: _f$specialFunction,
     #userSpeed: _f$userSpeed,
     #realSpeed: _f$realSpeed,
+    #accuracy: _f$accuracy,
   };
 
   static LocationInfo _instantiate(DecodingData data) {
@@ -61,47 +61,53 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
         deviceId: data.dec(_f$deviceId),
         specialFunction: data.dec(_f$specialFunction),
         userSpeed: data.dec(_f$userSpeed),
-        realSpeed: data.dec(_f$realSpeed));
+        realSpeed: data.dec(_f$realSpeed),
+        accuracy: data.dec(_f$accuracy));
   }
 
   @override
   final Function instantiate = _instantiate;
 
   static LocationInfo fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<LocationInfo>(map));
+    return ensureInitialized().decodeMap<LocationInfo>(map);
   }
 
   static LocationInfo fromJson(String json) {
-    return _guard((c) => c.fromJson<LocationInfo>(json));
+    return ensureInitialized().decodeJson<LocationInfo>(json);
   }
 }
 
 mixin LocationInfoMappable {
   String toJson() {
-    return LocationInfoMapper._guard((c) => c.toJson(this as LocationInfo));
+    return LocationInfoMapper.ensureInitialized()
+        .encodeJson<LocationInfo>(this as LocationInfo);
   }
 
   Map<String, dynamic> toMap() {
-    return LocationInfoMapper._guard((c) => c.toMap(this as LocationInfo));
+    return LocationInfoMapper.ensureInitialized()
+        .encodeMap<LocationInfo>(this as LocationInfo);
   }
 
   LocationInfoCopyWith<LocationInfo, LocationInfo, LocationInfo> get copyWith =>
       _LocationInfoCopyWithImpl(this as LocationInfo, $identity, $identity);
   @override
   String toString() {
-    return LocationInfoMapper._guard((c) => c.asString(this));
+    return LocationInfoMapper.ensureInitialized()
+        .stringifyValue(this as LocationInfo);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            LocationInfoMapper._guard((c) => c.isEqual(this, other)));
+            LocationInfoMapper.ensureInitialized()
+                .isValueEqual(this as LocationInfo, other));
   }
 
   @override
   int get hashCode {
-    return LocationInfoMapper._guard((c) => c.hash(this));
+    return LocationInfoMapper.ensureInitialized()
+        .hashValue(this as LocationInfo);
   }
 }
 
@@ -119,7 +125,8 @@ abstract class LocationInfoCopyWith<$R, $In extends LocationInfo, $Out>
       String? deviceId,
       int? specialFunction,
       double? userSpeed,
-      double? realSpeed});
+      double? realSpeed,
+      double? accuracy});
   LocationInfoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -138,14 +145,16 @@ class _LocationInfoCopyWithImpl<$R, $Out>
           String? deviceId,
           Object? specialFunction = $none,
           Object? userSpeed = $none,
-          Object? realSpeed = $none}) =>
+          Object? realSpeed = $none,
+          Object? accuracy = $none}) =>
       $apply(FieldCopyWithData({
         if (coords != null) #coords: coords,
         if (isParticipating != null) #isParticipating: isParticipating,
         if (deviceId != null) #deviceId: deviceId,
         if (specialFunction != $none) #specialFunction: specialFunction,
         if (userSpeed != $none) #userSpeed: userSpeed,
-        if (realSpeed != $none) #realSpeed: realSpeed
+        if (realSpeed != $none) #realSpeed: realSpeed,
+        if (accuracy != $none) #accuracy: accuracy
       }));
   @override
   LocationInfo $make(CopyWithData data) => LocationInfo(
@@ -154,7 +163,8 @@ class _LocationInfoCopyWithImpl<$R, $Out>
       deviceId: data.get(#deviceId, or: $value.deviceId),
       specialFunction: data.get(#specialFunction, or: $value.specialFunction),
       userSpeed: data.get(#userSpeed, or: $value.userSpeed),
-      realSpeed: data.get(#realSpeed, or: $value.realSpeed));
+      realSpeed: data.get(#realSpeed, or: $value.realSpeed),
+      accuracy: data.get(#accuracy, or: $value.accuracy));
 
   @override
   LocationInfoCopyWith<$R2, LocationInfo, $Out2> $chain<$R2, $Out2>(

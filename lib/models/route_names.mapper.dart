@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'route_names.dart';
 
@@ -16,11 +17,6 @@ class RouteNamesMapper extends ClassMapperBase<RouteNames> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'RouteNames';
 
@@ -32,7 +28,7 @@ class RouteNamesMapper extends ClassMapperBase<RouteNames> {
       Field('exception', _$exception, opt: true);
 
   @override
-  final Map<Symbol, Field<RouteNames, dynamic>> fields = const {
+  final MappableFields<RouteNames> fields = const {
     #routeNames: _f$routeNames,
     #exception: _f$exception,
   };
@@ -46,40 +42,44 @@ class RouteNamesMapper extends ClassMapperBase<RouteNames> {
   final Function instantiate = _instantiate;
 
   static RouteNames fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<RouteNames>(map));
+    return ensureInitialized().decodeMap<RouteNames>(map);
   }
 
   static RouteNames fromJson(String json) {
-    return _guard((c) => c.fromJson<RouteNames>(json));
+    return ensureInitialized().decodeJson<RouteNames>(json);
   }
 }
 
 mixin RouteNamesMappable {
   String toJson() {
-    return RouteNamesMapper._guard((c) => c.toJson(this as RouteNames));
+    return RouteNamesMapper.ensureInitialized()
+        .encodeJson<RouteNames>(this as RouteNames);
   }
 
   Map<String, dynamic> toMap() {
-    return RouteNamesMapper._guard((c) => c.toMap(this as RouteNames));
+    return RouteNamesMapper.ensureInitialized()
+        .encodeMap<RouteNames>(this as RouteNames);
   }
 
   RouteNamesCopyWith<RouteNames, RouteNames, RouteNames> get copyWith =>
       _RouteNamesCopyWithImpl(this as RouteNames, $identity, $identity);
   @override
   String toString() {
-    return RouteNamesMapper._guard((c) => c.asString(this));
+    return RouteNamesMapper.ensureInitialized()
+        .stringifyValue(this as RouteNames);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            RouteNamesMapper._guard((c) => c.isEqual(this, other)));
+            RouteNamesMapper.ensureInitialized()
+                .isValueEqual(this as RouteNames, other));
   }
 
   @override
   int get hashCode {
-    return RouteNamesMapper._guard((c) => c.hash(this));
+    return RouteNamesMapper.ensureInitialized().hashValue(this as RouteNames);
   }
 }
 

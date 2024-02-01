@@ -1,15 +1,16 @@
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:permission_handler/permission_handler.dart' hide PermissionStatus;
+import 'package:permission_handler/permission_handler.dart'
+    hide PermissionStatus;
 import 'package:get/get.dart';
 import 'package:location2/location2.dart' as loc2;
 
 import '../generated/l10n.dart';
 import 'device_info_helper.dart';
 import 'hive_box/hive_settings_db.dart';
+import 'logger.dart';
 
 enum LocationPermissionStatus {
   unknown,
@@ -42,13 +43,15 @@ class LocationPermissionDialog {
   Future<LocationPermissionStatus> getLocationPermissions() async {
     //get android version, on V11 you need 'always' permissions to use location, when app is not in Foreground
 
-    var isAndroidPlatformGreater09BuildQ = await DeviceHelper.isAndroidGreaterVNine();
+    var isAndroidPlatformGreater09BuildQ =
+        await DeviceHelper.isAndroidGreaterVNine();
 
     if (kIsWeb) {
       return LocationPermissionStatus.locationNotEnabled;
     }
     final locationPermission = await loc2.getLocationPermissionStatus();
-    if (locationPermission.locationPermissionId == loc2.LocationPermission.denied.index) {
+    if (locationPermission.locationPermissionId ==
+        loc2.LocationPermission.denied.index) {
       var prominentDisclosureResult =
           await FlutterPlatformAlert.showCustomAlert(
               windowTitle: Localize.current.requestLocationPermissionTitle,
@@ -68,8 +71,6 @@ class LocationPermissionDialog {
     return getPermissionsStatus();
   }
 
-
-
   ///Shows Disclosure on Android and return true if positive or false on denied forever or negative answer
   Future<bool> showProminentAndroidDisclosure() async {
     double? platformVersion;
@@ -85,7 +86,7 @@ class LocationPermissionDialog {
 
     final locationPermission = await loc2.getLocationPermissionStatus();
 
-    if (locationPermission == loc2.PermissionStatus.denied) {
+    if (locationPermission.locationPermission == loc2.LocationPermission.denied) {
       var prominentDisclosureResult =
           await FlutterPlatformAlert.showCustomAlert(
               windowTitle: Localize.current.requestLocationPermissionTitle,
@@ -106,12 +107,10 @@ class LocationPermissionDialog {
   }
 
   Future<LocationPermissionStatus> requestAlwaysLocationPermissions() async {
-    if (!kIsWeb) {
-      FLog.info(
+    BnLog.info(
         text: 'requesting always permissions',
         className: toString(),
         methodName: 'requestAlwaysLocationPermission');
-    }
     var permissions = getLocationPermissions();
     if (HiveSettingsDB.hasAskedAlwaysAllowLocationPermission) {
       return permissions;
@@ -126,14 +125,15 @@ class LocationPermissionDialog {
     if (prominentDisclosureResult == CustomButton.negativeButton) {
       return getPermissionsStatus();
     } else {
-      final res = await loc2.requestLocationPermission(loc2.LocationPermission.authorizedAlways );
+      final res = await loc2
+          .requestLocationPermission(loc2.LocationPermission.authorizedAlways);
       if (res == loc2.LocationPermission.authorizedAlways) {
         return LocationPermissionStatus.always;
       }
       if (res == loc2.LocationPermission.denied) {
         if (!kIsWeb) {
-          FLog.warning(
-            text: 'requestAlwaysOnAndroid permissions permanentlyDenied');
+          BnLog.warning(
+              text: 'requestAlwaysOnAndroid permissions permanentlyDenied');
         }
 
         var permanentDeniedResult = await FlutterPlatformAlert.showCustomAlert(
@@ -148,9 +148,9 @@ class LocationPermissionDialog {
             Fluttertoast.showToast(
                 msg: Localize.current.couldNotOpenAppSettings);
             if (!kIsWeb) {
-              FLog.warning(
-                text:
-                    'App settings could not opened while always location permissions are permanentlyDenied');
+              BnLog.warning(
+                  text:
+                      'App settings could not opened while always location permissions are permanentlyDenied');
             }
           }
         }
@@ -195,22 +195,26 @@ class LocationPermissionDialog {
     //hangs for 9 sec on app start
     //var isAlways = await Permission.locationAlways.status;
     if (!kIsWeb) {
-      FLog.info(
+      BnLog.info(
           className: 'locationProvider',
           methodName: 'init',
           text: 'init get permissions status ${sw.elapsedMicroseconds}micros');
     }
-    if (kDebugMode) print('init get permissions status ${sw.elapsedMicroseconds}micros /${sw.elapsedMilliseconds}ms');
+    if (kDebugMode) {
+      print(
+          'init get permissions status ${sw.elapsedMicroseconds}micros /${sw.elapsedMilliseconds}ms');
+    }
     sw.stop();
-    if (permissionStatus.locationPermissionId == loc2.PermissionStatus.authorizedAlways.index) {
+    if (permissionStatus.locationPermissionId ==
+        loc2.PermissionStatus.authorizedAlways.index) {
       return LocationPermissionStatus.always;
     }
-    if (permissionStatus.locationPermissionId == loc2.PermissionStatus.authorizedWhenInUse.index) {
+    if (permissionStatus.locationPermissionId ==
+        loc2.PermissionStatus.authorizedWhenInUse.index) {
       return LocationPermissionStatus.whenInUse;
     }
     return LocationPermissionStatus.denied;
   }
-
 
   Future<bool> requestAndOpenAppSettings() async {
     var permanentDeniedResult = await FlutterPlatformAlert.showCustomAlert(
@@ -224,9 +228,9 @@ class LocationPermissionDialog {
       if (res == false) {
         Fluttertoast.showToast(msg: Localize.current.couldNotOpenAppSettings);
         if (!kIsWeb) {
-          FLog.warning(
-            text:
-                'App settings could not opened while location permissions are permanently denied');
+          BnLog.warning(
+              text:
+                  'App settings could not opened while location permissions are permanently denied');
         }
         return false;
       }
@@ -234,18 +238,18 @@ class LocationPermissionDialog {
     }
     return false;
   }
-  static Future<bool> openSystemSettings()async {
+
+  static Future<bool> openSystemSettings() async {
     var res = await openAppSettings();
     if (res == false) {
       Fluttertoast.showToast(msg: Localize.current.couldNotOpenAppSettings);
       if (!kIsWeb) {
-        FLog.warning(
-          text:
-          'App settings could not opened while location permissions are permanently denied');
+        BnLog.warning(
+            text:
+                'App settings could not opened while location permissions are permanently denied');
       }
       return false;
     }
     return true;
   }
-
 }

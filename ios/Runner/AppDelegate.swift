@@ -215,6 +215,30 @@ import WatchConnectivity
 
 extension AppDelegate: WCSessionDelegate {
     
+    override func application(
+         _ application: UIApplication,
+         didReceiveRemoteNotification userInfo: [AnyHashable : Any],
+         fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
+     ){
+         print("diRcvRemoteNote")
+         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+
+                let notificationChannel = FlutterMethodChannel(name: "bladenightbgnotificationchannel",
+                                                         binaryMessenger: controller.binaryMessenger)
+         
+         //print(userInfo)
+         var notificationData:NSMutableDictionary
+         if let custom = userInfo["custom"] as? NSDictionary {
+              if let data = custom["a"] as? NSDictionary {
+                  notificationData = data.mutableCopy() as! NSMutableDictionary
+
+                  if(data["category"] as? String == "MESSAGESTATUS"){
+                      notificationChannel.invokeMethod("getSilentLastSeenMessage", arguments: notificationData)
+                  }
+
+          }}
+     }
+    
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
     }
     
@@ -293,3 +317,4 @@ extension AppDelegate: WCSessionDelegate {
         //inform sender about successfull tansfer
     }
 }
+

@@ -7,7 +7,7 @@ import 'no_network_warning.dart';
 import 'no_server_reachable_warning.dart';
 
 class ConnectionWarning extends ConsumerWidget {
-  const ConnectionWarning({Key? key, this.reason}) : super(key: key);
+  const ConnectionWarning({super.key, this.reason});
 
   final Exception? reason;
 

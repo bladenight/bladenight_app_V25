@@ -16,7 +16,7 @@ import 'data_loading_indicator.dart';
 import 'no_data_warning.dart';
 
 class RouteDialog extends ConsumerWidget {
-  const RouteDialog({required this.event, Key? key}) : super(key: key);
+  const RouteDialog({required this.event, super.key});
 
   final Event event;
 
@@ -39,8 +39,7 @@ class RouteDialog extends ConsumerWidget {
               Text('${Localize.of(context).routeoverview}: ${event.routeName}'),
         ),
         child: Builder(builder: (context) {
-          var sizeValue = MediaQuery.of(context).textScaleFactor *
-              HiveSettingsDB.iconSizeValue;
+          var sizeValue = MediaQuery.textScalerOf(context).scale(HiveSettingsDB.iconSizeValue);
           var asyncRoute = ref.watch(routeProvider(event.routeName));
           return asyncRoute.maybeWhen(
               skipLoadingOnRefresh: false,
@@ -70,12 +69,12 @@ class RouteDialog extends ConsumerWidget {
                           BnMapMarker(
                             buildContext: context,
                             headerText: Localize.of(context).finish,
-                            anchorPosition: AnchorPos.align(AnchorAlign.bottom),
                             color: Colors.red,
                             width: 20.0,
                             height: 20.0,
                             point: route.points!.last,
-                            builder: (context) => const Stack(
+                            child: Builder(
+                              builder: (context) =>  const Stack(
                               children: [
                                 Image(
                                   image: AssetImage(
@@ -86,18 +85,19 @@ class RouteDialog extends ConsumerWidget {
                               ],
                             ),
                           ),
-                      ], //StartMarker
+                          ),], //StartMarker
                       ...[
                         if (route.points != null && route.points!.isNotEmpty)
                           BnMapMarker(
                             buildContext: context,
                             headerText: Localize.of(context).start,
-                            anchorPosition: AnchorPos.align(AnchorAlign.top),
+                            //anchorPosition: AnchorPos.align(AnchorAlign.top),
                             color: Colors.transparent,
                             width: sizeValue,
                             height: sizeValue,
                             point: route.points!.first,
-                            builder: (context) => const Stack(
+                            child: Builder(
+                              builder: (context) => const Stack(
                               children: [
                                 Image(
                                   image: AssetImage(
@@ -107,7 +107,7 @@ class RouteDialog extends ConsumerWidget {
                                 ),
                               ],
                             ),
-                          ),
+                            ),),
                         if (route.points != null &&
                             route.points!.length > 3) ...[
                           for (var hp in GeoLocationHelper.calculateHeadings(
@@ -116,6 +116,7 @@ class RouteDialog extends ConsumerWidget {
                               point: hp.latLng,
                               width: 20,
                               height: 20,
+                              child: Builder(
                               builder: (context) => Transform.rotate(
                                 angle: hp.bearing,
                                 child: const Image(
@@ -126,7 +127,7 @@ class RouteDialog extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                        ],
+                            ),],
                       ],
                     ],
                   ),

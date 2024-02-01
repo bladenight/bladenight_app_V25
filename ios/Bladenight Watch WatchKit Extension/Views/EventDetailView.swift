@@ -17,7 +17,7 @@ struct EventDetailView: View {
     @State var warnColor:Color?
     @State var outDatedData:Bool = false
     @State var timerOneSec = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
+
     var body: some View {
         ScrollView{
             if(!viewModel.isLocationTracking){
@@ -39,7 +39,7 @@ struct EventDetailView: View {
                     }
                 }.padding(1)
             }
-            
+
             VStack{
                 HStack{
                     Text("Zug")
@@ -48,7 +48,7 @@ struct EventDetailView: View {
                         .foregroundColor(warnColor)
                     Text("Tracker:\(viewModel.realTimeData.getTrackers())").frame(maxWidth: .infinity,alignment: .trailing)  .font(.system(size: 10))
                 }.frame(maxWidth: .infinity, alignment: .trailing)
-                
+
                 HStack{
                     Text("Länge").frame(alignment: .leading)
                     Text("\(DistanceConverter.ConvertMetersToString(distance:(viewModel.realTimeData.distanceOfTrainComplete()))) | \(DateTimeformatter.formatDuration(d: viewModel.realTimeData.timeOfTrainComplete ()))").frame(maxWidth: .infinity, alignment: .trailing)
@@ -71,10 +71,10 @@ struct EventDetailView: View {
                                     .frame( alignment: .center )
                                     .font(.system(size: 8))
                                     .foregroundColor(warnColor)
-                                
-                
+
+
             }
-         
+
         }.onAppear(){
             debugPrint("EventDetailview onAppear main")
             viewModel.sendDataMessage(for: .getLocationIsTracking)
@@ -103,7 +103,7 @@ struct EventDetailView: View {
                 warnColor = nil
                 outDatedData = false
             }
-           
+
         }
     }
 }

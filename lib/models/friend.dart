@@ -11,12 +11,15 @@ part 'friend.mapper.dart';
 
 @MappableClass(includeCustomMappers: [ColorMapper()])
 class Friend with FriendMappable {
+  @MappableField()
   late String name;
   @MappableField(key: 'friendid')
   late int friendId;
   late bool isActive;
+  @MappableField()
   late Color color;
   late bool isOnline;
+  @MappableField()
   late int requestId = 0;
   late double speed = 0;
   @MappableField(key: 'rsp')
@@ -24,6 +27,7 @@ class Friend with FriendMappable {
   @MappableField(key: 'spv')
   late int specialValue = 0;
   late int? timestamp; // = DateTime.now().millisecondsSinceEpoch;
+  late int? codeTimestamp;
   late double? latitude = defaultLatitude;
   late double? longitude = defaultLongitude;
 
@@ -31,8 +35,8 @@ class Friend with FriendMappable {
   int? relativeTime;
 
   ///driven distance from start
-  int? relativeDistance;
-  int? absolutePosition;
+  int relativeDistance=0;
+  int absolutePosition=0;
 
   ///positive when in front //negative when behind
   int? timeToUser;
@@ -61,20 +65,34 @@ class Friend with FriendMappable {
       this.specialValue = 0,
       this.timeToUser = 0,
       this.timestamp = 0,
+      this.codeTimestamp = 0,
       this.hasServerEntry = true}) {
     resetPositionData();
   }
 
   void resetPositionData() {
     relativeTime = null;
-    relativeDistance = null;
-    absolutePosition = null;
+    relativeDistance = 0;
+    absolutePosition = 0;
     latitude = null;
     longitude = null;
   }
 
+  bool get codeExpired {
+    if (codeTimestamp == null) return false;
+    var codeDtTimeDiff = DateTime.now()
+        .difference(DateTime.fromMillisecondsSinceEpoch(codeTimestamp!));
+    if (codeTimestamp! > 0 && codeDtTimeDiff > const Duration(minutes: 59)) {
+      return true;
+    }
+    return false;
+  }
+
   String getFriendStatusText(BuildContext context) {
     String statustext = Localize.of(context).status_active;
+    if (requestId > 0 && codeExpired) {
+      return Localize.of(context).codeExpired;
+    }
     if (requestId > 0) {
       return '${Localize.of(context).status_pending} ( Code: $requestId )';
     } else if (!isActive && hasServerEntry) {
@@ -88,14 +106,14 @@ class Friend with FriendMappable {
     if (isOnline) {
       statustext += ' | ${Localize.current.tracking}';
     } else {
-      statustext += ' | ${Localize.current.notAvailable}';
+      statustext += ' | ${Localize.current.noLocationAvailable}';
     }
     return statustext;
   }
 
   String formatDistance() {
     int meters = 0;
-    if (relativeDistance != null) meters = relativeDistance!;
+    meters = relativeDistance;
     String s = '- m';
     if (meters.abs() == 0) {
       return s;

@@ -5,21 +5,21 @@ double mediaSizePercentage = 0.05;
 double mediaSizeTrackProgressIconsPercentage = 0.03;
 
 ///Default update interval to get [RealtimeData] when not tracking in seconds
-const int defaultRealtimeUpdateInterval = 15;
+const int defaultRealtimeUpdateInterval = 14;
 
 ///Default update interval to get [RealtimeData] when tracking in seconds
-const int defaultLocationUpdateInterval = 5;
+const int defaultLocationUpdateInterval = 4;
 
 const Duration wampTimeout = Duration(seconds: 10);
 
 ///Defaulttime to send new [RealtimeUpdate] with location when tracking in seconds
-const int defaultSendNewLocationDelay = 5;
+const int defaultSendNewLocationDelay = 4;
 
-///Default minimum running interval in minutes before autostop.
+///Default minimum running interval in minutes before auto stop.
 ///Issue can occur when user goes around finish on startup and tracking is switched on
-const int defaultMinimumDurationBeforeAutostopInMin = 60;
+const int defaultMinimumDurationBeforeAutoStopInMin = 60;
 
-///Maximum duration in Server in Millisec bnserver.relationships.collector.maxage=3600000
+///Maximum duration in Server in milli sec bnserver.relationships.collector.maxage=3600000
 const int maxDurationCodeIsValid = 3600000; //1hour
 
 class ColorConstants {

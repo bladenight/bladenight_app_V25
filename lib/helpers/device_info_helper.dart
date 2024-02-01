@@ -1,5 +1,8 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+import '../models/app_version.dart';
 
 class DeviceHelper {
   static Future<bool> deviceIsIPad() async {
@@ -52,5 +55,15 @@ class DeviceHelper {
     return GetPlatform.isAndroid &&
         platformVersion != null &&
         platformVersion >= version;
+  }
+
+  static Future<AppVersion> getAppVersionsData() async{
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  var appName = packageInfo.appName;
+  var packageName = packageInfo.packageName;
+  var version = packageInfo.version;
+  var buildNumber = packageInfo.buildNumber;
+  return AppVersion(appName, packageName, version, buildNumber);
   }
 }

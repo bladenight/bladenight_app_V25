@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'friend.dart';
 
@@ -15,11 +16,6 @@ class FriendMapper extends ClassMapperBase<Friend> {
       MapperContainer.globals.useAll([ColorMapper()]);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -54,10 +50,10 @@ class FriendMapper extends ClassMapperBase<Friend> {
   static int? _$relativeTime(Friend v) => v.relativeTime;
   static const Field<Friend, int> _f$relativeTime =
       Field('relativeTime', _$relativeTime, opt: true, def: 0);
-  static int? _$relativeDistance(Friend v) => v.relativeDistance;
+  static int _$relativeDistance(Friend v) => v.relativeDistance;
   static const Field<Friend, int> _f$relativeDistance =
       Field('relativeDistance', _$relativeDistance, opt: true, def: 0);
-  static int? _$absolutePosition(Friend v) => v.absolutePosition;
+  static int _$absolutePosition(Friend v) => v.absolutePosition;
   static const Field<Friend, int> _f$absolutePosition =
       Field('absolutePosition', _$absolutePosition, opt: true, def: 0);
   static int? _$distanceToUser(Friend v) => v.distanceToUser;
@@ -72,15 +68,18 @@ class FriendMapper extends ClassMapperBase<Friend> {
   static int? _$timestamp(Friend v) => v.timestamp;
   static const Field<Friend, int> _f$timestamp =
       Field('timestamp', _$timestamp, opt: true, def: 0);
+  static int? _$codeTimestamp(Friend v) => v.codeTimestamp;
+  static const Field<Friend, int> _f$codeTimestamp =
+      Field('codeTimestamp', _$codeTimestamp, opt: true, def: 0);
   static bool _$hasServerEntry(Friend v) => v.hasServerEntry;
   static const Field<Friend, bool> _f$hasServerEntry =
       Field('hasServerEntry', _$hasServerEntry, opt: true, def: true);
   static double _$realSpeed(Friend v) => v.realSpeed;
   static const Field<Friend, double> _f$realSpeed =
-      Field('realSpeed', _$realSpeed);
+      Field('realSpeed', _$realSpeed, key: 'rsp');
 
   @override
-  final Map<Symbol, Field<Friend, dynamic>> fields = const {
+  final MappableFields<Friend> fields = const {
     #name: _f$name,
     #friendId: _f$friendId,
     #color: _f$color,
@@ -97,6 +96,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
     #specialValue: _f$specialValue,
     #timeToUser: _f$timeToUser,
     #timestamp: _f$timestamp,
+    #codeTimestamp: _f$codeTimestamp,
     #hasServerEntry: _f$hasServerEntry,
     #realSpeed: _f$realSpeed,
   };
@@ -119,6 +119,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
         specialValue: data.dec(_f$specialValue),
         timeToUser: data.dec(_f$timeToUser),
         timestamp: data.dec(_f$timestamp),
+        codeTimestamp: data.dec(_f$codeTimestamp),
         hasServerEntry: data.dec(_f$hasServerEntry));
   }
 
@@ -126,40 +127,41 @@ class FriendMapper extends ClassMapperBase<Friend> {
   final Function instantiate = _instantiate;
 
   static Friend fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Friend>(map));
+    return ensureInitialized().decodeMap<Friend>(map);
   }
 
   static Friend fromJson(String json) {
-    return _guard((c) => c.fromJson<Friend>(json));
+    return ensureInitialized().decodeJson<Friend>(json);
   }
 }
 
 mixin FriendMappable {
   String toJson() {
-    return FriendMapper._guard((c) => c.toJson(this as Friend));
+    return FriendMapper.ensureInitialized().encodeJson<Friend>(this as Friend);
   }
 
   Map<String, dynamic> toMap() {
-    return FriendMapper._guard((c) => c.toMap(this as Friend));
+    return FriendMapper.ensureInitialized().encodeMap<Friend>(this as Friend);
   }
 
   FriendCopyWith<Friend, Friend, Friend> get copyWith =>
       _FriendCopyWithImpl(this as Friend, $identity, $identity);
   @override
   String toString() {
-    return FriendMapper._guard((c) => c.asString(this));
+    return FriendMapper.ensureInitialized().stringifyValue(this as Friend);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            FriendMapper._guard((c) => c.isEqual(this, other)));
+            FriendMapper.ensureInitialized()
+                .isValueEqual(this as Friend, other));
   }
 
   @override
   int get hashCode {
-    return FriendMapper._guard((c) => c.hash(this));
+    return FriendMapper.ensureInitialized().hashValue(this as Friend);
   }
 }
 
@@ -187,6 +189,7 @@ abstract class FriendCopyWith<$R, $In extends Friend, $Out>
       int? specialValue,
       int? timeToUser,
       int? timestamp,
+      int? codeTimestamp,
       bool? hasServerEntry});
   FriendCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -209,12 +212,13 @@ class _FriendCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Friend, $Out>
           Object? longitude = $none,
           Object? latitude = $none,
           Object? relativeTime = $none,
-          Object? relativeDistance = $none,
-          Object? absolutePosition = $none,
+          int? relativeDistance,
+          int? absolutePosition,
           Object? distanceToUser = $none,
           int? specialValue,
           Object? timeToUser = $none,
           Object? timestamp = $none,
+          Object? codeTimestamp = $none,
           bool? hasServerEntry}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
@@ -227,12 +231,13 @@ class _FriendCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Friend, $Out>
         if (longitude != $none) #longitude: longitude,
         if (latitude != $none) #latitude: latitude,
         if (relativeTime != $none) #relativeTime: relativeTime,
-        if (relativeDistance != $none) #relativeDistance: relativeDistance,
-        if (absolutePosition != $none) #absolutePosition: absolutePosition,
+        if (relativeDistance != null) #relativeDistance: relativeDistance,
+        if (absolutePosition != null) #absolutePosition: absolutePosition,
         if (distanceToUser != $none) #distanceToUser: distanceToUser,
         if (specialValue != null) #specialValue: specialValue,
         if (timeToUser != $none) #timeToUser: timeToUser,
         if (timestamp != $none) #timestamp: timestamp,
+        if (codeTimestamp != $none) #codeTimestamp: codeTimestamp,
         if (hasServerEntry != null) #hasServerEntry: hasServerEntry
       }));
   @override
@@ -255,6 +260,7 @@ class _FriendCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Friend, $Out>
       specialValue: data.get(#specialValue, or: $value.specialValue),
       timeToUser: data.get(#timeToUser, or: $value.timeToUser),
       timestamp: data.get(#timestamp, or: $value.timestamp),
+      codeTimestamp: data.get(#codeTimestamp, or: $value.codeTimestamp),
       hasServerEntry: data.get(#hasServerEntry, or: $value.hasServerEntry));
 
   @override

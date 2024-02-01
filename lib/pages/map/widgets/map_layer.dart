@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
@@ -9,9 +7,9 @@ import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
 import '../../../models/event.dart';
 import '../../../models/route.dart';
-import 'bn_dark_container.dart';
 import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
+import 'map_tile_layer.dart';
 
 class MapLayer extends StatefulWidget {
   const MapLayer(
@@ -22,8 +20,7 @@ class MapLayer extends StatefulWidget {
       this.markers = const [],
       this.polyLines = const [],
       this.controller,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final LatLng? location;
   final Event event;
@@ -39,7 +36,7 @@ class MapLayer extends StatefulWidget {
 
 class _MapLayerState extends State<MapLayer> {
   /// Used to trigger showing/hiding of popups.
-  final PopupController _popupLayerController = PopupController();
+  final PopupController _popupMarkerController = PopupController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,57 +45,27 @@ class _MapLayerState extends State<MapLayer> {
       mapController: widget.controller,
       options: MapOptions(
         keepAlive: true,
-        zoom: 12.0,
+        initialZoom: 13.0,
         minZoom: HiveSettingsDB.openStreetMapEnabled
             ? MapSettings.minZoom
             : MapSettings.minZoomDefault,
         maxZoom: HiveSettingsDB.openStreetMapEnabled
             ? MapSettings.maxZoom
             : MapSettings.maxZoomDefault,
-        center: widget.startPoint,
-        maxBounds: HiveSettingsDB.openStreetMapEnabled ||
+        initialCenter: widget.startPoint,
+        cameraConstraint: HiveSettingsDB.openStreetMapEnabled ||
                 widget.event.hasSpecialStartPoint
-            ? MapSettings.mapOnlineBoundaries
-            : MapSettings.mapOfflineBoundaries,
-        interactiveFlags: InteractiveFlag.all ^ InteractiveFlag.rotate,
-        onTap: (_, __) => _popupLayerController.hideAllPopups(),
+            ? CameraConstraint.contain(bounds: MapSettings.mapOnlineBoundaries)
+            : CameraConstraint.contain(
+                bounds: MapSettings.mapOfflineBoundaries),
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.all,
+          enableMultiFingerGestureRace: true,
+        ),
+        onTap: (_, __) => _popupMarkerController.hideAllPopups(),
       ),
       children: [
-        _darkModeContainerIfEnabled(
-          TileLayer(
-            minNativeZoom: HiveSettingsDB.openStreetMapEnabled
-                ? MapSettings.minNativeZoom
-                : MapSettings.minNativeZoomDefault,
-            maxNativeZoom: HiveSettingsDB.openStreetMapEnabled
-                ? MapSettings.maxNativeZoom
-                : MapSettings.maxNativeZoomDefault,
-            minZoom: HiveSettingsDB.openStreetMapEnabled
-                ? MapSettings.minZoom
-                : MapSettings.minZoomDefault,
-            maxZoom: HiveSettingsDB.openStreetMapEnabled
-                ? MapSettings.maxZoom
-                : MapSettings.maxZoomDefault,
-            urlTemplate: HiveSettingsDB.openStreetMapEnabled ||
-                    widget.event.hasSpecialStartPoint
-                ? MapSettings.openStreetMapLinkString //use own ts
-                : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
-            evictErrorTileStrategy:
-                EvictErrorTileStrategy.notVisibleRespectMargin,
-            tileProvider: HiveSettingsDB.openStreetMapEnabled ||
-                    widget.event.hasSpecialStartPoint
-                ? CachedTileProvider(errorListener: () {
-                    print('CachedTileProvider errorListener');
-                  })
-                : AssetTileProvider(),
-            subdomains: HiveSettingsDB.openStreetMapEnabled ||
-                    widget.event.hasSpecialStartPoint
-                ? MapSettings.mapLinkSubdomains
-                : <String>[],
-            errorImage: const AssetImage(
-              'assets/images/skatemunichmaperror.png',
-            ),
-          ),
-        ),
+        const MapTileLayer(),
         PolylineLayer(
           polylines:widget.polyLines,// context.watch(polyLinesProvider),// widget.polyLines,
         ),
@@ -119,7 +86,7 @@ class _MapLayerState extends State<MapLayer> {
             ),
             markerCenterAnimation: const MarkerCenterAnimation(),
             markers: widget.markers,
-            popupController: _popupLayerController,
+            popupController: _popupMarkerController,
 
             markerTapBehavior: MarkerTapBehavior.togglePopup(),
             // : MarkerTapBehavior.togglePopupAndHideRest(),
@@ -130,32 +97,5 @@ class _MapLayerState extends State<MapLayer> {
         ),
       ],
     );
-  }
-
-  Widget _darkModeContainerIfEnabled(Widget child) {
-    if (CupertinoTheme.brightnessOf(context) == Brightness.light) {
-      return child;
-    }
-
-    return bnDarkModeTilesContainerBuilder(context, child);
-  }
-}
-
-class CachedTileProvider extends TileProvider {
-  CachedTileProvider({required Null Function() errorListener});
-
-  @override
-  ImageProvider getImage(coordinates, TileLayer options) {
-    return CachedNetworkImageProvider(getTileUrl(coordinates, options));
-  }
-}
-
-class CachedAssetProvider extends TileProvider {
-  CachedAssetProvider(
-      {required BuildContext context, required Null Function() errorListener});
-
-  @override
-  ImageProvider getImage(coordinates, TileLayer options) {
-    return AssetImage(getTileUrl(coordinates, options));
   }
 }

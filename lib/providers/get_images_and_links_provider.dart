@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app_settings/app_configuration_helper.dart';
+import '../app_settings/server_connections.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger.dart';
 import '../models/image_and_link.dart';
 import '../models/images_and_links.dart';
 import 'images_and_links/bladeguard_link_image_and_link_provider.dart';
@@ -29,7 +30,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
   } else {
     ial = await ImageAndLinkList.getImagesAndLinks();
     if (ial.imagesAndLinks == null || ial.rpcException != null) {
-      if (!kIsWeb) FLog.warning(text: 'Error retrieving ${ial.rpcException}');
+      BnLog.warning(text: 'Error retrieving ${ial.rpcException}');
       return false;
     }
     resultValue = true;
@@ -45,6 +46,9 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
         break;
       case 'bladeguardLink':
         ref.read(BladeguardLinkImageAndLink.provider.notifier).setValue(ial);
+        break;
+      case 'bnMessage':
+        bladenightMessageServerLink = (ial.link ?? '').trim();
         break;
       case 'startPoint':
         ref.read(StartPointImageAndLink.provider.notifier).setValue(ial);
@@ -81,15 +85,11 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
             MapSettings.setOpenStreetMapLink(decodedLink);
           } catch (e) {
             if (!kIsWeb) {
-              FLog.error(
+              BnLog.error(
                   text:
                       'Could not decode open street map link. Must be base64encoded $e');
             }
           }
-        }
-        ///Image contains subdomains for osm link
-        if (ial.image != null && ial.image!.isNotEmpty) {
-          MapSettings.setMapLinkSubdomains(ial.image!.trim());
         }
         break;
       /*case 'openStreetMapDark': //disable OSM via remote
@@ -124,7 +124,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
             MapSettings.setMapBoundaries(ial.link!);
           } catch (e) {
             if (!kIsWeb) {
-              FLog.error(
+              BnLog.error(
                   text: 'Could not decode setTileServerMapBoundsAndZoom.$e');
             }
           }
@@ -143,7 +143,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
             }
           } catch (e) {
             if (!kIsWeb) {
-              FLog.error(
+              BnLog.error(
                   text: 'Could not decode setTileServerMapBoundsAndZoom. $e');
             }
           }

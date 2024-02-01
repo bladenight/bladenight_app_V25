@@ -8,7 +8,7 @@ import '../../../pages/widgets/data_widget_left_right.dart';
 class MapMarkerPopup extends StatefulWidget {
   final BnMapMarker marker;
 
-  const MapMarkerPopup(this.marker, {Key? key}) : super(key: key);
+  const MapMarkerPopup(this.marker, {super.key});
 
   @override
   State<StatefulWidget> createState() => _MapMarkerPopupState();
@@ -46,7 +46,7 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
                     constraints: const BoxConstraints(maxHeight: 30),
                     child: Row(
                       children: [
-                        Builder(builder: widget.marker.builder),
+                        widget.marker.child,
                         const SizedBox(
                           width: 10,
                         ),
@@ -97,6 +97,11 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
                 descriptionLeft: Localize.of(context).distanceDriven,
                 descriptionRight: widget.marker.drivenDistanceText ?? '',
                 rightWidget: Container()),
+          DataLeftRightContent(
+              descriptionLeft: Localize.of(context).position,
+              descriptionRight:
+                  'Lat:${widget.marker.point.latitude.toStringAsFixed(6)} Lon:${widget.marker.point.longitude.toStringAsFixed(6)}',
+              rightWidget: Container()),
           if (widget.marker.timeUserToHeadText != null)
             Divider(
               height: 2,

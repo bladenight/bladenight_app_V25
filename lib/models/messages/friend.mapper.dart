@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'friend.dart';
 
@@ -14,11 +15,6 @@ class FriendMessageMapper extends ClassMapperBase<FriendMessage> {
       MapperContainer.globals.use(_instance = FriendMessageMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -65,7 +61,7 @@ class FriendMessageMapper extends ClassMapperBase<FriendMessage> {
       Field('friendId', _$friendId, key: 'fid');
 
   @override
-  final Map<Symbol, Field<FriendMessage, dynamic>> fields = const {
+  final MappableFields<FriendMessage> fields = const {
     #requestId: _f$requestId,
     #online: _f$online,
     #specialValue: _f$specialValue,
@@ -102,21 +98,23 @@ class FriendMessageMapper extends ClassMapperBase<FriendMessage> {
   final Function instantiate = _instantiate;
 
   static FriendMessage fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<FriendMessage>(map));
+    return ensureInitialized().decodeMap<FriendMessage>(map);
   }
 
   static FriendMessage fromJson(String json) {
-    return _guard((c) => c.fromJson<FriendMessage>(json));
+    return ensureInitialized().decodeJson<FriendMessage>(json);
   }
 }
 
 mixin FriendMessageMappable {
   String toJson() {
-    return FriendMessageMapper._guard((c) => c.toJson(this as FriendMessage));
+    return FriendMessageMapper.ensureInitialized()
+        .encodeJson<FriendMessage>(this as FriendMessage);
   }
 
   Map<String, dynamic> toMap() {
-    return FriendMessageMapper._guard((c) => c.toMap(this as FriendMessage));
+    return FriendMessageMapper.ensureInitialized()
+        .encodeMap<FriendMessage>(this as FriendMessage);
   }
 
   FriendMessageCopyWith<FriendMessage, FriendMessage, FriendMessage>
@@ -124,19 +122,22 @@ mixin FriendMessageMappable {
           this as FriendMessage, $identity, $identity);
   @override
   String toString() {
-    return FriendMessageMapper._guard((c) => c.asString(this));
+    return FriendMessageMapper.ensureInitialized()
+        .stringifyValue(this as FriendMessage);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            FriendMessageMapper._guard((c) => c.isEqual(this, other)));
+            FriendMessageMapper.ensureInitialized()
+                .isValueEqual(this as FriendMessage, other));
   }
 
   @override
   int get hashCode {
-    return FriendMessageMapper._guard((c) => c.hash(this));
+    return FriendMessageMapper.ensureInitialized()
+        .hashValue(this as FriendMessage);
   }
 }
 

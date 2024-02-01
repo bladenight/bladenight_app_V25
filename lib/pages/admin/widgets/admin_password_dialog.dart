@@ -12,7 +12,7 @@ import '../admin_page.dart';
 const kInvalidPassword = 'http://app.bladenight/invalidPassword';
 
 class AdminPasswordDialog extends StatefulWidget {
-  const AdminPasswordDialog({Key? key}) : super(key: key);
+  const AdminPasswordDialog({super.key});
 
   @override
   State<AdminPasswordDialog> createState() => _AdminPasswordDialogState();
@@ -32,8 +32,8 @@ class AdminPasswordDialog extends StatefulWidget {
     if (password != null) {
       try {
         //Add loading indicator
-        var res = await AdminCalls.verifyAdminPassword(MapperContainer.globals.toMap(
-            AdminMessage.authenticate(
+        var res = await AdminCalls.verifyAdminPassword(MapperContainer.globals
+            .toMap(AdminMessage.authenticate(
                 password: password, deviceId: await DeviceId.getId)));
 
         if (res != 'OK') {
@@ -49,6 +49,7 @@ class AdminPasswordDialog extends StatefulWidget {
         }
       }
       Globals.adminPass = password;
+      if (!context.mounted) return;
       await Navigator.of(context).push(CupertinoPageRoute(
         builder: (context) => AdminPage(password: password!),
       ));
@@ -62,12 +63,12 @@ class _AdminPasswordDialogState extends State<AdminPasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return CupertinoAlertDialog(
-      title: const Padding(
-        padding: EdgeInsets.only(bottom: 10),
-        child: Text('Enter password'),
+      title: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Text(Localize.of(context).enterPassword),
       ),
       content: CupertinoTextField(
-        placeholder: 'Admin Password',
+        placeholder: Localize.of(context).enterPassword,
         onChanged: (value) {
           setState(() {
             password = value;

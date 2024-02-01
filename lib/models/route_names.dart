@@ -25,7 +25,7 @@ class RouteNames with RouteNamesMappable{
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getallrouteNames);
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp<RouteNames>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => RouteNames( routeNames: [],exception: error));

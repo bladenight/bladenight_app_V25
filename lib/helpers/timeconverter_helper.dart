@@ -1,8 +1,7 @@
-import 'package:f_logs/model/flog/flog.dart';
-import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import '../generated/l10n.dart';
+import 'logger.dart';
 
 ///Helperclass to convert times from server
 class TimeConverter {
@@ -43,8 +42,8 @@ class TimeConverter {
     }
     if (tokens.isNotEmpty || hours != 0) {
       tokens.add('${hours}h');
-      if (days >9){
-          return tokens.join(':').trim();
+      if (days > 9) {
+        return tokens.join(':').trim();
       }
     }
     if (tokens.isNotEmpty || minutes != 0) {
@@ -106,7 +105,7 @@ class DateFormatter {
         .dateTimeDayIntl(dateTime.toLocal(), dateTime.toLocal());
     if (res.contains('19:00')) {
       print('current locale ${Intl.getCurrentLocale()}');
-      if (!kIsWeb) FLog.warning(text: 'wrong date');
+      BnLog.warning(text: 'wrong date');
       return Localize.current.dateTimeIntl(dateTime.toLocal(), _startTime2100);
     }
     return res;

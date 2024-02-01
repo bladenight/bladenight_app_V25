@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../generated/l10n.dart';
 
 class NoNetworkWarning extends ConsumerWidget {
-  const NoNetworkWarning({Key? key, this.reason}) : super(key: key);
+  const NoNetworkWarning({super.key, this.reason});
 
   final Exception? reason;
 

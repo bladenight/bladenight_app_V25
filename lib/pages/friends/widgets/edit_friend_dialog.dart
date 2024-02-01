@@ -1,24 +1,23 @@
-import 'package:flutter/foundation.dart';
-import 'package:universal_io/io.dart';
 import 'dart:math';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:universal_io/io.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../app_settings/app_constants.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/device_info_helper.dart';
+import '../../../helpers/logger.dart';
 import '../../../models/friend.dart';
+import '../../../pages/widgets/fast_custom_color_picker.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../wamp/wamp_error.dart';
-import '../../../pages/widgets/fast_custom_color_picker.dart';
-import '../friends_page.dart';
+import 'friends_action_sheet.dart';
 
 class EditFriendResult {
   final String name;
@@ -31,8 +30,7 @@ class EditFriendResult {
 
 class EditFriendDialog extends StatefulWidget {
   const EditFriendDialog(
-      {this.friend, this.action = FriendsAction.edit, Key? key})
-      : super(key: key);
+      {this.friend, this.action = FriendsAction.edit, super.key});
 
   final Friend? friend;
   final FriendsAction action;
@@ -58,7 +56,7 @@ class EditFriendDialog extends StatefulWidget {
 class _EditFriendDialogState extends State<EditFriendDialog> {
   late final TextEditingController nameController;
   late final TextEditingController codeController;
-  String? errortext;
+  String? errorText;
   String name = '';
   String? code;
   Color? color;
@@ -148,10 +146,10 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                 },
               ),
             ],
-            if (errortext != null)
+            if (errorText != null)
               FittedBox(
                 child: Text(
-                  errortext!,
+                  errorText!,
                   style: const TextStyle(
                     fontSize: 18.0,
                     color: CupertinoColors.destructiveRed,
@@ -268,24 +266,22 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                           }
                         } on SocketException {
                           setState(() {
-                            errortext = Localize.of(context).networkerror;
+                            errorText = Localize.of(context).networkerror;
                             isLoading = false;
                           });
                         } on WampError {
                           setState(() {
-                            errortext = Localize.of(context).invalidcode;
+                            errorText = Localize.of(context).invalidcode;
                             isLoading = false;
                           });
                         } catch (e) {
                           print(e);
-                          if (!kIsWeb) {
-                            FLog.error(
+                          BnLog.error(
                               className: toString(),
                               methodName: 'friendActionDialog',
                               text: e.toString());
-                          }
                           setState(() {
-                            errortext = Localize.of(context).unknownerror;
+                            errorText = Localize.of(context).unknownerror;
                             isLoading = false;
                           });
                         }
@@ -293,7 +289,7 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                     : null,
                 child: Text(Localize.of(context).save))
           else
-             const Column(
+            const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

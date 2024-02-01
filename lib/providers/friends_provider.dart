@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../generated/l10n.dart';
 import '../helpers/deviceid_helper.dart';
 import '../helpers/location_bearing_distance.dart';
+import '../helpers/logger.dart';
 import '../helpers/preferences_helper.dart';
 import '../models/friend.dart';
 import '../models/messages/friends.dart';
@@ -54,9 +54,7 @@ class FriendsLogic with ChangeNotifier {
 
       var result = await FriendsMessage.getFriends(deviceId);
       if (result.exception != null) {
-        if (!kIsWeb) {
-          FLog.warning(text: 'refreshFriends read failed ${result.exception}');
-        }
+        BnLog.warning(text: 'refreshFriends read failed ${result.exception}');
         return;
       }
 
@@ -70,7 +68,7 @@ class FriendsLogic with ChangeNotifier {
           // dont update when not seen friend.timestamp = DateTime.now().millisecondsSinceEpoch;
         }
         if (!kIsWeb) {
-          FLog.info(
+          BnLog.info(
               className: 'friendsProvider',
               methodName: 'refreshFriends',
               text: 'Friendlist is empty');
@@ -117,14 +115,14 @@ class FriendsLogic with ChangeNotifier {
       }*/
     } on WampError catch (e) {
       if (!kIsWeb) {
-        FLog.error(
+        BnLog.error(
             className: 'friendsProvider',
             methodName: 'refreshFriends_WampError',
             text: e.toString());
       }
     } on Exception catch (e) {
       if (!kIsWeb) {
-        FLog.error(
+        BnLog.error(
             className: 'friendsProvider',
             methodName: 'refreshFriends_exception',
             text: e.toString());
@@ -200,6 +198,7 @@ class FriendsLogic with ChangeNotifier {
       return null;
     }
     friend.requestId = getFriendRelationshipResult.requestId;
+    friend.codeTimestamp = DateTime.now().millisecondsSinceEpoch;
     friends[friend.friendId] = friend;
     PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
     notifyListeners();
@@ -240,29 +239,42 @@ class FriendsLogic with ChangeNotifier {
     friends.remove(id);
     notifyListeners();
     var deviceId = await DeviceId.getId;
+    PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
     var getFriendRelationshipResult =
         await RelationshipOutputMessage.getRelationShip(
       RelationshipInputMessage(deviceId: deviceId, friendId: id, requestId: 0),
     );
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
-      await FlutterPlatformAlert.showAlert(
-          windowTitle: Localize.current.deletefriend,
-          text: Localize.current.failed);
+      if (!kIsWeb) {
+        BnLog.error(
+            text: 'Error deleting friend on Server',
+            exception: getFriendRelationshipResult?.rpcException);
+      }
       return;
     }
-    friends.remove(id);
-    PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
-    notifyListeners();
   }
 
-  Future<void> updateFriend(Friend friend) async {
+  Future<bool> updateFriendName(int friendId, String name) async {
+    var currFriend = friends[friendId];
+    if (currFriend != null) {
+      currFriend.name = name;
+      PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> updateFriend(Friend friend) async {
     var currFriend = friends[friend.friendId];
     if (currFriend != null) {
       friends[friend.friendId] = friend;
       PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
       notifyListeners();
+      return true;
     }
+    return false;
   }
 }
 

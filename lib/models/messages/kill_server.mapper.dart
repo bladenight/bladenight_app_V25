@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'kill_server.dart';
 
@@ -15,11 +16,6 @@ class KillServerMessageMapper extends ClassMapperBase<KillServerMessage> {
       AdminMessageMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -39,7 +35,7 @@ class KillServerMessageMapper extends ClassMapperBase<KillServerMessage> {
       Field('deviceId', _$deviceId, key: 'did');
 
   @override
-  final Map<Symbol, Field<KillServerMessage, dynamic>> fields = const {
+  final MappableFields<KillServerMessage> fields = const {
     #timestamp: _f$timestamp,
     #checksum: _f$checksum,
     #noise: _f$noise,
@@ -58,23 +54,23 @@ class KillServerMessageMapper extends ClassMapperBase<KillServerMessage> {
   final Function instantiate = _instantiate;
 
   static KillServerMessage fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<KillServerMessage>(map));
+    return ensureInitialized().decodeMap<KillServerMessage>(map);
   }
 
   static KillServerMessage fromJson(String json) {
-    return _guard((c) => c.fromJson<KillServerMessage>(json));
+    return ensureInitialized().decodeJson<KillServerMessage>(json);
   }
 }
 
 mixin KillServerMessageMappable {
   String toJson() {
-    return KillServerMessageMapper._guard(
-        (c) => c.toJson(this as KillServerMessage));
+    return KillServerMessageMapper.ensureInitialized()
+        .encodeJson<KillServerMessage>(this as KillServerMessage);
   }
 
   Map<String, dynamic> toMap() {
-    return KillServerMessageMapper._guard(
-        (c) => c.toMap(this as KillServerMessage));
+    return KillServerMessageMapper.ensureInitialized()
+        .encodeMap<KillServerMessage>(this as KillServerMessage);
   }
 
   KillServerMessageCopyWith<KillServerMessage, KillServerMessage,
@@ -83,19 +79,22 @@ mixin KillServerMessageMappable {
           this as KillServerMessage, $identity, $identity);
   @override
   String toString() {
-    return KillServerMessageMapper._guard((c) => c.asString(this));
+    return KillServerMessageMapper.ensureInitialized()
+        .stringifyValue(this as KillServerMessage);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            KillServerMessageMapper._guard((c) => c.isEqual(this, other)));
+            KillServerMessageMapper.ensureInitialized()
+                .isValueEqual(this as KillServerMessage, other));
   }
 
   @override
   int get hashCode {
-    return KillServerMessageMapper._guard((c) => c.hash(this));
+    return KillServerMessageMapper.ensureInitialized()
+        .hashValue(this as KillServerMessage);
   }
 }
 

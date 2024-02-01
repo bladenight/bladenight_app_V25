@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'event.dart';
 
@@ -36,6 +37,8 @@ class EventStatusMapper extends EnumMapper<EventStatus> {
         return EventStatus.running;
       case 'FIN':
         return EventStatus.finished;
+      case 'UKN':
+        return EventStatus.unknown;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -56,6 +59,8 @@ class EventStatusMapper extends EnumMapper<EventStatus> {
         return 'RUN';
       case EventStatus.finished:
         return 'FIN';
+      case EventStatus.unknown:
+        return 'UKN';
     }
   }
 }
@@ -63,7 +68,7 @@ class EventStatusMapper extends EnumMapper<EventStatus> {
 extension EventStatusMapperExtension on EventStatus {
   dynamic toValue() {
     EventStatusMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this);
+    return MapperContainer.globals.toValue<EventStatus>(this);
   }
 }
 
@@ -78,11 +83,6 @@ class EventMapper extends ClassMapperBase<Event> {
       EventStatusMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -123,9 +123,12 @@ class EventMapper extends ClassMapperBase<Event> {
   static String? _$startPoint(Event v) => v.startPoint;
   static const Field<Event, String> _f$startPoint =
       Field('startPoint', _$startPoint, key: 'stp', opt: true);
+  static bool _$isActive(Event v) => v.isActive;
+  static const Field<Event, bool> _f$isActive =
+      Field('isActive', _$isActive, key: 'isa', opt: true, def: true);
 
   @override
-  final Map<Symbol, Field<Event, dynamic>> fields = const {
+  final MappableFields<Event> fields = const {
     #startDate: _f$startDate,
     #routeName: _f$routeName,
     #duration: _f$duration,
@@ -137,6 +140,7 @@ class EventMapper extends ClassMapperBase<Event> {
     #startPointLatitude: _f$startPointLatitude,
     #startPointLongitude: _f$startPointLongitude,
     #startPoint: _f$startPoint,
+    #isActive: _f$isActive,
   };
 
   static Event _instantiate(DecodingData data) {
@@ -151,47 +155,48 @@ class EventMapper extends ClassMapperBase<Event> {
         rpcException: data.dec(_f$rpcException),
         startPointLatitude: data.dec(_f$startPointLatitude),
         startPointLongitude: data.dec(_f$startPointLongitude),
-        startPoint: data.dec(_f$startPoint));
+        startPoint: data.dec(_f$startPoint),
+        isActive: data.dec(_f$isActive));
   }
 
   @override
   final Function instantiate = _instantiate;
 
   static Event fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Event>(map));
+    return ensureInitialized().decodeMap<Event>(map);
   }
 
   static Event fromJson(String json) {
-    return _guard((c) => c.fromJson<Event>(json));
+    return ensureInitialized().decodeJson<Event>(json);
   }
 }
 
 mixin EventMappable {
   String toJson() {
-    return EventMapper._guard((c) => c.toJson(this as Event));
+    return EventMapper.ensureInitialized().encodeJson<Event>(this as Event);
   }
 
   Map<String, dynamic> toMap() {
-    return EventMapper._guard((c) => c.toMap(this as Event));
+    return EventMapper.ensureInitialized().encodeMap<Event>(this as Event);
   }
 
   EventCopyWith<Event, Event, Event> get copyWith =>
       _EventCopyWithImpl(this as Event, $identity, $identity);
   @override
   String toString() {
-    return EventMapper._guard((c) => c.asString(this));
+    return EventMapper.ensureInitialized().stringifyValue(this as Event);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            EventMapper._guard((c) => c.isEqual(this, other)));
+            EventMapper.ensureInitialized().isValueEqual(this as Event, other));
   }
 
   @override
   int get hashCode {
-    return EventMapper._guard((c) => c.hash(this));
+    return EventMapper.ensureInitialized().hashValue(this as Event);
   }
 }
 
@@ -213,7 +218,8 @@ abstract class EventCopyWith<$R, $In extends Event, $Out>
       Exception? rpcException,
       double? startPointLatitude,
       double? startPointLongitude,
-      String? startPoint});
+      String? startPoint,
+      bool? isActive});
   EventCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -235,7 +241,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
           Object? rpcException = $none,
           Object? startPointLatitude = $none,
           Object? startPointLongitude = $none,
-          Object? startPoint = $none}) =>
+          Object? startPoint = $none,
+          bool? isActive}) =>
       $apply(FieldCopyWithData({
         if (startDate != null) #startDate: startDate,
         if (routeName != null) #routeName: routeName,
@@ -249,7 +256,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
           #startPointLatitude: startPointLatitude,
         if (startPointLongitude != $none)
           #startPointLongitude: startPointLongitude,
-        if (startPoint != $none) #startPoint: startPoint
+        if (startPoint != $none) #startPoint: startPoint,
+        if (isActive != null) #isActive: isActive
       }));
   @override
   Event $make(CopyWithData data) => Event(
@@ -265,7 +273,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
           data.get(#startPointLatitude, or: $value.startPointLatitude),
       startPointLongitude:
           data.get(#startPointLongitude, or: $value.startPointLongitude),
-      startPoint: data.get(#startPoint, or: $value.startPoint));
+      startPoint: data.get(#startPoint, or: $value.startPoint),
+      isActive: data.get(#isActive, or: $value.isActive));
 
   @override
   EventCopyWith<$R2, Event, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -284,11 +293,6 @@ class EventsMapper extends ClassMapperBase<Events> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Events';
 
@@ -300,7 +304,7 @@ class EventsMapper extends ClassMapperBase<Events> {
       Field('rpcException', _$rpcException, opt: true);
 
   @override
-  final Map<Symbol, Field<Events, dynamic>> fields = const {
+  final MappableFields<Events> fields = const {
     #events: _f$events,
     #rpcException: _f$rpcException,
   };
@@ -313,40 +317,41 @@ class EventsMapper extends ClassMapperBase<Events> {
   final Function instantiate = _instantiate;
 
   static Events fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Events>(map));
+    return ensureInitialized().decodeMap<Events>(map);
   }
 
   static Events fromJson(String json) {
-    return _guard((c) => c.fromJson<Events>(json));
+    return ensureInitialized().decodeJson<Events>(json);
   }
 }
 
 mixin EventsMappable {
   String toJson() {
-    return EventsMapper._guard((c) => c.toJson(this as Events));
+    return EventsMapper.ensureInitialized().encodeJson<Events>(this as Events);
   }
 
   Map<String, dynamic> toMap() {
-    return EventsMapper._guard((c) => c.toMap(this as Events));
+    return EventsMapper.ensureInitialized().encodeMap<Events>(this as Events);
   }
 
   EventsCopyWith<Events, Events, Events> get copyWith =>
       _EventsCopyWithImpl(this as Events, $identity, $identity);
   @override
   String toString() {
-    return EventsMapper._guard((c) => c.asString(this));
+    return EventsMapper.ensureInitialized().stringifyValue(this as Events);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            EventsMapper._guard((c) => c.isEqual(this, other)));
+            EventsMapper.ensureInitialized()
+                .isValueEqual(this as Events, other));
   }
 
   @override
   int get hashCode {
-    return EventsMapper._guard((c) => c.hash(this));
+    return EventsMapper.ensureInitialized().hashValue(this as Events);
   }
 }
 

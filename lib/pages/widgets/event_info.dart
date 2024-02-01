@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +8,12 @@ import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
+import '../../helpers/logger.dart';
 import '../../helpers/timeconverter_helper.dart';
-import '../../helpers/url_launch_helper.dart';
 import '../../models/event.dart';
 import '../../providers/active_event_notifier_provider.dart';
 import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/images_and_links/main_sponsor_image_and_link_provider.dart';
-import '../../providers/images_and_links/second_sponsor_image_and_link_provider.dart';
 import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
@@ -24,7 +22,7 @@ import 'hidden_admin_button.dart';
 import 'no_connection_warning.dart';
 
 class EventInfo extends StatefulWidget {
-  const EventInfo({Key? key}) : super(key: key);
+  const EventInfo({super.key});
 
   @override
   State<EventInfo> createState() => _EventInfoState();
@@ -55,9 +53,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (!kIsWeb) {
-      FLog.debug(text: 'event_info - didChangeAppLifecycleState $state');
-    }
+    BnLog.debug(text: 'event_info - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       initEventUpdates(forceUpdate: true);
       context.read(locationProvider).refresh(forceUpdate: true);
@@ -176,12 +172,13 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
               padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 5.0),
               child: GestureDetector(
                 onTap: () {
-                  var link =
+                  return; //
+                  /* var link =
                       context.read(MainSponsorImageAndLink.provider).link;
                   if (link != null && link != '') {
                     Launch.launchUrlFromString(
                         context.read(MainSponsorImageAndLink.provider).link!);
-                  }
+                  }*/
                 },
                 child: Builder(builder: (context) {
                   var ms = context.watch(MainSponsorImageAndLink.provider);
@@ -206,12 +203,13 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
               padding: const EdgeInsets.fromLTRB(50.0, 1.0, 50, 1.0),
               child: GestureDetector(
                 onTap: () {
-                  var link =
+                  return; //removed because Apple privacy issue
+                  /*var link =
                       context.read(SecondSponsorImageAndLink.provider).link;
                   if (link != null && link != '') {
                     Launch.launchUrlFromString(
                         context.read(SecondSponsorImageAndLink.provider).link!);
-                  }
+                  }*/
                 },
                 child: Builder(builder: (context) {
                   return Image.asset(secondLogoPlaceholder,
@@ -222,13 +220,14 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
           ]),
           GestureDetector(
             onTap: () async {
-              context.read(activeEventProvider).refresh();
+              return; //removed because Apple privacy issue
+              /*context.read(activeEventProvider).refresh();
               context.refresh(updateImagesAndLinksProvider);
               var link = context.read(StartPointImageAndLink.provider).link;
               if (link != null && link != '') {
                 Launch.launchUrlFromString(
                     context.read(StartPointImageAndLink.provider).link!);
-              }
+              }*/
             },
             child: Column(
               children: [

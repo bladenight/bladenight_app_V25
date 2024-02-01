@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'image_and_link.dart';
 
@@ -14,11 +15,6 @@ class ImageAndLinkMapper extends ClassMapperBase<ImageAndLink> {
       MapperContainer.globals.use(_instance = ImageAndLinkMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -37,7 +33,7 @@ class ImageAndLinkMapper extends ClassMapperBase<ImageAndLink> {
   static const Field<ImageAndLink, String> _f$key = Field('key', _$key);
 
   @override
-  final Map<Symbol, Field<ImageAndLink, dynamic>> fields = const {
+  final MappableFields<ImageAndLink> fields = const {
     #image: _f$image,
     #link: _f$link,
     #text: _f$text,
@@ -53,40 +49,45 @@ class ImageAndLinkMapper extends ClassMapperBase<ImageAndLink> {
   final Function instantiate = _instantiate;
 
   static ImageAndLink fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<ImageAndLink>(map));
+    return ensureInitialized().decodeMap<ImageAndLink>(map);
   }
 
   static ImageAndLink fromJson(String json) {
-    return _guard((c) => c.fromJson<ImageAndLink>(json));
+    return ensureInitialized().decodeJson<ImageAndLink>(json);
   }
 }
 
 mixin ImageAndLinkMappable {
   String toJson() {
-    return ImageAndLinkMapper._guard((c) => c.toJson(this as ImageAndLink));
+    return ImageAndLinkMapper.ensureInitialized()
+        .encodeJson<ImageAndLink>(this as ImageAndLink);
   }
 
   Map<String, dynamic> toMap() {
-    return ImageAndLinkMapper._guard((c) => c.toMap(this as ImageAndLink));
+    return ImageAndLinkMapper.ensureInitialized()
+        .encodeMap<ImageAndLink>(this as ImageAndLink);
   }
 
   ImageAndLinkCopyWith<ImageAndLink, ImageAndLink, ImageAndLink> get copyWith =>
       _ImageAndLinkCopyWithImpl(this as ImageAndLink, $identity, $identity);
   @override
   String toString() {
-    return ImageAndLinkMapper._guard((c) => c.asString(this));
+    return ImageAndLinkMapper.ensureInitialized()
+        .stringifyValue(this as ImageAndLink);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ImageAndLinkMapper._guard((c) => c.isEqual(this, other)));
+            ImageAndLinkMapper.ensureInitialized()
+                .isValueEqual(this as ImageAndLink, other));
   }
 
   @override
   int get hashCode {
-    return ImageAndLinkMapper._guard((c) => c.hash(this));
+    return ImageAndLinkMapper.ensureInitialized()
+        .hashValue(this as ImageAndLink);
   }
 }
 

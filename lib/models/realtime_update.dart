@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:f_logs/model/flog/flog.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -10,6 +8,7 @@ import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location_bearing_distance.dart';
+import '../helpers/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../providers/friends_provider.dart';
 import '../providers/location_provider.dart';
@@ -24,6 +23,11 @@ import 'messages/friends.dart';
 import 'moving_point.dart';
 
 part 'realtime_update.mapper.dart';
+
+/*[50,"FPWAUWMKX33D64BN",{"hea":{"pos":0,"spd":0,"rsp":0.0,"eta":0,"ior":false,"iip":false,"lat":0.0,"lon":0.0,"acc":0},
+"tai":{"pos":0,"spd":0,"rsp":0.0,"eta":0,"ior":false,"iip":false,"lat":0.0,"lon":0.0,"acc":0},"fri":{"fri":{}},
+"up":{"pos":0,"spd":0,"rsp":0.0,"eta":0,"ior":false,"iip":false,"lat":0.0,"lon":0.0,"acc":0},
+"rle":15926.0,"rna":"West_test","sts":"CON","isa":true,"ust":1,"usr":0,"sht":false,"startTimeStamp":0}]*/
 
 @MappableClass()
 class RealtimeUpdate with RealtimeUpdateMappable {
@@ -41,6 +45,9 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   ///State of event == EventStatus new feature 06_23
   @MappableField(key: 'sts')
   final EventStatus? eventState;
+  ///Event == Event is active new feature 01_24 - default true for older Server
+  @MappableField(key: 'isa')
+  final bool eventIsActive;
   @MappableField(key: 'ust')
   final String usersTracking;
   @MappableField(key: 'usr')
@@ -66,7 +73,8 @@ class RealtimeUpdate with RealtimeUpdateMappable {
       required this.friends,
       this.specialFunction,
       this.rpcException,
-      this.eventState});
+      this.eventState,
+      this.eventIsActive = true});
 
   static RealtimeUpdate rpcError(Exception exception) {
     return RealtimeUpdate(
@@ -169,6 +177,15 @@ class RealtimeUpdate with RealtimeUpdateMappable {
       } else {
         if (length + segmentLength >= headPos) {
           running.add(a);
+          //calculate missing part
+          double missingLength = headPos - length;
+          if (missingLength <= segmentLength) {
+            double relativePositionOnSegment = missingLength / segmentLength;
+            double lat = a.latitude + relativePositionOnSegment * (b.latitude - a.latitude);
+            double lon = a.longitude + relativePositionOnSegment * (b.longitude - a.longitude);
+            var endLatLong = LatLng(lat,lon);
+            running.add(endLatLong);
+          }
           break;
         } else {
           length += segmentLength;
@@ -223,17 +240,16 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   }
 
   static Future<RealtimeUpdate> wampUpdate([dynamic message]) async {
-    if (!kIsWeb) {
-      FLog.debug(
-        className: 'Future<RealtimeUpdate>  wampUpdate',
-        methodName: 'sendLocation',
-        text: 'will send:$message',
-      );
-    }
+    BnLog.debug(
+      className: 'Future<RealtimeUpdate>  wampUpdate',
+      methodName: 'sendLocation',
+      text: 'will send:$message',
+    );
+
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
         WampEndpoint.getrealtimeupdate, message);
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp<RealtimeUpdate>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => RealtimeUpdate.rpcError(error));

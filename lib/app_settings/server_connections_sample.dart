@@ -1,15 +1,15 @@
 //This is only an example File
 //please setup your own data
 
-///adress for standard encrypted wss connection with participation
+///address for standard encrypted wss connection with participation
 ///set credentials BasicAuth for App
 const String defaultWampAdress = 'wss://bnapp:AppSecurit1@test.de:8091';
 
-///adress for test of encrypted wss connection with participation
+///address for test of encrypted wss connection with participation
 const String defaultTestWampAdress =
     'wss://bnapp:AppSecurit1@10.10.10.20:8081/ws';
 
-///adress for standard unencrypted connection / no participation / no authorization
+///address for standard unencrypted connection / no participation / no authorization
 const String defaultWampClientAux = 'wss://bladenight.app:8092';
 
 ///address for standard test of unencrypted connection / no participation / no authorization

@@ -32,7 +32,7 @@ class ImageAndLinkList with ImageAndLinkListMappable{
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getImagesAndLinks);
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp<ImageAndLinkList>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => ImageAndLinkList.rpcError(error));

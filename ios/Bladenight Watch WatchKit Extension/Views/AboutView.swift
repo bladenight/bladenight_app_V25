@@ -27,26 +27,24 @@ struct AboutView: View {
   
     @Binding var tabSelection: Int
     var body: some View {
-        VStack{
-            Text("App Info")
-            Text(" \(Bundle.main.displayName)")
-            Text("Version \(Bundle.main.appVersionLong) (\(Bundle.main.appBuild))")
-            Divider()
-                .frame(height: 2)
-                .overlay(.yellow)
-            Text("Eventstatus vom \(viewModel.activeEvent.lastUpdate ?? "-")")
-                    .frame( maxWidth: .infinity,alignment: .leading)
-                    .font(.system(size: 10));
-            Text("Eventdaten vom \(viewModel.updateEventDataLastUpdate)")
+        ScrollView{
+            VStack{
+                Text("App Info")
+                Text(" \(Bundle.main.displayName)")
+                Text("Version \(Bundle.main.appVersionLong) (\(Bundle.main.appBuild))")
+                Divider()
+                    .frame(height: 2)
+                    .overlay(.yellow)
+                Text("Eventdaten vom \(viewModel.updateEventDataLastUpdate)")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.system(size: 10));
-            Text("Freundedaten vom \(viewModel.friendDataLastUpdate)")
-                .frame(maxWidth: .infinity, alignment: .leading)
+                Text("Event-Detaildaten vom \(viewModel.realTimeDataLastUpdate)")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.system(size: 10));
+                Text("Freundedaten vom \(viewModel.friendDataLastUpdate)")
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.system(size: 10))
-                
-        
-           
-            
+            }
         }
     }
 }

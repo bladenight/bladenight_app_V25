@@ -33,6 +33,10 @@ enum EventStatus {
   ///Event actual finished
   @MappableValue('FIN')
   finished,
+
+  ///Event actual finished
+  @MappableValue('UKN')
+  unknown,
 }
 
 @MappableClass(includeCustomMappers: [DurationMapper()])
@@ -55,6 +59,8 @@ class Event with EventMappable implements Comparable {
   final double? startPointLongitude;
   @MappableField(key: 'stp') //startPointInfo
   final String? startPoint;
+  @MappableField(key: 'isa') //event is running - means it't after start time or manual active
+  final bool isActive;
 
   @MappableField(key: 'lastupdate')
   late DateTime? lastupdate;
@@ -81,7 +87,8 @@ class Event with EventMappable implements Comparable {
       this.rpcException,
       this.startPointLatitude,
       this.startPointLongitude,
-      this.startPoint});
+      this.startPoint,
+      this.isActive = true});
 
   @override
   String toString() {
@@ -151,12 +158,11 @@ class Event with EventMappable implements Comparable {
   ///
   /// if Event duration is zero return always false
   bool get isOver {
-    if (duration.inMinutes ==0 ) return false;
+    if (duration.inMinutes == 0) return false;
     var eventDifference =
-    startDate.toUtc().add(duration).difference(DateTime.now().toUtc());
+        startDate.toUtc().add(duration).difference(DateTime.now().toUtc());
     return eventDifference.isNegative;
   }
-
 
   @override
   int compareTo(other) {
@@ -175,18 +181,16 @@ class Event with EventMappable implements Comparable {
     return 0;
   }
 
-  String get  statusText {
+  String get statusText {
     return '${Localize.current.status}: ${Intl.select(status, {
-      EventStatus.pending: Localize.current.pending,
-      EventStatus.confirmed:
-      Localize.current.confirmed,
-      EventStatus.cancelled:
-      Localize.current.canceled,
-      EventStatus.noevent: Localize.current.noEvent,
-      EventStatus.running: Localize.current.running,
-      EventStatus.finished: Localize.current.finished,
-      'other': Localize.current.unknown
-    })}';
+          EventStatus.pending: Localize.current.pending,
+          EventStatus.confirmed: Localize.current.confirmed,
+          EventStatus.cancelled: Localize.current.canceled,
+          EventStatus.noevent: Localize.current.noEvent,
+          EventStatus.running: Localize.current.running,
+          EventStatus.finished: Localize.current.finished,
+          'other': Localize.current.unknown
+        })}';
   }
 
   static Future<Event> getEventWamp({bool forceUpdate = false}) async {
@@ -201,13 +205,13 @@ class Event with EventMappable implements Comparable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getActiveEvent);
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp<Event>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => Event.rpcError(error));
     if (wampResult is Map<String, dynamic>) {
       var event = MapperContainer.globals.fromMap<Event>(wampResult);
-      event.lastupdate=DateTime.now();
+      event.lastupdate = DateTime.now();
       return event;
     }
     if (wampResult is Event) {
@@ -244,7 +248,7 @@ class Events with EventsMappable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getallevents);
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp<Events>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => Events.rpcError(error));

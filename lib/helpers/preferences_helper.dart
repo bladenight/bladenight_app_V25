@@ -1,11 +1,11 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/friend.dart';
 import '../models/image_and_link.dart';
 import '../models/images_and_links.dart';
+import 'logger.dart';
 
 class PreferencesHelper {
   static const String _friendPref = 'friendlist';
@@ -54,7 +54,6 @@ class PreferencesHelper {
     return finalFriendId;
   }
 
-
   static Future<bool> getAutoStopFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     final bool? autoStop = prefs.getBool(_trackAutoStopPref);
@@ -67,7 +66,7 @@ class PreferencesHelper {
   }
 
   static Future<ImageAndLinkList> getImagesAndLinksPref() async {
-    if (!kIsWeb) FLog.trace(text: 'Prefs get images and links');
+    if (!kIsWeb) BnLog.trace(text: 'Prefs get images and links');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       var val = prefs.getString(_imagesAndLinksPref);
@@ -81,7 +80,7 @@ class PreferencesHelper {
       return Future.value(links);
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(text: 'Error Prefs get images and links', exception: e);
+        BnLog.error(text: 'Error Prefs get images and links', exception: e);
       }
     }
     return ImageAndLinkList(<ImageAndLink>[]);
@@ -94,7 +93,7 @@ class PreferencesHelper {
       prefs.setString(_imagesAndLinksPref, prefString);
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(text: 'Error Prefs set images and links', exception: e);
+        BnLog.error(text: 'Error Prefs set images and links', exception: e);
       }
     }
   }

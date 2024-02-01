@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'relationship_input.dart';
 
@@ -19,11 +20,6 @@ class RelationshipInputMessageMapper
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'RelationshipInputMessage';
 
@@ -38,7 +34,7 @@ class RelationshipInputMessageMapper
       Field('requestId', _$requestId, key: 'req');
 
   @override
-  final Map<Symbol, Field<RelationshipInputMessage, dynamic>> fields = const {
+  final MappableFields<RelationshipInputMessage> fields = const {
     #deviceId: _f$deviceId,
     #friendId: _f$friendId,
     #requestId: _f$requestId,
@@ -55,23 +51,23 @@ class RelationshipInputMessageMapper
   final Function instantiate = _instantiate;
 
   static RelationshipInputMessage fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<RelationshipInputMessage>(map));
+    return ensureInitialized().decodeMap<RelationshipInputMessage>(map);
   }
 
   static RelationshipInputMessage fromJson(String json) {
-    return _guard((c) => c.fromJson<RelationshipInputMessage>(json));
+    return ensureInitialized().decodeJson<RelationshipInputMessage>(json);
   }
 }
 
 mixin RelationshipInputMessageMappable {
   String toJson() {
-    return RelationshipInputMessageMapper._guard(
-        (c) => c.toJson(this as RelationshipInputMessage));
+    return RelationshipInputMessageMapper.ensureInitialized()
+        .encodeJson<RelationshipInputMessage>(this as RelationshipInputMessage);
   }
 
   Map<String, dynamic> toMap() {
-    return RelationshipInputMessageMapper._guard(
-        (c) => c.toMap(this as RelationshipInputMessage));
+    return RelationshipInputMessageMapper.ensureInitialized()
+        .encodeMap<RelationshipInputMessage>(this as RelationshipInputMessage);
   }
 
   RelationshipInputMessageCopyWith<RelationshipInputMessage,
@@ -80,20 +76,22 @@ mixin RelationshipInputMessageMappable {
           this as RelationshipInputMessage, $identity, $identity);
   @override
   String toString() {
-    return RelationshipInputMessageMapper._guard((c) => c.asString(this));
+    return RelationshipInputMessageMapper.ensureInitialized()
+        .stringifyValue(this as RelationshipInputMessage);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            RelationshipInputMessageMapper._guard(
-                (c) => c.isEqual(this, other)));
+            RelationshipInputMessageMapper.ensureInitialized()
+                .isValueEqual(this as RelationshipInputMessage, other));
   }
 
   @override
   int get hashCode {
-    return RelationshipInputMessageMapper._guard((c) => c.hash(this));
+    return RelationshipInputMessageMapper.ensureInitialized()
+        .hashValue(this as RelationshipInputMessage);
   }
 }
 
@@ -154,11 +152,6 @@ class GetFriendsListMessageMapper
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'GetFriendsListMessage';
 
@@ -173,7 +166,7 @@ class GetFriendsListMessageMapper
       Field('requestId', _$requestId, key: 'req');
 
   @override
-  final Map<Symbol, Field<GetFriendsListMessage, dynamic>> fields = const {
+  final MappableFields<GetFriendsListMessage> fields = const {
     #deviceId: _f$deviceId,
     #friendId: _f$friendId,
     #requestId: _f$requestId,
@@ -190,23 +183,23 @@ class GetFriendsListMessageMapper
   final Function instantiate = _instantiate;
 
   static GetFriendsListMessage fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<GetFriendsListMessage>(map));
+    return ensureInitialized().decodeMap<GetFriendsListMessage>(map);
   }
 
   static GetFriendsListMessage fromJson(String json) {
-    return _guard((c) => c.fromJson<GetFriendsListMessage>(json));
+    return ensureInitialized().decodeJson<GetFriendsListMessage>(json);
   }
 }
 
 mixin GetFriendsListMessageMappable {
   String toJson() {
-    return GetFriendsListMessageMapper._guard(
-        (c) => c.toJson(this as GetFriendsListMessage));
+    return GetFriendsListMessageMapper.ensureInitialized()
+        .encodeJson<GetFriendsListMessage>(this as GetFriendsListMessage);
   }
 
   Map<String, dynamic> toMap() {
-    return GetFriendsListMessageMapper._guard(
-        (c) => c.toMap(this as GetFriendsListMessage));
+    return GetFriendsListMessageMapper.ensureInitialized()
+        .encodeMap<GetFriendsListMessage>(this as GetFriendsListMessage);
   }
 
   GetFriendsListMessageCopyWith<GetFriendsListMessage, GetFriendsListMessage,
@@ -215,19 +208,22 @@ mixin GetFriendsListMessageMappable {
           this as GetFriendsListMessage, $identity, $identity);
   @override
   String toString() {
-    return GetFriendsListMessageMapper._guard((c) => c.asString(this));
+    return GetFriendsListMessageMapper.ensureInitialized()
+        .stringifyValue(this as GetFriendsListMessage);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            GetFriendsListMessageMapper._guard((c) => c.isEqual(this, other)));
+            GetFriendsListMessageMapper.ensureInitialized()
+                .isValueEqual(this as GetFriendsListMessage, other));
   }
 
   @override
   int get hashCode {
-    return GetFriendsListMessageMapper._guard((c) => c.hash(this));
+    return GetFriendsListMessageMapper.ensureInitialized()
+        .hashValue(this as GetFriendsListMessage);
   }
 }
 

@@ -1,4 +1,3 @@
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/deviceid_helper.dart';
+import '../../helpers/logger.dart';
 import '../../models/event.dart';
 import '../../models/messages/kill_server.dart';
 import '../../models/messages/set_active_route.dart';
@@ -20,7 +20,7 @@ import '../../providers/route_providers.dart';
 import '../../wamp/admin_calls.dart';
 
 class AdminPage extends ConsumerStatefulWidget {
-  const AdminPage({required this.password, Key? key}) : super(key: key);
+  const AdminPage({required this.password, super.key});
   final String password;
 
   @override
@@ -74,10 +74,8 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                       ).toMap(),
                     );
                   } catch (e) {
-                    if (!kIsWeb) {
-                      FLog.error(
-                          text: 'SetActiveStatusMessage failed', exception: e);
-                    }
+                    BnLog.error(
+                        text: 'SetActiveStatusMessage failed', exception: e);
                   }
                   setState(() => _activityVisible = false);
                   Future.delayed(const Duration(seconds: 1), () {
@@ -130,7 +128,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                     );
                   } catch (e) {
                     if (!kIsWeb) {
-                      FLog.error(
+                      BnLog.error(
                           text: 'Error setroute',
                           className: toString(),
                           methodName: 'Adminpage Setroute');
@@ -145,7 +143,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   var routeRes = ref.read(currentRouteProvider);
                   var eventRes = ref.read(activeEventProvider);
                   if (!kIsWeb) {
-                    FLog.info(
+                    BnLog.info(
                         text: 'Admin set route $routeRes,event $eventRes');
                   }
                 } else {
@@ -174,7 +172,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                     ).toMap());
                   } catch (e) {
                     if (!kIsWeb) {
-                      FLog.error(
+                      BnLog.error(
                           text: 'Error KillServer',
                           className: toString(),
                           methodName: 'Adminpage KillServer');

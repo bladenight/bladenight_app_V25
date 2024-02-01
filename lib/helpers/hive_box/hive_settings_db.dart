@@ -1,6 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
@@ -8,10 +7,15 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:logger/logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../models/event.dart';
+import '../../models/user_trackpoint.dart';
+import '../logger.dart';
+import '../uuid_helper.dart';
 
+part 'location_store.dart';
 part 'map_settings.dart';
 
 final hiveDBProvider =
@@ -35,6 +39,7 @@ class HiveSettingsDB {
   }
 
   void init() async {
+    setSessionShortUUID(UUID.createShortUuid());
     //not working here
     //await Hive.initFlutter();
     //await Hive.openBox('settings');
@@ -57,8 +62,21 @@ class HiveSettingsDB {
   }
 
   static void setBackgroundLocationLogLevel(int val) {
-    if (!kIsWeb) FLog.info(text: 'setBackgroundLocationLogLevel to $val');
+    BnLog.info(text: 'setBackgroundLocationLogLevel to $val');
     _hiveBox.put(_bgLoglevelKey, val);
+  }
+
+  static const String _sessionShortUUIDKey = 'sessionShortUUIDPref';
+
+  ///get RoutePointsAsString
+  static String get sessionShortUUID {
+    return _hiveBox.get(_sessionShortUUIDKey,
+        defaultValue: UUID.createShortUuid());
+  }
+
+  ///set SessionShortUUID
+  static void setSessionShortUUID(String val) {
+    _hiveBox.put(_sessionShortUUIDKey, val);
   }
 
   static const String _disableMotionDetection = 'disableMotionDetectionPref';
@@ -71,7 +89,7 @@ class HiveSettingsDB {
 
   ///set if motion detection is disabled
   static void setIsMotionDetectionDisabled(bool val) {
-    if (!kIsWeb) FLog.info(text: 'setisMotionDetectionDisabled to $val');
+    if (!kIsWeb) BnLog.info(text: 'setisMotionDetectionDisabled to $val');
     _hiveBox.put(_disableMotionDetection, val);
   }
 
@@ -87,7 +105,7 @@ class HiveSettingsDB {
 
   ///set if motion detection is disabled
   static void setUseAlternativeLocationProvider(bool val) {
-    if (!kIsWeb) FLog.info(text: 'setUseAlternativeLocationProvider to $val');
+    if (!kIsWeb) BnLog.info(text: 'setUseAlternativeLocationProvider to $val');
     _hiveBox.put(_useAlternativeLocationProvider, val);
   }
 
@@ -102,21 +120,22 @@ class HiveSettingsDB {
 
   ///set if motion detection is disabled
   static void setHasShownProminentDisclosure(bool val) {
-    if (!kIsWeb) FLog.info(text: 'set hasShownProminentDisclosure to $val');
+    if (!kIsWeb) BnLog.info(text: 'set hasShownProminentDisclosure to $val');
     _hiveBox.put(_hasShownProminentDisclosure, val);
   }
 
   static const String _fLogLevel = 'fLogLevelPref';
 
   ///get loglevel FLog
-  static int get flogLogLevel {
-    return _hiveBox.get(_fLogLevel, defaultValue: 3);
+  static Level get flogLogLevel {
+    var levelIndex = _hiveBox.get(_fLogLevel, defaultValue: Level.info.index);
+    return Level.values[levelIndex];
   }
 
   ///set loglevel
-  static void setFlogLevel(int val) {
-    if (!kIsWeb) FLog.info(text: 'setFlogLevel to $val');
-    _hiveBox.put(_fLogLevel, val);
+  static void setFlogLevel(Level level) {
+    if (!kIsWeb) BnLog.info(text: 'setFlogLevel to ${level.index}');
+    _hiveBox.put(_fLogLevel, level.index);
   }
 
   static const String _odometerKey = 'odometerKeyPref';
@@ -239,7 +258,7 @@ class HiveSettingsDB {
 
   ///get oneSignalId
   static String get oneSignalId {
-    return _hiveBox.get(_oneSignalIdKey, defaultValue: true);
+    return _hiveBox.get(_oneSignalIdKey, defaultValue: 'noId');
   }
 
   ///set if  setOneSignalId were shown
@@ -424,6 +443,18 @@ class HiveSettingsDB {
     _hiveBox.put(_getUserIsParticipantKey, isParticipant);
   }
 
+  static const String _myNameKey = 'myNamePref';
+
+  ///get name to transfer vie lokal link
+  static String get myName {
+    return _hiveBox.get(_myNameKey, defaultValue: 'Anonym');
+  }
+
+  ///set MyName
+  static void setMyName(String val) {
+    _hiveBox.put(_myNameKey, val);
+  }
+
   static const String _routePointsLastUpdate =
       'routePoints_routePointsLastUpdatePref';
 
@@ -518,19 +549,6 @@ class HiveSettingsDB {
   ///set eventsMapString as Json
   static void setEventsJson(String val) {
     _hiveBox.put(_eventsMapKey, val);
-  }
-
-
-  static const String _mapMenuVisibleKey = 'mapMenuVisiblePref';
-
-  ///get mapMenuVisible
-  static bool get mapMenuVisible {
-    return _hiveBox.get(_mapMenuVisibleKey, defaultValue: true);
-  }
-
-  ///set mapMenuVisibleString
-  static void setMapMenuVisible(bool val) {
-    _hiveBox.put(_mapMenuVisibleKey, val);
   }
 
   static const String _themeKey = 'dynamicTheme3Pref';

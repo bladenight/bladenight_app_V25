@@ -14,7 +14,7 @@ class AdminCalls {
     BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
         WampEndpoint.setactivestatus, message);
 
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampError(error.toString()));
@@ -29,7 +29,7 @@ class AdminCalls {
     BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
         WampEndpoint.setactiveroute, message);
 
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampError(error.toString()));
@@ -44,7 +44,7 @@ class AdminCalls {
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.killserver, message);
 
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampError(error.toString()));
@@ -64,7 +64,7 @@ class AdminCalls {
       message,
     );
 
-    var wampResult = await Wamp_V2.instance
+    var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampError(error.toString()));

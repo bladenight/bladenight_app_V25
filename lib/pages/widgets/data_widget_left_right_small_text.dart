@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 
 class DataWidgetLeftRightSmallTextContent extends StatelessWidget {
   const DataWidgetLeftRightSmallTextContent(
-      {Key? key,
+      {super.key,
       required this.descriptionLeft,
       required this.descriptionRight,
-      required this.rightWidget})
-      : super(key: key);
+      required this.rightWidget});
   final String descriptionLeft;
   final String descriptionRight;
   final Widget rightWidget;
@@ -20,7 +19,7 @@ class DataWidgetLeftRightSmallTextContent extends StatelessWidget {
           descriptionLeft,
           overflow: TextOverflow.fade,
           style: TextStyle(
-              fontSize: _textSize * MediaQuery.textScaleFactorOf(context),
+              fontSize: MediaQuery.textScalerOf(context).scale(_textSize),
               color: CupertinoTheme.of(context).primaryColor),
           maxLines: 1,
         ),
@@ -30,7 +29,7 @@ class DataWidgetLeftRightSmallTextContent extends StatelessWidget {
           Text(
             descriptionRight,
             style: TextStyle(
-                fontSize: _textSize * MediaQuery.textScaleFactorOf(context),
+                fontSize: MediaQuery.textScalerOf(context).scale(_textSize),
                 color: CupertinoTheme.of(context).primaryColor),
           ),
           const SizedBox(

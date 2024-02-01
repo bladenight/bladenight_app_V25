@@ -21,24 +21,22 @@ class RelationshipInputMessage with RelationshipInputMessageMappable{
 ///Create relationship
 //@MappableClass()
 class CreateRelationshipMessage extends RelationshipInputMessage {
-  CreateRelationshipMessage({required String deviceId, required int friendId})
-      : super(deviceId: deviceId, friendId: friendId, requestId: 0);
+  CreateRelationshipMessage({required super.deviceId, required super.friendId})
+      : super(requestId: 0);
 }
 
 ///Finalize relationship with 6-digit code
 //@MappableClass()
 class FinalizeRelationshipMessage extends RelationshipInputMessage {
   FinalizeRelationshipMessage(
-      {required String deviceId, required int friendId, required int requestId})
-      : super(deviceId: deviceId, friendId: friendId, requestId: requestId);
+      {required super.deviceId, required super.friendId, required super.requestId});
 }
 
 ///Delete relationship
 //@MappableClass()
 class DeleteRelationshipMessage extends RelationshipInputMessage {
   DeleteRelationshipMessage(
-      {required String deviceId, required int friendId, required int requestId})
-      : super(deviceId: deviceId, friendId: friendId, requestId: requestId);
+      {required super.deviceId, required super.friendId, required super.requestId});
 }
 
 @MappableClass()

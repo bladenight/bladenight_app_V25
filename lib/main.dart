@@ -5,8 +5,6 @@ import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:f_logs/f_logs.dart';
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,17 +20,13 @@ import 'app_settings/app_configuration_helper.dart';
 import 'firebase_options.dart';
 import 'generated/l10n.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
-import 'helpers/logger_helper.dart';
+import 'helpers/logger.dart';
 import 'helpers/notification/notification_helper.dart';
 import 'helpers/preferences_helper.dart';
 import 'main.init.dart';
 import 'pages/home_screen.dart';
 import 'pages/widgets/intro_slider.dart';
 import 'providers/shared_prefs_provider.dart';
-
-
-
-const bnUpdateEventTaskKey = 'workmanager.background.task';
 
 void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -46,7 +40,7 @@ void main() async {
           FlutterError.presentError(details);
         };
       }
-      if (!kIsWeb) {
+      if (!kDebugMode && !kIsWeb)  {
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
@@ -62,9 +56,8 @@ void main() async {
       initializeMappers();
       await Hive.initFlutter();
       await Hive.openBox('settings');
-
+      await initLogger();
       if (!kIsWeb) {
-        await initLogger();
         await initNotifications();
       }
       initSettings();
@@ -85,19 +78,19 @@ void main() async {
       if (!kDebugMode && !kIsWeb) {
         //FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }
-      if (!kIsWeb) {
-        FLog.error(
-            className: 'main',
-            methodName: 'runZonedGuarded',
-            text: '$error\n$stackTrace');
-      }
+
+      BnLog.error(
+          className: 'main',
+          methodName: 'runZonedGuarded',
+          text: '$error\n$stackTrace');
     },
   );
 }
 
 Future<bool> initLogger() async {
   try {
-    await LoggerHelper.instance.init();
+    await BnLog.init();
+    BnLog.info(text: 'logger initialized');
   } catch (e) {
     print(e);
     return false;
@@ -121,13 +114,15 @@ void initSettings() async {
 }
 
 class BladeNightApp extends StatelessWidget {
-  const BladeNightApp({Key? key}) : super(key: key);
+  const BladeNightApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        final shouldPop = await showDialog<bool>(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+
+         await showDialog<bool>(
           context: context,
           builder: (context) {
             return AlertDialog(
@@ -150,7 +145,7 @@ class BladeNightApp extends StatelessWidget {
             );
           },
         );
-        return shouldPop!;
+        return ;
       },
       child: MediaQuery.fromView(
         view: View.of(context),

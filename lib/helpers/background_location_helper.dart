@@ -1,4 +1,3 @@
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
@@ -6,6 +5,7 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 
 import '../generated/l10n.dart';
+import 'logger.dart';
 
 class BackgroundGeolocationHelper {
   static Future<bool> resetOdoMeter(BuildContext context) async {
@@ -19,7 +19,7 @@ class BackgroundGeolocationHelper {
       bg.BackgroundGeolocation.setOdometer(0.0)
           .then((value) => true)
           .catchError((error) {
-        if (!kIsWeb) FLog.error(text: '[resetOdometer] ERROR: $error');
+        if (!kIsWeb) BnLog.error(text: '[resetOdometer] ERROR: $error');
         return false;
       });
     }
@@ -41,11 +41,9 @@ class BackgroundGeolocationHelper {
         return await bg.DeviceSettings.show(request);
       }
     }).catchError((dynamic error) {
-      print(error);
-      if (!kIsWeb) FLog.error(text: 'Batterieoptimierung fehlgeschlagen $error');
+      BnLog.error(text: 'Batterieoptimierung fehlgeschlagen $error');
       return false;
     });
-
     return false;
   }
 }

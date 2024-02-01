@@ -70,7 +70,7 @@ extension MapSettings on HiveSettingsDB {
   }
 
   ///Returns map boundaries for static asset offline map tiles
-  static LatLngBounds? get mapOfflineBoundaries {
+  static LatLngBounds get mapOfflineBoundaries {
     return LatLngBounds(
       const LatLng(kIsWeb ? 47.9579 : 48.0570, kIsWeb ? 11.8213 : 11.4416),
       const LatLng(48.2349, kIsWeb ? 11.2816 : 11.6213),
@@ -78,7 +78,7 @@ extension MapSettings on HiveSettingsDB {
   }
 
   ///Returns map boundaries for static asset offline map tiles
-  static LatLngBounds? get mapOnlineDefaultBoundaries {
+  static LatLngBounds get mapOnlineDefaultBoundaries {
     return LatLngBounds(
       const LatLng(81.47299, 46.75348),
       const LatLng(29.735139, -34.49296),
@@ -91,7 +91,7 @@ extension MapSettings on HiveSettingsDB {
   ///were served
   ///
   /// Returns [mapOnlineDefaultBoundaries] if no parameters given or failed
-  static LatLngBounds? get mapOnlineBoundaries {
+  static LatLngBounds get mapOnlineBoundaries {
     var val = HiveSettingsDB._hiveBox
         .get(_mapOnlineBoundariesKey, defaultValue: null);
 
@@ -109,7 +109,7 @@ extension MapSettings on HiveSettingsDB {
       );
     } catch (e) {
       if (!kIsWeb) {
-        FLog.error(text: 'LatLngBounds could not converted', exception: e);
+        BnLog.error(text: 'LatLngBounds could not converted', exception: e);
       }
     }
     return mapOnlineDefaultBoundaries;
@@ -124,29 +124,12 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.delete(_mapOnlineBoundariesKey);
   }
 
-  static const String _mapLinkSubdomainsKey = 'mapLinkSubdomainsPref';
-
-  ///get mapLinkSubdomains level for map
-  static List<String> get mapLinkSubdomains {
-    var value =
-        HiveSettingsDB._hiveBox.get(_mapLinkSubdomainsKey, defaultValue: null);
-    if (value == null) {
-      return ['a', 'b', 'c'];
-    }
-    return value.split(',');
-  }
-
-  ///set mapLinkSubdomains level for map
-  static void setMapLinkSubdomains(String val) {
-    HiveSettingsDB._hiveBox.put(_mapLinkSubdomainsKey, val);
-  }
-
-  static const String _openStreetMapLinkKey = 'openStreetMapLinkPref';
+  static const String _openStreetMapLinkKey = 'osmLightLinkPref';
 
   ///get openStreetMapLinkAsString
   static String get openStreetMapLinkString {
     return HiveSettingsDB._hiveBox.get(_openStreetMapLinkKey,
-        defaultValue: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        defaultValue: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png');
   }
 
   ///set openStreetMapLinkString
@@ -158,12 +141,12 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.delete(_openStreetMapLinkKey);
   }
 
-  static const String _openStreetMapDarkLinkKey = 'openStreetMapDarkLinkPref';
+  static const String _openStreetMapDarkLinkKey = 'osmDarkLinkPref';
 
   ///get openStreetMapDarkLinkAsString
   static String get openStreetMapDarkLinkString {
     return HiveSettingsDB._hiveBox.get(_openStreetMapDarkLinkKey,
-        defaultValue: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        defaultValue: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png');
   }
 
   ///set openStreetMapDarkLinkString
@@ -174,4 +157,30 @@ extension MapSettings on HiveSettingsDB {
   static void removeOpenStreetMapDarkLink() {
     HiveSettingsDB._hiveBox.delete(_openStreetMapDarkLinkKey);
   }
+
+  static const String _mapMenuVisibleKey = 'mapMenuVisiblePref';
+
+  ///get mapMenuVisible
+  static bool get mapMenuVisible {
+    return HiveSettingsDB._hiveBox.get(_mapMenuVisibleKey, defaultValue: true);
+  }
+
+  ///set mapMenuVisibleString
+  static void setMapMenuVisible(bool val) {
+    HiveSettingsDB._hiveBox.put(_mapMenuVisibleKey, val);
+  }
+
+  static const String showOwnTrackKey = 'showOwnTrackPref';
+
+  /// Get value
+  /// if own driven track should bei shown on map
+  static bool get showOwnTrack {
+    return HiveSettingsDB._hiveBox.get(showOwnTrackKey, defaultValue: true);
+  }
+
+  ///set showOwnTrack
+  static void setShowOwnTrack(bool val) {
+    HiveSettingsDB._hiveBox.put(showOwnTrackKey, val);
+  }
+
 }

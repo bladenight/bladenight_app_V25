@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -11,13 +10,14 @@ import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/export_import_data_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../providers/get_images_and_links_provider.dart';
-import 'bladeguard_page.dart';
 import 'events_page.dart';
 import 'friends/friends_page.dart';
 import 'home_page.dart';
 import 'map/map_page.dart';
+import 'settings_page.dart';
 import 'widgets/intro_slider.dart';
 
 bool _initialURILinkHandled = false;
@@ -25,7 +25,7 @@ bool _initialURILinkHandled = false;
 class HomeScreen extends ConsumerStatefulWidget {
   static const String routeName = '/homeScreen';
 
-  const HomeScreen({Key? key, int tabIndex = 0}) : super(key: key);
+  const HomeScreen({super.key, int tabIndex = 0});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -40,18 +40,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   void initState() {
-    if (!kIsWeb) {
-      FLog.info(
-          className: 'home_screen',
-          methodName: 'initState ',
-          text: 'App started');
-    }
+    BnLog.info(
+        className: 'home_screen',
+        methodName: 'initState ',
+        text: 'App started');
     super.initState();
     if (kIsWeb) {
       tabController = CupertinoTabController(initialIndex: 1)
         ..addListener(() {
           if (!kIsWeb) {
-            FLog.info(
+            BnLog.info(
                 className: 'home_screen',
                 methodName: 'tabControllerListener',
                 text: 'tabController selected index ${tabController.index}');
@@ -61,7 +59,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       tabController = CupertinoTabController(initialIndex: 0)
         ..addListener(() {
           if (!kIsWeb) {
-            FLog.debug(
+            BnLog.debug(
                 className: 'home_screen',
                 methodName: 'tabControllerListener',
                 text: 'tabController selected index ${tabController.index}');
@@ -93,7 +91,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _openIntroScreenFirstTime() async {
     if (!kIsWeb && !HiveSettingsDB.hasShownIntro) {
-      FLog.info(
+      BnLog.info(
           className: 'home_screen',
           methodName: 'openIntroScreenFirstTime',
           text: 'Will open IntroScreen');
@@ -127,7 +125,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       try {
         Uri? initUri = await getInitialUri();
         print('Invoked _initURIHandler');
-        if (!kIsWeb) FLog.info(text: 'Invoked _initURIHandler $initUri');
+        if (!kIsWeb) BnLog.info(text: 'Invoked _initURIHandler $initUri');
         if (initUri == null) return;
         _handleIncomingUriResult(initUri.toString());
         // Use the initialURI and warn the user if it is not correct,
@@ -135,10 +133,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       } on PlatformException catch (ex) {
         // Platform messages may fail but we ignore the exception
         if (!kIsWeb) {
-          FLog.error(text: 'Platform exception failed to get initial uri $ex');
+          BnLog.error(text: 'Platform exception failed to get initial uri $ex');
         }
       } on FormatException catch (err) {
-        if (!kIsWeb) FLog.error(text: 'malformed initial uri $err');
+        if (!kIsWeb) BnLog.error(text: 'malformed initial uri $err');
       }
     }
   }
@@ -150,7 +148,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // It will handle app links while the app is already started - be it in
     // the foreground or in the background.
     _uniLinkStreamSubscription = uriLinkStream.listen((Uri? uri) async {
-      if (!kIsWeb) FLog.info(text: 'Received URI: $uri');
+      if (!kIsWeb) BnLog.info(text: 'Received URI: $uri');
       _handleIncomingUriResult(uri.toString());
 
       //uri received
@@ -203,11 +201,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               icon: const Icon(CupertinoIcons.group),
               label: Localize.of(context).friends,
             ),
-          if (!kIsWeb && !HiveSettingsDB.isBladeGuard)
-            BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.shield_lefthalf_fill),
-              label: Localize.of(context).bladeGuard,
-            ),
+          BottomNavigationBarItem(
+            icon: const Icon(CupertinoIcons.settings_solid),
+            label: Localize.of(context).settings,
+          ),
         ],
       ),
       tabBuilder: (context, index) {
@@ -222,16 +219,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             if (!kIsWeb) {
               return const FriendsPage();
             }
-            return Container();
+            return const SettingsPage();
           case 4:
-            return Builder(builder: (context) {
-              if (!kIsWeb) {
-                return const BladeGuardPage();
-              }
-              return Container();
-              /*var ssp = context.watch(BladeguardLinkImageAndLink.provider);
+            if (!kIsWeb) {
+              return const SettingsPage();
+            }
+            return Container();
+          /*var ssp = context.watch(BladeguardLinkImageAndLink.provider);
               return ssp.link == null ? Container() : BladeGuardPage();*/
-            });
           default:
             return Container();
         }

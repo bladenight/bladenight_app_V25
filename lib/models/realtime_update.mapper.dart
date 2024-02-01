@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'realtime_update.dart';
 
@@ -17,11 +18,6 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
       EventStatusMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -60,9 +56,12 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
   static EventStatus? _$eventState(RealtimeUpdate v) => v.eventState;
   static const Field<RealtimeUpdate, EventStatus> _f$eventState =
       Field('eventState', _$eventState, key: 'sts', opt: true);
+  static bool _$eventIsActive(RealtimeUpdate v) => v.eventIsActive;
+  static const Field<RealtimeUpdate, bool> _f$eventIsActive =
+      Field('eventIsActive', _$eventIsActive, key: 'isa', opt: true, def: true);
 
   @override
-  final Map<Symbol, Field<RealtimeUpdate, dynamic>> fields = const {
+  final MappableFields<RealtimeUpdate> fields = const {
     #head: _f$head,
     #tail: _f$tail,
     #user: _f$user,
@@ -74,6 +73,7 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
     #specialFunction: _f$specialFunction,
     #rpcException: _f$rpcException,
     #eventState: _f$eventState,
+    #eventIsActive: _f$eventIsActive,
   };
 
   static RealtimeUpdate _instantiate(DecodingData data) {
@@ -88,28 +88,31 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
         friends: data.dec(_f$friends),
         specialFunction: data.dec(_f$specialFunction),
         rpcException: data.dec(_f$rpcException),
-        eventState: data.dec(_f$eventState));
+        eventState: data.dec(_f$eventState),
+        eventIsActive: data.dec(_f$eventIsActive));
   }
 
   @override
   final Function instantiate = _instantiate;
 
   static RealtimeUpdate fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<RealtimeUpdate>(map));
+    return ensureInitialized().decodeMap<RealtimeUpdate>(map);
   }
 
   static RealtimeUpdate fromJson(String json) {
-    return _guard((c) => c.fromJson<RealtimeUpdate>(json));
+    return ensureInitialized().decodeJson<RealtimeUpdate>(json);
   }
 }
 
 mixin RealtimeUpdateMappable {
   String toJson() {
-    return RealtimeUpdateMapper._guard((c) => c.toJson(this as RealtimeUpdate));
+    return RealtimeUpdateMapper.ensureInitialized()
+        .encodeJson<RealtimeUpdate>(this as RealtimeUpdate);
   }
 
   Map<String, dynamic> toMap() {
-    return RealtimeUpdateMapper._guard((c) => c.toMap(this as RealtimeUpdate));
+    return RealtimeUpdateMapper.ensureInitialized()
+        .encodeMap<RealtimeUpdate>(this as RealtimeUpdate);
   }
 
   RealtimeUpdateCopyWith<RealtimeUpdate, RealtimeUpdate, RealtimeUpdate>
@@ -117,19 +120,22 @@ mixin RealtimeUpdateMappable {
           this as RealtimeUpdate, $identity, $identity);
   @override
   String toString() {
-    return RealtimeUpdateMapper._guard((c) => c.asString(this));
+    return RealtimeUpdateMapper.ensureInitialized()
+        .stringifyValue(this as RealtimeUpdate);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            RealtimeUpdateMapper._guard((c) => c.isEqual(this, other)));
+            RealtimeUpdateMapper.ensureInitialized()
+                .isValueEqual(this as RealtimeUpdate, other));
   }
 
   @override
   int get hashCode {
-    return RealtimeUpdateMapper._guard((c) => c.hash(this));
+    return RealtimeUpdateMapper.ensureInitialized()
+        .hashValue(this as RealtimeUpdate);
   }
 }
 
@@ -156,7 +162,8 @@ abstract class RealtimeUpdateCopyWith<$R, $In extends RealtimeUpdate, $Out>
       FriendsMessage? friends,
       int? specialFunction,
       Exception? rpcException,
-      EventStatus? eventState});
+      EventStatus? eventState,
+      bool? eventIsActive});
   RealtimeUpdateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -193,7 +200,8 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
           FriendsMessage? friends,
           Object? specialFunction = $none,
           Object? rpcException = $none,
-          Object? eventState = $none}) =>
+          Object? eventState = $none,
+          bool? eventIsActive}) =>
       $apply(FieldCopyWithData({
         if (head != null) #head: head,
         if (tail != null) #tail: tail,
@@ -205,7 +213,8 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
         if (friends != null) #friends: friends,
         if (specialFunction != $none) #specialFunction: specialFunction,
         if (rpcException != $none) #rpcException: rpcException,
-        if (eventState != $none) #eventState: eventState
+        if (eventState != $none) #eventState: eventState,
+        if (eventIsActive != null) #eventIsActive: eventIsActive
       }));
   @override
   RealtimeUpdate $make(CopyWithData data) => RealtimeUpdate(
@@ -219,7 +228,8 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
       friends: data.get(#friends, or: $value.friends),
       specialFunction: data.get(#specialFunction, or: $value.specialFunction),
       rpcException: data.get(#rpcException, or: $value.rpcException),
-      eventState: data.get(#eventState, or: $value.eventState));
+      eventState: data.get(#eventState, or: $value.eventState),
+      eventIsActive: data.get(#eventIsActive, or: $value.eventIsActive));
 
   @override
   RealtimeUpdateCopyWith<$R2, RealtimeUpdate, $Out2> $chain<$R2, $Out2>(

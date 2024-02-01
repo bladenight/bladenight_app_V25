@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
 
 import '../../generated/l10n.dart';
 import '../../providers/version_provider.dart';
-import 'data_loading_indicator.dart';
 
 class VersionWidget extends ConsumerWidget {
   const VersionWidget({super.key});
@@ -14,7 +14,7 @@ class VersionWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var appInfo = ref.watch(versionProvider);
     return appInfo.when(
-      loading: () => const DataLoadingIndicator(),
+      loading: () => const CircularProgressIndicator(),
       error: (err, stack) => Container(),
       data: (appInfoData) {
         return Column(

@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'shake_hands.dart';
 
@@ -14,11 +15,6 @@ class ShakeHandMapper extends ClassMapperBase<ShakeHand> {
       MapperContainer.globals.use(_instance = ShakeHandMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -42,7 +38,7 @@ class ShakeHandMapper extends ClassMapperBase<ShakeHand> {
       Field('osversion', _$osversion, key: 'rel', opt: true, def: 'unknown');
 
   @override
-  final Map<Symbol, Field<ShakeHand, dynamic>> fields = const {
+  final MappableFields<ShakeHand> fields = const {
     #build: _f$build,
     #deviceId: _f$deviceId,
     #manufacturer: _f$manufacturer,
@@ -63,40 +59,44 @@ class ShakeHandMapper extends ClassMapperBase<ShakeHand> {
   final Function instantiate = _instantiate;
 
   static ShakeHand fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<ShakeHand>(map));
+    return ensureInitialized().decodeMap<ShakeHand>(map);
   }
 
   static ShakeHand fromJson(String json) {
-    return _guard((c) => c.fromJson<ShakeHand>(json));
+    return ensureInitialized().decodeJson<ShakeHand>(json);
   }
 }
 
 mixin ShakeHandMappable {
   String toJson() {
-    return ShakeHandMapper._guard((c) => c.toJson(this as ShakeHand));
+    return ShakeHandMapper.ensureInitialized()
+        .encodeJson<ShakeHand>(this as ShakeHand);
   }
 
   Map<String, dynamic> toMap() {
-    return ShakeHandMapper._guard((c) => c.toMap(this as ShakeHand));
+    return ShakeHandMapper.ensureInitialized()
+        .encodeMap<ShakeHand>(this as ShakeHand);
   }
 
   ShakeHandCopyWith<ShakeHand, ShakeHand, ShakeHand> get copyWith =>
       _ShakeHandCopyWithImpl(this as ShakeHand, $identity, $identity);
   @override
   String toString() {
-    return ShakeHandMapper._guard((c) => c.asString(this));
+    return ShakeHandMapper.ensureInitialized()
+        .stringifyValue(this as ShakeHand);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ShakeHandMapper._guard((c) => c.isEqual(this, other)));
+            ShakeHandMapper.ensureInitialized()
+                .isValueEqual(this as ShakeHand, other));
   }
 
   @override
   int get hashCode {
-    return ShakeHandMapper._guard((c) => c.hash(this));
+    return ShakeHandMapper.ensureInitialized().hashValue(this as ShakeHand);
   }
 }
 

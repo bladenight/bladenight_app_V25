@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'moving_point.dart';
 
@@ -14,11 +15,6 @@ class MovingPointMapper extends ClassMapperBase<MovingPoint> {
       MapperContainer.globals.use(_instance = MovingPointMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -53,7 +49,7 @@ class MovingPointMapper extends ClassMapperBase<MovingPoint> {
       Field('accuracy', _$accuracy, key: 'acc', opt: true);
 
   @override
-  final Map<Symbol, Field<MovingPoint, dynamic>> fields = const {
+  final MappableFields<MovingPoint> fields = const {
     #position: _f$position,
     #speed: _f$speed,
     #realSpeed: _f$realSpeed,
@@ -82,40 +78,44 @@ class MovingPointMapper extends ClassMapperBase<MovingPoint> {
   final Function instantiate = _instantiate;
 
   static MovingPoint fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<MovingPoint>(map));
+    return ensureInitialized().decodeMap<MovingPoint>(map);
   }
 
   static MovingPoint fromJson(String json) {
-    return _guard((c) => c.fromJson<MovingPoint>(json));
+    return ensureInitialized().decodeJson<MovingPoint>(json);
   }
 }
 
 mixin MovingPointMappable {
   String toJson() {
-    return MovingPointMapper._guard((c) => c.toJson(this as MovingPoint));
+    return MovingPointMapper.ensureInitialized()
+        .encodeJson<MovingPoint>(this as MovingPoint);
   }
 
   Map<String, dynamic> toMap() {
-    return MovingPointMapper._guard((c) => c.toMap(this as MovingPoint));
+    return MovingPointMapper.ensureInitialized()
+        .encodeMap<MovingPoint>(this as MovingPoint);
   }
 
   MovingPointCopyWith<MovingPoint, MovingPoint, MovingPoint> get copyWith =>
       _MovingPointCopyWithImpl(this as MovingPoint, $identity, $identity);
   @override
   String toString() {
-    return MovingPointMapper._guard((c) => c.asString(this));
+    return MovingPointMapper.ensureInitialized()
+        .stringifyValue(this as MovingPoint);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MovingPointMapper._guard((c) => c.isEqual(this, other)));
+            MovingPointMapper.ensureInitialized()
+                .isValueEqual(this as MovingPoint, other));
   }
 
   @override
   int get hashCode {
-    return MovingPointMapper._guard((c) => c.hash(this));
+    return MovingPointMapper.ensureInitialized().hashValue(this as MovingPoint);
   }
 }
 

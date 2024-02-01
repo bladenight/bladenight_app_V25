@@ -8,7 +8,7 @@ import '../helpers/export_import_data_helper.dart';
 import '../helpers/url_launch_helper.dart';
 
 class AboutPage extends StatefulWidget {
-  const AboutPage({Key? key}) : super(key: key);
+  const AboutPage({super.key});
 
   @override
   State<AboutPage> createState() => _AboutPageState();
@@ -18,11 +18,6 @@ class AboutPage extends StatefulWidget {
         .push(CupertinoPageRoute(builder: (context) => const AboutPage()));
   }
 }
-
-String appName = '';
-String packageName = '';
-String version = '';
-String buildNumber = '';
 
 class _AboutPageState extends State<AboutPage> {
   @override

@@ -1,4 +1,3 @@
-import 'package:f_logs/model/flog/flog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,9 +6,11 @@ import 'package:universal_io/io.dart';
 import '../models/event.dart';
 import '../models/moving_point.dart';
 import '../models/route.dart';
-import '../models/watchEvent.dart';
+import '../models/watch_event.dart';
 import '../providers/active_event_notifier_provider.dart';
+import '../providers/is_tracking_provider.dart';
 import '../providers/location_provider.dart';
+import 'logger.dart';
 
 const MethodChannel channel = MethodChannel('bladenightchannel');
 const String flutterToWatch = 'flutterToWatch';
@@ -33,10 +34,6 @@ class SendToWatch {
   static updateRealtimeData(String? realTimeUpdate) {
     if (!Platform.isIOS) {
       return;
-    }
-
-    if (kDebugMode) {
-      print('updateRealtimeData $realTimeUpdate');
     }
     channel.invokeMethod(flutterToWatch,
         {'method': 'updateRealtimeData', 'data': realTimeUpdate});
@@ -102,7 +99,7 @@ class SendToWatch {
       return;
     }
     channel.invokeMethod(
-        transferApplicationContext, //transferApplicationContext
+        flutterToWatch, //transferApplicationContext
         {'method': 'updateFriends', 'data': friendsJsonsArray});
   }
 }
@@ -114,12 +111,11 @@ Future<void> initFlutterChannel() async {
       case 'sendNavToggleToFlutter':
         print('sendNavToggleToFlutter received');
         try {
-          ProviderContainer()
-              .read(locationProvider)
-              .toggleProcessionTracking(userIsParticipant: true);
+          ProviderContainer().read(isTrackingProvider.notifier)
+              .toggleTracking(true);
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'sendNavToggleToFlutter',
                 text: '$e');
@@ -135,7 +131,7 @@ Future<void> initFlutterChannel() async {
           ProviderContainer().read(locationProvider).refresh(forceUpdate: true);
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'getEventDataFromFlutter',
                 text: '$e');
@@ -145,11 +141,10 @@ Future<void> initFlutterChannel() async {
       case 'getLocationIsTracking':
         print('getLocationIsTrackingFromFlutter received');
         try {
-          SendToWatch.setIsLocationTracking(
-              LocationProvider.instance.isTracking);
+          SendToWatch.setIsLocationTracking(ProviderContainer().read(isTrackingProvider));
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'getLocationIsTracking',
                 text: '$e');
@@ -162,7 +157,7 @@ Future<void> initFlutterChannel() async {
           LocationProvider.instance.refresh(forceUpdate: true);
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'getFriendsDataFromFlutter',
                 text: '$e');
@@ -175,11 +170,11 @@ Future<void> initFlutterChannel() async {
           LocationProvider.instance.getLastRealtimeData();
           if (LocationProvider.instance.realtimeUpdate != null) {
             SendToWatch.updateRealtimeData(
-                LocationProvider.instance.realtimeUpdate.toJson());
+                LocationProvider.instance.realtimeUpdate!.toJson());
           }
         } catch (e) {
           if (!kIsWeb) {
-            FLog.error(
+            BnLog.error(
                 className: 'watchCommunication_helper',
                 methodName: 'getFriendsDataFromFlutter',
                 text: '$e');

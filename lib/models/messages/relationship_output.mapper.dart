@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'relationship_output.dart';
 
@@ -16,11 +17,6 @@ class RelationshipOutputMessageMapper
           .use(_instance = RelationshipOutputMessageMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -38,7 +34,7 @@ class RelationshipOutputMessageMapper
       Field('rpcException', _$rpcException, opt: true);
 
   @override
-  final Map<Symbol, Field<RelationshipOutputMessage, dynamic>> fields = const {
+  final MappableFields<RelationshipOutputMessage> fields = const {
     #friendId: _f$friendId,
     #requestId: _f$requestId,
     #rpcException: _f$rpcException,
@@ -55,23 +51,25 @@ class RelationshipOutputMessageMapper
   final Function instantiate = _instantiate;
 
   static RelationshipOutputMessage fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<RelationshipOutputMessage>(map));
+    return ensureInitialized().decodeMap<RelationshipOutputMessage>(map);
   }
 
   static RelationshipOutputMessage fromJson(String json) {
-    return _guard((c) => c.fromJson<RelationshipOutputMessage>(json));
+    return ensureInitialized().decodeJson<RelationshipOutputMessage>(json);
   }
 }
 
 mixin RelationshipOutputMessageMappable {
   String toJson() {
-    return RelationshipOutputMessageMapper._guard(
-        (c) => c.toJson(this as RelationshipOutputMessage));
+    return RelationshipOutputMessageMapper.ensureInitialized()
+        .encodeJson<RelationshipOutputMessage>(
+            this as RelationshipOutputMessage);
   }
 
   Map<String, dynamic> toMap() {
-    return RelationshipOutputMessageMapper._guard(
-        (c) => c.toMap(this as RelationshipOutputMessage));
+    return RelationshipOutputMessageMapper.ensureInitialized()
+        .encodeMap<RelationshipOutputMessage>(
+            this as RelationshipOutputMessage);
   }
 
   RelationshipOutputMessageCopyWith<RelationshipOutputMessage,
@@ -80,20 +78,22 @@ mixin RelationshipOutputMessageMappable {
           this as RelationshipOutputMessage, $identity, $identity);
   @override
   String toString() {
-    return RelationshipOutputMessageMapper._guard((c) => c.asString(this));
+    return RelationshipOutputMessageMapper.ensureInitialized()
+        .stringifyValue(this as RelationshipOutputMessage);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            RelationshipOutputMessageMapper._guard(
-                (c) => c.isEqual(this, other)));
+            RelationshipOutputMessageMapper.ensureInitialized()
+                .isValueEqual(this as RelationshipOutputMessage, other));
   }
 
   @override
   int get hashCode {
-    return RelationshipOutputMessageMapper._guard((c) => c.hash(this));
+    return RelationshipOutputMessageMapper.ensureInitialized()
+        .hashValue(this as RelationshipOutputMessage);
   }
 }
 

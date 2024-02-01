@@ -9,7 +9,7 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 class IntroScreen extends StatefulWidget {
   static const String routeName = '/intro';
 
-  const IntroScreen({Key? key}) : super(key: key);
+  const IntroScreen({super.key});
 
   @override
   IntroScreenState createState() => IntroScreenState();

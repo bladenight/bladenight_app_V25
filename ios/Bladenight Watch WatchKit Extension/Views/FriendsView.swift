@@ -16,7 +16,7 @@ struct FriendsView: View {
     @State var warnColor:Color?
     @State var outDatedData:Bool = false
     @State var  timerOneSec = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
+
     var body: some View {
         VStack{
             if(!viewModel.isLocationTracking){

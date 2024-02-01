@@ -2,8 +2,6 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="de.bladenight.bladenight_app_flutter"
 >
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -90,5 +88,8 @@
         <meta-data
                 android:name="flutterEmbedding"
                 android:value="2"/>
+
+        <service android:name="com.transistorsoft.locationmanager.service.LocationRequestService" android:foregroundServiceType="location"
+                 tools:replace="android:foregroundServiceType" />
     </application>
 </manifest>

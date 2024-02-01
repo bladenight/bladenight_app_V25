@@ -1,7 +1,8 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'shake_hand_result.dart';
 
@@ -14,11 +15,6 @@ class ShakeHandResultMapper extends ClassMapperBase<ShakeHandResult> {
       MapperContainer.globals.use(_instance = ShakeHandResultMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -35,7 +31,7 @@ class ShakeHandResultMapper extends ClassMapperBase<ShakeHandResult> {
       Field('rpcException', _$rpcException, opt: true);
 
   @override
-  final Map<Symbol, Field<ShakeHandResult, dynamic>> fields = const {
+  final MappableFields<ShakeHandResult> fields = const {
     #status: _f$status,
     #minBuild: _f$minBuild,
     #rpcException: _f$rpcException,
@@ -52,23 +48,23 @@ class ShakeHandResultMapper extends ClassMapperBase<ShakeHandResult> {
   final Function instantiate = _instantiate;
 
   static ShakeHandResult fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<ShakeHandResult>(map));
+    return ensureInitialized().decodeMap<ShakeHandResult>(map);
   }
 
   static ShakeHandResult fromJson(String json) {
-    return _guard((c) => c.fromJson<ShakeHandResult>(json));
+    return ensureInitialized().decodeJson<ShakeHandResult>(json);
   }
 }
 
 mixin ShakeHandResultMappable {
   String toJson() {
-    return ShakeHandResultMapper._guard(
-        (c) => c.toJson(this as ShakeHandResult));
+    return ShakeHandResultMapper.ensureInitialized()
+        .encodeJson<ShakeHandResult>(this as ShakeHandResult);
   }
 
   Map<String, dynamic> toMap() {
-    return ShakeHandResultMapper._guard(
-        (c) => c.toMap(this as ShakeHandResult));
+    return ShakeHandResultMapper.ensureInitialized()
+        .encodeMap<ShakeHandResult>(this as ShakeHandResult);
   }
 
   ShakeHandResultCopyWith<ShakeHandResult, ShakeHandResult, ShakeHandResult>
@@ -76,19 +72,22 @@ mixin ShakeHandResultMappable {
           this as ShakeHandResult, $identity, $identity);
   @override
   String toString() {
-    return ShakeHandResultMapper._guard((c) => c.asString(this));
+    return ShakeHandResultMapper.ensureInitialized()
+        .stringifyValue(this as ShakeHandResult);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ShakeHandResultMapper._guard((c) => c.isEqual(this, other)));
+            ShakeHandResultMapper.ensureInitialized()
+                .isValueEqual(this as ShakeHandResult, other));
   }
 
   @override
   int get hashCode {
-    return ShakeHandResultMapper._guard((c) => c.hash(this));
+    return ShakeHandResultMapper.ensureInitialized()
+        .hashValue(this as ShakeHandResult);
   }
 }
 

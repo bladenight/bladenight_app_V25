@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
 class BnMapMarker extends Marker {
-  BnMapMarker(
+  const BnMapMarker(
       {required this.headerText,
       this.speedText,
       this.drivenDistanceText,
@@ -16,19 +15,12 @@ class BnMapMarker extends Marker {
       this.distanceTailText,
       this.timeToTailText,
       this.rightWidget,
-      this.anchorPosition,
       required this.buildContext,
-      required height,
-      required width,
-      required LatLng point,
-      required WidgetBuilder builder,
-      required this.color})
-      : super(
-            point: point,
-            builder: builder,
-            anchorPos: anchorPosition,
-            width: width,
-            height: height);
+      required super.height,
+      required super.width,
+      required super.point,
+      required super.child,
+      required this.color});
 
   final Color color;
   final String headerText;
@@ -43,6 +35,5 @@ class BnMapMarker extends Marker {
   final String? distanceTailText;
   final String? timeToTailText;
   final Widget? rightWidget;
-  final AnchorPos? anchorPosition;
   final BuildContext? buildContext;
 }
