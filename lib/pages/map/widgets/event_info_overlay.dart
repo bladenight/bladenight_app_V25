@@ -11,6 +11,7 @@ import '../../../models/route.dart' hide Path;
 class EventInfoOverlay extends StatefulWidget {
   const EventInfoOverlay(
       {super.key, required this.event, required this.routePoints});
+
   final Event event;
   final RoutePoints? routePoints;
 
@@ -50,29 +51,31 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                       ),
                     ),
                   ),
-                  Center(
-                    child: FittedBox(
+                  if (widget.event.status != EventStatus.noevent)
+                    Center(
                       child: FittedBox(
-                        child: Text(
-                          '${Localize.of(context).at} ${Localize.current.dateTimeIntl(widget.event.startDate, widget.event.startDate)}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
+                        child: FittedBox(
+                          child: Text(
+                            '${Localize.of(context).at} ${Localize.current.dateTimeIntl(widget.event.startDate, widget.event.startDate)}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  if (widget.event.startPoint!=null)
-                  Center(
-                    child: FittedBox(
-                      child: Text(
-                        '${Localize.of(context).startPointTitle} ${widget.event.startPoint}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
+                  if (widget.event.startPoint != null)
+                    Center(
+                      child: FittedBox(
+                        child: Text(
+                          '${Localize.of(context).startPointTitle} ${widget.event.startPoint}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                      textAlign: TextAlign.center,),
+                      ),
                     ),
-                  ),
                 ]),
               ),
             ]),

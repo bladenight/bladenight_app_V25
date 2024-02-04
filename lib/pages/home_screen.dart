@@ -24,6 +24,7 @@ bool _initialURILinkHandled = false;
 
 class HomeScreen extends ConsumerStatefulWidget {
   static const String routeName = '/homeScreen';
+  static const String openRouteMapRoute = '/eventRoute/';
 
   const HomeScreen({super.key, int tabIndex = 0});
 

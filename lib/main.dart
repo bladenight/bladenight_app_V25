@@ -26,6 +26,7 @@ import 'helpers/preferences_helper.dart';
 import 'main.init.dart';
 import 'pages/home_screen.dart';
 import 'pages/widgets/intro_slider.dart';
+import 'pages/widgets/route_name_dialog.dart';
 import 'providers/shared_prefs_provider.dart';
 
 void main() async {
@@ -40,7 +41,7 @@ void main() async {
           FlutterError.presentError(details);
         };
       }
-      if (!kDebugMode && !kIsWeb)  {
+      if (!kDebugMode && !kIsWeb) {
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
@@ -121,8 +122,7 @@ class BladeNightApp extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
-
-         await showDialog<bool>(
+        await showDialog<bool>(
           context: context,
           builder: (context) {
             return AlertDialog(
@@ -145,7 +145,7 @@ class BladeNightApp extends StatelessWidget {
             );
           },
         );
-        return ;
+        return;
       },
       child: MediaQuery.fromView(
         view: View.of(context),
@@ -161,6 +161,21 @@ class BladeNightApp extends StatelessWidget {
           ),
           initial: HiveSettingsDB.adaptiveThemeMode,
           builder: (theme) => CupertinoApp(
+              onGenerateRoute: (settings) {
+                BnLog.info(text: 'onGenerateRoute requested ${settings.name}');
+                if (settings.name != null &&
+                    settings.name!.startsWith('/showroute')) {
+                  return CupertinoPageRoute(
+                      builder: (context) => RouteNameDialog(
+                            routeName: settings.name
+                                .toString()
+                                .replaceAll('/showroute?', '')
+                                .trim(),
+                          ),
+                      fullscreenDialog: true);
+                }
+                return null;
+              },
               title: 'BladeNight München',
               debugShowCheckedModeBanner: false,
               theme: theme,
@@ -178,7 +193,7 @@ class BladeNightApp extends StatelessWidget {
               // AppLocalizations.supportedLocales,
               home: const HomeScreen(),
               routes: <String, WidgetBuilder>{
-                IntroScreen.routeName: (BuildContext context) =>
+                IntroScreen.openIntroRoute: (BuildContext context) =>
                     const IntroScreen(),
                 HomeScreen.routeName: (BuildContext context) =>
                     const HomeScreen(),
