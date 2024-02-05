@@ -1,3 +1,4 @@
+import '../../app_settings/app_configuration_helper.dart';
 import '../map/widgets/event_info_overlay.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,9 +47,16 @@ class RouteNameDialog extends ConsumerWidget {
               skipLoadingOnReload: false,
               data: (route) {
                 if (route.rpcException != null) {
-                  return NoDataWarning(
-                    onReload: () => ref.refresh(routeProvider(route.name)),
-                  );
+                  return Stack(children: [
+                    MapLayer(
+                      event: Event(startDate: DateTime.now(), routeName: routeName),
+                      startPoint: LatLng(defaultLatitude, defaultLongitude),
+                      finishPoint: route.lastPointOrDefault,
+                    ),
+                    NoDataWarning(
+                      onReload: () => ref.refresh(routeProvider(route.name)),
+                    )
+                  ]);
                 }
                 return Stack(children: [
                   MapLayer(
