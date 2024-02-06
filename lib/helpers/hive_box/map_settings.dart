@@ -1,6 +1,7 @@
 part of 'hive_settings_db.dart';
 
 extension MapSettings on HiveSettingsDB {
+
   ///minZoom for Static map tiles
   static double get minZoomDefault {
     return 2.0;
@@ -158,16 +159,16 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.delete(_openStreetMapDarkLinkKey);
   }
 
-  static const String _mapMenuVisibleKey = 'mapMenuVisiblePref';
+  static const String mapMenuVisibleKey = 'mapMenuVisiblePref';
 
   ///get mapMenuVisible
   static bool get mapMenuVisible {
-    return HiveSettingsDB._hiveBox.get(_mapMenuVisibleKey, defaultValue: true);
+    return HiveSettingsDB._hiveBox.get(mapMenuVisibleKey, defaultValue: true);
   }
 
   ///set mapMenuVisibleString
   static void setMapMenuVisible(bool val) {
-    HiveSettingsDB._hiveBox.put(_mapMenuVisibleKey, val);
+    HiveSettingsDB._hiveBox.put(mapMenuVisibleKey, val);
   }
 
   static const String showOwnTrackKey = 'showOwnTrackPref';

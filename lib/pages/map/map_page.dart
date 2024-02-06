@@ -28,7 +28,7 @@ import 'widgets/map_tile_layer.dart';
 import 'widgets/markers_layer.dart';
 import 'widgets/poly_lines.dart';
 import 'widgets/track_progress_overlay.dart';
-import 'widgets/user_speed_odometer.dart';
+import 'widgets/gps_info_and_map_copyright.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
@@ -256,7 +256,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               const MapButtonsLayer(),
             ],
           ),
-          const UserSpeedAndOdometerOverlay(),
+          const GPSInfoAndMapCopyright(),
         ]),
       ),
     );

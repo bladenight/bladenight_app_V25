@@ -8,8 +8,10 @@ import '../../../models/bn_map_marker.dart';
 import '../../../models/event.dart';
 import '../../../models/route.dart';
 import 'map_friend_marker_popup.dart';
+import 'map_left_buttons.dart';
 import 'map_marker_popup.dart';
 import 'map_tile_layer.dart';
+import 'gps_info_and_map_copyright.dart';
 
 class MapLayer extends StatefulWidget {
   const MapLayer(
@@ -66,6 +68,8 @@ class _MapLayerState extends State<MapLayer> {
       ),
       children: [
         const MapTileLayer(),
+        const GPSInfoAndMapCopyright(showOdoMeter: false,),
+        const MapLeftButtonsLayer(),
         PolylineLayer(
           polylines:widget.polyLines,// context.watch(polyLinesProvider),// widget.polyLines,
         ),

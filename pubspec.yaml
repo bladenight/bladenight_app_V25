@@ -12,7 +12,7 @@ dependencies:
   archive: ^3.3.7
   asset_fill: ^1.1.0
   barcode_widget: ^2.0.2
-  cached_network_image: ^3.2.3
+  cached_network_image: ^3.3.1
   convert: ^3.1.1
   crypto: ^3.0.2
   cupertino_icons: ^1.0.4

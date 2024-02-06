@@ -1,6 +1,5 @@
 import 'dart:core';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,15 +14,16 @@ import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/notification/toast_notification.dart';
-import '../../../helpers/url_launch_helper.dart';
 import '../../../models/follow_location_state.dart';
 import '../../../models/route.dart';
 import '../../../pages/widgets/following_location_icon.dart';
 import '../../../providers/images_and_links/live_map_image_and_link_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/route_providers.dart';
 import '../widgets/qr_create_page.dart';
+import 'map_left_buttons.dart';
 
 class MapButtonsLayer extends ConsumerStatefulWidget {
   const MapButtonsLayer({super.key});
@@ -74,10 +74,10 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
             }),
           ),
         ),
-      if (!kIsWeb && MapSettings.mapMenuVisible)
+      if (!kIsWeb && ref.watch(mapSettingsProviderProvider))
         Positioned(
           left: 10,
-          bottom: MapSettings.mapMenuVisible ? 300 : 100,
+          bottom: ref.watch(mapSettingsProviderProvider) ? 300 : 100,
           height: 40,
           child: Builder(builder: (context) {
             var isTracking = ref.watch(isTrackingProvider);
@@ -119,71 +119,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
             );
           }),
         ),
-      if (MapSettings.mapMenuVisible)
-        Positioned(
-          left: 10,
-          bottom: 200,
-          height: 40,
-          child: Builder(builder: (context) {
-            return FloatingActionButton(
-              onPressed: () {
-                final controller = MapController.maybeOf(context);
-                final camera = MapCamera.maybeOf(context);
-                if (controller == null || camera == null) {
-                  return;
-                }
-                controller.move(controller.camera.center, camera.zoom - 0.5);
-              },
-              heroTag: 'zoomInTag',
-              child: const Icon(CupertinoIcons.zoom_out),
-            );
-          }),
-        ),
-      if (MapSettings.mapMenuVisible)
-        Positioned(
-          left: 10,
-          bottom: 150,
-          height: 40,
-          child: Builder(builder: (context) {
-            return FloatingActionButton(
-              onPressed: () {
-                final controller = MapController.maybeOf(context);
-                final camera = MapCamera.maybeOf(context);
-                if (controller == null || camera == null) {
-                  return;
-                }
-                controller.move(controller.camera.center, camera.zoom + 0.5);
-              },
-              heroTag: 'zoomOutTag',
-              child: const Icon(CupertinoIcons.zoom_in),
-            );
-          }),
-        ),
-      if (MapSettings.mapMenuVisible)
-        Positioned(
-          left: 10,
-          bottom: 100,
-          height: 40,
-          child: Builder(builder: (context) {
-            return FloatingActionButton(
-              onPressed: () {
-                var theme = CupertinoAdaptiveTheme.of(context).theme;
-                if (theme.brightness == Brightness.light) {
-                  CupertinoAdaptiveTheme.of(context).setDark();
-                  HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.dark);
-                } else {
-                  CupertinoAdaptiveTheme.of(context).setLight();
-                  HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.light);
-                }
-                },
-              heroTag: 'darkLightTag',
-              child: CupertinoAdaptiveTheme.of(context).theme.brightness ==
-                      Brightness.light
-                  ? const Icon(CupertinoIcons.moon)
-                  : const Icon(CupertinoIcons.sun_min),
-            );
-          }),
-        ),
+      const MapLeftButtonsLayer(),
 
       //##############right buttons
 
@@ -307,30 +243,12 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
           }),
         ),
 
-      //Left located buttons
-
-      Positioned(
-        left: 10,
-        bottom: 50,
-        height: 40,
-        child: Builder(builder: (context) {
-          return FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                MapSettings.setMapMenuVisible(!MapSettings.mapMenuVisible);
-              });
-            },
-            heroTag: 'showMenuTag',
-            child: MapSettings.mapMenuVisible
-                ? const Icon(Icons.menu_open)
-                : const Icon(Icons.menu),
-          );
-        }),
-      ),
+      //Left located button web
       if (kIsWeb)
-        Positioned(
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 500),
           left: 10,
-          bottom: MapSettings.mapMenuVisible ? 250 : 100,
+          bottom: ref.watch(mapSettingsProviderProvider) ? 250 : 100,
           height: 40,
           child: Builder(builder: (context) {
             return FloatingActionButton(
@@ -377,30 +295,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
             );
           }),
         ),
-
-      Positioned(
-        left: -10,
-        bottom: 0,
-        width: MediaQuery.of(context).size.width * .350,
-        child: Builder(builder: (context) {
-          return CupertinoButton(
-            onPressed: () {
-              Launch.launchUrlFromString(
-                  'https://www.openstreetmap.org/copyright');
-            },
-            child: const FittedBox(
-              child: Text(
-                '©OpenStreetMap contributors',
-                maxLines: 2,
-                style: TextStyle(
-                    backgroundColor: Colors.black26,
-                    color: CupertinoColors.white,
-                    fontSize: 10.0),
-              ),
-            ),
-          );
-        }),
-      ),
     ]);
   }
 

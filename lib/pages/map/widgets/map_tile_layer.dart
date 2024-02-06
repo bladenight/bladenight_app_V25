@@ -75,7 +75,7 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
       tileProvider: HiveSettingsDB.openStreetMapEnabled ||
               ref.watch(activeEventProvider).event.hasSpecialStartPoint
-          ? CancellableNetworkTileProvider()
+          ? CachedTileProvider()
           : AssetTileProvider(),
       errorImage: const AssetImage(
         'assets/images/skatemunichmaperror.png',
