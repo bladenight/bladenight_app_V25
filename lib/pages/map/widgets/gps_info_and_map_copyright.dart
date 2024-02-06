@@ -57,9 +57,7 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
   Widget build(BuildContext context) {
     return kIsWeb
         ? const Align(
-            alignment: Alignment.bottomRight,
-            child: SizedBox(height: 30, child: OpenStreetMapCopyright()),
-          )
+            alignment: Alignment.bottomRight, child: OpenStreetMapCopyright())
         : Align(
             alignment: Alignment.bottomCenter,
             child: Padding(

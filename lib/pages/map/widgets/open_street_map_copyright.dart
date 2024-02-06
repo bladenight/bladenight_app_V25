@@ -33,8 +33,8 @@ class OpenStreetMapCopyright extends StatelessWidget {
           )
         : Padding(
             padding: const EdgeInsets.all(10),
-            child: ElevatedButton(
-              onPressed: () {
+            child: GestureDetector(
+              onTap: () {
                 Launch.launchUrlFromString(
                     'https://www.openstreetmap.org/copyright');
               },

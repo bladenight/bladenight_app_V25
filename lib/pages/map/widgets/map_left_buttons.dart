@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../providers/map_button_visibility_provider.dart';
-import 'open_street_map_copyright.dart';
 
 class MapLeftButtonsLayer extends ConsumerStatefulWidget {
   const MapLeftButtonsLayer({super.key});
