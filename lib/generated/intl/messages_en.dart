@@ -114,6 +114,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Add friend with Code"),
         "addnewfriend": MessageLookupByLibrary.simpleMessage("Add new friend."),
         "aheadOfMe": MessageLookupByLibrary.simpleMessage("ahead of me"),
+        "alignDirectionAndPositionOnUpdate":
+            MessageLookupByLibrary.simpleMessage(
+                "Align map on direction and position"),
+        "alignDirectionOnUpdateOnly": MessageLookupByLibrary.simpleMessage(
+            "Align map on direction update only"),
+        "alignNever": MessageLookupByLibrary.simpleMessage("No map align"),
+        "alignPositionOnUpdateOnly": MessageLookupByLibrary.simpleMessage(
+            "Align map on my position update only"),
         "allowHeadless":
             MessageLookupByLibrary.simpleMessage("Background update activ"),
         "allowHeadlessHeader": MessageLookupByLibrary.simpleMessage(

@@ -441,5 +441,9 @@
   "codeExpired": "Code zu alt! Eintrag bitte löschen und Freund:in neu einladen!",
   "eventNotStarted": "Noch nicht gestartet",
   "trackPointsExporting": "Folgende Routenpunkte werden exportiert: ",
-  "trackingPoints": "Aufgezeichnet Routenpunkte"
+  "trackingPoints": "Aufgezeichnet Routenpunkte",
+  "alignNever": "Keine Kartenausrichtung",
+  "alignPositionOnUpdateOnly": "Kartenausrichtung bei Positionsänderungen",
+  "alignDirectionOnUpdateOnly": "Kartenausrichtung bei Richtungswechsel",
+  "alignDirectionAndPositionOnUpdate": "Kartenausrichtung bei Positions- und Richtungswechsel"
 }

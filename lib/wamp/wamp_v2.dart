@@ -13,6 +13,7 @@ import '../app_settings/server_connections.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
 import '../helpers/wamp/message_types.dart';
+import '../models/realtime_update.dart';
 import '../models/shake_hand_result.dart';
 import '../providers/active_event_notifier_provider.dart';
 import 'bn_wamp_message.dart';
@@ -33,10 +34,12 @@ class WampV2 {
   static int _startShakeHandsRetryCounter = 0;
   bool _isWebsocketRunning = false; //status of a websocket
   bool busy = false;
-  final Map<String, BnWampMessage> calls = {};
+  final Map<int, BnWampMessage> calls = {};
   int _retryLimit = 3;
   Queue<BnWampMessage> queue = Queue();
   var streamController = StreamController<BnWampMessage>();
+
+  var eventStreamController = StreamController<dynamic>();
 
   WampV2._() {
     _init();
@@ -66,27 +69,21 @@ class WampV2 {
   }
 
   void _put(BnWampMessage message) {
-    calls[message.id] = message;
+    calls[message.requestId] = message;
     streamController.sink.add(message);
   }
 
-  Future<void> _sendToWampFromRunner(BnWampMessage value) async {
+  Future<void> _sendToWampFromRunner(BnWampMessage message) async {
     //check timed out
-    if ((DateTime.now().difference(value.dateTime)) >
+    if ((DateTime.now().difference(message.dateTime)) >
             const Duration(seconds: 10) &&
-        value.completer.isCompleted == false) {
-      value.completer.completeError(
+        message.completer.isCompleted == false) {
+      message.completer.completeError(
           TimeoutException('WampV2_runner not started within 10 secs'));
-      calls.remove(value.id);
+      calls.remove(message.requestId);
     }
 
-    channel?.sink.add(json.encode([
-      WampMessageType.call.messageID,
-      value.id,
-      {}, //no options
-      'http://bladenight.app/rpc/${value.endpoint}',
-      if (value.message != null) value.message
-    ]));
+    channel?.sink.add(message.getMessageAsJson);
   }
 
   Future<WampConnectionState> _initWamp() async {
@@ -223,7 +220,7 @@ class WampV2 {
                 message.completer.completeError(TimeoutException(
                     'WampV2_runner not started within 10 secs'));
               }
-              calls.remove(message.id);
+              calls.remove(message.requestId);
               busy = true;
               continue;
             }
@@ -234,7 +231,7 @@ class WampV2 {
                   className: toString(),
                   methodName: 'send message finished ',
                   text:
-                      'id: ${message.id} target ${message.endpoint} - Message:$message');
+                      'id: ${message.requestId} target ${message.endpoint} - Message:$message');
             }
 
             //queue.removeFirst();
@@ -269,19 +266,38 @@ class WampV2 {
       channel!.stream.listen(
         (event) async {
           var wampMessage = json.decode(event) as List;
+          var requestId = 0;
+          if (wampMessage.length >= 2) {
+            //workaround because server is sending requestId as "string"
+            var strId = wampMessage[1].toString();
+            requestId = int.parse(strId);
+          }
           var wampMessageType =
               WampMessageTypeHelper.getMessageType(wampMessage[0]);
           if (wampMessageType == WampMessageType.welcome) {
             welcomeCompleter.complete();
-            calls.remove(wampMessage[1]);
-            //session.calls.remove([message[1]]);
+            // [WELCOME, Session|id, Details|dict]
+          }
+          if (wampMessageType == WampMessageType.abort) {
+            //[ABORT, Details|dict, Reason|uri, Arguments|list, ArgumentsKw|dict]
+            _isWebsocketRunning = false;
+            _hadShakeHands = false;
+            _isConnecting = false;
+            BnLog.info(text: 'Session aborted ${wampMessage[2]}');
+          }
+          if (wampMessageType == WampMessageType.goodbye) {
+            //[GOODBYE, Details|dict, Reason|uri]
+            _isWebsocketRunning = false;
+            _hadShakeHands = false;
+            _isConnecting = false;
+            BnLog.info(text: 'Session closed with goodbye ${wampMessage[2]}');
           } else if (wampMessageType == WampMessageType.result) {
             // [RESULT, CALL.Request|id, Details|dict, YIELD.Arguments|list, YIELD.ArgumentsKw|dict]
             if (!kIsWeb) BnLog.debug(text: 'channel result $wampMessage');
             //print('channel runner $wampMessage');
             var messageResult = wampMessage[2];
-            calls[wampMessage[1]]?.completer.complete(messageResult);
-            calls.remove(wampMessage[1]);
+            calls[requestId]?.completer.complete(messageResult);
+            calls.remove(requestId);
           } else if (wampMessageType == WampMessageType.error) {
             //   [ERROR, CALL, CALL.Request|id, Details|dict, Error|uri]
             calls[wampMessage[2]]
@@ -294,21 +310,28 @@ class WampV2 {
           } else if (wampMessageType == WampMessageType.subscribed) {
             // [SUBSCRIBED, SUBSCRIBE.Request|id, Subscription|id]
             //    [33, 713845233, 5512315355]
-            calls.remove(wampMessage[1]);
-            if (!kIsWeb) BnLog.debug(text: 'subscribed $wampMessage');
+            var messageResult = wampMessage[2];
+            calls[requestId]?.completer.complete(messageResult);
+            calls.remove(requestId);
+            if (!kIsWeb) BnLog.debug(text: 'subscribed id:$messageResult');
           } else if (wampMessageType == WampMessageType.unsubscribe) {
             // [UNSUBSCRIBE, Request|id, SUBSCRIBED.Subscription|id]
             //  [34, 85346237, 5512315355]
-            calls.remove(wampMessage[1]);
+            var messageResult = wampMessage[2];
+            calls[requestId]?.completer.complete(messageResult);
+            calls.remove(requestId);
             if (!kIsWeb) BnLog.debug(text: 'unsubscribe $wampMessage');
           } else if (wampMessageType == WampMessageType.unsubscribed) {
             //[UNSUBSCRIBED, UNSUBSCRIBE.Request|id]
             //[35, 85346237]
-            calls.remove(wampMessage[1]);
+            calls[requestId]?.completer.complete(true);
+            calls.remove(requestId);
             if (!kIsWeb) BnLog.debug(text: 'unsubscribed $wampMessage');
           } else if (wampMessageType == WampMessageType.publish) {
             //    [PUBLISH, Request|id, Options|dict, Topic|uri]
-            calls.remove(wampMessage[1]);
+            var messageResult = wampMessage[3];
+            calls[requestId]?.completer.complete(messageResult);
+            calls.remove(requestId);
             if (!kIsWeb) BnLog.debug(text: 'publish $wampMessage');
           } else if (wampMessageType == WampMessageType.event) {
             // [EVENT, SUBSCRIBED.Subscription|id, PUBLISHED.Publication|id, Details|dict]
@@ -316,6 +339,15 @@ class WampV2 {
             // [36, 5512315355, 4429313566, {}]
             //         PUBLISH.Arguments|list, PUBLISH.ArgumentsKw|dict]
             //[36, 5512315355, 4429313566, {}, [], {"color": "orange", "sizes": [23, 42, 7]}]
+            try {
+              var messageResult = wampMessage[2];
+              var result = RealtimeUpdateMapper.fromMap(messageResult);
+              eventStreamController.add(result);
+              BnLog.trace(text: result.toString());
+            } catch (e) {
+              BnLog.error(text: e.toString(),className: toString());
+            }
+            if (!kIsWeb) BnLog.debug(text: 'event $wampMessage');
           } else {
             var typeId = wampMessage[0];
             if (!kIsWeb) {
@@ -396,7 +428,7 @@ class WampV2 {
     } else if ((kDebugMode && localTesting) && !kIsWeb) {
       link = Platform.isAndroid
           ? defaultTestWampAdressAndroid
-          : defaultTestWampAdressOther; //defaultTestWampAdressOther;
+          : defaultTestWampAdressOther; //defaultTestWampAddressOther;
     } else if (kIsWeb) {
       link = defaultWampClientAux;
     } else {

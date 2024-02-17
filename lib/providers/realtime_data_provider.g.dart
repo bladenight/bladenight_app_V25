@@ -6,7 +6,7 @@ part of 'realtime_data_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$realtimeDataHash() => r'78464f0414a7ca26effaff44845179306c3f7a87';
+String _$realtimeDataHash() => r'2609f072d91e4810d9103cfa641fd9ffb5c42eca';
 
 /// See also [RealtimeData].
 @ProviderFor(RealtimeData)

@@ -179,6 +179,8 @@ class LocationProvider with ChangeNotifier {
     _trainHeadStreamController.close();
     _userPositionStreamController.close();
     _internetConnectionSubscription?.cancel();
+    _userLocationMarkerPositionStreamController.close();
+    _userLocationMarkerHeadingStreamController.close();
     super.dispose();
   }
 

@@ -118,6 +118,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "addnewfriend":
             MessageLookupByLibrary.simpleMessage("Ajouter un nouvel ami"),
         "aheadOfMe": MessageLookupByLibrary.simpleMessage("en avance sur moi"),
+        "alignDirectionAndPositionOnUpdate":
+            MessageLookupByLibrary.simpleMessage(
+                "Cartes de gestion des positions et des ressources"),
+        "alignDirectionOnUpdateOnly": MessageLookupByLibrary.simpleMessage(
+            "Cartes de gestion des ressources financières"),
+        "alignNever": MessageLookupByLibrary.simpleMessage(
+            "Aucune orientation de la carte,"),
+        "alignPositionOnUpdateOnly": MessageLookupByLibrary.simpleMessage(
+            "Cartes de sélection des positions"),
         "allowHeadless": MessageLookupByLibrary.simpleMessage(
             "Mise à jour de l\'arrière-plan active"),
         "allowHeadlessHeader": MessageLookupByLibrary.simpleMessage(

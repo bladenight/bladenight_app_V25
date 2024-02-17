@@ -1,4 +1,5 @@
 import '../../app_settings/app_configuration_helper.dart';
+import '../../providers/map/icon_size_provider.dart';
 import '../map/widgets/event_info_overlay.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
-import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/location_bearing_distance.dart';
 import '../../models/bn_map_marker.dart';
 import '../../models/event.dart';
@@ -40,7 +40,8 @@ class RouteNameDialog extends ConsumerWidget {
               Text('${Localize.of(context).routeoverview}: $routeName'),
         ),
         child: Builder(builder: (context) {
-          var sizeValue = MediaQuery.textScalerOf(context).scale(HiveSettingsDB.iconSizeValue);
+          var iconSize = ref.watch(iconSizeProvider);
+          var sizeValue = MediaQuery.textScalerOf(context).scale(iconSize);
           var asyncRoute = ref.watch(routeProvider(routeName));
           return asyncRoute.maybeWhen(
               skipLoadingOnRefresh: false,
@@ -109,7 +110,7 @@ class RouteNameDialog extends ConsumerWidget {
                               children: [
                                 Image(
                                   image: AssetImage(
-                                    'assets/images/startMarker.png',
+                                    'assets/images/start_marker.png',
                                   ),
                                   fit: BoxFit.cover,
                                 ),

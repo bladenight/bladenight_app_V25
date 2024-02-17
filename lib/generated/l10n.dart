@@ -3677,6 +3677,46 @@ class Localize {
       args: [],
     );
   }
+
+  /// `No map align`
+  String get alignNever {
+    return Intl.message(
+      'No map align',
+      name: 'alignNever',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Align map on my position update only`
+  String get alignPositionOnUpdateOnly {
+    return Intl.message(
+      'Align map on my position update only',
+      name: 'alignPositionOnUpdateOnly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Align map on direction update only`
+  String get alignDirectionOnUpdateOnly {
+    return Intl.message(
+      'Align map on direction update only',
+      name: 'alignDirectionOnUpdateOnly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Align map on direction and position`
+  String get alignDirectionAndPositionOnUpdate {
+    return Intl.message(
+      'Align map on direction and position',
+      name: 'alignDirectionAndPositionOnUpdate',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

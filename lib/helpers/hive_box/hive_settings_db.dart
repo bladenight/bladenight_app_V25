@@ -11,6 +11,7 @@ import 'package:logger/logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../models/event.dart';
+import '../../models/follow_location_state.dart';
 import '../../models/user_trackpoint.dart';
 import '../logger.dart';
 import '../uuid_helper.dart';
@@ -150,11 +151,11 @@ class HiveSettingsDB {
     _hiveBox.put(_odometerKey, val);
   }
 
-  static const String _iconSizeKey = 'iconSizeValKey';
+  static const String iconSizeKey = 'iconSizeValKey';
 
   ///get iconSizeValue
   static double get iconSizeValue {
-    var size = _hiveBox.get(_iconSizeKey, defaultValue: 25.0);
+    var size = _hiveBox.get(iconSizeKey, defaultValue: 25.0);
     return size;
   }
 
@@ -166,7 +167,7 @@ class HiveSettingsDB {
     if (size > 60.0) {
       HiveSettingsDB.setIconSizeValue(60.0);
     }
-    _hiveBox.put(_iconSizeKey, size);
+    _hiveBox.put(iconSizeKey, size);
   }
 
   static const String _bgSettingVisibleKey = 'bgSettingVisibleKeyPref';
@@ -314,17 +315,7 @@ class HiveSettingsDB {
     _hiveBox.put(_rsvSkatemunichInfosKey, val);
   }
 
-  static const String _openStreetMapEnabledKey = 'openStreetMapEnabledPref';
 
-  ///get openStreetMapEnabled
-  static bool get openStreetMapEnabled {
-    return _hiveBox.get(_openStreetMapEnabledKey, defaultValue: false);
-  }
-
-  ///show openStreetMap setOpenStreetMapEnable
-  static void setOpenStreetMapEnabled(bool val) {
-    _hiveBox.put(_openStreetMapEnabledKey, val);
-  }
 
   static const String _trackingActiveKey = 'trackingActiveKey';
 

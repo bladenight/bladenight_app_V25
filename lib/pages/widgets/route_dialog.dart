@@ -5,11 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
-import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/location_bearing_distance.dart';
 import '../../models/bn_map_marker.dart';
 import '../../models/event.dart';
 import '../../models/route.dart';
+import '../../providers/map/icon_size_provider.dart';
 import '../../providers/route_providers.dart';
 import '../map/widgets/event_info_overlay.dart';
 import '../map/widgets/map_layer.dart';
@@ -32,6 +32,7 @@ class RouteDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var iconSize = ref.watch(iconSizeProvider);
     return ScaffoldMessenger(
       child: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
@@ -40,7 +41,7 @@ class RouteDialog extends ConsumerWidget {
         ),
         child: Builder(builder: (context) {
           var sizeValue = MediaQuery.textScalerOf(context)
-              .scale(HiveSettingsDB.iconSizeValue);
+              .scale(iconSize);
           var asyncRoute = ref.watch(routeProvider(event.routeName));
           return asyncRoute.maybeWhen(
               skipLoadingOnRefresh: false,
@@ -110,7 +111,7 @@ class RouteDialog extends ConsumerWidget {
                                 children: [
                                   Image(
                                     image: AssetImage(
-                                      'assets/images/startMarker.png',
+                                      'assets/images/start_marker.png',
                                     ),
                                     fit: BoxFit.cover,
                                   ),

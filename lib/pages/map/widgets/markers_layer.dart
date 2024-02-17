@@ -12,6 +12,7 @@ import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
 import '../../../providers/active_event_notifier_provider.dart';
+import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
@@ -33,8 +34,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
     var runningRoutePoints =
         realtimeData?.runningRoute(activeEvent.activeEventRoutePoints);
     var headingRoutePoints = activeEvent.headingPoints;
-    var sizeValue =
-        MediaQuery.textScalerOf(context).scale(HiveSettingsDB.iconSizeValue);
+    var sizeValue = ref.watch(iconSizeProvider);
     return PopupMarkerLayer(
       options: PopupMarkerLayerOptions(
         popupDisplayOptions: PopupDisplayOptions(
@@ -114,7 +114,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                   children: [
                     Image(
                       image: AssetImage(
-                        'assets/images/startMarker.png',
+                        'assets/images/start_marker.png',
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -151,8 +151,8 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                             color: SpeedToColor.getColorFromSpeed(
                                 friend.realSpeed),
                             shape: BoxShape.circle),
-                        child:  CircleAvatar(
-                          radius: sizeValue -6,
+                        child: CircleAvatar(
+                          radius: sizeValue - 6,
                           backgroundImage: const AssetImage(
                               'assets/images/skatechildmunichgreen.png'),
                         ),

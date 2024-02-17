@@ -55,24 +55,24 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
   @override
   Widget build(BuildContext context) {
     return TileLayer(
-      minNativeZoom: HiveSettingsDB.openStreetMapEnabled
+      minNativeZoom: MapSettings.openStreetMapEnabled
           ? MapSettings.minNativeZoom
           : MapSettings.minNativeZoomDefault,
-      maxNativeZoom: HiveSettingsDB.openStreetMapEnabled
+      maxNativeZoom: MapSettings.openStreetMapEnabled
           ? MapSettings.maxNativeZoom
           : MapSettings.maxNativeZoomDefault,
-      minZoom: HiveSettingsDB.openStreetMapEnabled
+      minZoom: MapSettings.openStreetMapEnabled
           ? MapSettings.minZoom
           : MapSettings.minZoomDefault,
-      maxZoom: HiveSettingsDB.openStreetMapEnabled
+      maxZoom: MapSettings.openStreetMapEnabled
           ? MapSettings.maxZoom
           : MapSettings.maxZoomDefault,
-      urlTemplate: HiveSettingsDB.openStreetMapEnabled ||
+      urlTemplate: MapSettings.openStreetMapEnabled ||
               ref.watch(activeEventProvider).event.hasSpecialStartPoint
           ? MapSettings.openStreetMapLinkString //use own ts
           : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
-      tileProvider: HiveSettingsDB.openStreetMapEnabled ||
+      tileProvider: MapSettings.openStreetMapEnabled ||
               ref.watch(activeEventProvider).event.hasSpecialStartPoint
           ? CachedTileProvider()
           : AssetTileProvider(),

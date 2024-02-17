@@ -116,6 +116,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "addnewfriend":
             MessageLookupByLibrary.simpleMessage("Freund:in neu anlegen"),
         "aheadOfMe": MessageLookupByLibrary.simpleMessage("vor mir"),
+        "alignDirectionAndPositionOnUpdate":
+            MessageLookupByLibrary.simpleMessage(
+                "Kartenausrichtung bei Positions- und Richtungswechsel"),
+        "alignDirectionOnUpdateOnly": MessageLookupByLibrary.simpleMessage(
+            "Kartenausrichtung bei Richtungswechsel"),
+        "alignNever":
+            MessageLookupByLibrary.simpleMessage("Keine Kartenausrichtung"),
+        "alignPositionOnUpdateOnly": MessageLookupByLibrary.simpleMessage(
+            "Kartenausrichtung bei Positionsänderungen"),
         "allowHeadless":
             MessageLookupByLibrary.simpleMessage("Hintergrund update aktiv"),
         "allowHeadlessHeader": MessageLookupByLibrary.simpleMessage(

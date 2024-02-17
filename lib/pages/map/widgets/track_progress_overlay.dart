@@ -41,7 +41,6 @@ class TrackProgressOverlay extends ConsumerStatefulWidget {
 
 class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     with WidgetsBindingObserver {
-
   @override
   void initState() {
     super.initState();
@@ -60,7 +59,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     }
     if (state == AppLifecycleState.resumed) {
       ref.read(refreshTimerProvider.notifier).start();
-
     } else if (state == AppLifecycleState.paused) {
       ref.read(refreshTimerProvider.notifier).stop();
     }
@@ -68,7 +66,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
 
   @override
   Widget build(BuildContext context) {
-
     var rtu = ref.watch(realtimeDataProvider);
     var actualOrNextEvent = ref.watch(eventStatusProvider);
     var eventIsActive = actualOrNextEvent.status == EventStatus.running ||
@@ -320,11 +317,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         child: CircleAvatar(
                                           backgroundColor:
                                               ref.watch(MeColor.provider),
-
                                           child: ref.watch(
                                                   isUserParticipatingProvider)
                                               ? const ImageIcon(AssetImage(
-                                                  'assets/images/skaterIcon_256.png'))
+                                              'assets/images/skater_icon_256.png'))
                                               : const Icon(
                                                   Icons.gps_fixed_sharp),
                                         ),
@@ -653,8 +649,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
       );
     }
   }
-
-
 }
 
 class InfoClipper extends CustomClipper<Path> {

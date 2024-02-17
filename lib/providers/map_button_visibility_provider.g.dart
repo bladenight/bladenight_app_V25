@@ -7,7 +7,7 @@ part of 'map_button_visibility_provider.dart';
 // **************************************************************************
 
 String _$mapSettingsProviderHash() =>
-    r'0cc7b48f5f95329e3d1b98b2b49c55da4da53cb9';
+    r'5ea53c6fadc5dd1fa74897c66558433d2cf4bd62';
 
 /// See also [MapSettingsProvider].
 @ProviderFor(MapSettingsProvider)

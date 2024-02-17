@@ -122,7 +122,7 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                                       context.watch(isUserParticipatingProvider)
                                           ? ImageIcon(
                                               const AssetImage(
-                                                  'assets/images/skaterIcon_256.png'),
+                                                  'assets/images/skater_icon_256.png'),
                                               color: context
                                                       .watch(isMovingProvider)
                                                   ? CupertinoTheme.of(context)

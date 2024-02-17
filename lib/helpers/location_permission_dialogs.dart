@@ -198,11 +198,11 @@ class LocationPermissionDialog {
       BnLog.info(
           className: 'locationProvider',
           methodName: 'init',
-          text: 'init get permissions status ${sw.elapsedMicroseconds}micros');
+          text: 'init get permissions status ${sw.elapsedMicroseconds} micros');
     }
     if (kDebugMode) {
       print(
-          'init get permissions status ${sw.elapsedMicroseconds}micros /${sw.elapsedMilliseconds}ms');
+          'init get permissions status ${sw.elapsedMicroseconds} micros /${sw.elapsedMilliseconds}ms');
     }
     sw.stop();
     if (permissionStatus.locationPermissionId ==

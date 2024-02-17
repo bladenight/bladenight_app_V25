@@ -1,7 +1,6 @@
 part of 'hive_settings_db.dart';
 
 extension MapSettings on HiveSettingsDB {
-
   ///minZoom for Static map tiles
   static double get minZoomDefault {
     return 2.0;
@@ -184,4 +183,42 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.put(showOwnTrackKey, val);
   }
 
+  static const String cameraFollowKey = 'cameraFollowPref';
+
+  /// Get last camera setting (global)
+  static CameraFollow get cameraFollow {
+    var value = HiveSettingsDB._hiveBox.get(cameraFollowKey, defaultValue: 0);
+    return CameraFollow.values.where((element) => element.index == value).first;
+  }
+
+  ///set cameraFollow
+  static void setCameraFollow(CameraFollow val) {
+    HiveSettingsDB._hiveBox.put(cameraFollowKey, val.index);
+  }
+
+  static const String alignFlutterMapKey = 'alignStreetMapPref';
+
+  /// Get last camera setting (global)
+  static AlignFlutterMapState get alignFlutterMap {
+    var value = HiveSettingsDB._hiveBox.get(alignFlutterMapKey, defaultValue: 0);
+    return AlignFlutterMapState.values.where((element) => element.index == value).first;
+  }
+
+  ///set alignStreetMap
+  static void setAlignFlutterMap(AlignFlutterMapState val) {
+    HiveSettingsDB._hiveBox.put(alignFlutterMapKey, val.index);
+  }
+
+  static const String openStreetMapEnabledKey = 'openStreetMapEnabledPref';
+
+  ///get openStreetMapEnabled
+  static bool get openStreetMapEnabled {
+    return HiveSettingsDB._hiveBox
+        .get(openStreetMapEnabledKey, defaultValue: false);
+  }
+
+  ///show openStreetMap setOpenStreetMapEnable
+  static void setOpenStreetMapEnabled(bool val) {
+    HiveSettingsDB._hiveBox.put(openStreetMapEnabledKey, val);
+  }
 }

@@ -397,7 +397,7 @@ class MapEventInformation extends StatelessWidget {
                                   Localize.of(context).mapFollowLocation,
                               descriptionRight: '',
                               rightWidget: const ImageIcon(
-                                AssetImage('assets/images/skaterIcon_256.png'),
+                                AssetImage('assets/images/skater_icon_256.png'),
                                 color: Colors.blue,
                               ),
                             ),

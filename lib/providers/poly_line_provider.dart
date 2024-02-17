@@ -1,11 +1,7 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vector_math/vector_math.dart';
 
-import 'active_event_notifier_provider.dart';
-import 'location_provider.dart';
 
 final polyLinesProvider = StateNotifierProvider<PolyLinesProviderNotifier, List<Polyline>>((ref) {
   return PolyLinesProviderNotifier(ref);

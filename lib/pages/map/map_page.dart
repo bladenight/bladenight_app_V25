@@ -17,18 +17,19 @@ import '../../app_settings/app_constants.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
+import '../../helpers/wamp/subscribeMessage.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../providers/active_event_notifier_provider.dart';
 import '../../providers/is_tracking_provider.dart';
 import '../../providers/location_provider.dart';
 import 'widgets/custom_location_layer.dart';
+import 'widgets/gps_info_and_map_copyright.dart';
 import 'widgets/map_buttons.dart';
 import 'widgets/map_tile_layer.dart';
 import 'widgets/markers_layer.dart';
 import 'widgets/poly_lines.dart';
 import 'widgets/track_progress_overlay.dart';
-import 'widgets/gps_info_and_map_copyright.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
@@ -40,11 +41,12 @@ class MapPage extends ConsumerStatefulWidget {
 class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   late MapController controller;
   late List<Marker> mapMarker = [];
-  late FollowLocationStates followLocationState =
-      FollowLocationStates.followOff;
+  late CameraFollow followLocationState =
+      CameraFollow.followOff;
   bool _webStartedTrainFollow = false;
   Timer? _updateRealTimeDataTimer;
   bool _firstRefresh = true;
+  int realTimeDataSubscriptionId = 0;
 
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
 
@@ -53,6 +55,9 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     super.initState();
     controller = MapController();
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      realTimeDataSubscriptionId = await subscribeMessage('RealtimeData');
+    });
   }
 
   @override
@@ -60,6 +65,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     pauseUpdates();
     WidgetsBinding.instance.removeObserver(this);
     _popupController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -73,11 +79,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       resumeUpdates(force: true);
       LocationProvider.instance.setToBackground(false);
-      BnLog.trace(
-        className: toString(),
-        methodName: 'didChangeAppLifecycleState',
-        text: 'resume updates calling',
-      );
     } else if (state == AppLifecycleState.paused) {
       LocationProvider.instance.setToBackground(true);
       if (!kIsWeb) {
@@ -90,8 +91,14 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     }
   }
 
-  void resumeUpdates({bool force = false}) {
-    _updateRealTimeDataTimer?.cancel();
+  void resumeUpdates({bool force = false}) async {
+    BnLog.trace(
+      className: toString(),
+      methodName: 'didChangeAppLifecycleState',
+      text: 'resume updates calling',
+    );
+    realTimeDataSubscriptionId = await subscribeMessage('RealtimeData');
+    _updateRealTimeDataTimer?.cancel(); //important
     if (force || _firstRefresh) {
       print('_firstRefresh resumeUpdates');
       ref.read(locationProvider).refresh(forceUpdate: force);
@@ -116,7 +123,16 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     );
   }
 
-  void pauseUpdates() {
+  void pauseUpdates() async {
+    if (realTimeDataSubscriptionId != 0) {
+      await unSubscribeMessage(realTimeDataSubscriptionId);
+      realTimeDataSubscriptionId = 0;
+    }
+    BnLog.trace(
+      className: toString(),
+      methodName: 'didChangeAppLifecycleState',
+      text: 'resume updates calling',
+    );
     if (!kIsWeb) {
       BnLog.trace(
           className: toString(),
@@ -135,7 +151,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
         controller.camera.zoom);
     locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
       locationUpdateProvider,
-      (_, value) {
+          (_, value) {
         if (value.value != null) {
           controller.move(value.value!, controller.camera.zoom);
         }
@@ -143,7 +159,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       fireImmediately: true,
     );
     setState(() {
-      followLocationState = FollowLocationStates.followMe;
+      followLocationState = CameraFollow.followMe;
     });
     ref.read(locationProvider).refresh(forceUpdate: true);
   }
@@ -182,7 +198,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   ///Toggles between user position and view with user pos
   void toggleViewerLocationService() async {
-
     if (ref.read(isTrackingProvider)) {
       ref.read(isTrackingProvider.notifier).toggleTracking(false);
       return;
@@ -194,7 +209,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
         negativeButtonTitle:
             Localize.of(context).no); //no neutral button on android
     if (clickedButton == CustomButton.positiveButton) {
-
       ref.read(isTrackingProvider.notifier).toggleTracking(false);
     }
   }
@@ -210,22 +224,21 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       key: scaffoldMessengerKey,
       child: CupertinoPageScaffold(
         child: Stack(children: [
-
           FlutterMap(
             mapController: controller,
             options: MapOptions(
               keepAlive: true,
               initialZoom: 13.0,
-              minZoom: HiveSettingsDB.openStreetMapEnabled
+              minZoom: MapSettings.openStreetMapEnabled
                   ? MapSettings.minZoom
                   : MapSettings.minZoomDefault,
-              maxZoom: HiveSettingsDB.openStreetMapEnabled
+              maxZoom: MapSettings.openStreetMapEnabled
                   ? MapSettings.maxZoom
                   : MapSettings.maxZoomDefault,
               initialCenter: ref.watch(activeEventProvider).startPoint,
               cameraConstraint: kDebugMode
                   ? null
-                  : HiveSettingsDB.openStreetMapEnabled ||
+                  : MapSettings.openStreetMapEnabled ||
                           ref
                               .watch(activeEventProvider)
                               .event
@@ -249,7 +262,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     longitude: ref.watch(realtimeDataProvider)!.head.longitude!,
                     accuracy: 1.0),
               ),*/
-              const CustomLocationLayer(),
+              CustomLocationLayer(_popupController),
               //needs map controller
               MarkersLayer(_popupController),
               TrackProgressOverlay(controller),
@@ -261,4 +274,27 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       ),
     );
   }
+  /// TODO
+  /// Disable align position and align direction temporarily when user is
+  /// manipulating the map.
+ /* void _onPointerDown(e, l) {
+    _pointerCount++;
+    setState(() {
+      _alignPositionOnUpdate = AlignOnUpdate.never;
+      _alignDirectionOnUpdate = AlignOnUpdate.never;
+    });
+  }
+
+  // Enable align position and align direction again when user manipulation
+  // ended.
+  void _onPointerUp(e, l) {
+    if (--_pointerCount == 0 && _navigationMode) {
+      setState(() {
+        _alignPositionOnUpdate = AlignOnUpdate.always;
+        _alignDirectionOnUpdate = AlignOnUpdate.always;
+      });
+      _alignPositionStreamController.add(18);
+      _alignDirectionStreamController.add(null);
+    }
+  }*/
 }

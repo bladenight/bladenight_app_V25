@@ -119,6 +119,9 @@ dev_dependencies:
   riverpod_lint:
 # import custom_lint too as riverpod_lint depends on it
 
+analyzer:
+  plugins:
+    - custom_lint
 
 dependency_overrides:
   # Remove when firebase_ui_firestore stops relying on 0.17.0.

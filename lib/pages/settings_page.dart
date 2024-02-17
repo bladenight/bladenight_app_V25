@@ -778,12 +778,12 @@ class _SettingsPageState extends State<SettingsPage> {
                                       descriptionRight: '',
                                       rightWidget: CupertinoSwitch(
                                         onChanged: (val) {
-                                          HiveSettingsDB
+                                          MapSettings
                                               .setOpenStreetMapEnabled(val);
                                           setState(() {});
                                         },
                                         value:
-                                            HiveSettingsDB.openStreetMapEnabled,
+                                        MapSettings.openStreetMapEnabled,
                                       ),
                                     ),
                                   ),

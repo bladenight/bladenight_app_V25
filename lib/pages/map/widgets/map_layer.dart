@@ -48,14 +48,14 @@ class _MapLayerState extends State<MapLayer> {
       options: MapOptions(
         keepAlive: true,
         initialZoom: 13.0,
-        minZoom: HiveSettingsDB.openStreetMapEnabled
+        minZoom: MapSettings.openStreetMapEnabled
             ? MapSettings.minZoom
             : MapSettings.minZoomDefault,
-        maxZoom: HiveSettingsDB.openStreetMapEnabled
+        maxZoom: MapSettings.openStreetMapEnabled
             ? MapSettings.maxZoom
             : MapSettings.maxZoomDefault,
         initialCenter: widget.startPoint,
-        cameraConstraint: HiveSettingsDB.openStreetMapEnabled ||
+        cameraConstraint: MapSettings.openStreetMapEnabled ||
                 widget.event.hasSpecialStartPoint
             ? CameraConstraint.contain(bounds: MapSettings.mapOnlineBoundaries)
             : CameraConstraint.contain(

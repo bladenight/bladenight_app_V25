@@ -70,3 +70,5 @@ pubspec.lock
 /firestore.rules
 /assets/images/Thumbs.db
 /assets/iosStore/*.xcf
+/lib/providers/map/*.g.dart
+/lib/providers/*.g.dart

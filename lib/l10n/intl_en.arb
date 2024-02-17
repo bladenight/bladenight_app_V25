@@ -440,6 +440,10 @@
   "codeExpired": "Code too old! Please delete entry and re-invite friend!",
   "eventNotStarted": "Event not started",
   "trackPointsExporting": "The following route points will be exported: ",
-  "trackingPoints": "Recorded route points"
+  "trackingPoints": "Recorded route points",
+  "alignNever": "No map align",
+  "alignPositionOnUpdateOnly": "Align map on my position update only",
+  "alignDirectionOnUpdateOnly":"Align map on direction update only",
+  "alignDirectionAndPositionOnUpdate": "Align map on direction and position"
 
 }

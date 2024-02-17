@@ -18,7 +18,7 @@ class MapLeftButtonsLayer extends ConsumerStatefulWidget {
 
 class _MapLeftButtonsOverlay extends ConsumerState<MapLeftButtonsLayer>
     with SingleTickerProviderStateMixin {
-  var _buttonsEnabled = MapSettings.mapMenuVisible;
+  var animationDuration = const Duration(milliseconds: 250);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class _MapLeftButtonsOverlay extends ConsumerState<MapLeftButtonsLayer>
         left: ref.watch(mapSettingsProviderProvider) ? 10 : -100,
         bottom: 190,
         height: 40,
-        duration: const Duration(milliseconds: 500),
+        duration: animationDuration,
         child: FloatingActionButton(
           onPressed: () {
             final controller = MapController.maybeOf(context);
@@ -43,7 +43,7 @@ class _MapLeftButtonsOverlay extends ConsumerState<MapLeftButtonsLayer>
       ),
       AnimatedPositioned(
         left: ref.watch(mapSettingsProviderProvider) ? 10 : -100,
-        duration: const Duration(milliseconds: 500),
+        duration: animationDuration,
         bottom: 140,
         height: 40,
         child: Builder(builder: (context) {
@@ -62,7 +62,7 @@ class _MapLeftButtonsOverlay extends ConsumerState<MapLeftButtonsLayer>
         }),
       ),
       AnimatedPositioned(
-        duration: const Duration(milliseconds: 500),
+        duration: animationDuration,
         left: ref.watch(mapSettingsProviderProvider) ? 10 : -100,
         bottom: 90,
         height: 40,
@@ -113,7 +113,6 @@ class _MapLeftButtonsOverlay extends ConsumerState<MapLeftButtonsLayer>
           );
         }),
       ),
-
     ]);
   }
 }

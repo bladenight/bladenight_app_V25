@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
-import '../../../helpers/hive_box/hive_settings_db.dart';
+import '../../../models/follow_location_state.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/map/align_flutter_map_provider.dart';
+import '../../../providers/map/camera_follow_location_provider.dart';
+import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/shared_prefs_provider.dart';
 
 class CustomLocationLayer extends ConsumerStatefulWidget {
-  const CustomLocationLayer({super.key});
+  const CustomLocationLayer(this.popupController, {super.key});
+
+  final PopupController popupController;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CustomLocationLayer();
@@ -18,6 +25,7 @@ class CustomLocationLayer extends ConsumerStatefulWidget {
 class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
   late final Stream<LocationMarkerPosition?> _positionStream;
   late final Stream<LocationMarkerHeading?> _headingStream;
+  ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
 
   @override
   void initState() {
@@ -28,36 +36,149 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var isTracking = ref.watch(isTrackingProvider);
-    return !isTracking?Container():
-     CurrentLocationLayer(
-      positionStream: _positionStream,
-      headingStream: _headingStream,
-      alignPositionOnUpdate: AlignOnUpdate.never,
-      alignDirectionOnUpdate: AlignOnUpdate.never,
-      style: LocationMarkerStyle(
-        showAccuracyCircle: false,
-        headingSectorColor: context.watch(MeColor.provider),
-        marker: DefaultLocationMarker(
-          child: CircleAvatar(
-            backgroundColor: context.watch(MeColor.provider).withOpacity(0.6),
-            child: LocationProvider.instance.userIsParticipant
-                ?  ImageIcon(
-                    const AssetImage('assets/images/skaterIcon_256_bearer.png'),
-                    size: MediaQuery.textScalerOf(context)
-                          .scale(HiveSettingsDB.iconSizeValue)-10,
+    var cameraFollow = ref.watch(cameraFollowLocationProvider);
+    var alignMap = ref.watch(alignFlutterMapProvider);
+    var iconSize = ref.watch(iconSizeProvider);
+    return !isTracking
+        ? Container()
+        : CurrentLocationLayer(
+            positionStream: _positionStream,
+            headingStream: _headingStream,
+            alignDirectionAnimationDuration: const Duration(milliseconds: 300),
+            alignPositionOnUpdate: cameraFollow == CameraFollow.followMe &&
+                    (alignMap ==
+                            AlignFlutterMapState.alignPositionOnUpdateOnly ||
+                        alignMap ==
+                            AlignFlutterMapState
+                                .alignDirectionAndPositionOnUpdate)
+                ? AlignOnUpdate.always
+                : AlignOnUpdate.never,
+            alignDirectionOnUpdate: cameraFollow == CameraFollow.followMe &&
+                    (alignMap ==
+                            AlignFlutterMapState.alignDirectionOnUpdateOnly ||
+                        alignMap ==
+                            AlignFlutterMapState
+                                .alignDirectionAndPositionOnUpdate)
+                ? AlignOnUpdate.always
+                : AlignOnUpdate.never,
+            style: LocationMarkerStyle(
+              showAccuracyCircle: true,
+              headingSectorColor: context.watch(MeColor.provider),
+              marker: DefaultLocationMarker(
+                child: CircleAvatar(
+                  backgroundColor:
+                      context.watch(MeColor.provider).withOpacity(0.6),
+                  child: LocationProvider.instance.userIsParticipant
+                      ? ImageIcon(
+                          const AssetImage(
+                              'assets/images/skater_icon_256_bearer.png'),
+                          size:
+                              MediaQuery.textScalerOf(context).scale(iconSize) -
+                                  10,
+                        )
+                      : const Icon(Icons.gps_fixed_sharp),
+                ),
+                /*
+                var locationUpdate = ref.watch(locationProvider);
 
-                  )
-                : const Icon(Icons.gps_fixed_sharp),
-          ),
-        ),
-        markerSize: Size(
-          MediaQuery.textScalerOf(context).scale(HiveSettingsDB.iconSizeValue),
-          MediaQuery.textScalerOf(context).scale(HiveSettingsDB.iconSizeValue),
-        ),
-        markerDirection: MarkerDirection.heading,
-      ),
-    );
+                child: PopupMarkerLayer(
+                  options: PopupMarkerLayerOptions(
+                    popupDisplayOptions: PopupDisplayOptions(
+                      builder: (BuildContext context, Marker marker) {
+                        if (marker is BnMapMarker) {
+                          return MapMarkerPopup(marker);
+                        }
+                        return Container();
+                      },
+                      snap: PopupSnap.markerBottom,
+                    ),
+                    markerCenterAnimation: const MarkerCenterAnimation(),
+                    markers: [
+                      BnMapMarker(
+                        buildContext: context,
+                        headerText: '${Localize.of(context).me} '
+                            '${locationUpdate.isHead ? "${Localize.of(context).iam} ${Localize.of(context).head}" : ''} '
+                            '${locationUpdate.isTail ? "${Localize.of(context).iam} ${Localize.of(context).tail}" : ''} ',
+                        speedText:
+                            '${locationUpdate.realUserSpeedKmh == null ? '- km/h' : locationUpdate.realUserSpeedKmh.formatSpeedKmH()} ∑${locationUpdate.odometer.toStringAsFixed(1)} km',
+                        drivenDistanceText:
+                            '${((locationUpdate.realtimeUpdate?.user.position) ?? '-')} m',
+                        timeUserToHeadText:
+                            '${(TimeConverter.millisecondsToDateTimeString(value: locationUpdate.realtimeUpdate?.timeUserToHead() ?? 0))}',
+                        distanceUserToHeadText:
+                            '${((locationUpdate.realtimeUpdate?.distanceOfUserToHead()) ?? '-')} m',
+                        timeUserToTailText:
+                            '${(TimeConverter.millisecondsToDateTimeString(value: locationUpdate.realtimeUpdate?.timeUserToTail() ?? 0))}',
+                        distanceUserToTailText:
+                            '${((locationUpdate.realtimeUpdate?.distanceOfUserToTail()) ?? '-')} m',
+                        color: ref.watch(MeColor.provider),
+                        point: locationUpdate.userLatLng!,
+                        width: iconSize,
+                        height: iconSize,
+                        child: Builder(builder: (context) {
+                          if (locationUpdate.isHead) {
+                            return Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: const BoxDecoration(
+                                  color: Colors.red, shape: BoxShape.circle),
+                              child: CircleAvatar(
+                                radius: iconSize - 5,
+                                backgroundImage: const AssetImage(
+                                    'assets/images/skater_icon_256.png'),
+                                backgroundColor: ref
+                                    .watch(MeColor.provider)
+                                    .withOpacity(0.6),
+                              ),
+                            );
+                          } else if (locationUpdate.isTail) {
+                            return Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: const BoxDecoration(
+                                  color: Colors.purple, shape: BoxShape.circle),
+                              child: CircleAvatar(
+                                radius: iconSize - 5,
+                                backgroundImage: const AssetImage(
+                                    'assets/images/skater_icon_256.png'),
+                                backgroundColor: ref
+                                    .watch(MeColor.provider)
+                                    .withOpacity(0.6),
+                              ),
+                            );
+                          }
+                          return CircleAvatar(
+                            backgroundColor:
+                                ref.watch(MeColor.provider).withOpacity(0.6),
+                            child: locationUpdate.userIsParticipant
+                                ? const ImageIcon(AssetImage(
+                                    'assets/images/skater_icon_256.png'))
+                                : const Icon(Icons.gps_fixed_sharp),
+                          );
+                        }),
+                      ),
+                    ],
+                    popupController: widget.popupController,
+                    markerTapBehavior:
+                        MarkerTapBehavior.togglePopupAndHideRest(),
+                    // : MarkerTapBehavior.togglePopupAndHideRest(),
+                    onPopupEvent: (event, selectedMarkers) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    },
+                  ),
+                ),*/
+              ),
+              markerSize: Size(
+                MediaQuery.textScalerOf(context).scale(iconSize),
+                MediaQuery.textScalerOf(context).scale(iconSize),
+              ),
+              markerDirection: MarkerDirection.heading,
+            ),
+          );
   }
 }

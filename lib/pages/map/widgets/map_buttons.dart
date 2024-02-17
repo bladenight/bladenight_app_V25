@@ -20,8 +20,11 @@ import '../../../pages/widgets/following_location_icon.dart';
 import '../../../providers/images_and_links/live_map_image_and_link_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/map/align_flutter_map_provider.dart';
+import '../../../providers/map/camera_follow_location_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/route_providers.dart';
+import '../../widgets/align_map_icon.dart';
 import '../widgets/qr_create_page.dart';
 import 'map_left_buttons.dart';
 
@@ -35,45 +38,44 @@ class MapButtonsLayer extends ConsumerStatefulWidget {
 class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
 
-  late FollowLocationStates followLocationState =
-      FollowLocationStates.followOff;
-
   @override
   Widget build(BuildContext context) {
+    CameraFollow followLocationState = ref.watch(cameraFollowLocationProvider);
+
     return Stack(children: [
       if (!kIsWeb)
-        Visibility(
-          visible: true, //MapSettings.mapMenuVisible,
-          child: Positioned(
-            right: 10,
-            bottom: 190, //same height as qrcode in web
-            height: 40,
-            child: Builder(builder: (context) {
-              if (ref.watch(isActiveEventProvider)) {
-                var currentRoute = ref.watch(currentRouteProvider);
-                return currentRoute.when(data: (data) {
-                  return FloatingActionButton(
-                      heroTag: 'barcodeBtnTag',
-                      backgroundColor: Colors.blue,
-                      onPressed: () {
-                        _showLiveMapLink(
-                            ref.read(LiveMapImageAndLink.provider).link);
-                      },
-                      child: const Icon(
-                        CupertinoIcons.qrcode,
-                        color: Colors.white,
-                      ));
-                }, error: (err, stack) {
-                  return Container();
-                }, loading: () {
-                  return Container();
-                });
-              } else {
+        Positioned(
+          left: 80,
+          bottom: 40,
+          //same height as qrcode in web
+          height: 40,
+          width: 40,
+          child: Builder(builder: (context) {
+            if (ref.watch(isActiveEventProvider)) {
+              var currentRoute = ref.watch(currentRouteProvider);
+              return currentRoute.when(data: (data) {
+                return FloatingActionButton(
+                    heroTag: 'barcodeBtnTag',
+                    backgroundColor: Colors.blue,
+                    onPressed: () {
+                      _showLiveMapLink(
+                          ref.read(LiveMapImageAndLink.provider).link);
+                    },
+                    child: const Icon(
+                      CupertinoIcons.qrcode,
+                      color: Colors.white,
+                    ));
+              }, error: (err, stack) {
                 return Container();
-              }
-            }),
-          ),
+              }, loading: () {
+                return Container();
+              });
+            } else {
+              return Container();
+            }
+          }),
         ),
+
       if (!kIsWeb && ref.watch(mapSettingsProviderProvider))
         Positioned(
           left: 10,
@@ -191,42 +193,41 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
         Positioned(
           right: 10,
           bottom: 110,
+          height: 40,
           child: Builder(builder: (context) {
             return FloatingActionButton(
               onPressed: () {
                 var controller = MapController.maybeOf(context);
                 if (controller == null) return;
-                switch (followLocationState) {
-                  case FollowLocationStates.followOff:
-                    followLocationState = FollowLocationStates.followMe;
-                    startFollowingMeLocation();
-                    showToast(message: Localize.of(context).mapFollowLocation);
-                    break;
-                  case FollowLocationStates.followMe:
-                    followLocationState = FollowLocationStates.followMeStopped;
-                    stopFollowingLocation();
-                    showToast(message: Localize.of(context).mapFollowStopped);
-                    break;
-                  case FollowLocationStates.followMeStopped:
-                    followLocationState = FollowLocationStates.followTrain;
-                    startFollowingTrainHead(controller);
-                    showToast(message: Localize.of(context).mapFollowTrain);
-                    break;
-                  case FollowLocationStates.followTrain:
-                    followLocationState =
-                        FollowLocationStates.followTrainStopped;
-                    stopFollowingLocation();
-                    showToast(
-                        message: Localize.of(context).mapFollowTrainStopped);
-                    break;
-                  case FollowLocationStates.followTrainStopped:
-                    followLocationState = FollowLocationStates.followOff;
+                var nextState =
+                    ref.read(cameraFollowLocationProvider.notifier).setNext();
+                switch (nextState) {
+                  case CameraFollow.followOff:
                     _moveMapToDefault(controller);
                     showToast(
                         message: Localize.of(context).mapToStartNoFollowing);
+
+                    break;
+                  case CameraFollow.followMe:
+                    showToast(message: Localize.of(context).mapFollowLocation);
+                    break;
+                  case CameraFollow.followMeStopped:
+                    stopFollowingLocation();
+                    showToast(message: Localize.of(context).mapFollowStopped);
+
+                    break;
+                  case CameraFollow.followTrain:
+                    startFollowingTrainHead(controller);
+                    showToast(message: Localize.of(context).mapFollowTrain);
+
+                    break;
+                  case CameraFollow.followTrainStopped:
+                    stopFollowingLocation();
+                    showToast(
+                        message: Localize.of(context).mapFollowTrainStopped);
+
                     break;
                   default:
-                    followLocationState = FollowLocationStates.followOff;
                     if (locationSubscription != null) {
                       stopFollowingLocation();
                     } else {
@@ -241,6 +242,53 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
               ),
             );
           }),
+        ),
+
+      if (!kIsWeb)
+        Visibility(
+          visible: followLocationState == CameraFollow.followMe ? true : false,
+          child: Positioned(
+            right: 10,
+            height: 40,
+            bottom: 160,
+            child: Builder(builder: (context) {
+              var alignMap = ref.watch(alignFlutterMapProvider);
+              return FloatingActionButton(
+                onPressed: () {
+                  var controller = MapController.maybeOf(context);
+                  if (controller == null) return;
+                  var nextState =
+                      ref.read(alignFlutterMapProvider.notifier).setNext();
+                  switch (nextState) {
+                    case AlignFlutterMapState.alignNever:
+                      var mapController = MapController.of(context);
+                      mapController.rotate(0);
+                      showToast(message: Localize.of(context).alignNever);
+                      break;
+                    case AlignFlutterMapState.alignPositionOnUpdateOnly:
+                      showToast(
+                          message:
+                              Localize.of(context).alignPositionOnUpdateOnly);
+                      break;
+                    case AlignFlutterMapState.alignDirectionOnUpdateOnly:
+                      showToast(
+                          message:
+                              Localize.of(context).alignDirectionOnUpdateOnly);
+                      break;
+                    case AlignFlutterMapState.alignDirectionAndPositionOnUpdate:
+                      showToast(
+                          message: Localize.of(context)
+                              .alignDirectionAndPositionOnUpdate);
+                      break;
+                  }
+                },
+                heroTag: 'mapAlignBtnTag',
+                child: AlignMapIcon(
+                  alignMapStatus: alignMap,
+                ),
+              );
+            }),
+          ),
         ),
 
       //Left located button web
@@ -259,27 +307,26 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
                   return;
                 }
                 switch (followLocationState) {
-                  case FollowLocationStates.followOff:
-                  case FollowLocationStates.followMeStopped:
-                    followLocationState = FollowLocationStates.followTrain;
+                  case CameraFollow.followOff:
+                  case CameraFollow.followMeStopped:
+                    followLocationState = CameraFollow.followTrain;
                     startFollowingTrainHead(controller);
                     showToast(message: Localize.of(context).mapFollowTrain);
                     break;
-                  case FollowLocationStates.followTrain:
-                    followLocationState =
-                        FollowLocationStates.followTrainStopped;
+                  case CameraFollow.followTrain:
+                    followLocationState = CameraFollow.followTrainStopped;
                     stopFollowingLocation();
                     showToast(
                         message: Localize.of(context).mapFollowTrainStopped);
                     break;
-                  case FollowLocationStates.followTrainStopped:
-                    followLocationState = FollowLocationStates.followOff;
+                  case CameraFollow.followTrainStopped:
+                    followLocationState = CameraFollow.followOff;
                     _moveMapToDefault(controller);
                     showToast(
                         message: Localize.of(context).mapToStartNoFollowing);
                     break;
                   default:
-                    followLocationState = FollowLocationStates.followOff;
+                    followLocationState = CameraFollow.followOff;
                     if (locationSubscription != null) {
                       stopFollowingLocation();
                     } else {
@@ -340,6 +387,22 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
         });
   }
 
+  void startFollowingTrainHead(MapController controller) {
+    locationSubscription?.close();
+    locationSubscription = null;
+    controller.move(defaultLatLng, controller.camera.zoom);
+    locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
+      locationTrainHeadUpdateProvider,
+      (_, value) {
+        if (value.value != null) {
+          controller.move(value.value!, controller.camera.zoom);
+        }
+      },
+      fireImmediately: true,
+    );
+    ref.read(locationProvider).refresh(forceUpdate: true);
+  }
+
   void startFollowingMeLocation() {
     final controller = MapController.maybeOf(context);
     final camera = MapCamera.maybeOf(context);
@@ -353,25 +416,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
         controller.camera.zoom);
     locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
       locationUpdateProvider,
-      (_, value) {
-        if (value.value != null) {
-          controller.move(value.value!, controller.camera.zoom);
-        }
-      },
-      fireImmediately: true,
-    );
-    setState(() {
-      followLocationState = FollowLocationStates.followMe;
-    });
-    ref.read(locationProvider).refresh(forceUpdate: true);
-  }
-
-  void startFollowingTrainHead(MapController controller) {
-    locationSubscription?.close();
-    locationSubscription = null;
-    controller.move(defaultLatLng, controller.camera.zoom);
-    locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
-      locationTrainHeadUpdateProvider,
       (_, value) {
         if (value.value != null) {
           controller.move(value.value!, controller.camera.zoom);

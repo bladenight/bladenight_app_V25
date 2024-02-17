@@ -74,10 +74,10 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
         }
         if (ial.text != null && ial.text!.trim() == 'on') {
           //enable OSM via remote // if empty don't change
-          HiveSettingsDB.setOpenStreetMapEnabled(true);
+          MapSettings.setOpenStreetMapEnabled(true);
         }
         if (ial.text != null && ial.text!.trim() == 'off') {
-          HiveSettingsDB.setOpenStreetMapEnabled(false);
+          MapSettings.setOpenStreetMapEnabled(false);
         }
         if (ial.link != null && ial.link!.isNotEmpty) {
           try {
