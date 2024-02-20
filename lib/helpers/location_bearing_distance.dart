@@ -26,15 +26,15 @@ class GeoLocationHelper {
           distP1P2.toDouble()));
     }
     //max 20
-    if (headingPoints.length > 20) {
+    if (headingPoints.length > 30) {
       var sublist = <HeadingPoint>[];
-      int i = (headingPoints.length / 20).round();
-      var subcount = 0;
+      int i = (headingPoints.length / 30).round();
+      var subCount = 0;
       for (var hp in headingPoints) {
-        if (subcount == 0) sublist.add(hp);
-        subcount++;
-        if (subcount >= i) {
-          subcount = 0;
+        if (subCount == 0) sublist.add(hp);
+        subCount++;
+        if (subCount >= i) {
+          subCount = 0;
         }
       }
       return sublist;

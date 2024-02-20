@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/location_bearing_distance.dart';
 import '../helpers/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../providers/friends_provider.dart';
@@ -138,67 +136,6 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     int headPos = head.position;
     int userPos = user.position;
     return headPos - userPos;
-  }
-
-  List<LatLng> runningRoute(List<LatLng> points) {
-    var headPos = head.position;
-    var tailPos = tail.position;
-    var running = <LatLng>[];
-    var length = 0.0;
-
-    /*if (head.latitude != null &&
-        head.latitude != 0.0 &&
-        head.longitude != null &&
-        head.longitude != 0.0) {
-      running.add(LatLng(head.latitude!, head.longitude!));
-    }*/
-
-    for (var i = 0; i < points.length - 1; i++) {
-      var a = points[i], b = points[i + 1];
-      var segmentLength = GeoLocationHelper.haversine(
-        a.latitude,
-        a.longitude,
-        b.latitude,
-        b.longitude,
-      );
-
-      if (tailPos == 0 && headPos == 0) {
-        running.add(a);
-        break;
-      }
-
-      if (length + segmentLength < tailPos) {
-        length += segmentLength;
-        continue;
-      } else if (length + segmentLength == tailPos) {
-        length += segmentLength;
-        running.add(a);
-        continue;
-      } else {
-        if (length + segmentLength >= headPos) {
-          running.add(a);
-          //calculate missing part
-          double missingLength = headPos - length;
-          if (missingLength <= segmentLength) {
-            double relativePositionOnSegment = missingLength / segmentLength;
-            double lat = a.latitude + relativePositionOnSegment * (b.latitude - a.latitude);
-            double lon = a.longitude + relativePositionOnSegment * (b.longitude - a.longitude);
-            var endLatLong = LatLng(lat,lon);
-            running.add(endLatLong);
-          }
-          break;
-        } else {
-          length += segmentLength;
-          running.add(a);
-        }
-      }
-    }
-
-    if (running.isEmpty && points.isNotEmpty) {
-      running.add(points.first);
-    }
-    //reverse it to draw head -first in queue to tail last in queue
-    return running.reversed.toList();
   }
 
   Iterable<Friend> mapPointFriends(FriendsMessage? rtFriends) {

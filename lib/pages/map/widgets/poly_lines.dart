@@ -4,7 +4,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
-import '../../../providers/active_event_notifier_provider.dart';
+import '../../../models/images_and_links.dart';
+import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/shared_prefs_provider.dart';
@@ -20,15 +21,22 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
   @override
   Widget build(BuildContext context) {
     var locationUpdate = ref.watch(locationProvider);
-    var activeEvent = ref.watch(activeEventProvider);
-    var runningRoutePoints = locationUpdate.realtimeUpdate
-        ?.runningRoute(activeEvent.activeEventRoutePoints);
+    var activeEventRouteP = ref.watch(activeEventRouteProvider);
+    var processionRoutePointsP = ref.watch(processionRoutePointsProvider);
+    var activeEventRoutePoints = <LatLng>[];
+    activeEventRouteP.hasValue
+        ? activeEventRoutePoints = activeEventRouteP.value!.points
+        : <LatLng>[];
+    var processionRoutePoints = <LatLng>[];
+    processionRoutePointsP.hasValue
+        ? processionRoutePoints = processionRoutePointsP.value!
+        : <LatLng>[];
 
     return PolylineLayer(polylines: [
-      if (context.watch(activeEventProvider).activeEventRoutePoints.isNotEmpty)
+      if (activeEventRoutePoints.isNotEmpty)
         Polyline(
           //active route points
-          points: context.watch(activeEventProvider).activeEventRoutePoints,
+          points: activeEventRoutePoints,
           strokeWidth: context.watch(isTrackingProvider) ? 5 : 3,
           borderColor: context.watch(isTrackingProvider)
               ? const CupertinoDynamicColor.withBrightness(
@@ -45,9 +53,9 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
           isDotted: false, //ref.watch(isTrackingProvider),
         ),
 
-      if (runningRoutePoints != null && runningRoutePoints.isNotEmpty)
+      if (processionRoutePoints.isNotEmpty)
         Polyline(
-            points: runningRoutePoints,
+            points: processionRoutePoints,
             color: CupertinoDynamicColor.withBrightness(
                 color: context.watch(ThemePrimaryColor.provider),
                 darkColor: ref.watch(ThemePrimaryDarkColor.provider)),

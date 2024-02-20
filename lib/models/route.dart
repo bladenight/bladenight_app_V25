@@ -23,10 +23,17 @@ class RoutePoints with RoutePointsMappable {
   @MappableField(key: 'nam')
   final String name;
   @MappableField(key: 'nod')
-  final List<LatLng>? points;
+  List<LatLng> points = <LatLng>[];
 
   Exception? rpcException;
   DateTime? lastUpdate;
+
+  LatLng get startLatLng => _startLatLng;
+
+  LatLng get finishLatLng => _finishLatLng;
+
+  LatLng _startLatLng = defaultLatLng;
+  LatLng _finishLatLng = defaultLatLng;
 
   static RoutePoints rpcError(Exception exception) {
     return RoutePoints('error', [], exception);
@@ -40,8 +47,16 @@ class RoutePoints with RoutePointsMappable {
                 .toUtc()
                 .difference(HiveSettingsDB.routePointsLastUpdate) <
             const Duration(seconds: 30)) {
-      return MapperContainer.globals
+      var rp = MapperContainer.globals
           .fromJson<RoutePoints>(HiveSettingsDB.routePointsString);
+      if (rp.points.isNotEmpty) {
+        rp._startLatLng = rp.points.first;
+        rp._finishLatLng = rp.points.last;
+      } else {
+        rp._startLatLng = defaultLatLng;
+        rp._finishLatLng = defaultLatLng;
+      }
+      return rp;
     }
 
     Completer completer = Completer();
@@ -54,7 +69,6 @@ class RoutePoints with RoutePointsMappable {
     if (wampResult is Map<String, dynamic>) {
       var rp = MapperContainer.globals.fromMap<RoutePoints>(wampResult);
       HiveSettingsDB.setRoutePointsString(MapperContainer.globals.toJson(rp));
-      HiveSettingsDB.setRoutePointsLastUpdate(DateTime.now().toUtc());
       return rp;
     }
     if (wampResult is RoutePoints) {
@@ -83,29 +97,29 @@ class RoutePoints with RoutePointsMappable {
 
   @override
   String toString() {
-    return 'RoutePoints $name, length:${points?.length}';
+    return 'RoutePoints $name, length:${points.length}';
   }
 }
 
 extension RoutePointExtension on RoutePoints {
   double get getRoutePointsSummaryDistance {
-    if (points == null || points!.isEmpty) {
+    if (points.isEmpty) {
       return 0.0;
     }
-    return GeoLocationHelper.calculateDistance(points!);
+    return GeoLocationHelper.calculateDistance(points);
   }
 
-  LatLng get firstPointOrDefault {
-    if (points == null || points!.isEmpty) {
+  LatLng get startLatLngOrDefault {
+    if (points.isEmpty) {
       return defaultLatLng;
     }
-    return points!.first;
+    return points.first;
   }
 
-  LatLng get lastPointOrDefault {
-    if (points == null || points!.isEmpty) {
+  LatLng get finishLatLngOrDefault {
+    if (points.isEmpty) {
       return defaultLatLng;
     }
-    return points!.last;
+    return points.last;
   }
 }

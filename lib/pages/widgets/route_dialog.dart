@@ -52,7 +52,7 @@ class RouteDialog extends ConsumerWidget {
                     MapLayer(
                       event: event,
                       startPoint: LatLng(defaultLatitude, defaultLongitude),
-                      finishPoint: route.lastPointOrDefault,
+                      finishPoint: route.finishLatLngOrDefault,
                     ),
                     NoDataWarning(
                       onReload: () => ref.refresh(routeProvider(route.name)),
@@ -62,11 +62,11 @@ class RouteDialog extends ConsumerWidget {
                 return Stack(children: [
                   MapLayer(
                     event: event,
-                    startPoint: route.firstPointOrDefault,
-                    finishPoint: route.lastPointOrDefault,
+                    startPoint: route.startLatLngOrDefault,
+                    finishPoint: route.finishLatLngOrDefault,
                     polyLines: [
                       Polyline(
-                        points: route.points ?? [],
+                        points: route.points,
                         color: CupertinoTheme.of(context).primaryColor,
                         strokeWidth: 4,
                       ),
@@ -74,14 +74,14 @@ class RouteDialog extends ConsumerWidget {
                     markers: [
                       //finishMarker
                       ...[
-                        if (route.points != null && route.points!.isNotEmpty)
+                        if (route.points.isNotEmpty)
                           BnMapMarker(
                             buildContext: context,
                             headerText: Localize.of(context).finish,
                             color: Colors.red,
                             width: 20.0,
                             height: 20.0,
-                            point: route.points!.last,
+                            point: route.points.last,
                             child: Builder(
                               builder: (context) => const Stack(
                                 children: [
@@ -97,7 +97,7 @@ class RouteDialog extends ConsumerWidget {
                           ),
                       ], //StartMarker
                       ...[
-                        if (route.points != null && route.points!.isNotEmpty)
+                        if ( route.points.isNotEmpty)
                           BnMapMarker(
                             buildContext: context,
                             headerText: Localize.of(context).start,
@@ -105,7 +105,7 @@ class RouteDialog extends ConsumerWidget {
                             color: Colors.transparent,
                             width: sizeValue,
                             height: sizeValue,
-                            point: route.points!.first,
+                            point: route.points.first,
                             child: Builder(
                               builder: (context) => const Stack(
                                 children: [
@@ -119,10 +119,9 @@ class RouteDialog extends ConsumerWidget {
                               ),
                             ),
                           ),
-                        if (route.points != null &&
-                            route.points!.length > 3) ...[
+                        if (route.points.length > 3) ...[
                           for (var hp in GeoLocationHelper.calculateHeadings(
-                              route.points!))
+                              route.points))
                             Marker(
                               point: hp.latLng,
                               width: 20,

@@ -4,7 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../helpers/hive_box/hive_settings_db.dart';
-import '../../../providers/active_event_notifier_provider.dart';
+import '../../../providers/active_event_provider.dart';
 import 'bn_dark_container.dart';
 
 class MapTileLayer extends StatefulWidget{
@@ -68,12 +68,12 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
           ? MapSettings.maxZoom
           : MapSettings.maxZoomDefault,
       urlTemplate: MapSettings.openStreetMapEnabled ||
-              ref.watch(activeEventProvider).event.hasSpecialStartPoint
+              ref.watch(activeEventProvider).hasSpecialStartPoint
           ? MapSettings.openStreetMapLinkString //use own ts
           : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
       tileProvider: MapSettings.openStreetMapEnabled ||
-              ref.watch(activeEventProvider).event.hasSpecialStartPoint
+              ref.watch(activeEventProvider).hasSpecialStartPoint
           ? CachedTileProvider()
           : AssetTileProvider(),
       errorImage: const AssetImage(

@@ -71,7 +71,7 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
                   height: 2,
                   thickness: 2,
                   indent: 20,
-                  endIndent: 20,
+                  endIndent: 10,
                 ),
                 _cardDescription(context),
                 const SizedBox(
@@ -111,7 +111,7 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
             Divider(
               height: 2,
               color: CupertinoTheme.of(context).primaryColor,
-              endIndent: 20,
+              endIndent: 0,
             ),
           if (widget.marker.timeUserToHeadText != null)
             DataLeftRightContent(
@@ -132,7 +132,7 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
             Divider(
               height: 2,
               color: CupertinoTheme.of(context).primaryColor,
-              endIndent: 20,
+              endIndent: 0,
             ),
           if (widget.marker.timeUserToTailText != null)
             DataLeftRightContent(
@@ -154,7 +154,7 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
             Divider(
               height: 2,
               color: CupertinoTheme.of(context).primaryColor,
-              endIndent: 20,
+              endIndent: 0,
             ),
           if (widget.marker.timeToTailText != null)
             DataLeftRightContent(
@@ -170,7 +170,7 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
             Divider(
               height: 2,
               color: CupertinoTheme.of(context).primaryColor,
-              endIndent: 20,
+              endIndent: 0,
             ),
           if (widget.marker.timeToHeadText != null)
             DataLeftRightContent(

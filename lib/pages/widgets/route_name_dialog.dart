@@ -1,17 +1,17 @@
-import '../../app_settings/app_configuration_helper.dart';
-import '../../providers/map/icon_size_provider.dart';
-import '../map/widgets/event_info_overlay.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/location_bearing_distance.dart';
 import '../../models/bn_map_marker.dart';
 import '../../models/event.dart';
 import '../../models/route.dart';
+import '../../providers/map/icon_size_provider.dart';
 import '../../providers/route_providers.dart';
+import '../map/widgets/event_info_overlay.dart';
 import '../map/widgets/map_layer.dart';
 import 'data_loading_indicator.dart';
 import 'no_data_warning.dart';
@@ -24,20 +24,20 @@ class RouteNameDialog extends ConsumerWidget {
   static show(BuildContext context, String routeName) {
     Navigator.of(context).push(
       CupertinoPageRoute(
-        builder: (context) => RouteNameDialog( routeName: routeName,),
+        builder: (context) => RouteNameDialog(
+          routeName: routeName,
+        ),
         fullscreenDialog: true,
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScaffoldMessenger(
       child: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle:
-              Text('${Localize.of(context).routeoverview}: $routeName'),
+          middle: Text('${Localize.of(context).routeoverview}: $routeName'),
         ),
         child: Builder(builder: (context) {
           var iconSize = ref.watch(iconSizeProvider);
@@ -50,9 +50,10 @@ class RouteNameDialog extends ConsumerWidget {
                 if (route.rpcException != null) {
                   return Stack(children: [
                     MapLayer(
-                      event: Event(startDate: DateTime.now(), routeName: routeName),
+                      event: Event(
+                          startDate: DateTime.now(), routeName: routeName),
                       startPoint: LatLng(defaultLatitude, defaultLongitude),
-                      finishPoint: route.lastPointOrDefault,
+                      finishPoint: route.finishLatLngOrDefault,
                     ),
                     NoDataWarning(
                       onReload: () => ref.refresh(routeProvider(route.name)),
@@ -61,12 +62,13 @@ class RouteNameDialog extends ConsumerWidget {
                 }
                 return Stack(children: [
                   MapLayer(
-                    event:  Event(startDate: DateTime.now(), routeName: routeName),
-                    startPoint: route.firstPointOrDefault,
-                    finishPoint: route.lastPointOrDefault,
+                    event:
+                        Event(startDate: DateTime.now(), routeName: routeName),
+                    startPoint: route.startLatLngOrDefault,
+                    finishPoint: route.finishLatLngOrDefault,
                     polyLines: [
                       Polyline(
-                        points: route.points ?? [],
+                        points: route.points,
                         color: CupertinoTheme.of(context).primaryColor,
                         strokeWidth: 4,
                       ),
@@ -74,29 +76,30 @@ class RouteNameDialog extends ConsumerWidget {
                     markers: [
                       //finishMarker
                       ...[
-                        if (route.points != null && route.points!.isNotEmpty)
+                        if (route.points.isNotEmpty)
                           BnMapMarker(
                             buildContext: context,
                             headerText: Localize.of(context).finish,
                             color: Colors.red,
                             width: 20.0,
                             height: 20.0,
-                            point: route.points!.last,
+                            point: route.points.last,
                             child: Builder(
-                              builder: (context) =>  const Stack(
-                              children: [
-                                Image(
-                                  image: AssetImage(
-                                    'assets/images/finishMarker.png',
+                              builder: (context) => const Stack(
+                                children: [
+                                  Image(
+                                    image: AssetImage(
+                                      'assets/images/finishMarker.png',
+                                    ),
+                                    fit: BoxFit.cover,
                                   ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                          ),], //StartMarker
+                      ], //StartMarker
                       ...[
-                        if (route.points != null && route.points!.isNotEmpty)
+                        if (route.points.isNotEmpty)
                           BnMapMarker(
                             buildContext: context,
                             headerText: Localize.of(context).start,
@@ -104,43 +107,49 @@ class RouteNameDialog extends ConsumerWidget {
                             color: Colors.transparent,
                             width: sizeValue,
                             height: sizeValue,
-                            point: route.points!.first,
+                            point: route.points.first,
                             child: Builder(
                               builder: (context) => const Stack(
-                              children: [
-                                Image(
-                                  image: AssetImage(
-                                    'assets/images/start_marker.png',
+                                children: [
+                                  Image(
+                                    image: AssetImage(
+                                      'assets/images/start_marker.png',
+                                    ),
+                                    fit: BoxFit.cover,
                                   ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            ),),
-                        if (route.points != null &&
-                            route.points!.length > 3) ...[
+                          ),
+                        if (route.points.length > 3) ...[
                           for (var hp in GeoLocationHelper.calculateHeadings(
-                              route.points!))
+                              route.points))
                             Marker(
                               point: hp.latLng,
                               width: 20,
                               height: 20,
                               child: Builder(
-                              builder: (context) => Transform.rotate(
-                                angle: hp.bearing,
-                                child: const Image(
-                                  image: AssetImage(
-                                    'assets/images/arrow_up.png',
+                                builder: (context) => Transform.rotate(
+                                  angle: hp.bearing,
+                                  child: const Image(
+                                    image: AssetImage(
+                                      'assets/images/arrow_up.png',
+                                    ),
+                                    fit: BoxFit.cover,
                                   ),
-                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
-                            ),],
+                        ],
                       ],
                     ],
                   ),
-                  EventInfoOverlay(event: Event( startDate: DateTime.now(), routeName: routeName,status: EventStatus.noevent), routePoints: route),
+                  EventInfoOverlay(
+                      event: Event(
+                          startDate: DateTime.now(),
+                          routeName: routeName,
+                          status: EventStatus.noevent),
+                      routePoints: route),
                 ]);
               },
               loading: () {
@@ -151,8 +160,7 @@ class RouteNameDialog extends ConsumerWidget {
               orElse: () {
                 return Center(
                   child: NoDataWarning(
-                    onReload: () => ProviderContainer()
-                        .refresh(routeProvider(routeName)),
+                    onReload: () => ref.refresh(routeProvider(routeName)),
                   ),
                 );
               });

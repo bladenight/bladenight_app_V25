@@ -11,10 +11,10 @@ import '../helpers/watch_communication_helper.dart';
 import '../models/event.dart';
 import '../models/route.dart';
 
-class ActiveEventProvider extends ChangeNotifier {
-  static final ActiveEventProvider instance = ActiveEventProvider._();
+class ActiveEventProviderOld extends ChangeNotifier {
+  static final ActiveEventProviderOld instance = ActiveEventProviderOld._();
 
-  ActiveEventProvider._() {
+  ActiveEventProviderOld._() {
     init();
   }
 
@@ -44,14 +44,6 @@ class ActiveEventProvider extends ChangeNotifier {
 
   List<HeadingPoint> get headingPoints => _headingPoints;
 
-  bool get appIsOutdated => _appIsOutdated;
-  bool _appIsOutdated = false;
-
-  void setAppOutDatedState(bool appIsOutdated) {
-    _appIsOutdated = appIsOutdated;
-    notifyListeners();
-  }
-
   ///Refresh [Event]
   Future<void> refresh({bool forceUpdate = false}) async {
     try {
@@ -69,10 +61,10 @@ class ActiveEventProvider extends ChangeNotifier {
         }*/
         _event = rpcEvent;
         SendToWatch.updateEvent(rpcEvent);
-        var oldEventInPrefs =  HiveSettingsDB.getActualEvent;
+        var oldEventInPrefs = HiveSettingsDB.getActualEvent;
         //get routepoints on eventupdate to update Map
         if (oldEventInPrefs.compareTo(rpcEvent) != 0 || _routePoints.isEmpty) {
-           HiveSettingsDB.setActualEvent(rpcEvent);
+          HiveSettingsDB.setActualEvent(rpcEvent);
           await _updateRoutePoints(rpcEvent);
           if ((DateTime.now().difference(_providerLastUpdate)).inSeconds > 30) {
             //avoid multiple notifications on force update
@@ -88,7 +80,7 @@ class ActiveEventProvider extends ChangeNotifier {
       _event = HiveSettingsDB.getActualEvent;
       _providerLastUpdate = DateTime.now();
       if (kDebugMode) {
-        print('SendToWatch aep94  update Event $event' );
+        print('SendToWatch aep94  update Event $event');
       }
       SendToWatch.updateEvent(event);
     }
@@ -96,12 +88,12 @@ class ActiveEventProvider extends ChangeNotifier {
   }
 
   Future<void> _updateRoutePoints(Event event) async {
-    if (event.status != EventStatus.noevent ) {
+    if (event.status != EventStatus.noevent) {
       var route = await RoutePoints.getActiveRoutePointsWamp();
       if (route.rpcException != null) {
         return;
       }
-      _routePoints = route.points ?? <LatLng>[];
+      _routePoints = route.points;
       _headingPoints = GeoLocationHelper.calculateHeadings(_routePoints);
       if (_routePoints.isNotEmpty) {
         _startPoint = _routePoints.first;
@@ -116,5 +108,5 @@ class ActiveEventProvider extends ChangeNotifier {
 }
 
 ///Get actual or coming [Event] from server
-final activeEventProvider =
-    ChangeNotifierProvider((ref) => ActiveEventProvider.instance);
+final activeEventProviderOld =
+    ChangeNotifierProvider((ref) => ActiveEventProviderOld.instance);

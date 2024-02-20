@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
+import 'package:bladenight_app_flutter/pages/map/widgets/custom_location_layer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +18,13 @@ import '../../app_settings/app_constants.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
-import '../../helpers/wamp/subscribeMessage.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
-import '../../providers/active_event_notifier_provider.dart';
+import '../../providers/active_event_provider.dart';
+import '../../providers/active_event_route_provider.dart';
 import '../../providers/is_tracking_provider.dart';
 import '../../providers/location_provider.dart';
-import 'widgets/custom_location_layer.dart';
+import '../../providers/realtime_data_provider.dart';
 import 'widgets/gps_info_and_map_copyright.dart';
 import 'widgets/map_buttons.dart';
 import 'widgets/map_tile_layer.dart';
@@ -41,8 +42,7 @@ class MapPage extends ConsumerStatefulWidget {
 class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   late MapController controller;
   late List<Marker> mapMarker = [];
-  late CameraFollow followLocationState =
-      CameraFollow.followOff;
+  late CameraFollow followLocationState = CameraFollow.followOff;
   bool _webStartedTrainFollow = false;
   Timer? _updateRealTimeDataTimer;
   bool _firstRefresh = true;
@@ -55,9 +55,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     super.initState();
     controller = MapController();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      realTimeDataSubscriptionId = await subscribeMessage('RealtimeData');
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {});
   }
 
   @override
@@ -97,7 +95,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       methodName: 'didChangeAppLifecycleState',
       text: 'resume updates calling',
     );
-    realTimeDataSubscriptionId = await subscribeMessage('RealtimeData');
     _updateRealTimeDataTimer?.cancel(); //important
     if (force || _firstRefresh) {
       print('_firstRefresh resumeUpdates');
@@ -109,25 +106,16 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
       const Duration(seconds: defaultRealtimeUpdateInterval),
       (timer) {
-        ///TODO subscribe event procession
-        /* if (ActiveEventProvider.instance.event.status != EventStatus.confirmed && !kIsWeb) {
-          return;
-        }*/
         if (kIsWeb & !_webStartedTrainFollow) {
           startFollowingTrainHead();
           _webStartedTrainFollow = true;
         }
-
-        ref.read(locationProvider).refreshRealtimeData();
+        ref.read(realtimeDataProvider.notifier).refresh();
       },
     );
   }
 
   void pauseUpdates() async {
-    if (realTimeDataSubscriptionId != 0) {
-      await unSubscribeMessage(realTimeDataSubscriptionId);
-      realTimeDataSubscriptionId = 0;
-    }
     BnLog.trace(
       className: toString(),
       methodName: 'didChangeAppLifecycleState',
@@ -151,7 +139,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
         controller.camera.zoom);
     locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
       locationUpdateProvider,
-          (_, value) {
+      (_, value) {
         if (value.value != null) {
           controller.move(value.value!, controller.camera.zoom);
         }
@@ -220,6 +208,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     print('rebuilding flutter_maps');
+    var route = ref.watch(activeEventRouteProvider);
+    var startPoint = route.hasValue ? route.value!.startLatLng : defaultLatLng;
     return ScaffoldMessenger(
       key: scaffoldMessengerKey,
       child: CupertinoPageScaffold(
@@ -235,14 +225,11 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               maxZoom: MapSettings.openStreetMapEnabled
                   ? MapSettings.maxZoom
                   : MapSettings.maxZoomDefault,
-              initialCenter: ref.watch(activeEventProvider).startPoint,
+              initialCenter: startPoint,
               cameraConstraint: kDebugMode
                   ? null
                   : MapSettings.openStreetMapEnabled ||
-                          ref
-                              .watch(activeEventProvider)
-                              .event
-                              .hasSpecialStartPoint
+                          ref.watch(activeEventProvider).hasSpecialStartPoint
                       ? CameraConstraint.contain(
                           bounds: MapSettings.mapOnlineBoundaries)
                       : CameraConstraint.contain(
@@ -255,18 +242,25 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
             ),
             children: [
               const MapTileLayer(),
-              const PolyLinesLayer(),
-              /*AnimatedLocationMarkerLayer(
+              Builder(builder: (context) {
+                return Stack(
+                  children: [
+                    const PolyLinesLayer(),
+                    /*AnimatedLocationMarkerLayer(
                 position: LocationMarkerPosition(
                     latitude: ref.watch(realtimeDataProvider)!.head.latitude!,
                     longitude: ref.watch(realtimeDataProvider)!.head.longitude!,
                     accuracy: 1.0),
               ),*/
+
+                    //needs map controller
+                    MarkersLayer(_popupController),
+                    TrackProgressOverlay(controller),
+                    const MapButtonsLayer(),
+                  ],
+                );
+              }),
               CustomLocationLayer(_popupController),
-              //needs map controller
-              MarkersLayer(_popupController),
-              TrackProgressOverlay(controller),
-              const MapButtonsLayer(),
             ],
           ),
           const GPSInfoAndMapCopyright(),
@@ -274,10 +268,11 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       ),
     );
   }
+
   /// TODO
   /// Disable align position and align direction temporarily when user is
   /// manipulating the map.
- /* void _onPointerDown(e, l) {
+/* void _onPointerDown(e, l) {
     _pointerCount++;
     setState(() {
       _alignPositionOnUpdate = AlignOnUpdate.never;

@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app_settings/app_constants.dart';
-import 'location_provider.dart';
+import '../helpers/wamp/subscribeMessage.dart';
+import '../wamp/wamp_v2.dart';
 
 @immutable
 class TimerModel {
@@ -19,12 +20,13 @@ class TimerNotifier extends StateNotifier<TimerModel> {
 
   static const int _initialDuration = defaultRealtimeUpdateInterval;
   static final _initialState =
-      TimerModel(_durationInSeconds(_initialDuration), 1.0);
+      TimerModel(_durationInMilliSeconds(_initialDuration), 1.0);
 
   final Ticker _ticker = Ticker();
   StreamSubscription<int>? _tickerSubscription;
+  int realTimeDataSubscriptionId = 0;
 
-  static int _durationInSeconds(int duration) {
+  static int _durationInMilliSeconds(int duration) {
     return duration;
   }
 
@@ -36,11 +38,24 @@ class TimerNotifier extends StateNotifier<TimerModel> {
   void stop() {
     _tickerSubscription?.cancel();
     _tickerSubscription = null;
+    _unsubscribe();
   }
 
-  void _startTimer() {
-    _tickerSubscription?.cancel();
+  void _unsubscribe() async {
+    if (realTimeDataSubscriptionId != 0) {
+      await unSubscribeMessage(realTimeDataSubscriptionId);
+      realTimeDataSubscriptionId = 0;
+    }
+  }
 
+  Future _subscribe() async {
+    if (!WampV2.instance.subscriptions.contains(3589978069)) {
+      realTimeDataSubscriptionId=await subscribeMessage('RealtimeData');
+    }
+  }
+
+  void _startTimer() async {
+    _tickerSubscription?.cancel();
     _tickerSubscription =
         _ticker.tick(ticks: _initialDuration).listen((duration) {
       state = TimerModel(duration, duration / defaultRealtimeUpdateInterval);
@@ -53,12 +68,12 @@ class TimerNotifier extends StateNotifier<TimerModel> {
     });
 
     state = const TimerModel(_initialDuration, 1.0);
+    _subscribe();
   }
 
-  void _reset() {
+  void _reset() async {
     _tickerSubscription?.cancel();
     state = _initialState;
-    LocationProvider.instance.getLastRealtimeData();
     _startTimer();
   }
 
@@ -72,7 +87,7 @@ class TimerNotifier extends StateNotifier<TimerModel> {
 class Ticker {
   Stream<int> tick({required int ticks}) {
     return Stream.periodic(
-      const Duration(seconds: 1),
+      const Duration(milliseconds: 10),
       (x) => ticks - x - 1,
     ).take(ticks);
   }

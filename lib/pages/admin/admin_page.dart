@@ -14,7 +14,7 @@ import '../../models/messages/set_active_route.dart';
 import '../../models/messages/set_active_status.dart';
 import '../../pages/widgets/event_info.dart';
 import '../../pages/widgets/no_data_warning.dart';
-import '../../providers/active_event_notifier_provider.dart';
+import '../../providers/active_event_provider.dart';
 import '../../providers/get_all_routes_provider.dart';
 import '../../providers/route_providers.dart';
 import '../../wamp/admin_calls.dart';
@@ -60,7 +60,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
               onPressed: () async {
                 var status = await showStatusDialog(
                   context,
-                  current: context.read(activeEventProvider).event.status,
+                  current: context.read(activeEventProvider).status,
                 );
 
                 if (status != null) {
@@ -79,7 +79,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   }
                   setState(() => _activityVisible = false);
                   Future.delayed(const Duration(seconds: 1), () {
-                    context.read(activeEventProvider).refresh();
+                    context.read(activeEventProvider.notifier).refresh();
                     context.read(currentRouteProvider);
                   });
                 }

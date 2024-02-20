@@ -7,11 +7,11 @@ import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
 import '../../../models/event.dart';
 import '../../../models/route.dart';
+import 'gps_info_and_map_copyright.dart';
+import 'map_buttons.dart';
 import 'map_friend_marker_popup.dart';
-import 'map_left_buttons.dart';
 import 'map_marker_popup.dart';
 import 'map_tile_layer.dart';
-import 'gps_info_and_map_copyright.dart';
 
 class MapLayer extends StatefulWidget {
   const MapLayer(
@@ -68,10 +68,12 @@ class _MapLayerState extends State<MapLayer> {
       ),
       children: [
         const MapTileLayer(),
-        const GPSInfoAndMapCopyright(showOdoMeter: false,),
-        const MapLeftButtonsLayer(),
+        const GPSInfoAndMapCopyright(
+          showOdoMeter: false,
+        ),
         PolylineLayer(
-          polylines:widget.polyLines,// context.watch(polyLinesProvider),// widget.polyLines,
+          polylines: widget
+              .polyLines, // context.watch(polyLinesProvider),// widget.polyLines,
         ),
         PopupMarkerLayer(
           options: PopupMarkerLayerOptions(
@@ -99,6 +101,7 @@ class _MapLayerState extends State<MapLayer> {
             },
           ),
         ),
+        const MapButtonsLayer(),
       ],
     );
   }

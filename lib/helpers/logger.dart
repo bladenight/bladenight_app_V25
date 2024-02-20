@@ -61,6 +61,17 @@ class BnLog {
     _logger.d('$text\n$className\n$methodName', error: exception);
   }
 
+  ///Print extended info
+  static void infoExt(String text,{
+    String? className,
+    String? methodName,
+    dynamic exception,
+    String? dataLogType,
+    StackTrace? stacktrace,
+  }) async {
+    _logger.i('$text\n$className\n$methodName', error: null, stackTrace: null);
+  }
+
   static void info({
     String? className,
     String? methodName,

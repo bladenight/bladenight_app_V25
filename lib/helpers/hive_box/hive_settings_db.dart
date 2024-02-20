@@ -6,12 +6,12 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../models/event.dart';
 import '../../models/follow_location_state.dart';
+import '../../models/route.dart';
 import '../../models/user_trackpoint.dart';
 import '../logger.dart';
 import '../uuid_helper.dart';
@@ -315,8 +315,6 @@ class HiveSettingsDB {
     _hiveBox.put(_rsvSkatemunichInfosKey, val);
   }
 
-
-
   static const String _trackingActiveKey = 'trackingActiveKey';
 
   ///get Tracking is Active means locations updating is active
@@ -351,6 +349,18 @@ class HiveSettingsDB {
   ///set if  setHeadlessAllowed were requested
   static void setHeadlessAllowed(bool val) {
     _hiveBox.put(_headlessAllowedKey, val);
+  }
+
+  static const String appOutDatedKey = 'appOutDatedKey';
+
+  ///get Tracking is Active means locations updating is active
+  static bool get appOutDated {
+    return _hiveBox.get(appOutDatedKey, defaultValue: false);
+  }
+
+  ///set if  setAppOutDated were requested
+  static void setAppOutDated(bool val) {
+    _hiveBox.put(appOutDatedKey, val);
   }
 
   static const String _useCustomServerKey = 'useCustomServerKey';
@@ -446,6 +456,20 @@ class HiveSettingsDB {
     _hiveBox.put(_myNameKey, val);
   }
 
+  static const String _realTimeDataLastUpdate =
+      'realTimeDataLastUpdatePref';
+
+  ///get realTimeDataString DateTimeStamp
+  static DateTime get realTimeDataLastUpdate {
+    return _hiveBox.get(_realTimeDataLastUpdate,
+        defaultValue: DateTime(2000, 1, 1, 0, 0, 0));
+  }
+
+  ///set realTimeDataString DateTimeStamp
+  static void setRealTimeDataLastUpdate(DateTime val) {
+    _hiveBox.put(_realTimeDataLastUpdate, val);
+  }
+  
   static const String _routePointsLastUpdate =
       'routePoints_routePointsLastUpdatePref';
 
@@ -462,14 +486,29 @@ class HiveSettingsDB {
 
   static const String _routePointsStringKey = 'routePointsStringPref';
 
+  ///get RoutePoints
+  static RoutePoints get routePoints {
+    var rp = _hiveBox.get(_routePointsStringKey, defaultValue: '');
+    if (rp as String == '') {
+      return RoutePoints('', <LatLng>[]);
+    } else {
+      return RoutePointsMapper.fromJson(rp);
+    }
+  }
+
   ///get RoutePointsAsString
   static String get routePointsString {
     return _hiveBox.get(_routePointsStringKey, defaultValue: '');
   }
 
+  static set setRoutePoints(RoutePoints routePoints) {
+    setRoutePointsString(routePoints.toJson());
+  }
+
   ///set RoutePointsString
   static void setRoutePointsString(String val) {
     _hiveBox.put(_routePointsStringKey, val);
+    setRoutePointsLastUpdate(DateTime.now().toUtc());
   }
 
   static const String _actualEventLastUpdate =
@@ -489,13 +528,13 @@ class HiveSettingsDB {
   static const String _actualEventStringKey = 'actualEventStringPref';
 
   ///get actualEventStringAsString
-  static String get actualEventStringString {
+  static String get actualEventAsJson {
     return _hiveBox.get(_actualEventStringKey, defaultValue: '');
   }
 
   ///Get actual [Event] from preferences and
   ///return saved event or if nothing saved [Event.init]
-  static get getActualEvent {
+  static Event get getActualEvent {
     try {
       var jsonData = _hiveBox.get(_actualEventStringKey);
       if (jsonData != null) {

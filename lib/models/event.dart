@@ -194,12 +194,12 @@ class Event with EventMappable implements Comparable {
   }
 
   static Future<Event> getEventWamp({bool forceUpdate = false}) async {
-    if (HiveSettingsDB.actualEventStringString.isNotEmpty &&
+    if (HiveSettingsDB.actualEventAsJson.isNotEmpty &&
         !forceUpdate &&
         DateTime.now().difference(HiveSettingsDB.actualEventLastUpdate) <
             const Duration(seconds: 10)) {
       return MapperContainer.globals
-          .fromJson<Event>(HiveSettingsDB.actualEventStringString);
+          .fromJson<Event>(HiveSettingsDB.actualEventAsJson);
     }
 
     Completer completer = Completer();
@@ -215,13 +215,13 @@ class Event with EventMappable implements Comparable {
       return event;
     }
     if (wampResult is Event) {
-      if (HiveSettingsDB.actualEventStringString.isNotEmpty &&
+      if (HiveSettingsDB.actualEventAsJson.isNotEmpty &&
           DateTime.now()
                   .toUtc()
                   .difference(HiveSettingsDB.actualEventLastUpdate) <
               const Duration(minutes: 5)) {
         var event = MapperContainer.globals
-            .fromJson<Event>(HiveSettingsDB.actualEventStringString);
+            .fromJson<Event>(HiveSettingsDB.actualEventAsJson);
         event.rpcException = wampResult.rpcException;
         return event;
       }

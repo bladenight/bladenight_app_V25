@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,12 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
+import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/route_providers.dart';
 import '../../widgets/align_map_icon.dart';
+import '../../widgets/positioned_visibility_opacity.dart';
 import '../widgets/qr_create_page.dart';
-import 'map_left_buttons.dart';
 
 class MapButtonsLayer extends ConsumerStatefulWidget {
   const MapButtonsLayer({super.key});
@@ -35,96 +37,28 @@ class MapButtonsLayer extends ConsumerStatefulWidget {
   ConsumerState<MapButtonsLayer> createState() => _MapButtonsOverlay();
 }
 
-class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
+class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
+    with SingleTickerProviderStateMixin {
+  var animationDuration = const Duration(milliseconds: 800);
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
+
+  @override
+  void initState() {
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 5));
+    animation =
+        CurveTween(curve: Curves.fastOutSlowIn).animate(animationController!);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     CameraFollow followLocationState = ref.watch(cameraFollowLocationProvider);
 
-    return Stack(children: [
-      if (!kIsWeb)
-        Positioned(
-          left: 80,
-          bottom: 40,
-          //same height as qrcode in web
-          height: 40,
-          width: 40,
-          child: Builder(builder: (context) {
-            if (ref.watch(isActiveEventProvider)) {
-              var currentRoute = ref.watch(currentRouteProvider);
-              return currentRoute.when(data: (data) {
-                return FloatingActionButton(
-                    heroTag: 'barcodeBtnTag',
-                    backgroundColor: Colors.blue,
-                    onPressed: () {
-                      _showLiveMapLink(
-                          ref.read(LiveMapImageAndLink.provider).link);
-                    },
-                    child: const Icon(
-                      CupertinoIcons.qrcode,
-                      color: Colors.white,
-                    ));
-              }, error: (err, stack) {
-                return Container();
-              }, loading: () {
-                return Container();
-              });
-            } else {
-              return Container();
-            }
-          }),
-        ),
-
-      if (!kIsWeb && ref.watch(mapSettingsProviderProvider))
-        Positioned(
-          left: 10,
-          bottom: ref.watch(mapSettingsProviderProvider) ? 300 : 100,
-          height: 40,
-          child: Builder(builder: (context) {
-            var isTracking = ref.watch(isTrackingProvider);
-            if (!isTracking) {
-              return FloatingActionButton(
-                heroTag: 'viewerBtnTag',
-                backgroundColor: Colors.blue,
-                onPressed: () {
-                  toggleViewerLocationService();
-                },
-                child: const Icon(CupertinoIcons.eye_solid,
-                    color: CupertinoColors.white),
-                /*CupertinoAdaptiveTheme.of(context).brightness ==
-                                Brightness.light
-                            ? ref.watch(ThemePrimaryDarkColor.provider)
-                            : ref.watch(ThemePrimaryColor.provider)),*/
-              );
-            } else {
-              return Container();
-            }
-          }),
-        ),
-      if (!kIsWeb && MapSettings.mapMenuVisible)
-        Positioned(
-          left: 10,
-          bottom: 250, //same height as qrcode in web
-          height: 40,
-          child: Builder(builder: (context) {
-            return FloatingActionButton(
-              heroTag: 'resetBtnTag',
-              backgroundColor: Colors.blue,
-              onPressed: () async {
-                await LocationProvider.instance.resetOdoMeterAndRoutePoints();
-              },
-              child: const Icon(
-                Icons.restart_alt,
-                color: Colors.white,
-              ),
-            );
-          }),
-        ),
-      const MapLeftButtonsLayer(),
-
-      //##############right buttons
-
+    return Stack(fit: StackFit.loose, children: [
+      //#######################################################################
+      //Right side buttons
+      //#######################################################################
       if (!kIsWeb)
         Positioned(
           right: 10,
@@ -192,65 +126,11 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
       if (!kIsWeb)
         Positioned(
           right: 10,
-          bottom: 110,
           height: 40,
-          child: Builder(builder: (context) {
-            return FloatingActionButton(
-              onPressed: () {
-                var controller = MapController.maybeOf(context);
-                if (controller == null) return;
-                var nextState =
-                    ref.read(cameraFollowLocationProvider.notifier).setNext();
-                switch (nextState) {
-                  case CameraFollow.followOff:
-                    _moveMapToDefault(controller);
-                    showToast(
-                        message: Localize.of(context).mapToStartNoFollowing);
-
-                    break;
-                  case CameraFollow.followMe:
-                    showToast(message: Localize.of(context).mapFollowLocation);
-                    break;
-                  case CameraFollow.followMeStopped:
-                    stopFollowingLocation();
-                    showToast(message: Localize.of(context).mapFollowStopped);
-
-                    break;
-                  case CameraFollow.followTrain:
-                    startFollowingTrainHead(controller);
-                    showToast(message: Localize.of(context).mapFollowTrain);
-
-                    break;
-                  case CameraFollow.followTrainStopped:
-                    stopFollowingLocation();
-                    showToast(
-                        message: Localize.of(context).mapFollowTrainStopped);
-
-                    break;
-                  default:
-                    if (locationSubscription != null) {
-                      stopFollowingLocation();
-                    } else {
-                      startFollowingMeLocation();
-                    }
-                    break;
-                }
-              },
-              heroTag: 'locationBtnTag',
-              child: FollowingLocationIcon(
-                followLocationStatus: followLocationState,
-              ),
-            );
-          }),
-        ),
-
-      if (!kIsWeb)
-        Visibility(
-          visible: followLocationState == CameraFollow.followMe ? true : false,
-          child: Positioned(
-            right: 10,
-            height: 40,
-            bottom: 160,
+          bottom: 160,
+          child: Visibility(
+            visible:
+                followLocationState == CameraFollow.followMe ? true : false,
             child: Builder(builder: (context) {
               var alignMap = ref.watch(alignFlutterMapProvider);
               return FloatingActionButton(
@@ -290,13 +170,75 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
             }),
           ),
         ),
+      if (!kIsWeb)
+        Positioned(
+          right: 10,
+          bottom: 110,
+          height: 40,
+          child: Builder(builder: (context) {
+            return FloatingActionButton(
+              onPressed: () {
+                var controller = MapController.maybeOf(context);
+                if (controller == null) return;
+                var nextState =
+                    ref.read(cameraFollowLocationProvider.notifier).setNext();
+                switch (nextState) {
+                  case CameraFollow.followOff:
+                    _moveMapToDefault(controller);
+                    showToast(
+                        message: Localize.of(context).mapToStartNoFollowing);
+                    break;
+                  case CameraFollow.followMe:
+                    if (ref.read(alignFlutterMapProvider) ==
+                        AlignFlutterMapState.alignNever) {
+                      showToast(
+                          message:
+                              '${Localize.of(context).mapFollowLocation} \n'
+                              '${Localize.of(context).alignNever}');
+                    } else {
+                      showToast(
+                          message: Localize.of(context).mapFollowLocation);
+                    }
+                    break;
+                  case CameraFollow.followMeStopped:
+                    stopFollowingLocation();
+                    showToast(message: Localize.of(context).mapFollowStopped);
+
+                    break;
+                  case CameraFollow.followTrain:
+                    startFollowingTrainHead(controller);
+                    showToast(message: Localize.of(context).mapFollowTrain);
+
+                    break;
+                  case CameraFollow.followTrainStopped:
+                    stopFollowingLocation();
+                    showToast(
+                        message: Localize.of(context).mapFollowTrainStopped);
+
+                    break;
+                  default:
+                    if (locationSubscription != null) {
+                      stopFollowingLocation();
+                    } else {
+                      startFollowingMeLocation();
+                    }
+                    break;
+                }
+              },
+              heroTag: 'locationBtnTag',
+              child: FollowingLocationIcon(
+                followLocationStatus: followLocationState,
+              ),
+            );
+          }),
+        ),
 
       //Left located button web
       if (kIsWeb)
         AnimatedPositioned(
           duration: const Duration(milliseconds: 500),
           left: 10,
-          bottom: ref.watch(mapSettingsProviderProvider) ? 250 : 100,
+          bottom: ref.watch(mapMenuVisibleProvider) ? 250 : 100,
           height: 40,
           child: Builder(builder: (context) {
             return FloatingActionButton(
@@ -342,7 +284,236 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer> {
             );
           }),
         ),
+      //#######################################################################
+      //Left side buttons
+      //#######################################################################
+      if (!kIsWeb)
+        Positioned(
+          left: 80,
+          bottom: 40,
+          //same height as qrcode in web
+          height: 40,
+          width: 40,
+          child: Builder(builder: (context) {
+            if (ref.watch(isActiveEventProvider)) {
+              var currentRoute = ref.watch(currentRouteProvider);
+              return currentRoute.when(data: (data) {
+                return FloatingActionButton(
+                    heroTag: 'barcodeBtnTag',
+                    backgroundColor: Colors.blue,
+                    onPressed: () {
+                      _showLiveMapLink(
+                          ref.read(LiveMapImageAndLink.provider).link);
+                    },
+                    child: const Icon(
+                      CupertinoIcons.qrcode,
+                      color: Colors.white,
+                    ));
+              }, error: (err, stack) {
+                return Container();
+              }, loading: () {
+                return Container();
+              });
+            } else {
+              return Container();
+            }
+          }),
+        ),
+
+      if (!kIsWeb)
+        Positioned(
+          left: 10,
+          bottom: ref.watch(mapMenuVisibleProvider) ? 300 : 90,
+          height: 40,
+          child: Builder(builder: (context) {
+            var isTracking = ref.watch(isTrackingProvider);
+            if (!isTracking) {
+              return FloatingActionButton(
+                heroTag: 'viewerBtnTag',
+                backgroundColor: Colors.blue,
+                onPressed: () {
+                  toggleViewerLocationService();
+                },
+                child: const Icon(CupertinoIcons.eye_solid,
+                    color: CupertinoColors.white),
+                /*CupertinoAdaptiveTheme.of(context).brightness ==
+                                Brightness.light
+                            ? ref.watch(ThemePrimaryDarkColor.provider)
+                            : ref.watch(ThemePrimaryColor.provider)),*/
+              );
+            } else {
+              return Container();
+            }
+          }),
+        ),
+      if (!kIsWeb)
+        PositionedVisibilityOpacity(
+          left: 10,
+          bottom: 250,
+          //same height as qrcode in web
+          height: 40,
+          heroTag: 'resetBtnTag',
+          backgroundColor: Colors.blue,
+          onPressed: () async {
+            await LocationProvider.instance.resetOdoMeterAndRoutePoints();
+          },
+          visibility: ref.watch(mapMenuVisibleProvider),
+          child: const Icon(
+            Icons.restart_alt,
+            color: Colors.white,
+          ),
+        ),
+
+      PositionedVisibilityOpacity(
+        left: 10,
+        bottom: 190,
+        height: 40,
+        heroTag: 'zoomOutTag',
+        onPressed: () {
+          final controller = MapController.maybeOf(context);
+          final camera = MapCamera.maybeOf(context);
+          if (controller == null || camera == null) {
+            return;
+          }
+          controller.move(controller.camera.center, camera.zoom - 0.5);
+          ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+        },
+        visibility: ref.watch(mapMenuVisibleProvider),
+        child: Icon(
+          CupertinoIcons.zoom_out,
+          semanticLabel: MapController.of(context).camera.zoom.toString(),
+        ),
+      ),
+      PositionedVisibilityOpacity(
+        heroTag: 'zoomInTag',
+        left: 10,
+        bottom: 140,
+        height: 40,
+        visibility: ref.watch(mapMenuVisibleProvider),
+        onPressed: () {
+          final controller = MapController.of(context);
+          final camera = MapCamera.of(context);
+          controller.move(controller.camera.center, camera.zoom + 0.5);
+          ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+        },
+        child: Icon(
+          CupertinoIcons.zoom_in,
+          semanticLabel: MapController.of(context).camera.zoom.toString(),
+        ),
+      ),
+      PositionedVisibilityOpacity(
+        left: 10,
+        bottom: 90,
+        height: 40,
+        visibility: ref.watch(mapMenuVisibleProvider),
+        onPressed: () {
+          var theme = CupertinoAdaptiveTheme.of(context).theme;
+          if (theme.brightness == Brightness.light) {
+            CupertinoAdaptiveTheme.of(context).setDark();
+            HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.dark);
+          } else {
+            CupertinoAdaptiveTheme.of(context).setLight();
+            HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.light);
+          }
+        },
+        heroTag: 'darkLightTag',
+        child: CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                Brightness.light
+            ? const Icon(CupertinoIcons.moon)
+            : const Icon(CupertinoIcons.sun_min),
+      ),
+      Positioned(
+        left: 10,
+        bottom: 40,
+        height: 40,
+        child: Builder(builder: (context) {
+          return FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                MapSettings.setMapMenuVisible(!MapSettings.mapMenuVisible);
+              });
+              _showOverlay(context, text: 'Menu');
+            },
+            tooltip: 'Menu',
+            heroTag: 'showMenuTag',
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              child: ref.watch(mapMenuVisibleProvider)
+                  ? const Icon(
+                      Icons.menu_open,
+                      key: ValueKey<int>(1),
+                    )
+                  : const Icon(
+                      Icons.menu,
+                      key: ValueKey<int>(2),
+                    ),
+            ),
+          );
+        }),
+      ),
     ]);
+  }
+
+  AnimationController? animationController;
+  Animation<double>? animation;
+
+  void _showOverlay(BuildContext context, {required String text}) async {
+    OverlayState? overlayState = Overlay.of(context);
+    OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(builder: (context) {
+      return Stack(
+        children: [
+          Positioned(
+            left: 70,
+            bottom: 130,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: FadeTransition(
+                opacity: animation!,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.grey.shade200.withOpacity(0.8),
+                  child: Text(
+                    text,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 20,
+            top: 50,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: FadeTransition(
+                opacity: animation!,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.grey.shade200.withOpacity(0.8),
+                  child: Text(
+                    Localize.of(context).actualInformations,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+    animationController!.addListener(() {
+      overlayState.setState(() {});
+    });
+    // inserting overlay entry
+    overlayState.insert(overlayEntry);
+    animationController!.forward();
+    await Future.delayed(const Duration(seconds: 3)).whenComplete(() =>
+            animationController!
+                .reverse()
+                .whenCompleteOrCancel(() => overlayEntry.remove())
+        // removing overlay entry after stipulated time.
+        );
   }
 
   ///Toggles between location tracking and view without user pos

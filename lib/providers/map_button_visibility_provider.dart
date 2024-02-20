@@ -6,7 +6,7 @@ import '../helpers/hive_box/hive_settings_db.dart';
 part 'map_button_visibility_provider.g.dart';
 
 @riverpod
-class MapSettingsProvider extends _$MapSettingsProvider {
+class MapMenuVisible extends _$MapMenuVisible {
   @override
   bool build() {
     Hive.box('settings')

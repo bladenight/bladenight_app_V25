@@ -11,7 +11,7 @@ import '../../generated/l10n.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/timeconverter_helper.dart';
 import '../../models/event.dart';
-import '../../providers/active_event_notifier_provider.dart';
+import '../../providers/active_event_provider.dart';
 import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/images_and_links/main_sponsor_image_and_link_provider.dart';
 import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
@@ -36,10 +36,9 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       initEventUpdates();
       initLocation();
-       //call on first start
+      //call on first start
       //
     });
   }
@@ -68,20 +67,23 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
     // first start
     context.refresh(updateImagesAndLinksProvider);
     await Future.delayed(const Duration(seconds: 2));
-    ActiveEventProvider.instance.refresh(forceUpdate: forceUpdate);
-
+    if (mounted) {
+      context
+          .read(activeEventProvider.notifier)
+          .refresh(forceUpdate: forceUpdate);
+    }
 
     _updateTimer?.cancel();
     _updateTimer = Timer.periodic(
       const Duration(minutes: 10),
       (timer) {
         if (!mounted) return;
-        context.read(activeEventProvider).refresh();
+        context.read(activeEventProvider.notifier).refresh();
       },
     );
   }
 
-  void initLocation()async {
+  void initLocation() async {
     await Future.delayed(const Duration(seconds: 5));
     LocationProvider.instance.refresh(forceUpdate: true);
   }
@@ -96,13 +98,13 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
         mainAxisSize: MainAxisSize.max,
         children: [
           if (!kIsWeb) appOutdatedWidget(context),
-          if (nextEventProvider.event.status == EventStatus.noevent)
+          if (nextEventProvider.status == EventStatus.noevent)
             HiddenAdminButton(
               child: Text(Localize.of(context).noEventPlanned,
                   textAlign: TextAlign.center,
                   style: CupertinoTheme.of(context).textTheme.textStyle),
             ),
-          if (nextEventProvider.event.status != EventStatus.noevent)
+          if (nextEventProvider.status != EventStatus.noevent)
             HiddenAdminButton(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -113,7 +115,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                   const SizedBox(height: 5),
                   FittedBox(
                     child: Text(
-                        '${Localize.of(context).route} ${nextEventProvider.event.routeName}',
+                        '${Localize.of(context).route} ${nextEventProvider.routeName}',
                         textAlign: TextAlign.center,
                         style: CupertinoTheme.of(context)
                             .textTheme
@@ -126,8 +128,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                       child: Text(
                           DateFormatter(Localize.of(context))
                               .getLocalDayDateTimeRepresentation(
-                                  nextEventProvider
-                                      .event.getUtcIso8601DateTime),
+                                  nextEventProvider.getUtcIso8601DateTime),
                           style: CupertinoTheme.of(context)
                               .textTheme
                               .navLargeTitleTextStyle),
@@ -138,10 +139,10 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: nextEventProvider.event.status ==
+                        color: nextEventProvider.status ==
                                 EventStatus.cancelled
                             ? Colors.redAccent
-                            : nextEventProvider.event.status ==
+                            : nextEventProvider.status ==
                                     EventStatus.confirmed
                                 ? Colors.green
                                 : Colors.transparent,
@@ -153,7 +154,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                       ),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
-                        child: Text(nextEventProvider.event.statusText,
+                        child: Text(nextEventProvider.statusText,
                             style: CupertinoTheme.of(context)
                                 .textTheme
                                 .pickerTextStyle),
@@ -232,7 +233,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
             child: Column(
               children: [
                 //Don't show starting point when no event
-                if (nextEventProvider.event.status != EventStatus.noevent)
+                if (nextEventProvider.status != EventStatus.noevent)
                   Builder(builder: (context) {
                     var spp = context.watch(StartPointImageAndLink.provider);
                     return spp.text != null
@@ -262,11 +263,11 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                   ),
                 ),
                 Text(
-                  nextEventProvider.event.lastupdate == null
+                  nextEventProvider.lastupdate == null
                       ? '-'
                       : Localize.current.dateTimeIntl(
-                          nextEventProvider.event.lastupdate as DateTime,
-                          nextEventProvider.event.lastupdate as DateTime,
+                          nextEventProvider.lastupdate as DateTime,
+                          nextEventProvider.lastupdate as DateTime,
                         ),
                   style: const TextStyle(
                     color: CupertinoDynamicColor.withBrightness(

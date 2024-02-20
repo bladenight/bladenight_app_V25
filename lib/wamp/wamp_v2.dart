@@ -15,7 +15,6 @@ import '../helpers/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../models/realtime_update.dart';
 import '../models/shake_hand_result.dart';
-import '../providers/active_event_notifier_provider.dart';
 import 'bn_wamp_message.dart';
 import 'http_overrides.dart';
 import 'wamp_error.dart';
@@ -37,9 +36,18 @@ class WampV2 {
   final Map<int, BnWampMessage> calls = {};
   int _retryLimit = 3;
   Queue<BnWampMessage> queue = Queue();
-  var streamController = StreamController<BnWampMessage>();
+  var streamController = StreamController<BnWampMessage>.broadcast();
 
-  var eventStreamController = StreamController<dynamic>();
+  var eventStreamController = StreamController<dynamic>.broadcast();
+  var resultStreamController = StreamController<dynamic>.broadcast();
+
+  StreamController<RealtimeUpdate?> get realTimeUpdateStreamController =>
+      _realTimeUpdateStreamController;
+  final _realTimeUpdateStreamController =
+  StreamController<RealtimeUpdate?>.broadcast();
+
+  HashSet<int> get subscriptions => _subscriptions;
+  final HashSet<int> _subscriptions = HashSet();
 
   WampV2._() {
     _init();
@@ -76,7 +84,7 @@ class WampV2 {
   Future<void> _sendToWampFromRunner(BnWampMessage message) async {
     //check timed out
     if ((DateTime.now().difference(message.dateTime)) >
-            const Duration(seconds: 10) &&
+        const Duration(seconds: 10) &&
         message.completer.isCompleted == false) {
       message.completer.completeError(
           TimeoutException('WampV2_runner not started within 10 secs'));
@@ -139,37 +147,29 @@ class WampV2 {
 
       if (shkRes.rpcException != null) {
         _startShakeHandsRetryCounter++;
-        if (!kIsWeb) {
-          BnLog.warning(
-              text: 'shakeHands failed',
-              methodName: '_shakeHands',
-              className: toString());
-        }
+        BnLog.warning(
+            text: 'shakeHands failed',
+            methodName: '_shakeHands',
+            className: toString());
         if (_startShakeHandsRetryCounter <= 3) {
           await Future.delayed(const Duration(seconds: 20));
           _shakeHands();
         } else {
-          if (!kIsWeb) {
-            BnLog.warning(
-                text:
-                    'shakeHands failed after 3 attempts ${shkRes.rpcException}',
-                methodName: '_shakeHands',
-                className: toString());
-          }
-        }
-        return;
-      } else {
-        if (!kIsWeb) {
-          BnLog.info(
-              text:
-                  'shakeHands = ${shkRes.status}, minBuild:${shkRes.minBuild}',
+          BnLog.warning(
+              text: 'shakeHands failed after 3 attempts ${shkRes.rpcException}',
               methodName: '_shakeHands',
               className: toString());
         }
+        return;
+      } else {
+        BnLog.info(
+            text: 'shakeHands = ${shkRes.status}, minBuild:${shkRes.minBuild}',
+            methodName: '_shakeHands',
+            className: toString());
         _startShakeHandsRetryCounter = 0;
         _hadShakeHands = true;
         shakeHandAppOutdatedResult = shkRes;
-        ActiveEventProvider.instance.setAppOutDatedState(!shkRes.status);
+        HiveSettingsDB.setAppOutDated(!shkRes.status);
       }
     }
   }
@@ -231,7 +231,8 @@ class WampV2 {
                   className: toString(),
                   methodName: 'send message finished ',
                   text:
-                      'id: ${message.requestId} target ${message.endpoint} - Message:$message');
+                  'id: ${message.requestId} target ${message
+                      .endpoint} - Message:$message');
             }
 
             //queue.removeFirst();
@@ -264,7 +265,7 @@ class WampV2 {
       );
       var welcomeCompleter = Completer();
       channel!.stream.listen(
-        (event) async {
+            (event) async {
           var wampMessage = json.decode(event) as List;
           var requestId = 0;
           if (wampMessage.length >= 2) {
@@ -273,31 +274,42 @@ class WampV2 {
             requestId = int.parse(strId);
           }
           var wampMessageType =
-              WampMessageTypeHelper.getMessageType(wampMessage[0]);
+          WampMessageTypeHelper.getMessageType(wampMessage[0]);
+
           if (wampMessageType == WampMessageType.welcome) {
             welcomeCompleter.complete();
             // [WELCOME, Session|id, Details|dict]
+            return;
           }
           if (wampMessageType == WampMessageType.abort) {
             //[ABORT, Details|dict, Reason|uri, Arguments|list, ArgumentsKw|dict]
-            _isWebsocketRunning = false;
-            _hadShakeHands = false;
-            _isConnecting = false;
+            _resetWampState();
             BnLog.info(text: 'Session aborted ${wampMessage[2]}');
+            return;
           }
           if (wampMessageType == WampMessageType.goodbye) {
             //[GOODBYE, Details|dict, Reason|uri]
-            _isWebsocketRunning = false;
-            _hadShakeHands = false;
-            _isConnecting = false;
+            _resetWampState();
             BnLog.info(text: 'Session closed with goodbye ${wampMessage[2]}');
+            return;
           } else if (wampMessageType == WampMessageType.result) {
             // [RESULT, CALL.Request|id, Details|dict, YIELD.Arguments|list, YIELD.ArgumentsKw|dict]
             if (!kIsWeb) BnLog.debug(text: 'channel result $wampMessage');
             //print('channel runner $wampMessage');
+
             var messageResult = wampMessage[2];
+            resultStreamController.add(messageResult.runtimeType);
+            try {
+              var rt = RealtimeUpdateMapper.fromMap(messageResult);
+              _realTimeUpdateStreamController.sink.add(rt);
+            } catch (e) {
+
+            }
+
             calls[requestId]?.completer.complete(messageResult);
             calls.remove(requestId);
+
+            return;
           } else if (wampMessageType == WampMessageType.error) {
             //   [ERROR, CALL, CALL.Request|id, Details|dict, Error|uri]
             calls[wampMessage[2]]
@@ -306,14 +318,17 @@ class WampV2 {
             calls.remove(wampMessage[2]);
           } else if (wampMessageType == WampMessageType.subscribe) {
             // [SUBSCRIBE, Request|id, Options|dict, Topic|uri]
-            if (!kIsWeb) BnLog.debug(text: 'subscribe $wampMessage');
+            BnLog.debug(text: 'subscribe $wampMessage');
+            return;
           } else if (wampMessageType == WampMessageType.subscribed) {
             // [SUBSCRIBED, SUBSCRIBE.Request|id, Subscription|id]
             //    [33, 713845233, 5512315355]
             var messageResult = wampMessage[2];
+            subscriptions.add(messageResult);
             calls[requestId]?.completer.complete(messageResult);
             calls.remove(requestId);
-            if (!kIsWeb) BnLog.debug(text: 'subscribed id:$messageResult');
+            BnLog.debug(text: 'subscribed id:$messageResult');
+            return;
           } else if (wampMessageType == WampMessageType.unsubscribe) {
             // [UNSUBSCRIBE, Request|id, SUBSCRIBED.Subscription|id]
             //  [34, 85346237, 5512315355]
@@ -321,18 +336,23 @@ class WampV2 {
             calls[requestId]?.completer.complete(messageResult);
             calls.remove(requestId);
             if (!kIsWeb) BnLog.debug(text: 'unsubscribe $wampMessage');
+            return;
           } else if (wampMessageType == WampMessageType.unsubscribed) {
             //[UNSUBSCRIBED, UNSUBSCRIBE.Request|id]
             //[35, 85346237]
+            var messageResult = wampMessage[1];
+            subscriptions.remove(messageResult);
             calls[requestId]?.completer.complete(true);
             calls.remove(requestId);
-            if (!kIsWeb) BnLog.debug(text: 'unsubscribed $wampMessage');
+            BnLog.debug(text: 'unsubscribed $wampMessage');
+            return;
           } else if (wampMessageType == WampMessageType.publish) {
             //    [PUBLISH, Request|id, Options|dict, Topic|uri]
             var messageResult = wampMessage[3];
             calls[requestId]?.completer.complete(messageResult);
             calls.remove(requestId);
-            if (!kIsWeb) BnLog.debug(text: 'publish $wampMessage');
+            BnLog.debug(text: 'publish $wampMessage');
+            return;
           } else if (wampMessageType == WampMessageType.event) {
             // [EVENT, SUBSCRIBED.Subscription|id, PUBLISHED.Publication|id, Details|dict]
             //or     [EVENT, SUBSCRIBED.Subscription|id, PUBLISHED.Publication|id, Details|dict,
@@ -345,22 +365,19 @@ class WampV2 {
               eventStreamController.add(result);
               BnLog.trace(text: result.toString());
             } catch (e) {
-              BnLog.error(text: e.toString(),className: toString());
+              BnLog.error(text: e.toString(), className: toString());
             }
-            if (!kIsWeb) BnLog.debug(text: 'event $wampMessage');
+            BnLog.debug(text: 'event $wampMessage');
+            return;
           } else {
             var typeId = wampMessage[0];
-            if (!kIsWeb) {
-              BnLog.error(
-                  text:
-                      'WAMP unknown messageType typeId: $typeId $wampMessage');
-            }
+
+            BnLog.error(
+                text: 'WAMP unknown messageType typeId: $typeId $wampMessage');
           }
         },
         onDone: () {
-          _isWebsocketRunning = false;
-          _hadShakeHands = false;
-          _isConnecting = false;
+          _resetWampState();
         },
         onError: (err) async {
           _isWebsocketRunning = false;
@@ -395,9 +412,8 @@ class WampV2 {
       _isConnecting = false;
       return true;
     }, (error, stack) {
-      _isWebsocketRunning = false;
-      _hadShakeHands = false;
-      _isConnecting = false;
+      BnLog.error(text: 'Wamp Error Close Wamp', exception: error);
+      _resetWampState();
     })?.catchError((error) {
       if (!kIsWeb) BnLog.error(text: 'error wamp ->$error');
       _isConnecting = false;
@@ -411,14 +427,19 @@ class WampV2 {
     if (channel != null) {
       channel!.sink.close();
     }
-    _isWebsocketRunning = false;
-    _hadShakeHands = false;
-    _startShakeHands = false;
+    _resetWampState();
   }
 
   void closeAndReconnect() {
     _closeStream();
     _initWamp();
+  }
+
+  void _resetWampState(){
+    _isWebsocketRunning = false;
+    _hadShakeHands = false;
+    _startShakeHands = false;
+    subscriptions.clear();
   }
 
   String _getLink() {

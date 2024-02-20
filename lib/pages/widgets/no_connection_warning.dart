@@ -18,7 +18,7 @@ class ConnectionWarning extends ConsumerWidget {
         networkAware.connectivityStatus == ConnectivityStatus.offline) {
       return GestureDetector(
         onTap: (() {
-          ProviderContainer().refresh(networkAwareProvider);
+          var _ = ref.refresh(networkAwareProvider);
         }),
         child: const NoNetworkWarning(),
       );

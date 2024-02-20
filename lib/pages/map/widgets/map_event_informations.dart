@@ -8,7 +8,7 @@ import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/route.dart';
-import '../../../providers/active_event_notifier_provider.dart';
+import '../../../providers/active_event_provider.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
@@ -118,7 +118,7 @@ class MapEventInformation extends StatelessWidget {
                               descriptionRight:
                                   DateFormatter(Localize.of(context))
                                       .getLocalDayDateTimeRepresentation(
-                                          event.event.getUtcIso8601DateTime),
+                                          event.getUtcIso8601DateTime),
                               rightWidget: Container()),
                         ],
                       ),

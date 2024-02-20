@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
+import '../../../helpers/location_bearing_distance.dart';
 import '../../../helpers/speed_to_color.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
-import '../../../providers/active_event_notifier_provider.dart';
+import '../../../models/route.dart';
+import '../../../providers/active_event_route_provider.dart';
+import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import 'map_friend_marker_popup.dart';
@@ -28,13 +30,34 @@ class MarkersLayer extends ConsumerStatefulWidget {
 
 class _MarkersLayerState extends ConsumerState<MarkersLayer> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final camera = MapCamera.of(context);
+      ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var activeEvent = ref.watch(activeEventProvider);
-    var realtimeData = ref.watch(realtimeDataProvider);
-    var runningRoutePoints =
-        realtimeData?.runningRoute(activeEvent.activeEventRoutePoints);
-    var headingRoutePoints = activeEvent.headingPoints;
+    var activeEventRoutePoints = RoutePoints('', <LatLng>[]);
+    var activeEventRouteP = ref.watch(activeEventRouteProvider);
+    activeEventRouteP.hasValue
+        ? activeEventRoutePoints = activeEventRouteP.value!
+        : activeEventRoutePoints = RoutePoints('', <LatLng>[]);
+
+    var processionRoutePointsP = ref.watch(processionRoutePointsProvider);
+    var processionRoutePoints = <LatLng>[];
+    processionRoutePointsP.hasValue
+        ? processionRoutePoints = processionRoutePointsP.value!
+        : processionRoutePoints = <LatLng>[];
+    List<HeadingPoint> headingRoutePoints;
+    var headingRoutePointsP = ref.watch(headingPointsProvider);
+    headingRoutePoints = headingRoutePointsP.value ?? <HeadingPoint>[];
     var sizeValue = ref.watch(iconSizeProvider);
+    var realtimeData = ref.watch(realtimeDataProvider);
+    var headingMarkerSize= ref.watch(headingMarkerSizeProvider);
+
     return PopupMarkerLayer(
       options: PopupMarkerLayerOptions(
         popupDisplayOptions: PopupDisplayOptions(
@@ -56,8 +79,8 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
           if (headingRoutePoints.isNotEmpty) ...[
             for (var hp in headingRoutePoints)
               Marker(
-                width: 20,
-                height: 20,
+                width: headingMarkerSize,
+                height: headingMarkerSize,
                 point: hp.latLng,
                 child: Builder(
                   builder: (context) => Transform.rotate(
@@ -75,14 +98,14 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
           //end direction arrows in track
 
           //beginn finish marker
-          if (runningRoutePoints != null && runningRoutePoints.isNotEmpty) ...[
+          ...[
             BnMapMarker(
               buildContext: context,
               headerText: Localize.of(context).finish,
               color: Colors.red,
               width: 35.0,
               height: 35.0,
-              point: activeEvent.activeEventRoutePoints.last,
+              point: activeEventRoutePoints.finishLatLngOrDefault,
               child: Builder(
                 builder: (context) => const Stack(
                   children: [
@@ -100,7 +123,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
           //end finish marker
 
           //begin start marker
-          if (runningRoutePoints != null && runningRoutePoints.isNotEmpty) ...[
+          ...[
             BnMapMarker(
               buildContext: context,
               headerText: Localize.of(context).start,
@@ -108,7 +131,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
               color: Colors.transparent,
               width: 35.0,
               height: 35.0,
-              point: activeEvent.activeEventRoutePoints.first,
+              point: activeEventRoutePoints.startLatLngOrDefault,
               child: Builder(
                 builder: (context) => const Stack(
                   children: [
@@ -202,7 +225,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
           //end friends marker
 
           //begin skater tail marker
-          if (runningRoutePoints != null && runningRoutePoints.isNotEmpty) ...[
+          if (processionRoutePoints.isNotEmpty) ...[
             BnMapMarker(
               buildContext: context,
               headerText: Localize.of(context).tail,
@@ -219,7 +242,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
               distanceUserToTailText:
                   '${((ref.read(realtimeDataProvider)?.distanceOfUserToTail()) ?? '-')} m',
               color: Colors.orange,
-              point: runningRoutePoints.last,
+              point: processionRoutePoints.last,
               width: sizeValue,
               height: sizeValue,
               child: Builder(
@@ -235,7 +258,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
           //end skater tail marker
 
           //begin skater head marker
-          if (runningRoutePoints != null && runningRoutePoints.isNotEmpty) ...[
+          if (processionRoutePoints.isNotEmpty) ...[
             //Skater head marker -set as 2nd because tail overlay drawn first
             BnMapMarker(
               buildContext: context,
@@ -253,7 +276,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
               distanceUserToHeadText:
                   '${((ref.read(realtimeDataProvider)?.distanceOfUserToHead()) ?? '-')} m',
               color: Colors.lightBlue,
-              point: runningRoutePoints.first,
+              point: processionRoutePoints.first,
               width: sizeValue,
               height: sizeValue,
               child: Builder(

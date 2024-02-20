@@ -5,7 +5,7 @@ double mediaSizePercentage = 0.05;
 double mediaSizeTrackProgressIconsPercentage = 0.03;
 
 ///Default update interval to get [RealtimeData] when not tracking in seconds
-const int defaultRealtimeUpdateInterval = 14;
+const int defaultRealtimeUpdateInterval = 1400;
 
 ///Default update interval to get [RealtimeData] when tracking in seconds
 const int defaultLocationUpdateInterval = 4;

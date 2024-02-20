@@ -11,7 +11,6 @@ class IsTracking extends _$IsTracking {
   @override
   bool build() {
     return LocationProvider.instance.isTracking;
-    //return false;
   }
 
   setValue(bool value) {
