@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../providers/active_event_provider.dart';
+import '../../../providers/map/use_open_street_map_provider.dart';
+import '../tiles_provider.dart';
 import 'bn_dark_container.dart';
 
-class MapTileLayer extends StatefulWidget{
+class MapTileLayer extends StatefulWidget {
   const MapTileLayer({super.key});
 
   @override
@@ -15,32 +17,31 @@ class MapTileLayer extends StatefulWidget{
 }
 
 class _MapTileState extends State<MapTileLayer> {
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {//update map colors for static tiles
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      //update map colors for static tiles
 
-    CupertinoAdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
-      setState(() {
+      CupertinoAdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
+        setState(() {});
       });
-    });});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if ( CupertinoTheme.brightnessOf(context) == Brightness.light) {
-    return const MapTileLayerWidget();
+    if (CupertinoTheme.brightnessOf(context) == Brightness.light) {
+      return const MapTileLayerWidget();
     }
     return bnDarkModeTilesContainerBuilder(context, const MapTileLayerWidget());
-    }
-
-    @override
-  void dispose() {
-      AdaptiveTheme.of(context).modeChangeNotifier.dispose();
-    super.dispose();
   }
 
+  @override
+  void dispose() {
+    AdaptiveTheme.of(context).modeChangeNotifier.dispose();
+    super.dispose();
+  }
 }
 
 class MapTileLayerWidget extends ConsumerStatefulWidget {
@@ -51,31 +52,31 @@ class MapTileLayerWidget extends ConsumerStatefulWidget {
 }
 
 class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
-
   @override
   Widget build(BuildContext context) {
+    var osmEnabled = ref.watch(useOpenStreetMapProvider);
     return TileLayer(
-      minNativeZoom: MapSettings.openStreetMapEnabled
+      minNativeZoom: osmEnabled
           ? MapSettings.minNativeZoom
           : MapSettings.minNativeZoomDefault,
-      maxNativeZoom: MapSettings.openStreetMapEnabled
+      maxNativeZoom: osmEnabled
           ? MapSettings.maxNativeZoom
           : MapSettings.maxNativeZoomDefault,
-      minZoom: MapSettings.openStreetMapEnabled
-          ? MapSettings.minZoom
-          : MapSettings.minZoomDefault,
-      maxZoom: MapSettings.openStreetMapEnabled
-          ? MapSettings.maxZoom
-          : MapSettings.maxZoomDefault,
-      urlTemplate: MapSettings.openStreetMapEnabled ||
-              ref.watch(activeEventProvider).hasSpecialStartPoint
-          ? MapSettings.openStreetMapLinkString //use own ts
-          : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
+      minZoom: osmEnabled ? MapSettings.minZoom : MapSettings.minZoomDefault,
+      maxZoom: osmEnabled ? MapSettings.maxZoom : MapSettings.maxZoomDefault,
+      urlTemplate:
+          osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
+              ? MapSettings.openStreetMapLinkString //use own ts
+              : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
-      tileProvider: MapSettings.openStreetMapEnabled ||
-              ref.watch(activeEventProvider).hasSpecialStartPoint
-          ? CachedTileProvider()
-          : AssetTileProvider(),
+      tileProvider:
+          osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
+              ? CachedTileProvider()
+              : BnCachedAssetProvider(context: context, errorListener: () {
+            print('errlistbntile');
+          }, callBack: (TileImage tile, Object error, StackTrace? stackTrace) {
+            print('errbntile');
+          }),
       errorImage: const AssetImage(
         'assets/images/skatemunichmaperror.png',
       ),

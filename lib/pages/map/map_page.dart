@@ -2,20 +2,17 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:bladenight_app_flutter/pages/map/widgets/custom_location_layer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/app_constants.dart';
-import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../models/follow_location_state.dart';
@@ -24,7 +21,9 @@ import '../../providers/active_event_provider.dart';
 import '../../providers/active_event_route_provider.dart';
 import '../../providers/is_tracking_provider.dart';
 import '../../providers/location_provider.dart';
+import '../../providers/map/use_open_street_map_provider.dart';
 import '../../providers/realtime_data_provider.dart';
+import 'widgets/custom_location_layer.dart';
 import 'widgets/gps_info_and_map_copyright.dart';
 import 'widgets/map_buttons.dart';
 import 'widgets/map_tile_layer.dart';
@@ -47,8 +46,13 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   Timer? _updateRealTimeDataTimer;
   bool _firstRefresh = true;
   int realTimeDataSubscriptionId = 0;
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+  final PopupController _popupController = PopupController();
 
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
+
+  bool _hasGesture = false;
 
   @override
   void initState() {
@@ -131,27 +135,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     _updateRealTimeDataTimer = null;
   }
 
-  void startFollowingMeLocation() {
-    locationSubscription?.close();
-    locationSubscription = null;
-
-    controller.move(LocationProvider.instance.userLatLng ?? defaultLatLng,
-        controller.camera.zoom);
-    locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
-      locationUpdateProvider,
-      (_, value) {
-        if (value.value != null) {
-          controller.move(value.value!, controller.camera.zoom);
-        }
-      },
-      fireImmediately: true,
-    );
-    setState(() {
-      followLocationState = CameraFollow.followMe;
-    });
-    ref.read(locationProvider).refresh(forceUpdate: true);
-  }
-
   void startFollowingTrainHead() {
     locationSubscription?.close();
     locationSubscription = null;
@@ -168,47 +151,11 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     ref.read(locationProvider).refresh(forceUpdate: true);
   }
 
-  void stopFollowingLocation() async {
-    locationSubscription?.close();
-    locationSubscription = null;
-    setState(() {});
-  }
-
-  void moveMapToDefault() {
-    controller.move(defaultLatLng, controller.camera.zoom);
-  }
-
-  ///Toggles between location tracking and view without user pos
-
-  void toggleLocationService() async {
-    ref.read(isTrackingProvider.notifier).toggleTracking(true);
-  }
-
-  ///Toggles between user position and view with user pos
-  void toggleViewerLocationService() async {
-    if (ref.read(isTrackingProvider)) {
-      ref.read(isTrackingProvider.notifier).toggleTracking(false);
-      return;
-    }
-    final clickedButton = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.of(context).startLocationWithoutParticipating,
-        text: Localize.of(context).startLocationWithoutParticipatingInfo,
-        positiveButtonTitle: Localize.of(context).yes,
-        negativeButtonTitle:
-            Localize.of(context).no); //no neutral button on android
-    if (clickedButton == CustomButton.positiveButton) {
-      ref.read(isTrackingProvider.notifier).toggleTracking(false);
-    }
-  }
-
-  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-      GlobalKey<ScaffoldMessengerState>();
-  final PopupController _popupController = PopupController();
-
   @override
   Widget build(BuildContext context) {
     print('rebuilding flutter_maps');
     var route = ref.watch(activeEventRouteProvider);
+    var osmEnabled = ref.watch(useOpenStreetMapProvider);
     var startPoint = route.hasValue ? route.value!.startLatLng : defaultLatLng;
     return ScaffoldMessenger(
       key: scaffoldMessengerKey,
@@ -219,16 +166,17 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
             options: MapOptions(
               keepAlive: true,
               initialZoom: 13.0,
-              minZoom: MapSettings.openStreetMapEnabled
-                  ? MapSettings.minZoom
-                  : MapSettings.minZoomDefault,
-              maxZoom: MapSettings.openStreetMapEnabled
-                  ? MapSettings.maxZoom
-                  : MapSettings.maxZoomDefault,
+              minZoom:
+                  osmEnabled ? MapSettings.minZoom : MapSettings.minZoomDefault,
+              maxZoom:
+                  osmEnabled ? MapSettings.maxZoom : MapSettings.maxZoomDefault,
               initialCenter: startPoint,
+              onPointerDown: (e, l) => _onPointerDown(e, l),
+              onPointerUp: (e, l) => _onPointerUp(e, l),
+              //onPositionChanged: (p, g) => _onPositionChanged(p, g),
               cameraConstraint: kDebugMode
                   ? null
-                  : MapSettings.openStreetMapEnabled ||
+                  : osmEnabled ||
                           ref.watch(activeEventProvider).hasSpecialStartPoint
                       ? CameraConstraint.contain(
                           bounds: MapSettings.mapOnlineBoundaries)
@@ -260,7 +208,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                   ],
                 );
               }),
-              CustomLocationLayer(_popupController),
+              CustomLocationLayer(_popupController, _hasGesture),
             ],
           ),
           const GPSInfoAndMapCopyright(),
@@ -272,24 +220,30 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   /// TODO
   /// Disable align position and align direction temporarily when user is
   /// manipulating the map.
-/* void _onPointerDown(e, l) {
+  int _pointerCount = 0;
+
+  void _onPointerDown(e, l) {
     _pointerCount++;
     setState(() {
-      _alignPositionOnUpdate = AlignOnUpdate.never;
-      _alignDirectionOnUpdate = AlignOnUpdate.never;
+      _hasGesture = true;
     });
   }
 
   // Enable align position and align direction again when user manipulation
   // ended.
   void _onPointerUp(e, l) {
-    if (--_pointerCount == 0 && _navigationMode) {
+    if (--_pointerCount <= 0) {
       setState(() {
-        _alignPositionOnUpdate = AlignOnUpdate.always;
-        _alignDirectionOnUpdate = AlignOnUpdate.always;
+        _hasGesture = false;
       });
-      _alignPositionStreamController.add(18);
-      _alignDirectionStreamController.add(null);
     }
-  }*/
+  }
+
+  _onPositionChanged(MapPosition p, bool g) {
+    if (ref.read(isTrackingProvider)) {
+      setState(() {
+        _hasGesture = g;
+      });
+    }
+  }
 }

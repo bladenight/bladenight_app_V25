@@ -14,9 +14,10 @@ import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/shared_prefs_provider.dart';
 
 class CustomLocationLayer extends ConsumerStatefulWidget {
-  const CustomLocationLayer(this.popupController, {super.key});
+  const CustomLocationLayer(this.popupController, this.hasGesture, {super.key});
 
   final PopupController popupController;
+  final bool hasGesture;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CustomLocationLayer();
@@ -46,6 +47,7 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
     var cameraFollow = ref.watch(cameraFollowLocationProvider);
     var alignMap = ref.watch(alignFlutterMapProvider);
     var iconSize = ref.watch(iconSizeProvider);
+    print('Widget has geture ${widget.hasGesture}');
     return !isTracking
         ? Container()
         : CurrentLocationLayer(
@@ -53,6 +55,7 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
             headingStream: _headingStream,
             alignDirectionAnimationDuration: const Duration(milliseconds: 300),
             alignPositionOnUpdate: cameraFollow == CameraFollow.followMe &&
+                    !widget.hasGesture &&
                     (alignMap ==
                             AlignFlutterMapState.alignPositionOnUpdateOnly ||
                         alignMap ==
@@ -61,6 +64,7 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
                 ? AlignOnUpdate.always
                 : AlignOnUpdate.never,
             alignDirectionOnUpdate: cameraFollow == CameraFollow.followMe &&
+                    !widget.hasGesture &&
                     (alignMap ==
                             AlignFlutterMapState.alignDirectionOnUpdateOnly ||
                         alignMap ==
