@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
 import '../models/realtime_update.dart';
 import '../wamp/wamp_v2.dart';
@@ -32,8 +31,7 @@ class RealtimeData extends _$RealtimeData {
 
     if (!isTracking) {
       _reStartTimer();
-    }
-    else {
+    } else {
       _stopTimer();
     }
     return stateOrNull;
@@ -64,10 +62,9 @@ class RealtimeData extends _$RealtimeData {
   }
 
   Future<RealtimeUpdate?> refresh({bool force = false}) async {
-    var timediff =
-    DateTime.now().difference(lastUpdate);
-    print('${timediff.inSeconds} Lastupdt: ${lastUpdate}');
-    if (!force && timediff < const Duration(seconds: 13)) {
+    var timeDiff = DateTime.now().difference(lastUpdate);
+    print('${timeDiff.inSeconds} Lastupdt: $lastUpdate');
+    if (!force && timeDiff < const Duration(seconds: 13)) {
       return null;
     }
     var update = await RealtimeUpdate.wampUpdate();

@@ -250,14 +250,16 @@ Future<bool> addFriendWithCodeFromUrl(
       message: 'Code $intCode ${Localize.of(context).received}',
       backgroundColor: Colors.green,
       textColor: Colors.black);
-
-  var result = await EditFriendDialog.show(context,
-      friend: Friend(
-          name: '',
-          friendId: await PreferencesHelper.getNewFriendId(),
-          requestId: intCode,
-          isActive: true),
-      friendDialogAction: FriendsAction.addWithCode);
+  EditFriendResult? result;
+  if (context.mounted) {
+    result = await EditFriendDialog.show(context,
+        friend: Friend(
+            name: '',
+            friendId: await PreferencesHelper.getNewFriendId(),
+            requestId: intCode,
+            isActive: true),
+        friendDialogAction: FriendsAction.addWithCode);
+  }
   if (result != null) {
     ProviderContainer()
         .read(friendsLogicProvider)

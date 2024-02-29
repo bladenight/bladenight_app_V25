@@ -83,7 +83,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                                     preferMessageBoxOnWindows: true,
                                     showAsLinksOnWindows: true));
                         if (clickedButton == CustomButton.positiveButton) {
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           await context
                               .read(messagesLogicProvider)
                               .clearMessages();
@@ -163,14 +163,14 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                                   positiveButtonTitle: Localize.current.delete,
                                   negativeButtonTitle: Localize.current.cancel);
                           if (deleteResult == CustomButton.positiveButton) {
-                            if (!mounted) return false;
+                            if (!context.mounted) return false;
                             context
                                 .read(messagesLogicProvider)
                                 .deleteMessage(message);
                           }
                         }
                         if (direction == DismissDirection.startToEnd) {
-                          if (!mounted) return false;
+                          if (!context.mounted) return false;
                           await context
                               .read(messagesLogicProvider)
                               .setReadMessage(message, !message.read);

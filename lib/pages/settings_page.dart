@@ -343,7 +343,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     HiveSettingsDB.setIsBladeGuard(val);
                                     HiveSettingsDB.setBladeGuardClick(val);
                                     int teamId = 0;
-                                    if (mounted) {
+                                    if (context.mounted) {
                                       teamId = await showTeamIdDialog(
                                               context, HiveSettingsDB.teamId) ??
                                           0;

@@ -80,7 +80,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     }
                     var action = await FriendsActionModal.show(context);
                     if (action == null || !mounted) return;
-                    if (action == FriendsAction.addNearby && mounted) {
+                    if (action == FriendsAction.addNearby && context.mounted) {
                       Navigator.of(context).push(
                         CupertinoPageRoute(
                           builder: (context) => const LinkFriendDevicePage(
@@ -92,7 +92,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                       );
                       return;
                     }
-                    if (action == FriendsAction.acceptNearby && mounted) {
+                    if (action == FriendsAction.acceptNearby && context.mounted) {
                       Navigator.of(context).push(
                         CupertinoPageRoute(
                           builder: (context) => const LinkFriendDevicePage(
@@ -104,7 +104,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                       );
                       return;
                     }
-                    if (!mounted) return;
+                    if (!context.mounted) return;
                     var result = await EditFriendDialog.show(
                       context,
                       friendDialogAction: action,
@@ -184,7 +184,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                   positiveButtonTitle: Localize.current.delete,
                                   negativeButtonTitle: Localize.current.cancel);
                           if (deleteResult == CustomButton.positiveButton) {
-                            if (!mounted) return false;
+                            if (!context.mounted) return false;
                             context
                                 .read(friendsLogicProvider)
                                 .deleteRelationShip(friend.friendId);
@@ -193,7 +193,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           var result = await EditFriendDialog.show(context,
                               friendDialogAction: FriendsAction.edit,
                               friend: friend);
-                          if (result == null || !mounted) return false;
+                          if (result == null || !context.mounted) return false;
                           context.read(friendsLogicProvider).updateFriend(
                               friend.copyWith(
                                   name: result.name,
@@ -384,11 +384,11 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     );
                   });
               if (action == FriendsAction.edit) {
-                if (!mounted) return;
+                if (!context.mounted) return;
                 var result = await EditFriendDialog.show(context,
                     friend: friend, friendDialogAction: FriendsAction.edit);
                 if (result != null) {
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   context.read(friendsLogicProvider).updateFriend(
                       friend.copyWith(
                           name: result.name,
@@ -396,12 +396,12 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           isActive: result.active));
                 }
               } else if (action == FriendsAction.delete) {
-                if (!mounted) return;
+                if (!context.mounted) return;
                 context
                     .read(friendsLogicProvider)
                     .deleteRelationShip(friend.friendId);
               }
-              if (mounted) {
+              if (context.mounted) {
                 _dismissKeyboard(context);
               }
             },

@@ -87,6 +87,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   @override
   void dispose() {
     _icCheckerSubscription?.cancel();
+    _isServerConnectedSubscription?.cancel();
     super.dispose();
   }
 

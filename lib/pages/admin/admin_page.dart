@@ -183,7 +183,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   _resultText = 'Kill Server sent!';
                   setState(() {});
 
-                  if (mounted) {
+                  if (context.mounted) {
                     Navigator.of(context).pop();
                   }
                 }

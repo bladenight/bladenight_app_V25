@@ -253,7 +253,7 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                               await Clipboard.setData(ClipboardData(
                                   text: friend.requestId.toString()));
                             }
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             Navigator.of(context).pop(); //go back
                           } else if (widget.action ==
                               FriendsAction.addWithCode) //validate code
@@ -261,7 +261,7 @@ class _EditFriendDialogState extends State<EditFriendDialog> {
                             await context
                                 .read(friendsLogicProvider)
                                 .addFriendWithCode(name, color!, code!);
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             Navigator.of(context).pop();
                           }
                         } on SocketException {
