@@ -91,6 +91,7 @@ dependencies:
   shared_preferences: ^2.1.1
   smooth_page_indicator: ^1.1.0
   step_progress_indicator: ^1.0.2
+  sticky_headers: ^0.3.0+2
   timezone: any
   #uni_links: ^0.5.1
   uni_links2: #Download from https://github.com/xunreal75/uni_links2.git and save to root

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:sticky_headers/sticky_headers/widget.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
@@ -25,12 +26,15 @@ class _EventsPageState extends State<EventsPage> {
   bool _noActualEventFound = false;
   final _pageController = PageController(viewportFraction: 1, keepPage: true);
   final ScrollController _scrollController = ScrollController();
+  String _header = "";
 
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-         _scrollToActualEvent();
+      setState(()=> _header = Localize.of(context).events);
+      _scrollToActualEvent();
     });
   }
 
@@ -56,7 +60,7 @@ class _EventsPageState extends State<EventsPage> {
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         CupertinoSliverNavigationBar(
           leading: const Icon(CupertinoIcons.ticket),
-          largeTitle: Text(Localize.of(context).events),
+          largeTitle: Text(_header),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -98,6 +102,13 @@ class _EventsPageState extends State<EventsPage> {
                     Expanded(
                       child: PageView.builder(
                         controller: _pageController,
+                        onPageChanged: (idx) {
+                          setState(() {
+                            var groupedEvents = events.groupByYear();
+                            _header =
+                                '${Localize.of(context).events} ${groupedEvents.keys.elementAt(idx)}';
+                          });
+                        },
                         itemCount: pages.length,
                         padEnds: false,
                         clipBehavior: Clip.antiAlias,
@@ -109,11 +120,19 @@ class _EventsPageState extends State<EventsPage> {
                     SmoothPageIndicator(
                       controller: _pageController,
                       count: pages.length,
-                      effect: const JumpingDotEffect(
+                      onDotClicked: (idx) => _pageController.animateToPage(idx,
+                          duration: Duration(milliseconds: 400),
+                          curve: Curves.linear),
+                      effect: JumpingDotEffect(
                         dotHeight: 16,
                         dotWidth: 16,
+                        dotColor: CupertinoTheme.of(context).barBackgroundColor,
+                        activeDotColor: CupertinoTheme.of(context).primaryColor,
                       ),
                     ),
+                    const SizedBox(
+                      height: 5,
+                    )
                   ],
                 ),
               );
@@ -137,69 +156,84 @@ class _EventsPageState extends State<EventsPage> {
     return _buildPages(context, events);
   }
 
-  List<Container> _buildPages(BuildContext context, Events events) {
+  List<StickyHeader> _buildPages(BuildContext context, Events events) {
     var groupedEvents = events.groupByYear();
     var lst = List.generate(groupedEvents.keys.length, (pageIndex) {
       var itemsCount =
           groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events.length;
       var pageEvents =
           groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events;
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          //   color: Colors.green.shade300,
+      return StickyHeader(
+        controller: _scrollController, // Optional
+        header: Container(
+          height: 50.0,
+          color: CupertinoTheme.of(context).barBackgroundColor,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          alignment: Alignment.centerLeft,
+          child: Text(
+            '${groupedEvents.keys.elementAt(pageIndex)} ',
+            style: TextStyle(
+              color: CupertinoTheme.of(context).primaryColor,
+            ),
+          ),
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
-        child: RefreshIndicator(
-          onRefresh: () async {
-            return context.refresh(allEventsProvider);
-          },
-          child: MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: itemsCount * 2 - 1,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index % 2 == 0) {
-                    var event = pageEvents[(index / 2).round()];
-                    var eventStartState = EventStartState.eventOver;
-                    var eventOver = event.startDateUtc
-                        .add(event.duration)
-                        .difference(DateTime.now().toUtc())
-                        .isNegative;
-                    var eventActual = !eventOver &&
-                        event.startDateUtc
-                                .difference(DateTime.now().toUtc())
-                                .inDays <
-                            7;
-                    var eventFuture = !eventOver &&
-                        event.startDateUtc
-                                .difference(DateTime.now().toUtc())
-                                .inDays >
-                            7;
-                    if (eventActual) {
-                      eventStartState = EventStartState.eventActual;
+        content: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            //   color: Colors.green.shade300,
+          ),
+          margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              return context.refresh(allEventsProvider);
+            },
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: itemsCount * 2 - 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index % 2 == 0) {
+                      var event = pageEvents[(index / 2).round()];
+                      var eventStartState = EventStartState.eventOver;
+                      var eventOver = event.startDateUtc
+                          .add(event.duration)
+                          .difference(DateTime.now().toUtc())
+                          .isNegative;
+                      var eventActual = !eventOver &&
+                          event.startDateUtc
+                                  .difference(DateTime.now().toUtc())
+                                  .inDays <
+                              7;
+                      var eventFuture = !eventOver &&
+                          event.startDateUtc
+                                  .difference(DateTime.now().toUtc())
+                                  .inDays >
+                              7;
+                      if (eventActual) {
+                        eventStartState = EventStartState.eventActual;
+                      }
+                      if (eventFuture) {
+                        eventStartState = EventStartState.eventFuture;
+                      }
+                      if (eventActual && _noActualEventFound) {
+                        _noActualEventFound = true;
+                        return Container(
+                            key: _dataKey,
+                            child: _listTile(context, event, eventStartState));
+                      }
+                      return _listTile(context, event, eventStartState);
+                    } else {
+                      return Divider(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        height: 1,
+                        indent: 16,
+                        endIndent: 16,
+                      );
                     }
-                    if (eventFuture) {
-                      eventStartState = EventStartState.eventFuture;
-                    }
-                    if (eventActual && _noActualEventFound) {
-                      _noActualEventFound = true;
-                      return Container(
-                          key: _dataKey,
-                          child: _listTile(context, event, eventStartState));
-                    }
-                    return _listTile(context, event, eventStartState);
-                  } else {
-                    return Divider(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      height: 1,
-                      indent: 16,
-                      endIndent: 16,
-                    );
-                  }
-                }),
+                  }),
+            ),
           ),
         ),
       );
