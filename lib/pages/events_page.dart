@@ -30,9 +30,7 @@ class _EventsPageState extends State<EventsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(1000,
-          duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-      _scrollToActualEvent();
+         _scrollToActualEvent();
     });
   }
 

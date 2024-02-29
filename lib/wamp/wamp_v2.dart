@@ -33,6 +33,7 @@ class WampV2 {
   static int _startShakeHandsRetryCounter = 0;
 
   bool _connectionErrorLogged = false;
+  bool _lastConnectionStatus = false;
 
   bool get webSocketIsConnected => _isWebsocketRunning;
   bool _isWebsocketRunning = false; //status of a websocket
@@ -44,7 +45,11 @@ class WampV2 {
 
   var eventStreamController = StreamController<dynamic>.broadcast();
   var resultStreamController = StreamController<dynamic>.broadcast();
-  var connectedStreamController = StreamController<bool>.broadcast();
+
+  StreamController<bool> get connectedStreamController =>
+      _connectedStreamController;
+
+  final _connectedStreamController = StreamController<bool>.broadcast();
 
   StreamController<RealtimeUpdate?> get realTimeUpdateStreamController =>
       _realTimeUpdateStreamController;
@@ -380,9 +385,9 @@ class WampV2 {
           _resetWampState();
         },
         onError: (err) async {
-          if (_isWebsocketRunning == false &&
-              await connectedStreamController.stream.last == true) {
-            connectedStreamController.sink.add(false);
+          if (_isWebsocketRunning == false && _lastConnectionStatus == true) {
+            _connectedStreamController.sink.add(false);
+            _lastConnectionStatus == false;
           }
           _isWebsocketRunning = false;
           _hadShakeHands = false;
@@ -414,8 +419,9 @@ class WampV2 {
       await welcomeCompleter.future;
       _connectionErrorLogged = false;
       _isWebsocketRunning = true;
-      if (await connectedStreamController.stream.last == false) {
-        connectedStreamController.sink.add(true);
+      if (_lastConnectionStatus == false) {
+        _connectedStreamController.sink.add(true);
+        _lastConnectionStatus = true;
       }
       _isConnecting = false;
       return true;
@@ -448,7 +454,7 @@ class WampV2 {
 
   void _resetWampState() {
     if (_isWebsocketRunning == false) {
-      connectedStreamController.sink.add(false);
+      _connectedStreamController.sink.add(false);
     }
     _isWebsocketRunning = false;
     _hadShakeHands = false;
