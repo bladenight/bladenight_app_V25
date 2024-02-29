@@ -108,76 +108,73 @@ class _HomePageState extends State<HomePage>
             CupertinoSliverNavigationBar(
               leading: const Icon(CupertinoIcons.home),
               largeTitle: Text(Localize.of(context).home),
-              trailing: Align(
-                alignment: Alignment.bottomRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      onPressed: () async {
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => const MessagesPage(),
-                            fullscreenDialog: false,
-                          ),
-                        );
-                      },
-                      child: messageProvider.messages.isNotEmpty
-                          ? Badge(
-                              label:
-                                  Text(messageProvider.readMessages.toString()),
-                              child: const Icon(Icons.mark_email_unread),
-                            )
-                          : const Icon(CupertinoIcons.envelope),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      onPressed: () async {
-                        //_showOverlay(context, text: 'OK');
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => const IntroScreen(),
-                            fullscreenDialog: false,
-                          ),
-                        );
-                      },
-                      child: const Icon(CupertinoIcons.question_circle),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => const SettingsPage(),
-                            fullscreenDialog: false,
-                          ),
-                        );
-                      },
-                      child: const Icon(CupertinoIcons.settings_solid),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      onPressed: () async {
-                        AboutPage.show(context);
-                      },
-                      child: const Icon(CupertinoIcons.info_circle),
-                    ),
-                  ],
-                ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minSize: 0,
+                    onPressed: () async {
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (context) => const MessagesPage(),
+                          fullscreenDialog: false,
+                        ),
+                      );
+                    },
+                    child: messageProvider.messages.isNotEmpty
+                        ? Badge(
+                            label:
+                                Text(messageProvider.readMessages.toString()),
+                            child: const Icon(Icons.mark_email_unread),
+                          )
+                        : const Icon(CupertinoIcons.envelope),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minSize: 0,
+                    onPressed: () async {
+                      //_showOverlay(context, text: 'OK');
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (context) => const IntroScreen(),
+                          fullscreenDialog: false,
+                        ),
+                      );
+                    },
+                    child: const Icon(CupertinoIcons.question_circle),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minSize: 0,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (context) => const SettingsPage(),
+                          fullscreenDialog: false,
+                        ),
+                      );
+                    },
+                    child: const Icon(CupertinoIcons.settings_solid),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minSize: 0,
+                    onPressed: () async {
+                      AboutPage.show(context);
+                    },
+                    child: const Icon(CupertinoIcons.info_circle),
+                  ),
+                ],
               ),
             ),
             CupertinoSliverRefreshControl(
@@ -189,20 +186,18 @@ class _HomePageState extends State<HomePage>
                     .refresh(forceUpdate: true);
               },
             ),
-            Builder(builder: (context) {
-              return const SliverFillRemaining(
-                hasScrollBody: false,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Center(
-                        child: kIsWeb ? EventInfoWeb() : EventInfo(),
-                      ),
+            const SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Center(
+                      child: kIsWeb ? EventInfoWeb() : EventInfo(),
                     ),
-                  ],
-                ),
-              );
-            }),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

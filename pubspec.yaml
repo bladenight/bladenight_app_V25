@@ -89,6 +89,7 @@ dependencies:
   settings_ui: ^2.0.2
   share_plus: ^7.0.1
   shared_preferences: ^2.1.1
+  smooth_page_indicator: ^1.1.0
   step_progress_indicator: ^1.0.2
   timezone: any
   #uni_links: ^0.5.1

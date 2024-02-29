@@ -66,77 +66,75 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
           CupertinoSliverNavigationBar(
             leading: const Icon(CupertinoIcons.group),
             largeTitle: Text(Localize.of(context).friends),
-            trailing: Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minSize: 0,
-                    onPressed: () async {
-                      if(mounted){
-                        _dismissKeyboard(context);
-                      }
-                      var action = await FriendsActionModal.show(context);
-                      if (action == null || !mounted) return;
-                      if (action == FriendsAction.addNearby) {
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => const LinkFriendDevicePage(
-                              deviceType: DeviceType.advertiser,
-                              friendsAction: FriendsAction.addNearby,
-                            ),
-                            fullscreenDialog: false,
+            //middle: Text(Localize.of(context).friends),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  minSize: 0,
+                  onPressed: () async {
+                    if (mounted) {
+                      _dismissKeyboard(context);
+                    }
+                    var action = await FriendsActionModal.show(context);
+                    if (action == null || !mounted) return;
+                    if (action == FriendsAction.addNearby && mounted) {
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (context) => const LinkFriendDevicePage(
+                            deviceType: DeviceType.advertiser,
+                            friendsAction: FriendsAction.addNearby,
                           ),
-                        );
-                        return;
-                      }
-                      if (action == FriendsAction.acceptNearby) {
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => const LinkFriendDevicePage(
-                              deviceType: DeviceType.browser,
-                              friendsAction: FriendsAction.acceptNearby,
-                            ),
-                            fullscreenDialog: false,
-                          ),
-                        );
-                        return;
-                      }
-                      var result = await EditFriendDialog.show(
-                        context,
-                        friendDialogAction: action,
+                          fullscreenDialog: false,
+                        ),
                       );
-                      if (result != null) {}
-                    },
-                    child: const Icon(CupertinoIcons.plus_circle),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minSize: 0,
-                    onPressed: () async {
-                      context.read(friendsLogicProvider).refreshFriends();
-                    },
-                    child: const Icon(CupertinoIcons.refresh),
-                  ),
-                ],
-              ),
+                      return;
+                    }
+                    if (action == FriendsAction.acceptNearby && mounted) {
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (context) => const LinkFriendDevicePage(
+                            deviceType: DeviceType.browser,
+                            friendsAction: FriendsAction.acceptNearby,
+                          ),
+                          fullscreenDialog: false,
+                        ),
+                      );
+                      return;
+                    }
+                    if (!mounted) return;
+                    var result = await EditFriendDialog.show(
+                      context,
+                      friendDialogAction: action,
+                    );
+                    if (result != null) {}
+                  },
+                  child: const Icon(CupertinoIcons.plus_circle),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  minSize: 0,
+                  onPressed: () async {
+                    context.read(friendsLogicProvider).refreshFriends();
+                  },
+                  child: const Icon(CupertinoIcons.refresh),
+                ),
+              ],
             ),
           ),
           CupertinoSliverRefreshControl(
             onRefresh: () async {
-              if(mounted){
+              if (mounted) {
                 _dismissKeyboard(context);
               }
               return context.read(friendsLogicProvider).refreshFriends();
             },
           ),
-          const SliverToBoxAdapter(child: ConnectionWarning()),
           SliverToBoxAdapter(
             child: FractionallySizedBox(
               widthFactor: 0.9,
@@ -159,6 +157,10 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                 ),
               ),
             ),
+          ),
+          const SliverToBoxAdapter(
+            child: FractionallySizedBox(
+                widthFactor: 0.9, child: ConnectionWarning()),
           ),
           Builder(builder: (context) {
             var friends = context.watch(filteredFriends);
@@ -399,8 +401,8 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     .read(friendsLogicProvider)
                     .deleteRelationShip(friend.friendId);
               }
-              if(mounted){
-              _dismissKeyboard(context);
+              if (mounted) {
+                _dismissKeyboard(context);
               }
             },
           ),

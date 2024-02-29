@@ -23,6 +23,7 @@ import '../../providers/is_tracking_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/map/use_open_street_map_provider.dart';
 import '../../providers/realtime_data_provider.dart';
+import '../widgets/no_connection_warning.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/gps_info_and_map_copyright.dart';
 import 'widgets/map_buttons.dart';
@@ -212,6 +213,10 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
             ],
           ),
           const GPSInfoAndMapCopyright(),
+          const SafeArea(
+            child: Align(
+                alignment: Alignment.topCenter, child: ConnectionWarning()),
+          ),
         ]),
       ),
     );

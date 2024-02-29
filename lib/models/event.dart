@@ -59,7 +59,9 @@ class Event with EventMappable implements Comparable {
   final double? startPointLongitude;
   @MappableField(key: 'stp') //startPointInfo
   final String? startPoint;
-  @MappableField(key: 'isa') //event is running - means it't after start time or manual active
+  @MappableField(
+      key:
+          'isa') //event is running - means it't after start time or manual active
   final bool isActive;
 
   @MappableField(key: 'lastupdate')
@@ -265,6 +267,21 @@ class Events with EventsMappable {
       return wampResult;
     }
     return Events.rpcError(Exception(WampError('unknown')));
+  }
+
+  Map<int, Events> groupByYear() {
+    var resultMap = <int, Events>{};
+    for (var event in events) {
+      if (!resultMap.keys.contains(event.startDate.year)) {
+        resultMap[event.startDate.year] = Events([event]);
+        continue;
+      }
+      var eventsList = resultMap[event.startDate.year]!.events;
+      eventsList.add(event);
+    }
+    var sortedByKeyMap = Map.fromEntries(
+        resultMap.entries.toList()..sort((e1, e2) => e2.key.compareTo(e1.key)));
+    return sortedByKeyMap;
   }
 }
 

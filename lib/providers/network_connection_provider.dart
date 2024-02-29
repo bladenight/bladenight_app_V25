@@ -1,14 +1,21 @@
 import 'dart:async';
-import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:universal_io/io.dart';
 
 import '../helpers/logger.dart';
 import '../wamp/wamp_v2.dart';
 
-enum ConnectivityStatus { unknown, online, offline, error, serverNotReachable }
+enum ConnectivityStatus {
+  unknown,
+  online,
+  disconnected,
+  error,
+  serverReachable,
+  serverNotReachable
+}
 
 class NetworkStateModel {
   const NetworkStateModel(
@@ -24,12 +31,15 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
 
   StreamController<ConnectivityStatus> connectionStatusController =
       StreamController<ConnectivityStatus>();
+  StreamController<bool> serverConnectionStatusController =
+      StreamController<bool>();
 
   late dynamic _connectivity;
   static bool _wasOffline = false;
 
   ConnectivityStatus connectivityStatus = ConnectivityStatus.unknown;
   StreamSubscription? _icCheckerSubscription;
+  StreamSubscription? _isServerConnectedSubscription;
 
   final StreamController<InternetConnectionStatus> _currentState =
       StreamController.broadcast();
@@ -50,8 +60,21 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     _currentState.addStream(_connectivity.onStatusChange);
     _icCheckerSubscription =
         _connectivity.onStatusChange.listen((InternetConnectionStatus result) {
-      _checkStatus(result);
+      if (result == InternetConnectionStatus.connected) {
+        _checkStatus(ConnectivityStatus.online);
+      } else {
+        _checkStatus(ConnectivityStatus.disconnected);
+      }
     });
+    _isServerConnectedSubscription =
+        WampV2.instance.connectedStreamController.stream.listen((event) {
+      if (event) {
+        _checkStatus(ConnectivityStatus.serverNotReachable);
+      } else {
+        _checkStatus(ConnectivityStatus.serverReachable);
+      }
+    });
+
     Timer.periodic(const Duration(seconds: 30), (timer) {
       refresh();
     });
@@ -67,7 +90,12 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     super.dispose();
   }
 
-  void _checkStatus(InternetConnectionStatus? result) async {
+  void _checkStatus(ConnectivityStatus? result) async {
+    if (result != null && result == ConnectivityStatus.serverReachable) {
+      state = const NetworkStateModel(
+          connectivityStatus: ConnectivityStatus.online, serverAvailable: true);
+    }
+
     bool isOnline = false;
     try {
       isOnline = await InternetConnectionChecker()
@@ -87,11 +115,18 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
         WampV2.instance.refresh();
         _wasOffline = false;
       }
-      state = const NetworkStateModel(
-          connectivityStatus: ConnectivityStatus.online, serverAvailable: true);
+      if (result != null && result == ConnectivityStatus.serverNotReachable) {
+        state = const NetworkStateModel(
+            connectivityStatus: ConnectivityStatus.online,
+            serverAvailable: false);
+      } else {
+        state = NetworkStateModel(
+            connectivityStatus: ConnectivityStatus.online,
+            serverAvailable: WampV2.instance.webSocketIsConnected);
+      }
     } else {
       state = const NetworkStateModel(
-          connectivityStatus: ConnectivityStatus.offline,
+          connectivityStatus: ConnectivityStatus.disconnected,
           serverAvailable: false);
       _wasOffline = true;
     }

@@ -178,13 +178,13 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           child: Builder(builder: (context) {
             return FloatingActionButton(
               onPressed: () {
-                var controller = MapController.maybeOf(context);
-                if (controller == null) return;
+                var mapController = MapController.maybeOf(context);
+                if (mapController == null) return;
                 var nextState =
                     ref.read(cameraFollowLocationProvider.notifier).setNext();
                 switch (nextState) {
                   case CameraFollow.followOff:
-                    _moveMapToDefault(controller);
+                    _moveMapToDefault(mapController);
                     showToast(
                         message: Localize.of(context).mapToStartNoFollowing);
                     break;
@@ -203,10 +203,10 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   case CameraFollow.followMeStopped:
                     stopFollowingLocation();
                     showToast(message: Localize.of(context).mapFollowStopped);
-
+                    mapController.rotate(0);
                     break;
                   case CameraFollow.followTrain:
-                    startFollowingTrainHead(controller);
+                    startFollowingTrainHead(mapController);
                     showToast(message: Localize.of(context).mapFollowTrain);
 
                     break;

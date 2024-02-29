@@ -31,6 +31,10 @@ class WampV2 {
   static bool _hadShakeHands = false;
   static bool _startShakeHands = false;
   static int _startShakeHandsRetryCounter = 0;
+
+  bool _connectionErrorLogged = false;
+
+  bool get webSocketIsConnected => _isWebsocketRunning;
   bool _isWebsocketRunning = false; //status of a websocket
   bool busy = false;
   final Map<int, BnWampMessage> calls = {};
@@ -40,11 +44,12 @@ class WampV2 {
 
   var eventStreamController = StreamController<dynamic>.broadcast();
   var resultStreamController = StreamController<dynamic>.broadcast();
+  var connectedStreamController = StreamController<bool>.broadcast();
 
   StreamController<RealtimeUpdate?> get realTimeUpdateStreamController =>
       _realTimeUpdateStreamController;
   final _realTimeUpdateStreamController =
-  StreamController<RealtimeUpdate?>.broadcast();
+      StreamController<RealtimeUpdate?>.broadcast();
 
   HashSet<int> get subscriptions => _subscriptions;
   final HashSet<int> _subscriptions = HashSet();
@@ -84,7 +89,7 @@ class WampV2 {
   Future<void> _sendToWampFromRunner(BnWampMessage message) async {
     //check timed out
     if ((DateTime.now().difference(message.dateTime)) >
-        const Duration(seconds: 10) &&
+            const Duration(seconds: 10) &&
         message.completer.isCompleted == false) {
       message.completer.completeError(
           TimeoutException('WampV2_runner not started within 10 secs'));
@@ -231,8 +236,7 @@ class WampV2 {
                   className: toString(),
                   methodName: 'send message finished ',
                   text:
-                  'id: ${message.requestId} target ${message
-                      .endpoint} - Message:$message');
+                      'id: ${message.requestId} target ${message.endpoint} - Message:$message');
             }
 
             //queue.removeFirst();
@@ -249,8 +253,6 @@ class WampV2 {
     });
   }
 
-  void cleanQueue() {}
-
   Future<bool> _startStream() async {
     //avoid long view of waiting for server
     await runZonedGuarded(() async {
@@ -265,7 +267,7 @@ class WampV2 {
       );
       var welcomeCompleter = Completer();
       channel!.stream.listen(
-            (event) async {
+        (event) async {
           var wampMessage = json.decode(event) as List;
           var requestId = 0;
           if (wampMessage.length >= 2) {
@@ -274,7 +276,7 @@ class WampV2 {
             requestId = int.parse(strId);
           }
           var wampMessageType =
-          WampMessageTypeHelper.getMessageType(wampMessage[0]);
+              WampMessageTypeHelper.getMessageType(wampMessage[0]);
 
           if (wampMessageType == WampMessageType.welcome) {
             welcomeCompleter.complete();
@@ -302,9 +304,7 @@ class WampV2 {
             try {
               var rt = RealtimeUpdateMapper.fromMap(messageResult);
               _realTimeUpdateStreamController.sink.add(rt);
-            } catch (e) {
-
-            }
+            } catch (e) {}
 
             calls[requestId]?.completer.complete(messageResult);
             calls.remove(requestId);
@@ -380,6 +380,10 @@ class WampV2 {
           _resetWampState();
         },
         onError: (err) async {
+          if (_isWebsocketRunning == false &&
+              await connectedStreamController.stream.last == true) {
+            connectedStreamController.sink.add(false);
+          }
           _isWebsocketRunning = false;
           _hadShakeHands = false;
           if (_retryLimit > 0) {
@@ -408,11 +412,18 @@ class WampV2 {
         },
       );
       await welcomeCompleter.future;
+      _connectionErrorLogged = false;
       _isWebsocketRunning = true;
+      if (await connectedStreamController.stream.last == false) {
+        connectedStreamController.sink.add(true);
+      }
       _isConnecting = false;
       return true;
     }, (error, stack) {
-      BnLog.error(text: 'Wamp Error Close Wamp', exception: error);
+      if (!_connectionErrorLogged) {
+        BnLog.error(text: 'Wamp Error Close Wamp', exception: error);
+        _connectionErrorLogged = true;
+      }
       _resetWampState();
     })?.catchError((error) {
       if (!kIsWeb) BnLog.error(text: 'error wamp ->$error');
@@ -435,7 +446,10 @@ class WampV2 {
     _initWamp();
   }
 
-  void _resetWampState(){
+  void _resetWampState() {
+    if (_isWebsocketRunning == false) {
+      connectedStreamController.sink.add(false);
+    }
     _isWebsocketRunning = false;
     _hadShakeHands = false;
     _startShakeHands = false;

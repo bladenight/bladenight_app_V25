@@ -15,7 +15,6 @@ import '../../../helpers/logger.dart';
 import '../../../helpers/speed_to_color.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/event.dart';
-import '../../../pages/widgets/no_connection_warning.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
@@ -44,7 +43,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_)async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(locationProvider).refresh(forceUpdate: true); //update in map
       ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
       ref.read(refreshTimerProvider.notifier).start();
@@ -100,8 +99,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                         ),
                         if (actualOrNextEvent.rpcException != null)
                           Text(Localize.of(context).dataCouldBeOutdated),
-                        if (actualOrNextEvent.rpcException != null)
-                          const ConnectionWarning(),
                       ]),
                     ),
                   );
@@ -320,7 +317,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                           child: ref.watch(
                                                   isUserParticipatingProvider)
                                               ? const ImageIcon(AssetImage(
-                                              'assets/images/skater_icon_256.png'))
+                                                  'assets/images/skater_icon_256.png'))
                                               : const Icon(
                                                   Icons.gps_fixed_sharp),
                                         ),
@@ -644,7 +641,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
               ),
             ),
           ),
-          if (!kIsWeb) const ConnectionWarning(),
         ],
       );
     }

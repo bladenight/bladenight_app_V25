@@ -114,7 +114,6 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
               return context.read(messagesLogicProvider).updateServerMessages();
             },
           ),
-          const SliverToBoxAdapter(child: ConnectionWarning()),
           SliverToBoxAdapter(
             child: FractionallySizedBox(
               widthFactor: 0.9,
@@ -137,6 +136,10 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                 ),
               ),
             ),
+          ),
+          const SliverToBoxAdapter(
+            child: FractionallySizedBox(
+                widthFactor: 0.9, child: ConnectionWarning()),
           ),
           Builder(builder: (context) {
             var messages = context.watch(filteredMessages);

@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../models/event.dart';
 import '../pages/widgets/data_loading_indicator.dart';
-import '../pages/widgets/no_connection_warning.dart';
 import '../pages/widgets/no_data_warning.dart';
 import '../pages/widgets/route_dialog.dart';
 import '../providers/event_providers.dart';
@@ -21,16 +21,16 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPageState extends State<EventsPage> {
-  final dataKey = GlobalKey();
-  bool noActualEventFound = false;
-  late ScrollController _controller;
+  final _dataKey = GlobalKey();
+  bool _noActualEventFound = false;
+  final _pageController = PageController(viewportFraction: 1, keepPage: true);
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _controller.animateTo(1000,
+      _scrollController.animateTo(1000,
           duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
       _scrollToActualEvent();
     });
@@ -38,8 +38,8 @@ class _EventsPageState extends State<EventsPage> {
 
   _scrollToActualEvent() async {
     await Future.delayed(const Duration(milliseconds: 400));
-    if (dataKey.currentContext != null) {
-      Scrollable.ensureVisible(dataKey.currentContext!,
+    if (_dataKey.currentContext != null) {
+      Scrollable.ensureVisible(_dataKey.currentContext!,
           curve: Curves.slowMiddle, alignment: 0.5);
     }
   }
@@ -52,112 +52,161 @@ class _EventsPageState extends State<EventsPage> {
 
   @override
   Widget build(BuildContext context) {
-      return CupertinoPageScaffold(
-        child: CustomScrollView(
-          controller: _controller,
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
+    return NestedScrollView(
+      controller: _scrollController,
+      floatHeaderSlivers: false,
+      headerSliverBuilder: (context, innerBoxIsScrolled) => [
+        CupertinoSliverNavigationBar(
+          leading: const Icon(CupertinoIcons.ticket),
+          largeTitle: Text(Localize.of(context).events),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                minSize: 0,
+                onPressed: () async {
+                  context.refresh(allEventsProvider);
+                },
+                child: const Icon(CupertinoIcons.refresh),
+              ),
+            ],
           ),
-          slivers: [
-            CupertinoSliverNavigationBar(
-              leading: const Icon(CupertinoIcons.ticket),
-              largeTitle: Text(Localize.of(context).events),
-              trailing: Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      onPressed: () async {
-                        context.refresh(allEventsProvider);
-                      },
-                      child: const Icon(CupertinoIcons.refresh),
+        ),
+        CupertinoSliverRefreshControl(
+          onRefresh: () async {
+            return context.refresh(allEventsProvider);
+          },
+        ),
+      ],
+      body: Builder(builder: (context) {
+        var asyncEvents = context.watch(allEventsProvider);
+        return asyncEvents.maybeWhen(
+            skipLoadingOnRefresh: false,
+            skipLoadingOnReload: false,
+            data: (events) {
+              if (events.rpcException != null) {
+                _noActualEventFound = false;
+                return NoDataWarning(onReload: () {
+                  context.refresh(allEventsProvider);
+                });
+              }
+              var pages = _buildPages(context, events);
+              return SizedBox(
+                width: 100,
+                height: 10,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: pages.length,
+                        padEnds: false,
+                        clipBehavior: Clip.antiAlias,
+                        itemBuilder: (_, index) {
+                          return pages[index % pages.length];
+                        },
+                      ),
+                    ),
+                    SmoothPageIndicator(
+                      controller: _pageController,
+                      count: pages.length,
+                      effect: const JumpingDotEffect(
+                        dotHeight: 16,
+                        dotWidth: 16,
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ),
-            CupertinoSliverRefreshControl(
-              onRefresh: () async {
-                context.refresh(
-                    allEventsProvider); //refresh event self//refresh route on Map
-              },
-            ),
-            const SliverToBoxAdapter(child: ConnectionWarning()),
-            Builder(builder: (context) {
-              var asyncEvents = context.watch(allEventsProvider);
-              return asyncEvents.maybeWhen(
-                  skipLoadingOnRefresh: false,
-                  skipLoadingOnReload: false,
-                  data: (events) {
-                    if (events.rpcException != null) {
-                      noActualEventFound = false;
-                      return SliverFillRemaining(
-                          child: NoDataWarning(onReload: () {
-                        context.refresh(allEventsProvider);
-                      }));
+              );
+            },
+            loading: () {
+              return const DataLoadingIndicator();
+            },
+            orElse: () {
+              return NoDataWarning(
+                onReload: () => context.refresh(allEventsProvider),
+              );
+            });
+      }),
+    );
+  }
+
+  buildPagesList(Events events) {
+    if (events.events.isEmpty) {
+      return Text(Localize.of(context).nodatareceived);
+    }
+    return _buildPages(context, events);
+  }
+
+  List<Container> _buildPages(BuildContext context, Events events) {
+    var groupedEvents = events.groupByYear();
+    var lst = List.generate(groupedEvents.keys.length, (pageIndex) {
+      var itemsCount =
+          groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events.length;
+      var pageEvents =
+          groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events;
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          //   color: Colors.green.shade300,
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            return context.refresh(allEventsProvider);
+          },
+          child: MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: itemsCount * 2 - 1,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index % 2 == 0) {
+                    var event = pageEvents[(index / 2).round()];
+                    var eventStartState = EventStartState.eventOver;
+                    var eventOver = event.startDateUtc
+                        .add(event.duration)
+                        .difference(DateTime.now().toUtc())
+                        .isNegative;
+                    var eventActual = !eventOver &&
+                        event.startDateUtc
+                                .difference(DateTime.now().toUtc())
+                                .inDays <
+                            7;
+                    var eventFuture = !eventOver &&
+                        event.startDateUtc
+                                .difference(DateTime.now().toUtc())
+                                .inDays >
+                            7;
+                    if (eventActual) {
+                      eventStartState = EventStartState.eventActual;
                     }
-                    return SliverList(
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                      if (index % 2 == 0) {
-                        var event = events.events[(index / 2).round()];
-                        var eventStartState = EventStartState.eventOver;
-                        var eventOver = event.startDateUtc
-                            .add(event.duration)
-                            .difference(DateTime.now().toUtc())
-                            .isNegative;
-                        var eventActual = !eventOver &&
-                            event.startDateUtc
-                                    .difference(DateTime.now().toUtc())
-                                    .inDays <
-                                7;
-                        var eventFuture = !eventOver &&
-                            event.startDateUtc
-                                    .difference(DateTime.now().toUtc())
-                                    .inDays >
-                                7;
-                        if (eventActual) {
-                          eventStartState = EventStartState.eventActual;
-                        }
-                        if (eventFuture) {
-                          eventStartState = EventStartState.eventFuture;
-                        }
-                        if (eventActual && noActualEventFound) {
-                          noActualEventFound = true;
-                          return Container(
-                              key: dataKey,
-                              child:
-                                  _listTile(context, event, eventStartState));
-                        }
-                        return _listTile(context, event, eventStartState);
-                      } else {
-                        return Divider(
-                          color: CupertinoTheme.of(context).primaryColor,
-                          height: 1,
-                          indent: 16,
-                          endIndent: 16,
-                        );
-                      }
-                    }, childCount: events.events.length * 2 - 1));
-                  },
-                  loading: () {
-                    return const SliverFillRemaining(
-                      child: DataLoadingIndicator(),
+                    if (eventFuture) {
+                      eventStartState = EventStartState.eventFuture;
+                    }
+                    if (eventActual && _noActualEventFound) {
+                      _noActualEventFound = true;
+                      return Container(
+                          key: _dataKey,
+                          child: _listTile(context, event, eventStartState));
+                    }
+                    return _listTile(context, event, eventStartState);
+                  } else {
+                    return Divider(
+                      color: CupertinoTheme.of(context).primaryColor,
+                      height: 1,
+                      indent: 16,
+                      endIndent: 16,
                     );
-                  },
-                  orElse: () {
-                    return SliverFillRemaining(
-                      child: NoDataWarning(
-                        onReload: () => context.refresh(allEventsProvider),
-                      ),
-                    );
-                  });
-            }),
-          ],
+                  }
+                }),
+          ),
         ),
       );
+    });
+    return lst;
   }
 }
 
@@ -296,3 +345,51 @@ Widget _listTile(
     ),
   );
 }
+
+/*
+* ListView.builder(
+            itemCount: 2,
+            itemBuilder: (BuildContext context, int index) {
+              for (var event in groupedEvents.values) {
+                if (index % 2 == 0) {
+                  var event = events.events[(index / 2).round()];
+                  var eventStartState = EventStartState.eventOver;
+                  var eventOver = event.startDateUtc
+                      .add(event.duration)
+                      .difference(DateTime.now().toUtc())
+                      .isNegative;
+                  var eventActual = !eventOver &&
+                      event.startDateUtc
+                              .difference(DateTime.now().toUtc())
+                              .inDays <
+                          7;
+                  var eventFuture = !eventOver &&
+                      event.startDateUtc
+                              .difference(DateTime.now().toUtc())
+                              .inDays >
+                          7;
+                  if (eventActual) {
+                    eventStartState = EventStartState.eventActual;
+                  }
+                  if (eventFuture) {
+                    eventStartState = EventStartState.eventFuture;
+                  }
+                  if (eventActual && noActualEventFound) {
+                    noActualEventFound = true;
+                    return Container(
+                        key: dataKey,
+                        child: _listTile(context, event, eventStartState));
+                  }
+                  return _listTile(context, event, eventStartState);
+                } else {
+                  return Divider(
+                    color: CupertinoTheme.of(context).primaryColor,
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                  );
+                }
+              }
+            },
+          ),
+          * */

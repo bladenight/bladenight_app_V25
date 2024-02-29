@@ -23,7 +23,7 @@ class NoDataWarning extends ConsumerWidget {
           Builder(builder: (context) {
             var networkAware = ref.watch(networkAwareProvider);
             if (networkAware.connectivityStatus == ConnectivityStatus.error ||
-                networkAware.connectivityStatus == ConnectivityStatus.offline) {
+                networkAware.connectivityStatus == ConnectivityStatus.disconnected) {
               return const NoNetworkWarning();
             } else if (networkAware.connectivityStatus ==
                 ConnectivityStatus.serverNotReachable) {
