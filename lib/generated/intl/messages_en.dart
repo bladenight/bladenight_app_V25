@@ -33,9 +33,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m5(timeout) =>
       "Location tracking after ${timeout} min of BladeNight automatic stopped. (Press long on ▶️ to deactivate Automatic tracking stop)";
 
-  static String m6(name) => "invite ${name}";
+  static String m6(code) =>
+      "Alternative can your friend scan the barcode below or manually enter the code ${code} in his app";
 
-  static String m7(dev) => "Accept ${dev} friend nearby";
+  static String m7(name) => "invite ${name}";
 
   static String m8(deviceName) =>
       "<h2>Important information</h2><ul><li>Your friend must have same mobile type. Apple to Android doesn\'t work. Use Code pairing instead.</li><li>Your friend must be within a maximum of 2 m of you!</li><li>Please open the Friends tab for your friend in the Bladenight app.</li><li>Select Plus at the top right<span class= \"icon\">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>${deviceName}</em></b> Pair.</li></ul>You can change your submitted name in the text field. This is only for transferring via direct connection / scan.";
@@ -291,8 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "forward": MessageLookupByLibrary.simpleMessage("Forward"),
         "friend": MessageLookupByLibrary.simpleMessage("Friend"),
         "friendIs": MessageLookupByLibrary.simpleMessage("Friend is"),
-        "friendScanQrCode": MessageLookupByLibrary.simpleMessage(
-            "Alternative can your friend the barcode below"),
+        "friendScanQrCode": m6,
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
             "Please support the exact presentation of BladeNight skater train.\nYour friends will miss you!"),
@@ -323,7 +323,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "internalerror_seemslinked":
             MessageLookupByLibrary.simpleMessage("Error - Is friend linked?"),
         "invalidcode": MessageLookupByLibrary.simpleMessage("invalid code"),
-        "invitebyname": m6,
+        "invitebyname": m7,
         "invitenewfriend":
             MessageLookupByLibrary.simpleMessage("Invite friend"),
         "isIgnoring": MessageLookupByLibrary.simpleMessage("Is ignored"),
@@ -334,7 +334,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "leavewheninuse":
             MessageLookupByLibrary.simpleMessage("Leave settings"),
         "length": MessageLookupByLibrary.simpleMessage("Length"),
-        "linkNearBy": m7,
+        "linkNearBy":
+            MessageLookupByLibrary.simpleMessage("Accept friend nearby"),
         "linkOnOtherDevice": m8,
         "linkingFailed": MessageLookupByLibrary.simpleMessage("Linking failed"),
         "linkingSuccessful":

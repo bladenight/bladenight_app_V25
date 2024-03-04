@@ -250,7 +250,7 @@
   "lastupdate": "Last update",
   "leavewheninuse": "Leave settings",
   "length": "Length",
-  "linkNearBy": "Accept {dev} friend nearby",
+  "linkNearBy": "Accept friend nearby",
   "linkOnOtherDevice": "<h2>Important information</h2><ul><li>Your friend must have same mobile type. Apple to Android doesn't work. Use Code pairing instead.</li><li>Your friend must be within a maximum of 2 m of you!</li><li>Please open the Friends tab for your friend in the Bladenight app.</li><li>Select Plus at the top right<span class= \"icon\">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>{deviceName}</em></b> Pair.</li></ul>You can change your submitted name in the text field. This is only for transferring via direct connection / scan.",
   "linkingFailed": "Linking failed",
   "linkingSuccessful": "Linking successful",
@@ -446,5 +446,5 @@
   "wasCanceledPleaseCheck": "is canceled! Please check this on https://bladenight-muenchen.de",
   "yes": "Yes",
   "yesterday": "was yesterday",
-  "friendScanQrCode": "Alternative can your friend the barcode below"
+  "friendScanQrCode": "Alternative can your friend scan the barcode below or manually enter the code {code} in his app"
 }

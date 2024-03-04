@@ -33,9 +33,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m5(timeout) =>
       "Le suivi de l\'emplacement après ${timeout} min de BladeNight s\'est arrêté automatiquement. (Appuyez longuement sur ▶️ pour désactiver l\'arrêt automatique du suivi)";
 
-  static String m6(name) => "inviter ${name}";
+  static String m6(code) =>
+      "Votre ami peut-il également scanner le code-barres ci-dessous ou saisir manuellement le code ${code} dans son application";
 
-  static String m7(dev) => "Accepter un ${dev} ami à proximité";
+  static String m7(name) => "inviter ${name}";
 
   static String m8(deviceName) =>
       "Votre ami doit se trouver à moins de 2 m de vous !<ul><li>Veuillez ouvrir l\'onglet Amis de votre ami dans l\'application Bladenight.</li><li>Sélectionnez Plus en haut à droite<span class= \" icon\">plus</span></li><li>Choisissez d\'accepter un ami à côté de vous</li><li>Maintenant avec cet appareil <b><em>${deviceName}</em></b > Paire.</li></ul>Vous pouvez modifier votre nom soumis dans le champ de texte. Ceci concerne uniquement le transfert via une connexion directe / scan.";
@@ -302,8 +303,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "forward": MessageLookupByLibrary.simpleMessage("Forward"),
         "friend": MessageLookupByLibrary.simpleMessage("Ami"),
         "friendIs": MessageLookupByLibrary.simpleMessage("L\'ami est"),
-        "friendScanQrCode": MessageLookupByLibrary.simpleMessage(
-            "Alternative can your friend the barcode below"),
+        "friendScanQrCode": m6,
         "friends": MessageLookupByLibrary.simpleMessage("Amis"),
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
             "Veuillez soutenir la présentation exacte de BladeNight skater train.\nVous manquerez à vos amis !"),
@@ -334,7 +334,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "internalerror_seemslinked":
             MessageLookupByLibrary.simpleMessage("Erreur - Un ami est lié?"),
         "invalidcode": MessageLookupByLibrary.simpleMessage("Code invalide"),
-        "invitebyname": m6,
+        "invitebyname": m7,
         "invitenewfriend":
             MessageLookupByLibrary.simpleMessage("Inviter un ami"),
         "isIgnoring": MessageLookupByLibrary.simpleMessage("Est ignoré"),
@@ -348,7 +348,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "leavewheninuse":
             MessageLookupByLibrary.simpleMessage("Laisser les paramètres"),
         "length": MessageLookupByLibrary.simpleMessage("Longueur"),
-        "linkNearBy": m7,
+        "linkNearBy":
+            MessageLookupByLibrary.simpleMessage("Accepter un ami à proximité"),
         "linkOnOtherDevice": m8,
         "linkingFailed":
             MessageLookupByLibrary.simpleMessage("Échec du couplage"),

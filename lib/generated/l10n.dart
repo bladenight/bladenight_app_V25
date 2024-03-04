@@ -1764,13 +1764,13 @@ class Localize {
     );
   }
 
-  /// `Accept {dev} friend nearby`
-  String linkNearBy(Object dev) {
+  /// `Accept friend nearby`
+  String get linkNearBy {
     return Intl.message(
-      'Accept $dev friend nearby',
+      'Accept friend nearby',
       name: 'linkNearBy',
       desc: '',
-      args: [dev],
+      args: [],
     );
   }
 
@@ -3728,13 +3728,13 @@ class Localize {
     );
   }
 
-  /// `Alternative can your friend the barcode below`
-  String get friendScanQrCode {
+  /// `Alternative can your friend scan the barcode below or manually enter the code {code} in his app`
+  String friendScanQrCode(Object code) {
     return Intl.message(
-      'Alternative can your friend the barcode below',
+      'Alternative can your friend scan the barcode below or manually enter the code $code in his app',
       name: 'friendScanQrCode',
       desc: '',
-      args: [],
+      args: [code],
     );
   }
 }

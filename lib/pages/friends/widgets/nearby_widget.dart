@@ -63,8 +63,13 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!context.mounted) return;
       if (widget.friendsAction == FriendsAction.addNearby) {
+        var dt= DateTime.now();
+        var dateString = Localize.current.dateTimeIntl(
+          dt,
+          dt,
+        );
         var friend = await context.read(friendsLogicProvider).addNewFriend(
-            '${Localize.of(context).friend}_${DateTime.now().toLocal()}',
+            '${Localize.of(context).friend} ${Localize.of(context).from} $dateString',
             getRandomColor());
         if (friend == null) {
           FlutterPlatformAlert.showAlert(
@@ -101,11 +106,11 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
           ),
           slivers: [
             CupertinoSliverNavigationBar(
-              middle: widget.deviceType == DeviceType.browser
-                  ? Text(Localize.of(context)
-                      .linkNearBy(Platform.operatingSystem.toUpperCase()))
-                  : Text(Localize.of(context)
-                      .addNearBy(Platform.operatingSystem.toUpperCase())),
+              largeTitle: widget.deviceType == DeviceType.browser
+                  ? Text(
+                      Localize.of(context).linkNearBy)
+                  : Text(
+                      Localize.of(context).addNearBy(Platform.operatingSystem)),
               backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
             ),
             SliverToBoxAdapter(
@@ -130,6 +135,10 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                             if (node.text != null &&
                                 node.text!.contains('plus')) {
                               return const Icon(CupertinoIcons.plus_circle);
+                            }
+                            if (node.text != null &&
+                                node.text!.contains('friendIcon')) {
+                              return const Icon(Icons.people);
                             }
                           }
                           return null;
@@ -175,12 +184,14 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                   color: CupertinoTheme.of(context).primaryColor,
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 2,
                 ),
-                if (_qrCodeText != '')
+                if (_qrCodeText != '' && _tempServerFriend != null)
                   Center(
                     child: Text(
-                      Localize.of(context).friendScanQrCode,
+                      Localize.of(context).friendScanQrCode(
+                          _tempServerFriend!.requestId.toString()),
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: MediaQuery.textScalerOf(context).scale(14),
                           color: CupertinoTheme.of(context).primaryColor),

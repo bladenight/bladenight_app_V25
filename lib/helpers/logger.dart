@@ -19,7 +19,7 @@ class BnLog {
   static bool _isInitialized = false;
   static final List<LogOutput> _logOutputs = [];
   static late Box<List<String>> _logBox;
-
+  static final DateTime  _startTime = DateTime.now();
   BnLog._(){
     if (_isInitialized == false){
       init();
@@ -31,14 +31,15 @@ class BnLog {
     _logBox.put('startLog', ['start logging']);
     //add logger
     _logOutputs.clear();
-    _logOutputs.addAll({BnLogOutput(_logBox), ConsoleLogOutput()});
+
+    _logOutputs.addAll({BnLogOutput(_logBox,_startTime), ConsoleLogOutput()});
     //_logger.close();
     _logger = Logger(
       filter: filter,
-      output: null,//MultiOutput(_logOutputs),
+      output:  MultiOutput(_logOutputs),
       level: logLevel ?? HiveSettingsDB.flogLogLevel,
       printer: BnLogPrinter(
-          logBox: _logBox,
+          logBox: _logBox,startTime: _startTime,
           methodCount: 2,
           errorMethodCount: 8,
           lineLength: 120,

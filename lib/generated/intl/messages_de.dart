@@ -33,9 +33,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m5(timeout) =>
       "Automatischer Trackingstopp nach max. ${timeout} min. BladeNight beendet. (Lange drücken auf ▶️ deaktiviert Autostop)";
 
-  static String m6(name) => "${name} einladen";
+  static String m6(code) =>
+      "Alternativ kann dein Freund den Barcode mit der Kamera scannen oder dich mit dem Code ${code} verbinden";
 
-  static String m7(dev) => "Freund:in ${dev} neben Dir annehmen";
+  static String m7(name) => "${name} einladen";
 
   static String m8(deviceName) =>
       "<h2>Wichtige Hinweise!</h2><ul><li>Dein Freund muss den gleichen Telefontyp verwenden Apple zu Android funktioniert nicht. Nutze in dem Fall das Code pairing.</li><li>Dein Freund muss in max. 2 m Entfernung von Dir sein!</li><li>Bitte bei deinem Freund in der Bladenight-App den Tab Freunde öffnen lassen.</li><li>Dort Plus oben rechts wählen<span class=\"icon\">plus</span></li><li>Freund:in neben Dir annehmen wählen</li><li>Nun mit diesem Gerät <b><em>${deviceName}</em></b> koppeln.</li></ul>Du kannst deinen übermittelten Namen im Textfeld ändern. Dieser ist nur ausschließlich zum übertragen per Direktverbindung / Scan.";
@@ -296,12 +297,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "forward": MessageLookupByLibrary.simpleMessage("Weiter"),
         "friend": MessageLookupByLibrary.simpleMessage("Freund:in"),
         "friendIs": MessageLookupByLibrary.simpleMessage("Freund:in ist"),
-        "friendScanQrCode": MessageLookupByLibrary.simpleMessage(
-            "Alternativ kann dein Freund den Barcode mit der Kamera scannen."),
+        "friendScanQrCode": m6,
         "friends": MessageLookupByLibrary.simpleMessage("Freunde"),
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
             "Bitte unterstütze weiter die genaue Darstellung des BladeNightzuges.\nAusserdem werden deine Freunde dich vermissen!"),
-        "from": MessageLookupByLibrary.simpleMessage("von"),
+        "from": MessageLookupByLibrary.simpleMessage("vom"),
         "getwebdata":
             MessageLookupByLibrary.simpleMessage("Lade Serverdaten ..."),
         "head": MessageLookupByLibrary.simpleMessage("Zugkopf"),
@@ -327,7 +327,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "internalerror_seemslinked": MessageLookupByLibrary.simpleMessage(
             "Fehler - Freund:in schon verlinkt?"),
         "invalidcode": MessageLookupByLibrary.simpleMessage("Code unbekannt"),
-        "invitebyname": m6,
+        "invitebyname": m7,
         "invitenewfriend":
             MessageLookupByLibrary.simpleMessage("Freund:in einladen"),
         "isIgnoring": MessageLookupByLibrary.simpleMessage("Wird ignoriert"),
@@ -339,7 +339,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "leavewheninuse":
             MessageLookupByLibrary.simpleMessage("Lasse Einstellung"),
         "length": MessageLookupByLibrary.simpleMessage("Länge"),
-        "linkNearBy": m7,
+        "linkNearBy": MessageLookupByLibrary.simpleMessage(
+            "Freund:in neben Dir annehmen"),
         "linkOnOtherDevice": m8,
         "linkingFailed":
             MessageLookupByLibrary.simpleMessage("Verknüpfung fehlgeschlagen"),

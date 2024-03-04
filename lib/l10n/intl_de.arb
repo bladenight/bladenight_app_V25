@@ -225,7 +225,7 @@
   "friendIs": "Freund:in ist",
   "friends": "Freunde",
   "friendswillmissyou": "Bitte unterstütze weiter die genaue Darstellung des BladeNightzuges.\nAusserdem werden deine Freunde dich vermissen!",
-  "from": "von",
+  "from": "vom",
   "getwebdata": "Lade Serverdaten ...",
   "head": "Zugkopf",
   "home": "Info",
@@ -250,7 +250,7 @@
   "lastupdate": "Letztes Update",
   "leavewheninuse": "Lasse Einstellung",
   "length": "Länge",
-  "linkNearBy": "Freund:in {dev} neben Dir annehmen",
+  "linkNearBy": "Freund:in neben Dir annehmen",
   "linkOnOtherDevice": "<h2>Wichtige Hinweise!</h2><ul><li>Dein Freund muss den gleichen Telefontyp verwenden Apple zu Android funktioniert nicht. Nutze in dem Fall das Code pairing.</li><li>Dein Freund muss in max. 2 m Entfernung von Dir sein!</li><li>Bitte bei deinem Freund in der Bladenight-App den Tab Freunde öffnen lassen.</li><li>Dort Plus oben rechts wählen<span class=\"icon\">plus</span></li><li>Freund:in neben Dir annehmen wählen</li><li>Nun mit diesem Gerät <b><em>{deviceName}</em></b> koppeln.</li></ul>Du kannst deinen übermittelten Namen im Textfeld ändern. Dieser ist nur ausschließlich zum übertragen per Direktverbindung / Scan.",
   "linkingFailed": "Verknüpfung fehlgeschlagen",
   "linkingSuccessful": "Verknüpfung erfolgreich",
@@ -446,5 +446,5 @@
   "wasCanceledPleaseCheck": "wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de",
   "yes": "Ja",
   "yesterday": "war gestern",
-  "friendScanQrCode": "Alternativ kann dein Freund den Barcode mit der Kamera scannen."
+  "friendScanQrCode": "Alternativ kann dein Freund den Barcode mit der Kamera scannen oder dich mit dem Code {code} verbinden"
 }

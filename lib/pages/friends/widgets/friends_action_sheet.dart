@@ -47,7 +47,7 @@ class FriendsActionModal extends StatelessWidget {
           },
         ),
         CupertinoActionSheetAction(
-          child: Text(Localize.of(context).linkNearBy(Platform.operatingSystem.toUpperCase())),
+          child: Text(Localize.of(context).linkNearBy),
           onPressed: () {
             Navigator.pop(context, FriendsAction.acceptNearby);
           },

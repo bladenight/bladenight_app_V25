@@ -70,7 +70,7 @@ class BnLogPrinter extends LogPrinter {
   static final _browserStackTraceRegex =
       RegExp(r'^(?:package:)?(dart:\S+|\S+)');
 
-  static DateTime? _startTime;
+  final DateTime startTime;
 
   /// The index at which the stack trace should start.
   ///
@@ -192,7 +192,9 @@ class BnLogPrinter extends LogPrinter {
   /// Default fallbacks are modifiable via [defaultLevelEmojis].
   final Map<Level, String>? levelEmojis;
 
-  BnLogPrinter({ required this.logBox,
+  BnLogPrinter({
+    required this.logBox,
+    required this.startTime,
     this.stackTraceBeginIndex = 0,
     this.methodCount = 2,
     this.errorMethodCount = 8,
@@ -205,10 +207,7 @@ class BnLogPrinter extends LogPrinter {
     this.excludePaths = const [],
     this.levelColors,
     this.levelEmojis,
-
   }) {
-    _startTime ??= DateTime.now();
-
     var doubleDividerLine = StringBuffer();
     var singleDividerLine = StringBuffer();
     for (var i = 0; i < lineLength - 1; i++) {
@@ -254,7 +253,6 @@ class BnLogPrinter extends LogPrinter {
       timeStr = getTime(event.time);
     }
 
-
     return _formatAndPrint(
       event.level,
       messageStr,
@@ -262,7 +260,6 @@ class BnLogPrinter extends LogPrinter {
       errorStr,
       stackTraceStr,
     );
-
   }
 
   String? formatStackTrace(StackTrace? stackTrace, int? methodCount) {
@@ -372,7 +369,7 @@ class BnLogPrinter extends LogPrinter {
     var min = twoDigits(now.minute);
     var sec = twoDigits(now.second);
     var ms = threeDigits(now.millisecond);
-    var timeSinceStart = now.difference(_startTime!).toString();
+    var timeSinceStart = now.difference(startTime!).toString();
     return '$h:$min:$sec.$ms (+$timeSinceStart)';
   }
 
@@ -407,42 +404,6 @@ class BnLogPrinter extends LogPrinter {
       }
     }
     return '';
-  }
-
-  _logToHiveBox(Level level,
-        String message,
-    String? time,
-    String? error,
-    String? stacktrace,
-    ) {
-    List<String> buffer = [];
-    String key = DateTime.now().millisecondsSinceEpoch.toString();
-    if (time != null) {
-      buffer.add('$time ${level.toString()}');
-    }
-    else {
-      buffer.add('${getTime(DateTime.now())} ${level.toString()}');
-    }
-
-    for (var line in message.split('\n')) {
-      buffer.add(line);
-    }
-
-    if (error != null) {
-      buffer.add('Error:');
-      for (var line in error.split('\n')) {
-        buffer.add(line);
-      }
-    }
-
-    if (stacktrace != null) {
-      buffer.add('Error:');
-      for (var line in stacktrace.split('\n')) {
-        buffer.add(line);
-      }
-
-    }
- logBox.put(key, buffer);
   }
 
   List<String> _formatAndPrint(
