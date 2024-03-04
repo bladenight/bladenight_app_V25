@@ -1,6 +1,9 @@
 //This is only an example File
 //please setup your own data
 
+///Deeplink server
+const String defaultDeepLinkServerAddress = 'https://bladenight.app/deeplink/';
+
 ///address for standard encrypted wss connection with participation
 ///set credentials BasicAuth for App
 const String defaultWampAdress = 'wss://bnapp:AppSecurit1@test.de:8091';

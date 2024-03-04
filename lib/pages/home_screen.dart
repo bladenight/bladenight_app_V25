@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uni_links2/uni_links.dart';
 
 import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
@@ -38,6 +38,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   StreamSubscription? _uniLinkStreamSubscription;
   StreamSubscription? _oneSignalOSNotificationOpenedResultSubSubscription;
   late CupertinoTabController tabController;
+  final _appLinks = AppLinks();
 
   @override
   void initState() {
@@ -124,7 +125,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _initialURILinkHandled = true;
 
       try {
-        Uri? initUri = await getInitialUri();
+        Uri? initUri = await _appLinks.getInitialAppLink();
         print('Invoked _initURIHandler');
         if (!kIsWeb) BnLog.info(text: 'Invoked _initURIHandler $initUri');
         if (initUri == null) return;
@@ -148,15 +149,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (kIsWeb) return;
     // It will handle app links while the app is already started - be it in
     // the foreground or in the background.
-    _uniLinkStreamSubscription = uriLinkStream.listen((Uri? uri) async {
+    _uniLinkStreamSubscription = _appLinks.allUriLinkStream.listen((uri) async {
       if (!kIsWeb) BnLog.info(text: 'Received URI: $uri');
       _handleIncomingUriResult(uri.toString());
 
       //uri received
       //check from terminal
-      //ios  /usr/bin/xcrun simctl openurl booted "bna://bladenight.app?code=620087"
+      //ios  /usr/bin/xcrun simctl openurl booted "bna://bladenight.app?addFriend&code=620087&name=Test"
       //android
-      // ~/Library/Android/sdk/platform-tools/adb adb -s devicename shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app/code/123456"'
+      // ~/Library/Android/sdk/platform-tools/adb adb -s devicename shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app?addFriend&code=620087&name=Test"'
     }, onError: (Object err) {
       print('Error occurred: $err');
     });
@@ -167,7 +168,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (uriString == null) return;
     if (uriString.contains('?data=')) {
       importData(context, uriString);
-    } else if (uriString.contains('?code=')) {
+    } else if (uriString.contains('?addFriend')) {
       tabController.index = 3;
       await addFriendWithCodeFromUrl(context, uriString);
     } else if (uriString.contains('?$specialCode=1')) {

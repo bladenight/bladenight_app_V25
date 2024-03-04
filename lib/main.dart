@@ -17,8 +17,10 @@ import 'package:riverpod_context/riverpod_context.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_settings/app_configuration_helper.dart';
+import 'app_settings/server_connections.dart';
 import 'firebase_options.dart';
 import 'generated/l10n.dart';
+import 'helpers/export_import_data_helper.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
 import 'helpers/logger.dart';
 import 'helpers/notification/notification_helper.dart';
@@ -161,18 +163,29 @@ class BladeNightApp extends StatelessWidget {
           ),
           initial: HiveSettingsDB.adaptiveThemeMode,
           builder: (theme) => CupertinoApp(
-              onGenerateRoute: (settings) {
-                BnLog.info(text: 'onGenerateRoute requested ${settings.name}');
-                if (settings.name != null &&
-                    settings.name!.startsWith('/showroute')) {
+              onGenerateRoute: (uriString) {
+                BnLog.info(text: 'onGenerateRoute requested ${uriString.name}');
+                if (uriString.name == null ) return null;
+                    if(uriString.name!.startsWith('/showroute')) {
                   return CupertinoPageRoute(
                       builder: (context) => RouteNameDialog(
-                            routeName: settings.name
+                            routeName: uriString.name
                                 .toString()
                                 .replaceAll('/showroute?', '')
                                 .trim(),
                           ),
                       fullscreenDialog: true);
+                }
+                if (uriString.name!.contains('?data=')) {
+                  importData(context, uriString.name!);
+                } else if (uriString.name!.contains('?addFriend')) {
+                  //tabController.index = 3;
+                  addFriendWithCodeFromUrl(context, uriString.name!).then((value) => null);
+                  
+                } else if (uriString.name!.contains('?$specialCode=1')) {
+                  HiveSettingsDB.setSpecialRightsPrefs(true);
+                } else if (uriString.name!.contains('?$specialCode=0')) {
+                  HiveSettingsDB.setSpecialRightsPrefs(false);
                 }
                 return null;
               },

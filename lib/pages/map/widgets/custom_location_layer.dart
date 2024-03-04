@@ -47,7 +47,7 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
     var cameraFollow = ref.watch(cameraFollowLocationProvider);
     var alignMap = ref.watch(alignFlutterMapProvider);
     var iconSize = ref.watch(iconSizeProvider);
-    print('Widget has geture ${widget.hasGesture}');
+    //print('Widget has geture ${widget.hasGesture}');
     return !isTracking
         ? Container()
         : CurrentLocationLayer(

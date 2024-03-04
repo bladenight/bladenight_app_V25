@@ -2,10 +2,10 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:permission_handler/permission_handler.dart'
-    hide PermissionStatus;
 import 'package:get/get.dart';
 import 'package:location2/location2.dart' as loc2;
+import 'package:permission_handler/permission_handler.dart'
+    hide PermissionStatus;
 
 import '../generated/l10n.dart';
 import 'device_info_helper.dart';
@@ -86,7 +86,8 @@ class LocationPermissionDialog {
 
     final locationPermission = await loc2.getLocationPermissionStatus();
 
-    if (locationPermission.locationPermission == loc2.LocationPermission.denied) {
+    if (locationPermission.locationPermissionId ==
+        loc2.LocationPermission.denied.index) {
       var prominentDisclosureResult =
           await FlutterPlatformAlert.showCustomAlert(
               windowTitle: Localize.current.requestLocationPermissionTitle,

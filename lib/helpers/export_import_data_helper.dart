@@ -225,18 +225,30 @@ void exportBgLocationLogs() async {
 
 Future<bool> addFriendWithCodeFromUrl(
     BuildContext context, String uriString) async {
+  var dataStartIdx = uriString.indexOf('?');
+  var datas = uriString.substring(dataStartIdx+1);
+  if (datas.length<5) return false;
+  var content = datas.split('&');
   //import code
   const String codeId = 'code=';
   var code = '';
-  var codePartIdx = -1;
 
-  codePartIdx = uriString.indexOf(codeId);
-  if (codePartIdx == -1) return false;
-  if (uriString.substring(codePartIdx + codeId.length).length < 6) {
+  const String nameId = 'name=';
+  var name = '';
+
+  for (var part in content){
+      if (part.contains(nameId)&& part.length>nameId.length)  {
+        name= part.split('=')[1].trim();
+      }
+      if (part.contains(codeId)&& part.length>codeId.length)  {
+        code= part.split('=')[1].trim();
+      }
+  }
+
+  if (code.length < 6) {
     return false;
   }
 
-  code = uriString.substring(codePartIdx + codeId.length);
   var intCode = int.tryParse(code);
   if (intCode == null) {
     showToast(
@@ -246,15 +258,17 @@ Future<bool> addFriendWithCodeFromUrl(
         textColor: Colors.black);
     return false;
   }
+
   showToast(
-      message: 'Code $intCode ${Localize.of(context).received}',
+      message: '${Localize.of(context).friend} $name Code $intCode ${Localize.of(context).received}',
       backgroundColor: Colors.green,
       textColor: Colors.black);
+
   EditFriendResult? result;
   if (context.mounted) {
     result = await EditFriendDialog.show(context,
         friend: Friend(
-            name: '',
+            name: name,
             friendId: await PreferencesHelper.getNewFriendId(),
             requestId: intCode,
             isActive: true),

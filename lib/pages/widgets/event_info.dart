@@ -168,6 +168,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
             height: 1,
           ),
           if (!kIsWeb) const ConnectionWarning(),
+
           Column(children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 5.0),

@@ -96,7 +96,6 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
       state = const NetworkStateModel(
           connectivityStatus: ConnectivityStatus.online, serverAvailable: true);
     }
-
     bool isOnline = false;
     try {
       isOnline = await InternetConnectionChecker()
@@ -116,30 +115,15 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
         WampV2.instance.refresh();
         _wasOffline = false;
       }
-      if (result != null && result == ConnectivityStatus.serverNotReachable) {
-        state = const NetworkStateModel(
-            connectivityStatus: ConnectivityStatus.online,
-            serverAvailable: false);
-      } else {
-        state = NetworkStateModel(
-            connectivityStatus: ConnectivityStatus.online,
-            serverAvailable: WampV2.instance.webSocketIsConnected);
-      }
+      state = NetworkStateModel(
+          connectivityStatus: ConnectivityStatus.online,
+          serverAvailable: WampV2.instance.webSocketIsConnected);
     } else {
       state = const NetworkStateModel(
           connectivityStatus: ConnectivityStatus.disconnected,
           serverAvailable: false);
       _wasOffline = true;
     }
-  }
-
-  /// set connection Stat to WampServer
-  void setServerConnected(bool value) {
-    if (value == state.serverAvailable) {
-      return;
-    }
-    state = NetworkStateModel(
-        connectivityStatus: state.connectivityStatus, serverAvailable: value);
   }
 }
 

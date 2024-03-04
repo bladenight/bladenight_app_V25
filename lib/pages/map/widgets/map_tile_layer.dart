@@ -1,6 +1,8 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../helpers/hive_box/hive_settings_db.dart';
@@ -69,14 +71,23 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
               ? MapSettings.openStreetMapLinkString //use own ts
               : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
-      tileProvider:
-          osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
-              ? CachedTileProvider()
-              : BnCachedAssetProvider(context: context, errorListener: () {
-            print('errlistbntile');
-          }, callBack: (TileImage tile, Object error, StackTrace? stackTrace) {
-            print('errbntile');
-          }),
+      tileProvider: osmEnabled ||
+              ref.watch(activeEventProvider).hasSpecialStartPoint
+          ? CachedTileProvider(
+              maxStale: const Duration(days: 30),
+              store: HiveCacheStore(
+                null,
+                hiveBoxName: 'HiveCacheStore',
+              ),
+            )
+          : BnCachedAssetProvider(
+              context: context,
+              errorListener: () {
+                print('errlistbntile');
+              },
+              callBack: (TileImage tile, Object error, StackTrace? stackTrace) {
+                print('errbntile');
+              }),
       errorImage: const AssetImage(
         'assets/images/skatemunichmaperror.png',
       ),

@@ -154,7 +154,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print('rebuilding flutter_maps');
     var route = ref.watch(activeEventRouteProvider);
     var osmEnabled = ref.watch(useOpenStreetMapProvider);
     var startPoint = route.hasValue ? route.value!.startLatLng : defaultLatLng;

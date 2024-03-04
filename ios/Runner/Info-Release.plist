@@ -55,7 +55,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<string>false</string>
 	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.healthcare-fitness</string>
+	<string>public.app-category.sports</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>mailto</string>

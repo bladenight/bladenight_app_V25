@@ -453,7 +453,7 @@ class WampV2 {
   }
 
   void _resetWampState() {
-    if (_isWebsocketRunning == false) {
+    if (_lastConnectionStatus == true) {
       _connectedStreamController.sink.add(false);
     }
     _isWebsocketRunning = false;
