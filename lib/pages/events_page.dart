@@ -190,6 +190,7 @@ class _EventsPageState extends State<EventsPage> {
             child: MediaQuery.removePadding(
               context: context,
               removeTop: true,
+              removeBottom: true,
               child: ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: itemsCount * 2 - 1,

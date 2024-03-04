@@ -11,7 +11,6 @@ import '../../models/event.dart';
 import '../../models/route.dart';
 import '../../providers/map/icon_size_provider.dart';
 import '../../providers/route_providers.dart';
-import '../map/widgets/event_info_overlay.dart';
 import '../map/widgets/map_layer.dart';
 import 'data_loading_indicator.dart';
 import 'no_data_warning.dart';
@@ -54,6 +53,7 @@ class RouteNameDialog extends ConsumerWidget {
                           startDate: DateTime.now(), routeName: routeName),
                       startPoint: LatLng(defaultLatitude, defaultLongitude),
                       finishPoint: route.finishLatLngOrDefault,
+                        routePoints:route,
                     ),
                     NoDataWarning(
                       onReload: () => ref.refresh(routeProvider(route.name)),
@@ -66,6 +66,7 @@ class RouteNameDialog extends ConsumerWidget {
                         Event(startDate: DateTime.now(), routeName: routeName),
                     startPoint: route.startLatLngOrDefault,
                     finishPoint: route.finishLatLngOrDefault,
+                    routePoints: route,
                     polyLines: [
                       Polyline(
                         points: route.points,
@@ -144,12 +145,6 @@ class RouteNameDialog extends ConsumerWidget {
                       ],
                     ],
                   ),
-                  EventInfoOverlay(
-                      event: Event(
-                          startDate: DateTime.now(),
-                          routeName: routeName,
-                          status: EventStatus.noevent),
-                      routePoints: route),
                 ]);
               },
               loading: () {

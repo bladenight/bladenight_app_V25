@@ -53,6 +53,7 @@ class RouteDialog extends ConsumerWidget {
                       event: event,
                       startPoint: LatLng(defaultLatitude, defaultLongitude),
                       finishPoint: route.finishLatLngOrDefault,
+                      routePoints: route,
                     ),
                     NoDataWarning(
                       onReload: () => ref.refresh(routeProvider(route.name)),
@@ -64,6 +65,7 @@ class RouteDialog extends ConsumerWidget {
                     event: event,
                     startPoint: route.startLatLngOrDefault,
                     finishPoint: route.finishLatLngOrDefault,
+                    routePoints: route,
                     polyLines: [
                       Polyline(
                         points: route.points,
@@ -142,7 +144,6 @@ class RouteDialog extends ConsumerWidget {
                       ],
                     ],
                   ),
-                  EventInfoOverlay(event: event, routePoints: route),
                 ]);
               },
               loading: () {

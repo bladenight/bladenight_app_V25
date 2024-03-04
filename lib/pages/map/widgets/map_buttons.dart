@@ -41,13 +41,14 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
     with SingleTickerProviderStateMixin {
   var animationDuration = const Duration(milliseconds: 800);
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
+  AnimationController? animationController;
+  Animation<double>? animation;
 
   @override
   void initState() {
-    animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 5));
-    animation =
-        CurveTween(curve: Curves.fastOutSlowIn).animate(animationController!);
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 250));
+    animation = CurveTween(curve: Curves.easeIn).animate(animationController!);
     super.initState();
   }
 
@@ -55,7 +56,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   Widget build(BuildContext context) {
     CameraFollow followLocationState = ref.watch(cameraFollowLocationProvider);
 
-    return Stack(fit: StackFit.loose, children: [
+    return Stack(fit: StackFit.passthrough, children: [
       //#######################################################################
       //Right side buttons
       //#######################################################################
@@ -432,7 +433,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               setState(() {
                 MapSettings.setMapMenuVisible(!MapSettings.mapMenuVisible);
               });
-              _showOverlay(context, text: 'Menu');
             },
             tooltip: 'Menu',
             heroTag: 'showMenuTag',
@@ -451,49 +451,199 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           );
         }),
       ),
+      Positioned(
+        top: kIsWeb ? 10 : kToolbarHeight,
+        right: kIsWeb ? 10 : 10,
+        height: 30,
+        child: Builder(builder: (context) {
+          return GestureDetector(
+              onTap: () {
+                setState(() {
+                  MapSettings.setMapMenuVisible(true);
+                });
+                _showOverlay(context, text: '');
+              },
+              child: const AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500),
+                  child: Icon(
+                    Icons.help,
+                  )));
+        }),
+      ),
     ]);
   }
 
-  AnimationController? animationController;
-  Animation<double>? animation;
-
   void _showOverlay(BuildContext context, {required String text}) async {
+    var navBarHeight = kToolbarHeight;
+    var tabBarHeight = kBottomNavigationBarHeight;
+    var screenHeight = MediaQuery.of(context).size.height -
+        (kToolbarHeight + kBottomNavigationBarHeight);
+    var bottomOffset = kBottomNavigationBarHeight + 38;
+
     OverlayState? overlayState = Overlay.of(context);
     OverlayEntry overlayEntry;
     overlayEntry = OverlayEntry(builder: (context) {
       return Stack(
         children: [
           Positioned(
+            left: 00,
+            top: kToolbarHeight,
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 180.0,
+                  child: Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: CupertinoTheme.of(context).primaryColor,
+                          width: 4.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_upward,
+                  color: CupertinoTheme.of(context).primaryColor,
+                ),
+                Text(
+                  Localize.of(context).actualInformations,
+                  style: TextStyle(
+                      color: CupertinoTheme.of(context).primaryColor,
+                      backgroundColor:
+                          CupertinoTheme.of(context).barBackgroundColor),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
             left: 70,
-            bottom: 130,
+            bottom: 250 + bottomOffset,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(2),
               child: FadeTransition(
                 opacity: animation!,
                 child: Container(
                   alignment: Alignment.center,
-                  color: Colors.grey.shade200.withOpacity(0.8),
                   child: Text(
-                    text,
-                    style: const TextStyle(color: Colors.black),
+                    'Reset Tacho',
+                    style: TextStyle(
+                      color: CupertinoTheme.of(context).primaryColor,
+                      backgroundColor:
+                      CupertinoTheme.of(context).barBackgroundColor,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
           Positioned(
-            left: 20,
-            top: 50,
+            left: 70,
+            bottom: 190 + bottomOffset,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(2),
               child: FadeTransition(
                 opacity: animation!,
                 child: Container(
                   alignment: Alignment.center,
-                  color: Colors.grey.shade200.withOpacity(0.8),
                   child: Text(
-                    Localize.of(context).actualInformations,
-                    style: const TextStyle(color: Colors.black),
+                    'Zoom -',
+                    style: TextStyle(
+                      color: CupertinoTheme.of(context).primaryColor,
+                      backgroundColor:
+                          CupertinoTheme.of(context).barBackgroundColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 70,
+            bottom: 140 + bottomOffset,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: FadeTransition(
+                opacity: animation!,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: CupertinoTheme.of(context).barBackgroundColor,
+                  child: Text(
+                    'Zoom +',
+                    style: TextStyle(
+                      color: CupertinoTheme.of(context).primaryColor,
+                      backgroundColor:
+                          CupertinoTheme.of(context).barBackgroundColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 70,
+            bottom: 90 + bottomOffset,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: FadeTransition(
+                opacity: animation!,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: CupertinoTheme.of(context).barBackgroundColor,
+                  child: Text(
+                    Localize.of(context).setDarkMode,
+                    style: TextStyle(
+                      color: CupertinoTheme.of(context).primaryColor,
+                      backgroundColor:
+                          CupertinoTheme.of(context).barBackgroundColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          Positioned(
+            right: 70,
+            bottom: 45 + bottomOffset,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: FadeTransition(
+                opacity: animation!,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: CupertinoTheme.of(context).barBackgroundColor,
+                  child: Text(
+                    'Teilnahme starten',
+                    style: TextStyle(
+                      color: CupertinoTheme.of(context).primaryColor,
+                      backgroundColor:
+                      CupertinoTheme.of(context).barBackgroundColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 70,
+            bottom: 115 + bottomOffset,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: FadeTransition(
+                opacity: animation!,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: CupertinoTheme.of(context).barBackgroundColor,
+                  child: Text(
+                    'Auf Karte verfolgen',
+                    style: TextStyle(
+                      color: CupertinoTheme.of(context).primaryColor,
+                      backgroundColor:
+                      CupertinoTheme.of(context).barBackgroundColor,
+                    ),
                   ),
                 ),
               ),

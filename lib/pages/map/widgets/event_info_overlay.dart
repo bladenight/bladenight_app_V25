@@ -78,6 +78,29 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                             ),
                           ),
                         ),
+                      if (widget.event.participants != 0)
+                        Center(
+                          child: FittedBox(
+                            child: Text(
+                              '${Localize.of(context).participant}: ${widget.event.participants}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      Center(
+                        child: FittedBox(
+                          child: Text(
+                            '${Localize.of(context).status} ${widget.event.statusText}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
                     ]),
                   ),
                 ]),
