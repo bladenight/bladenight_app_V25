@@ -167,7 +167,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     //import friends and Id
     if (uriString == null) return;
     if (uriString.contains('?data=')) {
-      importData(context, uriString);
+      importData(uriString);
     } else if (uriString.contains('?addFriend')) {
       tabController.index = 3;
       await addFriendWithCodeFromUrl(context, uriString);

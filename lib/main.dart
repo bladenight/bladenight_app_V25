@@ -177,7 +177,7 @@ class BladeNightApp extends StatelessWidget {
                       fullscreenDialog: true);
                 }
                 if (uriString.name!.contains('?data=')) {
-                  importData(context, uriString.name!);
+                  importData(uriString.name!);
                 } else if (uriString.name!.contains('?addFriend')) {
                   //tabController.index = 3;
                   addFriendWithCodeFromUrl(context, uriString.name!).then((value) => null);

@@ -63,11 +63,11 @@ void exportData(BuildContext context) async {
   }
 }
 
-void importData(BuildContext context, String dataString) async {
+void importData(String dataString) async {
   try {
     var res = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.of(context).importWarningTitle,
-        text: Localize.of(context).importWarning,
+        windowTitle: Localize.current.importWarningTitle,
+        text: Localize.current.importWarning,
         positiveButtonTitle: Localize.current.import,
         negativeButtonTitle: Localize.current.cancel);
     if (res == CustomButton.negativeButton) {
@@ -94,9 +94,7 @@ void importData(BuildContext context, String dataString) async {
         backgroundColor: CupertinoColors.activeGreen,
         textColor: CupertinoColors.black);
   } catch (e) {
-    if (!kIsWeb) {
-      BnLog.error(methodName: 'exportData', text: 'failed to export $e');
-    }
+    BnLog.error(methodName: 'importData', text: 'failed to import $e');
     showToast(
         message: '${Localize.current.import} ${Localize.current.failed}',
         backgroundColor: CupertinoColors.systemRed,

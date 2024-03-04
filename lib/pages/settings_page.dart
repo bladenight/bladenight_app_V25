@@ -868,7 +868,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       });
                                     },
                                     onFieldSubmitted: (value) {
-                                      importData(context, value);
+                                      importData(value);
                                     },
                                   ),
                                   AnimatedOpacity(
@@ -882,7 +882,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                           Localize.of(context).setStartImport),
                                       onPressed: () {
                                         inputText.length > 10
-                                            ? importData(context, inputText)
+                                            ? importData(inputText)
                                             : null;
                                       },
                                     ),
