@@ -40,13 +40,11 @@ class MapPage extends ConsumerStatefulWidget {
 }
 
 class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
-  late MapController controller;
-  late List<Marker> mapMarker = [];
+  late MapController _mapController;
   late CameraFollow followLocationState = CameraFollow.followOff;
   bool _webStartedTrainFollow = false;
   Timer? _updateRealTimeDataTimer;
   bool _firstRefresh = true;
-  int realTimeDataSubscriptionId = 0;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
   final PopupController _popupController = PopupController();
@@ -58,7 +56,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    controller = MapController();
+    _mapController = MapController();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {});
   }
@@ -68,7 +66,9 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     pauseUpdates();
     WidgetsBinding.instance.removeObserver(this);
     _popupController.dispose();
-    controller.dispose();
+    _mapController.dispose();
+    locationSubscription?.close();
+    locationSubscription = null;
     super.dispose();
   }
 
@@ -139,12 +139,12 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   void startFollowingTrainHead() {
     locationSubscription?.close();
     locationSubscription = null;
-    controller.move(defaultLatLng, controller.camera.zoom);
+    _mapController.move(defaultLatLng, _mapController.camera.zoom);
     locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
       locationTrainHeadUpdateProvider,
       (_, value) {
         if (value.value != null) {
-          controller.move(value.value!, controller.camera.zoom);
+          _mapController.move(value.value!, _mapController.camera.zoom);
         }
       },
       fireImmediately: true,
@@ -162,7 +162,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       child: CupertinoPageScaffold(
         child: Stack(children: [
           FlutterMap(
-            mapController: controller,
+            mapController: _mapController,
             options: MapOptions(
               keepAlive: true,
               initialZoom: 13.0,
@@ -203,7 +203,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
                     //needs map controller
                     MarkersLayer(_popupController),
-                    TrackProgressOverlay(controller),
+                    TrackProgressOverlay(_mapController),
                     const MapButtonsLayer(),
                   ],
                 );

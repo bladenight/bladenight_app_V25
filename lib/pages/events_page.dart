@@ -21,19 +21,40 @@ class EventsPage extends StatefulWidget {
   State<StatefulWidget> createState() => _EventsPageState();
 }
 
-class _EventsPageState extends State<EventsPage> {
+class _EventsPageState extends State<EventsPage>
+    with SingleTickerProviderStateMixin {
   final _dataKey = GlobalKey();
   bool _noActualEventFound = false;
   final _pageController = PageController(viewportFraction: 1, keepPage: true);
   final ScrollController _scrollController = ScrollController();
-  String _header = "";
+  String _header = '';
+  double _stickyHeaderSize = 30;
+  AnimationController? animationController;
+  Animation<double>? animation;
 
   @override
   void initState() {
     super.initState();
-
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 250));
+    animation = CurveTween(curve: Curves.easeIn).animate(animationController!);
+    //workaround for missing 3ßpx at bottom of Listview
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        bool isTop = _scrollController.position.pixels >= 30;
+        if (isTop) {
+          setState(() {
+            _stickyHeaderSize = 30;
+          });
+        } else {
+          setState(() {
+            _stickyHeaderSize = 0;
+          });
+        }
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(()=> _header = Localize.of(context).events);
+      setState(() => _header = Localize.of(context).events);
       _scrollToActualEvent();
     });
   }
@@ -44,6 +65,12 @@ class _EventsPageState extends State<EventsPage> {
       Scrollable.ensureVisible(_dataKey.currentContext!,
           curve: Curves.slowMiddle, alignment: 0.5);
     }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -72,6 +99,14 @@ class _EventsPageState extends State<EventsPage> {
                 },
                 child: const Icon(CupertinoIcons.refresh),
               ),
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                minSize: 0,
+                onPressed: () async {
+                  _showOverlay(context);
+                },
+                child: const Icon(Icons.help),
+              ),
             ],
           ),
         ),
@@ -94,47 +129,43 @@ class _EventsPageState extends State<EventsPage> {
                 });
               }
               var pages = _buildPages(context, events);
-              return SizedBox(
-                width: 100,
-                height: 10,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: PageView.builder(
-                        controller: _pageController,
-                        onPageChanged: (idx) {
-                          setState(() {
-                            var groupedEvents = events.groupByYear();
-                            _header =
-                                '${Localize.of(context).events} ${groupedEvents.keys.elementAt(idx)}';
-                          });
-                        },
-                        itemCount: pages.length,
-                        padEnds: false,
-                        clipBehavior: Clip.antiAlias,
-                        itemBuilder: (_, index) {
-                          return pages[index % pages.length];
-                        },
-                      ),
-                    ),
-                    SmoothPageIndicator(
+              return Column(
+                children: <Widget>[
+                  Expanded(
+                    child: PageView.builder(
                       controller: _pageController,
-                      count: pages.length,
-                      onDotClicked: (idx) => _pageController.animateToPage(idx,
-                          duration: Duration(milliseconds: 400),
-                          curve: Curves.linear),
-                      effect: JumpingDotEffect(
-                        dotHeight: 16,
-                        dotWidth: 16,
-                        dotColor: CupertinoTheme.of(context).barBackgroundColor,
-                        activeDotColor: CupertinoTheme.of(context).primaryColor,
-                      ),
+                      onPageChanged: (idx) {
+                        setState(() {
+                          var groupedEvents = events.groupByYear();
+                          _header =
+                              '${Localize.of(context).events} ${groupedEvents.keys.elementAt(idx)}';
+                        });
+                      },
+                      itemCount: pages.length,
+                      padEnds: false,
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      itemBuilder: (_, index) {
+                        return pages[index % pages.length];
+                      },
                     ),
-                    const SizedBox(
-                      height: 5,
-                    )
-                  ],
-                ),
+                  ),
+                  SmoothPageIndicator(
+                    controller: _pageController,
+                    count: pages.length,
+                    onDotClicked: (idx) => _pageController.animateToPage(idx,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.linear),
+                    effect: JumpingDotEffect(
+                      dotHeight: 16,
+                      dotWidth: 16,
+                      dotColor: CupertinoTheme.of(context).barBackgroundColor,
+                      activeDotColor: CupertinoTheme.of(context).primaryColor,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  )
+                ],
               );
             },
             loading: () {
@@ -166,7 +197,7 @@ class _EventsPageState extends State<EventsPage> {
       return StickyHeader(
         controller: _scrollController, // Optional
         header: Container(
-          height: 50.0,
+          height: _stickyHeaderSize,
           color: CupertinoTheme.of(context).barBackgroundColor,
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           alignment: Alignment.centerLeft,
@@ -240,6 +271,117 @@ class _EventsPageState extends State<EventsPage> {
       );
     });
     return lst;
+  }
+
+  void _showOverlay(BuildContext context) async {
+    var bottomOffset = kBottomNavigationBarHeight + 38;
+    OverlayState? overlayState = Overlay.of(context);
+    OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(builder: (context) {
+      return Stack(
+        children: [
+          Positioned(
+            left: 00,
+            top: kToolbarHeight,
+            child: Column(
+              children: <Widget>[
+                Stack(
+                  children: [
+                    Positioned(
+                      top: 1,
+                      bottom: 1,
+                      left: 1,
+                      right: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        //Center Row contents horizontally,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        //Center Row contents vertically,
+                        children: [
+                          Icon(
+                            Icons.arrow_back_sharp,
+                            color: CupertinoTheme.of(context).primaryColor,
+                          ),
+                          Text(
+                            ' Wischen ',
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.textScalerOf(context).scale(20),
+                                color: CupertinoTheme.of(context).primaryColor,
+                                backgroundColor: CupertinoTheme.of(context)
+                                    .barBackgroundColor),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_sharp,
+                            color: CupertinoTheme.of(context).primaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height -
+                          kBottomNavigationBarHeight * 3,
+                      child: Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: CupertinoTheme.of(context).primaryColor,
+                              width: 4.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          Positioned(
+            left: 1,
+            right: 1,
+            bottom: bottomOffset + 30,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: FadeTransition(
+                opacity: animation!,
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Seitenanzeige',
+                          style: TextStyle(
+                            color: CupertinoTheme.of(context).primaryColor,
+                            backgroundColor:
+                                CupertinoTheme.of(context).barBackgroundColor,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_downward_sharp,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                      ],
+                    )),
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+    animationController!.addListener(() {
+      overlayState.setState(() {});
+    });
+    // inserting overlay entry
+    overlayState.insert(overlayEntry);
+    animationController!.forward();
+    await Future.delayed(const Duration(seconds: 3)).whenComplete(() =>
+            animationController!
+                .reverse()
+                .whenCompleteOrCancel(() => overlayEntry.remove())
+        // removing overlay entry after stipulated time.
+        );
   }
 }
 
@@ -378,51 +520,3 @@ Widget _listTile(
     ),
   );
 }
-
-/*
-* ListView.builder(
-            itemCount: 2,
-            itemBuilder: (BuildContext context, int index) {
-              for (var event in groupedEvents.values) {
-                if (index % 2 == 0) {
-                  var event = events.events[(index / 2).round()];
-                  var eventStartState = EventStartState.eventOver;
-                  var eventOver = event.startDateUtc
-                      .add(event.duration)
-                      .difference(DateTime.now().toUtc())
-                      .isNegative;
-                  var eventActual = !eventOver &&
-                      event.startDateUtc
-                              .difference(DateTime.now().toUtc())
-                              .inDays <
-                          7;
-                  var eventFuture = !eventOver &&
-                      event.startDateUtc
-                              .difference(DateTime.now().toUtc())
-                              .inDays >
-                          7;
-                  if (eventActual) {
-                    eventStartState = EventStartState.eventActual;
-                  }
-                  if (eventFuture) {
-                    eventStartState = EventStartState.eventFuture;
-                  }
-                  if (eventActual && noActualEventFound) {
-                    noActualEventFound = true;
-                    return Container(
-                        key: dataKey,
-                        child: _listTile(context, event, eventStartState));
-                  }
-                  return _listTile(context, event, eventStartState);
-                } else {
-                  return Divider(
-                    color: CupertinoTheme.of(context).primaryColor,
-                    height: 1,
-                    indent: 16,
-                    endIndent: 16,
-                  );
-                }
-              }
-            },
-          ),
-          * */

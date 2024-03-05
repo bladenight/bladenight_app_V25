@@ -39,7 +39,6 @@ class MapButtonsLayer extends ConsumerStatefulWidget {
 
 class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
     with SingleTickerProviderStateMixin {
-  var animationDuration = const Duration(milliseconds: 800);
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
   AnimationController? animationController;
   Animation<double>? animation;
@@ -474,10 +473,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   }
 
   void _showOverlay(BuildContext context, {required String text}) async {
-    var navBarHeight = kToolbarHeight;
-    var tabBarHeight = kBottomNavigationBarHeight;
-    var screenHeight = MediaQuery.of(context).size.height -
-        (kToolbarHeight + kBottomNavigationBarHeight);
     var bottomOffset = kBottomNavigationBarHeight + 38;
 
     OverlayState? overlayState = Overlay.of(context);
