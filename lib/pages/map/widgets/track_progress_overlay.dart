@@ -7,12 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
-import '../../../helpers/speed_to_color.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/event.dart';
 import '../../../providers/active_event_provider.dart';
@@ -21,10 +19,10 @@ import '../../../providers/location_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 import '../../../providers/shared_prefs_provider.dart';
-import '../../../providers/special_procession_function_provider.dart';
 import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
 import 'special_function_info.dart';
+import 'update_progress.dart';
 
 ///Overlay to show progress in top of map
 ///
@@ -226,8 +224,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                             .primaryColor
                                             .withOpacity(0.8),
                                         progressColor:
-                                        CupertinoTheme.of(context)
-                                            .primaryColor,
+                                            CupertinoTheme.of(context)
+                                                .primaryColor,
                                         start: rtu.runningLength == 0
                                             ? 0
                                             : rtu.tail.position /
@@ -245,14 +243,14 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     height: 0,
                                     child: Progresso(
                                         backgroundColor:
-                                        Colors.grey.withOpacity(0.5),
+                                            Colors.grey.withOpacity(0.5),
                                         progressStrokeWidth: 6,
                                         points: [
                                           0,
                                           rtu.runningLength == 0
                                               ? 0
                                               : rtu.user.position /
-                                              rtu.runningLength
+                                                  rtu.runningLength
                                         ],
                                         pointColor: Colors.black,
                                         progressColor: ref
@@ -262,11 +260,13 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         progress: rtu.runningLength == 0
                                             ? 0
                                             : rtu.user.position /
-                                            rtu.runningLength),
+                                                rtu.runningLength),
                                   ),
                                 ]),
                                 if (eventIsActive)
-                                  const SizedBox(height: 5,),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
                                 if (eventIsActive)
                                   Stack(children: [
                                     //tail
@@ -470,31 +470,31 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                       height: 15,
                                       child: Progresso(
                                           backgroundColor:
-                                          Colors.grey.withOpacity(0.5),
+                                              Colors.grey.withOpacity(0.5),
                                           points: [
                                             rtu.runningLength == 0
                                                 ? 0
                                                 : rtu.tail.position /
-                                                rtu.runningLength,
+                                                    rtu.runningLength,
                                             rtu.runningLength == 0
                                                 ? 0
                                                 : rtu.head.position /
-                                                rtu.runningLength
+                                                    rtu.runningLength
                                           ],
                                           pointColor: CupertinoTheme.of(context)
                                               .primaryColor
                                               .withOpacity(0.8),
                                           progressColor:
-                                          CupertinoTheme.of(context)
-                                              .primaryColor,
+                                              CupertinoTheme.of(context)
+                                                  .primaryColor,
                                           start: rtu.runningLength == 0
                                               ? 0
                                               : rtu.tail.position /
-                                              (rtu.runningLength),
+                                                  (rtu.runningLength),
                                           progress: rtu.runningLength == 0
                                               ? 0
                                               : rtu.head.position /
-                                              rtu.runningLength),
+                                                  rtu.runningLength),
                                     ),
                                   ]),
                                 if (eventIsActive)
@@ -610,7 +610,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                 ),
                               ]),
                             ),
-
                           Center(
                             child: FittedBox(
                               child: Text(
@@ -622,29 +621,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               ),
                             ),
                           ),
-                          Builder(
-                            builder: (context) => Align(
-                              child: SizedBox(
-                                width: 25,
-                                height: 25,
-                                child: Stack(children: [
-                                  Align(
-                                    child: CircularProgressIndicator(
-                                      color: CupertinoTheme.of(context)
-                                          .primaryColor,
-                                      value: ref.watch(percentLeftProvider),
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                  Align(
-                                    child: Icon(CupertinoIcons.info_circle_fill,
-                                        color: CupertinoTheme.of(context)
-                                            .primaryColor),
-                                  ),
-                                ]),
-                              ),
-                            ),
+                          const SizedBox(
+                            height: 5,
                           ),
+                          const UpdateProgress(),
                         ]),
                       );
                     }),

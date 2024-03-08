@@ -513,6 +513,39 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               ],
             ),
           ),
+          if (!kIsWeb)
+            Positioned(
+              left: 70,
+              bottom: ref.watch(mapMenuVisibleProvider)
+                  ? 290 + bottomOffset
+                  : 80 + bottomOffset,
+              height: 40,
+              child: Builder(builder: (context) {
+                var isTracking = ref.watch(isTrackingProvider);
+                if (!isTracking) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: FadeTransition(
+                      opacity: animation!,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          Localize.of(context)
+                              .startLocationWithoutParticipating,
+                          style: TextStyle(
+                            color: CupertinoTheme.of(context).barBackgroundColor,
+                            backgroundColor:
+                                CupertinoTheme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              }),
+            ),
           Positioned(
             left: 70,
             bottom: 250 + bottomOffset,
@@ -525,9 +558,9 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   child: Text(
                     'Reset Tacho',
                     style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
+                      color: CupertinoTheme.of(context).barBackgroundColor,
                       backgroundColor:
-                      CupertinoTheme.of(context).barBackgroundColor,
+                          CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -546,9 +579,9 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   child: Text(
                     'Zoom -',
                     style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
+                      color: CupertinoTheme.of(context).barBackgroundColor,
                       backgroundColor:
-                          CupertinoTheme.of(context).barBackgroundColor,
+                          CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -564,13 +597,12 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 opacity: animation!,
                 child: Container(
                   alignment: Alignment.center,
-                  color: CupertinoTheme.of(context).barBackgroundColor,
                   child: Text(
                     'Zoom +',
                     style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
+                      color: CupertinoTheme.of(context).barBackgroundColor,
                       backgroundColor:
-                          CupertinoTheme.of(context).barBackgroundColor,
+                          CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -586,20 +618,46 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 opacity: animation!,
                 child: Container(
                   alignment: Alignment.center,
-                  color: CupertinoTheme.of(context).barBackgroundColor,
                   child: Text(
                     Localize.of(context).setDarkMode,
                     style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
+                      color: CupertinoTheme.of(context).barBackgroundColor,
                       backgroundColor:
-                          CupertinoTheme.of(context).barBackgroundColor,
+                          CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
               ),
             ),
           ),
-
+          if (!kIsWeb)
+            Positioned(
+              right: 70,
+              bottom: 160+bottomOffset,
+              child: Visibility(
+                visible: ref.read(cameraFollowLocationProvider) ==
+                        CameraFollow.followMe
+                    ? true
+                    : false,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: FadeTransition(
+                    opacity: animation!,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Kartenausrichtung',
+                        style: TextStyle(
+                          color: CupertinoTheme.of(context).barBackgroundColor,
+                          backgroundColor:
+                              CupertinoTheme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           Positioned(
             right: 70,
             bottom: 45 + bottomOffset,
@@ -609,13 +667,12 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 opacity: animation!,
                 child: Container(
                   alignment: Alignment.center,
-                  color: CupertinoTheme.of(context).barBackgroundColor,
                   child: Text(
                     'Teilnahme starten',
                     style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
+                      color: CupertinoTheme.of(context).barBackgroundColor,
                       backgroundColor:
-                      CupertinoTheme.of(context).barBackgroundColor,
+                          CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -631,13 +688,12 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 opacity: animation!,
                 child: Container(
                   alignment: Alignment.center,
-                  color: CupertinoTheme.of(context).barBackgroundColor,
                   child: Text(
                     'Auf Karte verfolgen',
                     style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
+                      color: CupertinoTheme.of(context).barBackgroundColor,
                       backgroundColor:
-                      CupertinoTheme.of(context).barBackgroundColor,
+                          CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
