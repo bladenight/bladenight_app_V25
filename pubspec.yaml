@@ -23,7 +23,7 @@ dependencies:
   dio_cache_interceptor: ^3.3.0
   dio_cache_interceptor_hive_store: ^3.2.1
   encrypt: ^5.0.1
-  extended_text: ^12.0.1
+  extended_text: ^13.0.0
   firebase_core: ^2.13.0
   firebase_crashlytics: ^3.3.1
   flutter:
@@ -75,6 +75,7 @@ dependencies:
 
   location2: ^6.0.4
   logger: ^2.0.1
+  lottie: ^3.1.0
   #modal_bottom_sheet: ^2.1.2
   maps_toolkit: ^3.0.0
   modal_bottom_sheet:
@@ -82,7 +83,7 @@ dependencies:
       url: https://github.com/followthemoney1/modal_bottom_sheet.git
       ref: main
       path: modal_bottom_sheet
-  onesignal_flutter: ^5.0.4
+  onesignal_flutter: ^5.1.2
   package_info_plus: ^5.0.1
   path_provider: ^2.0.15
   permission_handler: ^11.1.0
@@ -122,7 +123,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   riverpod_generator:
-  # riverpod_lint makes it easier to work with Riverpod
+# riverpod_lint makes it easier to work with Riverpod
   riverpod_lint:
 # import custom_lint too as riverpod_lint depends on it
 
@@ -169,6 +170,7 @@ flutter:
     - assets/images/
     - assets/images/instruction/
     - assets/iosStore/
+    - assets/lottie/
     - assets/maptiles/
     - assets/maptiles/osday/
     - assets/maptiles/osday/10/
@@ -364,7 +366,7 @@ flutter_native_splash:
   android_12:
   # The image parameter sets the splash screen icon image.  If this parameter is not specified,
   # the app's launcher icon will be used instead.
-  # Please note that the splash screen will be clipped to a circle on the center of the screen.
+  # Please note that the splash screen will be clipped to a circle in the center of the screen.
   # App icon with an icon background: This should be 960×960 pixels, and fit within a circle
   # 640 pixels in diameter.
   # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle

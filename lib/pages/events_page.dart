@@ -2,6 +2,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
@@ -98,6 +99,9 @@ class _EventsPageState extends State<EventsPage>
                   context.refresh(allEventsProvider);
                 },
                 child: const Icon(CupertinoIcons.refresh),
+              ),
+              const SizedBox(
+                width: 10,
               ),
               CupertinoButton(
                 padding: EdgeInsets.zero,
@@ -302,15 +306,11 @@ class _EventsPageState extends State<EventsPage>
                             Icons.arrow_back_sharp,
                             color: CupertinoTheme.of(context).primaryColor,
                           ),
-
-                          Text(
-                            ' Wischen ',
-                            style: TextStyle(
-                                fontSize:
-                                    MediaQuery.textScalerOf(context).scale(20),
-                                color: CupertinoTheme.of(context).primaryColor,
-                                backgroundColor: CupertinoTheme.of(context)
-                                    .barBackgroundColor),
+                          Expanded(
+                            child: Center(
+                              child: Lottie.asset('assets/lottie/swipe.json',
+                                  alignment: Alignment.center),
+                            ),
                           ),
                           Icon(
                             Icons.arrow_forward_sharp,

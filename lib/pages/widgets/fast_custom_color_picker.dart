@@ -1,7 +1,6 @@
 import 'spring_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../app_settings/app_constants.dart';
 
@@ -31,8 +30,8 @@ class _FastCustomColorPicker extends State<FastCustomColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoScaffold(
-      body: SizedBox(
+    return CupertinoPageScaffold(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
