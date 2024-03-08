@@ -369,7 +369,7 @@ class BnLogPrinter extends LogPrinter {
     var min = twoDigits(now.minute);
     var sec = twoDigits(now.second);
     var ms = threeDigits(now.millisecond);
-    var timeSinceStart = now.difference(startTime!).toString();
+    var timeSinceStart = now.difference(startTime).toString();
     return '$h:$min:$sec.$ms (+$timeSinceStart)';
   }
 

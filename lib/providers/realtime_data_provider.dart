@@ -14,11 +14,13 @@ class RealtimeData extends _$RealtimeData {
   int _maxFails = 3;
   Timer? _timer;
   DateTime lastUpdate = DateTime(2000);
+  StreamSubscription<RealtimeUpdate?>? _listener;
 
   @override
   RealtimeUpdate? build() {
     var isTracking = ref.watch(isTrackingProvider);
-    WampV2.instance.realTimeUpdateStreamController.stream.listen((event) {
+    _listener =
+        WampV2.instance.realTimeUpdateStreamController.stream.listen((event) {
       BnLog.info(text: 'rtevent $event');
       state = event;
       _timer?.cancel();
@@ -27,6 +29,7 @@ class RealtimeData extends _$RealtimeData {
     ref.onDispose(() {
       BnLog.info(text: 'rtprovide dispose');
       _timer?.cancel();
+      _listener?.cancel();
     });
 
     if (!isTracking) {

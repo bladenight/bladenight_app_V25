@@ -233,7 +233,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "done": MessageLookupByLibrary.simpleMessage("Done"),
         "editfriend": MessageLookupByLibrary.simpleMessage("Edit friend"),
         "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
-            "To use BladeNight-App also in the background (Share location with friends and increase train accuracy) without screen on, should location settings changed to \'Allow all time\'."),
+            "To use BladeNight-App also in the background (Share location with friends and increase procession accuracy) without screen on, should location settings changed to \'Allow all time\'."),
         "enableOnesignalPushMessage":
             MessageLookupByLibrary.simpleMessage("Push message active"),
         "enableOnesignalPushMessageTitle": MessageLookupByLibrary.simpleMessage(
@@ -341,14 +341,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "linkingSuccessful":
             MessageLookupByLibrary.simpleMessage("Linking successful"),
         "liveMapInBrowser": MessageLookupByLibrary.simpleMessage(
-            "Follow Bladnight-train without app"),
+            "Follow BladeNight procession without app"),
         "liveMapInBrowserInfoHeader":
-            MessageLookupByLibrary.simpleMessage("Livemap in browser"),
+            MessageLookupByLibrary.simpleMessage("Live map in browser"),
         "loading": MessageLookupByLibrary.simpleMessage("Loading ..."),
         "locationServiceOff": MessageLookupByLibrary.simpleMessage(
             "Location is turned off in settings. Tracking not possible. Press Play ▶️ or go to OS-Settings."),
         "locationServiceRunning": MessageLookupByLibrary.simpleMessage(
-            "Locationsharing was started and is active."),
+            "Location sharing was started and is active."),
         "login": MessageLookupByLibrary.simpleMessage("login"),
         "manufacturer": MessageLookupByLibrary.simpleMessage("Manufacturer"),
         "map": MessageLookupByLibrary.simpleMessage("Map"),
@@ -357,9 +357,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "mapFollowStopped":
             MessageLookupByLibrary.simpleMessage("Map follows me stopped!"),
         "mapFollowTrain": MessageLookupByLibrary.simpleMessage(
-            "Map follows train head position."),
+            "Map follows procession head position."),
         "mapFollowTrainStopped": MessageLookupByLibrary.simpleMessage(
-            "Map follows train head stopped."),
+            "Map follows procession head stopped."),
         "mapToStartNoFollowing": MessageLookupByLibrary.simpleMessage(
             "Move map to start, no following"),
         "markMeAsHead": MessageLookupByLibrary.simpleMessage(

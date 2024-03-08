@@ -1134,10 +1134,10 @@ class Localize {
     );
   }
 
-  /// `To use BladeNight-App also in the background (Share location with friends and increase train accuracy) without screen on, should location settings changed to 'Allow all time'.`
+  /// `To use BladeNight-App also in the background (Share location with friends and increase procession accuracy) without screen on, should location settings changed to 'Allow all time'.`
   String get enableAlwaysLocationInfotext {
     return Intl.message(
-      'To use BladeNight-App also in the background (Share location with friends and increase train accuracy) without screen on, should location settings changed to \'Allow all time\'.',
+      'To use BladeNight-App also in the background (Share location with friends and increase procession accuracy) without screen on, should location settings changed to \'Allow all time\'.',
       name: 'enableAlwaysLocationInfotext',
       desc: '',
       args: [],
@@ -1804,20 +1804,20 @@ class Localize {
     );
   }
 
-  /// `Follow Bladnight-train without app`
+  /// `Follow BladeNight procession without app`
   String get liveMapInBrowser {
     return Intl.message(
-      'Follow Bladnight-train without app',
+      'Follow BladeNight procession without app',
       name: 'liveMapInBrowser',
       desc: '',
       args: [],
     );
   }
 
-  /// `Livemap in browser`
+  /// `Live map in browser`
   String get liveMapInBrowserInfoHeader {
     return Intl.message(
-      'Livemap in browser',
+      'Live map in browser',
       name: 'liveMapInBrowserInfoHeader',
       desc: '',
       args: [],
@@ -1844,10 +1844,10 @@ class Localize {
     );
   }
 
-  /// `Locationsharing was started and is active.`
+  /// `Location sharing was started and is active.`
   String get locationServiceRunning {
     return Intl.message(
-      'Locationsharing was started and is active.',
+      'Location sharing was started and is active.',
       name: 'locationServiceRunning',
       desc: '',
       args: [],
@@ -1904,20 +1904,20 @@ class Localize {
     );
   }
 
-  /// `Map follows train head position.`
+  /// `Map follows procession head position.`
   String get mapFollowTrain {
     return Intl.message(
-      'Map follows train head position.',
+      'Map follows procession head position.',
       name: 'mapFollowTrain',
       desc: '',
       args: [],
     );
   }
 
-  /// `Map follows train head stopped.`
+  /// `Map follows procession head stopped.`
   String get mapFollowTrainStopped {
     return Intl.message(
-      'Map follows train head stopped.',
+      'Map follows procession head stopped.',
       name: 'mapFollowTrainStopped',
       desc: '',
       args: [],

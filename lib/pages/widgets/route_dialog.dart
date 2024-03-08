@@ -11,7 +11,6 @@ import '../../models/event.dart';
 import '../../models/route.dart';
 import '../../providers/map/icon_size_provider.dart';
 import '../../providers/route_providers.dart';
-import '../map/widgets/event_info_overlay.dart';
 import '../map/widgets/map_layer.dart';
 import 'data_loading_indicator.dart';
 import 'no_data_warning.dart';

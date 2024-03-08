@@ -50,9 +50,9 @@ class HiveSettingsDB {
 
   static const String _hasSpecialRightsPref = 'hasSpecialRightsPref';
   static const String _specialRightsPref = 'specialRightsPref';
-  static const String _isTailOfProcessionKey = 'isTailOfProcessionSettingPref';
-  static const String _isHeadOfProcessionKey = 'isHeadOfProcessionSettingPref';
-  static const String _wantSeeFullOfProcessionKey =
+  static const String isTailOfProcessionKey = 'isTailOfProcessionSettingPref';
+  static const String isHeadOfProcessionKey = 'isHeadOfProcessionSettingPref';
+  static const String wantSeeFullOfProcessionKey =
       'wantSeeFullOfProcessionSettingPref';
   static const String _bgLoglevelKey = 'bgLoglevelPref';
   static const String _getUserIsParticipantKey = 'userIsParticipantKeyPref';
@@ -398,28 +398,28 @@ class HiveSettingsDB {
     _hiveBox.put(_hasSpecialRightsPref, value);
   }
 
-  static bool get isSpecialHead {
-    return _hiveBox.get(_isHeadOfProcessionKey, defaultValue: false);
+  static bool get isHeadOfProcession {
+    return _hiveBox.get(isHeadOfProcessionKey, defaultValue: false);
   }
 
   static void setIsSpecialHead(bool value) {
-    _hiveBox.put(_isHeadOfProcessionKey, value);
+    _hiveBox.put(isHeadOfProcessionKey, value);
   }
 
-  static bool get isSpecialTail {
-    return _hiveBox.get(_isTailOfProcessionKey, defaultValue: false);
+  static bool get isTailOfProcession {
+    return _hiveBox.get(isTailOfProcessionKey, defaultValue: false);
   }
 
   static void setIsSpecialTail(bool value) {
-    _hiveBox.put(_isTailOfProcessionKey, value);
+    _hiveBox.put(isTailOfProcessionKey, value);
   }
 
   static bool get wantSeeFullOfProcession {
-    return _hiveBox.get(_wantSeeFullOfProcessionKey, defaultValue: false);
+    return _hiveBox.get(wantSeeFullOfProcessionKey, defaultValue: false);
   }
 
   static void setwantSeeFullOfProcession(bool value) {
-    _hiveBox.put(_wantSeeFullOfProcessionKey, value);
+    _hiveBox.put(wantSeeFullOfProcessionKey, value);
   }
 
   static void setSpecialRightsValuePrefs(int value) {
@@ -427,11 +427,11 @@ class HiveSettingsDB {
   }
 
   static int get specialCodeValue {
-    if (isSpecialHead && isSpecialTail) {
+    if (isHeadOfProcession && isTailOfProcession) {
       return (wantSeeFullOfProcession ? 4 : 0);
     } else {
-      return (isSpecialHead ? 1 : 0) +
-          (isSpecialTail ? 2 : 0) +
+      return (isHeadOfProcession ? 1 : 0) +
+          (isTailOfProcession ? 2 : 0) +
           (wantSeeFullOfProcession ? 4 : 0);
     }
   }

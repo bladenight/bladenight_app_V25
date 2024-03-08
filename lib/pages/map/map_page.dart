@@ -208,7 +208,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                   ],
                 );
               }),
-              CustomLocationLayer(_popupController, _hasGesture),
+              //CurrentLocationLayer(),
+             CustomLocationLayer(_popupController, _hasGesture),
             ],
           ),
           const GPSInfoAndMapCopyright(),

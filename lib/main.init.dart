@@ -50,6 +50,7 @@ void initializeMappers() {
   p14.SetActiveRouteMessageMapper.ensureInitialized();
   p15.SetActiveStatusMessageMapper.ensureInitialized();
   p16.SetProcessionModeMessageMapper.ensureInitialized();
+  p16.AdminProcessionModeMapper.ensureInitialized();
   p17.MovingPointMapper.ensureInitialized();
   p18.RealtimeUpdateMapper.ensureInitialized();
   p19.RoutePointsMapper.ensureInitialized();

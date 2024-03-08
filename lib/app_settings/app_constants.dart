@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+const String hiveBoxSettingDbName = 'settings';
+
 ///factor to resize icons with MediaQuery (MediaQuery.of(context).size.width * mediaSizePercentage)
 double mediaSizePercentage = 0.05;
 double mediaSizeTrackProgressIconsPercentage = 0.03;

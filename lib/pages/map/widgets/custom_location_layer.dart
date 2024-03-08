@@ -52,6 +52,7 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
         ? Container()
         : CurrentLocationLayer(
             positionStream: _positionStream,
+            indicators: const LocationMarkerIndicators(),
             headingStream: _headingStream,
             alignDirectionAnimationDuration: const Duration(milliseconds: 300),
             alignPositionOnUpdate: cameraFollow == CameraFollow.followMe &&
@@ -78,7 +79,7 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
               marker: DefaultLocationMarker(
                 child: CircleAvatar(
                   backgroundColor:
-                      context.watch(MeColor.provider).withOpacity(0.6),
+                      context.watch(MeColor.provider),
                   child: LocationProvider.instance.userIsParticipant
                       ? ImageIcon(
                           const AssetImage(

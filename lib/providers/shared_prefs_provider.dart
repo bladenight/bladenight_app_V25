@@ -108,7 +108,7 @@ class ShowOwnTrack extends StateNotifier<bool> {
 
 ///Set as Head of procession
 class IsHeadOfProcession extends ChangeNotifier {
-  bool isSpecialHead = HiveSettingsDB.isSpecialHead;
+  bool isSpecialHead = HiveSettingsDB.isHeadOfProcession;
 
   void setValue(bool value) async {
     HiveSettingsDB.setwantSeeFullOfProcession(value);
@@ -119,7 +119,7 @@ class IsHeadOfProcession extends ChangeNotifier {
 
 ///Set as Head of procession
 class IsTailOfProcession extends ChangeNotifier {
-  bool isSpecialTail = HiveSettingsDB.isSpecialTail;
+  bool isSpecialTail = HiveSettingsDB.isTailOfProcession;
 
   void setValue(bool value) async {
     HiveSettingsDB.setwantSeeFullOfProcession(value);

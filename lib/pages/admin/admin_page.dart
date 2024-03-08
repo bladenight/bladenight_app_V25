@@ -8,19 +8,22 @@ import 'package:riverpod_context/riverpod_context.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/deviceid_helper.dart';
 import '../../helpers/logger.dart';
+import '../../helpers/timeconverter_helper.dart';
 import '../../models/event.dart';
 import '../../models/messages/kill_server.dart';
 import '../../models/messages/set_active_route.dart';
 import '../../models/messages/set_active_status.dart';
-import '../../pages/widgets/event_info.dart';
+import '../../models/messages/set_procession_mode.dart';
 import '../../pages/widgets/no_data_warning.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/get_all_routes_provider.dart';
 import '../../providers/route_providers.dart';
 import '../../wamp/admin_calls.dart';
+import '../widgets/no_connection_warning.dart';
 
 class AdminPage extends ConsumerStatefulWidget {
   const AdminPage({required this.password, super.key});
+
   final String password;
 
   @override
@@ -28,24 +31,27 @@ class AdminPage extends ConsumerStatefulWidget {
 }
 
 class _AdminPageState extends ConsumerState<AdminPage> {
-  late bool _activityVisible = false;
-  late bool _resultTextVisibility = false;
-  late String _resultText = '';
+  bool _activityVisible = false;
+  bool _resultTextVisibility = false;
+  String _resultText = '';
 
   @override
   Widget build(BuildContext context) {
+    var nextEventProvider = context.watch(activeEventProvider);
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor:
-            CupertinoTheme.of(context).barBackgroundColor.withOpacity(1),
+        CupertinoTheme
+            .of(context)
+            .barBackgroundColor
+            .withOpacity(1),
         middle: const Text('Admin'),
       ),
-      child: Center(
+      child: CupertinoScrollbar(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Expanded(child: Center(child: EventInfo())),
             Visibility(
               visible: _activityVisible,
               child: const Center(
@@ -55,12 +61,81 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                 ),
               ),
             ),
+            Text(Localize
+                .of(context)
+                .nextEvent,
+                textAlign: TextAlign.center,
+                style: CupertinoTheme
+                    .of(context)
+                    .textTheme
+                    .textStyle),
+            const SizedBox(height: 5),
+            FittedBox(
+              child: Text(
+                  '${Localize
+                      .of(context)
+                      .route} ${nextEventProvider.routeName}',
+                  textAlign: TextAlign.center,
+                  style: CupertinoTheme
+                      .of(context)
+                      .textTheme
+                      .navLargeTitleTextStyle),
+            ),
+            const SizedBox(height: 5),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15.0, 5, 15, 5),
+              child: FittedBox(
+                child: Text(
+                    DateFormatter(Localize.of(context))
+                        .getLocalDayDateTimeRepresentation(
+                        nextEventProvider.getUtcIso8601DateTime),
+                    style: CupertinoTheme
+                        .of(context)
+                        .textTheme
+                        .navLargeTitleTextStyle),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: nextEventProvider.status == EventStatus.cancelled
+                      ? Colors.redAccent
+                      : nextEventProvider.status == EventStatus.confirmed
+                      ? Colors.green
+                      : Colors.transparent,
+                  borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(10.0),
+                      bottomRight: Radius.circular(10.0),
+                      topLeft: Radius.circular(10.0),
+                      bottomLeft: Radius.circular(10.0)),
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(nextEventProvider.statusText,
+                      style:
+                      CupertinoTheme
+                          .of(context)
+                          .textTheme
+                          .pickerTextStyle),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 1,
+            ),
+            const ConnectionWarning(),
             CupertinoButton.filled(
-              child: Text(Localize.of(context).setState),
+              child: Text(Localize
+                  .of(context)
+                  .setState),
               onPressed: () async {
                 var status = await showStatusDialog(
                   context,
-                  current: context.read(activeEventProvider).status,
+                  current: context
+                      .read(activeEventProvider)
+                      .status,
                 );
 
                 if (status != null) {
@@ -93,11 +168,16 @@ class _AdminPageState extends ConsumerState<AdminPage> {
               ),
             ),
             CupertinoButton.filled(
-              child: Text(Localize.of(context).setRoute),
+              child: Text(Localize
+                  .of(context)
+                  .setRoute),
               onPressed: () async {
                 var route = await showRouteDialog(
                   context,
-                  current: context.read(currentRouteProvider).value?.name,
+                  current: context
+                      .read(currentRouteProvider)
+                      .value
+                      ?.name,
                 );
 
                 if (route != null) {
@@ -136,7 +216,10 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   }
                   setState(() => _activityVisible = false);
                   setState(
-                      () => _resultText = Localize.of(context).sendData30sec);
+                          () =>
+                      _resultText = Localize
+                          .of(context)
+                          .sendData30sec);
                   setState(() => _resultTextVisibility = true);
                   await Future.delayed(const Duration(seconds: 2));
                   setState(() => _resultTextVisibility = false);
@@ -148,10 +231,52 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   }
                 } else {
                   setState(() =>
-                      _resultText = Localize.of(context).noChoiceNoAction);
+                  _resultText = Localize
+                      .of(context)
+                      .noChoiceNoAction);
                   setState(() => _resultTextVisibility = true);
                   await Future.delayed(const Duration(seconds: 2));
                   setState(() => _resultTextVisibility = false);
+                }
+              },
+            ),
+            const SizedBox(height: 15),
+            CupertinoButton.filled(
+              child: const Text('ProcessionMode'),
+              onPressed: () async {
+                setState(() {
+                  _activityVisible = false;
+                });
+                var status = await showProcessionModeDialog(
+                  context,
+                  current: null,
+                );
+
+                if (status != null) {
+                  try {
+                    await AdminCalls.setProcessionMode(SetProcessionModeMessage.authenticate(
+                      deviceId: await DeviceId.getId,
+                      password: widget.password,
+                      mode: status
+                    ).toMap());
+                  } catch (e) {
+                    if (!kIsWeb) {
+                      BnLog.error(
+                          text: 'Error ProcessionMode',
+                          className: toString(),
+                          methodName: 'Adminpage ProcessionMode');
+                    }
+                  }
+
+
+                  setState(() {
+                    _activityVisible = false;
+                    _resultText = 'ProcessionMode Server sent!';
+                  });
+
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
                 }
               },
             ),
@@ -189,7 +314,10 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                 }
               },
             ),
-            SizedBox(height: 15 + MediaQuery.of(context).padding.bottom),
+            SizedBox(height: 15 + MediaQuery
+                .of(context)
+                .padding
+                .bottom),
           ],
         ),
       ),
@@ -204,12 +332,14 @@ class _AdminPageState extends ConsumerState<AdminPage> {
       barrierDismissible: true,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text(Localize.of(context).setState),
+          title: Text(Localize
+              .of(context)
+              .setState),
           content: SizedBox(
             height: 100,
             child: CupertinoPicker(
               scrollController:
-                  FixedExtentScrollController(initialItem: current?.index ?? 0),
+              FixedExtentScrollController(initialItem: current?.index ?? 0),
               onSelectedItemChanged: (int value) {
                 status = EventStatus.values[value];
               },
@@ -218,14 +348,30 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                 for (var status in EventStatus.values)
                   Center(
                     child: Text(
-                        '${Localize.of(context).status}: ${Intl.select(status, {
-                          EventStatus.pending: Localize.of(context).pending,
-                          EventStatus.confirmed: Localize.of(context).confirmed,
-                          EventStatus.cancelled: Localize.of(context).canceled,
-                          EventStatus.noevent: Localize.of(context).noEvent,
-                          EventStatus.running: Localize.of(context).running,
-                          EventStatus.finished: Localize.of(context).finished,
-                          'other': Localize.of(context).unknown
+                        '${Localize
+                            .of(context)
+                            .status}: ${Intl.select(status, {
+                          EventStatus.pending: Localize
+                              .of(context)
+                              .pending,
+                          EventStatus.confirmed: Localize
+                              .of(context)
+                              .confirmed,
+                          EventStatus.cancelled: Localize
+                              .of(context)
+                              .canceled,
+                          EventStatus.noevent: Localize
+                              .of(context)
+                              .noEvent,
+                          EventStatus.running: Localize
+                              .of(context)
+                              .running,
+                          EventStatus.finished: Localize
+                              .of(context)
+                              .finished,
+                          'other': Localize
+                              .of(context)
+                              .unknown
                         })}'),
                   ),
               ],
@@ -233,13 +379,17 @@ class _AdminPageState extends ConsumerState<AdminPage> {
           ),
           actions: [
             CupertinoDialogAction(
-              child: Text(Localize.of(context).cancel),
+              child: Text(Localize
+                  .of(context)
+                  .cancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             CupertinoDialogAction(
-              child: Text(Localize.of(context).save),
+              child: Text(Localize
+                  .of(context)
+                  .save),
               onPressed: () {
                 Navigator.of(context).pop(status);
               },
@@ -257,7 +407,9 @@ class _AdminPageState extends ConsumerState<AdminPage> {
       barrierDismissible: true,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text(Localize.of(context).setRoute),
+          title: Text(Localize
+              .of(context)
+              .setRoute),
           content: SizedBox(
             height: 100,
             child: Builder(builder: (context) {
@@ -275,7 +427,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                     route = routeNames.routeNames?.first;
                     return CupertinoPicker(
                         scrollController:
-                            FixedExtentScrollController(initialItem: 0),
+                        FixedExtentScrollController(initialItem: 0),
                         onSelectedItemChanged: (int value) {
                           if (routeNames.routeNames != null) {
                             route = routeNames.routeNames![value];
@@ -302,13 +454,17 @@ class _AdminPageState extends ConsumerState<AdminPage> {
           ),
           actions: [
             CupertinoDialogAction(
-              child: Text(Localize.of(context).cancel),
+              child: Text(Localize
+                  .of(context)
+                  .cancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             CupertinoDialogAction(
-              child: Text(Localize.of(context).save),
+              child: Text(Localize
+                  .of(context)
+                  .save),
               onPressed: () {
                 Navigator.of(context).pop(route);
               },
@@ -319,44 +475,104 @@ class _AdminPageState extends ConsumerState<AdminPage> {
     );
   }
 
-  Future<int?> showKillServerDialog(BuildContext context, {int? current}) {
-    int? status;
-    return showCupertinoDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return CupertinoAlertDialog(
-          title: const Text('Wirklich killen'),
-          content: SizedBox(
-            height: 100,
-            child: CupertinoPicker(
-              scrollController: FixedExtentScrollController(initialItem: 0),
-              onSelectedItemChanged: (int value) {
-                status = value;
-              },
-              itemExtent: 50,
-              children: [
-                Center(child: Text(Localize.of(context).no)),
-                Center(child: Text(Localize.of(context).yes)),
-              ],
+  Future<AdminProcessionMode?> showProcessionModeDialog(BuildContext context,
+      {AdminProcessionMode? current}) {
+      AdminProcessionMode? status;
+      return showCupertinoDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text(Localize
+                .of(context)
+                .setState),
+            content: SizedBox(
+              height: 100,
+              child: CupertinoPicker(
+                scrollController:
+                FixedExtentScrollController(initialItem: current?.index ?? 0),
+                onSelectedItemChanged: (int value) {
+                  status = AdminProcessionMode.values[value];
+                },
+                itemExtent: 50,
+                children: [
+                  for (var status in AdminProcessionMode.values)
+                    Center(
+                      child: Text(status.toString()
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-          actions: [
-            CupertinoDialogAction(
-              child: Text(Localize.of(context).cancel),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+            actions: [
+              CupertinoDialogAction(
+                child: Text(Localize
+                    .of(context)
+                    .cancel),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              CupertinoDialogAction(
+                child: Text(Localize
+                    .of(context)
+                    .save),
+                onPressed: () {
+                  Navigator.of(context).pop(status);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    Future<int?> showKillServerDialog(BuildContext context, {int? current}) {
+      int? status;
+      return showCupertinoDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: const Text('Wirklich killen'),
+            content: SizedBox(
+              height: 100,
+              child: CupertinoPicker(
+                scrollController: FixedExtentScrollController(initialItem: 0),
+                onSelectedItemChanged: (int value) {
+                  status = value;
+                },
+                itemExtent: 50,
+                children: [
+                  Center(child: Text(Localize
+                      .of(context)
+                      .no)),
+                  Center(child: Text(Localize
+                      .of(context)
+                      .yes)),
+                ],
+              ),
             ),
-            CupertinoDialogAction(
-              child: Text(Localize.of(context).ok),
-              onPressed: () {
-                Navigator.of(context).pop(status);
-              },
-            ),
-          ],
-        );
-      },
-    );
+            actions: [
+              CupertinoDialogAction(
+                child: Text(Localize
+                    .of(context)
+                    .cancel),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              CupertinoDialogAction(
+                child: Text(Localize
+                    .of(context)
+                    .ok),
+                onPressed: () {
+                  Navigator.of(context).pop(status);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
-}

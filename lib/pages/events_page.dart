@@ -302,6 +302,7 @@ class _EventsPageState extends State<EventsPage>
                             Icons.arrow_back_sharp,
                             color: CupertinoTheme.of(context).primaryColor,
                           ),
+
                           Text(
                             ' Wischen ',
                             style: TextStyle(

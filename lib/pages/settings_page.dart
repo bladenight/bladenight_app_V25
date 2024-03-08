@@ -464,7 +464,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         }
                                       });
                                     },
-                                    value: HiveSettingsDB.isSpecialHead,
+                                    value: HiveSettingsDB.isHeadOfProcession,
                                   ),
                                 ),
                               ),
@@ -491,7 +491,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         }
                                       });
                                     },
-                                    value: HiveSettingsDB.isSpecialTail,
+                                    value: HiveSettingsDB.isTailOfProcession,
                                   ),
                                 ),
                               ),

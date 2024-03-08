@@ -21,8 +21,10 @@ import '../../../providers/location_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 import '../../../providers/shared_prefs_provider.dart';
+import '../../../providers/special_procession_function_provider.dart';
 import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
+import 'special_function_info.dart';
 
 ///Overlay to show progress in top of map
 ///
@@ -199,10 +201,11 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     ),
                                   ),
                                 ),
-                                Stack(children: [
+                                Column(children: [
                                   SizedBox(
-                                    height: 22,
+                                    height: 10,
                                     child: Progresso(
+                                        progressStrokeWidth: 6,
                                         points: [
                                           rtu.runningLength == 0
                                               ? 0
@@ -223,7 +226,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                             .primaryColor
                                             .withOpacity(0.8),
                                         progressColor:
-                                            CupertinoColors.activeGreen,
+                                        CupertinoTheme.of(context)
+                                            .primaryColor,
                                         start: rtu.runningLength == 0
                                             ? 0
                                             : rtu.tail.position /
@@ -237,7 +241,32 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                 : rtu.head.position /
                                                     rtu.runningLength),
                                   ),
+                                  SizedBox(
+                                    height: 0,
+                                    child: Progresso(
+                                        backgroundColor:
+                                        Colors.grey.withOpacity(0.5),
+                                        progressStrokeWidth: 6,
+                                        points: [
+                                          0,
+                                          rtu.runningLength == 0
+                                              ? 0
+                                              : rtu.user.position /
+                                              rtu.runningLength
+                                        ],
+                                        pointColor: Colors.black,
+                                        progressColor: ref
+                                            .watch(MeColor.provider)
+                                            .withOpacity(0.8),
+                                        start: 0,
+                                        progress: rtu.runningLength == 0
+                                            ? 0
+                                            : rtu.user.position /
+                                            rtu.runningLength),
+                                  ),
                                 ]),
+                                if (eventIsActive)
+                                  const SizedBox(height: 5,),
                                 if (eventIsActive)
                                   Stack(children: [
                                     //tail
@@ -308,9 +337,9 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                       //need correction of center
                                       child: SizedBox(
                                         width: MediaQuery.textScalerOf(context)
-                                            .scale(20),
+                                            .scale(18),
                                         height: MediaQuery.textScalerOf(context)
-                                            .scale(20),
+                                            .scale(18),
                                         child: CircleAvatar(
                                           backgroundColor:
                                               ref.watch(MeColor.provider),
@@ -433,39 +462,39 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                                         .getUtcIso8601DateTime),
                                                           ),
                                                         )
-                                                  : Container()) //empty when not confirmed no viewermode available
+                                                  : Container()) //empty when not confirmed no viewer mode available
                                       ),
                                 if (eventIsActive)
-                                  Stack(children: [
+                                  Column(children: [
                                     SizedBox(
-                                      height: 20,
+                                      height: 15,
                                       child: Progresso(
                                           backgroundColor:
-                                              Colors.grey.withOpacity(0.2),
+                                          Colors.grey.withOpacity(0.5),
                                           points: [
                                             rtu.runningLength == 0
                                                 ? 0
                                                 : rtu.tail.position /
-                                                    rtu.runningLength,
+                                                rtu.runningLength,
                                             rtu.runningLength == 0
                                                 ? 0
                                                 : rtu.head.position /
-                                                    rtu.runningLength
+                                                rtu.runningLength
                                           ],
                                           pointColor: CupertinoTheme.of(context)
                                               .primaryColor
                                               .withOpacity(0.8),
                                           progressColor:
-                                              CupertinoTheme.of(context)
-                                                  .primaryColor,
+                                          CupertinoTheme.of(context)
+                                              .primaryColor,
                                           start: rtu.runningLength == 0
                                               ? 0
                                               : rtu.tail.position /
-                                                  (rtu.runningLength),
+                                              (rtu.runningLength),
                                           progress: rtu.runningLength == 0
                                               ? 0
                                               : rtu.head.position /
-                                                  rtu.runningLength),
+                                              rtu.runningLength),
                                     ),
                                   ]),
                                 if (eventIsActive)
@@ -550,25 +579,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     ),
                                   )
                                 ]),
-                          if (HiveSettingsDB.wantSeeFullOfProcession)
-                            Align(
-                              child: StepProgressIndicator(
-                                totalSteps: SpeedToColor.speedColors.length,
-                                direction: Axis.horizontal,
-                                currentStep: SpeedToColor.speedColors.length,
-                                size: 12,
-                                unselectedGradientColor: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: SpeedToColor.speedColors,
-                                ),
-                                selectedGradientColor: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: SpeedToColor.speedColors,
-                                ),
-                              ),
-                            ),
+                          const SpecialFunctionInfo(),
                           if (!actualOrNextEvent.isActive ||
                               actualOrNextEvent.status ==
                                   EventStatus.cancelled ||
@@ -599,6 +610,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                 ),
                               ]),
                             ),
+
                           Center(
                             child: FittedBox(
                               child: Text(

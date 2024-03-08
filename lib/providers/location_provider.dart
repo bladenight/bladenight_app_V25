@@ -827,12 +827,13 @@ class LocationProvider with ChangeNotifier {
     BnLog.trace(
         className: toString(),
         methodName: '_subToUpdates',
-        text: '_subUpdates Failed:');
+        text: '_subUpdates OK:');
 
     if (_lastKnownPoint != null) {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp);
       var diff = DateTime.now().toUtc().difference(ts.toUtc());
-      if (diff < const Duration(minutes: 10)) {
+      //set lastKnownPoint to null after x min
+      if (diff > const Duration(minutes: 5)) {
         _lastKnownPoint = null;
         return null;
       }
