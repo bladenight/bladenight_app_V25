@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../helpers/logger.dart';
+import '../helpers/wamp/subscribeMessage.dart';
 import '../models/realtime_update.dart';
 import '../wamp/wamp_v2.dart';
 import 'is_tracking_provider.dart';
+import 'location_provider.dart';
 
 part 'realtime_data_provider.g.dart';
 
@@ -15,6 +17,7 @@ class RealtimeData extends _$RealtimeData {
   Timer? _timer;
   DateTime lastUpdate = DateTime(2000);
   StreamSubscription<RealtimeUpdate?>? _listener;
+  int _realTimeDataSubscriptionId = 0;
 
   @override
   RealtimeUpdate? build() {
@@ -23,18 +26,21 @@ class RealtimeData extends _$RealtimeData {
         WampV2.instance.realTimeUpdateStreamController.stream.listen((event) {
       BnLog.info(text: 'rtevent $event');
       state = event;
-      _timer?.cancel();
+      _reStartTimer();
     });
 
     ref.onDispose(() {
-      BnLog.info(text: 'rtprovide dispose');
+      BnLog.debug(text: 'rtprovide dispose');
       _timer?.cancel();
+      _realTimeDataSubscriptionId = 0;
       _listener?.cancel();
     });
 
     if (!isTracking) {
+      _subscribe();
       _reStartTimer();
     } else {
+      _unsubscribe();
       _stopTimer();
     }
     return stateOrNull;
@@ -84,5 +90,23 @@ class RealtimeData extends _$RealtimeData {
     }
     _maxFails = 3;
     return update;
+  }
+
+  void _unsubscribe() async {
+    if (WampV2.instance.subscriptions.contains(3589978069)) {
+      await unSubscribeMessage(3589978069);
+      _realTimeDataSubscriptionId = 0;
+    }
+  }
+
+  Future _subscribe() async {
+    if (!WampV2.instance.subscriptions.contains(3589978069) ||
+        _realTimeDataSubscriptionId == 0) {
+      _realTimeDataSubscriptionId = await subscribeMessage('RealtimeData');
+      if (_realTimeDataSubscriptionId == 0) {
+        //workaround if subscription fails
+        LocationProvider.instance.refresh();
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_settings/app_constants.dart';
 import '../helpers/wamp/subscribeMessage.dart';
 import '../wamp/wamp_v2.dart';
+import 'location_provider.dart';
 
 @immutable
 class TimerModel {
@@ -38,21 +39,10 @@ class TimerNotifier extends StateNotifier<TimerModel> {
   void stop() {
     _tickerSubscription?.cancel();
     _tickerSubscription = null;
-    _unsubscribe();
+    //_unsubscribe();
   }
 
-  void _unsubscribe() async {
-    if (realTimeDataSubscriptionId != 0) {
-      await unSubscribeMessage(realTimeDataSubscriptionId);
-      realTimeDataSubscriptionId = 0;
-    }
-  }
 
-  Future _subscribe() async {
-    if (!WampV2.instance.subscriptions.contains(3589978069)) {
-      realTimeDataSubscriptionId=await subscribeMessage('RealtimeData');
-    }
-  }
 
   void _startTimer() async {
     _tickerSubscription?.cancel();
@@ -68,7 +58,7 @@ class TimerNotifier extends StateNotifier<TimerModel> {
     });
 
     state = const TimerModel(_initialDuration, 1.0);
-    _subscribe();
+    //_subscribe();
   }
 
   void _reset() async {
