@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:crypto/crypto.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
+as bg;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -15,12 +18,14 @@ import '../../models/route.dart';
 import '../../models/user_trackpoint.dart';
 import '../logger.dart';
 import '../uuid_helper.dart';
+import '../validator.dart';
 
 part 'location_store.dart';
+
 part 'map_settings.dart';
 
 final hiveDBProvider =
-    StateProvider<HiveSettingsDB>((ref) => HiveSettingsDB.instance);
+StateProvider<HiveSettingsDB>((ref) => HiveSettingsDB.instance);
 
 final bgLeaderSettingProvider = Provider((ref) {
   return ref.watch(hiveDBProvider);
@@ -100,7 +105,7 @@ class HiveSettingsDB {
   ///get if motion detection is disabled
   static bool get useAlternativeLocationProvider {
     var val =
-        _hiveBox.get(_useAlternativeLocationProvider, defaultValue: false);
+    _hiveBox.get(_useAlternativeLocationProvider, defaultValue: false);
     return val;
   }
 
@@ -170,25 +175,25 @@ class HiveSettingsDB {
     _hiveBox.put(iconSizeKey, size);
   }
 
-  static const String _bgSettingVisibleKey = 'bgSettingVisibleKeyPref';
+  static const String bgSettingVisibleKey = 'bgSettingVisibleKeyPref';
 
   static bool get bgSettingVisible {
-    return _hiveBox.get(_bgSettingVisibleKey, defaultValue: false);
+    return _hiveBox.get(bgSettingVisibleKey, defaultValue: false);
   }
 
   static void setBgSettingVisible(bool val) {
-    _hiveBox.put(_bgSettingVisibleKey, val);
+    _hiveBox.put(bgSettingVisibleKey, val);
   }
 
-  static const String _bgLeaderSettingVisibleKey =
+  static const String bgLeaderSettingVisibleKey =
       'bgLeaderSettingVisibleKeyPref';
 
   static bool get bgLeaderSettingVisible {
-    return _hiveBox.get(_bgLeaderSettingVisibleKey, defaultValue: false);
+    return _hiveBox.get(bgLeaderSettingVisibleKey, defaultValue: false);
   }
 
   static void setBgLeaderSettingVisible(bool val) {
-    _hiveBox.put(_bgLeaderSettingVisibleKey, val);
+    _hiveBox.put(bgLeaderSettingVisibleKey, val);
   }
 
   static const String _mainSponsorImagePathKey = 'mainSponsorImagePathKeyPref';
@@ -242,6 +247,30 @@ class HiveSettingsDB {
     _hiveBox.put(_hasShownIntroKey, val);
   }
 
+  static const String _hasShownBladeGuardKey = 'hasShownBladeGuardPref';
+
+  ///get hasShownBladeGuard
+  static bool get hasShownBladeGuard {
+    return _hiveBox.get(_hasShownBladeGuardKey, defaultValue: false);
+  }
+
+  ///set if  setHasShownBladeGuardPath were shown
+  static void setHasShownBladeGuard(bool val) {
+    _hiveBox.put(_hasShownBladeGuardKey, val);
+  }
+
+  static const String _chrashlyticsEnabledKey = 'chrashlyticsEnabledPref';
+
+  ///Firebase Chrashlytics enabled
+  static bool get chrashlyticsEnabled {
+    return _hiveBox.get(_chrashlyticsEnabledKey, defaultValue: true);
+  }
+
+  ///set if  setChrashlyticsEnabled were shown
+  static void setChrashlyticsEnabled(bool val) {
+    _hiveBox.put(_chrashlyticsEnabledKey, val);
+  }
+
   static const String _pushNotificationsEnabledKey =
       'pushNotificationsEnabledPref';
 
@@ -267,16 +296,62 @@ class HiveSettingsDB {
     _hiveBox.put(_oneSignalIdKey, val);
   }
 
-  static const String _isBladeGuardKey = 'isBladeGuardPref';
+  static const String isBladeGuardKey = 'isBladeGuardPref';
 
   ///get isBladeGuard
   static bool get isBladeGuard {
-    return _hiveBox.get(_isBladeGuardKey, defaultValue: false);
+    return _hiveBox.get(isBladeGuardKey, defaultValue: false);
   }
 
   ///set if  setIsBladeGuard were shown
   static void setIsBladeGuard(bool val) {
-    _hiveBox.put(_isBladeGuardKey, val);
+    _hiveBox.put(isBladeGuardKey, val);
+  }
+
+  static const String _wasBladeGuardReqShownKey = 'wasBladeGuardReqShownPref';
+
+  ///get wasBladeGuardReqShown
+  static bool get wasBladeGuardReqShown {
+    return _hiveBox.get(_wasBladeGuardReqShownKey, defaultValue: false);
+  }
+
+  ///set if  setWasBladeGuardReqShown were shown
+  static void setWasBladeGuardReqShown(bool val) {
+    _hiveBox.put(_wasBladeGuardReqShownKey, val);
+  }
+
+  static const String bladeguardEmailKey = 'bladeguardEmailPref';
+
+  ///get bladeguardEmail
+  static String? get bladeguardEmail {
+    return _hiveBox.get(bladeguardEmailKey, defaultValue: null);
+  }
+
+  ///get Bladeguard email as SHA512
+  static String get bladeguardSHA512Hash {
+    var email = _hiveBox.get(bladeguardEmailKey, defaultValue: '');
+    if (email != null && email != '') {
+      return sha512.convert(utf8.encode(email)).toString();
+    }
+    return '';
+  }
+
+  ///set BladeguardEmail for Bladeguard
+  static void setBladeguardEmail(String val) {
+    checkBladeguardEmailValid(val);
+    _hiveBox.put(bladeguardEmailKey, val);
+  }
+
+  static const String isBladeguardEmailValidKey = 'bladeguardEmailValidPref';
+
+  ///get bladeguardEmailValid
+  static bool get bladeguardEmailValid {
+    return validateEmail(bladeguardEmail);
+  }
+
+  ///set if  setBladeguardEmailValid were shown
+  static void checkBladeguardEmailValid(String val) {
+    _hiveBox.put(isBladeguardEmailValidKey, validateEmail(val));
   }
 
   static const String _teamIdKey = 'teamIdPref';
@@ -286,21 +361,23 @@ class HiveSettingsDB {
     return _hiveBox.get(_teamIdKey, defaultValue: 0);
   }
 
-  ///set setTeamId for Bladeguard
+  ///set TeamId for Bladeguard
   static void setTeamId(int val) {
     _hiveBox.put(_teamIdKey, val);
   }
 
-  static const String _bladeGuardClickKey = 'bladeGuardClickPref';
+  static const String _oneSignalRegisterBladeGuardPushKey =
+      'oneSignalRegisterBladeGuardPushPref';
 
-  ///get bladeGuardClick
-  static bool get bladeGuardClick {
-    return _hiveBox.get(_bladeGuardClickKey, defaultValue: false);
+  ///Bladeguard is registered for OneSignalPush
+  static bool get oneSignalRegisterBladeGuardPush {
+    return _hiveBox.get(_oneSignalRegisterBladeGuardPushKey,
+        defaultValue: false);
   }
 
-  ///set if  setbladeGuardClick were shown
-  static void setBladeGuardClick(bool val) {
-    _hiveBox.put(_bladeGuardClickKey, val);
+  ///Set if Bladeguard is registered for OneSignalPush
+  static void setOneSignalRegisterBladeGuardPush(bool val) {
+    _hiveBox.put(_oneSignalRegisterBladeGuardPushKey, val);
   }
 
   static const String _rsvSkatemunichInfosKey = 'rsvSkatemunichInfosPref';
@@ -456,8 +533,7 @@ class HiveSettingsDB {
     _hiveBox.put(_myNameKey, val);
   }
 
-  static const String _realTimeDataLastUpdate =
-      'realTimeDataLastUpdatePref';
+  static const String _realTimeDataLastUpdate = 'realTimeDataLastUpdatePref';
 
   ///get realTimeDataString DateTimeStamp
   static DateTime get realTimeDataLastUpdate {
@@ -469,7 +545,7 @@ class HiveSettingsDB {
   static void setRealTimeDataLastUpdate(DateTime val) {
     _hiveBox.put(_realTimeDataLastUpdate, val);
   }
-  
+
   static const String _routePointsLastUpdate =
       'routePoints_routePointsLastUpdatePref';
 

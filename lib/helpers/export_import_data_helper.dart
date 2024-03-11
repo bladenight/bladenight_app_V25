@@ -137,11 +137,10 @@ Future<File> _createLogFile(String fileName) async {
 
 Future<void> exportLogs() async {
   try {
-    var fileContent =
-        await BnLog.exportLogs().timeout(const Duration(seconds: 30));
+    var fileContent = await BnLog.exportLogs();
     if (kIsWeb) {
       print(fileContent);
-      showToast(message: 'siehe Console');
+      showToast(message: 'Siehe Console');
       return;
     }
     var fileName = '${DateTime.now().year}_'
@@ -158,7 +157,7 @@ Future<void> exportLogs() async {
     encoder.create(zipFilePath);
     await encoder.addFile(logfilePath);
     encoder.close();
-    showToast(message: '${Localize.current.ok})');
+    showToast(message: '${fileContent.length.toString()}  ${Localize.current.ok}');
     var aV = await DeviceHelper.getAppVersionsData();
 
     final Email email = Email(
@@ -224,8 +223,8 @@ void exportBgLocationLogs() async {
 Future<bool> addFriendWithCodeFromUrl(
     BuildContext context, String uriString) async {
   var dataStartIdx = uriString.indexOf('?');
-  var datas = uriString.substring(dataStartIdx+1);
-  if (datas.length<5) return false;
+  var datas = uriString.substring(dataStartIdx + 1);
+  if (datas.length < 5) return false;
   var content = datas.split('&');
   //import code
   const String codeId = 'code=';
@@ -234,13 +233,13 @@ Future<bool> addFriendWithCodeFromUrl(
   const String nameId = 'name=';
   var name = '';
 
-  for (var part in content){
-      if (part.contains(nameId)&& part.length>nameId.length)  {
-        name= part.split('=')[1].trim();
-      }
-      if (part.contains(codeId)&& part.length>codeId.length)  {
-        code= part.split('=')[1].trim();
-      }
+  for (var part in content) {
+    if (part.contains(nameId) && part.length > nameId.length) {
+      name = part.split('=')[1].trim();
+    }
+    if (part.contains(codeId) && part.length > codeId.length) {
+      code = part.split('=')[1].trim();
+    }
   }
 
   if (code.length < 6) {
@@ -258,7 +257,8 @@ Future<bool> addFriendWithCodeFromUrl(
   }
 
   showToast(
-      message: '${Localize.of(context).friend} $name Code $intCode ${Localize.of(context).received}',
+      message:
+          '${Localize.of(context).friend} $name Code $intCode ${Localize.of(context).received}',
       backgroundColor: Colors.green,
       textColor: Colors.black);
 

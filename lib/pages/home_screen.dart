@@ -13,6 +13,7 @@ import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../providers/get_images_and_links_provider.dart';
+import 'bladeguard/bladeguard_page.dart';
 import 'events_page.dart';
 import 'friends/friends_page.dart';
 import 'home_page.dart';
@@ -24,7 +25,6 @@ bool _initialURILinkHandled = false;
 
 class HomeScreen extends ConsumerStatefulWidget {
   static const String routeName = '/homeScreen';
-  static const String openRouteMapRoute = '/eventRoute/';
 
   const HomeScreen({super.key, int tabIndex = 0});
 
@@ -72,12 +72,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _initURIHandler();
     _incomingLinkHandler();
     initFlutterChannel();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _openIntroScreenFirstTime();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _openIntroScreenFirstTime();
+      _openBladeguardRequestFirstTime();
+    });
   }
 
   void _initImages() async {
@@ -99,12 +97,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           text: 'Will open IntroScreen');
 
       HiveSettingsDB.setHasShownIntro(true);
-      //navigator called but build not ready
-      await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
-      Navigator.of(context).push(
+      await Navigator.of(context).push(
         CupertinoPageRoute(
           builder: (context) => const IntroScreen(),
+          fullscreenDialog: false,
+        ),
+      );
+    }
+  }
+
+  void _openBladeguardRequestFirstTime() async {
+    if (!kIsWeb && !HiveSettingsDB.hasShownBladeGuard) {
+      BnLog.info(
+          className: 'home_screen',
+          methodName: 'openBladeguardRequestFirstTime',
+          text: 'Will open BladeguardRequestFirstTime');
+
+      if (!mounted) return;
+        await Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (context) => const BladeGuardPage(),
           fullscreenDialog: false,
         ),
       );

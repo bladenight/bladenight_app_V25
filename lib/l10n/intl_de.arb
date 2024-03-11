@@ -229,8 +229,9 @@
   "getwebdata": "Lade Serverdaten ...",
   "head": "Zugkopf",
   "home": "Info",
-  "iAmBladeGuard": "Ich bin Bladeguard",
-  "iAmBladeGuardTitle": "Ich bin aktiver Bladeguard und möchte Infos erhalten. Passwort bitte beim Teamleiter oder Skatemunich mit Teamnummer erfragen (anonym d.h. Es werden keine Daten verknüpft)",
+  "iAmBladeGuard": "Ich bin bereits Bladeguard",
+  "iAmBladeGuardTitle": "Wir benötigen Unterstützung von Ehrenamtlichen. Als Bladeguard unterstützt du die Bladenight aktiv. Es gelten die <a href=\"{bladeguardPrivacyLink}\">Münchener BladeNight Datenschutzbestimmungen</a></p>",
+  "bladeguardInfo": "<h2>Voraussetzungen und Regeln:</h2><ul><li>Du bist mind. 16 Jahre alt.</li><li>Du stehst sicher auf Inline Skates und kannst bremsen.</li><li>Du kennst die Regeln im Straßenverkehr</li><li>Du bist hilfsbereit, freundlich und Teamplayer</li><li>Du nimmst vor deiner ersten Fahrt an unserer kostenlosen Schulung teil.</li></ul><p>Dir entstehen als Bladeguard keine Kosten. Du kannst dich jederzeit wieder abmelden. <h3>Hier gehts zur <a href=\"{bladeguardRegisterlink}\">Onlineanmeldung</a> und zum <a href=\"{bladeguardPrivacyLink}\">Datenschutz</a></p></h3>",
   "iam": "Ich bin",
   "ignoreBatteriesOptimisation": "Hinweis - manche Hersteller schalten die Apps durch ungünstige Batterieoptimierungen ab oder schließen die App. In dem Falle bitte versuchen die Batterieoptimierung für die App zu deaktivieren. Einstellung keine Beschränkung.",
   "ignoreBatteriesOptimisationTitle": "Batterieoptimierung ändern",
@@ -446,5 +447,10 @@
   "wasCanceledPleaseCheck": "wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de",
   "yes": "Ja",
   "yesterday": "war gestern",
-  "friendScanQrCode": "Alternativ kann dein Freund den Barcode mit der Kamera scannen oder dich mit dem Code {code} verbinden"
+  "friendScanQrCode": "Alternativ kann dein Freund den Barcode mit der Kamera scannen oder dich mit dem Code {code} verbinden",
+  "bladeGuardSettings": "Bladeguard Einstellungen",
+  "bladeGuardSettingsTitle": "Bladeguardeinstellungen aufrufen",
+  "checkBgRegistration": "Prüfen ob die E-Mail registriert wurde.",
+  "fireBaseCrashlyticsHeader": "Um die App zu verbessern, werden Absturzprotokolle an Crashlytics gesendet. Dies kann hier unterdrück werden.",
+  "fireBaseCrashlytics": "Crashlytics deaktivieren"
 }

@@ -229,8 +229,9 @@
   "getwebdata": "Loading data from server ...",
   "head": "Head",
   "home": "Home",
-  "iAmBladeGuard": "I am a Bladeguard",
-  "iAmBladeGuardTitle": "I am an active bladeguard and would like to receive info. Please ask the team leader or Skatemunich with team number for password (anonymous - i.e. no personal data like email etc. will be linked).",
+  "iAmBladeGuard": "I am already a Bladeguard",
+  "iAmBladeGuardTitle": "We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href=\"{bladeguardPrivacyLink}\">Munich data protection regulations</a></p> apply",
+  "bladeguardInfo": "<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href=\"{bladeguardRegisterlink}\">Online registration</a> and <a href=\"{ bladeguardPrivacyLink}\">Data protection</a></p></h3>",
   "iam": "I am",
   "ignoreBatteriesOptimisation": "Note - some manufacturers switch off the apps due to unfavorable battery optimization or close the app. If so, please try disabling battery optimization for the app. Set to No restrictions.",
   "ignoreBatteriesOptimisationTitle": "Change Battery Optimizations",
@@ -446,5 +447,10 @@
   "wasCanceledPleaseCheck": "is canceled! Please check this on https://bladenight-muenchen.de",
   "yes": "Yes",
   "yesterday": "was yesterday",
-  "friendScanQrCode": "Alternative can your friend scan the barcode below or manually enter the code {code} in his app"
+  "friendScanQrCode": "Alternative can your friend scan the barcode below or manually enter the code {code} in his app",
+  "bladeGuardSettings": "Bladeguard settings",
+  "bladeGuardSettingsTitle": "Open Bladeguard settings page",
+  "checkBgRegistration": "Check if you registered as Bladeguard",
+  "fireBaseCrashlyticsHeader": "To improve the app, crash logs are sent to Crashlytics. This can be suppressed here.",
+  "fireBaseCrashlytics": "Disable Crashlytics"
 }

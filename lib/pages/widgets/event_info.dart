@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_context/riverpod_context.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
@@ -14,9 +15,11 @@ import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/images_and_links/main_sponsor_image_and_link_provider.dart';
+import '../../providers/images_and_links/second_sponsor_image_and_link_provider.dart';
 import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
+import '../bladeguard/bladeguardAdvertise.dart';
 import 'app_outdated.dart';
 import 'hidden_admin_button.dart';
 import 'no_connection_warning.dart';
@@ -97,6 +100,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
+          if (!kIsWeb) const ConnectionWarning(),
           if (!kIsWeb) appOutdatedWidget(context),
           if (nextEventProvider.status == EventStatus.noevent)
             HiddenAdminButton(
@@ -109,6 +113,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const BladeGuardAdvertise(),
                   Text(Localize.of(context).nextEvent,
                       textAlign: TextAlign.center,
                       style: CupertinoTheme.of(context).textTheme.textStyle),
@@ -139,11 +144,9 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: nextEventProvider.status ==
-                                EventStatus.cancelled
+                        color: nextEventProvider.status == EventStatus.cancelled
                             ? Colors.redAccent
-                            : nextEventProvider.status ==
-                                    EventStatus.confirmed
+                            : nextEventProvider.status == EventStatus.confirmed
                                 ? Colors.green
                                 : Colors.transparent,
                         borderRadius: const BorderRadius.only(
@@ -164,23 +167,21 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                 ],
               ),
             ),
-          const SizedBox(
-            height: 1,
-          ),
-          if (!kIsWeb) const ConnectionWarning(),
-
           Column(children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 5.0),
               child: GestureDetector(
-                onTap: () {
-                  return; //
-                  /* var link =
+                onTap: () async {
+                  var link =
                       context.read(MainSponsorImageAndLink.provider).link;
                   if (link != null && link != '') {
-                    Launch.launchUrlFromString(
+                    var uri = Uri.parse(
                         context.read(MainSponsorImageAndLink.provider).link!);
-                  }*/
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri,
+                          mode: LaunchMode.externalApplication);
+                    }
+                  }
                 },
                 child: Builder(builder: (context) {
                   var ms = context.watch(MainSponsorImageAndLink.provider);
@@ -204,14 +205,17 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
             Padding(
               padding: const EdgeInsets.fromLTRB(50.0, 1.0, 50, 1.0),
               child: GestureDetector(
-                onTap: () {
-                  return; //removed because Apple privacy issue
-                  /*var link =
+                onTap: () async {
+                  var link =
                       context.read(SecondSponsorImageAndLink.provider).link;
                   if (link != null && link != '') {
-                    Launch.launchUrlFromString(
+                    var uri = Uri.parse(
                         context.read(SecondSponsorImageAndLink.provider).link!);
-                  }*/
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri,
+                          mode: LaunchMode.externalApplication);
+                    }
+                  }
                 },
                 child: Builder(builder: (context) {
                   return Image.asset(secondLogoPlaceholder,

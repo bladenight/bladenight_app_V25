@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class BladeGuardPage extends StatefulWidget {
-  const BladeGuardPage({super.key});
+class BladeGuardWebRegisterPage extends StatefulWidget {
+  const BladeGuardWebRegisterPage({super.key});
 
   @override
-  State<BladeGuardPage> createState() => _BladeGuardPage();
+  State<BladeGuardWebRegisterPage> createState() => _BladeGuardWebRegisterPage();
 }
 
-class _BladeGuardPage extends State<BladeGuardPage>
+class _BladeGuardWebRegisterPage extends State<BladeGuardWebRegisterPage>
     with WidgetsBindingObserver {
   final controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)

@@ -121,7 +121,7 @@ class OnesignalHandler {
 
   static Future<void> setOneSignalChannels() async {
     if (HiveSettingsDB.pushNotificationsEnabled == false) {
-      HiveSettingsDB.setBladeGuardClick(false);
+      HiveSettingsDB.setOneSignalRegisterBladeGuardPush(false);
       await OnesignalHandler.registerPushAsBladeGuard(false, 0);
       HiveSettingsDB.setRcvSkatemunichInfos(false);
       await OnesignalHandler.registerSkateMunichInfo(false);

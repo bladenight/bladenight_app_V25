@@ -19,9 +19,10 @@ class BnLog {
   static bool _isInitialized = false;
   static final List<LogOutput> _logOutputs = [];
   static late Box<List<String>> _logBox;
-  static final DateTime  _startTime = DateTime.now();
-  BnLog._(){
-    if (_isInitialized == false){
+  static final DateTime _startTime = DateTime.now();
+
+  BnLog._() {
+    if (_isInitialized == false) {
       init();
     }
   }
@@ -32,21 +33,22 @@ class BnLog {
     //add logger
     _logOutputs.clear();
 
-    _logOutputs.addAll({BnLogOutput(_logBox,_startTime), ConsoleLogOutput()});
+    _logOutputs.addAll({BnLogOutput(_logBox, _startTime), ConsoleLogOutput()});
     //_logger.close();
     _logger = Logger(
       filter: filter,
-      output:  MultiOutput(_logOutputs),
+      output: MultiOutput(_logOutputs),
       level: logLevel ?? HiveSettingsDB.flogLogLevel,
       printer: BnLogPrinter(
-          logBox: _logBox,startTime: _startTime,
-          methodCount: 2,
-          errorMethodCount: 8,
-          lineLength: 120,
-          colors: false,
-          printEmojis: true,
-          printTime: true,
-          ),
+        logBox: _logBox,
+        startTime: _startTime,
+        methodCount: 2,
+        errorMethodCount: 8,
+        lineLength: 120,
+        colors: false,
+        printEmojis: true,
+        printTime: true,
+      ),
     );
     _isInitialized = true;
   }
@@ -63,7 +65,8 @@ class BnLog {
   }
 
   ///Print extended info
-  static void infoExt(String text,{
+  static void infoExt(
+    String text, {
     String? className,
     String? methodName,
     dynamic exception,
@@ -173,17 +176,19 @@ class BnLog {
         stackTrace: stacktrace);
   }
 
+
   static Future<String> exportLogs() async {
-    await _logBox.flush();
-    var resString = '';
-    for (var key in _logBox.keys) {
-      var val = _logBox.get(key);
-      if (val != null) {
-        resString = '$resString$val\n';
-      }
-    }
-    return resString;
+   await _logBox.flush();
+
+    var items = _logBox.values.toList();
+    return await compute(logValuesAsString, items);
   }
+
+  ///executed in isolate
+  static String logValuesAsString(List<List<String>> values){
+    return values.reversed.join(';');
+  }
+
 
   static Future<bool> clearLogs() async {
     for (var key in _logBox.keys) {
@@ -200,7 +205,7 @@ class BnLog {
         DateTime.now().subtract(deleteOlderThan).millisecondsSinceEpoch;
     for (var key in _logBox.keys) {
       var intVal = int.tryParse(key);
-      if (intVal!=null && intVal < leftDate) {
+      if (intVal != null && intVal < leftDate) {
         await _logBox.delete(key);
       }
     }

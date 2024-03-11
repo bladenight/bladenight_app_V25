@@ -4,9 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app_settings/app_constants.dart';
-import '../helpers/wamp/subscribeMessage.dart';
-import '../wamp/wamp_v2.dart';
-import 'location_provider.dart';
 
 @immutable
 class TimerModel {

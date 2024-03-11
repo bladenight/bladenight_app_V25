@@ -10,7 +10,6 @@ import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 import 'package:wakelock/wakelock.dart';
 
-import '../app_settings/globals.dart';
 import '../generated/l10n.dart';
 import '../helpers/background_location_helper.dart';
 import '../helpers/export_import_data_helper.dart';
@@ -21,11 +20,11 @@ import '../helpers/notification/toast_notification.dart';
 import '../pages/widgets/app_id_widget.dart';
 import '../pages/widgets/data_widget_left_right.dart';
 import '../pages/widgets/fast_custom_color_picker.dart';
-import '../pages/widgets/password_input.dart';
 import '../providers/location_provider.dart';
 import '../providers/network_connection_provider.dart';
 import '../providers/shared_prefs_provider.dart';
 import '../wamp/wamp_v2.dart';
+import 'bladeguard/bladeguard_page.dart';
 import 'widgets/one_signal_id_widget.dart';
 import 'widgets/settings_invisible_offline.dart';
 
@@ -69,6 +68,22 @@ class _SettingsPageState extends State<SettingsPage> {
             SliverToBoxAdapter(
               child: Column(
                 children: [
+                    CupertinoFormSection(
+                        header:
+                            Text(Localize.of(context).bladeGuardSettingsTitle),
+                        children: <Widget>[
+                          CupertinoButton(
+                            child:
+                                Text(Localize.of(context).bladeGuardSettings),
+                            onPressed: () => {
+                              Navigator.of(context).push(
+                                CupertinoPageRoute(
+                                  builder: (context) => const BladeGuardPage(),
+                                ),
+                              )
+                            },
+                          ),
+                        ]),
                   //const VersionWidget(),
                   CupertinoFormSection(
                       header: Text(Localize.of(context).setMeColor),
@@ -267,282 +282,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ]),
                   settingsInvisibleOfflineWidget(context),
-                  if (networkConnected.connectivityStatus ==
-                          ConnectivityStatus.online &&
-                      !kIsWeb)
-                    CupertinoFormSection(
-                      header: Text(
-                          Localize.of(context).enableOnesignalPushMessageTitle),
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: DataLeftRightContent(
-                            descriptionLeft:
-                                Localize.of(context).enableOnesignalPushMessage,
-                            descriptionRight: '',
-                            rightWidget: _showPushProgressIndicator
-                                ? const CircularProgressIndicator()
-                                : CupertinoSwitch(
-                                    onChanged: (val) async {
-                                      HiveSettingsDB
-                                          .setPushNotificationsEnabled(val);
-                                      setState(() {
-                                        _showPushProgressIndicator = true;
-                                      });
-                                      await OnesignalHandler
-                                              .setOneSignalChannels()
-                                          .timeout(const Duration(seconds: 20))
-                                          .catchError((error) {
-                                        BnLog.error(
-                                            text: 'error deactivating Push');
-                                      });
-                                      _showPushProgressIndicator = false;
-                                      setState(() {});
-                                    },
-                                    value:
-                                        HiveSettingsDB.pushNotificationsEnabled,
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  if (networkConnected.connectivityStatus ==
-                          ConnectivityStatus.online &&
-                      HiveSettingsDB.pushNotificationsEnabled &&
-                      !kIsWeb)
-                    Column(
-                      children: [
-                        const OneSignalIdWidget(),
-                        CupertinoFormSection(
-                          header: Text(Localize.of(context).iAmBladeGuardTitle),
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).iAmBladeGuard,
-                                descriptionRight: '',
-                                rightWidget: CupertinoSwitch(
-                                  onChanged: (val) async {
-                                    if (val == false) {
-                                      //switch off and unregister
-                                      HiveSettingsDB.setBgSettingVisible(false);
-                                      HiveSettingsDB.setBgLeaderSettingVisible(
-                                          false);
-                                      HiveSettingsDB.setIsBladeGuard(false);
-                                      HiveSettingsDB.setBladeGuardClick(false);
-                                      OnesignalHandler.registerPushAsBladeGuard(
-                                          false, 0);
-                                      setState(() {});
-                                      return;
-                                    }
-                                    var codeResult =
-                                        await InputPasswordDialog.show(context);
-                                    if (!codeResult) return;
-                                    HiveSettingsDB.setIsBladeGuard(val);
-                                    HiveSettingsDB.setBladeGuardClick(val);
-                                    int teamId = 0;
-                                    if (context.mounted) {
-                                      teamId = await showTeamIdDialog(
-                                              context, HiveSettingsDB.teamId) ??
-                                          0;
-                                      HiveSettingsDB.setTeamId(teamId);
-                                    }
-                                    setState(() {});
-                                    OnesignalHandler.registerPushAsBladeGuard(
-                                        val, teamId);
-                                  },
-                                  value: HiveSettingsDB.isBladeGuard,
-                                ),
-                              ),
-                            ),
-                            if (HiveSettingsDB.isBladeGuard &&
-                                (HiveSettingsDB.bgSettingVisible ||
-                                    HiveSettingsDB.bgLeaderSettingVisible ||
-                                    Globals.adminPass != null))
-                              CupertinoButton(
-                                  child: Text(
-                                      '${Localize.of(context).bgTeam} ${HiveSettingsDB.teamId}'),
-                                  onPressed: () async {
-                                    var teamId = await showTeamIdDialog(
-                                        context, HiveSettingsDB.teamId);
-                                    if (teamId == null) return;
-                                    HiveSettingsDB.setTeamId(teamId);
-                                    setState(() {});
-                                    await OnesignalHandler
-                                        .registerPushAsBladeGuard(
-                                            HiveSettingsDB.bladeGuardClick,
-                                            teamId);
-                                  }),
-                          ],
-                        ),
-                        if (HiveSettingsDB.isBladeGuard &&
-                            (HiveSettingsDB.bgSettingVisible ||
-                                HiveSettingsDB.bgLeaderSettingVisible ||
-                                Globals.adminPass != null))
-                          CupertinoFormSection(
-                            header: Text(Localize.of(context)
-                                .pushMessageParticipateAsBladeGuardTitle),
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: DataLeftRightContent(
-                                  descriptionLeft: Localize.of(context)
-                                      .pushMessageParticipateAsBladeGuard,
-                                  descriptionRight: '',
-                                  rightWidget: CupertinoSwitch(
-                                    onChanged: (val) async {
-                                      setState(() {
-                                        HiveSettingsDB.setBladeGuardClick(val);
-                                      });
-                                      await OnesignalHandler
-                                          .registerPushAsBladeGuard(
-                                              val, HiveSettingsDB.teamId);
-                                    },
-                                    value: HiveSettingsDB.bladeGuardClick,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        if (!kIsWeb &&
-                            HiveSettingsDB.isBladeGuard &&
-                            (HiveSettingsDB.bgSettingVisible ||
-                                HiveSettingsDB.bgLeaderSettingVisible ||
-                                Globals.adminPass != null))
-                          CupertinoFormSection(
-                            header: Text(Localize.of(context)
-                                .pushMessageSkateMunichInfosTitle),
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: DataLeftRightContent(
-                                  descriptionLeft: Localize.of(context)
-                                      .pushMessageSkateMunichInfos,
-                                  descriptionRight: '',
-                                  rightWidget: CupertinoSwitch(
-                                    onChanged: (val) async {
-                                      setState(() {
-                                        HiveSettingsDB.setRcvSkatemunichInfos(
-                                            val);
-                                      });
-                                      HiveSettingsDB.setRcvSkatemunichInfos(
-                                          val);
-                                      OnesignalHandler.registerSkateMunichInfo(
-                                          val);
-                                    },
-                                    value: HiveSettingsDB.rcvSkatemunichInfos,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        if (!kIsWeb && HiveSettingsDB.bgLeaderSettingVisible ||
-                            Globals.adminPass != null)
-                          CupertinoFormSection(
-                            header: Text(Localize.of(context).markMeAsHead),
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: DataLeftRightContent(
-                                  descriptionLeft: Localize.of(context).head,
-                                  descriptionRight: '',
-                                  rightWidget: CupertinoSwitch(
-                                    onChanged: (val) {
-                                      setState(() {
-                                        HiveSettingsDB.setIsSpecialHead(val);
-                                        if (val) {
-                                          HiveSettingsDB.setIsSpecialTail(
-                                              false);
-                                        }
-                                      });
-                                    },
-                                    value: HiveSettingsDB.isHeadOfProcession,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        if (!kIsWeb && HiveSettingsDB.bgLeaderSettingVisible ||
-                            Globals.adminPass != null)
-                          CupertinoFormSection(
-                            header: Text(Localize.of(context).markMeAsTail),
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: DataLeftRightContent(
-                                  descriptionLeft: Localize.of(context).tail,
-                                  descriptionRight: '',
-                                  rightWidget: CupertinoSwitch(
-                                    onChanged: (val) {
-                                      setState(() {
-                                        HiveSettingsDB.setIsSpecialTail(val);
-                                        if (val) {
-                                          HiveSettingsDB.setIsSpecialHead(
-                                              false);
-                                        }
-                                      });
-                                    },
-                                    value: HiveSettingsDB.isTailOfProcession,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  if (Globals.adminPass != null)
-                    CupertinoFormSection(
-                      header:
-                          Text(Localize.of(context).showFullProcessionTitle),
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: DataLeftRightContent(
-                            descriptionLeft:
-                                Localize.of(context).showFullProcession,
-                            descriptionRight: '',
-                            rightWidget: CupertinoSwitch(
-                                onChanged: (val) {
-                                  setState(() {
-                                    HiveSettingsDB.setwantSeeFullOfProcession(
-                                        val);
-                                  });
-                                },
-                                value: HiveSettingsDB.wantSeeFullOfProcession),
-                          ),
-                        ),
-                      ],
-                    ),
-                  if (!kIsWeb)
-                    CupertinoFormSection(
-                        header: Text(Localize.of(context).setSystem),
-                        children: <Widget>[
-                          CupertinoButton(
-                              child: Text(Localize.of(context)
-                                  .openOperatingSystemSettings),
-                              onPressed: () => openAppSettings()),
-                        ]),
-                  if (Platform.isAndroid)
-                    CupertinoFormSection(
-                        header: Text(
-                            Localize.of(context).ignoreBatteriesOptimisation),
-                        children: <Widget>[
-                          CupertinoButton(
-                              child: Text(Localize.of(context)
-                                  .ignoreBatteriesOptimisationTitle),
-                              onPressed: () async =>
-                                  await BackgroundGeolocationHelper
-                                      .openBatteriesSettings()),
-                        ]),
+
                   if (!kIsWeb)
                     const SizedBox(
                       height: 15,
@@ -563,6 +303,95 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Column(
                       children: [
                         const AppIdWidget(),
+                        const OneSignalIdWidget(),
+                        if (networkConnected.connectivityStatus ==
+                                ConnectivityStatus.online &&
+                            !kIsWeb)
+                          CupertinoFormSection(
+                            header: Text(Localize.of(context)
+                                .enableOnesignalPushMessageTitle),
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: DataLeftRightContent(
+                                  descriptionLeft: Localize.of(context)
+                                      .enableOnesignalPushMessage,
+                                  descriptionRight: '',
+                                  rightWidget: _showPushProgressIndicator
+                                      ? const CircularProgressIndicator()
+                                      : CupertinoSwitch(
+                                          onChanged: (val) async {
+                                            HiveSettingsDB
+                                                .setPushNotificationsEnabled(
+                                                    val);
+                                            setState(() {
+                                              _showPushProgressIndicator = true;
+                                            });
+                                            await OnesignalHandler
+                                                    .setOneSignalChannels()
+                                                .timeout(
+                                                    const Duration(seconds: 20))
+                                                .catchError((error) {
+                                              BnLog.error(
+                                                  text:
+                                                      'error deactivating Push');
+                                            });
+                                            _showPushProgressIndicator = false;
+                                            setState(() {});
+                                          },
+                                          value: HiveSettingsDB
+                                              .pushNotificationsEnabled,
+                                        ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (!kIsWeb)
+                          CupertinoFormSection(
+                            header: Text(
+                                Localize.of(context).fireBaseCrashlyticsHeader),
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: DataLeftRightContent(
+                                  descriptionLeft:
+                                      Localize.of(context).fireBaseCrashlytics,
+                                  descriptionRight: '',
+                                  rightWidget: CupertinoSwitch(
+                                    onChanged: (val) async {
+                                      HiveSettingsDB.setChrashlyticsEnabled(
+                                          val);
+                                      setState(() {});
+                                    },
+                                    value: HiveSettingsDB.chrashlyticsEnabled,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (!kIsWeb)
+                          CupertinoFormSection(
+                              header: Text(Localize.of(context).setSystem),
+                              children: <Widget>[
+                                CupertinoButton(
+                                    child: Text(Localize.of(context)
+                                        .openOperatingSystemSettings),
+                                    onPressed: () => openAppSettings()),
+                              ]),
+                        if (Platform.isAndroid)
+                          CupertinoFormSection(
+                              header: Text(Localize.of(context)
+                                  .ignoreBatteriesOptimisation),
+                              children: <Widget>[
+                                CupertinoButton(
+                                    child: Text(Localize.of(context)
+                                        .ignoreBatteriesOptimisationTitle),
+                                    onPressed: () async =>
+                                        await BackgroundGeolocationHelper
+                                            .openBatteriesSettings()),
+                              ]),
                         const SizedBox(height: 5),
                         CupertinoFormSection(
                           header: Text(Localize.of(context).exportLogData),
@@ -583,6 +412,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                       });
                                     }),
                           ],
+                        ),
+                        const SizedBox(
+                          height: 10,
                         ),
                         Visibility(
                           visible: _openInvisibleSettings,
@@ -899,52 +731,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ]),
-    );
-  }
-
-  Future<int?> showTeamIdDialog(BuildContext context, int? current) {
-    int selected = current ?? 0;
-    return showCupertinoDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return CupertinoAlertDialog(
-          title: Text(Localize.of(context).setTeam),
-          content: SizedBox(
-            height: 100,
-            child: Builder(builder: (context) {
-              //ref not working here in Alert
-              var teams = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-              return CupertinoPicker(
-                  scrollController:
-                      FixedExtentScrollController(initialItem: selected),
-                  onSelectedItemChanged: (int value) {
-                    setState(() {
-                      selected = value;
-                    });
-                  },
-                  itemExtent: 50,
-                  children: [
-                    for (var i in teams) Center(child: Text(i.toString()))
-                  ]);
-            }),
-          ),
-          actions: [
-            CupertinoDialogAction(
-              child: Text(Localize.of(context).cancel),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            CupertinoDialogAction(
-              child: Text(Localize.of(context).save),
-              onPressed: () {
-                Navigator.of(context).pop(selected);
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

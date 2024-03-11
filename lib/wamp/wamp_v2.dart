@@ -19,6 +19,8 @@ import 'bn_wamp_message.dart';
 import 'http_overrides.dart';
 import 'wamp_error.dart';
 
+
+///TODO add keepalive with on error reopen
 enum WampConnectionState { unknown, connecting, connected, failed, offline }
 
 class WampV2 {
@@ -31,6 +33,7 @@ class WampV2 {
   static bool _hadShakeHands = false;
   static bool _startShakeHands = false;
   static int _startShakeHandsRetryCounter = 0;
+  int _retryLimit = 3;
 
   bool _connectionErrorLogged = false;
   bool _lastConnectionStatus = false;
@@ -39,7 +42,7 @@ class WampV2 {
   bool _isWebsocketRunning = false; //status of a websocket
   bool busy = false;
   final Map<int, BnWampMessage> calls = {};
-  int _retryLimit = 3;
+
   Queue<BnWampMessage> queue = Queue();
   var streamController = StreamController<BnWampMessage>.broadcast();
 
@@ -329,7 +332,9 @@ class WampV2 {
             // [SUBSCRIBED, SUBSCRIBE.Request|id, Subscription|id]
             //    [33, 713845233, 5512315355]
             var messageResult = wampMessage[2];
-            subscriptions.add(messageResult);
+            var id = int.parse(wampMessage[1]);
+            _subscriptions.add(id);
+
             calls[requestId]?.completer.complete(messageResult);
             calls.remove(requestId);
             BnLog.debug(text: 'subscribed id:$messageResult');
@@ -366,9 +371,17 @@ class WampV2 {
             //[36, 5512315355, 4429313566, {}, [], {"color": "orange", "sizes": [23, 42, 7]}]
             try {
               var messageResult = wampMessage[2];
+              var id = int.parse(wampMessage[1]);
+              _subscriptions.add(id);
               var result = RealtimeUpdateMapper.fromMap(messageResult);
-              eventStreamController.add(result);
+              _realTimeUpdateStreamController.sink.add(result);
               BnLog.trace(text: result.toString());
+              return;
+            } catch (e) {
+              BnLog.error(text: e.toString(), className: toString());
+            }
+            try {
+              eventStreamController.sink.add(wampMessage[2]);
             } catch (e) {
               BnLog.error(text: e.toString(), className: toString());
             }
@@ -376,8 +389,7 @@ class WampV2 {
             return;
           } else {
             var typeId = wampMessage[0];
-
-            BnLog.error(
+            BnLog.warning(
                 text: 'WAMP unknown messageType typeId: $typeId $wampMessage');
           }
         },

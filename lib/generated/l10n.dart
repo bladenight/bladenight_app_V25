@@ -1554,23 +1554,34 @@ class Localize {
     );
   }
 
-  /// `I am a Bladeguard`
+  /// `I am already a Bladeguard`
   String get iAmBladeGuard {
     return Intl.message(
-      'I am a Bladeguard',
+      'I am already a Bladeguard',
       name: 'iAmBladeGuard',
       desc: '',
       args: [],
     );
   }
 
-  /// `I am an active bladeguard and would like to receive info. Please ask the team leader or Skatemunich with team number for password (anonymous - i.e. no personal data like email etc. will be linked).`
-  String get iAmBladeGuardTitle {
+  /// `We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href="{bladeguardPrivacyLink}">Munich data protection regulations</a></p> apply`
+  String iAmBladeGuardTitle(Object bladeguardPrivacyLink) {
     return Intl.message(
-      'I am an active bladeguard and would like to receive info. Please ask the team leader or Skatemunich with team number for password (anonymous - i.e. no personal data like email etc. will be linked).',
+      'We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href="$bladeguardPrivacyLink">Munich data protection regulations</a></p> apply',
       name: 'iAmBladeGuardTitle',
       desc: '',
-      args: [],
+      args: [bladeguardPrivacyLink],
+    );
+  }
+
+  /// `<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="{bladeguardRegisterlink}">Online registration</a> and <a href="{ bladeguardPrivacyLink}">Data protection</a></p></h3>`
+  String bladeguardInfo(
+      Object bladeguardRegisterlink, Object bladeguardPrivacyLink) {
+    return Intl.message(
+      '<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="$bladeguardRegisterlink">Online registration</a> and <a href="$bladeguardPrivacyLink">Data protection</a></p></h3>',
+      name: 'bladeguardInfo',
+      desc: '',
+      args: [bladeguardRegisterlink, bladeguardPrivacyLink],
     );
   }
 
@@ -3735,6 +3746,56 @@ class Localize {
       name: 'friendScanQrCode',
       desc: '',
       args: [code],
+    );
+  }
+
+  /// `Bladeguard settings`
+  String get bladeGuardSettings {
+    return Intl.message(
+      'Bladeguard settings',
+      name: 'bladeGuardSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open Bladeguard settings page`
+  String get bladeGuardSettingsTitle {
+    return Intl.message(
+      'Open Bladeguard settings page',
+      name: 'bladeGuardSettingsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check if you registered as Bladeguard`
+  String get checkBgRegistration {
+    return Intl.message(
+      'Check if you registered as Bladeguard',
+      name: 'checkBgRegistration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To improve the app, crash logs are sent to Crashlytics. This can be suppressed here.`
+  String get fireBaseCrashlyticsHeader {
+    return Intl.message(
+      'To improve the app, crash logs are sent to Crashlytics. This can be suppressed here.',
+      name: 'fireBaseCrashlyticsHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disable Crashlytics`
+  String get fireBaseCrashlytics {
+    return Intl.message(
+      'Disable Crashlytics',
+      name: 'fireBaseCrashlytics',
+      desc: '',
+      args: [],
     );
   }
 }

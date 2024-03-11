@@ -139,11 +139,11 @@ class _EventsPageState extends State<EventsPage>
                     child: PageView.builder(
                       controller: _pageController,
                       onPageChanged: (idx) {
-                        setState(() {
-                          var groupedEvents = events.groupByYear();
+                        /*setState(() {
+                           var groupedEvents = events.groupByYear();
                           _header =
                               '${Localize.of(context).events} ${groupedEvents.keys.elementAt(idx)}';
-                        });
+                        });*/
                       },
                       itemCount: pages.length,
                       padEnds: false,
