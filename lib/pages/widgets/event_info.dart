@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,19 +20,22 @@ import '../../providers/images_and_links/second_sponsor_image_and_link_provider.
 import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
+import '../../providers/realtime_data_provider.dart';
 import '../bladeguard/bladeguardAdvertise.dart';
+import '../bladeguard/bladeguard_on_site_page.dart';
 import 'app_outdated.dart';
 import 'hidden_admin_button.dart';
 import 'no_connection_warning.dart';
 
-class EventInfo extends StatefulWidget {
+class EventInfo extends ConsumerStatefulWidget {
   const EventInfo({super.key});
 
   @override
-  State<EventInfo> createState() => _EventInfoState();
+  ConsumerState<EventInfo> createState() => _EventInfoState();
 }
 
-class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
+class _EventInfoState extends ConsumerState<EventInfo>
+    with WidgetsBindingObserver {
   Timer? _updateTimer;
 
   @override
@@ -96,6 +100,9 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
     BuildContext context,
   ) {
     var nextEventProvider = context.watch(activeEventProvider);
+    var eventActive =
+        ref.watch(realtimeDataProvider.select((rt) => rt?.eventIsActive)) ??
+            false;
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -167,16 +174,17 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                 ],
               ),
             ),
+          if (nextEventProvider.status == EventStatus.confirmed && !eventActive)
+            const BladeGuardOnsite(),
           Column(children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 5.0),
               child: GestureDetector(
                 onTap: () async {
-                  var link =
-                      context.read(MainSponsorImageAndLink.provider).link;
+                  var link = context.read(mainSponsorImageAndLinkProvider).link;
                   if (link != null && link != '') {
                     var uri = Uri.parse(
-                        context.read(MainSponsorImageAndLink.provider).link!);
+                        context.read(mainSponsorImageAndLinkProvider).link!);
                     if (await canLaunchUrl(uri)) {
                       await launchUrl(uri,
                           mode: LaunchMode.externalApplication);
@@ -184,7 +192,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                   }
                 },
                 child: Builder(builder: (context) {
-                  var ms = context.watch(MainSponsorImageAndLink.provider);
+                  var ms = context.watch(mainSponsorImageAndLinkProvider);
                   var nw = context.watch(networkAwareProvider);
                   return (ms.image != null &&
                           nw.connectivityStatus == ConnectivityStatus.online)
@@ -207,10 +215,10 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
               child: GestureDetector(
                 onTap: () async {
                   var link =
-                      context.read(SecondSponsorImageAndLink.provider).link;
+                      context.read(secondSponsorImageAndLinkProvider).link;
                   if (link != null && link != '') {
                     var uri = Uri.parse(
-                        context.read(SecondSponsorImageAndLink.provider).link!);
+                        context.read(secondSponsorImageAndLinkProvider).link!);
                     if (await canLaunchUrl(uri)) {
                       await launchUrl(uri,
                           mode: LaunchMode.externalApplication);
@@ -218,29 +226,35 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                   }
                 },
                 child: Builder(builder: (context) {
-                  return Image.asset(secondLogoPlaceholder,
-                      fit: BoxFit.fitWidth);
+                  var img = context.watch(secondSponsorImageAndLinkProvider);
+                  var nw = context.watch(networkAwareProvider);
+                  return (img.image != null &&
+                          nw.connectivityStatus == ConnectivityStatus.online)
+                      ? CachedNetworkImage(
+                          imageUrl: img.image!,
+                          placeholder: (context, url) => Image.asset(
+                              secondLogoPlaceholder,
+                              fit: BoxFit.fitWidth),
+                          errorWidget: (context, url, error) => Image.asset(
+                              secondLogoPlaceholder,
+                              fit: BoxFit.fitWidth),
+                        )
+                      : Image.asset(secondLogoPlaceholder,
+                          fit: BoxFit.fitWidth);
                 }),
               ),
             ),
           ]),
           GestureDetector(
             onTap: () async {
-              return; //removed because Apple privacy issue
-              /*context.read(activeEventProvider).refresh();
-              context.refresh(updateImagesAndLinksProvider);
-              var link = context.read(StartPointImageAndLink.provider).link;
-              if (link != null && link != '') {
-                Launch.launchUrlFromString(
-                    context.read(StartPointImageAndLink.provider).link!);
-              }*/
+              return;
             },
             child: Column(
               children: [
                 //Don't show starting point when no event
                 if (nextEventProvider.status != EventStatus.noevent)
                   Builder(builder: (context) {
-                    var spp = context.watch(StartPointImageAndLink.provider);
+                    var spp = context.watch(startpointImageAndLinkProvider);
                     return spp.text != null
                         ? FittedBox(
                             child: Text(

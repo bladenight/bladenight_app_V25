@@ -1,31 +1,28 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-
+import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../models/image_and_link.dart';
-import '../shared_prefs_provider.dart';
 
-String secondSponsorImageAndLinkKey ='secondSponsorImageAndLinkKey';
-String _secondSponsorImageAndLinkPrefJson='{"key":"secondLogo","image":"https://bladenight.app/skatemunich.png","link":""}';
+part 'second_sponsor_image_and_link_provider.g.dart';
 
-class SecondSponsorImageAndLink extends StateNotifier<ImageAndLink> {
-  SecondSponsorImageAndLink(this.pref)
-      : super(MapperContainer.globals.fromJson(pref?.getString(secondSponsorImageAndLinkKey)?.toString() ?? _secondSponsorImageAndLinkPrefJson));
+String secondSponsorImageAndLinkKey = 'secondSponsorIalKey';
+ImageAndLink _defaultSecondSponsor = ImageAndLink(
+    'https://bladenight.app/skatemunich.png', '', '', 'secondLogo');
 
-  final SharedPreferences? pref;
-
-  static final provider = StateNotifierProvider<SecondSponsorImageAndLink, ImageAndLink>((ref) {
-    final pref = ref.watch(sharedPrefs).maybeWhen(
-          data: (value) => value,
-          orElse: () =>  null,
-        );
-    return  SecondSponsorImageAndLink(pref);
-  });
+@riverpod
+class SecondSponsorImageAndLink extends _$SecondSponsorImageAndLink {
+  @override
+  ImageAndLink build() {
+    HiveSettingsDB.settingsHiveBox
+        .watch(key: secondSponsorImageAndLinkKey)
+        .listen((event) => state = event.value);
+    return HiveSettingsDB.settingsHiveBox
+        .get(secondSponsorImageAndLinkKey, defaultValue: _defaultSecondSponsor);
+  }
 
   void setValue(ImageAndLink imageAndLink) {
-    state = imageAndLink;
-    pref!.setString(secondSponsorImageAndLinkKey,MapperContainer.globals.toJson(imageAndLink));
+    HiveSettingsDB.settingsHiveBox
+        .put(secondSponsorImageAndLinkKey, imageAndLink);
+    //state = imageAndLink;
   }
 }

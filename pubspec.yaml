@@ -26,6 +26,7 @@ dependencies:
   extended_text: ^13.0.0
   firebase_core: ^2.13.0
   firebase_crashlytics: ^3.3.1
+  flex_color_picker: ^3.4.0
   flutter:
     sdk: flutter
   flutter_background_geolocation: ^4.12.0
@@ -66,9 +67,9 @@ dependencies:
     #url: https://github.com/fairuzmn/flutterlocation.git
     #ref: location-v5.5.0.0-dev.9-fix
     #path: packages/location
-    #geolocator:
-    #git:
-    #url: https://github.com/Baseflow/flutter-geolocator.git
+  #geolocator:
+  #git:
+  #url: https://github.com/Baseflow/flutter-geolocator.git
   #ref: location-v5.5.0.0-dev.9-fix
   #path: ../flutter-geolocator/geolocator
   #location: ^4.4.0
@@ -101,7 +102,7 @@ dependencies:
   timezone: any
   #uni_links: ^0.5.1
   #uni_links2: #Download from https://github.com/xunreal75/uni_links2.git and save to root
-    #path: ../uni_links/uni_links/
+  #path: ../uni_links/uni_links/
   universal_io: ^2.2.0
   url_launcher: ^6.1.10
   vector_math: ^2.1.4
@@ -122,10 +123,9 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
+  hive_generator: ^2.0.1
   riverpod_generator:
-# riverpod_lint makes it easier to work with Riverpod
   riverpod_lint:
-# import custom_lint too as riverpod_lint depends on it
 
 analyzer:
   plugins:

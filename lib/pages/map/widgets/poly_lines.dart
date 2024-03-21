@@ -8,7 +8,10 @@ import '../../../models/images_and_links.dart';
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
-import '../../../providers/shared_prefs_provider.dart';
+import '../../../providers/map/map_settings_provider.dart';
+import '../../../providers/settings/dark_color_provider.dart';
+import '../../../providers/settings/light_color_provider.dart';
+import '../../../providers/me_color_provider.dart';
 
 class PolyLinesLayer extends ConsumerStatefulWidget {
   const PolyLinesLayer({super.key});
@@ -57,18 +60,18 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
         Polyline(
             points: processionRoutePoints,
             color: CupertinoDynamicColor.withBrightness(
-                color: context.watch(ThemePrimaryColor.provider),
-                darkColor: ref.watch(ThemePrimaryDarkColor.provider)),
+                color: context.watch(themePrimaryLightColorProvider),
+                darkColor: ref.watch(themePrimaryDarkColorProvider)),
             strokeWidth: 3,
             borderStrokeWidth: 5.0,
             isDotted: true),
       //user track
       if (locationUpdate.userLatLongs.isNotEmpty &&
-          context.watch(ShowOwnTrack.provider))
+          context.watch(showOwnTrackProvider))
         Polyline(
           points: locationUpdate.userLatLongs,
           strokeWidth: context.watch(isTrackingProvider) ? 4 : 3,
-          borderColor: context.watch(MeColor.provider),
+          borderColor: context.watch(meColorProvider),
           color: context.watch(isTrackingProvider)
               ? const CupertinoDynamicColor.withBrightness(
                   color: CupertinoColors.white,

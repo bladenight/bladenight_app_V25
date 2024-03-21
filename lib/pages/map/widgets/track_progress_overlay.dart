@@ -16,9 +16,9 @@ import '../../../models/event.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/me_color_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
-import '../../../providers/shared_prefs_provider.dart';
 import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
 import 'special_function_info.dart';
@@ -254,7 +254,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         ],
                                         pointColor: Colors.black,
                                         progressColor: ref
-                                            .watch(MeColor.provider)
+                                            .watch(meColorProvider)
                                             .withOpacity(0.8),
                                         start: 0,
                                         progress: rtu.runningLength == 0
@@ -342,13 +342,21 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                             .scale(18),
                                         child: CircleAvatar(
                                           backgroundColor:
-                                              ref.watch(MeColor.provider),
+                                              ref.watch(meColorProvider),
                                           child: ref.watch(
                                                   isUserParticipatingProvider)
-                                              ? const ImageIcon(AssetImage(
-                                                  'assets/images/skater_icon_256.png'))
-                                              : const Icon(
-                                                  Icons.gps_fixed_sharp),
+                                              ? ImageIcon(
+                                                  const AssetImage(
+                                                      'assets/images/skater_icon_256.png'),
+                                                  color: ref
+                                                      .watch(meColorProvider),
+                                                )
+                                              : Icon(
+                                                  Icons
+                                                      .compass_calibration_rounded,
+                                                  color: ref
+                                                      .watch(meColorProvider),
+                                                ),
                                         ),
                                       ),
                                     ),

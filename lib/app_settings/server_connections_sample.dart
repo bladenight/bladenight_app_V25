@@ -18,11 +18,8 @@ const String defaultWampClientAux = 'wss://bladenight.app:8092';
 ///address for standard test of unencrypted connection / no participation / no authorization
 const String defaultTestWampClientAux = 'wss://bladenight.app:12345';
 
-///address to receive messages for client
-String bladenightMessageServerLink = 'https://bladenight.app/messages_ep';
-
-///address to validate and get information about email hash
-String bladenightRestApiServerLink = 'https://bladenight.app/rest/api_ep';
+const String defaultBladenightRestApiServerLink = 'https://bladenight.app/rest/api';
+const String defaultApiCryptoPass = 'changeit';
 
 const String certificatePassword = 'changeit';
 

@@ -303,7 +303,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     backgroundColor: Colors.blue,
                     onPressed: () {
                       _showLiveMapLink(
-                          ref.read(LiveMapImageAndLink.provider).link);
+                          ref.read(liveMapImageAndLinkProvider).link);
                     },
                     child: const Icon(
                       CupertinoIcons.qrcode,
@@ -473,7 +473,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   }
 
   void _showOverlay(BuildContext context, {required String text}) async {
-    var bottomOffset = kBottomNavigationBarHeight + 38;
+    var bottomOffset =
+        kIsWeb ? kBottomNavigationBarHeight : kBottomNavigationBarHeight + 38;
 
     OverlayState? overlayState = Overlay.of(context);
     OverlayEntry overlayEntry;
@@ -482,7 +483,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         children: [
           Positioned(
             left: 00,
-            top: kToolbarHeight,
+            top: kIsWeb ? 0 : kToolbarHeight,
             child: Column(
               children: <Widget>[
                 SizedBox(
@@ -533,7 +534,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                           Localize.of(context)
                               .startLocationWithoutParticipating,
                           style: TextStyle(
-                            color: CupertinoTheme.of(context).barBackgroundColor,
+                            color:
+                                CupertinoTheme.of(context).barBackgroundColor,
                             backgroundColor:
                                 CupertinoTheme.of(context).primaryColor,
                           ),
@@ -546,27 +548,28 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 }
               }),
             ),
-          Positioned(
-            left: 70,
-            bottom: 250 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Reset Tacho',
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).primaryColor,
+          if (!kIsWeb)
+            Positioned(
+              left: 70,
+              bottom: 250 + bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Reset Tacho',
+                      style: TextStyle(
+                        color: CupertinoTheme.of(context).barBackgroundColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).primaryColor,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
           Positioned(
             left: 70,
             bottom: 190 + bottomOffset,
@@ -580,8 +583,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     'Zoom -',
                     style: TextStyle(
                       color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).primaryColor,
+                      backgroundColor: CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -601,8 +603,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     'Zoom +',
                     style: TextStyle(
                       color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).primaryColor,
+                      backgroundColor: CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -622,8 +623,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     Localize.of(context).setDarkMode,
                     style: TextStyle(
                       color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).primaryColor,
+                      backgroundColor: CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -633,7 +633,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           if (!kIsWeb)
             Positioned(
               right: 70,
-              bottom: 160+bottomOffset,
+              bottom: 160 + bottomOffset,
               child: Visibility(
                 visible: ref.read(cameraFollowLocationProvider) ==
                         CameraFollow.followMe
@@ -658,30 +658,32 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 ),
               ),
             ),
-          Positioned(
-            right: 70,
-            bottom: 45 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Teilnahme starten',
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).primaryColor,
+          if (!kIsWeb)
+            Positioned(
+              right: 70,
+              bottom: 45 + bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Teilnahme starten',
+                      style: TextStyle(
+                        color: CupertinoTheme.of(context).barBackgroundColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).primaryColor,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
           Positioned(
-            right: 70,
-            bottom: 115 + bottomOffset,
+            right: kIsWeb ? null : 170,
+            left: kIsWeb ? 70 : null,
+            bottom: kIsWeb ? 310 : 115 + bottomOffset,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(2),
               child: FadeTransition(
@@ -692,14 +694,35 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     'Auf Karte verfolgen',
                     style: TextStyle(
                       color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).primaryColor,
+                      backgroundColor: CupertinoTheme.of(context).primaryColor,
                     ),
                   ),
                 ),
               ),
             ),
           ),
+          if (kIsWeb)
+            Positioned(
+              left: 70,
+              bottom: 45 + bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Menu',
+                      style: TextStyle(
+                        color: CupertinoTheme.of(context).barBackgroundColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       );
     });
@@ -724,7 +747,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
 
   ///Toggles between user position and view with user pos
   void toggleViewerLocationService() async {
-    if (context.watch(isTrackingProvider)) {
+    if (ref.read(isTrackingProvider)) {
       ref.read(isTrackingProvider.notifier).toggleTracking(false);
       return;
     }
@@ -752,9 +775,9 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   : MediaQuery.of(context).size.height * 0.7,
             ),
             child: QRCreatePage(
-                qrcodetext: link ?? liveMapLink,
-                headertext: Localize.of(context).liveMapInBrowserInfoHeader,
-                infotext: Localize.of(context).liveMapInBrowser),
+                qrCodeText: link ?? liveMapLink,
+                headerText: Localize.of(context).liveMapInBrowserInfoHeader,
+                infoText: Localize.of(context).liveMapInBrowser),
           );
         });
   }

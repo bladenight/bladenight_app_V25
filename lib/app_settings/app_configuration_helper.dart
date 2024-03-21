@@ -25,7 +25,8 @@ const String mainSponsorPlaceholder = 'assets/images/bladenight_logo.png';
 const String secondLogoPlaceholder = 'assets/images/skatemunich.png';
 
 //globals
-String bladeguardRegisterLink = 'https://bladenight-muenchen.de/blade-guards/#anmelden';
+String bladeguardRegisterLink =
+    'https://bladenight-muenchen.de/blade-guards/#anmelden';
 String bladeguardPrivacyLink = 'https://bladenight-muenchen.de/datenschutz';
 String bladeguardLinkText = 'Bladeguard';
 

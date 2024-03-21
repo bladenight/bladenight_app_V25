@@ -41,7 +41,7 @@ class FriendsActionModal extends StatelessWidget {
         ),
         CupertinoActionSheetAction(
           child: Text(Localize.of(context)
-              .addNearBy(Platform.operatingSystem.toUpperCase())),
+              .addNearBy),
           onPressed: () {
             Navigator.pop(context, FriendsAction.addNearby);
           },
@@ -56,7 +56,7 @@ class FriendsActionModal extends StatelessWidget {
       cancelButton: CupertinoActionSheetAction(
         child: Text(Localize.of(context).cancel),
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.of(context).pop();
         },
       ),
     );

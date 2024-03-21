@@ -63,7 +63,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!context.mounted) return;
       if (widget.friendsAction == FriendsAction.addNearby) {
-        var dt= DateTime.now();
+        var dt = DateTime.now();
         var dateString = Localize.current.dateTimeIntl(
           dt,
           dt,
@@ -73,8 +73,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
             getRandomColor());
         if (friend == null) {
           FlutterPlatformAlert.showAlert(
-              windowTitle: Localize.current
-                  .addNearBy(Platform.operatingSystem.toUpperCase()),
+              windowTitle: Localize.current.addNearBy,
               text: Localize.current.failedAddNearbyTryCode);
           return;
         }
@@ -107,10 +106,8 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
           slivers: [
             CupertinoSliverNavigationBar(
               largeTitle: widget.deviceType == DeviceType.browser
-                  ? Text(
-                      Localize.of(context).linkNearBy)
-                  : Text(
-                      Localize.of(context).addNearBy(Platform.operatingSystem)),
+                  ? Text(Localize.of(context).linkNearBy)
+                  : Text(Localize.of(context).addNearBy),
               backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
             ),
             SliverToBoxAdapter(
@@ -413,8 +410,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                 return;
               } else {
                 FlutterPlatformAlert.showAlert(
-                    windowTitle: Localize.current
-                        .addNearBy(Platform.operatingSystem.toUpperCase()),
+                    windowTitle: Localize.current.addNearBy,
                     text: Localize.current.failedAddNearbyTryCode);
                 return;
               }

@@ -2,23 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/globals.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
+import '../../helpers/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
-import '../../helpers/rest_api/bladeguard_rest_api.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/network_connection_provider.dart';
+import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
+import '../widgets/birthday_date_picker.dart';
 import '../widgets/data_widget_left_right.dart';
 import '../widgets/email_widget.dart';
+import '../widgets/phone_number.dart';
 import 'bladeguard_on_site_page.dart';
 //import 'widgets/show_message_dialog.dart';
 
@@ -52,7 +55,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
     var isBladeguard = ref.watch(userIsBladeguardProvider);
     var bladeguardSettingsVisible =
         ref.watch(bladeguardSettingsVisibleProvider);
-    var networkConnected = context.watch(networkAwareProvider);
+    var networkConnected = ref.watch(networkAwareProvider);
     return CupertinoPageScaffold(
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(
@@ -69,6 +72,29 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
               child: const Icon(CupertinoIcons.back),
             ),
             largeTitle: Text(Localize.of(context).bladeGuard),
+            trailing: (networkConnected.connectivityStatus ==
+                    ConnectivityStatus.online)
+                ? CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minSize: 0,
+                    onPressed: () async {
+                      var _ = await ref.refresh(fetchOnSiteStateProvider(
+                              HiveSettingsDB.bladeguardSHA512Hash)
+                          .future);
+                    },
+                    child: isBladeguard
+                        ? const Icon(CupertinoIcons.refresh)
+                        : Container(),
+                  )
+                : const Icon(Icons.offline_bolt_outlined),
+          ),
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+              if (!isBladeguard) return;
+              var _ = await ref.refresh(
+                  fetchOnSiteStateProvider(HiveSettingsDB.bladeguardSHA512Hash)
+                      .future);
+            },
           ),
           const SliverToBoxAdapter(
             child: FractionallySizedBox(
@@ -77,7 +103,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
           SliverToBoxAdapter(
             child: Column(
               children: [
-                BladeGuardOnsite(),
+                const BladeGuardOnsite(),
                 if (networkConnected.connectivityStatus ==
                     ConnectivityStatus.online)
                   CupertinoFormSection(
@@ -136,7 +162,54 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   bladeguardRegisterLink,
                                   bladeguardPrivacyLink)),
                         ),
-                      if (isBladeguard) const EmailTextField(),
+                      //--------- Register
+                      if (!isBladeguard)
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: CupertinoButton(
+                                onPressed: () async {
+                                  var uri = Uri.parse(bladeguardRegisterLink);
+                                  if (await canLaunchUrl(uri)) {
+                                    await launchUrl(uri,
+                                        mode: LaunchMode.externalApplication);
+                                  } else {
+                                    if (!context.mounted) return;
+                                    showToast(
+                                        message: Localize.of(context).failed);
+                                  }
+                                },
+                                color: Colors.lightGreen,
+                                child: Text(Localize.of(context).register),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: CupertinoButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                color: Colors.redAccent,
+                                child: Text(Localize.of(context).later),
+                              ),
+                            ),
+                          ],
+                        ),
+                      //---------
+                      if (isBladeguard) ...[
+                        const EmailTextField(),
+                        const BirthdayDatePicker(),
+                        const PhoneTextField(),
+                      ],
                       if (networkConnected.connectivityStatus ==
                               ConnectivityStatus.online &&
                           !bladeguardSettingsVisible &&
@@ -146,31 +219,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             child:
                                 Text(Localize.of(context).checkBgRegistration),
                             onPressed: () async {
-                              if (HiveSettingsDB.bladeguardSHA512Hash != '') {
-                                var res = await checkBladeguardEmail(
-                                    HiveSettingsDB.bladeguardSHA512Hash);
-                                if (res.integer != null) {
-                                  ref
-                                      .read(bladeguardSettingsVisibleProvider
-                                          .notifier)
-                                      .setValue(true);
-                                  HiveSettingsDB.setTeamId(res.integer!);
-                                } else {
-                                  ref
-                                      .read(bladeguardSettingsVisibleProvider
-                                          .notifier)
-                                      .setValue(false);
-                                  showToast(
-                                      message:
-                                          '${Localize.current.failed} ${res.errorDescription}');
-                                }
-                                setState(() {});
-                              }
-
-                              /*await OnesignalHandler.registerPushAsBladeGuard(
-                                  HiveSettingsDB
-                                      .oneSignalRegisterBladeGuardPush,
-                                  teamId);*/
+                              await checkOrUpdateBladeGuardData();
                             }),
                       if (!kIsWeb)
                         Column(
@@ -179,17 +228,20 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 (bladeguardSettingsVisible ||
                                     HiveSettingsDB.bgLeaderSettingVisible ||
                                     Globals.adminPass != null))
-                              CupertinoButton(
-                                  child: Text(
-                                      '${Localize.of(context).bgTeam} ${HiveSettingsDB.teamId}'),
-                                  onPressed: () async {
-                                    setState(() {});
-                                    await OnesignalHandler
-                                        .registerPushAsBladeGuard(
-                                            HiveSettingsDB
-                                                .oneSignalRegisterBladeGuardPush,
-                                            HiveSettingsDB.teamId);
-                                  }),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 15, right: 15),
+                                child: DataLeftRightContent(
+                                  descriptionLeft: HiveSettingsDB.bgTeam,
+                                  descriptionRight: '',
+                                  rightWidget: CupertinoButton(
+                                      child: Text(Localize.of(context).update),
+                                      onPressed: () async {
+                                        setState(() {});
+                                        await checkOrUpdateBladeGuardData();
+                                      }),
+                                ),
+                              )
                           ],
                         ),
                       if (!kIsWeb &&
@@ -217,7 +269,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     });
                                     await OnesignalHandler
                                         .registerPushAsBladeGuard(
-                                            val, HiveSettingsDB.teamId);
+                                            val, HiveSettingsDB.bgTeam);
                                   },
                                   value: HiveSettingsDB
                                       .oneSignalRegisterBladeGuardPush,
@@ -389,5 +441,32 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
         );
       },
     );
+  }
+
+  checkOrUpdateBladeGuardData() async {
+    if (HiveSettingsDB.bladeguardSHA512Hash != '') {
+      try {
+        final res = await ref.read(checkBladeguardMailProvider(
+                HiveSettingsDB.bladeguardSHA512Hash,
+                HiveSettingsDB.bladeguardBirthday,
+                HiveSettingsDB.bladeguardPhone)
+            .future);
+        if (res.result != null && res.result != '') {
+          ref.read(bladeguardSettingsVisibleProvider.notifier).setValue(true);
+          HiveSettingsDB.setBgTeam(res.result!);
+        } else {
+          ref.read(bladeguardSettingsVisibleProvider.notifier).setValue(false);
+          showToast(
+              message: '${Localize.current.failed} ${res.errorDescription}');
+
+          setState(() {});
+        }
+      } catch (ex) {
+        BnLog.error(
+            text: ex.toString(),
+            methodName: 'checkOrUpdateBladeGuardData',
+            className: toString());
+      }
+    }
   }
 }

@@ -1,10 +1,12 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
@@ -19,23 +21,25 @@ import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/notification/toast_notification.dart';
 import '../pages/widgets/app_id_widget.dart';
 import '../pages/widgets/data_widget_left_right.dart';
-import '../pages/widgets/fast_custom_color_picker.dart';
 import '../providers/location_provider.dart';
+import '../providers/map/map_settings_provider.dart';
+import '../providers/me_color_provider.dart';
 import '../providers/network_connection_provider.dart';
-import '../providers/shared_prefs_provider.dart';
+import '../providers/settings/dark_color_provider.dart';
+import '../providers/settings/light_color_provider.dart';
 import '../wamp/wamp_v2.dart';
 import 'bladeguard/bladeguard_page.dart';
 import 'widgets/one_signal_id_widget.dart';
 import 'widgets/settings_invisible_offline.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends ConsumerState<SettingsPage> {
   @override
   void initState() {
     super.initState();
@@ -68,35 +72,50 @@ class _SettingsPageState extends State<SettingsPage> {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                    CupertinoFormSection(
-                        header:
-                            Text(Localize.of(context).bladeGuardSettingsTitle),
-                        children: <Widget>[
-                          CupertinoButton(
-                            child:
-                                Text(Localize.of(context).bladeGuardSettings),
-                            onPressed: () => {
-                              Navigator.of(context).push(
-                                CupertinoPageRoute(
-                                  builder: (context) => const BladeGuardPage(),
-                                ),
-                              )
-                            },
-                          ),
-                        ]),
+                  CupertinoFormSection(
+                      header:
+                          Text(Localize.of(context).bladeGuardSettingsTitle),
+                      children: <Widget>[
+                        CupertinoButton(
+                          child: Text(Localize.of(context).bladeGuardSettings),
+                          onPressed: () => {
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                builder: (context) => const BladeGuardPage(),
+                              ),
+                            )
+                          },
+                        ),
+                      ]),
                   //const VersionWidget(),
                   CupertinoFormSection(
                       header: Text(Localize.of(context).setMeColor),
                       children: <Widget>[
-                        FittedBox(
-                          child: FastCustomColorPicker(
-                            selectedColor: context.watch(MeColor.provider),
-                            onColorSelected: (color) {
-                              setState(() {
-                                context
-                                    .read(MeColor.provider.notifier)
-                                    .setColor(color);
-                              });
+                        CupertinoListTile(
+                          title: GestureDetector(
+                            onTap: () async {
+                              final Color colorBeforeDialog =
+                                  ref.read(meColorProvider);
+                              var res = await showColorPickerDialog(
+                                  context, colorBeforeDialog);
+                              ref
+                                  .read(themePrimaryDarkColorProvider.notifier)
+                                  .setColor(res);
+                            },
+                            child: Text(Localize.of(context).setcolor),
+                          ),
+                          trailing: ColorIndicator(
+                            width: 20,
+                            height: 20,
+                            borderRadius: 22,
+                            color: ref.watch(meColorProvider),
+                            onSelectFocus: false,
+                            onSelect: () async {
+                              final Color colorBeforeDialog =
+                                  ref.read(meColorProvider);
+                              var res = await showColorPickerDialog(
+                                  context, colorBeforeDialog);
+                              ref.read(meColorProvider.notifier).setColor(res);
                             },
                           ),
                         ),
@@ -104,90 +123,79 @@ class _SettingsPageState extends State<SettingsPage> {
                   CupertinoFormSection(
                       header: Text(Localize.of(context).setPrimaryColor),
                       children: <Widget>[
-                        FittedBox(
-                          child: FastCustomColorPicker(
-                            selectedColor:
-                                context.watch(ThemePrimaryColor.provider),
-                            onColorSelected: (color) {
-                              setState(() {
-                                context
-                                    .read(ThemePrimaryColor.provider.notifier)
-                                    .setColor(color);
-                              });
+                        CupertinoListTile(
+                          title: GestureDetector(
+                            onTap: () async {
+                              final Color colorBeforeDialog =
+                                  ref.read(themePrimaryLightColorProvider);
+                              var res = await showColorPickerDialog(
+                                  context, colorBeforeDialog);
+                              ref
+                                  .read(themePrimaryLightColorProvider.notifier)
+                                  .setColor(res);
+                            },
+                            child: Text(Localize.of(context).setcolor),
+                          ),
+                          trailing: ColorIndicator(
+                            width: 20,
+                            height: 20,
+                            borderRadius: 22,
+                            color: ref.watch(themePrimaryLightColorProvider),
+                            onSelectFocus: false,
+                            onSelect: () async {
+                              final Color colorBeforeDialog =
+                                  ref.read(themePrimaryLightColorProvider);
+                              var res = await showColorPickerDialog(
+                                  context, colorBeforeDialog);
+                              ref
+                                  .read(themePrimaryLightColorProvider.notifier)
+                                  .setColor(res);
+                              if (!context.mounted) return;
                               CupertinoAdaptiveTheme.of(context).setTheme(
-                                light: CupertinoThemeData(
-                                    brightness: Brightness.light,
-                                    primaryColor: color),
-                                dark: CupertinoThemeData(
-                                  brightness: Brightness.dark,
-                                  primaryColor: context
-                                      .read(ThemePrimaryDarkColor.provider),
-                                ),
-                              );
+                                  light: CupertinoThemeData(
+                                      brightness: Brightness.light,
+                                      primaryColor: res),
+                                  dark: CupertinoThemeData(
+                                    brightness: Brightness.dark,
+                                    primaryColor: context
+                                        .read(themePrimaryDarkColorProvider),
+                                  ));
                             },
                           ),
                         ),
                       ]),
                   CupertinoFormSection(
                       header: Text(Localize.of(context).setPrimaryDarkColor),
-                      children: <Widget>[
-                        FittedBox(
-                          child: FastCustomColorPicker(
-                            selectedColor:
-                                context.watch(ThemePrimaryDarkColor.provider),
-                            onColorSelected: (color) {
-                              setState(() {
-                                context
-                                    .read(
-                                        ThemePrimaryDarkColor.provider.notifier)
-                                    .setColor(color);
-                              });
+                      children: [
+                        CupertinoListTile(
+                          title: Text(Localize.of(context).setcolor),
+                          trailing: ColorIndicator(
+                            width: 20,
+                            height: 20,
+                            borderRadius: 22,
+                            color: ref.watch(themePrimaryDarkColorProvider),
+                            onSelectFocus: false,
+                            onSelect: () async {
+                              final Color colorBeforeDialog =
+                                  ref.read(meColorProvider);
+                              var res = await showColorPickerDialog(
+                                  context, colorBeforeDialog);
+                              ref
+                                  .read(themePrimaryDarkColorProvider.notifier)
+                                  .setColor(res);
+                              if (!context.mounted) return;
                               CupertinoAdaptiveTheme.of(context).setTheme(
-                                light: CupertinoThemeData(
-                                  brightness: Brightness.light,
-                                  primaryColor:
-                                      context.read(ThemePrimaryColor.provider),
-                                ),
-                                dark: CupertinoThemeData(
-                                  brightness: Brightness.dark,
-                                  primaryColor: color,
-                                ),
-                              );
+                                  light: CupertinoThemeData(
+                                      brightness: Brightness.light,
+                                      primaryColor: context.read(
+                                          themePrimaryLightColorProvider)),
+                                  dark: CupertinoThemeData(
+                                    brightness: Brightness.dark,
+                                    primaryColor: res,
+                                  ));
                             },
                           ),
                         ),
-                      ]),
-                  CupertinoFormSection(
-                      header: Text(Localize.of(context).setIconSizeTitle),
-                      children: <Widget>[
-                        Text(
-                            '${Localize.of(context).setIconSize} ${_iconSize.toStringAsFixed(0)} px'),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CupertinoSlider(
-                                key: const Key('sliderIconSize'),
-                                value: _iconSize,
-                                divisions: 100,
-                                min: 15.0,
-                                max: 60,
-                                activeColor: context.watch(MeColor.provider),
-                                thumbColor: context.watch(MeColor.provider),
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _iconSize = value;
-                                  });
-                                },
-                                onChangeEnd: ((val) =>
-                                    HiveSettingsDB.setIconSizeValue(val)),
-                              ),
-                              const SizedBox(width: 10),
-                              Center(
-                                child: Icon(CupertinoIcons.circle_filled,
-                                    size: _iconSize,
-                                    color: context.watch(MeColor.provider)),
-                              ),
-                            ]),
                       ]),
                   CupertinoFormSection(
                       header: Text(Localize.of(context).setDarkModeTitle),
@@ -219,6 +227,39 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                       ]),
+                  CupertinoFormSection(
+                      header: Text(Localize.of(context).setIconSizeTitle),
+                      children: <Widget>[
+                        Text(
+                            '${Localize.of(context).setIconSize} ${_iconSize.toStringAsFixed(0)} px'),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CupertinoSlider(
+                                key: const Key('sliderIconSize'),
+                                value: _iconSize,
+                                divisions: 100,
+                                min: 15.0,
+                                max: 60,
+                                activeColor: context.watch(meColorProvider),
+                                thumbColor: context.watch(meColorProvider),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _iconSize = value;
+                                  });
+                                },
+                                onChangeEnd: ((val) =>
+                                    HiveSettingsDB.setIconSizeValue(val)),
+                              ),
+                              const SizedBox(width: 10),
+                              Center(
+                                child: Icon(CupertinoIcons.circle_filled,
+                                    size: _iconSize,
+                                    color: context.watch(meColorProvider)),
+                              ),
+                            ]),
+                      ]),
+
                   if (!kIsWeb)
                     CupertinoFormSection(
                         header: Text(Localize.of(context).showOwnTrack),
@@ -233,11 +274,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                 onChanged: (val) {
                                   setState(() {
                                     context
-                                        .read(ShowOwnTrack.provider.notifier)
+                                        .read(showOwnTrackProvider.notifier)
                                         .setValue(val);
                                   });
                                 },
-                                value: context.watch(ShowOwnTrack.provider),
+                                value: context.watch(showOwnTrackProvider),
                               ),
                             ),
                           ),

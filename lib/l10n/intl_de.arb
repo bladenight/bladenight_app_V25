@@ -3,6 +3,16 @@
   "@dateIntl": {
     "placeholders": {
       "date": {
+        "format": "dd.MM.yyyy",
+        "isCustomDateFormat": "true",
+        "numeric": "auto",
+        "type": "DateTime"
+      }
+    }
+  },
+  "@weekdayIntl": {
+    "placeholders": {
+      "date": {
         "format": "EEEE",
         "numeric": "auto",
         "type": "DateTime"
@@ -112,7 +122,7 @@
   "about_oneSignalPrivacy": "Wir verwenden für unsere Website OneSignal, eine Mobile-Marketing-Plattform. Dienstanbieter ist das amerikanische Unternehmen OneSignal, 2850 S Delaware St #201, San Mateo, CA 94403, USA.\n\nOneSignal verarbeitet Daten u.a. auch in den USA. Wir weisen darauf hin, dass nach Meinung des Europäischen Gerichtshofs derzeit kein angemessenes Schutzniveau für den Datentransfer in die USA besteht. Dies kann mit verschiedenen Risiken für die Rechtmäßigkeit und Sicherheit der Datenverarbeitung einhergehen.\n\nAls Grundlage der Datenverarbeitung bei Empfängern mit Sitz in Drittstaaten (außerhalb der Europäischen Union, Island, Liechtenstein, Norwegen, also insbesondere in den USA) oder einer Datenweitergabe dorthin verwendet OneSignal von der EU-Kommission genehmigte Standardvertragsklauseln (= Art. 46. Abs. 2 und 3 DSGVO). Diese Klauseln verpflichten OneSignal, das EU-Datenschutzniveau bei der Verarbeitung relevanter Daten auch außerhalb der EU einzuhalten. Diese Klauseln basieren auf einem Durchführungsbeschluss der EU-Kommission. Sie finden den Beschluss sowie die Klauseln u.a. hier: https://germany.representation.ec.europa.eu/index_de.\n\nMehr über die Daten, die durch die Verwendung von OneSignal verarbeitet werden, erfahren Sie in der Privacy Policy auf https://onesignal.com/privacy.\n\nAlle Texte sind urheberrechtlich geschützt.\n\nQuelle: Erstellt mit dem Datenschutz Generator von AdSimple",
   "about_open_street_map": "Daten, die wir automatisch erhalten\n\nDie OSMF betreibt eine Reihe von Diensten für die OpenStreetMap-Gemeinschaft, z. B. die Website openstreetmap.org, die Online-Karte im \"Standard\"-Stil, die OSM-API und die Nominatim-Suchfunktion.\n\nWenn Sie eine OSMF-Website besuchen, über einen Browser oder über Anwendungen, die die bereitgestellten APIs nutzen, auf einen der Dienste zugreifen, werden Aufzeichnungen über diese Nutzung erstellt, wir sammeln Informationen über Ihren Browser oder Ihre Anwendung und Ihre Interaktion mit unserer Website, einschließlich (a) IP-Adresse, (b) Browser- und Gerätetyp, (c) Betriebssystem, (d) verweisende Webseite, (e) Datum und Uhrzeit der Seitenbesuche und (f) die auf unseren Websites aufgerufenen Seiten.\n\nDarüber hinaus können wir Software zur Verfolgung der Benutzerinteraktion einsetzen, die zusätzliche Aufzeichnungen über die Benutzeraktivität erstellt, z. B. Piwik.\n\nDienste, die Geo-DNS oder ähnliche Mechanismen verwenden, um die Last auf geografisch verteilte Server zu verteilen, erzeugen möglicherweise eine Aufzeichnung Ihres Standorts in großem Umfang (z. B. ermittelt das OSMF-Kachel-Cache-Netzwerk das Land, in dem Sie sich wahrscheinlich befinden, und leitet Ihre Anfragen an einen entsprechenden Server weiter).\n\nDiese Aufzeichnungen werden auf folgende Weise verwendet oder können verwendet werden:\n\nzur Unterstützung des Betriebs der Dienste aus technischer, sicherheitstechnischer und planerischer Sicht.\nals anonymisierte, zusammengefasste Daten für Forschungs- und andere Zwecke. Solche Daten können über https://planet.openstreetmap.org oder andere Kanäle öffentlich angeboten und von Dritten genutzt werden.\num den OpenStreetMap-Datensatz zu verbessern. Zum Beispiel durch die Analyse von Nominatim-Abfragen auf fehlende Adressen und Postleitzahlen und die Bereitstellung solcher Daten für die OSM-Community.\nDie auf den Systemen gesammelten Daten sind für die Systemadministratoren und die entsprechenden OSMF-Arbeitsgruppen, z. B. die Datenarbeitsgruppe, zugänglich. Es werden keine persönlichen Informationen oder Informationen, die mit einer Person in Verbindung gebracht werden können, an Dritte weitergegeben, es sei denn, dies ist gesetzlich vorgeschrieben.\n\nDie von Piwik gespeicherten IP-Adressen werden auf zwei Bytes gekürzt und die detaillierten Nutzungsdaten werden 180 Tage lang aufbewahrt.\n\nDa diese Speicherung nur vorübergehend erfolgt, ist es uns im Allgemeinen nicht möglich, Zugang zu IP-Adressen oder den damit verbundenen Protokollen zu gewähren.\n\nDie oben genannten Daten werden auf der Grundlage eines berechtigten Interesses verarbeitet (siehe Artikel 6 Absatz 1 Buchstabe f der DSGVO).",
   "actualInformations": "Aktuelle Informationen",
-  "addNearBy": "Freund:in {dev} neben Dir hinzufügen",
+  "addNearBy": "Freund:in neben Dir hinzufügen",
   "addfriendwithcode": "Freund:in mit Code hinzufügen",
   "addnewfriend": "Freund:in neu anlegen",
   "aheadOfMe": "vor mir",
@@ -451,6 +461,18 @@
   "bladeGuardSettings": "Bladeguard Einstellungen",
   "bladeGuardSettingsTitle": "Bladeguardeinstellungen aufrufen",
   "checkBgRegistration": "Prüfen ob die E-Mail registriert wurde.",
-  "fireBaseCrashlyticsHeader": "Um die App zu verbessern, werden Absturzprotokolle an Crashlytics gesendet. Dies kann hier unterdrück werden.",
-  "fireBaseCrashlytics": "Crashlytics deaktivieren"
+  "fireBaseCrashlyticsHeader": "Um die App zu verbessern, werden Absturzprotokolle an Crashlytics gesendet. Dies kann hier unterdrückt werden.",
+  "fireBaseCrashlytics": "Crashlytics an/aus",
+  "later": "Später",
+  "register": "Anmelden",
+  "invalidEMail": "Email nicht gefunden!",
+  "enterBirthday": "Dein Geburtstag ",
+  "birthday": "Geburtstag",
+  "weekdayIntl": "{date}",
+  "enterPhoneNumber": "Deine Mobiltelefonnummer",
+  "phoneNumber": "Tel:",
+  "invalidLoginData" : "Email not found or wrong birthday",
+  "update": "Update",
+  "requestOffSite":"Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. ",
+  "todayNo": "Heute nein"
 }

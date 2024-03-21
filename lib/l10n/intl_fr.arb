@@ -3,6 +3,16 @@
   "@dateIntl": {
     "placeholders": {
       "date": {
+        "format": "dd.MM.yyyy",
+        "isCustomDateFormat": "true",
+        "numeric": "auto",
+        "type": "DateTime"
+      }
+    }
+  },
+  "@weekdayIntl": {
+    "placeholders": {
+      "date": {
         "format": "EEEE",
         "numeric": "auto",
         "type": "DateTime"
@@ -88,10 +98,10 @@
   "about_crashlytics": "Pour améliorer la stabilité et la fiabilité de cette application, nous nous appuyons sur des rapports de crash anonymes. Pour ce faire, nous utilisons Firebase Crashlytics, un service de Google Ireland Ltd, Google Building Gordon House, Barrow Street, Dublin 4, Irlande. En cas de panne, des informations anonymes sont envoyées aux serveurs de Google aux États-Unis (état de l'application au moment de la panne, UUID d'installation, trace de la panne, fabricant du téléphone portable et système d'exploitation, derniers messages du journal). Ces informations ne contiennent aucune donnée personnelle. Les rapports de crash ne sont envoyés qu'avec votre consentement explicite. Lorsque vous utilisez des applications iOS, vous pouvez donner votre consentement dans les paramètres de l'application ou après un crash. Pour les applications Android, lors de la configuration de l'appareil mobile, vous avez la possibilité de donner votre accord général à la transmission des notifications de crash à Google et au développeur de l'application.\nLa base juridique de la transmission des données est l'article 6, paragraphe 1, point a), du règlement GDPR.\nVous pouvez révoquer votre consentement à tout moment en désactivant la fonction rapports de crash dans les paramètres des applications iOS (dans les applications magazines, l'entrée se trouve dans l'élément de menu 'Communication'). Pour ce faire, ouvrez l'application Paramètres, sélectionnez 'Google' et, dans le menu à trois points en haut à droite, l'élément de menu 'Utilisation & Diagnostics'. Vous pouvez y désactiver l'envoi des données correspondantes. Pour plus d'informations, consultez l'aide de votre compte Google.\nPlus d'informations sur la protection des données sont disponibles dans les informations sur la protection des données de Firebase Crashlytics à l'adresse https://firebase.google.com/support/privacy et https://docs.fabric.io/apple/fabric/data-privacy.html#data-collection-policies",
   "about_feedback": "Vos commentaires sont les bienvenus.\nEnvoyez-nous un courriel:\nnservice@skatemunich.de",
   "about_h_androidapplicationflutter": "BladeNight-App iOS/Android (2022)",
-  "about_h_androidapplicationflutter_23": "BladeNight-App iOS/Android (2023)",
+  "about_h_androidapplicationflutter_23": "BladeNight-App iOS/Android (2023-2024)",
   "about_h_androidapplicationv1": "Application Android V1 (2013)",
   "about_h_androidapplicationv2": "Android App V2 (2014-2022)",
-  "about_h_androidapplicationv3": "Android App V3 (2023)",
+  "about_h_androidapplicationv3": "Android App V3 (2023-2024)",
   "about_h_bnapp": "À quoi sert l'application",
   "about_h_crashlytics": "Firebase Crashlytics privacy",
   "about_h_feedback": "Retour d'information à propos de BladeNight",
@@ -112,7 +122,7 @@
   "about_oneSignalPrivacy": "Nous utilisons OneSignal, une plateforme de marketing mobile, pour notre site web. Le prestataire de services est la société américaine OneSignal, 2850 S Delaware St #201, San Mateo, CA 94403, USA.\nOneSignal traite également des données aux États-Unis, entre autres. Nous tenons à souligner que, selon la Cour européenne de justice, il n'existe actuellement aucun niveau de protection adéquat pour le transfert de données vers les États-Unis. Ceci peut être associé à divers risques pour la légalité et la sécurité du traitement des données. OneSignal utilise des clauses contractuelles standard approuvées par la Commission européenne (= Art. 46. Para. 2 et 3 GDPR). Ces clauses obligent OneSignal à se conformer au niveau de protection des données de l'UE lorsqu'il traite des données pertinentes en dehors de l'UE. Ces clauses sont basées sur une décision de mise en œuvre de la Commission européenne. Vous pouvez trouver la décision et les clauses ici : https://germany.representation.ec.europa.eu/index_de. Pour en savoir plus sur les données traitées par OneSignal, consultez la politique de confidentialité à l'adresse https://onesignal.com/privacy. Tous les textes sont protégés par des droits d'auteur. Source : Créé avec le générateur de confidentialité par AdSimple",
   "about_open_street_map": "Données que nous recevons automatiquement L'OSMF gère un certain nombre de services pour la communauté OpenStreetMap, par exemple le site web openstreetmap.org, la carte en ligne de style 'Standard', l'API OSM et l'outil de recherche nominatim.\nLorsque vous visitez un site web OSMF, accédez à l'un des services via un navigateur ou via des applications qui utilisent les API fournies, des enregistrements de cette utilisation sont produits, nous collectons des informations sur votre navigateur ou application et votre interaction avec notre site web, y compris (a) l'adresse IP, (b) le type de navigateur et d'appareil, (c) le système d'exploitation, (d) la page web de référence, (e) la date et l'heure des visites de pages, et (f) les pages consultées sur nos sites web.\nLes services qui utilisent le Geo-DNS ou des mécanismes similaires pour répartir la charge sur des serveurs géographiquement distribués généreront potentiellement un enregistrement de votre localisation à grande échelle (par exemple, le réseau de cache de tuiles OSMF détermine le pays dans lequel vous êtes susceptible d'être situé et dirige vos requêtes vers un serveur approprié). \nCes données sont utilisées ou peuvent être utilisées de la manière suivante : pour soutenir le fonctionnement des services d'un point de vue technique, de sécurité et de planification, en tant que données anonymes et résumées à des fins de recherche et autres. Ces données peuvent être proposées publiquement via https://planet.openstreetmap.org ou d'autres canaux et utilisées par des tiers.\npour améliorer le jeu de données OpenStreetMap. Par exemple, en analysant les requêtes nominatives pour les adresses et les codes postaux manquants et en fournissant ces données à la communauté OSM. Les données collectées sur les systèmes seront accessibles par les administrateurs du système et les groupes de travail OSMF appropriés, par exemple le groupe de travail sur les données. Aucune information personnelle ou liée à un individu ne sera divulguée à des tiers, sauf si la loi l'exige.\nLes adresses IP stockées par Piwik sont raccourcies à deux octets et les informations d'utilisation détaillées sont conservées pendant 180 jours.\nCompte tenu de la nature temporaire de ce stockage, il n'est généralement pas possible pour nous de fournir un accès aux adresses IP ou aux journaux qui y sont associés.\nLes données mentionnées ci-dessus sont traitées sur la base de l'intérêt légitime (voir GDPR article 6.1f ).",
   "actualInformations": "Informations actuelles",
-  "addNearBy": "Ajouter un {dev} ami à proximité",
+  "addNearBy": "Ajouter un ami à proximité",
   "addfriendwithcode": "Ajouter un ami avec un code",
   "addnewfriend": "Ajouter un nouvel ami",
   "aheadOfMe": "en avance sur moi",
@@ -230,7 +240,7 @@
   "head": "Tête",
   "home": "Accueil",
   "iAmBladeGuard": "Je suis déjà un Bladeguard",
-  "iAmBladeGuardTitle": "Nous avons besoin du soutien de bénévoles. En tant que Bladeguard, vous soutenez activement Bladenight. Les <a href=\"{bladeguardPrivacyLink}\">Règlements de Munich sur la protection des données</a></p> s'appliquent",
+  "iAmBladeGuardTitle": "Nous avons besoin du soutien de bénévoles. En tant que Bladeguard, vous soutenez activement Bladenight. Les <a href=\"{bladeguardPrivacyLink}\">Règlements de Munich BladeNight sur la protection des données</a></p> s'appliquent",
   "bladeguardInfo": "<h2>Exigences et règles :</h2><ul><li>Vous avez au moins 16 ans.</li><li>Vous êtes à l'aise avec les rollers en ligne et savez freiner.</li ><li>Vous connaissez le code de la route </li><li>Vous êtes serviable, sympathique et avez l'esprit d'équipe </li><li>Vous participez à notre formation gratuite avant votre premier voyage.</li> </ul ><p>En tant que Bladeguard, il n'y a aucun frais pour vous. Vous pouvez vous désinscrire à tout moment. <h3>Ici, vous pouvez accéder à <a href=\"{bladeguardRegisterlink}\">Inscription en ligne</a> et <a href=\"{ bladeguardPrivacyLink}\">Protection des données</a></p></h3>",
   "iam": "Je suis",
   "ignoreBatteriesOptimisation": "Note - certains fabricants désactivent les applications en raison d'une optimisation défavorable de la batterie ou ferment l'application. Si c'est le cas, essayez de désactiver l'optimisation de la batterie pour l'application. Régler sur Aucune restriction",
@@ -240,6 +250,8 @@
   "importWarningTitle": "Importer les amis et l'ID",
   "inprogress": "non implémenté. Nous y travaillons...",
   "internalerror_invalidcode": "Code invalide",
+  "requestOffSite":"Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. ",
+  "todayNo": "Heute nein",
   "internalerror_seemslinked": "Erreur - Un ami est lié?",
   "invalidcode": "Code invalide",
   "invitebyname": "inviter {name}",
@@ -451,6 +463,16 @@
   "bladeGuardSettings": "Paramètres du Bladeguard",
   "bladeGuardSettingsTitle": "Ouvrir la page des paramètres de Bladeguard",
   "checkBgRegistration": "Vérifiez si vous êtes enregistré en tant que Bladeguard",
-  "fireBaseCrashlyticsHeader": "Pour améliorer l'application, les journaux de crash sont envoyés à Crashlytics. Cela peut être supprimé ici.",
-  "fireBaseCrashlytics": "Désactiver Crashlytics"
+  "fireBaseCrashlyticsHeader": "Pour améliorer l'application, les événements de crash seront envoyés à Crashlytics. Cela peut être supprimé ici.",
+  "fireBaseCrashlytics": "Crashlytics activé/désactivé",
+  "plus tard": "Plus tard",
+  "register": "S'inscrire",
+  "invalidEMail" : "Mail not found",
+  "enterBirthday": "Your Birthday",
+  "birthday": "Birthday",
+  "weekdayIntl": "{date}",
+  "enterPhoneNumber": "Please enter your mobile phone Number",
+  "phoneNumber": "Mobile",
+  "invalidLoginData" : "Email not found or wrong birthday",
+  "update": "Update"
 }

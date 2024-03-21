@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
@@ -194,13 +195,15 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                 return Stack(
                   children: [
                     const PolyLinesLayer(),
-                    /*AnimatedLocationMarkerLayer(
+                   // CurrentLocationLayer(),
+                   /*AnimatedLocationMarkerLayer(
                 position: LocationMarkerPosition(
                     latitude: ref.watch(realtimeDataProvider)!.head.latitude!,
                     longitude: ref.watch(realtimeDataProvider)!.head.longitude!,
-                    accuracy: 1.0),
+                    accuracy: 1.0
+                ),
               ),*/
-
+                    CustomLocationLayer(_popupController, _hasGesture),
                     //needs map controller
                     MarkersLayer(_popupController),
                     TrackProgressOverlay(_mapController),
@@ -209,7 +212,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                 );
               }),
               //CurrentLocationLayer(),
-             CustomLocationLayer(_popupController, _hasGesture),
+
             ],
           ),
           const GPSInfoAndMapCopyright(),

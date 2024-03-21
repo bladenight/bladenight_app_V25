@@ -40,7 +40,7 @@ class _EmailTextFieldState extends ConsumerState<EmailTextField> {
           onChanged: (value) {
             var validEmail = validateEmail(_emailTextController.text);
             if (validEmail || _emailTextController.text == '') {
-              HiveSettingsDB.setBladeguardEmail(_emailTextController.text);
+              HiveSettingsDB.setBladeguardEmail(_emailTextController.text.toLowerCase());
             }
             setState(() {});
           },

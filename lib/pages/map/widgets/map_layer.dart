@@ -19,7 +19,7 @@ class MapLayer extends StatefulWidget {
     required this.event,
     required this.startPoint,
     required this.finishPoint,
-    required RoutePoints this.routePoints,
+    required this.routePoints,
     this.location,
     this.markers = const [],
     this.polyLines = const [],

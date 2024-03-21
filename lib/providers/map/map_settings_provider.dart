@@ -1,0 +1,22 @@
+import 'package:hive/hive.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../app_settings/app_constants.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
+
+part 'map_settings_provider.g.dart';
+
+@riverpod
+class ShowOwnTrack extends _$ShowOwnTrack {
+  @override
+  bool build() {
+    Hive.box(hiveBoxSettingDbName)
+        .watch(key: MapSettings.showOwnTrackKey)
+        .listen((event) => state = event.value);
+    return MapSettings.showOwnTrack;
+  }
+
+  void setValue(bool val) {
+    MapSettings.setShowOwnTrack(val);
+  }
+}

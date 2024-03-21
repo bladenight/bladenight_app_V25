@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../models/follow_location_state.dart';
 import '../../../providers/is_tracking_provider.dart';
@@ -11,7 +10,8 @@ import '../../../providers/location_provider.dart';
 import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
-import '../../../providers/shared_prefs_provider.dart';
+import '../../../providers/me_color_provider.dart';
+import 'location_marker_widget.dart';
 
 class CustomLocationLayer extends ConsumerStatefulWidget {
   const CustomLocationLayer(this.popupController, this.hasGesture, {super.key});
@@ -47,12 +47,12 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
     var cameraFollow = ref.watch(cameraFollowLocationProvider);
     var alignMap = ref.watch(alignFlutterMapProvider);
     var iconSize = ref.watch(iconSizeProvider);
-    //print('Widget has geture ${widget.hasGesture}');
+    //print('Widget has gesture ${widget.hasGesture}');
     return !isTracking
         ? Container()
         : CurrentLocationLayer(
             positionStream: _positionStream,
-            indicators: const LocationMarkerIndicators(),
+            //indicators: const LocationMarkerIndicators(),
             headingStream: _headingStream,
             alignDirectionAnimationDuration: const Duration(milliseconds: 300),
             alignPositionOnUpdate: cameraFollow == CameraFollow.followMe &&
@@ -74,22 +74,12 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
                 ? AlignOnUpdate.always
                 : AlignOnUpdate.never,
             style: LocationMarkerStyle(
-              showAccuracyCircle: true,
-              headingSectorColor: context.watch(MeColor.provider),
+              showAccuracyCircle: false,
+              headingSectorColor: ref.watch(meColorProvider),
               marker: DefaultLocationMarker(
-                child: CircleAvatar(
-                  backgroundColor:
-                      context.watch(MeColor.provider),
-                  child: LocationProvider.instance.userIsParticipant
-                      ? ImageIcon(
-                          const AssetImage(
-                              'assets/images/skater_icon_256_bearer.png'),
-                          size:
-                              MediaQuery.textScalerOf(context).scale(iconSize) -
-                                  10,
-                        )
-                      : const Icon(Icons.gps_fixed_sharp),
-                ),
+                color: CupertinoTheme.of(context).barBackgroundColor,
+                child: const UserLocationMarker(),
+
                 /*
                 var locationUpdate = ref.watch(locationProvider);
 

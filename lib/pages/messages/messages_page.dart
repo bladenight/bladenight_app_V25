@@ -60,9 +60,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
               child: const Icon(CupertinoIcons.back),
             ),
             largeTitle: Text(Localize.of(context).messages),
-            trailing: Align(
-              alignment: Alignment.centerRight,
-              child: Row(
+            trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CupertinoButton(
@@ -102,13 +100,10 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                     },
                     child: const Icon(CupertinoIcons.refresh),
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
                 ],
               ),
             ),
-          ),
+
           CupertinoSliverRefreshControl(
             onRefresh: () async {
               return context.read(messagesLogicProvider).updateServerMessages();
@@ -352,7 +347,7 @@ class MessagesActionModal extends StatelessWidget {
       cancelButton: CupertinoActionSheetAction(
         child: Text(Localize.of(context).cancel),
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.of(context).pop();
         },
       ),
     );

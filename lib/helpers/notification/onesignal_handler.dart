@@ -122,7 +122,7 @@ class OnesignalHandler {
   static Future<void> setOneSignalChannels() async {
     if (HiveSettingsDB.pushNotificationsEnabled == false) {
       HiveSettingsDB.setOneSignalRegisterBladeGuardPush(false);
-      await OnesignalHandler.registerPushAsBladeGuard(false, 0);
+      await OnesignalHandler.registerPushAsBladeGuard(false, '');
       HiveSettingsDB.setRcvSkatemunichInfos(false);
       await OnesignalHandler.registerSkateMunichInfo(false);
       await OneSignal.User.pushSubscription.optOut();
@@ -134,9 +134,18 @@ class OnesignalHandler {
     BnLog.info(text: 'setOneSignalChannels optIn is $optedIn');
   }
 
-  static Future<void> registerPushAsBladeGuard(bool value, int teamId) async {
+  static Future<void> unRegisterPushAsBladeGuard() async {
+    HiveSettingsDB.setOneSignalRegisterBladeGuardPush(false);
+    await OnesignalHandler.registerPushAsBladeGuard(false, '');
+    HiveSettingsDB.setRcvSkatemunichInfos(false);
+    await OnesignalHandler.registerSkateMunichInfo(false);
+    await OneSignal.User.pushSubscription.optOut();
+    BnLog.info(text: 'Bladeguard logged out from OneSignal');
+  }
+
+  static Future<void> registerPushAsBladeGuard(bool value, String teamId) async {
     Map<String, String> map = {
-      'IsBladeguard': value ? teamId.toString() : '0',
+      'IsBladeguard': value ? teamId: '',
     };
     BnLog.info(text: 'register IsBladeguard value $value $teamId');
     OneSignal.User.addTags(map).catchError((err) {
@@ -203,13 +212,13 @@ class OnesignalHandler {
   static void receivedBgRemoteMessage(MethodCall call) async {
     try {
       print('remote notification received');
-      ProviderContainer().read(messagesLogicProvider).addMessage(ExternalAppMessage(
-          uid: UUID.createUuid(),
-          title: call.arguments,
-          body: 'Test',
-          timeStamp: DateTime.now().millisecondsSinceEpoch,
-          lastChange: DateTime.now().millisecondsSinceEpoch
-      ));
+      ProviderContainer().read(messagesLogicProvider).addMessage(
+          ExternalAppMessage(
+              uid: UUID.createUuid(),
+              title: call.arguments,
+              body: 'Test',
+              timeStamp: DateTime.now().millisecondsSinceEpoch,
+              lastChange: DateTime.now().millisecondsSinceEpoch));
     } catch (e) {
       BnLog.error(
           className: 'onesignal_handler',

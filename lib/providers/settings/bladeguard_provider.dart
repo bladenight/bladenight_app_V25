@@ -25,7 +25,7 @@ class UserIsBladeguard extends _$UserIsBladeguard {
       HiveSettingsDB.setBgLeaderSettingVisible(false);
       HiveSettingsDB.setIsBladeGuard(false);
       HiveSettingsDB.setOneSignalRegisterBladeGuardPush(false);
-      OnesignalHandler.registerPushAsBladeGuard(false, 0);
+      OnesignalHandler.registerPushAsBladeGuard(false,'');
       state = value;
       return;
     }

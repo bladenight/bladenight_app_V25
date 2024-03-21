@@ -122,13 +122,11 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color:
-                        nextEventProvider.status == EventStatus.cancelled
-                            ? Colors.redAccent
-                            : nextEventProvider.status ==
-                                    EventStatus.confirmed
-                                ? Colors.green
-                                : Colors.transparent,
+                    color: nextEventProvider.status == EventStatus.cancelled
+                        ? Colors.redAccent
+                        : nextEventProvider.status == EventStatus.confirmed
+                            ? Colors.green
+                            : Colors.transparent,
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(10.0),
                         bottomRight: Radius.circular(10.0),
@@ -155,14 +153,14 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                 width: iwidth,
                 child: GestureDetector(
                   onTap: () {
-                    if (context.read(MainSponsorImageAndLink.provider).link !=
+                    if (ref.read(mainSponsorImageAndLinkProvider).link !=
                         null) {
                       Launch.launchUrlFromString(
-                          context.read(MainSponsorImageAndLink.provider).link!);
+                          ref.read(mainSponsorImageAndLinkProvider).link!);
                     }
                   },
                   child: Builder(builder: (context) {
-                    var ms = context.watch(MainSponsorImageAndLink.provider);
+                    var ms = ref.watch(mainSponsorImageAndLinkProvider);
                     //var nw = context.watch(networkAwareProvider);
                     return (ms.image != null)
                         // && nw.connectivityStatus == ConnectivityStatus.online)
@@ -191,15 +189,15 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                 width: iwidth,
                 child: GestureDetector(
                   onTap: () {
-                    if (context.read(SecondSponsorImageAndLink.provider).link !=
+                    if (context.read(secondSponsorImageAndLinkProvider).link !=
                         null) {
                       Launch.launchUrlFromString(context
-                          .read(SecondSponsorImageAndLink.provider)
+                          .read(secondSponsorImageAndLinkProvider)
                           .link!);
                     }
                   },
                   child: Builder(builder: (context) {
-                    var ssp = context.watch(SecondSponsorImageAndLink.provider);
+                    var ssp = context.watch(secondSponsorImageAndLinkProvider);
                     return ssp.image != null
                         ? FadeInImage.assetNetwork(
                             placeholder: secondLogoPlaceholder,
@@ -233,7 +231,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                 //Don't show starting point when no event
                 if (nextEventProvider.status != EventStatus.noevent)
                   Builder(builder: (context) {
-                    var spp = ref.watch(StartPointImageAndLink.provider);
+                    var spp = ref.watch(startpointImageAndLinkProvider);
                     return spp.text != null
                         ? FittedBox(
                             child: Text(

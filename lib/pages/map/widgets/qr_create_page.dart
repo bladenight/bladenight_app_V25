@@ -3,29 +3,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../helpers/url_launch_helper.dart';
-
 class QRCreatePage extends StatefulWidget {
   const QRCreatePage(
       {super.key,
-      required this.qrcodetext,
-      required this.headertext,
-      required this.infotext});
+      required this.qrCodeText,
+      required this.headerText,
+      required this.infoText});
 
-  final String headertext;
-  final String infotext;
-  final String qrcodetext;
+  final String headerText;
+  final String infoText;
+  final String qrCodeText;
 
   static Future<dynamic> show(
       {required BuildContext context,
-      required String qrcodetext,
-      required String headertext,
+      required String qrCodeText,
+      required String headerText,
       required String infotext}) async {
     return Navigator.of(context).push(CupertinoPageRoute(
       builder: (context) => QRCreatePage(
-        qrcodetext: qrcodetext,
-        headertext: headertext,
-        infotext: infotext,
+        qrCodeText: qrCodeText,
+        headerText: headerText,
+        infoText: infotext,
       ),
     ));
   }
@@ -63,7 +61,7 @@ class QRCreatePageState extends State<QRCreatePage> {
                   barcode: Barcode.qrCode(),
                   color: Colors.white,
                   backgroundColor: Colors.black,
-                  data: widget.qrcodetext,
+                  data: widget.qrCodeText,
                   width: 200,
                   height: 200,
                 ),
@@ -73,16 +71,17 @@ class QRCreatePageState extends State<QRCreatePage> {
                 padding: const EdgeInsets.all(24),
                 child: FittedBox(
                   child: GestureDetector(
-                    onTap: () async{
-                      var uri = Uri.parse(widget.qrcodetext);
-                      if (await canLaunchUrl(uri)){
-                      await launchUrl(uri);
+                    onTap: () async {
+                      var uri = Uri.parse(widget.qrCodeText);
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri,
+                            mode: LaunchMode.externalApplication);
                       } else {
-                      // can't launch url
+                        // can't launch url
                       }
                       //Launch.launchUrlFromString(widget.qrcodetext);
                     },
-                    child: Text(widget.infotext,
+                    child: Text(widget.infoText,
                         style: CupertinoTheme.of(context)
                             .textTheme
                             .navLargeTitleTextStyle),

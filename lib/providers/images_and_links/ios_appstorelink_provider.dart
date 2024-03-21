@@ -1,34 +1,29 @@
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-
+import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../models/image_and_link.dart';
-import '../shared_prefs_provider.dart';
 
-String iosLinkImageAndLinkKey = 'iosLinkKey';
-String _iosLinkImageAndLinkPrefJson =
-    '{"key":"iOSAppStoreLink","image":"","link":"https://apps.apple.com/de/app/bladenight-vorab/id1629988473","text":"BladenightApp iOS"}';
+part 'ios_appstorelink_provider.g.dart';
 
-class IosAppStoreImageAndLink extends StateNotifier<ImageAndLink> {
-  IosAppStoreImageAndLink(this.pref)
-      : super(MapperContainer.globals.fromJson(
-            pref?.getString(iosLinkImageAndLinkKey)?.toString() ??
-                _iosLinkImageAndLinkPrefJson));
+String iosIalKey = 'iosAppStoreIalKey';
+ImageAndLink _defaultIosIal = ImageAndLink('', 'https://apps.apple.com/de/app/bladenight-vorab/id1629988473', 'BladenightApp iOS', 'iOSAppStoreLink');
 
-  final SharedPreferences? pref;
 
-  static final provider =
-      StateNotifierProvider<IosAppStoreImageAndLink, ImageAndLink>((ref) {
-    final pref = ref.watch(sharedPrefs).maybeWhen(
-          data: (value) => value,
-          orElse: () => null,
-        );
-    return IosAppStoreImageAndLink(pref);
-  });
+@riverpod
+class IosAppstoreImageAndLink extends _$IosAppstoreImageAndLink {
+  @override
+  ImageAndLink build() {
+    HiveSettingsDB.settingsHiveBox
+        .watch(key: iosIalKey)
+        .listen((event) => state = event.value);
+    return HiveSettingsDB.settingsHiveBox
+        .get(iosIalKey, defaultValue: _defaultIosIal);
+  }
 
   void setValue(ImageAndLink imageAndLink) {
-    state = imageAndLink;
-    pref!.setString(iosLinkImageAndLinkKey, MapperContainer.globals.toJson(imageAndLink));
+    HiveSettingsDB.settingsHiveBox
+        .put(iosIalKey, imageAndLink);
+    //state = imageAndLink;
   }
 }
+

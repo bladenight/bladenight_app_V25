@@ -23,16 +23,20 @@ import 'app_settings/server_connections.dart';
 import 'firebase_options.dart';
 import 'generated/l10n.dart';
 import 'helpers/export_import_data_helper.dart';
+import 'helpers/hive_box/adapter/color_adapter.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
 import 'helpers/logger.dart';
 import 'helpers/notification/notification_helper.dart';
 import 'helpers/preferences_helper.dart';
 import 'main.init.dart';
+import 'models/image_and_link.dart';
 import 'pages/bladeguard/bladeguard_page.dart';
 import 'pages/home_screen.dart';
 import 'pages/widgets/intro_slider.dart';
 import 'pages/widgets/route_name_dialog.dart';
-import 'providers/shared_prefs_provider.dart';
+import 'providers/settings/dark_color_provider.dart';
+import 'providers/settings/light_color_provider.dart';
+import 'providers/settings/light_color_provider.dart';
 
 const String openRouteMapRoute = '/eventRoute';
 const String openBladeguardOnSite = '/bgOnsite';
@@ -67,8 +71,12 @@ void main() async {
       }
       initializeMappers();
       await Hive.initFlutter();
+      Hive.registerAdapter(ColorAdapter());
+      Hive.registerAdapter(ImageAndLinkAdapter());
       await Hive.openBox(hiveBoxSettingDbName);
+      await Hive.openBox(hiveBoxServerConfigDBName);
       Globals.logToCrashlytics = HiveSettingsDB.chrashlyticsEnabled;
+
       await initLogger();
       if (!kIsWeb) {
         await initNotifications();
@@ -164,12 +172,10 @@ class BladeNightApp extends StatelessWidget {
         child: CupertinoAdaptiveTheme(
           light: CupertinoThemeData(
               brightness: Brightness.light,
-              primaryColor: context.watch(ThemePrimaryColor.provider) ??
-                  systemPrimaryDefaultColor),
+              primaryColor: HiveSettingsDB.themePrimaryLightColor),
           dark: CupertinoThemeData(
             brightness: Brightness.dark,
-            primaryColor: context.watch(ThemePrimaryDarkColor.provider) ??
-                systemPrimaryDefaultColor,
+            primaryColor: HiveSettingsDB.themePrimaryDarkColor,
           ),
           initial: HiveSettingsDB.adaptiveThemeMode,
           builder: (theme) => CupertinoApp(

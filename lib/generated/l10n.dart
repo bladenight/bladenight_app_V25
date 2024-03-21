@@ -360,13 +360,13 @@ class Localize {
     );
   }
 
-  /// `Add {dev} friend nearby`
-  String addNearBy(Object dev) {
+  /// `Add friend nearby`
+  String get addNearBy {
     return Intl.message(
-      'Add $dev friend nearby',
+      'Add friend nearby',
       name: 'addNearBy',
       desc: '',
-      args: [dev],
+      args: [],
     );
   }
 
@@ -912,7 +912,8 @@ class Localize {
 
   /// `{date}`
   String dateIntl(DateTime date) {
-    final DateFormat dateDateFormat = DateFormat.EEEE(Intl.getCurrentLocale());
+    final DateFormat dateDateFormat =
+        DateFormat('dd.MM.yyyy', Intl.getCurrentLocale());
     final String dateString = dateDateFormat.format(date);
 
     return Intl.message(
@@ -1564,10 +1565,10 @@ class Localize {
     );
   }
 
-  /// `We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href="{bladeguardPrivacyLink}">Munich data protection regulations</a></p> apply`
+  /// `We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href="{bladeguardPrivacyLink}">Munich BladeNight data protection regulations</a></p> apply`
   String iAmBladeGuardTitle(Object bladeguardPrivacyLink) {
     return Intl.message(
-      'We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href="$bladeguardPrivacyLink">Munich data protection regulations</a></p> apply',
+      'We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href="$bladeguardPrivacyLink">Munich BladeNight data protection regulations</a></p> apply',
       name: 'iAmBladeGuardTitle',
       desc: '',
       args: [bladeguardPrivacyLink],
@@ -3779,21 +3780,154 @@ class Localize {
     );
   }
 
-  /// `To improve the app, crash logs are sent to Crashlytics. This can be suppressed here.`
+  /// `To improve the app, crash events will be send to Crashlytics. This can be suppressed here.`
   String get fireBaseCrashlyticsHeader {
     return Intl.message(
-      'To improve the app, crash logs are sent to Crashlytics. This can be suppressed here.',
+      'To improve the app, crash events will be send to Crashlytics. This can be suppressed here.',
       name: 'fireBaseCrashlyticsHeader',
       desc: '',
       args: [],
     );
   }
 
-  /// `Disable Crashlytics`
+  /// `Crashlytics on/off`
   String get fireBaseCrashlytics {
     return Intl.message(
-      'Disable Crashlytics',
+      'Crashlytics on/off',
       name: 'fireBaseCrashlytics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Later`
+  String get later {
+    return Intl.message(
+      'Later',
+      name: 'later',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register`
+  String get register {
+    return Intl.message(
+      'Register',
+      name: 'register',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email not found`
+  String get invalidEMail {
+    return Intl.message(
+      'Email not found',
+      name: 'invalidEMail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Birthday`
+  String get enterBirthday {
+    return Intl.message(
+      'Your Birthday',
+      name: 'enterBirthday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Birthday`
+  String get birthday {
+    return Intl.message(
+      'Birthday',
+      name: 'birthday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{date}`
+  String weekdayIntl(DateTime date) {
+    final DateFormat dateDateFormat = DateFormat.EEEE(Intl.getCurrentLocale());
+    final String dateString = dateDateFormat.format(date);
+
+    return Intl.message(
+      '$dateString',
+      name: 'weekdayIntl',
+      desc: '',
+      args: [dateString],
+    );
+  }
+
+  /// `Please enter your mobile phone Number`
+  String get enterPhoneNumber {
+    return Intl.message(
+      'Please enter your mobile phone Number',
+      name: 'enterPhoneNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mobile`
+  String get phoneNumber {
+    return Intl.message(
+      'Mobile',
+      name: 'phoneNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email not found or wrong birthday`
+  String get invalidLoginData {
+    return Intl.message(
+      'Email not found or wrong birthday',
+      name: 'invalidLoginData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get update {
+    return Intl.message(
+      'Update',
+      name: 'update',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Heute kein Bladeguard ? `
+  String get requestOffSiteTitle {
+    return Intl.message(
+      'Heute kein Bladeguard ? ',
+      name: 'requestOffSiteTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. `
+  String get requestOffSite {
+    return Intl.message(
+      'Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. ',
+      name: 'requestOffSite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Heute nein`
+  String get todayNo {
+    return Intl.message(
+      'Heute nein',
+      name: 'todayNo',
       desc: '',
       args: [],
     );

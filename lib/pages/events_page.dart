@@ -14,15 +14,16 @@ import '../pages/widgets/data_loading_indicator.dart';
 import '../pages/widgets/no_data_warning.dart';
 import '../pages/widgets/route_dialog.dart';
 import '../providers/event_providers.dart';
+import '../providers/network_connection_provider.dart';
 
-class EventsPage extends StatefulWidget {
+class EventsPage extends ConsumerStatefulWidget {
   const EventsPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _EventsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _EventsPageState();
 }
 
-class _EventsPageState extends State<EventsPage>
+class _EventsPageState extends ConsumerState<EventsPage>
     with SingleTickerProviderStateMixin {
   final _dataKey = GlobalKey();
   bool _noActualEventFound = false;
@@ -82,6 +83,7 @@ class _EventsPageState extends State<EventsPage>
 
   @override
   Widget build(BuildContext context) {
+    var networkAvailable = ref.watch(networkAwareProvider);
     return NestedScrollView(
       controller: _scrollController,
       floatHeaderSlivers: false,
@@ -89,30 +91,32 @@ class _EventsPageState extends State<EventsPage>
         CupertinoSliverNavigationBar(
           leading: const Icon(CupertinoIcons.ticket),
           largeTitle: Text(_header),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                minSize: 0,
-                onPressed: () async {
-                  context.refresh(allEventsProvider);
-                },
-                child: const Icon(CupertinoIcons.refresh),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                minSize: 0,
-                onPressed: () async {
-                  _showOverlay(context);
-                },
-                child: const Icon(Icons.help),
-              ),
-            ],
-          ),
+          trailing: (networkAvailable.serverAvailable)
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      minSize: 0,
+                      onPressed: () async {
+                        context.refresh(allEventsProvider);
+                      },
+                      child: const Icon(CupertinoIcons.refresh),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      minSize: 0,
+                      onPressed: () async {
+                        _showOverlay(context);
+                      },
+                      child: const Icon(Icons.help),
+                    ),
+                  ],
+                )
+              : const Icon(Icons.offline_bolt_outlined),
         ),
         CupertinoSliverRefreshControl(
           onRefresh: () async {

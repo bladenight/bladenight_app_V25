@@ -4,28 +4,30 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-as bg;
+    as bg;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
+import '../../app_settings/app_constants.dart';
 import '../../models/event.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../models/user_trackpoint.dart';
 import '../logger.dart';
+import '../notification/onesignal_handler.dart';
 import '../uuid_helper.dart';
 import '../validator.dart';
 
-part 'location_store.dart';
-
-part 'map_settings.dart';
+part 'location_store_db.dart';
+part 'map_settings_db.dart';
 
 final hiveDBProvider =
-StateProvider<HiveSettingsDB>((ref) => HiveSettingsDB.instance);
+    StateProvider<HiveSettingsDB>((ref) => HiveSettingsDB.instance);
 
 final bgLeaderSettingProvider = Provider((ref) {
   return ref.watch(hiveDBProvider);
@@ -41,7 +43,11 @@ class HiveSettingsDB {
   }
 
   static get _hiveBox {
-    return Hive.box('settings');
+    return Hive.box(hiveBoxSettingDbName);
+  }
+
+  static get settingsHiveBox {
+    return _hiveBox;
   }
 
   void init() async {
@@ -50,8 +56,6 @@ class HiveSettingsDB {
     //await Hive.initFlutter();
     //await Hive.openBox('settings');
   }
-
-  static get settingsHiveBox => _hiveBox;
 
   static const String _hasSpecialRightsPref = 'hasSpecialRightsPref';
   static const String _specialRightsPref = 'specialRightsPref';
@@ -105,7 +109,7 @@ class HiveSettingsDB {
   ///get if motion detection is disabled
   static bool get useAlternativeLocationProvider {
     var val =
-    _hiveBox.get(_useAlternativeLocationProvider, defaultValue: false);
+        _hiveBox.get(_useAlternativeLocationProvider, defaultValue: false);
     return val;
   }
 
@@ -181,8 +185,14 @@ class HiveSettingsDB {
     return _hiveBox.get(bgSettingVisibleKey, defaultValue: false);
   }
 
-  static void setBgSettingVisible(bool val) {
+  static void setBgSettingVisible(bool val) async {
     _hiveBox.put(bgSettingVisibleKey, val);
+    if (val == false) {
+      setRcvSkatemunichInfos(false);
+      setOneSignalRegisterBladeGuardPush(false);
+      await OnesignalHandler.unRegisterPushAsBladeGuard();
+      //including remove special rights
+    }
   }
 
   static const String bgLeaderSettingVisibleKey =
@@ -354,16 +364,42 @@ class HiveSettingsDB {
     _hiveBox.put(isBladeguardEmailValidKey, validateEmail(val));
   }
 
-  static const String _teamIdKey = 'teamIdPref';
+  static const String bladeguardBirthdayKey = 'bladeguardBirthdayPref';
+
+  ///get bladeguardBirthday
+  static DateTime get bladeguardBirthday {
+    return _hiveBox.get(bladeguardBirthdayKey,
+        defaultValue:
+            DateTime.now().subtract(const Duration(days: 16 * 365 + 4)));
+  }
+
+  ///set BladeguardPhone for Bladeguard
+  static void setBladeguardBirthday(DateTime val) {
+    _hiveBox.put(bladeguardBirthdayKey, val);
+  }
+
+  static const String bladeguardPhoneKey = 'bladeguardPhonePref';
+
+  ///get bladeguardPhone
+  static String get bladeguardPhone {
+    return _hiveBox.get(bladeguardPhoneKey, defaultValue: '');
+  }
+
+  ///set BladeguardPhone for Bladeguard
+  static void setBladeguardPhone(String val) {
+    _hiveBox.put(bladeguardPhoneKey, val);
+  }
+
+  static const String _bgTeamKey = 'bgTeamPref';
 
   ///get teamId
-  static int get teamId {
-    return _hiveBox.get(_teamIdKey, defaultValue: 0);
+  static String get bgTeam {
+    return _hiveBox.get(_bgTeamKey, defaultValue: '');
   }
 
   ///set TeamId for Bladeguard
-  static void setTeamId(int val) {
-    _hiveBox.put(_teamIdKey, val);
+  static void setBgTeam(String val) {
+    _hiveBox.put(_bgTeamKey, val);
   }
 
   static const String _oneSignalRegisterBladeGuardPushKey =
@@ -685,6 +721,46 @@ class HiveSettingsDB {
         _hiveBox.put(_themeKey, ThemeType.system.index);
         break;
     }
+  }
+
+  //Colors
+  static const String meColorKey = 'meColorPref';
+
+  ///get RoutePointsstring DateTimeStamp
+  static Color get meColor {
+    return _hiveBox.get(meColorKey, defaultValue: meDefaultColor);
+  }
+
+  ///set RoutePointsstring DateTimeStamp
+  static void setMeColor(Color val) {
+    _hiveBox.put(meColorKey, val);
+  }
+
+  static const String themePrimaryLightColorKey = 'primaryLightColorPref';
+
+  ///get RoutePointsstring DateTimeStamp
+  static Color get themePrimaryLightColor {
+    return _hiveBox.get(themePrimaryLightColorKey,
+        defaultValue: systemPrimaryDefaultColor);
+  }
+
+  ///set RoutePointsstring DateTimeStamp
+  static void setThemePrimaryLightColor(Color val) {
+    _hiveBox.put(themePrimaryLightColorKey, val);
+  }
+
+  static const String themePrimaryDarkColorKey = 'primaryDarkColorPref';
+
+  ///get RoutePointsstring DateTimeStamp
+  static Color get themePrimaryDarkColor {
+    var val = _hiveBox.get(themePrimaryDarkColorKey,
+        defaultValue: systemPrimaryDarkDefaultColor);
+    return val;
+  }
+
+  ///set RoutePointsstring DateTimeStamp
+  static void setThemePrimaryDarkColor(Color val) {
+    _hiveBox.put(themePrimaryDarkColorKey, val);
   }
 }
 

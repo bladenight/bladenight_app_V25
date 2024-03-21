@@ -116,7 +116,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                             context,
                             friendDialogAction: action,
                           );
-                          if (result != null) {}
+                         // if (result != null) {}
                         },
                         child: const Icon(CupertinoIcons.plus_circle),
                       ),
@@ -133,7 +133,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                       ),
                     ],
                   )
-                : const Icon(Icons.warning),
+                : const Icon(Icons.offline_bolt_outlined),
           ),
           CupertinoSliverRefreshControl(
             onRefresh: () async {

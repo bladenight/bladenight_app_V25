@@ -552,8 +552,7 @@ class LocationProvider with ChangeNotifier {
       _userLatLng = null;
       //reset autostart
       //avoid second autostart on an event , reset after end
-      var activeEventData =
-          ProviderContainer().read(activeEventProvider);
+      var activeEventData = ProviderContainer().read(activeEventProvider);
       if (_startedTrackingTime != null &&
           DateTime.now().difference(_startedTrackingTime!).inMinutes >
               activeEventData.duration.inMinutes) {
@@ -652,7 +651,9 @@ class LocationProvider with ChangeNotifier {
       setUpdateTimer(true);
       _startedTrackingTime = DateTime.now();
       _stoppedAfterMaxTime = false;
-      ProviderContainer().read(activeEventProvider.notifier).refresh(forceUpdate: true);
+      ProviderContainer()
+          .read(activeEventProvider.notifier)
+          .refresh(forceUpdate: true);
       notifyListeners();
       _subToUpdates();
       SendToWatch.setIsLocationTracking(_isTracking);
@@ -670,7 +671,9 @@ class LocationProvider with ChangeNotifier {
         _stoppedAfterMaxTime = false;
         _isTracking = bgGeoLocState.enabled;
         setUpdateTimer(true);
-        ProviderContainer().read(activeEventProvider.notifier).refresh(forceUpdate: true);
+        ProviderContainer()
+            .read(activeEventProvider.notifier)
+            .refresh(forceUpdate: true);
         notifyListeners();
         _subToUpdates();
         HiveSettingsDB.setTrackingActive(_isTracking);
@@ -734,7 +737,8 @@ class LocationProvider with ChangeNotifier {
         (timer) {
           int lastUpdate = DateTime.now().difference(_lastUpdate).inSeconds;
           if (kDebugMode) {
-            print('${DateTime.now().toIso8601String() } update timer internal  lastupdate ${lastUpdate}s ago');
+            print(
+                '${DateTime.now().toIso8601String()} update timer internal  lastupdate ${lastUpdate}s ago');
           }
           if (lastUpdate >= defaultLocationUpdateInterval) {
             if (!kIsWeb) {
@@ -902,7 +906,9 @@ class LocationProvider with ChangeNotifier {
       _lastRouteName = _realtimeUpdate!.routeName;
       _eventState = _realtimeUpdate!.eventState;
       _eventIsActive = _realtimeUpdate!.eventIsActive;
-      ProviderContainer().read(activeEventProvider.notifier).refresh(forceUpdate: true);
+      ProviderContainer()
+          .read(activeEventProvider.notifier)
+          .refresh(forceUpdate: true);
     }
     if (_realtimeUpdate != null && _realtimeUpdate?.friends != null) {
       var friendList =
@@ -1012,7 +1018,9 @@ class LocationProvider with ChangeNotifier {
             _eventState != _realtimeUpdate?.eventState) {
           _lastRouteName = _realtimeUpdate!.routeName;
           _eventState = _realtimeUpdate!.eventState;
-          ProviderContainer().read(activeEventProvider.notifier).refresh(forceUpdate: true);
+          ProviderContainer()
+              .read(activeEventProvider.notifier)
+              .refresh(forceUpdate: true);
         }
       }
       if (_lastKnownPoint == null) {
@@ -1036,11 +1044,10 @@ class LocationProvider with ChangeNotifier {
 
   void checkUserFinishedOrEndEvent() async {
     try {
-      var activeEventData =ProviderContainer().read(activeEventProvider);
+      var activeEventData = ProviderContainer().read(activeEventProvider);
       //Check for 'user reached finish' event and inform user
-      Duration eventRuntime = DateTime.now()
-          .toUtc()
-          .difference(activeEventData.startDate.toUtc());
+      Duration eventRuntime =
+          DateTime.now().toUtc().difference(activeEventData.startDate.toUtc());
       int userPos = _realtimeUpdate?.user.position ?? 0;
       double runLength = _realtimeUpdate?.runningLength ?? double.maxFinite;
 
@@ -1317,8 +1324,8 @@ final isUserParticipatingProvider = Provider((ref) {
 
 ///Watch active [Event]
 final isActiveEventProvider = Provider((ref) {
-  return ref.watch(
-      realtimeDataProvider.select((l) => l == null ? false : l.eventIsActive));
+  return ref.watch(realtimeDataProvider
+      .select((l) => l == null ? false : l.eventIsActive ?? true));
 });
 
 final bgNetworkConnectedProvider = Provider((ref) {

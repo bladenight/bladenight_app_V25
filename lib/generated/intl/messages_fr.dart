@@ -20,46 +20,46 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'fr';
 
-  static String m0(dev) => "Ajouter un ${dev} ami à proximité";
-
-  static String m1(bladeguardRegisterlink, bladeguardPrivacyLink) =>
+  static String m0(bladeguardRegisterlink, bladeguardPrivacyLink) =>
       "<h2>Exigences et règles :</h2><ul><li>Vous avez au moins 16 ans.</li><li>Vous êtes à l\'aise avec les rollers en ligne et savez freiner.</li ><li>Vous connaissez le code de la route </li><li>Vous êtes serviable, sympathique et avez l\'esprit d\'équipe </li><li>Vous participez à notre formation gratuite avant votre premier voyage.</li> </ul ><p>En tant que Bladeguard, il n\'y a aucun frais pour vous. Vous pouvez vous désinscrire à tout moment. <h3>Ici, vous pouvez accéder à <a href=\"${bladeguardRegisterlink}\">Inscription en ligne</a> et <a href=\"${bladeguardPrivacyLink}\">Protection des données</a></p></h3>";
 
-  static String m2(date) => "${date}";
+  static String m1(date) => "${date}";
 
-  static String m3(date, time) => "${date} à ${time}";
+  static String m2(date, time) => "${date} à ${time}";
 
-  static String m4(date, time) => "${date} ${time}";
+  static String m3(date, time) => "${date} ${time}";
 
-  static String m5(date, time) => "${date} à ${time} ${date} ${time}Uhr";
+  static String m4(date, time) => "${date} à ${time} ${date} ${time}Uhr";
 
-  static String m6(timeout) =>
+  static String m5(timeout) =>
       "Le suivi de l\'emplacement après ${timeout} min de BladeNight s\'est arrêté automatiquement. (Appuyez longuement sur ▶️ pour désactiver l\'arrêt automatique du suivi)";
 
-  static String m7(code) =>
+  static String m6(code) =>
       "Votre ami peut-il également scanner le code-barres ci-dessous ou saisir manuellement le code ${code} dans son application";
 
-  static String m8(bladeguardPrivacyLink) =>
-      "Nous avons besoin du soutien de bénévoles. En tant que Bladeguard, vous soutenez activement Bladenight. Les <a href=\"${bladeguardPrivacyLink}\">Règlements de Munich sur la protection des données</a></p> s\'appliquent";
+  static String m7(bladeguardPrivacyLink) =>
+      "Nous avons besoin du soutien de bénévoles. En tant que Bladeguard, vous soutenez activement Bladenight. Les <a href=\"${bladeguardPrivacyLink}\">Règlements de Munich BladeNight sur la protection des données</a></p> s\'appliquent";
 
-  static String m9(name) => "inviter ${name}";
+  static String m8(name) => "inviter ${name}";
 
-  static String m10(deviceName) =>
+  static String m9(deviceName) =>
       "Votre ami doit se trouver à moins de 2 m de vous !<ul><li>Veuillez ouvrir l\'onglet Amis de votre ami dans l\'application Bladenight.</li><li>Sélectionnez Plus en haut à droite<span class= \" icon\">plus</span></li><li>Choisissez d\'accepter un ami à côté de vous</li><li>Maintenant avec cet appareil <b><em>${deviceName}</em></b > Paire.</li></ul>Vous pouvez modifier votre nom soumis dans le champ de texte. Ceci concerne uniquement le transfert via une connexion directe / scan.";
 
-  static String m11(timeout) =>
+  static String m10(timeout) =>
       "Aucun événement n\'est actif depuis plus de ${timeout} min - le suivi s\'est arrêté automatiquement";
 
-  static String m12(requestid, playStoreLink, iosAppStoreLink) =>
+  static String m11(requestid, playStoreLink, iosAppStoreLink) =>
       "Hi, this is my invitation to share your skating position in BladeNight App, and find me. Si vous aimez cela, obtenez l\'application BladeNight sur l\'AppStore et entrez le code : ${requestid} dans Amis après avoir appuyé sur + ajouter un ami par code.\nLorsque l\'application BladeNight est installée, utilisez le lien suivant : bna://bladenight.app?addFriend&code=${requestid} sur votre mobile. \nAmusez-vous et nous trouverons ensemble.\nL\'application BladeNight est disponible sur Playstore \n${playStoreLink} et sur Apple App Store \n${iosAppStoreLink}";
 
-  static String m13(timeout) =>
+  static String m12(timeout) =>
       "L\'événement s\'est terminé (${timeout} min). N\'oubliez pas d\'arrêter le suivi";
 
-  static String m14(name, requestid) =>
+  static String m13(name, requestid) =>
       "Veuillez indiquer ce code à \'${name}\' \n${requestid}\nIl/elle doit le confirmer dans son \'BladeNight-App\'.\nLe code n\'est valable que 60 minutes ! \nVeuillez mettre à jour le statut manuellement avec le bouton ↻.";
 
-  static String m15(time) => "${time}";
+  static String m14(time) => "${time}";
+
+  static String m15(date) => "${date}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -79,13 +79,13 @@ class MessageLookup extends MessageLookupByLibrary {
                 "BladeNight-App iOS/Android (2022)"),
         "about_h_androidapplicationflutter_23":
             MessageLookupByLibrary.simpleMessage(
-                "BladeNight-App iOS/Android (2023)"),
+                "BladeNight-App iOS/Android (2023-2024)"),
         "about_h_androidapplicationv1": MessageLookupByLibrary.simpleMessage(
             "Application Android V1 (2013)"),
         "about_h_androidapplicationv2":
             MessageLookupByLibrary.simpleMessage("Android App V2 (2014-2022)"),
         "about_h_androidapplicationv3":
-            MessageLookupByLibrary.simpleMessage("Android App V3 (2023)"),
+            MessageLookupByLibrary.simpleMessage("Android App V3 (2023-2024)"),
         "about_h_bnapp":
             MessageLookupByLibrary.simpleMessage("À quoi sert l\'application"),
         "about_h_crashlytics": MessageLookupByLibrary.simpleMessage(
@@ -122,7 +122,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Données que nous recevons automatiquement L\'OSMF gère un certain nombre de services pour la communauté OpenStreetMap, par exemple le site web openstreetmap.org, la carte en ligne de style \'Standard\', l\'API OSM et l\'outil de recherche nominatim.\nLorsque vous visitez un site web OSMF, accédez à l\'un des services via un navigateur ou via des applications qui utilisent les API fournies, des enregistrements de cette utilisation sont produits, nous collectons des informations sur votre navigateur ou application et votre interaction avec notre site web, y compris (a) l\'adresse IP, (b) le type de navigateur et d\'appareil, (c) le système d\'exploitation, (d) la page web de référence, (e) la date et l\'heure des visites de pages, et (f) les pages consultées sur nos sites web.\nLes services qui utilisent le Geo-DNS ou des mécanismes similaires pour répartir la charge sur des serveurs géographiquement distribués généreront potentiellement un enregistrement de votre localisation à grande échelle (par exemple, le réseau de cache de tuiles OSMF détermine le pays dans lequel vous êtes susceptible d\'être situé et dirige vos requêtes vers un serveur approprié). \nCes données sont utilisées ou peuvent être utilisées de la manière suivante : pour soutenir le fonctionnement des services d\'un point de vue technique, de sécurité et de planification, en tant que données anonymes et résumées à des fins de recherche et autres. Ces données peuvent être proposées publiquement via https://planet.openstreetmap.org ou d\'autres canaux et utilisées par des tiers.\npour améliorer le jeu de données OpenStreetMap. Par exemple, en analysant les requêtes nominatives pour les adresses et les codes postaux manquants et en fournissant ces données à la communauté OSM. Les données collectées sur les systèmes seront accessibles par les administrateurs du système et les groupes de travail OSMF appropriés, par exemple le groupe de travail sur les données. Aucune information personnelle ou liée à un individu ne sera divulguée à des tiers, sauf si la loi l\'exige.\nLes adresses IP stockées par Piwik sont raccourcies à deux octets et les informations d\'utilisation détaillées sont conservées pendant 180 jours.\nCompte tenu de la nature temporaire de ce stockage, il n\'est généralement pas possible pour nous de fournir un accès aux adresses IP ou aux journaux qui y sont associés.\nLes données mentionnées ci-dessus sont traitées sur la base de l\'intérêt légitime (voir GDPR article 6.1f )."),
         "actualInformations":
             MessageLookupByLibrary.simpleMessage("Informations actuelles"),
-        "addNearBy": m0,
+        "addNearBy":
+            MessageLookupByLibrary.simpleMessage("Ajouter un ami à proximité"),
         "addfriendwithcode":
             MessageLookupByLibrary.simpleMessage("Ajouter un ami avec un code"),
         "addnewfriend":
@@ -178,12 +179,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Suivi de l\'arrière-plan de BladeNight"),
         "bgTeam":
             MessageLookupByLibrary.simpleMessage("L\'équipe des Bladeguard"),
+        "birthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
         "bladeGuardSettings":
             MessageLookupByLibrary.simpleMessage("Paramètres du Bladeguard"),
         "bladeGuardSettingsTitle": MessageLookupByLibrary.simpleMessage(
             "Ouvrir la page des paramètres de Bladeguard"),
-        "bladeguardInfo": m1,
+        "bladeguardInfo": m0,
         "bladenight": MessageLookupByLibrary.simpleMessage("BladeNight"),
         "bladenightUpdate":
             MessageLookupByLibrary.simpleMessage("BladeNight Update"),
@@ -223,10 +225,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Impossible d\'ouvrir les paramètres de l\'application !"),
         "dataCouldBeOutdated": MessageLookupByLibrary.simpleMessage(
             "Les données pourraient être obsolètes"),
-        "dateIntl": m2,
-        "dateTimeDayIntl": m3,
-        "dateTimeIntl": m4,
-        "dateTimeSecIntl": m5,
+        "dateIntl": m1,
+        "dateTimeDayIntl": m2,
+        "dateTimeIntl": m3,
+        "dateTimeSecIntl": m4,
         "delete": MessageLookupByLibrary.simpleMessage("Supprimer"),
         "deleteMessage":
             MessageLookupByLibrary.simpleMessage("Supprimer le message"),
@@ -260,10 +262,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Activer les notifications push d\'Onesignal. Ici, des informations générales peuvent être reçues par notification push, par exemple si la nuit blanche a lieu. Le réglage recommandé est \'On\'"),
         "enter6digitcode": MessageLookupByLibrary.simpleMessage(
             "Vous devez entrer un code à 6 chiffres"),
+        "enterBirthday": MessageLookupByLibrary.simpleMessage("Your Birthday"),
         "enterEmail": MessageLookupByLibrary.simpleMessage(
             "Saisir l\'adresse électronique"),
         "enterPassword":
             MessageLookupByLibrary.simpleMessage("Entrer le mot de passe"),
+        "enterPhoneNumber": MessageLookupByLibrary.simpleMessage(
+            "Please enter your mobile phone Number"),
         "entercode": MessageLookupByLibrary.simpleMessage("Code : "),
         "enterfriendname":
             MessageLookupByLibrary.simpleMessage("Entrez le nom de votre ami"),
@@ -300,12 +305,12 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Finish reached - Please stop location tracking"),
         "finishStopTrackingEventOver": MessageLookupByLibrary.simpleMessage(
             "Arrêt automatique du suivi : Arrêt automatique du suivi, car cet événement BladeNight est terminé. (Appuyez longuement sur ▶️ pour désactiver l\'arrêt automatique du suivi)"),
-        "finishStopTrackingTimeout": m6,
+        "finishStopTrackingTimeout": m5,
         "finished": MessageLookupByLibrary.simpleMessage("Fini"),
-        "fireBaseCrashlytics":
-            MessageLookupByLibrary.simpleMessage("Désactiver Crashlytics"),
+        "fireBaseCrashlytics": MessageLookupByLibrary.simpleMessage(
+            "Crashlytics activé/désactivé"),
         "fireBaseCrashlyticsHeader": MessageLookupByLibrary.simpleMessage(
-            "Pour améliorer l\'application, les journaux de crash sont envoyés à Crashlytics. Cela peut être supprimé ici."),
+            "Pour améliorer l\'application, les événements de crash seront envoyés à Crashlytics. Cela peut être supprimé ici."),
         "fitnessPermissionInfoText": MessageLookupByLibrary.simpleMessage(
             "L\'accès à la détection de l\'activité de mouvement (activité physique) est souhaitable. Cela augmente l\'efficacité de la batterie en désactivant intelligemment le suivi de la localisation lorsque votre appareil est détecté comme étant stationnaire. Veuillez donc activer cette fonction. Elle sera demandée dans les étapes suivantes."),
         "fitnessPermissionInfoTextTitle":
@@ -320,7 +325,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "forward": MessageLookupByLibrary.simpleMessage("Forward"),
         "friend": MessageLookupByLibrary.simpleMessage("Ami"),
         "friendIs": MessageLookupByLibrary.simpleMessage("L\'ami est"),
-        "friendScanQrCode": m7,
+        "friendScanQrCode": m6,
         "friends": MessageLookupByLibrary.simpleMessage("Amis"),
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
             "Veuillez soutenir la présentation exacte de BladeNight skater procession.\nVous manquerez à vos amis !"),
@@ -331,7 +336,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "home": MessageLookupByLibrary.simpleMessage("Accueil"),
         "iAmBladeGuard":
             MessageLookupByLibrary.simpleMessage("Je suis déjà un Bladeguard"),
-        "iAmBladeGuardTitle": m8,
+        "iAmBladeGuardTitle": m7,
         "iam": MessageLookupByLibrary.simpleMessage("Je suis"),
         "ignoreBatteriesOptimisation": MessageLookupByLibrary.simpleMessage(
             "Note - certains fabricants désactivent les applications en raison d\'une optimisation défavorable de la batterie ou ferment l\'application. Si c\'est le cas, essayez de désactiver l\'optimisation de la batterie pour l\'application. Régler sur Aucune restriction"),
@@ -349,8 +354,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Code invalide"),
         "internalerror_seemslinked":
             MessageLookupByLibrary.simpleMessage("Erreur - Un ami est lié?"),
+        "invalidEMail": MessageLookupByLibrary.simpleMessage("Mail not found"),
+        "invalidLoginData": MessageLookupByLibrary.simpleMessage(
+            "Email not found or wrong birthday"),
         "invalidcode": MessageLookupByLibrary.simpleMessage("Code invalide"),
-        "invitebyname": m9,
+        "invitebyname": m8,
         "invitenewfriend":
             MessageLookupByLibrary.simpleMessage("Inviter un ami"),
         "isIgnoring": MessageLookupByLibrary.simpleMessage("Est ignoré"),
@@ -366,7 +374,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "length": MessageLookupByLibrary.simpleMessage("Longueur"),
         "linkNearBy":
             MessageLookupByLibrary.simpleMessage("Accepter un ami à proximité"),
-        "linkOnOtherDevice": m10,
+        "linkOnOtherDevice": m9,
         "linkingFailed":
             MessageLookupByLibrary.simpleMessage("Échec du couplage"),
         "linkingSuccessful":
@@ -434,7 +442,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Pas d\'événement"),
         "noEventStartedAutoStop":
             MessageLookupByLibrary.simpleMessage("No Event - Autostop"),
-        "noEventTimeOut": m11,
+        "noEventTimeOut": m10,
         "noGpsAllowed": MessageLookupByLibrary.simpleMessage("GPS non actif"),
         "noLocationAvailable":
             MessageLookupByLibrary.simpleMessage("Pas de localisation connue"),
@@ -492,6 +500,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "own": MessageLookupByLibrary.simpleMessage("Propre"),
         "participant": MessageLookupByLibrary.simpleMessage("Participant"),
         "pending": MessageLookupByLibrary.simpleMessage("Pending ⏰"),
+        "phoneNumber": MessageLookupByLibrary.simpleMessage("Mobile"),
         "pickcolor":
             MessageLookupByLibrary.simpleMessage("Choisissez une couleur"),
         "position": MessageLookupByLibrary.simpleMessage("Position"),
@@ -519,6 +528,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "receiveBladeGuardInfos":
             MessageLookupByLibrary.simpleMessage("Reçu Bladeguard Infos"),
         "received": MessageLookupByLibrary.simpleMessage("reçu"),
+        "register": MessageLookupByLibrary.simpleMessage("S\'inscrire"),
         "reload": MessageLookupByLibrary.simpleMessage("Recharger"),
         "reltime": MessageLookupByLibrary.simpleMessage("rel. timediff."),
         "remove": MessageLookupByLibrary.simpleMessage("Retirer"),
@@ -526,6 +536,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Location always permissions"),
         "requestLocationPermissionTitle": MessageLookupByLibrary.simpleMessage(
             "Information sur les raisons pour lesquelles le partage de la localisation serait nécessaire"),
+        "requestOffSite": MessageLookupByLibrary.simpleMessage(
+            "Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. "),
         "resetInSettings":
             MessageLookupByLibrary.simpleMessage("Reset in Paramètres"),
         "resetLongPress": MessageLookupByLibrary.simpleMessage(
@@ -549,7 +561,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Demande envoyée - le changement prend environ 30 secondes."),
         "sendlink": MessageLookupByLibrary.simpleMessage("Envoyer un lien"),
-        "sendlinkdescription": m12,
+        "sendlinkdescription": m11,
         "sendlinksubject": MessageLookupByLibrary.simpleMessage(
             "Envoyer un lien à BladeNight-App. Vous pouvez vous voir"),
         "serverNotReachable": MessageLookupByLibrary.simpleMessage(
@@ -637,14 +649,14 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Arrêter la localisation sans participer"),
         "stopParticipationTracking": MessageLookupByLibrary.simpleMessage(
             "Arrêter le suivi de la participation"),
-        "stopTrackingTimeOut": m13,
+        "stopTrackingTimeOut": m12,
         "submit": MessageLookupByLibrary.simpleMessage("Senden"),
         "symbols": MessageLookupByLibrary.simpleMessage("Symboles"),
         "tail": MessageLookupByLibrary.simpleMessage("Fin du procession"),
-        "tellcode": m14,
+        "tellcode": m13,
         "thanksForParticipating":
             MessageLookupByLibrary.simpleMessage("Merci d\'avoir participé"),
-        "timeIntl": m15,
+        "timeIntl": m14,
         "timeOutDurationExceedTitle": MessageLookupByLibrary.simpleMessage(
             "Timeout - duration of BladeNight exceed"),
         "timeStamp": MessageLookupByLibrary.simpleMessage("Timestamp"),
@@ -658,6 +670,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "timeToTail": MessageLookupByLibrary.simpleMessage(
             "Le temps de fin du procession"),
         "today": MessageLookupByLibrary.simpleMessage("Aujourd\'hui"),
+        "todayNo": MessageLookupByLibrary.simpleMessage("Heute nein"),
         "tomorrow": MessageLookupByLibrary.simpleMessage("Demain"),
         "trackPointsExporting": MessageLookupByLibrary.simpleMessage(
             "Les points d\'itinéraire suivants seront exportés : "),
@@ -676,6 +689,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "unknown": MessageLookupByLibrary.simpleMessage("inconnu"),
         "unknownerror": MessageLookupByLibrary.simpleMessage("erreur inconnue"),
         "unreadMessage": MessageLookupByLibrary.simpleMessage("Message non lu"),
+        "update": MessageLookupByLibrary.simpleMessage("Update"),
         "userSpeed":
             MessageLookupByLibrary.simpleMessage("C\'est ma vitesse GPS"),
         "validatefriend":
@@ -687,6 +701,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "waittime": MessageLookupByLibrary.simpleMessage("Temps d\'attente"),
         "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
             "Est annulé ! Veuillez le vérifier sur https://bladenight-muenchen.de"),
+        "weekdayIntl": m15,
         "yes": MessageLookupByLibrary.simpleMessage("Oui"),
         "yesterday": MessageLookupByLibrary.simpleMessage("était hier")
       };
