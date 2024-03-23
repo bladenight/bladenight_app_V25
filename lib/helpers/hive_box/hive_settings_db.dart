@@ -544,7 +544,7 @@ class HiveSettingsDB {
     return _hiveBox.get(wantSeeFullOfProcessionKey, defaultValue: false);
   }
 
-  static void setwantSeeFullOfProcession(bool value) {
+  static void setWantSeeFullOfProcession(bool value) {
     _hiveBox.put(wantSeeFullOfProcessionKey, value);
   }
 

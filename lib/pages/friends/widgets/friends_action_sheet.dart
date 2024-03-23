@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:universal_io/io.dart';
 
 import '../../../generated/l10n.dart';
 

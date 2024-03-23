@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -27,13 +28,13 @@ class BladeGuardApiRepository {
   }
 
   ///Get TeamId
-  Future<ResultOrError> checkBladeguardEmail(
+  Future<ResultStringOrError> checkBladeguardEmail(
       String hashcode, DateTime birthday, String phone, String? pin) async {
     if (hashcode.contains('@')) {
       BnLog.error(
           text: 'invalid parameter --> not hashed',
           methodName: 'checkBladeguardEmail');
-      return ResultOrError(null, 'invalid parameter --> not hashed');
+      return ResultStringOrError(null, 'invalid parameter --> not hashed');
     }
     Map<String, String> qParams = {
       'code': hashcode,
@@ -54,14 +55,14 @@ class BladeGuardApiRepository {
           await dioClient.post<String>(url, queryParameters: qParams);
       if (response.statusCode == 200) {
         if (response.data == '') {
-          return ResultOrError(null, Localize.current.invalidLoginData);
+          return ResultStringOrError(null, Localize.current.invalidLoginData);
         }
         var jsonResult = jsonDecode(response.data!);
         if (jsonResult is Map && jsonResult.keys.contains('fail')) {
-          return ResultOrError(null, Localize.current.invalidLoginData);
+          return ResultStringOrError(null, Localize.current.invalidLoginData);
         }
         if (jsonResult is Map) {
-          return ResultOrError(response.data!, null);
+          return ResultStringOrError(response.data!, null);
         }
       } else {
         BnLog.warning(
@@ -71,22 +72,22 @@ class BladeGuardApiRepository {
     } on DioException catch (e) {
       BnLog.warning(text: e.toString(), methodName: 'checkBladeguardEmail');
       if (e.response == null) {
-        return ResultOrError(null, e.toString());
+        return ResultStringOrError(null, e.toString());
       }
-      return ResultOrError(null, e.response!.statusCode.toString());
+      return ResultStringOrError(null, e.response!.statusCode.toString());
     } catch (e) {
       BnLog.warning(text: e.toString(), methodName: 'checkBladeguardEmail');
     }
-    var res = ResultOrError(null, 'unknown');
+    var res = ResultStringOrError(null, 'unknown');
     return res;
   }
 
-  Future<ResultOrError> checkLoginState(String hashcode) async {
+  Future<ResultStringOrError> checkLoginState(String hashcode) async {
     if (hashcode.contains('@')) {
       BnLog.error(
           text: 'invalid parameter --> not hashed',
           methodName: 'checkBladeguardEmail');
-      return ResultOrError(null, 'invalid parameter --> not hashed');
+      return ResultStringOrError(null, 'invalid parameter --> not hashed');
     }
     Map<String, String> qParams = {
       'code': hashcode,
@@ -96,12 +97,18 @@ class BladeGuardApiRepository {
       final url = _getUrl(parameter: '/check');
       final response =
           await dioClient.get<String>(url, queryParameters: qParams);
+
       if (response.statusCode == 200) {
         if (response.data == '') {
-          return ResultOrError(null, Localize.current.invalidEMail);
+          return ResultStringOrError(null, Localize.current.failed);
         }
-
-        return ResultOrError(response.data!, null);
+        var jsonResult = jsonDecode(response.data!);
+        if (jsonResult is Map && jsonResult.keys.contains('fail')) {
+          return ResultStringOrError(null, Localize.current.failed);
+        }
+        if (jsonResult is Map) {
+          return ResultStringOrError(response.data!, null);
+        }
       } else {
         BnLog.warning(
             text: response.statusCode.toString(),
@@ -110,31 +117,33 @@ class BladeGuardApiRepository {
     } on DioException catch (e) {
       BnLog.warning(text: e.toString(), methodName: 'checkLoginState');
       if (e.response == null) {
-        return ResultOrError(null, e.toString());
+        return ResultStringOrError(null, e.toString());
       }
-      return ResultOrError(null, e.response!.statusCode.toString());
+      return ResultStringOrError(null, e.response!.statusCode.toString());
     } catch (e) {
       BnLog.warning(text: e.toString(), methodName: 'checkLoginState');
     }
-    var res = ResultOrError(null, 'unknown');
+    var res = ResultStringOrError(null, 'unknown');
     return res;
   }
 
-  Future<ResultOrError> checkBladeguardIsOnSite(String hash) async {
-    Map<String, String> qParams = {
-      'code': hash,
+  Future<ResultBoolOrError> checkBladeguardIsOnSite() async {
+    var birthday = HiveSettingsDB.bladeguardBirthday;
+    Map<String, dynamic> qParams = {
+      'code': HiveSettingsDB.bladeguardSHA512Hash,
+      'birth':
+          '${birthday.year}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}',
     };
-
     try {
       var host = ServerConfigDb.restApiLink;
       var apiLink = '$host/isOnSite';
       var response = await dioClient.get(apiLink, queryParameters: qParams);
       if (response.statusCode == 200) {
         if (response.data == '') {
-          return ResultOrError(null, Localize.current.failed);
+          return ResultBoolOrError(null, Localize.current.failed);
         }
         if (response.data is Map && response.data.keys.contains('isOnSite')) {
-          return ResultOrError(response.data['isOnSite'].toString(), null);
+          return ResultBoolOrError(response.data['isOnSite'], null);
         }
       } else {
         BnLog.warning(
@@ -144,20 +153,22 @@ class BladeGuardApiRepository {
     } on DioException catch (e) {
       BnLog.warning(text: e.toString(), methodName: 'checkBladeguardOnSite $e');
       if (e.response == null) {
-        return ResultOrError(null, e.toString());
+        return ResultBoolOrError(null, e.toString());
       }
-      return ResultOrError(null, e.response!.statusCode.toString());
+      return ResultBoolOrError(null, e.response!.statusCode.toString());
     } catch (e) {
       BnLog.warning(text: e.toString(), methodName: 'checkBladeguardOnSite');
     }
-    return ResultOrError(null, 'unknown');
+    return ResultBoolOrError(null, Localize.current.unknownerror);
   }
 
-  Future<ResultOrError> setBladeguardOnSite(bool onSite, String hash) async {
+  Future<ResultBoolOrError> setBladeguardOnSite(bool onSite) async {
+    var birthday = HiveSettingsDB.bladeguardBirthday;
     Map<String, dynamic> qParams = {
       'onSite': onSite,
-      'code': hash,
-      'birth':HiveSettingsDB.bladeguardBirthday,
+      'code': HiveSettingsDB.bladeguardSHA512Hash,
+      'birth':
+          '${birthday.year}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}',
       'oneSignalId': HiveSettingsDB.oneSignalId
     };
 
@@ -167,10 +178,11 @@ class BladeGuardApiRepository {
       var response = await dioClient.get(apiLink, queryParameters: qParams);
       if (response.statusCode == 200) {
         if (response.data == '') {
-          return ResultOrError(null, Localize.current.failed);
+          return ResultBoolOrError(null, Localize.current.failed);
         }
-        if (response.data is Map && response.data.keys.contains('result')) {
-          return ResultOrError(response.data['result'].toString(), null);
+        if (response.data is Map && response.data.keys.contains('isOnSite')) {
+          return ResultBoolOrError(
+              response.data['isOnSite'], null);
         }
       } else {
         BnLog.warning(
@@ -180,43 +192,13 @@ class BladeGuardApiRepository {
     } on DioException catch (e) {
       BnLog.warning(text: e.toString(), methodName: 'setBladeguardOnSite $e');
       if (e.response == null) {
-        return ResultOrError(null, e.toString());
+        return ResultBoolOrError(null, e.toString());
       }
-      return ResultOrError(null, e.response!.statusCode.toString());
+      return ResultBoolOrError(null, e.response!.statusCode.toString());
     } catch (e) {
       BnLog.warning(text: e.toString(), methodName: 'setBladeguardOnSite');
     }
-    return ResultOrError(null, 'unknown');
-  }
-
-  Future<ResultOrError> getOnSiteState(bool onSite, String hash) async {
-    Map<String, String> qParams = {
-      'onsite': onSite.toString(),
-      'code': hash,
-      'oneSignalId': HiveSettingsDB.oneSignalId
-    };
-
-    try {
-      var host = ServerConfigDb.restApiLink;
-      var apiLink = '$host/check';
-      var response = await dioClient.get(apiLink, queryParameters: qParams);
-      if (response.statusCode == 200) {
-        return ResultOrError(response.data, null);
-      } else {
-        BnLog.warning(
-            text: response.statusCode.toString(),
-            methodName: 'checkBladeguardOnSite');
-      }
-    } on DioException catch (e) {
-      BnLog.warning(text: e.toString(), methodName: 'checkBladeguardOnSite $e');
-      if (e.response == null) {
-        return ResultOrError(null, e.toString());
-      }
-      return ResultOrError(null, e.response!.statusCode.toString());
-    } catch (e) {
-      BnLog.warning(text: e.toString(), methodName: 'checkBladeguardOnSite');
-    }
-    return ResultOrError(null, 'unknown');
+    return ResultBoolOrError(null, 'unknown');
   }
 }
 
@@ -226,24 +208,47 @@ BladeGuardApiRepository bladeGuardApiRepository(
     BladeGuardApiRepository(dioClient: ref.read(dioProvider));
 
 @riverpod
-Future<ResultOrError> setOnSiteState(
-    SetOnSiteStateRef ref, bool isOnSite, String emailHash) async {
-  BnLog.info(text: 'setOnSiteState $isOnSite');
-  final repo = ref.read(bladeGuardApiRepositoryProvider);
-  return repo.setBladeguardOnSite(isOnSite, emailHash);
-}
-
-@riverpod
-Future<ResultOrError> fetchOnSiteState(
-    FetchOnSiteStateRef ref, String emailHash) async {
-  BnLog.info(text: 'fetchOnSiteState');
-  final repo = ref.read(bladeGuardApiRepositoryProvider);
-  return repo.checkBladeguardIsOnSite(emailHash);
-}
-
-@riverpod
-Future<ResultOrError> checkBladeguardMail(CheckBladeguardMailRef ref,
+Future<ResultStringOrError> checkBladeguardMail(CheckBladeguardMailRef ref,
     String emailHash, DateTime birthday, String phone, String? pin) async {
   final repo = ref.read(bladeGuardApiRepositoryProvider);
   return repo.checkBladeguardEmail(emailHash, birthday, phone, pin);
+}
+
+@riverpod
+class BgIsOnSite extends _$BgIsOnSite {
+  @override
+  FutureOr<bool> build() async {
+    final repo = ref.read(bladeGuardApiRepositoryProvider);
+    try {
+      var res = await repo
+          .checkBladeguardIsOnSite();
+      if (res.errorDescription != null) {
+        state = AsyncValue.error(res.errorDescription!, StackTrace.current);
+        return false;
+      }
+      if (res.result != null) {
+        state = AsyncValue.data(res.result!);
+        return res.result!;
+      }
+    } catch (e) {
+      state = AsyncValue.error(Localize.current.failed, StackTrace.current);
+    }
+
+    return true;
+  }
+
+  Future<void> setOnSiteState(bool isOnSite) async {
+    if (state == const AsyncValue.loading()){
+      return;
+    }
+    state = const AsyncValue.loading();
+    final repo = ref.read(bladeGuardApiRepositoryProvider);
+    var res = await repo.setBladeguardOnSite(isOnSite);
+    if (res.errorDescription != null) {
+      state = AsyncValue.error(res.errorDescription!, StackTrace.current);
+    }
+    else {
+      state = AsyncValue.data(res.result!);
+    }
+  }
 }

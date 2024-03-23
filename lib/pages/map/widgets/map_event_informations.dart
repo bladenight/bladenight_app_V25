@@ -68,8 +68,7 @@ class MapEventInformation extends StatelessWidget {
                           DataLeftRightContent(
                             descriptionLeft: Localize.of(context).lastupdate,
                             descriptionRight: DateFormatter(Localize.current)
-                                .getFullDateTimeString(
-                                    context.watch(locationLastUpdateProvider)),
+                                .getFullDateTimeString(rtu.timeStamp),
                             rightWidget: const UpdateProgress(),
                           ),
                           DataLeftRightContent(

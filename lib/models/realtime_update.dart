@@ -58,6 +58,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   final int? specialFunction;
 
   Exception? rpcException;
+  final timeStamp = DateTime.now();
 
   ///All datas from server about actual procession
   RealtimeUpdate(

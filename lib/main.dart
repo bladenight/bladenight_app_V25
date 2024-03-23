@@ -34,9 +34,6 @@ import 'pages/bladeguard/bladeguard_page.dart';
 import 'pages/home_screen.dart';
 import 'pages/widgets/intro_slider.dart';
 import 'pages/widgets/route_name_dialog.dart';
-import 'providers/settings/dark_color_provider.dart';
-import 'providers/settings/light_color_provider.dart';
-import 'providers/settings/light_color_provider.dart';
 
 const String openRouteMapRoute = '/eventRoute';
 const String openBladeguardOnSite = '/bgOnsite';

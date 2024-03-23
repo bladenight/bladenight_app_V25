@@ -16,6 +16,7 @@ import '../../../models/event.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/me_color_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
@@ -341,22 +342,38 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         height: MediaQuery.textScalerOf(context)
                                             .scale(18),
                                         child: CircleAvatar(
+                                          radius: MediaQuery.textScalerOf(
+                                                  context)
+                                              .scale(
+                                                  ref.watch(iconSizeProvider)),
                                           backgroundColor:
-                                              ref.watch(meColorProvider),
-                                          child: ref.watch(
-                                                  isUserParticipatingProvider)
-                                              ? ImageIcon(
-                                                  const AssetImage(
-                                                      'assets/images/skater_icon_256.png'),
-                                                  color: ref
-                                                      .watch(meColorProvider),
-                                                )
-                                              : Icon(
-                                                  Icons
-                                                      .compass_calibration_rounded,
-                                                  color: ref
-                                                      .watch(meColorProvider),
-                                                ),
+                                              CupertinoTheme.of(context)
+                                                  .barBackgroundColor,
+                                          child: CircleAvatar(
+                                            backgroundColor:
+                                                CupertinoTheme.of(context)
+                                                    .barBackgroundColor,
+                                            child: ref.watch(
+                                                    isUserParticipatingProvider)
+                                                ? ImageIcon(
+                                                    size: MediaQuery
+                                                            .textScalerOf(
+                                                                context)
+                                                        .scale(ref.watch(
+                                                                iconSizeProvider) -
+                                                            10),
+                                                    const AssetImage(
+                                                        'assets/images/skater_icon_256.png'),
+                                                    color: ref
+                                                        .watch(meColorProvider),
+                                                  )
+                                                : Icon(
+                                                    Icons
+                                                        .compass_calibration_rounded,
+                                                    color: ref
+                                                        .watch(meColorProvider),
+                                                  ),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -447,7 +464,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                   actualOrNextEvent.status ==
                                                       EventStatus.running)
                                               ? Text(
-                                                  '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(ref.watch(locationLastUpdateProvider))}') //Text when Event confirmed
+                                                  '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(rtu.timeStamp)}') //Text when Event confirmed
                                               : (actualOrNextEvent.status !=
                                                           EventStatus
                                                               .confirmed ||

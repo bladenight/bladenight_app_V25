@@ -81,9 +81,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                     padding: EdgeInsets.zero,
                     minSize: 0,
                     onPressed: () async {
-                      var _ = await ref.refresh(fetchOnSiteStateProvider(
-                              HiveSettingsDB.bladeguardSHA512Hash)
-                          .future);
+                      var _ = ref.refresh(bgIsOnSiteProvider);
                     },
                     child: isBladeguard
                         ? const Icon(CupertinoIcons.refresh)
@@ -94,9 +92,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
           CupertinoSliverRefreshControl(
             onRefresh: () async {
               if (!isBladeguard) return;
-              var _ = await ref.refresh(
-                  fetchOnSiteStateProvider(HiveSettingsDB.bladeguardSHA512Hash)
-                      .future);
+              var _ = await ref.refresh(bgIsOnSiteProvider.future);
             },
           ),
           const SliverToBoxAdapter(
@@ -143,7 +139,11 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      if (!isBladeguard)
+
+                      if (!isBladeguard) ...[
+                        const SizedBox(
+                          height: 10,
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: HtmlWidget(
@@ -165,8 +165,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   bladeguardRegisterLink,
                                   bladeguardPrivacyLink)),
                         ),
-                      //--------- Register
-                      if (!isBladeguard)
+                        //--------- Register
+
                         Column(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -207,10 +207,10 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             ),
                           ],
                         ),
+                      ],
                       //---------
                       if (isBladeguard) ...[
-                        if (!bladeguardSettingsVisible)
-                        const EmailTextField(),
+                        if (!bladeguardSettingsVisible) const EmailTextField(),
                         if (!bladeguardSettingsVisible)
                           const BirthdayDatePicker(),
                         const PhoneTextField(),
@@ -372,7 +372,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                     ],
                   ),
-                if (Globals.adminPass != null|| HiveSettingsDB.hasSpecialRights)
+                if (Globals.adminPass != null ||
+                    HiveSettingsDB.hasSpecialRights)
                   CupertinoFormSection(
                     header: Text(Localize.of(context).showFullProcessionTitle),
                     children: <Widget>[
@@ -385,7 +386,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           rightWidget: CupertinoSwitch(
                               onChanged: (val) {
                                 setState(() {
-                                  HiveSettingsDB.setwantSeeFullOfProcession(
+                                  HiveSettingsDB.setWantSeeFullOfProcession(
                                       val);
                                 });
                               },
@@ -484,7 +485,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                     if (resPinMap.keys.contains('role')) {
                       role = resPinMap['role'];
                     }
-                    _setBladegurdRole(role);
+                    _setBladeguardRole(role);
                     HiveSettingsDB.setBgTeam(
                         '${resPinMap['team']} ${role != null ? '($role)' : ''}');
                     ref
@@ -512,7 +513,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
               if (resultMap.keys.contains('role')) {
                 role = resultMap['role'];
               }
-              _setBladegurdRole(role);
+              _setBladeguardRole(role);
               HiveSettingsDB.setBgTeam(
                   '${resultMap['team']} ${role != null ? '($role)' : ''}');
               ref
@@ -542,17 +543,17 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
         true, HiveSettingsDB.bgTeam);
   }
 
-  _setBladegurdRole(String? role) {
+  _setBladeguardRole(String? role) {
     if (role == null) return;
-    if (role.toLowerCase() == 'admin') {
-      HiveSettingsDB.setBgLeaderSettingVisible(true);
-      HiveSettingsDB.setSpecialRightsPrefs(true);
-    } else if (role.toLowerCase() == 'spec') {
+    if (role.toLowerCase().contains('spec')) {
       HiveSettingsDB.setBgLeaderSettingVisible(false);
       HiveSettingsDB.setSpecialRightsPrefs(true);
-    } else if (role.toLowerCase() == 'lead') {
+    } else if (role.toLowerCase().contains('lead')) {
       HiveSettingsDB.setBgLeaderSettingVisible(true);
       HiveSettingsDB.setSpecialRightsPrefs(false);
+    } else if (role.toLowerCase() == 'admin') {
+      HiveSettingsDB.setBgLeaderSettingVisible(true);
+      HiveSettingsDB.setSpecialRightsPrefs(true);
     } else {
       HiveSettingsDB.setBgLeaderSettingVisible(false);
       HiveSettingsDB.setSpecialRightsPrefs(false);

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -14,8 +13,6 @@ import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../providers/get_images_and_links_provider.dart';
-import '../providers/settings/dark_color_provider.dart';
-import '../providers/settings/light_color_provider.dart';
 import 'bladeguard/bladeguard_page.dart';
 import 'events_page.dart';
 import 'friends/friends_page.dart';
@@ -124,6 +121,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           fullscreenDialog: false,
         ),
       );
+      HiveSettingsDB.setHasShownBladeGuard(true);
     }
   }
 

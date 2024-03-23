@@ -59,6 +59,9 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
   static bool _$eventIsActive(RealtimeUpdate v) => v.eventIsActive;
   static const Field<RealtimeUpdate, bool> _f$eventIsActive =
       Field('eventIsActive', _$eventIsActive, key: 'isa', opt: true, def: true);
+  static DateTime _$timeStamp(RealtimeUpdate v) => v.timeStamp;
+  static const Field<RealtimeUpdate, DateTime> _f$timeStamp =
+      Field('timeStamp', _$timeStamp, mode: FieldMode.member);
 
   @override
   final MappableFields<RealtimeUpdate> fields = const {
@@ -74,6 +77,7 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
     #rpcException: _f$rpcException,
     #eventState: _f$eventState,
     #eventIsActive: _f$eventIsActive,
+    #timeStamp: _f$timeStamp,
   };
 
   static RealtimeUpdate _instantiate(DecodingData data) {

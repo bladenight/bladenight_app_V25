@@ -681,7 +681,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               ),
             ),
           Positioned(
-            right: kIsWeb ? null : 170,
+            right: kIsWeb ? null : 70,
             left: kIsWeb ? 70 : null,
             bottom: kIsWeb ? 310 : 115 + bottomOffset,
             child: ClipRRect(

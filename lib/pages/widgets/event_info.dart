@@ -100,9 +100,6 @@ class _EventInfoState extends ConsumerState<EventInfo>
     BuildContext context,
   ) {
     var nextEventProvider = context.watch(activeEventProvider);
-    var eventActive =
-        ref.watch(realtimeDataProvider.select((rt) => rt?.eventIsActive)) ??
-            false;
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -174,7 +171,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                 ],
               ),
             ),
-          if (nextEventProvider.status == EventStatus.confirmed && !eventActive)
+
             const BladeGuardOnsite(),
           Column(children: [
             Padding(
