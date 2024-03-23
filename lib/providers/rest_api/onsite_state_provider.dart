@@ -28,7 +28,7 @@ class BladeGuardApiRepository {
 
   ///Get TeamId
   Future<ResultOrError> checkBladeguardEmail(
-      String hashcode, DateTime birthday, String phone) async {
+      String hashcode, DateTime birthday, String phone, String? pin) async {
     if (hashcode.contains('@')) {
       BnLog.error(
           text: 'invalid parameter --> not hashed',
@@ -44,11 +44,14 @@ class BladeGuardApiRepository {
     if (phone.length > 7) {
       qParams['phone'] = phone;
     }
+    if (pin != null && pin.length > 4) {
+      qParams['pin'] = pin;
+    }
 
     try {
       final url = _getUrl(parameter: '/check');
       final response =
-          await dioClient.get<String>(url, queryParameters: qParams);
+          await dioClient.post<String>(url, queryParameters: qParams);
       if (response.statusCode == 200) {
         if (response.data == '') {
           return ResultOrError(null, Localize.current.invalidLoginData);
@@ -57,9 +60,8 @@ class BladeGuardApiRepository {
         if (jsonResult is Map && jsonResult.keys.contains('fail')) {
           return ResultOrError(null, Localize.current.invalidLoginData);
         }
-        if (jsonResult is Map && jsonResult.keys.contains('team')) {
-          var teamId = jsonResult['team'];
-          return ResultOrError(teamId, null);
+        if (jsonResult is Map) {
+          return ResultOrError(response.data!, null);
         }
       } else {
         BnLog.warning(
@@ -98,24 +100,21 @@ class BladeGuardApiRepository {
         if (response.data == '') {
           return ResultOrError(null, Localize.current.invalidEMail);
         }
-        var jsonResult = jsonDecode(response.data!);
-        if (jsonResult is Map && jsonResult.keys.contains('team')) {
-          var teamId = jsonResult['team'];
-          return ResultOrError(teamId, null);
-        }
+
+        return ResultOrError(response.data!, null);
       } else {
         BnLog.warning(
             text: response.statusCode.toString(),
-            methodName: 'checkBladeguardEmail');
+            methodName: 'checkLoginState');
       }
     } on DioException catch (e) {
-      BnLog.warning(text: e.toString(), methodName: 'checkBladeguardEmail');
+      BnLog.warning(text: e.toString(), methodName: 'checkLoginState');
       if (e.response == null) {
         return ResultOrError(null, e.toString());
       }
       return ResultOrError(null, e.response!.statusCode.toString());
     } catch (e) {
-      BnLog.warning(text: e.toString(), methodName: 'checkBladeguardEmail');
+      BnLog.warning(text: e.toString(), methodName: 'checkLoginState');
     }
     var res = ResultOrError(null, 'unknown');
     return res;
@@ -158,6 +157,7 @@ class BladeGuardApiRepository {
     Map<String, dynamic> qParams = {
       'onSite': onSite,
       'code': hash,
+      'birth':HiveSettingsDB.bladeguardBirthday,
       'oneSignalId': HiveSettingsDB.oneSignalId
     };
 
@@ -243,7 +243,7 @@ Future<ResultOrError> fetchOnSiteState(
 
 @riverpod
 Future<ResultOrError> checkBladeguardMail(CheckBladeguardMailRef ref,
-    String emailHash, DateTime birthday, String phone) async {
+    String emailHash, DateTime birthday, String phone, String? pin) async {
   final repo = ref.read(bladeGuardApiRepositoryProvider);
-  return repo.checkBladeguardEmail(emailHash, birthday, phone);
+  return repo.checkBladeguardEmail(emailHash, birthday, phone, pin);
 }

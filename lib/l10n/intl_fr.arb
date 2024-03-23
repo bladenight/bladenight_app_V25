@@ -474,5 +474,9 @@
   "enterPhoneNumber": "Please enter your mobile phone Number",
   "phoneNumber": "Mobile",
   "invalidLoginData" : "Email not found or wrong birthday",
-  "update": "Update"
+  "bgUpdatePhone": "Update Tel.",
+  "bgTodayOnSite":"Du bist heute als Bladeguard vor Ort ?",
+  "bgTodayNotOnSite": "Du bist heute nicht vor Ort?",
+  "bgTodayNotParticipation": "Ich kann heute leider nicht als Bladeguard teilnehmen",
+  "bgTodayRegister":"Bitte heute als Bladeguard einloggen!"
 }

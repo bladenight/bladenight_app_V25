@@ -175,6 +175,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "bgNotificationTitle": MessageLookupByLibrary.simpleMessage(
             "BladeNight Hintergrundstandortupdate"),
         "bgTeam": MessageLookupByLibrary.simpleMessage("Bladeguard Team"),
+        "bgTodayNotOnSite": MessageLookupByLibrary.simpleMessage(
+            "Du bist heute nicht vor Ort?"),
+        "bgTodayNotParticipation": MessageLookupByLibrary.simpleMessage(
+            "Ich kann heute leider nicht als Bladeguard teilnehmen"),
+        "bgTodayOnSite": MessageLookupByLibrary.simpleMessage(
+            "Du bist heute als Bladeguard vor Ort ?"),
+        "bgTodayRegister": MessageLookupByLibrary.simpleMessage(
+            "Bitte heute als Bladeguard einloggen!"),
+        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Update Tel."),
         "birthday": MessageLookupByLibrary.simpleMessage("Geburtstag"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
         "bladeGuardSettings":
@@ -264,8 +273,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "enterEmail": MessageLookupByLibrary.simpleMessage("Email eingeben"),
         "enterPassword":
             MessageLookupByLibrary.simpleMessage("Passwort eingeben"),
-        "enterPhoneNumber":
-            MessageLookupByLibrary.simpleMessage("Deine Mobiltelefonnummer"),
+        "enterPhoneNumber": MessageLookupByLibrary.simpleMessage(
+            "Deine Mobiltelefonnummer.(Nur für die Bladenight und falls die Polizei bei der Ordnerprüfung dich sehen möchte."),
         "entercode": MessageLookupByLibrary.simpleMessage("Code: "),
         "enterfriendname":
             MessageLookupByLibrary.simpleMessage("Name eingeben."),
@@ -671,7 +680,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "understand": MessageLookupByLibrary.simpleMessage("Verstanden"),
         "unknown": MessageLookupByLibrary.simpleMessage("unbekannt"),
         "unknownerror": MessageLookupByLibrary.simpleMessage("unbek. Fehler"),
-        "update": MessageLookupByLibrary.simpleMessage("Update"),
+        "updatePhone": MessageLookupByLibrary.simpleMessage("UpdatePhone"),
         "userSpeed":
             MessageLookupByLibrary.simpleMessage("Meine GPS-Geschwindigkeit."),
         "validatefriend":

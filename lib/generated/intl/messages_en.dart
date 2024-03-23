@@ -174,6 +174,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "bgNotificationTitle": MessageLookupByLibrary.simpleMessage(
             "BladeNight background tracking"),
         "bgTeam": MessageLookupByLibrary.simpleMessage("Bladeguard team"),
+        "bgTodayNotOnSite": MessageLookupByLibrary.simpleMessage(
+            "Du bist heute nicht vor Ort?"),
+        "bgTodayNotParticipation": MessageLookupByLibrary.simpleMessage(
+            "Ich kann heute leider nicht als Bladeguard teilnehmen"),
+        "bgTodayOnSite": MessageLookupByLibrary.simpleMessage(
+            "Du bist heute als Bladeguard vor Ort ?"),
+        "bgTodayRegister": MessageLookupByLibrary.simpleMessage(
+            "Bitte heute als Bladeguard einloggen!"),
+        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Update Tel."),
         "birthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
         "bladeGuardSettings":
@@ -660,7 +669,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "unknown": MessageLookupByLibrary.simpleMessage("unknown"),
         "unknownerror": MessageLookupByLibrary.simpleMessage("unknown error"),
         "unreadMessage": MessageLookupByLibrary.simpleMessage("Unread"),
-        "update": MessageLookupByLibrary.simpleMessage("Update"),
+        "updatePhone": MessageLookupByLibrary.simpleMessage("Update Phone"),
         "userSpeed":
             MessageLookupByLibrary.simpleMessage("This is my GPS-speed."),
         "validatefriend":

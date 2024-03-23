@@ -3893,11 +3893,11 @@ class Localize {
     );
   }
 
-  /// `Update`
-  String get update {
+  /// `Update Phone`
+  String get updatePhone {
     return Intl.message(
-      'Update',
-      name: 'update',
+      'Update Phone',
+      name: 'updatePhone',
       desc: '',
       args: [],
     );
@@ -3928,6 +3928,56 @@ class Localize {
     return Intl.message(
       'Heute nein',
       name: 'todayNo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Tel.`
+  String get bgUpdatePhone {
+    return Intl.message(
+      'Update Tel.',
+      name: 'bgUpdatePhone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Du bist heute als Bladeguard vor Ort ?`
+  String get bgTodayOnSite {
+    return Intl.message(
+      'Du bist heute als Bladeguard vor Ort ?',
+      name: 'bgTodayOnSite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Du bist heute nicht vor Ort?`
+  String get bgTodayNotOnSite {
+    return Intl.message(
+      'Du bist heute nicht vor Ort?',
+      name: 'bgTodayNotOnSite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ich kann heute leider nicht als Bladeguard teilnehmen`
+  String get bgTodayNotParticipation {
+    return Intl.message(
+      'Ich kann heute leider nicht als Bladeguard teilnehmen',
+      name: 'bgTodayNotParticipation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bitte heute als Bladeguard einloggen!`
+  String get bgTodayRegister {
+    return Intl.message(
+      'Bitte heute als Bladeguard einloggen!',
+      name: 'bgTodayRegister',
       desc: '',
       args: [],
     );

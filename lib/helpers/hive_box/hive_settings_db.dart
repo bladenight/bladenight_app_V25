@@ -188,6 +188,7 @@ class HiveSettingsDB {
   static void setBgSettingVisible(bool val) async {
     _hiveBox.put(bgSettingVisibleKey, val);
     if (val == false) {
+      setBladeguardPin(null);
       setRcvSkatemunichInfos(false);
       setOneSignalRegisterBladeGuardPush(false);
       await OnesignalHandler.unRegisterPushAsBladeGuard();
@@ -388,6 +389,18 @@ class HiveSettingsDB {
   ///set BladeguardPhone for Bladeguard
   static void setBladeguardPhone(String val) {
     _hiveBox.put(bladeguardPhoneKey, val);
+  }
+
+  static const String bladeguardPinKey = 'bladeguardPinPref';
+
+  ///get bladeguardPin
+  static String? get bladeguardPin {
+    return _hiveBox.get(bladeguardPinKey);
+  }
+
+  ///set BladeguardPin for Bladeguard
+  static void setBladeguardPin(String? val) {
+    _hiveBox.put(bladeguardPinKey, val);
   }
 
   static const String _bgTeamKey = 'bgTeamPref';

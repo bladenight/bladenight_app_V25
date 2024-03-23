@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -20,8 +21,10 @@ import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
 import '../widgets/birthday_date_picker.dart';
 import '../widgets/data_widget_left_right.dart';
+import '../widgets/data_widget_left_right_text.dart';
 import '../widgets/email_widget.dart';
 import '../widgets/phone_number.dart';
+import 'bg_pin_dialog.dart';
 import 'bladeguard_on_site_page.dart';
 //import 'widgets/show_message_dialog.dart';
 
@@ -206,8 +209,10 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                       //---------
                       if (isBladeguard) ...[
+                        if (!bladeguardSettingsVisible)
                         const EmailTextField(),
-                        const BirthdayDatePicker(),
+                        if (!bladeguardSettingsVisible)
+                          const BirthdayDatePicker(),
                         const PhoneTextField(),
                       ],
                       if (networkConnected.connectivityStatus ==
@@ -231,14 +236,14 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 15, right: 15),
-                                child: DataLeftRightContent(
-                                  descriptionLeft: HiveSettingsDB.bgTeam,
-                                  descriptionRight: '',
-                                  rightWidget: CupertinoButton(
-                                      child: Text(Localize.of(context).update),
+                                child: DataLeftWidgetRightTextContent(
+                                  descriptionRight: HiveSettingsDB.bgTeam,
+                                  leftWidget: CupertinoButton(
+                                      child: Text(
+                                          Localize.of(context).updatePhone),
                                       onPressed: () async {
-                                        setState(() {});
                                         await checkOrUpdateBladeGuardData();
+                                        setState(() {});
                                       }),
                                 ),
                               )
@@ -259,7 +264,6 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               child: DataLeftRightContent(
                                 descriptionLeft: Localize.of(context)
                                     .pushMessageParticipateAsBladeGuard,
-                                descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
                                   onChanged: (val) async {
                                     setState(() {
@@ -274,6 +278,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   value: HiveSettingsDB
                                       .oneSignalRegisterBladeGuardPush,
                                 ),
+                                descriptionRight: '',
                               ),
                             ),
                           ],
@@ -367,7 +372,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                     ],
                   ),
-                if (Globals.adminPass != null)
+                if (Globals.adminPass != null|| HiveSettingsDB.hasSpecialRights)
                   CupertinoFormSection(
                     header: Text(Localize.of(context).showFullProcessionTitle),
                     children: <Widget>[
@@ -446,27 +451,111 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
   checkOrUpdateBladeGuardData() async {
     if (HiveSettingsDB.bladeguardSHA512Hash != '') {
       try {
+        String? role;
         final res = await ref.read(checkBladeguardMailProvider(
-                HiveSettingsDB.bladeguardSHA512Hash,
-                HiveSettingsDB.bladeguardBirthday,
-                HiveSettingsDB.bladeguardPhone)
-            .future);
-        if (res.result != null && res.result != '') {
-          ref.read(bladeguardSettingsVisibleProvider.notifier).setValue(true);
-          HiveSettingsDB.setBgTeam(res.result!);
+          HiveSettingsDB.bladeguardSHA512Hash,
+          HiveSettingsDB.bladeguardBirthday,
+          HiveSettingsDB.bladeguardPhone,
+          HiveSettingsDB.bladeguardPin,
+        ).future);
+        if (res.result != null && res.result!.length > 5) {
+          //check PIN
+          var resultMap = jsonDecode(res.result!);
+          if (resultMap is Map) {
+            if (resultMap.keys.contains('pinReq') &&
+                resultMap['pinReq'] == true) {
+              if (mounted) {
+                var pinRes = await PinDialog.show(context);
+                if (pinRes == null) return;
+                final resPin = await ref.read(checkBladeguardMailProvider(
+                  HiveSettingsDB.bladeguardSHA512Hash,
+                  HiveSettingsDB.bladeguardBirthday,
+                  HiveSettingsDB.bladeguardPhone,
+                  pinRes,
+                ).future);
+                if (resPin.result != null) {
+                  //check PIN
+                  var resPinMap = jsonDecode(resPin.result!);
+                  if (resPinMap is Map &&
+                      resPinMap.keys.contains('pin') &&
+                      resPinMap['pin'] == true) {
+                    role = '';
+                    HiveSettingsDB.setBladeguardPin(pinRes);
+                    if (resPinMap.keys.contains('role')) {
+                      role = resPinMap['role'];
+                    }
+                    _setBladegurdRole(role);
+                    HiveSettingsDB.setBgTeam(
+                        '${resPinMap['team']} ${role != null ? '($role)' : ''}');
+                    ref
+                        .read(bladeguardSettingsVisibleProvider.notifier)
+                        .setValue(true);
+                    await _activatePush();
+                    if (mounted) {
+                      showToast(message: Localize.of(context).ok);
+                    }
+                    setState(() {});
+                    return;
+                  }
+                } else {
+                  ref
+                      .read(bladeguardSettingsVisibleProvider.notifier)
+                      .setValue(false);
+                  showToast(message: Localize.current.failed);
+                  setState(() {});
+                  return;
+                }
+              }
+            }
+            if (resultMap.keys.contains('team')) {
+              String? role;
+              if (resultMap.keys.contains('role')) {
+                role = resultMap['role'];
+              }
+              _setBladegurdRole(role);
+              HiveSettingsDB.setBgTeam(
+                  '${resultMap['team']} ${role != null ? '($role)' : ''}');
+              ref
+                  .read(bladeguardSettingsVisibleProvider.notifier)
+                  .setValue(true);
+              await _activatePush();
+            }
+          }
         } else {
           ref.read(bladeguardSettingsVisibleProvider.notifier).setValue(false);
           showToast(
               message: '${Localize.current.failed} ${res.errorDescription}');
-
-          setState(() {});
         }
+        setState(() {});
       } catch (ex) {
         BnLog.error(
             text: ex.toString(),
             methodName: 'checkOrUpdateBladeGuardData',
             className: toString());
       }
+    }
+  }
+
+  _activatePush() async {
+    HiveSettingsDB.setOneSignalRegisterBladeGuardPush(true);
+    await OnesignalHandler.registerPushAsBladeGuard(
+        true, HiveSettingsDB.bgTeam);
+  }
+
+  _setBladegurdRole(String? role) {
+    if (role == null) return;
+    if (role.toLowerCase() == 'admin') {
+      HiveSettingsDB.setBgLeaderSettingVisible(true);
+      HiveSettingsDB.setSpecialRightsPrefs(true);
+    } else if (role.toLowerCase() == 'spec') {
+      HiveSettingsDB.setBgLeaderSettingVisible(false);
+      HiveSettingsDB.setSpecialRightsPrefs(true);
+    } else if (role.toLowerCase() == 'lead') {
+      HiveSettingsDB.setBgLeaderSettingVisible(true);
+      HiveSettingsDB.setSpecialRightsPrefs(false);
+    } else {
+      HiveSettingsDB.setBgLeaderSettingVisible(false);
+      HiveSettingsDB.setSpecialRightsPrefs(false);
     }
   }
 }

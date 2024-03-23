@@ -37,7 +37,7 @@ class BladeGuardOnsite extends ConsumerWidget {
               ? Column(
                   children: [
                     if (status.result != null && status.result == 'false') ...[
-                      Text('Bitte anmelden!'),
+                      Text(Localize.of(context).bgTodayRegister),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: CupertinoButton(
@@ -50,8 +50,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                                 .future);
                           },
                           color: Colors.lightGreen,
-                          child: const Text(
-                              'Ich bin heute als Bladeguard vor Ort'),
+                          child:  Text(Localize.of(context).bgTodayOnSite),
                         ),
                       ),
                       const SizedBox(
@@ -59,7 +58,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                       ),
                     ],
                     if (status.result != null && status.result == 'true') ...[
-                      Text('Du bist heute nicht vor Ort?!'),
+                      Text(Localize.of(context).bgTodayNotOnSite),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: CupertinoButton(
@@ -86,8 +85,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                                 .future);
                           },
                           color: Colors.orange,
-                          child: const Text(
-                              'Ich kann heute leider nicht als Bladeguard teilnehmen'),
+                          child:  Text(Localize.of(context).bgTodayNotParticipation),
                         ),
                       ),
                       const SizedBox(

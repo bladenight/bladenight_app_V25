@@ -469,10 +469,15 @@
   "enterBirthday": "Dein Geburtstag ",
   "birthday": "Geburtstag",
   "weekdayIntl": "{date}",
-  "enterPhoneNumber": "Deine Mobiltelefonnummer",
+  "enterPhoneNumber": "Deine Mobiltelefonnummer.(Nur für die Bladenight und falls die Polizei bei der Ordnerprüfung dich sehen möchte.",
   "phoneNumber": "Tel:",
   "invalidLoginData" : "Email not found or wrong birthday",
-  "update": "Update",
+  "updatePhone": "UpdatePhone",
   "requestOffSite":"Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. ",
-  "todayNo": "Heute nein"
+  "todayNo": "Heute nein",
+  "bgUpdatePhone": "Update Tel.",
+  "bgTodayOnSite":"Du bist heute als Bladeguard vor Ort ?",
+  "bgTodayNotOnSite": "Du bist heute nicht vor Ort?",
+  "bgTodayNotParticipation": "Ich kann heute leider nicht als Bladeguard teilnehmen",
+  "bgTodayRegister":"Bitte heute als Bladeguard einloggen!"
 }
