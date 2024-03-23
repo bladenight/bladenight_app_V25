@@ -10,16 +10,14 @@ enum AdminProcessionMode {
   headAndTail,
   @MappableValue('OFF')
   noHeadAndTail,
-  ///Event actual finished
-  @MappableValue('UKN')
-  unknown,
+
 }
 
 
 @MappableClass()
 class SetProcessionModeMessage extends AdminMessage with SetProcessionModeMessageMappable
 {
-  @MappableField(key: 'mod')
+  @MappableField(key: 'pmo')
   final AdminProcessionMode mode;
 
   SetProcessionModeMessage({
