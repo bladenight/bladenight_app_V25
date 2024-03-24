@@ -17,7 +17,7 @@ import '../../../providers/active_event_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
-import '../../../providers/me_color_provider.dart';
+import '../../../providers/settings/me_color_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 import 'map_event_informations.dart';
@@ -204,15 +204,12 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                   SizedBox(
                                     height: 10,
                                     child: Progresso(
+                                        //head and tail
                                         progressStrokeWidth: 6,
                                         points: [
                                           rtu.runningLength == 0
                                               ? 0
                                               : rtu.tail.position /
-                                                  rtu.runningLength,
-                                          rtu.runningLength == 0
-                                              ? 0
-                                              : rtu.user.position /
                                                   rtu.runningLength,
                                           rtu.runningLength == 0
                                               ? 0
@@ -233,16 +230,13 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                 (rtu.runningLength),
                                         progress: rtu.runningLength == 0
                                             ? 0
-                                            : rtu.head.position <
-                                                    rtu.user.position
-                                                ? rtu.user.position /
-                                                    rtu.runningLength
-                                                : rtu.head.position /
-                                                    rtu.runningLength),
+                                            : rtu.head.position /
+                                                rtu.runningLength),
                                   ),
                                   SizedBox(
                                     height: 0,
                                     child: Progresso(
+                                        //user
                                         backgroundColor:
                                             Colors.grey.withOpacity(0.5),
                                         progressStrokeWidth: 6,
@@ -351,8 +345,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                   .barBackgroundColor,
                                           child: CircleAvatar(
                                             backgroundColor:
-                                                CupertinoTheme.of(context)
-                                                    .barBackgroundColor,
+                                            CupertinoTheme.of(context).primaryColor,
                                             child: ref.watch(
                                                     isUserParticipatingProvider)
                                                 ? ImageIcon(
@@ -635,17 +628,37 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                 ),
                               ]),
                             ),
-                          Center(
-                            child: FittedBox(
-                              child: Text(
-                                '${Localize.of(context).route}: ${rtu.routeName}  '
-                                '${Localize.of(context).length}: ${((rtu.runningLength) / 1000).toStringAsFixed(1)} km  '
-                                '${actualOrNextEvent.status == EventStatus.confirmed || actualOrNextEvent.status == EventStatus.running ? "${rtu.usersTracking.toString()} ${Localize.of(context).trackers}" : ""}',
-                                overflow: TextOverflow.fade,
-                                maxLines: 1,
+                          if (rtu.rpcException == null) ...[
+                            Center(
+                              child: FittedBox(
+                                child: Text(
+                                  '${Localize.of(context).route}: ${rtu.routeName}  '
+                                  '${Localize.of(context).length}: ${((rtu.runningLength) / 1000).toStringAsFixed(1)} km  '
+                                  '${actualOrNextEvent.status == EventStatus.confirmed || actualOrNextEvent.status == EventStatus.running ? "${rtu.usersTracking.toString()} ${Localize.of(context).trackers}" : ""}',
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                ),
                               ),
                             ),
-                          ),
+                          ],
+                          if (rtu.rpcException != null)
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color:
+                                      CupertinoTheme.of(context).primaryColor,
+                                  width: 3.0,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: FittedBox(
+                                  child:
+                                      Text(Localize.of(context).nodatareceived),
+                                ),
+                              ),
+                            ),
                           const SizedBox(
                             height: 5,
                           ),

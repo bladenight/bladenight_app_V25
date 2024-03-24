@@ -10,7 +10,7 @@ import '../../../providers/location_provider.dart';
 import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
-import '../../../providers/me_color_provider.dart';
+import '../../../providers/settings/me_color_provider.dart';
 import 'location_marker_widget.dart';
 
 class CustomLocationLayer extends ConsumerStatefulWidget {

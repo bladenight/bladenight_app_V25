@@ -11,7 +11,7 @@ import '../../../providers/location_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/settings/dark_color_provider.dart';
 import '../../../providers/settings/light_color_provider.dart';
-import '../../../providers/me_color_provider.dart';
+import '../../../providers/settings/me_color_provider.dart';
 
 class PolyLinesLayer extends ConsumerStatefulWidget {
   const PolyLinesLayer({super.key});

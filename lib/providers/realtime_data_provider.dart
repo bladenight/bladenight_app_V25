@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../helpers/logger.dart';
-import '../helpers/wamp/subscribeMessage.dart';
+import '../helpers/wamp/subscribe_message.dart';
 import '../models/realtime_update.dart';
 import '../wamp/wamp_v2.dart';
 import 'is_tracking_provider.dart';

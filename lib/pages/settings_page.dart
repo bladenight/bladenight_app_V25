@@ -23,7 +23,7 @@ import '../pages/widgets/app_id_widget.dart';
 import '../pages/widgets/data_widget_left_right.dart';
 import '../providers/location_provider.dart';
 import '../providers/map/map_settings_provider.dart';
-import '../providers/me_color_provider.dart';
+import '../providers/settings/me_color_provider.dart';
 import '../providers/network_connection_provider.dart';
 import '../providers/settings/dark_color_provider.dart';
 import '../providers/settings/light_color_provider.dart';

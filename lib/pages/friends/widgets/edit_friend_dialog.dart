@@ -333,7 +333,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
         Navigator.of(context).pop(); //go back
       } else if (widget.action == FriendsAction.addWithCode) //validate code
       {
-        var res = await ref
+        var _ = await ref
             .read(friendsLogicProvider)
             .addFriendWithCode(name, color!, code!);
         if (!mounted) {

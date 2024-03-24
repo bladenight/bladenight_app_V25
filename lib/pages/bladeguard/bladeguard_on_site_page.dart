@@ -31,7 +31,7 @@ class BladeGuardOnsite extends ConsumerWidget {
         width: MediaQuery.of(context).size.width * 0.9,
         child: CupertinoButton(
           onPressed: () async {
-            var newData = ref.refresh(bgIsOnSiteProvider);
+            var _ = ref.refresh(bgIsOnSiteProvider);
           },
           color: Colors.redAccent,
           child: Text(Localize.of(context).networkerror),
@@ -87,7 +87,6 @@ class BladeGuardOnsite extends ConsumerWidget {
                         ref
                             .read(bgIsOnSiteProvider.notifier)
                             .setOnSiteState(false);
-                        ;
                       },
                       color: Colors.orange,
                       child: Text(Localize.of(context).bgTodayNotParticipation),

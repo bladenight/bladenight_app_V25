@@ -12,7 +12,7 @@ class ServerConfigDb {
 
   static final ServerConfigDb instance = ServerConfigDb._();
 
-  ServerConfigDb._() {}
+  ServerConfigDb._();
 
   static const String restApiLinkKey = 'restApiLinkIalKey';
 

@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
-import '../../../helpers/location_bearing_distance.dart';
 import '../../../helpers/speed_to_color.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/bn_map_friend_marker.dart';
@@ -51,12 +50,8 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
     processionRoutePointsP.hasValue
         ? processionRoutePoints = processionRoutePointsP.value!
         : processionRoutePoints = <LatLng>[];
-    List<HeadingPoint> headingRoutePoints;
-    var headingRoutePointsP = ref.watch(headingPointsProvider);
-    headingRoutePoints = headingRoutePointsP.value ?? <HeadingPoint>[];
     var sizeValue = ref.watch(iconSizeProvider);
     var realtimeData = ref.watch(realtimeDataProvider);
-    var headingMarkerSize= ref.watch(headingMarkerSizeProvider);
 
     return PopupMarkerLayer(
       options: PopupMarkerLayerOptions(
@@ -75,28 +70,6 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
         ),
         markerCenterAnimation: const MarkerCenterAnimation(),
         markers: [
-          //begin direction arrows in track
-          if (headingRoutePoints.isNotEmpty) ...[
-            for (var hp in headingRoutePoints)
-              Marker(
-                width: headingMarkerSize,
-                height: headingMarkerSize,
-                point: hp.latLng,
-                child: Builder(
-                  builder: (context) => Transform.rotate(
-                    angle: hp.bearing,
-                    child: const Image(
-                      image: AssetImage(
-                        'assets/images/arrow_up.png',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-          //end direction arrows in track
-
           //beginn finish marker
           ...[
             BnMapMarker(

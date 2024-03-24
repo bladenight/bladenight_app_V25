@@ -38,9 +38,10 @@ class _PhoneTextFieldState extends ConsumerState<PhoneTextField> {
           maxLines: 1,
           onChanged: (value) {
             setState(() {
-              RegExp regexp= RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
-              var match = regexp.allMatches(_phoneTextController.text);
-              validPhone = _phoneTextController.text.length > 7;
+              RegExp regExp= RegExp(r'(^\+[0-9]{1,3}\.[0-9]{4,14}(?:x.+)?$)');
+              final candidateFormatted = _phoneTextController.text.replaceAll(RegExp('[^+0-9]'), '');
+              final tokens = regExp.allMatches(_phoneTextController.text);
+              validPhone = tokens.isNotEmpty;// regExp.hasMatch(_phoneTextController.text);
             });
             if (validPhone) {
               HiveSettingsDB.setBladeguardPhone(

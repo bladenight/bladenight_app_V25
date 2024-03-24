@@ -3,8 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../app_settings/app_constants.dart';
-import '../helpers/hive_box/hive_settings_db.dart';
+import '../../app_settings/app_constants.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
 
 part 'me_color_provider.g.dart';
 

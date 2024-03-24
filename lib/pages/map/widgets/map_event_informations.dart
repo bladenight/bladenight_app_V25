@@ -11,7 +11,6 @@ import '../../../models/route.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
-import '../../../providers/location_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_data_warning.dart';

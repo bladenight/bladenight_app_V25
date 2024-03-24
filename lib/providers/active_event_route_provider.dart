@@ -104,7 +104,7 @@ class ProcessionRoutePoints extends _$ProcessionRoutePoints {
       } else {
         if (length + segmentLength >= headPos) {
           running.add(a);
-//calculate missing part
+          //calculate missing part
           double missingLength = headPos - length;
           if (missingLength <= segmentLength) {
             double relativePositionOnSegment = missingLength / segmentLength;

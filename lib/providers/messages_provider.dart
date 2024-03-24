@@ -102,7 +102,7 @@ class MessagesLogic with ChangeNotifier {
       }
 
       var host = ServerConfigDb.restApiLink;
-      var response = await dio.get('$host/messages?$parameter',
+      var response = await dio.get('$host/msg/getMessages?$parameter',
           options: options);
       if (response.statusCode != 200) {
         await _loadMessages();

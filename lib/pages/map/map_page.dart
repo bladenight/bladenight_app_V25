@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
@@ -27,6 +26,7 @@ import '../../providers/realtime_data_provider.dart';
 import '../widgets/no_connection_warning.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/gps_info_and_map_copyright.dart';
+import 'widgets/headings_layer.dart';
 import 'widgets/map_buttons.dart';
 import 'widgets/map_tile_layer.dart';
 import 'widgets/markers_layer.dart';
@@ -195,24 +195,25 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                 return Stack(
                   children: [
                     const PolyLinesLayer(),
-                   // CurrentLocationLayer(),
-                   /*AnimatedLocationMarkerLayer(
+                    // CurrentLocationLayer(),
+                    /*AnimatedLocationMarkerLayer(
                 position: LocationMarkerPosition(
                     latitude: ref.watch(realtimeDataProvider)!.head.latitude!,
                     longitude: ref.watch(realtimeDataProvider)!.head.longitude!,
                     accuracy: 1.0
                 ),
               ),*/
+                    const HeadingsLayer(),
                     CustomLocationLayer(_popupController, _hasGesture),
                     //needs map controller
                     MarkersLayer(_popupController),
+
                     TrackProgressOverlay(_mapController),
                     const MapButtonsLayer(),
                   ],
                 );
               }),
               //CurrentLocationLayer(),
-
             ],
           ),
           const GPSInfoAndMapCopyright(),

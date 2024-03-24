@@ -112,7 +112,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                             return;
                           }
                           if (!context.mounted) return;
-                          var result = await EditFriendDialog.show(
+                          var _ = await EditFriendDialog.show(
                             context,
                             friendDialogAction: action,
                           );

@@ -6,6 +6,8 @@ part 'set_procession_mode.mapper.dart';
 
 @MappableEnum()
 enum AdminProcessionMode {
+  @MappableValue('NON')
+  none,
   @MappableValue('HAT')
   headAndTail,
   @MappableValue('OFF')

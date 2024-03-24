@@ -20,8 +20,7 @@ import '../../providers/images_and_links/second_sponsor_image_and_link_provider.
 import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
-import '../../providers/realtime_data_provider.dart';
-import '../bladeguard/bladeguardAdvertise.dart';
+import '../bladeguard/bladeguard_advertise.dart';
 import '../bladeguard/bladeguard_on_site_page.dart';
 import 'app_outdated.dart';
 import 'hidden_admin_button.dart';

@@ -1325,7 +1325,7 @@ final isUserParticipatingProvider = Provider((ref) {
 ///Watch active [Event]
 final isActiveEventProvider = Provider((ref) {
   return ref.watch(realtimeDataProvider
-      .select((l) => l == null ? false : l.eventIsActive ?? true));
+      .select((l) => l == null ? false : l.eventIsActive));
 });
 
 final bgNetworkConnectedProvider = Provider((ref) {

@@ -312,7 +312,8 @@ class WampV2 {
             try {
               var rt = RealtimeUpdateMapper.fromMap(messageResult);
               _realTimeUpdateStreamController.sink.add(rt);
-            } catch (e) {}
+            } catch (_) {
+            }
 
             calls[requestId]?.completer.complete(messageResult);
             calls.remove(requestId);
