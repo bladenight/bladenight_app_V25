@@ -60,20 +60,20 @@ class Localize {
     );
   }
 
-  /// `The app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live",\nThe app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live`
+  /// `The app is provided free of charge by the publisher exclusively for the Munich BladeNight and Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of the routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow them live`
   String get about_appinfo {
     return Intl.message(
-      'The app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live",\nThe app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live',
+      'The app is provided free of charge by the publisher exclusively for the Munich BladeNight and Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of the routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow them live',
       name: 'about_appinfo',
       desc: '',
       args: [],
     );
   }
 
-  /// `This app uses a unique id, which is created on first start. This id is used to share your position with your friends. Further we transfer your buildnumber and manufacturer to collect the correct version for server-communication. We store your id on server and locally for next events and reopen the app. On deleting this app all linked friends are lost and can't restore. We don't share any data with other providers. Your data are only to track the actual event. Your position data are used to calculate and show start and end position of skatertrain and distances to friends and finish. When you leave the track or the event is finished you are disappearing in the app. Sourcecode is opensource.`
+  /// `This app uses a unique ID that is saved locally when the app is first started.\nThis ID is used on the server to link friends and share the position. This is only transferred between your own app and server. \nThe app version number and phone manufacturer (Apple or Android) are also transmitted to check correct communication.\nThe ID is stored on the server with the linked friends.\nDeleting and reinstalling the app deletes the ID and the friends must be relinked \nThe data will not be passed on to third parties or used in any other way.\nYour location data will be used during the event to calculate and display the start and end of the train on the route and to calculate the distance to friends and to the destination.\nNo personal data is collected. The names of friends are only stored locally in the app.\nThe use of the app, email function, Bladeguard functions and website https://bladenight-muenchen.de is subject to the data protection regulations of Skatemunich e.V.\n These can be found at https:/ /bladenight-muenchen.de/datenschutzerklaerung can be viewed. The personal data is collected and processed exclusively for the purpose of organizing the Munich BladeNight. If you have any questions, please use the contact form,`
   String get about_appprivacy {
     return Intl.message(
-      'This app uses a unique id, which is created on first start. This id is used to share your position with your friends. Further we transfer your buildnumber and manufacturer to collect the correct version for server-communication. We store your id on server and locally for next events and reopen the app. On deleting this app all linked friends are lost and can\'t restore. We don\'t share any data with other providers. Your data are only to track the actual event. Your position data are used to calculate and show start and end position of skatertrain and distances to friends and finish. When you leave the track or the event is finished you are disappearing in the app. Sourcecode is opensource.',
+      'This app uses a unique ID that is saved locally when the app is first started.\nThis ID is used on the server to link friends and share the position. This is only transferred between your own app and server. \nThe app version number and phone manufacturer (Apple or Android) are also transmitted to check correct communication.\nThe ID is stored on the server with the linked friends.\nDeleting and reinstalling the app deletes the ID and the friends must be relinked \nThe data will not be passed on to third parties or used in any other way.\nYour location data will be used during the event to calculate and display the start and end of the train on the route and to calculate the distance to friends and to the destination.\nNo personal data is collected. The names of friends are only stored locally in the app.\nThe use of the app, email function, Bladeguard functions and website https://bladenight-muenchen.de is subject to the data protection regulations of Skatemunich e.V.\n These can be found at https:/ /bladenight-muenchen.de/datenschutzerklaerung can be viewed. The personal data is collected and processed exclusively for the purpose of organizing the Munich BladeNight. If you have any questions, please use the contact form,',
       name: 'about_appprivacy',
       desc: '',
       args: [],
@@ -670,6 +670,66 @@ class Localize {
     );
   }
 
+  /// `You're not on site today?`
+  String get bgTodayNotOnSite {
+    return Intl.message(
+      'You\'re not on site today?',
+      name: 'bgTodayNotOnSite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unfortunately I cannot participate as a Bladeguard today`
+  String get bgTodayNotParticipation {
+    return Intl.message(
+      'Unfortunately I cannot participate as a Bladeguard today',
+      name: 'bgTodayNotParticipation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you on site today as a bladeguard?`
+  String get bgTodayOnSite {
+    return Intl.message(
+      'Are you on site today as a bladeguard?',
+      name: 'bgTodayOnSite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please log in as Bladeguard today!`
+  String get bgTodayRegister {
+    return Intl.message(
+      'Please log in as Bladeguard today!',
+      name: 'bgTodayRegister',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Phone.`
+  String get bgUpdatePhone {
+    return Intl.message(
+      'Update Phone.',
+      name: 'bgUpdatePhone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Birthday`
+  String get birthday {
+    return Intl.message(
+      'Birthday',
+      name: 'birthday',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Bladeguard`
   String get bladeGuard {
     return Intl.message(
@@ -677,6 +737,37 @@ class Localize {
       name: 'bladeGuard',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Bladeguard settings`
+  String get bladeGuardSettings {
+    return Intl.message(
+      'Bladeguard settings',
+      name: 'bladeGuardSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open Bladeguard settings page`
+  String get bladeGuardSettingsTitle {
+    return Intl.message(
+      'Open Bladeguard settings page',
+      name: 'bladeGuardSettingsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="{bladeguardRegisterlink}">Online registration</a> and <a href="{ bladeguardPrivacyLink}">Data protection</a></p></h3>`
+  String bladeguardInfo(
+      Object bladeguardRegisterlink, Object bladeguardPrivacyLink) {
+    return Intl.message(
+      '<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="$bladeguardRegisterlink">Online registration</a> and <a href="$bladeguardPrivacyLink">Data protection</a></p></h3>',
+      name: 'bladeguardInfo',
+      desc: '',
+      args: [bladeguardRegisterlink, bladeguardPrivacyLink],
     );
   }
 
@@ -755,6 +846,16 @@ class Localize {
     return Intl.message(
       'Change it to \'Allow all time\'',
       name: 'changetoalways',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check if you registered as Bladeguard`
+  String get checkBgRegistration {
+    return Intl.message(
+      'Check if you registered as Bladeguard',
+      name: 'checkBgRegistration',
       desc: '',
       args: [],
     );
@@ -1175,6 +1276,16 @@ class Localize {
     );
   }
 
+  /// `Your Birthday`
+  String get enterBirthday {
+    return Intl.message(
+      'Your Birthday',
+      name: 'enterBirthday',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Enter email`
   String get enterEmail {
     return Intl.message(
@@ -1190,6 +1301,16 @@ class Localize {
     return Intl.message(
       'Enter password',
       name: 'enterPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your mobile phone Number`
+  String get enterPhoneNumber {
+    return Intl.message(
+      'Please enter your mobile phone Number',
+      name: 'enterPhoneNumber',
       desc: '',
       args: [],
     );
@@ -1415,6 +1536,26 @@ class Localize {
     );
   }
 
+  /// `Crashlytics on/off`
+  String get fireBaseCrashlytics {
+    return Intl.message(
+      'Crashlytics on/off',
+      name: 'fireBaseCrashlytics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To improve the app, crash events will be send to Crashlytics. This can be suppressed here.`
+  String get fireBaseCrashlyticsHeader {
+    return Intl.message(
+      'To improve the app, crash events will be send to Crashlytics. This can be suppressed here.',
+      name: 'fireBaseCrashlyticsHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps.`
   String get fitnessPermissionInfoText {
     return Intl.message(
@@ -1495,6 +1636,16 @@ class Localize {
     );
   }
 
+  /// `Alternative can your friend scan the barcode below or manually enter the code {code} in his app`
+  String friendScanQrCode(Object code) {
+    return Intl.message(
+      'Alternative can your friend scan the barcode below or manually enter the code $code in his app',
+      name: 'friendScanQrCode',
+      desc: '',
+      args: [code],
+    );
+  }
+
   /// `Friends`
   String get friends {
     return Intl.message(
@@ -1572,17 +1723,6 @@ class Localize {
       name: 'iAmBladeGuardTitle',
       desc: '',
       args: [bladeguardPrivacyLink],
-    );
-  }
-
-  /// `<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="{bladeguardRegisterlink}">Online registration</a> and <a href="{ bladeguardPrivacyLink}">Data protection</a></p></h3>`
-  String bladeguardInfo(
-      Object bladeguardRegisterlink, Object bladeguardPrivacyLink) {
-    return Intl.message(
-      '<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="$bladeguardRegisterlink">Online registration</a> and <a href="$bladeguardPrivacyLink">Data protection</a></p></h3>',
-      name: 'bladeguardInfo',
-      desc: '',
-      args: [bladeguardRegisterlink, bladeguardPrivacyLink],
     );
   }
 
@@ -1676,6 +1816,26 @@ class Localize {
     );
   }
 
+  /// `Email not found`
+  String get invalidEMail {
+    return Intl.message(
+      'Email not found',
+      name: 'invalidEMail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email not found or wrong birthday`
+  String get invalidLoginData {
+    return Intl.message(
+      'Email not found or wrong birthday',
+      name: 'invalidLoginData',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `invalid code`
   String get invalidcode {
     return Intl.message(
@@ -1751,6 +1911,16 @@ class Localize {
     return Intl.message(
       'Last update',
       name: 'lastupdate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Later`
+  String get later {
+    return Intl.message(
+      'Later',
+      name: 'later',
       desc: '',
       args: [],
     );
@@ -2546,6 +2716,16 @@ class Localize {
     );
   }
 
+  /// `Mobile`
+  String get phoneNumber {
+    return Intl.message(
+      'Mobile',
+      name: 'phoneNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Pick a color.`
   String get pickcolor {
     return Intl.message(
@@ -2686,6 +2866,16 @@ class Localize {
     );
   }
 
+  /// `Register`
+  String get register {
+    return Intl.message(
+      'Register',
+      name: 'register',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Reload`
   String get reload {
     return Intl.message(
@@ -2731,6 +2921,26 @@ class Localize {
     return Intl.message(
       'Information why location sharing would be necessary.',
       name: 'requestLocationPermissionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You really want to deregister as a Bladeguard today. We need everyone. Think again.`
+  String get requestOffSite {
+    return Intl.message(
+      'You really want to deregister as a Bladeguard today. We need everyone. Think again.',
+      name: 'requestOffSite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Bladeguard today?`
+  String get requestOffSiteTitle {
+    return Intl.message(
+      'No Bladeguard today?',
+      name: 'requestOffSiteTitle',
       desc: '',
       args: [],
     );
@@ -3520,6 +3730,16 @@ class Localize {
     );
   }
 
+  /// `No today`
+  String get todayNo {
+    return Intl.message(
+      'No today',
+      name: 'todayNo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Tomorrow`
   String get tomorrow {
     return Intl.message(
@@ -3650,6 +3870,16 @@ class Localize {
     );
   }
 
+  /// `Update Phone`
+  String get updatePhone {
+    return Intl.message(
+      'Update Phone',
+      name: 'updatePhone',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `This is my GPS-speed.`
   String get userSpeed {
     return Intl.message(
@@ -3720,6 +3950,19 @@ class Localize {
     );
   }
 
+  /// `{date}`
+  String weekdayIntl(DateTime date) {
+    final DateFormat dateDateFormat = DateFormat.EEEE(Intl.getCurrentLocale());
+    final String dateString = dateDateFormat.format(date);
+
+    return Intl.message(
+      '$dateString',
+      name: 'weekdayIntl',
+      desc: '',
+      args: [dateString],
+    );
+  }
+
   /// `Yes`
   String get yes {
     return Intl.message(
@@ -3735,249 +3978,6 @@ class Localize {
     return Intl.message(
       'was yesterday',
       name: 'yesterday',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Alternative can your friend scan the barcode below or manually enter the code {code} in his app`
-  String friendScanQrCode(Object code) {
-    return Intl.message(
-      'Alternative can your friend scan the barcode below or manually enter the code $code in his app',
-      name: 'friendScanQrCode',
-      desc: '',
-      args: [code],
-    );
-  }
-
-  /// `Bladeguard settings`
-  String get bladeGuardSettings {
-    return Intl.message(
-      'Bladeguard settings',
-      name: 'bladeGuardSettings',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Open Bladeguard settings page`
-  String get bladeGuardSettingsTitle {
-    return Intl.message(
-      'Open Bladeguard settings page',
-      name: 'bladeGuardSettingsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Check if you registered as Bladeguard`
-  String get checkBgRegistration {
-    return Intl.message(
-      'Check if you registered as Bladeguard',
-      name: 'checkBgRegistration',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `To improve the app, crash events will be send to Crashlytics. This can be suppressed here.`
-  String get fireBaseCrashlyticsHeader {
-    return Intl.message(
-      'To improve the app, crash events will be send to Crashlytics. This can be suppressed here.',
-      name: 'fireBaseCrashlyticsHeader',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Crashlytics on/off`
-  String get fireBaseCrashlytics {
-    return Intl.message(
-      'Crashlytics on/off',
-      name: 'fireBaseCrashlytics',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Later`
-  String get later {
-    return Intl.message(
-      'Later',
-      name: 'later',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Register`
-  String get register {
-    return Intl.message(
-      'Register',
-      name: 'register',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email not found`
-  String get invalidEMail {
-    return Intl.message(
-      'Email not found',
-      name: 'invalidEMail',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your Birthday`
-  String get enterBirthday {
-    return Intl.message(
-      'Your Birthday',
-      name: 'enterBirthday',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Birthday`
-  String get birthday {
-    return Intl.message(
-      'Birthday',
-      name: 'birthday',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `{date}`
-  String weekdayIntl(DateTime date) {
-    final DateFormat dateDateFormat = DateFormat.EEEE(Intl.getCurrentLocale());
-    final String dateString = dateDateFormat.format(date);
-
-    return Intl.message(
-      '$dateString',
-      name: 'weekdayIntl',
-      desc: '',
-      args: [dateString],
-    );
-  }
-
-  /// `Please enter your mobile phone Number`
-  String get enterPhoneNumber {
-    return Intl.message(
-      'Please enter your mobile phone Number',
-      name: 'enterPhoneNumber',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Mobile`
-  String get phoneNumber {
-    return Intl.message(
-      'Mobile',
-      name: 'phoneNumber',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email not found or wrong birthday`
-  String get invalidLoginData {
-    return Intl.message(
-      'Email not found or wrong birthday',
-      name: 'invalidLoginData',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Update Phone`
-  String get updatePhone {
-    return Intl.message(
-      'Update Phone',
-      name: 'updatePhone',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Heute kein Bladeguard ? `
-  String get requestOffSiteTitle {
-    return Intl.message(
-      'Heute kein Bladeguard ? ',
-      name: 'requestOffSiteTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. `
-  String get requestOffSite {
-    return Intl.message(
-      'Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. ',
-      name: 'requestOffSite',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Heute nein`
-  String get todayNo {
-    return Intl.message(
-      'Heute nein',
-      name: 'todayNo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Update Tel.`
-  String get bgUpdatePhone {
-    return Intl.message(
-      'Update Tel.',
-      name: 'bgUpdatePhone',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Du bist heute als Bladeguard vor Ort ?`
-  String get bgTodayOnSite {
-    return Intl.message(
-      'Du bist heute als Bladeguard vor Ort ?',
-      name: 'bgTodayOnSite',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Du bist heute nicht vor Ort?`
-  String get bgTodayNotOnSite {
-    return Intl.message(
-      'Du bist heute nicht vor Ort?',
-      name: 'bgTodayNotOnSite',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Ich kann heute leider nicht als Bladeguard teilnehmen`
-  String get bgTodayNotParticipation {
-    return Intl.message(
-      'Ich kann heute leider nicht als Bladeguard teilnehmen',
-      name: 'bgTodayNotParticipation',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Bitte heute als Bladeguard einloggen!`
-  String get bgTodayRegister {
-    return Intl.message(
-      'Bitte heute als Bladeguard einloggen!',
-      name: 'bgTodayRegister',
       desc: '',
       args: [],
     );

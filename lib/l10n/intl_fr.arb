@@ -10,15 +10,6 @@
       }
     }
   },
-  "@weekdayIntl": {
-    "placeholders": {
-      "date": {
-        "format": "EEEE",
-        "numeric": "auto",
-        "type": "DateTime"
-      }
-    }
-  },
   "@dateTimeDayIntl": {
     "placeholders": {
       "date": {
@@ -91,9 +82,18 @@
       }
     }
   },
+  "@weekdayIntl": {
+    "placeholders": {
+      "date": {
+        "format": "EEEE",
+        "numeric": "auto",
+        "type": "DateTime"
+      }
+    }
+  },
   "OneSignalId": "Push-Message-Id",
-  "about_appinfo": "L'application est fournie gratuitement par l'éditeur à titre d'information sur Skatemunich e.V. et ses sponsors.\nL'application offre à tous les participants de BladeNight les fonctions suivantes:\nVue d'ensemble des dates à venir et passées\n- Affichage des itinéraires sur la carte\n- Affichage en direct du procession pendant BladeNight\n- Affichage en direct de votre propre position sur l'itinéraire et dans le procession\n- Ajouter des amis et suivre en direct, \nL'application est fournie gratuitement par l'éditeur à titre d'information sur Skatemunich e.. V. et ses sponsors.\nL'application offre à tous les participants à la BladeNight les fonctions suivantes:\n- Aperçu des dates à venir et passées\n- Affichage des itinéraires sur la carte\n- Affichage en direct du procession pendant la BladeNight\n- Affichage en direct de votre propre position sur l'itinéraire et à l'intérieur du procession\n- Ajouter des amis et suivre en direct",
-  "about_appprivacy": "Cette application utilise un identifiant unique, qui est créé au premier démarrage. Cet identifiant est utilisé pour partager votre position avec vos amis. En outre, nous transférons votre numéro de construction et votre fabricant afin de collecter la version correcte pour la communication avec le serveur. Nous stockons votre identifiant sur le serveur et localement pour les prochains événements et nous rouvrons l'application. Lorsque vous supprimez cette application, tous les amis liés sont perdus et ne peuvent pas être restaurés. Nous ne partageons aucune donnée avec d'autres fournisseurs. Vos données ne servent qu'à suivre l'événement en cours. Vos données de position sont utilisées pour calculer et montrer la position de départ et d'arrivée du skaterprocession et les distances vers les amis et l'arrivée. Lorsque vous quittez la piste ou que l'événement est terminé, vous disparaissez dans l'application. Le code source est opensource",
+  "about_appinfo": "L'application est fournie gratuitement par l'éditeur exclusivement pour Munich BladeNight et Skatemunich e.V. et ses sponsors.\nL'application offre à tous les participants de BladeNight les fonctions suivantes :\n\t-Aperçu des dates à venir et passées\n- Affichage des itinéraires sur la carte\n- Affichage en direct du train pendant BladeNight\n- Affichage en direct de votre propre position sur l'itinéraire et dans le train\n- Ajoutez des amis et suivez-les en direct",
+  "about_appprivacy": "Cette application utilise un identifiant unique qui est enregistré localement lors du premier démarrage de l'application.\nCet identifiant est utilisé sur le serveur pour lier des amis et partager la position. Il est uniquement transféré entre votre propre application et votre serveur. \nLe numéro de version de l'application et le fabricant du téléphone (Apple ou Android) sont également transmis pour vérifier la bonne communication.\nL'ID est stocké sur le serveur avec les amis liés.\nLa suppression et la réinstallation de l'application supprime l'ID et les amis doivent être à nouveau liés. \nLe les données ne seront pas transmises à des tiers ni utilisées de quelque autre manière.\nVos données de localisation seront utilisées pendant l'événement pour calculer et afficher le début et la fin du train sur l'itinéraire et pour calculer la distance par rapport aux amis et au destination.\nAucune donnée personnelle n'est collectée. Les noms des amis ne sont stockés que localement dans l'application.\nL'utilisation de l'application, de la fonction e-mail, des fonctions Bladeguard et du site Web https://bladenight-muenchen.de est soumise à la protection des données. règlements de Skatemunich e.V.\n Ceux-ci peuvent être consultés sur https://bladenight-muenchen.de/datenschutzerklaerung. Les données personnelles sont collectées et traitées exclusivement dans le but d'organiser la Munich BladeNight. Si vous avez des questions, veuillez utiliser le formulaire de contact,",
   "about_bnapp": "A propos de l'application BladeNight",
   "about_crashlytics": "Pour améliorer la stabilité et la fiabilité de cette application, nous nous appuyons sur des rapports de crash anonymes. Pour ce faire, nous utilisons Firebase Crashlytics, un service de Google Ireland Ltd, Google Building Gordon House, Barrow Street, Dublin 4, Irlande. En cas de panne, des informations anonymes sont envoyées aux serveurs de Google aux États-Unis (état de l'application au moment de la panne, UUID d'installation, trace de la panne, fabricant du téléphone portable et système d'exploitation, derniers messages du journal). Ces informations ne contiennent aucune donnée personnelle. Les rapports de crash ne sont envoyés qu'avec votre consentement explicite. Lorsque vous utilisez des applications iOS, vous pouvez donner votre consentement dans les paramètres de l'application ou après un crash. Pour les applications Android, lors de la configuration de l'appareil mobile, vous avez la possibilité de donner votre accord général à la transmission des notifications de crash à Google et au développeur de l'application.\nLa base juridique de la transmission des données est l'article 6, paragraphe 1, point a), du règlement GDPR.\nVous pouvez révoquer votre consentement à tout moment en désactivant la fonction rapports de crash dans les paramètres des applications iOS (dans les applications magazines, l'entrée se trouve dans l'élément de menu 'Communication'). Pour ce faire, ouvrez l'application Paramètres, sélectionnez 'Google' et, dans le menu à trois points en haut à droite, l'élément de menu 'Utilisation & Diagnostics'. Vous pouvez y désactiver l'envoi des données correspondantes. Pour plus d'informations, consultez l'aide de votre compte Google.\nPlus d'informations sur la protection des données sont disponibles dans les informations sur la protection des données de Firebase Crashlytics à l'adresse https://firebase.google.com/support/privacy et https://docs.fabric.io/apple/fabric/data-privacy.html#data-collection-policies",
   "about_feedback": "Vos commentaires sont les bienvenus.\nEnvoyez-nous un courriel:\nnservice@skatemunich.de",
@@ -153,7 +153,16 @@
   "bgNotificationText": "La mise à jour de la position en arrière-plan est active. Merci de votre participation",
   "bgNotificationTitle": "Suivi de l'arrière-plan de BladeNight",
   "bgTeam": "L'équipe des Bladeguard",
+  "bgTodayNotOnSite": "Vous n'êtes pas sur place aujourd'hui ?",
+  "bgTodayNotParticipation": "Malheureusement, je ne peux pas participer en tant que Bladeguard aujourd'hui",
+  "bgTodayOnSite": "Etes-vous sur place aujourd'hui en tant que protège-lame ?",
+  "bgTodayRegister": "Veuillez vous connecter en tant que Bladeguard aujourd'hui!",
+  "bgUpdatePhone": "Mettre à jour le téléphone.",
+  "birthday": "Birthday",
   "bladeGuard": "Bladeguard",
+  "bladeGuardSettings": "Paramètres du Bladeguard",
+  "bladeGuardSettingsTitle": "Ouvrir la page des paramètres de Bladeguard",
+  "bladeguardInfo": "<h2>Exigences et règles :</h2><ul><li>Vous avez au moins 16 ans.</li><li>Vous êtes à l'aise avec les rollers en ligne et savez freiner.</li ><li>Vous connaissez le code de la route </li><li>Vous êtes serviable, sympathique et avez l'esprit d'équipe </li><li>Vous participez à notre formation gratuite avant votre premier voyage.</li> </ul ><p>En tant que Bladeguard, il n'y a aucun frais pour vous. Vous pouvez vous désinscrire à tout moment. <h3>Ici, vous pouvez accéder à <a href=\"{bladeguardRegisterlink}\">Inscription en ligne</a> et <a href=\"{ bladeguardPrivacyLink}\">Protection des données</a></p></h3>",
   "bladenight": "BladeNight",
   "bladenightUpdate": "BladeNight Update",
   "bladenightViewerTracking": "Mode visualisation avec GPS",
@@ -162,6 +171,7 @@
   "canceled": "Annulé 😞",
   "change": "Le modifier.",
   "changetoalways": "Changer pour 'Autoriser tout le temps'",
+  "checkBgRegistration": "Vérifiez si vous êtes enregistré en tant que Bladeguard",
   "chooseDeviceToLink": "Veuillez choisir l'appareil à coupler !",
   "clearLogsQuestion": "Clear logs really ?",
   "clearLogsTitle": "Les données de logs seront supprimées de manière permanente !",
@@ -201,8 +211,10 @@
   "enableOnesignalPushMessage": "Message push actif",
   "enableOnesignalPushMessageTitle": "Activer les notifications push d'Onesignal. Ici, des informations générales peuvent être reçues par notification push, par exemple si la nuit blanche a lieu. Le réglage recommandé est 'On'",
   "enter6digitcode": "Vous devez entrer un code à 6 chiffres",
+  "enterBirthday": "Your Birthday",
   "enterEmail": "Saisir l'adresse électronique",
   "enterPassword": "Entrer le mot de passe",
+  "enterPhoneNumber": "Please enter your mobile phone Number",
   "entercode": "Code : ",
   "enterfriendname": "Entrez le nom de votre ami",
   "entername": "Entrez le nom de votre ami",
@@ -225,6 +237,8 @@
   "finishStopTrackingEventOver": "Arrêt automatique du suivi : Arrêt automatique du suivi, car cet événement BladeNight est terminé. (Appuyez longuement sur ▶️ pour désactiver l'arrêt automatique du suivi)",
   "finishStopTrackingTimeout": "Le suivi de l'emplacement après {timeout} min de BladeNight s'est arrêté automatiquement. (Appuyez longuement sur ▶️ pour désactiver l'arrêt automatique du suivi)",
   "finished": "Fini",
+  "fireBaseCrashlytics": "Crashlytics activé/désactivé",
+  "fireBaseCrashlyticsHeader": "Pour améliorer l'application, les événements de crash seront envoyés à Crashlytics. Cela peut être supprimé ici.",
   "fitnessPermissionInfoText": "L'accès à la détection de l'activité de mouvement (activité physique) est souhaitable. Cela augmente l'efficacité de la batterie en désactivant intelligemment le suivi de la localisation lorsque votre appareil est détecté comme étant stationnaire. Veuillez donc activer cette fonction. Elle sera demandée dans les étapes suivantes.",
   "fitnessPermissionInfoTextTitle": "Activité physique",
   "fitnessPermissionSettingsText": "L'accès à la détection de l'activité de mouvement (activité physique) est souhaitable. Cela augmente l'efficacité de la batterie en désactivant intelligemment le suivi de l'emplacement lorsque votre appareil est détecté comme étant stationnaire. Veuillez donc activer cette fonction. (Inactive par défaut)",
@@ -233,6 +247,7 @@
   "forward": "Forward",
   "friend": "Ami",
   "friendIs": "L'ami est",
+  "friendScanQrCode": "Votre ami peut-il également scanner le code-barres ci-dessous ou saisir manuellement le code {code} dans son application",
   "friends": "Amis",
   "friendswillmissyou": "Veuillez soutenir la présentation exacte de BladeNight skater procession.\nVous manquerez à vos amis !",
   "from": "by",
@@ -241,7 +256,6 @@
   "home": "Accueil",
   "iAmBladeGuard": "Je suis déjà un Bladeguard",
   "iAmBladeGuardTitle": "Nous avons besoin du soutien de bénévoles. En tant que Bladeguard, vous soutenez activement Bladenight. Les <a href=\"{bladeguardPrivacyLink}\">Règlements de Munich BladeNight sur la protection des données</a></p> s'appliquent",
-  "bladeguardInfo": "<h2>Exigences et règles :</h2><ul><li>Vous avez au moins 16 ans.</li><li>Vous êtes à l'aise avec les rollers en ligne et savez freiner.</li ><li>Vous connaissez le code de la route </li><li>Vous êtes serviable, sympathique et avez l'esprit d'équipe </li><li>Vous participez à notre formation gratuite avant votre premier voyage.</li> </ul ><p>En tant que Bladeguard, il n'y a aucun frais pour vous. Vous pouvez vous désinscrire à tout moment. <h3>Ici, vous pouvez accéder à <a href=\"{bladeguardRegisterlink}\">Inscription en ligne</a> et <a href=\"{ bladeguardPrivacyLink}\">Protection des données</a></p></h3>",
   "iam": "Je suis",
   "ignoreBatteriesOptimisation": "Note - certains fabricants désactivent les applications en raison d'une optimisation défavorable de la batterie ou ferment l'application. Si c'est le cas, essayez de désactiver l'optimisation de la batterie pour l'application. Régler sur Aucune restriction",
   "ignoreBatteriesOptimisationTitle": "Modifier les optimisations de la batterie",
@@ -250,9 +264,9 @@
   "importWarningTitle": "Importer les amis et l'ID",
   "inprogress": "non implémenté. Nous y travaillons...",
   "internalerror_invalidcode": "Code invalide",
-  "requestOffSite":"Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. ",
-  "todayNo": "Heute nein",
   "internalerror_seemslinked": "Erreur - Un ami est lié?",
+  "invalidEMail": "Mail not found",
+  "invalidLoginData": "Email not found or wrong birthday",
   "invalidcode": "Code invalide",
   "invitebyname": "inviter {name}",
   "invitenewfriend": "Inviter un ami",
@@ -340,7 +354,9 @@
   "own": "Propre",
   "participant": "Participant",
   "pending": "Pending ⏰",
+  "phoneNumber": "Mobile",
   "pickcolor": "Choisissez une couleur",
+  "plus tard": "Plus tard",
   "position": "Position",
   "positiveInFront": "Positif si je suis devant, négatif si je suis derrière",
   "proceed": "Proceed",
@@ -352,13 +368,16 @@
   "pushMessageSkateMunichInfosTitle": "Recevoir des informations sur les événements de SkateMunich par message push?",
   "qrcoderouteinfoheader": "QRCode pour afficher des informations sur les événements sans application dans le navigateur",
   "readMessage": "Message lu",
-  "received": "reçu",
   "receiveBladeGuardInfos": "Reçu Bladeguard Infos",
+  "received": "reçu",
+  "register": "S'inscrire",
   "reload": "Recharger",
   "reltime": "rel. timediff.",
   "remove": "Retirer",
   "requestAlwaysPermissionTitle": "Location always permissions",
   "requestLocationPermissionTitle": "Information sur les raisons pour lesquelles le partage de la localisation serait nécessaire",
+  "requestOffSite": "Vous voulez vraiment vous désinscrire en tant que Bladeguard aujourd'hui. Nous avons besoin de tout le monde. Détrompez-vous.",
+  "requestOffSiteTitle": "Pas de Bladeguard aujourd'hui ?",
   "resetInSettings": "Reset in Paramètres",
   "resetLongPress": "Appuyer longuement sur la jauge pour réinitialiser le compteur ODO",
   "resetOdoMeter": "Remettre le compteur ODO à 0 et effacer l'itinéraire conduit?",
@@ -437,6 +456,7 @@
   "timeToMe": "Le temps de moi",
   "timeToTail": "Le temps de fin du procession",
   "today": "Aujourd'hui",
+  "todayNo": "Non aujourd'hui",
   "tomorrow": "Demain",
   "trackPointsExporting": "Les points d'itinéraire suivants seront exportés : ",
   "trackers": "Traceur",
@@ -457,26 +477,7 @@
   "waiting": "En attente...",
   "waittime": "Temps d'attente",
   "wasCanceledPleaseCheck": "Est annulé ! Veuillez le vérifier sur https://bladenight-muenchen.de",
-  "yes": "Oui",
-  "yesterday": "était hier",
-  "friendScanQrCode": "Votre ami peut-il également scanner le code-barres ci-dessous ou saisir manuellement le code {code} dans son application",
-  "bladeGuardSettings": "Paramètres du Bladeguard",
-  "bladeGuardSettingsTitle": "Ouvrir la page des paramètres de Bladeguard",
-  "checkBgRegistration": "Vérifiez si vous êtes enregistré en tant que Bladeguard",
-  "fireBaseCrashlyticsHeader": "Pour améliorer l'application, les événements de crash seront envoyés à Crashlytics. Cela peut être supprimé ici.",
-  "fireBaseCrashlytics": "Crashlytics activé/désactivé",
-  "plus tard": "Plus tard",
-  "register": "S'inscrire",
-  "invalidEMail" : "Mail not found",
-  "enterBirthday": "Your Birthday",
-  "birthday": "Birthday",
   "weekdayIntl": "{date}",
-  "enterPhoneNumber": "Please enter your mobile phone Number",
-  "phoneNumber": "Mobile",
-  "invalidLoginData" : "Email not found or wrong birthday",
-  "bgUpdatePhone": "Update Tel.",
-  "bgTodayOnSite":"Du bist heute als Bladeguard vor Ort ?",
-  "bgTodayNotOnSite": "Du bist heute nicht vor Ort?",
-  "bgTodayNotParticipation": "Ich kann heute leider nicht als Bladeguard teilnehmen",
-  "bgTodayRegister":"Bitte heute als Bladeguard einloggen!"
+  "yes": "Oui",
+  "yesterday": "était hier"
 }

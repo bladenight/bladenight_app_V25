@@ -121,6 +121,71 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
           ],
           //end start marker
 
+          //begin skater tail marker
+          if (processionRoutePoints.isNotEmpty) ...[
+            BnMapMarker(
+              buildContext: context,
+              headerText: Localize.of(context).tail,
+              speedText:
+              '${((ref.read(realtimeDataProvider)?.tail.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.tail.realSpeed)!.toStringAsFixed(1))} km/h',
+              drivenDistanceText:
+              '${((ref.read(realtimeDataProvider)?.tail.position) ?? '-')} m',
+              timeToHeadText:
+              '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
+              distanceToHeadText:
+              '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
+              timeUserToTailText:
+              '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToTail() ?? 0))}',
+              distanceUserToTailText:
+              '${((ref.read(realtimeDataProvider)?.distanceOfUserToTail()) ?? '-')} m',
+              color: Colors.orange,
+              point: processionRoutePoints.last,
+              width: sizeValue,
+              height: sizeValue,
+              child: Builder(
+                builder: (context) => const Image(
+                  image: AssetImage(
+                    'assets/images/skatechildmunichred.png',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ],
+          //end skater tail marker
+
+          //begin skater head marker
+          if (processionRoutePoints.isNotEmpty) ...[
+            //Skater head marker -set as 2nd because tail overlay drawn first
+            BnMapMarker(
+              buildContext: context,
+              headerText: Localize.of(context).head,
+              speedText:
+              '${((ref.read(realtimeDataProvider)?.head.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.head.realSpeed)!.toStringAsFixed(1))} km/h',
+              drivenDistanceText:
+              '${((ref.read(realtimeDataProvider)?.head.position) ?? '-')} m',
+              distanceTailText:
+              '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
+              timeToTailText:
+              '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
+              timeUserToHeadText:
+              '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToHead() ?? 0))}',
+              distanceUserToHeadText:
+              '${((ref.read(realtimeDataProvider)?.distanceOfUserToHead()) ?? '-')} m',
+              color: Colors.lightBlue,
+              point: processionRoutePoints.first,
+              width: sizeValue,
+              height: sizeValue,
+              child: Builder(
+                builder: (context) => const Image(
+                  image: AssetImage(
+                    'assets/images/skatechildmunich.png',
+                  ),
+                ),
+              ),
+            ),
+          ],
+          //end skater head marker
           //begin friends marker
           //Friends are only in [RealTimeData] available when we send an new user position to server.
           //Friend has to stay visible when online - replace on offline message after send location
@@ -197,71 +262,6 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
 
           //end friends marker
 
-          //begin skater tail marker
-          if (processionRoutePoints.isNotEmpty) ...[
-            BnMapMarker(
-              buildContext: context,
-              headerText: Localize.of(context).tail,
-              speedText:
-                  '${((ref.read(realtimeDataProvider)?.tail.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.tail.realSpeed)!.toStringAsFixed(1))} km/h',
-              drivenDistanceText:
-                  '${((ref.read(realtimeDataProvider)?.tail.position) ?? '-')} m',
-              timeToHeadText:
-                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
-              distanceToHeadText:
-                  '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
-              timeUserToTailText:
-                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToTail() ?? 0))}',
-              distanceUserToTailText:
-                  '${((ref.read(realtimeDataProvider)?.distanceOfUserToTail()) ?? '-')} m',
-              color: Colors.orange,
-              point: processionRoutePoints.last,
-              width: sizeValue,
-              height: sizeValue,
-              child: Builder(
-                builder: (context) => const Image(
-                  image: AssetImage(
-                    'assets/images/skatechildmunichred.png',
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ],
-          //end skater tail marker
-
-          //begin skater head marker
-          if (processionRoutePoints.isNotEmpty) ...[
-            //Skater head marker -set as 2nd because tail overlay drawn first
-            BnMapMarker(
-              buildContext: context,
-              headerText: Localize.of(context).head,
-              speedText:
-                  '${((ref.read(realtimeDataProvider)?.head.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.head.realSpeed)!.toStringAsFixed(1))} km/h',
-              drivenDistanceText:
-                  '${((ref.read(realtimeDataProvider)?.head.position) ?? '-')} m',
-              distanceTailText:
-                  '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
-              timeToTailText:
-                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
-              timeUserToHeadText:
-                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToHead() ?? 0))}',
-              distanceUserToHeadText:
-                  '${((ref.read(realtimeDataProvider)?.distanceOfUserToHead()) ?? '-')} m',
-              color: Colors.lightBlue,
-              point: processionRoutePoints.first,
-              width: sizeValue,
-              height: sizeValue,
-              child: Builder(
-                builder: (context) => const Image(
-                  image: AssetImage(
-                    'assets/images/skatechildmunich.png',
-                  ),
-                ),
-              ),
-            ),
-          ],
-          //end skater head marker
         ],
         popupController: widget.popupController,
         markerTapBehavior: MarkerTapBehavior.togglePopupAndHideRest(),

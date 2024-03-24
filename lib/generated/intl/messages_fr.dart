@@ -65,9 +65,9 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "OneSignalId": MessageLookupByLibrary.simpleMessage("Push-Message-Id"),
         "about_appinfo": MessageLookupByLibrary.simpleMessage(
-            "L\'application est fournie gratuitement par l\'éditeur à titre d\'information sur Skatemunich e.V. et ses sponsors.\nL\'application offre à tous les participants de BladeNight les fonctions suivantes:\nVue d\'ensemble des dates à venir et passées\n- Affichage des itinéraires sur la carte\n- Affichage en direct du procession pendant BladeNight\n- Affichage en direct de votre propre position sur l\'itinéraire et dans le procession\n- Ajouter des amis et suivre en direct, \nL\'application est fournie gratuitement par l\'éditeur à titre d\'information sur Skatemunich e.. V. et ses sponsors.\nL\'application offre à tous les participants à la BladeNight les fonctions suivantes:\n- Aperçu des dates à venir et passées\n- Affichage des itinéraires sur la carte\n- Affichage en direct du procession pendant la BladeNight\n- Affichage en direct de votre propre position sur l\'itinéraire et à l\'intérieur du procession\n- Ajouter des amis et suivre en direct"),
+            "L\'application est fournie gratuitement par l\'éditeur exclusivement pour Munich BladeNight et Skatemunich e.V. et ses sponsors.\nL\'application offre à tous les participants de BladeNight les fonctions suivantes :\n\t-Aperçu des dates à venir et passées\n- Affichage des itinéraires sur la carte\n- Affichage en direct du train pendant BladeNight\n- Affichage en direct de votre propre position sur l\'itinéraire et dans le train\n- Ajoutez des amis et suivez-les en direct"),
         "about_appprivacy": MessageLookupByLibrary.simpleMessage(
-            "Cette application utilise un identifiant unique, qui est créé au premier démarrage. Cet identifiant est utilisé pour partager votre position avec vos amis. En outre, nous transférons votre numéro de construction et votre fabricant afin de collecter la version correcte pour la communication avec le serveur. Nous stockons votre identifiant sur le serveur et localement pour les prochains événements et nous rouvrons l\'application. Lorsque vous supprimez cette application, tous les amis liés sont perdus et ne peuvent pas être restaurés. Nous ne partageons aucune donnée avec d\'autres fournisseurs. Vos données ne servent qu\'à suivre l\'événement en cours. Vos données de position sont utilisées pour calculer et montrer la position de départ et d\'arrivée du skaterprocession et les distances vers les amis et l\'arrivée. Lorsque vous quittez la piste ou que l\'événement est terminé, vous disparaissez dans l\'application. Le code source est opensource"),
+            "Cette application utilise un identifiant unique qui est enregistré localement lors du premier démarrage de l\'application.\nCet identifiant est utilisé sur le serveur pour lier des amis et partager la position. Il est uniquement transféré entre votre propre application et votre serveur. \nLe numéro de version de l\'application et le fabricant du téléphone (Apple ou Android) sont également transmis pour vérifier la bonne communication.\nL\'ID est stocké sur le serveur avec les amis liés.\nLa suppression et la réinstallation de l\'application supprime l\'ID et les amis doivent être à nouveau liés. \nLe les données ne seront pas transmises à des tiers ni utilisées de quelque autre manière.\nVos données de localisation seront utilisées pendant l\'événement pour calculer et afficher le début et la fin du train sur l\'itinéraire et pour calculer la distance par rapport aux amis et au destination.\nAucune donnée personnelle n\'est collectée. Les noms des amis ne sont stockés que localement dans l\'application.\nL\'utilisation de l\'application, de la fonction e-mail, des fonctions Bladeguard et du site Web https://bladenight-muenchen.de est soumise à la protection des données. règlements de Skatemunich e.V.\n Ceux-ci peuvent être consultés sur https://bladenight-muenchen.de/datenschutzerklaerung. Les données personnelles sont collectées et traitées exclusivement dans le but d\'organiser la Munich BladeNight. Si vous avez des questions, veuillez utiliser le formulaire de contact,"),
         "about_bnapp": MessageLookupByLibrary.simpleMessage(
             "A propos de l\'application BladeNight"),
         "about_crashlytics": MessageLookupByLibrary.simpleMessage(
@@ -180,14 +180,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "bgTeam":
             MessageLookupByLibrary.simpleMessage("L\'équipe des Bladeguard"),
         "bgTodayNotOnSite": MessageLookupByLibrary.simpleMessage(
-            "Du bist heute nicht vor Ort?"),
+            "Vous n\'êtes pas sur place aujourd\'hui ?"),
         "bgTodayNotParticipation": MessageLookupByLibrary.simpleMessage(
-            "Ich kann heute leider nicht als Bladeguard teilnehmen"),
+            "Malheureusement, je ne peux pas participer en tant que Bladeguard aujourd\'hui"),
         "bgTodayOnSite": MessageLookupByLibrary.simpleMessage(
-            "Du bist heute als Bladeguard vor Ort ?"),
+            "Etes-vous sur place aujourd\'hui en tant que protège-lame ?"),
         "bgTodayRegister": MessageLookupByLibrary.simpleMessage(
-            "Bitte heute als Bladeguard einloggen!"),
-        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Update Tel."),
+            "Veuillez vous connecter en tant que Bladeguard aujourd\'hui!"),
+        "bgUpdatePhone":
+            MessageLookupByLibrary.simpleMessage("Mettre à jour le téléphone."),
         "birthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
         "bladeGuardSettings":
@@ -546,7 +547,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "requestLocationPermissionTitle": MessageLookupByLibrary.simpleMessage(
             "Information sur les raisons pour lesquelles le partage de la localisation serait nécessaire"),
         "requestOffSite": MessageLookupByLibrary.simpleMessage(
-            "Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. "),
+            "Vous voulez vraiment vous désinscrire en tant que Bladeguard aujourd\'hui. Nous avons besoin de tout le monde. Détrompez-vous."),
+        "requestOffSiteTitle": MessageLookupByLibrary.simpleMessage(
+            "Pas de Bladeguard aujourd\'hui ?"),
         "resetInSettings":
             MessageLookupByLibrary.simpleMessage("Reset in Paramètres"),
         "resetLongPress": MessageLookupByLibrary.simpleMessage(
@@ -679,7 +682,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "timeToTail": MessageLookupByLibrary.simpleMessage(
             "Le temps de fin du procession"),
         "today": MessageLookupByLibrary.simpleMessage("Aujourd\'hui"),
-        "todayNo": MessageLookupByLibrary.simpleMessage("Heute nein"),
+        "todayNo": MessageLookupByLibrary.simpleMessage("Non aujourd\'hui"),
         "tomorrow": MessageLookupByLibrary.simpleMessage("Demain"),
         "trackPointsExporting": MessageLookupByLibrary.simpleMessage(
             "Les points d\'itinéraire suivants seront exportés : "),

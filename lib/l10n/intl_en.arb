@@ -10,15 +10,6 @@
       }
     }
   },
-  "@weekdayIntl": {
-    "placeholders": {
-      "date": {
-        "format": "EEEE",
-        "numeric": "auto",
-        "type": "DateTime"
-      }
-    }
-  },
   "@dateTimeDayIntl": {
     "placeholders": {
       "date": {
@@ -91,9 +82,18 @@
       }
     }
   },
+  "@weekdayIntl": {
+    "placeholders": {
+      "date": {
+        "format": "EEEE",
+        "numeric": "auto",
+        "type": "DateTime"
+      }
+    }
+  },
   "OneSignalId": "Push-Message-Id",
-  "about_appinfo": "The app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live\",\nThe app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live",
-  "about_appprivacy": "This app uses a unique id, which is created on first start. This id is used to share your position with your friends. Further we transfer your buildnumber and manufacturer to collect the correct version for server-communication. We store your id on server and locally for next events and reopen the app. On deleting this app all linked friends are lost and can't restore. We don't share any data with other providers. Your data are only to track the actual event. Your position data are used to calculate and show start and end position of skatertrain and distances to friends and finish. When you leave the track or the event is finished you are disappearing in the app. Sourcecode is opensource.",
+  "about_appinfo": "The app is provided free of charge by the publisher exclusively for the Munich BladeNight and Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of the routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow them live",
+  "about_appprivacy": "This app uses a unique ID that is saved locally when the app is first started.\nThis ID is used on the server to link friends and share the position. This is only transferred between your own app and server. \nThe app version number and phone manufacturer (Apple or Android) are also transmitted to check correct communication.\nThe ID is stored on the server with the linked friends.\nDeleting and reinstalling the app deletes the ID and the friends must be relinked \nThe data will not be passed on to third parties or used in any other way.\nYour location data will be used during the event to calculate and display the start and end of the train on the route and to calculate the distance to friends and to the destination.\nNo personal data is collected. The names of friends are only stored locally in the app.\nThe use of the app, email function, Bladeguard functions and website https://bladenight-muenchen.de is subject to the data protection regulations of Skatemunich e.V.\n These can be found at https:/ /bladenight-muenchen.de/datenschutzerklaerung can be viewed. The personal data is collected and processed exclusively for the purpose of organizing the Munich BladeNight. If you have any questions, please use the contact form,",
   "about_bnapp": "About BladeNight App",
   "about_crashlytics": "To improve the stability and reliability of this app, we rely on anonymized crash reports. For this we use \"Firebase Crashlytics\", a service of Google Ireland Ltd., Google Building Gordon House, Barrow Street, Dublin 4, Ireland.\nIn the event of a crash, anonymous information is sent to the Google servers in the USA (status of the app at the time of the crash, installation UUID, crash trace, cell phone manufacturer and operating system, last log messages). This information does not contain any personal data.\n\nCrash reports are only sent with your express consent. When using iOS apps, you can give consent in the app's settings or after a crash. With Android apps, when setting up the mobile device, you have the option of generally agreeing to the transmission of crash notifications to Google and the app developer.\n\nThe legal basis for data transmission is Article 6 (1) (a) GDPR.\n\nYou can revoke your consent at any time by deactivating the \"Crash reports\" function in the settings of the iOS apps (in the magazine apps the entry is in the \"Communication\" menu item).\n\nWith the Android apps, the deactivation is basically done in the Android settings.To do this, open the Settings app, select \"Google\" and there in the three-point menu at the top right the menu item \"Usage & Diagnostics\". Here you can deactivate the sending of the corresponding data. For more information, see your Google Account Help.\n\nFurther information on data protection can be found in the Firebase Crashlytics data protection information at https://firebase.google.com/support/privacy and https://docs.fabric.io/apple/fabric/data-privacy.html#data-collection-policies",
   "about_feedback": "Your feedback is welcome.\nSend us an email:\nservice@skatemunich.de",
@@ -153,7 +153,16 @@
   "bgNotificationText": "Background location update is active. Thank you for participating.",
   "bgNotificationTitle": "BladeNight background tracking",
   "bgTeam": "Bladeguard team",
+  "bgTodayNotOnSite": "You're not on site today?",
+  "bgTodayNotParticipation": "Unfortunately I cannot participate as a Bladeguard today",
+  "bgTodayOnSite": "Are you on site today as a bladeguard?",
+  "bgTodayRegister": "Please log in as Bladeguard today!",
+  "bgUpdatePhone": "Update Phone.",
+  "birthday": "Birthday",
   "bladeGuard": "Bladeguard",
+  "bladeGuardSettings": "Bladeguard settings",
+  "bladeGuardSettingsTitle": "Open Bladeguard settings page",
+  "bladeguardInfo": "<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href=\"{bladeguardRegisterlink}\">Online registration</a> and <a href=\"{ bladeguardPrivacyLink}\">Data protection</a></p></h3>",
   "bladenight": "BladeNight",
   "bladenightUpdate": "BladeNight Update",
   "bladenightViewerTracking": "Viewermode with GPS",
@@ -162,6 +171,7 @@
   "canceled": "Canceled 😞",
   "change": "Change it.",
   "changetoalways": "Change it to 'Allow all time'",
+  "checkBgRegistration": "Check if you registered as Bladeguard",
   "chooseDeviceToLink": "Please select your friend's device to link !",
   "clearLogsQuestion": "Clear logs really?",
   "clearLogsTitle": "Logdata will be deleted permanently!",
@@ -201,8 +211,10 @@
   "enableOnesignalPushMessage": "Push message active",
   "enableOnesignalPushMessageTitle": "Enable Onesignal Push Notifications. Herewith general information can be received via push notification e.g. if the bladenight takes place. Recommended setting is 'On'",
   "enter6digitcode": "You must enter a 6-digit-code",
+  "enterBirthday": "Your Birthday",
   "enterEmail": "Enter email",
   "enterPassword": "Enter password",
+  "enterPhoneNumber": "Please enter your mobile phone Number",
   "entercode": "Code: ",
   "enterfriendname": "Enter your friends name",
   "entername": "Enter Name",
@@ -225,6 +237,8 @@
   "finishStopTrackingEventOver": "Automatic tracking stop, because this BladeNight event is finished. (Press long on ▶️ to deactivate Automatic tracking stop)",
   "finishStopTrackingTimeout": "Location tracking after {timeout} min of BladeNight automatic stopped. (Press long on ▶️ to deactivate Automatic tracking stop)",
   "finished": "Finished",
+  "fireBaseCrashlytics": "Crashlytics on/off",
+  "fireBaseCrashlyticsHeader": "To improve the app, crash events will be send to Crashlytics. This can be suppressed here.",
   "fitnessPermissionInfoText": "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps.",
   "fitnessPermissionInfoTextTitle": "Fitness Activity",
   "fitnessPermissionSettingsText": "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. (Default inactive)",
@@ -233,6 +247,7 @@
   "forward": "Forward",
   "friend": "Friend",
   "friendIs": "Friend is",
+  "friendScanQrCode": "Alternative can your friend scan the barcode below or manually enter the code {code} in his app",
   "friends": "Friends",
   "friendswillmissyou": "Please support the exact presentation of BladeNight skater train.\nYour friends will miss you!",
   "from": "by",
@@ -241,7 +256,6 @@
   "home": "Home",
   "iAmBladeGuard": "I am already a Bladeguard",
   "iAmBladeGuardTitle": "We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href=\"{bladeguardPrivacyLink}\">Munich BladeNight data protection regulations</a></p> apply",
-  "bladeguardInfo": "<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href=\"{bladeguardRegisterlink}\">Online registration</a> and <a href=\"{ bladeguardPrivacyLink}\">Data protection</a></p></h3>",
   "iam": "I am",
   "ignoreBatteriesOptimisation": "Note - some manufacturers switch off the apps due to unfavorable battery optimization or close the app. If so, please try disabling battery optimization for the app. Set to No restrictions.",
   "ignoreBatteriesOptimisationTitle": "Change Battery Optimizations",
@@ -251,6 +265,8 @@
   "inprogress": "not implemented. We are working ...",
   "internalerror_invalidcode": "Invalid Code",
   "internalerror_seemslinked": "Error - Is friend linked?",
+  "invalidEMail": "Email not found",
+  "invalidLoginData": "Email not found or wrong birthday",
   "invalidcode": "invalid code",
   "invitebyname": "invite {name}",
   "invitenewfriend": "Invite friend",
@@ -259,6 +275,7 @@
   "isuseractive": "Show in map",
   "lastseen": "Last seen",
   "lastupdate": "Last update",
+  "later": "Later",
   "leavewheninuse": "Leave settings",
   "length": "Length",
   "linkNearBy": "Accept friend nearby",
@@ -338,6 +355,7 @@
   "own": "Own",
   "participant": "Participant",
   "pending": "Pending ⏰",
+  "phoneNumber": "Mobile",
   "pickcolor": "Pick a color.",
   "position": "Position",
   "positiveInFront": "Positive if in front, negative if behind me.",
@@ -352,11 +370,14 @@
   "readMessage": "Read",
   "receiveBladeGuardInfos": "Receive Bladeguard Infos",
   "received": "received",
+  "register": "Register",
   "reload": "Reload",
   "reltime": "rel. timediff.",
   "remove": "Remove",
   "requestAlwaysPermissionTitle": "Location always permissions",
   "requestLocationPermissionTitle": "Information why location sharing would be necessary.",
+  "requestOffSite": "You really want to deregister as a Bladeguard today. We need everyone. Think again.",
+  "requestOffSiteTitle": "No Bladeguard today?",
   "resetInSettings": "Reset in settings-page",
   "resetLongPress": "Press gauge long to reset the ODO meter",
   "resetOdoMeter": "Reset ODO meter to 0 and clear driven route?",
@@ -435,6 +456,7 @@
   "timeToMe": "Time to me",
   "timeToTail": "Time to tail",
   "today": "Today",
+  "todayNo": "No today",
   "tomorrow": "Tomorrow",
   "trackPointsExporting": "The following route points will be exported: ",
   "trackers": "Tracker",
@@ -448,6 +470,7 @@
   "unknown": "unknown",
   "unknownerror": "unknown error",
   "unreadMessage": "Unread",
+  "updatePhone": "Update Phone",
   "userSpeed": "This is my GPS-speed.",
   "validatefriend": "Validate friend",
   "version": "Version:",
@@ -455,30 +478,7 @@
   "waiting": "Waiting...",
   "waittime": "Waittime",
   "wasCanceledPleaseCheck": "is canceled! Please check this on https://bladenight-muenchen.de",
-  "yes": "Yes",
-  "yesterday": "was yesterday",
-  "friendScanQrCode": "Alternative can your friend scan the barcode below or manually enter the code {code} in his app",
-  "bladeGuardSettings": "Bladeguard settings",
-  "bladeGuardSettingsTitle": "Open Bladeguard settings page",
-  "checkBgRegistration": "Check if you registered as Bladeguard",
-  "fireBaseCrashlyticsHeader": "To improve the app, crash events will be send to Crashlytics. This can be suppressed here.",
-  "fireBaseCrashlytics": "Crashlytics on/off",
-  "later": "Later",
-  "register": "Register",
-  "invalidEMail" : "Email not found",
-  "enterBirthday": "Your Birthday",
-  "birthday": "Birthday",
   "weekdayIntl": "{date}",
-  "enterPhoneNumber": "Please enter your mobile phone Number",
-  "phoneNumber": "Mobile",
-  "invalidLoginData" : "Email not found or wrong birthday",
-  "updatePhone": "Update Phone",
-  "requestOffSiteTitle": "Heute kein Bladeguard ? ",
-  "requestOffSite":"Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. ",
-  "todayNo": "Heute nein",
-  "bgUpdatePhone": "Update Tel.",
-  "bgTodayOnSite":"Du bist heute als Bladeguard vor Ort ?",
-  "bgTodayNotOnSite": "Du bist heute nicht vor Ort?",
-  "bgTodayNotParticipation": "Ich kann heute leider nicht als Bladeguard teilnehmen",
-  "bgTodayRegister":"Bitte heute als Bladeguard einloggen!"
+  "yes": "Yes",
+  "yesterday": "was yesterday"
 }

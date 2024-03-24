@@ -65,9 +65,9 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "OneSignalId": MessageLookupByLibrary.simpleMessage("Push-Message-Id"),
         "about_appinfo": MessageLookupByLibrary.simpleMessage(
-            "The app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live\",\nThe app is provided free of charge by the publisher for information on Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow live"),
+            "The app is provided free of charge by the publisher exclusively for the Munich BladeNight and Skatemunich e.V. and its sponsors.\nThe app offers all BladeNight participants the following functions:\n\t-Overview of upcoming and past dates\n- Display of the routes on the map\n- Live display of the train during BladeNight\n- Live display of your own position on the route and within the train\n- Add friends and follow them live"),
         "about_appprivacy": MessageLookupByLibrary.simpleMessage(
-            "This app uses a unique id, which is created on first start. This id is used to share your position with your friends. Further we transfer your buildnumber and manufacturer to collect the correct version for server-communication. We store your id on server and locally for next events and reopen the app. On deleting this app all linked friends are lost and can\'t restore. We don\'t share any data with other providers. Your data are only to track the actual event. Your position data are used to calculate and show start and end position of skatertrain and distances to friends and finish. When you leave the track or the event is finished you are disappearing in the app. Sourcecode is opensource."),
+            "This app uses a unique ID that is saved locally when the app is first started.\nThis ID is used on the server to link friends and share the position. This is only transferred between your own app and server. \nThe app version number and phone manufacturer (Apple or Android) are also transmitted to check correct communication.\nThe ID is stored on the server with the linked friends.\nDeleting and reinstalling the app deletes the ID and the friends must be relinked \nThe data will not be passed on to third parties or used in any other way.\nYour location data will be used during the event to calculate and display the start and end of the train on the route and to calculate the distance to friends and to the destination.\nNo personal data is collected. The names of friends are only stored locally in the app.\nThe use of the app, email function, Bladeguard functions and website https://bladenight-muenchen.de is subject to the data protection regulations of Skatemunich e.V.\n These can be found at https:/ /bladenight-muenchen.de/datenschutzerklaerung can be viewed. The personal data is collected and processed exclusively for the purpose of organizing the Munich BladeNight. If you have any questions, please use the contact form,"),
         "about_bnapp":
             MessageLookupByLibrary.simpleMessage("About BladeNight App"),
         "about_crashlytics": MessageLookupByLibrary.simpleMessage(
@@ -174,15 +174,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "bgNotificationTitle": MessageLookupByLibrary.simpleMessage(
             "BladeNight background tracking"),
         "bgTeam": MessageLookupByLibrary.simpleMessage("Bladeguard team"),
-        "bgTodayNotOnSite": MessageLookupByLibrary.simpleMessage(
-            "Du bist heute nicht vor Ort?"),
+        "bgTodayNotOnSite":
+            MessageLookupByLibrary.simpleMessage("You\'re not on site today?"),
         "bgTodayNotParticipation": MessageLookupByLibrary.simpleMessage(
-            "Ich kann heute leider nicht als Bladeguard teilnehmen"),
+            "Unfortunately I cannot participate as a Bladeguard today"),
         "bgTodayOnSite": MessageLookupByLibrary.simpleMessage(
-            "Du bist heute als Bladeguard vor Ort ?"),
+            "Are you on site today as a bladeguard?"),
         "bgTodayRegister": MessageLookupByLibrary.simpleMessage(
-            "Bitte heute als Bladeguard einloggen!"),
-        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Update Tel."),
+            "Please log in as Bladeguard today!"),
+        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Update Phone."),
         "birthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
         "bladeGuardSettings":
@@ -527,9 +527,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "requestLocationPermissionTitle": MessageLookupByLibrary.simpleMessage(
             "Information why location sharing would be necessary."),
         "requestOffSite": MessageLookupByLibrary.simpleMessage(
-            "Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. "),
+            "You really want to deregister as a Bladeguard today. We need everyone. Think again."),
         "requestOffSiteTitle":
-            MessageLookupByLibrary.simpleMessage("Heute kein Bladeguard ? "),
+            MessageLookupByLibrary.simpleMessage("No Bladeguard today?"),
         "resetInSettings":
             MessageLookupByLibrary.simpleMessage("Reset in settings-page"),
         "resetLongPress": MessageLookupByLibrary.simpleMessage(
@@ -651,7 +651,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "timeToMe": MessageLookupByLibrary.simpleMessage("Time to me"),
         "timeToTail": MessageLookupByLibrary.simpleMessage("Time to tail"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
-        "todayNo": MessageLookupByLibrary.simpleMessage("Heute nein"),
+        "todayNo": MessageLookupByLibrary.simpleMessage("No today"),
         "tomorrow": MessageLookupByLibrary.simpleMessage("Tomorrow"),
         "trackPointsExporting": MessageLookupByLibrary.simpleMessage(
             "The following route points will be exported: "),
