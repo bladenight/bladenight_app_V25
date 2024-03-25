@@ -18,7 +18,7 @@
 
     <meta charset="UTF-8">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-    <meta name="description" content="A new Flutter project.">
+    <meta name="description" content="BladeNight App.">
 
     <!-- iOS meta tags & icons -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -43,25 +43,65 @@
 
     <!-- This script adds the flutter initialization JS code -->
     <script src="flutter.js" defer></script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(function(OneSignal) {
+            OneSignal.init({
+                appId: "3c72b3fa-515e-4ca4-93a5-98201c8bee5c",
+            });
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="loading/style.css">
 </head>
 <body>
+<div class='onesignal-customlink-container' style="z-index:99999999;"></div>
+
+<div class="container" id="loadingContainer">
+    <div class="lds-roller" style="color: #0a53be">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div id="progressBarText" style="color: #0a53be">Lade...</div>
+</div>
 <script>
-    window.addEventListener('load', function (ev) {
+
+    window.addEventListener('load', function () {
+        var loading = document.querySelector('#progressBarText');
+        var loadingContainer = document.querySelector('#loadingContainer');
+        loading.textContent = "Starte. Bitte einen moment Geduld...";
+
         let useHtml = false;
-            // Download main.dart.js
         _flutter.loader.loadEntrypoint({
             serviceWorker: {
                 serviceWorkerVersion: serviceWorkerVersion,
+            },
+            onEntrypointLoaded: async function (engineInitializer) {
+                loading.textContent = "Lade BladeNight-Web-App...";
+
+                let config = {
+                    renderer: useHtml ? "html" : "canvaskit",
+                }
+                let appRunner = await engineInitializer.initializeEngine(config);
+
+                loading.textContent = "Starte BladeNight-Web-App...";
+                OneSignalDeferred.push(function (OneSignal) {
+                    OneSignal.init({
+                        appId: "3c72b3fa-515e-4ca4-93a5-98201c8bee5c",
+                    });
+                });
+                loadingContainer.remove();
+                await appRunner.runApp();
             }
-        }).then(function (engineInitializer) {
-            let config = {
-                renderer: useHtml ? "html" : "canvaskit",
-            }
-            return engineInitializer.initializeEngine(config);
-        }).then(function (appRunner) {
-            return appRunner.runApp();
         });
     });
 </script>
+
 </body>
 </html>

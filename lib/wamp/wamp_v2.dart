@@ -19,7 +19,6 @@ import 'bn_wamp_message.dart';
 import 'http_overrides.dart';
 import 'wamp_error.dart';
 
-
 ///TODO add keepalive with on error reopen
 enum WampConnectionState { unknown, connecting, connected, failed, offline }
 
@@ -109,7 +108,7 @@ class WampV2 {
 
   Future<WampConnectionState> _initWamp() async {
     if (_isConnecting == true) {
-      await Future.delayed(const Duration(milliseconds: 5000));
+      await Future.delayed(const Duration(milliseconds: 1000));
       if (!kIsWeb) {
         BnLog.trace(
             text: 'is connecting',
@@ -210,12 +209,12 @@ class WampV2 {
             await Future.delayed(const Duration(milliseconds: 500));
             continue;
           } else if (res == WampConnectionState.offline) {
-            await Future.delayed(const Duration(milliseconds: 5000));
+            await Future.delayed(const Duration(milliseconds: 1000));
             continue;
           }
         }
         if (DateTime.now().difference(_busyTimeStamp) >
-            const Duration(seconds: 5)) {
+            const Duration(milliseconds: 1000)) {
           busy = false;
         }
         if (busy == false) {
@@ -273,6 +272,7 @@ class WampV2 {
       channel = WebSocketChannel.connect(
         Uri.parse(url), //connect to a websocket
       );
+      await channel?.ready;
       var welcomeCompleter = Completer();
       channel!.stream.listen(
         (event) async {
@@ -312,8 +312,7 @@ class WampV2 {
             try {
               var rt = RealtimeUpdateMapper.fromMap(messageResult);
               _realTimeUpdateStreamController.sink.add(rt);
-            } catch (_) {
-            }
+            } catch (_) {}
 
             calls[requestId]?.completer.complete(messageResult);
             calls.remove(requestId);
@@ -429,13 +428,11 @@ class WampV2 {
           }
         },
       );
+      _connectedStreamController.sink.add(true);
+      _lastConnectionStatus=true;
       await welcomeCompleter.future;
       _connectionErrorLogged = false;
       _isWebsocketRunning = true;
-      if (_lastConnectionStatus == false) {
-        _connectedStreamController.sink.add(true);
-        _lastConnectionStatus = true;
-      }
       _isConnecting = false;
       return true;
     }, (error, stack) {

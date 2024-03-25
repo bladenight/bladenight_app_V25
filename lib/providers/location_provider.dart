@@ -228,15 +228,12 @@ class LocationProvider with ChangeNotifier {
         ProviderContainer().read(activeEventProvider).status ==
             EventStatus.confirmed) {
       //restart tracking on reopen
-      if (!kIsWeb) {
         BnLog.info(
             className: 'locationProvider',
             methodName: 'init',
-            text: 'restart tracking');
-      }
-      var state = await ProviderContainer()
-          .read(isTrackingProvider.notifier)
-          .startTracking(_userIsParticipant);
+            text: 'restarting tracking');
+      HiveSettingsDB.setUserIsParticipant(userIsParticipant);
+      var state = await startTracking(_userIsParticipant);
       if (state) {
         showToast(message: Localize.current.trackingRestarted);
       }
@@ -515,7 +512,7 @@ class LocationProvider with ChangeNotifier {
         break;
       case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_DENIED:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.denied;
-        ProviderContainer().read(locationProvider.notifier).stopTracking();
+        stopTracking();
         break;
       case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_ALWAYS:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.always;
@@ -565,6 +562,7 @@ class LocationProvider with ChangeNotifier {
     }).catchError((error) {
       if (!kIsWeb) BnLog.error(text: 'Stopping ERROR: $error');
     });
+    notifyListeners();
     return _isTracking;
   }
 
@@ -1074,9 +1072,7 @@ class LocationProvider with ChangeNotifier {
                   methodName: 'checkUserFinishedOrEndEvent',
                   text: 'User reached finish - auto stop');
             }
-            await ProviderContainer()
-                .read(locationProvider.notifier)
-                .stopTracking();
+            stopTracking();
           } else {
             NotificationHelper().showString(
                 id: DateTime.now().hashCode,
@@ -1105,9 +1101,7 @@ class LocationProvider with ChangeNotifier {
           !_stoppedAfterMaxTime) {
         _stoppedAfterMaxTime = true;
         _userReachedFinishDateTime == null;
-        await ProviderContainer()
-            .read(locationProvider.notifier)
-            .stopTracking();
+        stopTracking();
 
         //Alert for overtime or finish event
         if (activeEventData.status == EventStatus.finished) {
@@ -1225,7 +1219,7 @@ class LocationProvider with ChangeNotifier {
   void refreshRealtimeData() {
     int lastUpdate = DateTime.now()
         .difference(LocationProvider.instance.lastUpdate)
-        .inSeconds;
+        .inMilliseconds;
     if (_isTracking || lastUpdate < defaultRealtimeUpdateInterval) {
       return;
     }
@@ -1244,7 +1238,7 @@ class LocationProvider with ChangeNotifier {
     }
     int lastUpdate = DateTime.now()
         .difference(LocationProvider.instance.lastUpdate)
-        .inSeconds;
+        .inMilliseconds;
     if (_isTracking || lastUpdate < defaultRealtimeUpdateInterval) {
       return;
     }

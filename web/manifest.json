@@ -1,6 +1,6 @@
 {
-    "name": "Bladenightapp",
-    "short_name": "Bladenightapp",
+    "name": "BladeNightWebApp",
+    "short_name": "BladeNightApp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#00000000",

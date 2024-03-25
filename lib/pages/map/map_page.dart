@@ -110,7 +110,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     //update data if not tracking
     _updateRealTimeDataTimer = Timer.periodic(
       //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
-      const Duration(seconds: defaultRealtimeUpdateInterval),
+      const Duration(milliseconds: defaultRealtimeUpdateInterval),
       (timer) {
         if (kIsWeb & !_webStartedTrainFollow) {
           startFollowingTrainHead();
@@ -175,9 +175,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               onPointerDown: (e, l) => _onPointerDown(e, l),
               onPointerUp: (e, l) => _onPointerUp(e, l),
               //onPositionChanged: (p, g) => _onPositionChanged(p, g),
-              cameraConstraint: kDebugMode
-                  ? null
-                  : osmEnabled ||
+              cameraConstraint: osmEnabled ||
                           ref.watch(activeEventProvider).hasSpecialStartPoint
                       ? CameraConstraint.contain(
                           bounds: MapSettings.mapOnlineBoundaries)

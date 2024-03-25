@@ -8,7 +8,6 @@ import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
 import '../generated/l10n.dart';
-import '../main.dart';
 import 'hive_box/hive_settings_db.dart';
 import 'logger/bn_log_output.dart';
 import 'logger/console_output.dart';
@@ -29,7 +28,7 @@ class BnLog {
 
   static init({Level? logLevel, LogFilter? filter}) async {
     _logBox = await Hive.openBox('logBox');
-    _logBox.put('startLog', ['start logging']);
+    _logBox.put('startLog', ['${DateTime.now().toIso8601String()} start logging ${logLevel ?? HiveSettingsDB.flogLogLevel}']);
     //add logger
     _logOutputs.clear();
 
@@ -176,19 +175,17 @@ class BnLog {
         stackTrace: stacktrace);
   }
 
-
   static Future<String> exportLogs() async {
-   await _logBox.flush();
+    await _logBox.flush();
 
     var items = _logBox.values.toList();
     return await compute(logValuesAsString, items);
   }
 
   ///executed in isolate
-  static String logValuesAsString(List<List<String>> values){
+  static String logValuesAsString(List<List<String>> values) {
     return values.reversed.join(';');
   }
-
 
   static Future<bool> clearLogs() async {
     for (var key in _logBox.keys) {
@@ -217,10 +214,13 @@ class BnLog {
     return HiveSettingsDB.flogLogLevel;
   }
 
-  static void setActiveLogLevel(Level logLevel) {
+  static void setActiveLogLevel(Level logLevel) async {
     //_logger.close();
     HiveSettingsDB.setFlogLevel(logLevel);
-    initLogger();
+    BnLog.info(text: 'Loglevel changed to ${logLevel.name}');
+    await _logBox.flush();
+    await _logBox.close();
+    init();
   }
 
   static Future<Level?> showLogLevelDialog(BuildContext context,
@@ -259,12 +259,6 @@ class BnLog {
               onPressed: () {
                 if (logLevel != null) {
                   BnLog.setActiveLogLevel(logLevel!);
-                  if (!kIsWeb) {
-                    BnLog.info(
-                      text: 'Loglevel changed to ${logLevel?.name}',
-                    );
-                  }
-                  HiveSettingsDB.setFlogLevel(logLevel!);
 
                   if (!kIsWeb) {
                     if (logLevel == Level.all || logLevel == Level.trace) {

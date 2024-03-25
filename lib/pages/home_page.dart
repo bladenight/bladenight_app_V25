@@ -34,10 +34,12 @@ class _HomePageState extends State<HomePage>
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    clearLog();
-    if (!kIsWeb) {
-      initOneSignal();
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!kIsWeb) {
+        initOneSignal();
+      }
+      clearLog();
+    });
   }
 
   @override
@@ -63,13 +65,16 @@ class _HomePageState extends State<HomePage>
   }
 
   void initOneSignal() async {
-    if (kIsWeb) return;
+    if (kIsWeb) {
+      BnLog.info(
+          text: 'Web - init OneSignal');
+      await OnesignalHandler.initPushNotifications();
+      return;
+    }
     await Future.delayed(const Duration(seconds: 3)); //delay and wait
     if (Platform.isIOS) {
-      if (!kIsWeb) {
         BnLog.info(
             text: ' iOS - init OneSignal PushNotifications permissions OK');
-      }
       await OnesignalHandler.initPushNotifications();
       return;
     }
@@ -82,6 +87,7 @@ class _HomePageState extends State<HomePage>
       await OnesignalHandler.initPushNotifications();
       return;
     }
+
     BnLog.info(text: 'Onesignal not available ${Platform.version}');
   }
 
