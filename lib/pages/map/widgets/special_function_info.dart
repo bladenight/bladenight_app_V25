@@ -29,7 +29,7 @@ class SpecialFunctionInfo extends ConsumerWidget {
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
                     child: ColoredBox(
-                      color: Colors.green,
+                      color: Colors.yellowAccent,
                       child: FittedBox(
                         child: Text(
                           Localize.of(context).head,
@@ -51,7 +51,7 @@ class SpecialFunctionInfo extends ConsumerWidget {
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
                     child: ColoredBox(
-                      color: Colors.greenAccent,
+                      color: Colors.redAccent,
                       child: FittedBox(
                         child: Text(
                           Localize.of(context).tail,

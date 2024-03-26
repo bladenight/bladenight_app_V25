@@ -5,11 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:universal_io/io.dart';
 
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
 import '../../models/external_app_message.dart';
 import '../../providers/messages_provider.dart';
+import '../device_info_helper.dart';
 import '../deviceid_helper.dart';
 import '../hive_box/hive_settings_db.dart';
 import '../logger.dart';
@@ -17,6 +19,34 @@ import '../url_launch_helper.dart';
 import '../uuid_helper.dart';
 
 const MethodChannel channel = MethodChannel('bladenightbgnotificationchannel');
+
+Future<void> initOneSignal() async {
+  if (kIsWeb) {
+    BnLog.info(
+        text: 'Web - init OneSignal');
+    await OnesignalHandler.initPushNotifications();
+    return;
+  }
+  await Future.delayed(const Duration(seconds: 3)); //delay and wait
+  if (Platform.isIOS) {
+    BnLog.info(
+        text: ' iOS - init OneSignal PushNotifications permissions OK');
+    await OnesignalHandler.initPushNotifications();
+    return;
+  }
+  //workaround for android 8.1 Nexus
+  if (Platform.isAndroid &&
+      await DeviceHelper.isAndroidGreaterOrEqualVersion(9)) {
+    BnLog.info(
+        text:
+        'Android is greater than V9 OneSignal  PushNotifications permissions OK');
+    await OnesignalHandler.initPushNotifications();
+    return;
+  }
+
+  BnLog.info(text: 'Onesignal not available ${Platform.version}');
+}
+
 
 class OnesignalHandler {
   OnesignalHandler._privateConstructor() {
@@ -211,12 +241,12 @@ class OnesignalHandler {
   @pragma('vm:entry-point')
   static void receivedBgRemoteMessage(MethodCall call) async {
     try {
-      print('remote notification received');
+      print('receivedBgRemoteMessage remote notification received');
       ProviderContainer().read(messagesLogicProvider).addMessage(
           ExternalAppMessage(
               uid: UUID.createUuid(),
               title: call.arguments,
-              body: 'Test',
+              body: 'test',
               timeStamp: DateTime.now().millisecondsSinceEpoch,
               lastChange: DateTime.now().millisecondsSinceEpoch));
     } catch (e) {

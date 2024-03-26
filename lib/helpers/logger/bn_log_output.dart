@@ -2,10 +2,10 @@ import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
 class BnLogOutput extends LogOutput {
-  final Box _logBox;
+  final LazyBox<String> _logBox;
   final DateTime _startTime;
 
-  BnLogOutput(this._logBox,this._startTime);
+  BnLogOutput(this._logBox, this._startTime);
 
   @override
   void output(OutputEvent event) {
@@ -40,6 +40,9 @@ class BnLogOutput extends LogOutput {
     }
 
     for (var line in message.split('\n')) {
+      if (message == 'null') {
+        continue;
+      }
       buffer.add(line);
     }
 
@@ -56,7 +59,7 @@ class BnLogOutput extends LogOutput {
         buffer.add(line);
       }
     }
-    _logBox.put(key, buffer);
+    _logBox.put(key, buffer.join(";"));
   }
 
   String getTime(DateTime time) {
@@ -79,5 +82,4 @@ class BnLogOutput extends LogOutput {
     var timeSinceStart = now.difference(_startTime).toString();
     return '$h:$min:$sec.$ms (+$timeSinceStart)';
   }
-
 }

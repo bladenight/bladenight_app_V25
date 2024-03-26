@@ -9,6 +9,7 @@ import 'package:logger/logger.dart';
 
 import '../generated/l10n.dart';
 import 'hive_box/hive_settings_db.dart';
+import 'log_filter.dart';
 import 'logger/bn_log_output.dart';
 import 'logger/console_output.dart';
 import 'logger/log_printer.dart';
@@ -17,7 +18,7 @@ class BnLog {
   static Logger _logger = Logger();
   static bool _isInitialized = false;
   static final List<LogOutput> _logOutputs = [];
-  static late Box<List<String>> _logBox;
+  static late LazyBox<String> _logBox;
   static final DateTime _startTime = DateTime.now();
 
   BnLog._() {
@@ -27,15 +28,19 @@ class BnLog {
   }
 
   static init({Level? logLevel, LogFilter? filter}) async {
-    _logBox = await Hive.openBox('logBox');
-    _logBox.put('startLog', ['${DateTime.now().toIso8601String()} start logging ${logLevel ?? HiveSettingsDB.flogLogLevel}']);
+    _logBox = await Hive.openLazyBox('logBox');
+    _logBox.put('startLog',
+        '${DateTime.now().toIso8601String()} start logging ${logLevel ?? HiveSettingsDB.flogLogLevel}');
     //add logger
     _logOutputs.clear();
+    _logOutputs.add(BnLogOutput(_logBox, _startTime));
+    if (kDebugMode) {
+      _logOutputs.add(ConsoleLogOutput());
+    }
 
-    _logOutputs.addAll({BnLogOutput(_logBox, _startTime), ConsoleLogOutput()});
     //_logger.close();
     _logger = Logger(
-      filter: filter,
+      filter: BnLogFilter(), //important for logging in releaseversion
       output: MultiOutput(_logOutputs),
       level: logLevel ?? HiveSettingsDB.flogLogLevel,
       printer: BnLogPrinter(
@@ -175,16 +180,30 @@ class BnLog {
         stackTrace: stacktrace);
   }
 
-  static Future<String> exportLogs() async {
+  static Future<String> collectLogs() async {
     await _logBox.flush();
-
-    var items = _logBox.values.toList();
-    return await compute(logValuesAsString, items);
+    List<String> valList = [];
+    for (var val in _logBox.keys) {
+      var str = await _logBox.get(val as String);
+      if (str != null) {
+        valList.add(str);
+      }
+    }
+    return await compute(logValuesAsString, valList);
   }
 
   ///executed in isolate
-  static String logValuesAsString(List<List<String>> values) {
-    return values.reversed.join(';');
+  static Future<String> logValuesAsString(List<String> valList) async {
+    return valList.reversed.join('\r\n');
+  }
+
+  ///Clean up log file and delete data's older than a week
+  void cleanupLog() async {
+    try {
+      await BnLog.cleanUpLogsByFilter(const Duration(minutes: 8));
+    } catch (e) {
+      BnLog.warning(text: 'Error clearing logs');
+    }
   }
 
   static Future<bool> clearLogs() async {
@@ -198,15 +217,17 @@ class BnLog {
   ///
   /// endTimeInMillis
   static Future<bool> cleanUpLogsByFilter(Duration deleteOlderThan) async {
+    int counter =0;
     var leftDate =
         DateTime.now().subtract(deleteOlderThan).millisecondsSinceEpoch;
     for (var key in _logBox.keys) {
       var intVal = int.tryParse(key);
       if (intVal != null && intVal < leftDate) {
         await _logBox.delete(key);
+        counter++;
       }
     }
-    BnLog.info(text: 'Cleared logs before $leftDate');
+    BnLog.info(text: 'Tidied up logs before ${DateTime.fromMillisecondsSinceEpoch(leftDate)}  - $counter entries removed');
     return Future(() => true);
   }
 

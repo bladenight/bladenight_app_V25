@@ -103,7 +103,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     );
     _updateRealTimeDataTimer?.cancel(); //important
     if (force || _firstRefresh) {
-      print('_firstRefresh resumeUpdates');
       ref.read(locationProvider).refresh(forceUpdate: force);
       _firstRefresh = false;
     }

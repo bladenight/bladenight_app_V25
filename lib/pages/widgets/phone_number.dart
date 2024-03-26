@@ -16,6 +16,9 @@ class _PhoneTextFieldState extends ConsumerState<PhoneTextField> {
   final TextEditingController _phoneTextController = TextEditingController();
   bool validPhone = true;
 
+  // validPhone = RegExp(r'^[0-9]{9,14}$').hasMatch(_phoneTextController.text);
+  RegExp regExp= RegExp(r'^[0-9+()]{10,14}?$');
+
   @override
   void initState() {
     _phoneTextController.text = HiveSettingsDB.bladeguardPhone;
@@ -24,7 +27,7 @@ class _PhoneTextFieldState extends ConsumerState<PhoneTextField> {
 
   @override
   Widget build(BuildContext context) {
-    validPhone = _phoneTextController.text.length > 7;
+    validPhone = regExp.hasMatch(_phoneTextController.text);
     return CupertinoFormSection(
       header: Text(Localize.current.enterPhoneNumber),
       children: <Widget>[
@@ -32,16 +35,13 @@ class _PhoneTextFieldState extends ConsumerState<PhoneTextField> {
           controller: _phoneTextController,
           placeholder: Localize.of(context).phoneNumber,
           autocorrect: false,
-          prefix: validPhone
+          prefix:validPhone
               ? const Icon(CupertinoIcons.hand_thumbsup, color: Colors.green)
               : const Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red),
           maxLines: 1,
           onChanged: (value) {
             setState(() {
-              RegExp regExp= RegExp(r'(^\+[0-9]{1,3}\.[0-9]{4,14}(?:x.+)?$)');
-              final candidateFormatted = _phoneTextController.text.replaceAll(RegExp('[^+0-9]'), '');
-              final tokens = regExp.allMatches(_phoneTextController.text);
-              validPhone = tokens.isNotEmpty;// regExp.hasMatch(_phoneTextController.text);
+              validPhone = regExp.hasMatch(_phoneTextController.text);
             });
             if (validPhone) {
               HiveSettingsDB.setBladeguardPhone(

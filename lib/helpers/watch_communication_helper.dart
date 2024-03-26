@@ -110,7 +110,7 @@ Future<void> initFlutterChannel() async {
     // Receive data from Native
     switch (call.method) {
       case 'sendNavToggleToFlutter':
-        print('sendNavToggleToFlutter received');
+        //print('sendNavToggleToFlutter received');
         try {
           ProviderContainer()
               .read(isTrackingProvider.notifier)

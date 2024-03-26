@@ -11,6 +11,7 @@ import '../generated/l10n.dart';
 import '../helpers/export_import_data_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
+import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../providers/get_images_and_links_provider.dart';
 import 'bladeguard/bladeguard_page.dart';
@@ -72,9 +73,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _initURIHandler();
     _incomingLinkHandler();
     initFlutterChannel();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _openIntroScreenFirstTime();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //_openIntroScreenFirstTime();
       _openBladeguardRequestFirstTime();
+      if (!kIsWeb) await initOneSignal();
+      await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
     });
   }
 

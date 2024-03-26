@@ -137,7 +137,7 @@ Future<File> _createLogFile(String fileName) async {
 
 Future<void> exportLogs() async {
   try {
-    var fileContent = await BnLog.exportLogs();
+    var fileContent = await BnLog.collectLogs();
     if (kIsWeb) {
       print(fileContent);
       showToast(message: 'Siehe Console');
@@ -184,7 +184,7 @@ Future<void> exportLogs() async {
     );*/
     //print('All logs exported to: \nPath: ${fileContent.toString()}');
   } catch (e) {
-    showToast(message: 'Log export fail $e');
+    showToast(message: 'Log export fail ${e}');
   }
 }
 

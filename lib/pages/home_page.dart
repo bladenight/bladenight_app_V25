@@ -34,12 +34,6 @@ class _HomePageState extends State<HomePage>
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!kIsWeb) {
-        initOneSignal();
-      }
-      clearLog();
-    });
   }
 
   @override
@@ -53,42 +47,6 @@ class _HomePageState extends State<HomePage>
     if (state == AppLifecycleState.resumed) {}
     if (state == AppLifecycleState.inactive) {}
     if (state == AppLifecycleState.paused) {}
-  }
-
-  ///Clean up log file and delete data's older than a week
-  void clearLog() async {
-    try {
-      await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
-    } catch (e) {
-      BnLog.warning(text: 'Error clearing logs');
-    }
-  }
-
-  void initOneSignal() async {
-    if (kIsWeb) {
-      BnLog.info(
-          text: 'Web - init OneSignal');
-      await OnesignalHandler.initPushNotifications();
-      return;
-    }
-    await Future.delayed(const Duration(seconds: 3)); //delay and wait
-    if (Platform.isIOS) {
-        BnLog.info(
-            text: ' iOS - init OneSignal PushNotifications permissions OK');
-      await OnesignalHandler.initPushNotifications();
-      return;
-    }
-    //workaround for android 8.1 Nexus
-    if (Platform.isAndroid &&
-        await DeviceHelper.isAndroidGreaterOrEqualVersion(9)) {
-      BnLog.info(
-          text:
-              'Android is greater than V9 OneSignal  PushNotifications permissions OK');
-      await OnesignalHandler.initPushNotifications();
-      return;
-    }
-
-    BnLog.info(text: 'Onesignal not available ${Platform.version}');
   }
 
   @override

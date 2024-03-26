@@ -24,13 +24,13 @@ class RealtimeData extends _$RealtimeData {
     var isTracking = ref.watch(isTrackingProvider);
     _listener =
         WampV2.instance.realTimeUpdateStreamController.stream.listen((event) {
-      BnLog.info(text: 'rtevent $event');
+      BnLog.debug(text: 'rtEvent $event');
       state = event;
       _reStartTimer();
     });
 
     ref.onDispose(() {
-      BnLog.debug(text: 'rtprovide dispose');
+      BnLog.debug(text: 'rtProvide dispose');
       _timer?.cancel();
       _realTimeDataSubscriptionId = 0;
       _listener?.cancel();
@@ -51,7 +51,6 @@ class RealtimeData extends _$RealtimeData {
     _timer?.cancel();
     _timer = null;
     _timer = Timer.periodic(const Duration(seconds: 15), (timer) async {
-      print('timer refresh ');
       var result = await refresh();
       if (result != null) {
         lastUpdate = DateTime.now();
@@ -72,7 +71,10 @@ class RealtimeData extends _$RealtimeData {
 
   Future<RealtimeUpdate?> refresh({bool force = false}) async {
     var timeDiff = DateTime.now().difference(lastUpdate);
-    print('${timeDiff.inSeconds} Lastupdt: $lastUpdate');
+    BnLog.trace(
+        text: '${timeDiff.inSeconds} Lastupdt: $lastUpdate',
+        methodName: 'refresh',
+        className: toString());
     if (!force && timeDiff < const Duration(seconds: 13)) {
       return null;
     }

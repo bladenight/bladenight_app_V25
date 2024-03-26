@@ -315,9 +315,6 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             ),
                           ],
                         ),
-                      const SizedBox(
-                        height: 15,
-                      ),
                       if (!kIsWeb && HiveSettingsDB.bgLeaderSettingVisible ||
                           Globals.adminPass != null)
                         CupertinoFormSection(
@@ -373,7 +370,9 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                     ],
                   ),
                 if (Globals.adminPass != null ||
-                    HiveSettingsDB.hasSpecialRights)
+                    HiveSettingsDB.hasSpecialRights &&
+                        networkConnected.connectivityStatus ==
+                            ConnectivityStatus.serverReachable)
                   CupertinoFormSection(
                     header: Text(Localize.of(context).showFullProcessionTitle),
                     children: <Widget>[
@@ -395,6 +394,9 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       ),
                     ],
                   ),
+                const SizedBox(
+                  height: 50,
+                ),
               ],
             ),
           ),
