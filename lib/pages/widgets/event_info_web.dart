@@ -62,9 +62,6 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
       const Duration(minutes: 5),
       (timer) {
         if (!mounted) return;
-        if (kDebugMode) {
-          print('refresh active Event periodic');
-        }
         context.read(activeEventProvider.notifier).refresh();
       },
     );
