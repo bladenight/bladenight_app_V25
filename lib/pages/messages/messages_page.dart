@@ -77,9 +77,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                                 neutralButtonTitle: Localize.current.cancel,
                                 windowPosition:
                                     AlertWindowPosition.screenCenter,
-                                options: FlutterPlatformAlertOption(
-                                    preferMessageBoxOnWindows: true,
-                                    showAsLinksOnWindows: true));
+                                );
                         if (clickedButton == CustomButton.positiveButton) {
                           if (!context.mounted) return;
                           await context

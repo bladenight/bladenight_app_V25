@@ -317,8 +317,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
             //removed - causes crash on iOS
             negativeButtonTitle: isIPad ? null : Localize.current.understand,
             windowPosition: AlertWindowPosition.screenCenter,
-            options: FlutterPlatformAlertOption(
-                preferMessageBoxOnWindows: true, showAsLinksOnWindows: true));
+            );
         if (clickedButton == CustomButton.positiveButton) {
           Share.share(
               Localize.current.sendlinkdescription(

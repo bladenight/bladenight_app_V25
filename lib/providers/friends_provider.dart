@@ -50,7 +50,7 @@ class FriendsLogic with ChangeNotifier {
 
   Future<void> refreshFriends() async {
     try {
-      var deviceId = await DeviceId.getId;
+      var deviceId =  DeviceId.appId;
 
       var result = await FriendsMessage.getFriends(deviceId);
       if (result.exception != null) {
@@ -184,7 +184,7 @@ class FriendsLogic with ChangeNotifier {
     var id = await PreferencesHelper.getNewFriendId();
     var friend = Friend(name: name, friendId: id, color: color);
 
-    var deviceId = await DeviceId.getId;
+    var deviceId =  DeviceId.appId;
 
     var getFriendRelationshipResult =
         await RelationshipOutputMessage.createRelationShip(
@@ -214,7 +214,7 @@ class FriendsLogic with ChangeNotifier {
     var getFriendRelationshipResult =
         await RelationshipOutputMessage.getRelationShip(
       RelationshipInputMessage(
-          deviceId: await DeviceId.getId,
+          deviceId:  DeviceId.appId,
           friendId: id,
           requestId: friend.requestId),
     );
@@ -238,7 +238,7 @@ class FriendsLogic with ChangeNotifier {
   Future<void> deleteRelationShip(int id) async {
     friends.remove(id);
     notifyListeners();
-    var deviceId = await DeviceId.getId;
+    var deviceId =  DeviceId.appId;
     PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
     var getFriendRelationshipResult =
         await RelationshipOutputMessage.getRelationShip(

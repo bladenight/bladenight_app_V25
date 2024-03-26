@@ -23,6 +23,7 @@ import '../pages/friends/widgets/friends_action_sheet.dart';
 import '../providers/friends_provider.dart';
 import 'device_info_helper.dart';
 import 'deviceid_helper.dart';
+import 'hive_box/hive_settings_db.dart';
 import 'logger.dart';
 import 'notification/toast_notification.dart';
 import 'preferences_helper.dart';
@@ -37,7 +38,7 @@ void exportData(BuildContext context) async {
     if (res == CustomButton.negativeButton) {
       return;
     }
-    var deviceID = await DeviceId.getId;
+    var deviceID =  DeviceId.appId;
     var friends = await PreferencesHelper.getFriendsFromPrefs();
     String exportdata =
         'id=$deviceID&fri=${MapperContainer.globals.toJson(friends)}';
@@ -82,7 +83,7 @@ void importData(String dataString) async {
     var base64Decoded = utf8.decode(base64.decode(base64dataString));
     var dataParts = base64Decoded.split('&');
     var id = dataParts[0].substring(3);
-    DeviceId.saveDeviceIdToPrefs(id);
+    HiveSettingsDB.setAppId(id);
     var friendJson = dataParts[1].substring(4);
     var friends = MapperContainer.globals.fromJson<List<Friend>>(friendJson);
     await PreferencesHelper.saveFriendsToPrefsAsync(friends);
@@ -184,7 +185,7 @@ Future<void> exportLogs() async {
     );*/
     //print('All logs exported to: \nPath: ${fileContent.toString()}');
   } catch (e) {
-    showToast(message: 'Log export fail ${e}');
+    showToast(message: 'Log export fail $e');
   }
 }
 

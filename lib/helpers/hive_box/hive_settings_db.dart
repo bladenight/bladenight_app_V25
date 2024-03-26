@@ -18,6 +18,7 @@ import '../../models/event.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../models/user_trackpoint.dart';
+import '../deviceid_helper.dart';
 import '../logger.dart';
 import '../notification/onesignal_handler.dart';
 import '../uuid_helper.dart';
@@ -246,6 +247,18 @@ class HiveSettingsDB {
     _hiveBox.put(_hasAskedAlwaysAllowLocationPermissionKey, val);
   }
 
+  static const String _firstStartKey = '2400firstStartPref';
+
+  ///get firstStart
+  static bool get firstStart {
+    return _hiveBox.get(_firstStartKey, defaultValue: true);
+  }
+
+  ///set if  setFirstStart
+  static void setFirstStart(bool val) {
+    _hiveBox.put(_firstStartKey, val);
+  }  
+  
   static const String _hasShownIntroKey = 'hasShownIntroPref';
 
   ///get hasShownIntro
@@ -295,11 +308,24 @@ class HiveSettingsDB {
     _hiveBox.put(_pushNotificationsEnabledKey, val);
   }
 
+  static const String _appIdKey = 'appIdPref';
+
+  ///get appId
+  static String get appId {
+    return _hiveBox.get(_appIdKey, defaultValue: '');
+  }
+
+  ///set if  setAppId were shown
+  static Future<void> setAppId(String val) async {
+    await _hiveBox.put(_appIdKey, val);
+
+  }  
+  
   static const String _oneSignalIdKey = 'oneSignalIdPref';
 
   ///get oneSignalId
   static String get oneSignalId {
-    return _hiveBox.get(_oneSignalIdKey, defaultValue: 'noId');
+    return _hiveBox.get(_oneSignalIdKey, defaultValue: '');
   }
 
   ///set if  setOneSignalId were shown

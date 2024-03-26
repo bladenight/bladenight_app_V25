@@ -7,13 +7,3 @@ import '../helpers/deviceid_helper.dart';
 final versionProvider = FutureProvider((ref) async {
   return  await DeviceHelper.getAppVersionsData();
 });
-
-final appIdProvider = FutureProvider((ref) async {
-  return DeviceId.getId;
-});
-
-final oneSignalIdProvider = FutureProvider((ref) async {
-  final status =  OneSignal.User.pushSubscription;
-  final String osUserID = status.id ?? '';
-  return osUserID;
-});

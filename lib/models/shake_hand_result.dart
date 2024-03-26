@@ -36,7 +36,7 @@ class ShakeHandResult with ShakeHandResultMappable{
       WampEndpoint.shakeHand,
       {
         'bui': await DeviceId.appBuildNumber,
-        'did': await DeviceId.getId,
+        'did': DeviceId.appId,
         'man': DeviceId.deviceManufacturer,
         'mod': 'unused',
         'rel': await DeviceId.getOSVersion

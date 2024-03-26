@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -6,56 +7,49 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'hive_box/hive_settings_db.dart';
+
 ///Create DeviceId in Format '920ecff0fb9b56577d44'
 ///
 class DeviceId {
   static const int length = 20;
   static const String prefid = 'deviceid_key';
 
-  static Future<String> get getId async {
-    //await removeDeviceIdFromPrefs(); //for testing
-    var id = await _readDeviceIdFromPrefs();
-    if (id == null) {
-      return await _generateAndSaveDeviceId();
-    } else {
-      return id;
+  static Future<String> initAppId() async {
+    if (HiveSettingsDB.appId.isEmpty || !HiveSettingsDB.firstStart) {
+      var id = await _readDeviceIdFromPrefs();
+      if (id != null) {
+        await HiveSettingsDB.setAppId(id);
+        HiveSettingsDB.setFirstStart(false);
+        return id;
+      } else {
+        var resultAppId = generateDeviceIdSync();
+        await HiveSettingsDB.setAppId(resultAppId);
+        return resultAppId;
+      }
     }
+    return HiveSettingsDB.appId;
   }
 
-  static Future<String> _generateAndSaveDeviceId() async {
-    Random random = Random();
-    String id = '';
-    /*if (Device.get().isIos) {
-      id += 'i';
-    } else if (Device.get().isAndroid) {
-      id += 'a';
-    } else {
-      id += 'u';
-    }*/
-
-    while (id.length < length) {
-      id += (random.nextInt(16)).toRadixString(16);
-    }
-    var resultid = id.substring(0, length);
-    await saveDeviceIdToPrefs(resultid);
-    return resultid;
+  static String get appId {
+    return HiveSettingsDB.appId;
   }
 
   static Future<String?> _readDeviceIdFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(prefid);
+    return prefs.getString(
+      prefid,
+    );
   }
 
-  ///Remove id from prefs, so it can be recreate next time.
-  ///Warning friends will be lost
-  static Future<bool> removeDeviceIdFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    return await prefs.remove(prefid);
-  }
+  static String generateDeviceIdSync() {
+    Random random = Random();
+    String id = '';
 
-  static Future<bool> saveDeviceIdToPrefs(String id) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.setString(prefid, id);
+    while (id.length < length) {
+      id += (random.nextInt(16)).toRadixString(16);
+    }
+    return id.substring(0, length);
   }
 
   ///Get manufacturer

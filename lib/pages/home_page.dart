@@ -3,12 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_context/riverpod_context.dart';
-import 'package:universal_io/io.dart';
 
 import '../generated/l10n.dart';
-import '../helpers/device_info_helper.dart';
-import '../helpers/logger.dart';
-import '../helpers/notification/onesignal_handler.dart';
 import '../pages/widgets/event_info.dart';
 import '../providers/active_event_provider.dart';
 import '../providers/messages_provider.dart';

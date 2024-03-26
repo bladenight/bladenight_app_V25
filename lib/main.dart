@@ -22,6 +22,7 @@ import 'app_settings/globals.dart';
 import 'app_settings/server_connections.dart';
 import 'firebase_options.dart';
 import 'generated/l10n.dart';
+import 'helpers/deviceid_helper.dart';
 import 'helpers/export_import_data_helper.dart';
 import 'helpers/hive_box/adapter/color_adapter.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
@@ -73,7 +74,7 @@ void main() async {
       await Hive.openBox(hiveBoxSettingDbName);
       await Hive.openBox(hiveBoxServerConfigDBName);
       Globals.logToCrashlytics = HiveSettingsDB.chrashlyticsEnabled;
-
+      await DeviceId.initAppId();
       await initLogger();
       if (!kIsWeb) {
         await initNotifications();

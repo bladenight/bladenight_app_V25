@@ -37,7 +37,6 @@ import '../models/realtime_update.dart';
 import '../models/route.dart';
 import '../models/user_trackpoint.dart';
 import 'active_event_provider.dart';
-import 'is_tracking_provider.dart';
 import 'network_connection_provider.dart';
 import 'realtime_data_provider.dart';
 
@@ -871,7 +870,7 @@ class LocationProvider with ChangeNotifier {
           //6 digits => 1 m location accuracy
           coords: LatLng(location.coords.latitude.toShortenedDouble(6),
               location.coords.longitude.toShortenedDouble(6)),
-          deviceId: await DeviceId.getId,
+          deviceId:  DeviceId.appId,
           isParticipating: _userIsParticipant,
           specialFunction: HiveSettingsDB.wantSeeFullOfProcession
               ? HiveSettingsDB.specialCodeValue

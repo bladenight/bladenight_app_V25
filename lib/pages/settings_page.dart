@@ -489,12 +489,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                                   windowPosition:
                                                       AlertWindowPosition
                                                           .screenCenter,
-                                                  options:
-                                                      FlutterPlatformAlertOption(
-                                                          preferMessageBoxOnWindows:
-                                                              true,
-                                                          showAsLinksOnWindows:
-                                                              true));
+                                                  );
                                           if (clickedButton ==
                                               CustomButton.positiveButton) {
                                             BnLog.clearLogs();
@@ -532,11 +527,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                                     windowPosition:
                                                         AlertWindowPosition
                                                             .screenCenter,
-                                                    options: FlutterPlatformAlertOption(
-                                                        preferMessageBoxOnWindows:
-                                                            true,
-                                                        showAsLinksOnWindows:
-                                                            true));
+                                                   );
                                             if (clickedButton ==
                                                 CustomButton.positiveButton) {
                                               bg.Logger.destroyLog();

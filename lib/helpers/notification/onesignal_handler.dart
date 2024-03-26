@@ -53,7 +53,6 @@ class OnesignalHandler {
     OneSignal.User.pushSubscription.addObserver((changes) {
       //  print(changes.to.userId);
       String? userId = OneSignal.User.pushSubscription.id ?? '';
-
       HiveSettingsDB.setOneSignalId(userId);
     });
   }
@@ -71,11 +70,13 @@ class OnesignalHandler {
         OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
       } else {
         OneSignal.Debug.setAlertLevel(OSLogLevel.none);
-        OneSignal.Debug.setLogLevel(OSLogLevel.none);
+        OneSignal.Debug.setLogLevel(OSLogLevel.info);
       }
 
       OneSignal.initialize(oneSignalAppId);
       OneSignal.User.pushSubscription.lifecycleInit();
+      //String userId = OneSignal.User.pushSubscription.id ?? '';
+      //if (userId.isNotEmpty )HiveSettingsDB.setOneSignalId(userId);
       OneSignal.Location.setShared(false);
 
       setOneSignalChannels();
@@ -159,6 +160,8 @@ class OnesignalHandler {
     } else {
       //allow onesignal
       await OneSignal.User.pushSubscription.optIn();
+      OneSignal.User.addAlias('App_id', DeviceId.appId);
+      OneSignal.User.addAlias('Team', 'test');
     }
     var optedIn = OneSignal.User.pushSubscription.optedIn;
     BnLog.info(text: 'setOneSignalChannels optIn is $optedIn');
@@ -229,7 +232,7 @@ class OnesignalHandler {
     if (buttonResult != null &&
         data != null &&
         buttonResult == CustomButton.positiveButton) {
-      var devId = await DeviceId.getId;
+      var devId = DeviceId.appId;
       if (data.keys.contains('url')) {
         message.url = data['url'] + '/?id=$devId';
         Launch.launchUrlFromString(data['url'] + '/?id=$devId');
