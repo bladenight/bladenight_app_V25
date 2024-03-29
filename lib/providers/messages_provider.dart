@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:universal_io/io.dart';
 
 import '../helpers/crypt_helper.dart';
 import '../helpers/hive_box/app_server_config_db.dart';
@@ -94,7 +95,7 @@ class MessagesLogic with ChangeNotifier {
       var skmMember = HiveSettingsDB.rcvSkatemunichInfos;
       var appId = HiveSettingsDB.appId;
       var parameter = CryptHelper.encryptAES(
-          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$appId',
+          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$appId&plf=${Platform.operatingSystem}',
           ServerConfigDb.restApiLinkPassword);
       if (parameter == null) {
         BnLog.error(text: "Couldn't encrypt Parameter");

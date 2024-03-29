@@ -574,14 +574,14 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<bool> startTracking(bool userIsParticipant) async {
-    if (kIsWeb) return false;
+    //if (kIsWeb) return false;
     _userIsParticipant = userIsParticipant;
     _isHead = HiveSettingsDB.specialCodeValue == 1 ||
         HiveSettingsDB.specialCodeValue == 5;
     _isTail = HiveSettingsDB.specialCodeValue == 2 ||
         HiveSettingsDB.specialCodeValue == 6;
 
-    if (HiveSettingsDB.wakeLockEnabled) {
+    if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
       Wakelock.enable();
     }
     var permissionWithService = Permission.location;
@@ -593,10 +593,9 @@ class LocationProvider with ChangeNotifier {
           await LocationPermissionDialog().showProminentAndroidDisclosure();
 
       if (!acceptLocation) {
-        if (!kIsWeb) {
-          BnLog.warning(
-              text: 'No positive prominent disclosure or always denied');
-        }
+        BnLog.warning(
+            text: 'No positive prominent disclosure or always denied');
+
         return false;
       }
       if (Platform.isAndroid && await DeviceHelper.isAndroidGreaterVNine()) {
@@ -609,12 +608,12 @@ class LocationProvider with ChangeNotifier {
       Fluttertoast.showToast(
           msg: Localize.current.noLocationPermitted,
           backgroundColor: Colors.orange);
-      if (!kIsWeb) {
-        BnLog.warning(
-            text: 'location permanentlyDenied by os',
-            className: 'location_provider',
-            methodName: '_startTracking');
-      }
+
+      BnLog.warning(
+          text: 'location permanentlyDenied by os',
+          className: 'location_provider',
+          methodName: '_startTracking');
+
       await LocationPermissionDialog().requestAndOpenAppSettings();
       return false;
     }
@@ -631,25 +630,40 @@ class LocationProvider with ChangeNotifier {
       }
     }
 
-    if (HiveSettingsDB.useAlternativeLocationProvider) {
-      if (!kIsWeb) {
-        BnLog.info(
-            text: 'alternative location tracking started',
-            className: 'location_provider',
-            methodName: '_startTracking');
+    if (kIsWeb || HiveSettingsDB.useAlternativeLocationProvider) {
+      if (kIsWeb) {
+        HiveSettingsDB.setUseAlternativeLocationProvider(true);
       }
-      _gpsLocationPermissionsStatus =
-          await LocationPermissionDialog().getPermissionsStatus();
+      BnLog.info(
+          text: 'alternative location tracking started',
+          className: 'location_provider',
+          methodName: '_startTracking');
+      if (kIsWeb) {
+        var permissionWithService = Permission.location;
+        var locationPermission = await permissionWithService.request();
 
-      _hasLocationPermissions =
-          _gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse ||
-              _gpsLocationPermissionsStatus == LocationPermissionStatus.always;
-      if (HiveSettingsDB.useAlternativeLocationProvider &&
-          _hasLocationPermissions) {
+        if (locationPermission == PermissionStatus.granted||locationPermission == PermissionStatus.limited) {
+          _gpsLocationPermissionsStatus = LocationPermissionStatus.always;
+          _hasLocationPermissions=true;
+        }
+        else  {
+          _gpsLocationPermissionsStatus = LocationPermissionStatus.denied;
+          _hasLocationPermissions=false;
+        }
+      } else {
         _gpsLocationPermissionsStatus =
-            _gpsLocationPermissionsStatus == LocationPermissionStatus.always
-                ? LocationPermissionStatus.always
-                : LocationPermissionStatus.whenInUse;
+            await LocationPermissionDialog().getPermissionsStatus();
+
+        _hasLocationPermissions = _gpsLocationPermissionsStatus ==
+                LocationPermissionStatus.whenInUse ||
+            _gpsLocationPermissionsStatus == LocationPermissionStatus.always;
+        if (HiveSettingsDB.useAlternativeLocationProvider &&
+            _hasLocationPermissions) {
+          _gpsLocationPermissionsStatus =
+              _gpsLocationPermissionsStatus == LocationPermissionStatus.always
+                  ? LocationPermissionStatus.always
+                  : LocationPermissionStatus.whenInUse;
+        }
       }
       _listenLocationWithAlternativePackage();
       _isTracking = true;
@@ -877,7 +891,8 @@ class LocationProvider with ChangeNotifier {
     update = await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
       LocationInfo(
           //location creation timestamp
-          locationTimeStamp: DateTime.now().millisecondsSinceEpoch - location.age,
+          locationTimeStamp:
+              DateTime.now().millisecondsSinceEpoch - location.age,
           //6 digits => 1 m location accuracy
           coords: LatLng(location.coords.latitude.toShortenedDouble(6),
               location.coords.longitude.toShortenedDouble(6)),

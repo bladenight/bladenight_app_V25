@@ -59,7 +59,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       //#######################################################################
       //Right side buttons
       //#######################################################################
-      if (!kIsWeb)
+      //if (!kIsWeb)
         Positioned(
           right: 10,
           bottom: 40,

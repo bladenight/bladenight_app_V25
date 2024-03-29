@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../generated/l10n.dart';
@@ -15,20 +16,23 @@ import 'settings_page.dart';
 import 'widgets/event_info_web.dart';
 import 'widgets/intro_slider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key, required this.tabController});
 
   final CupertinoTabController tabController;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HomePageState extends ConsumerState<HomePage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(messagesLogicProvider).updateServerMessages();
+    });
     super.initState();
   }
 
@@ -40,7 +44,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {}
+    if (state == AppLifecycleState.resumed) {
+      ref.read(messagesLogicProvider).updateServerMessages();
+    }
     if (state == AppLifecycleState.inactive) {}
     if (state == AppLifecycleState.paused) {}
   }
@@ -139,9 +145,9 @@ class _HomePageState extends State<HomePage>
             ),
             CupertinoSliverRefreshControl(
               onRefresh: () async {
-                context.read(messagesLogicProvider).updateServerMessages();
-                context.refresh(currentRouteProvider);
-                context
+                ref.read(messagesLogicProvider).updateServerMessages();
+                ref.refresh(currentRouteProvider);
+                ref
                     .read(activeEventProvider.notifier)
                     .refresh(forceUpdate: true);
               },

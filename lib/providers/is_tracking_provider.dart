@@ -21,7 +21,7 @@ class IsTracking extends _$IsTracking {
   ///set [userIsParticipant] to false if only in viewer-mode
   Future<bool> toggleTracking(bool userIsParticipant) async {
     if (kIsWeb) {
-      return false;
+     // return false;
     }
     HiveSettingsDB.setUserIsParticipant(userIsParticipant);
     if (LocationProvider.instance.isTracking) {
