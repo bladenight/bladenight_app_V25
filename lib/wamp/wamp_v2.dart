@@ -38,7 +38,6 @@ class WampV2 {
   var _busyTimeStamp = DateTime.now();
   var _lock = Lock();
   WebSocketChannel? channel; //initialize a websocket channel
-  static bool _isConnecting = false;
   static bool _hadShakeHands = false;
   static bool _startShakeHands = false;
   static int _startShakeHandsRetryCounter = 0;
@@ -83,24 +82,40 @@ class WampV2 {
     BnLog.info(text: 'Wamp Init', methodName: '_init', className: toString());
     if (!kIsWeb) {
       _icCheckerSubscription =
-          _internetConnChecker!.onStatusChange.listen((InternetStatus result) {
+          _internetConnChecker.onStatusChange.listen((InternetStatus result) {
         if (result == InternetStatus.connected) {
           _isConnectedToInternet = true;
+          BnLog.debug(
+              text: 'Wamp internet online',
+              methodName: '_init',
+              className: toString());
         } else {
           _isConnectedToInternet = false;
+          BnLog.debug(
+              text: 'Wamp internet offline',
+              methodName: '_init',
+              className: toString());
           _closeStream();
         }
       });
     }
-    ;
     runner();
   }
 
   Future<WampConnectionState> _initWamp() async {
-    _isConnecting = true;
+    var startResult = false;
     _retryLimit = 3;
-    var startResult = await _startStream();
-    _isConnecting = false;
+    try {
+      startResult = await _lock.synchronized(() async {
+        return await _startStream();
+      }, timeout: const Duration(seconds: 10));
+    } on TimeoutException catch (_) {
+      BnLog.trace(text: 'Timeout _startStream');
+      _lock = Lock();
+    } catch (_) {
+      BnLog.trace(text: '_startStream error $e', exception: e);
+      _lock = Lock();
+    }
     if (startResult == false) {
       return WampConnectionState.failed;
     }
@@ -123,11 +138,6 @@ class WampV2 {
           methodName: 'refresh',
           className: toString());
     }
-    /*if (_isWebsocketRunning == false) {
-      await _lock.synchronized(() async {
-        await _initWamp();
-      }).timeout(const Duration(seconds: 2));
-    }*/
   }
 
   ///called from App and put to queue
@@ -203,30 +213,11 @@ class WampV2 {
         queue.add(message);
 
         while (_isWebsocketRunning == false) {
-          try {
-            await Future.delayed(const Duration(milliseconds: 250));
-            if (_isConnectedToInternet == false) {
-              continue;
-            }
-            await _lock.synchronized(() async {
-              var res = await _initWamp();
-              if (res == WampConnectionState.connected) {
-                //if (kDebugMode) print('runner init wamp connected');
-                //await _getInitialRealTimeData();
-              }
-            }, timeout: const Duration(seconds: 10));
-          } on TimeoutException catch (_) {
-            BnLog.trace(text: 'Timeout initWamp');
-            _lock = Lock();
-            //if (kDebugMode) print('Timeout initWamp');
-
-            //unlock _lock
-          } catch (_) {
-            BnLog.trace(text: 'initWamp error $e', exception: e);
-            _lock = Lock();
-            //if (kDebugMode) print('initWamp error $e');
-            //other issue
+          await Future.delayed(const Duration(milliseconds: 250));
+          if (_isConnectedToInternet == false) {
+            continue;
           }
+          var res = await _initWamp();
         }
         if (DateTime.now().difference(_busyTimeStamp) >
             const Duration(milliseconds: 1000)) {
@@ -434,13 +425,11 @@ class WampV2 {
             if (!welcomeCompleter.isCompleted) {
               welcomeCompleter.completeError(e);
             }
-            _isConnecting = false;
             return false;
           }
         },
       );
       _isWebsocketRunning = true;
-      _isConnecting = false;
       _wampConnectedStreamController.sink.add(true);
       _lastConnectionStatus = true;
       await welcomeCompleter.future;
@@ -454,7 +443,6 @@ class WampV2 {
       _resetWampState();
     })?.catchError((error) {
       if (!kIsWeb) BnLog.error(text: 'error wamp ->$error');
-      _isConnecting = false;
       return false;
     });
     return true;

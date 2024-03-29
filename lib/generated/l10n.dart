@@ -350,10 +350,10 @@ class Localize {
     );
   }
 
-  /// `Actual informations`
+  /// `Actual information`
   String get actualInformations {
     return Intl.message(
-      'Actual informations',
+      'Actual information',
       name: 'actualInformations',
       desc: '',
       args: [],

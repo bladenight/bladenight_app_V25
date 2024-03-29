@@ -146,7 +146,7 @@ class _HomePageState extends ConsumerState<HomePage>
             CupertinoSliverRefreshControl(
               onRefresh: () async {
                 ref.read(messagesLogicProvider).updateServerMessages();
-                ref.refresh(currentRouteProvider);
+                var _= ref.refresh(currentRouteProvider);
                 ref
                     .read(activeEventProvider.notifier)
                     .refresh(forceUpdate: true);

@@ -82,6 +82,10 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   if (isTracking && !userParticipating) {
                     toggleViewerLocationService();
                   } else if (isTracking) {
+                    if(kIsWeb){
+                      _toggleLocationService();
+                      return;
+                    }
                     //&& !autoStop
                     final clickedButton =
                         await FlutterPlatformAlert.showCustomAlert(
@@ -123,7 +127,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             );
           }),
         ),
-      if (!kIsWeb)
+      //if (!kIsWeb)
         Positioned(
           right: 10,
           height: 40,
@@ -170,7 +174,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             }),
           ),
         ),
-      if (!kIsWeb)
+     // if (!kIsWeb)
         Positioned(
           right: 10,
           bottom: 110,
@@ -234,7 +238,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         ),
 
       //Left located button web
-      if (kIsWeb)
+     /* if (kIsWeb)
         AnimatedPositioned(
           duration: const Duration(milliseconds: 500),
           left: 10,
@@ -283,7 +287,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               ),
             );
           }),
-        ),
+        ),*/
       //#######################################################################
       //Left side buttons
       //#######################################################################
@@ -630,7 +634,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               ),
             ),
           ),
-          if (!kIsWeb)
+          //if (!kIsWeb)
             Positioned(
               right: 70,
               bottom: 160 + bottomOffset,
@@ -658,7 +662,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 ),
               ),
             ),
-          if (!kIsWeb)
+         // if (!kIsWeb)
             Positioned(
               right: 70,
               bottom: 45 + bottomOffset,
@@ -681,9 +685,10 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               ),
             ),
           Positioned(
-            right: kIsWeb ? null : 70,
-            left: kIsWeb ? 70 : null,
-            bottom: kIsWeb ? 310 : 115 + bottomOffset,
+            //right: kIsWeb ? null : 70,
+            //left: kIsWeb ? 70 : null,
+            right: 70,
+            bottom:  115 + bottomOffset,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(2),
               child: FadeTransition(

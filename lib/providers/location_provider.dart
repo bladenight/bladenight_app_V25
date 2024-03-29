@@ -545,13 +545,26 @@ class LocationProvider with ChangeNotifier {
     _isTracking = false;
     setUpdateTimer(false);
     Wakelock.disable();
-    bg.BackgroundGeolocation.stop().then((bg.State state) {
-      if (!kIsWeb) {
-        BnLog.info(
-            text: 'location tracking stopped ${state.enabled}',
-            className: 'location_provider',
-            methodName: '_stopTracking');
+    if (HiveSettingsDB.useAlternativeLocationProvider) {
+      _realUserSpeedKmh = null;
+      _userLatLng = null;
+      //reset autostart
+      //avoid second autostart on an event , reset after end
+      var activeEventData = ProviderContainer().read(activeEventProvider);
+      if (_startedTrackingTime != null &&
+          DateTime.now().difference(_startedTrackingTime!).inMinutes >
+              activeEventData.duration.inMinutes) {
+        _startedTrackingTime = null;
       }
+      SendToWatch.setIsLocationTracking(false);
+      HiveSettingsDB.setTrackingActive(false);
+      LocationStore.saveUserTrackPointList(_userTrackingPoints);
+    }
+    bg.BackgroundGeolocation.stop().then((bg.State state) {
+      BnLog.info(
+          text: 'location tracking stopped ${state.enabled}',
+          className: 'location_provider',
+          methodName: '_stopTracking');
       _realUserSpeedKmh = null;
       _userLatLng = null;
       //reset autostart
@@ -567,7 +580,7 @@ class LocationProvider with ChangeNotifier {
       LocationStore.saveUserTrackPointList(_userTrackingPoints);
       notifyListeners();
     }).catchError((error) {
-      if (!kIsWeb) BnLog.error(text: 'Stopping ERROR: $error');
+      BnLog.error(text: 'Stopping ERROR: $error');
     });
     notifyListeners();
     return _isTracking;
@@ -642,13 +655,13 @@ class LocationProvider with ChangeNotifier {
         var permissionWithService = Permission.location;
         var locationPermission = await permissionWithService.request();
 
-        if (locationPermission == PermissionStatus.granted||locationPermission == PermissionStatus.limited) {
+        if (locationPermission == PermissionStatus.granted ||
+            locationPermission == PermissionStatus.limited) {
           _gpsLocationPermissionsStatus = LocationPermissionStatus.always;
-          _hasLocationPermissions=true;
-        }
-        else  {
+          _hasLocationPermissions = true;
+        } else {
           _gpsLocationPermissionsStatus = LocationPermissionStatus.denied;
-          _hasLocationPermissions=false;
+          _hasLocationPermissions = false;
         }
       } else {
         _gpsLocationPermissionsStatus =
