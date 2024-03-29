@@ -6,12 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/timeconverter_helper.dart';
+import '../../helpers/url_launch_helper.dart';
 import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/get_images_and_links_provider.dart';
@@ -170,8 +170,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                 ],
               ),
             ),
-
-            const BladeGuardOnsite(),
+          const BladeGuardOnsite(),
           Column(children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 5.0),
@@ -181,10 +180,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                   if (link != null && link != '') {
                     var uri = Uri.parse(
                         context.read(mainSponsorImageAndLinkProvider).link!);
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(uri,
-                          mode: LaunchMode.externalApplication);
-                    }
+                    Launch.launchUrlFromUri(uri);
                   }
                 },
                 child: Builder(builder: (context) {
@@ -215,10 +211,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                   if (link != null && link != '') {
                     var uri = Uri.parse(
                         context.read(secondSponsorImageAndLinkProvider).link!);
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(uri,
-                          mode: LaunchMode.externalApplication);
-                    }
+                    Launch.launchUrlFromUri(uri);
                   }
                 },
                 child: Builder(builder: (context) {

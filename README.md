@@ -22,22 +22,22 @@ You need the bladenight-server written in java to communicate routes, friends, p
 * Install Flutter-Intl-plugin to Intellij or Android Studio <a href="https://plugins.jetbrains.com/plugin/13666-flutter-intl/versions">See external link</a>
 * On Mac install CocoaPods
   for Intel based Mac
-
+  
   ```bash
   sudo gem install cocoapods
   ```
-
+  
   for M1/M2 based Mac
-
+  
   ```bash
   sudo gem uninstall ffi && sudo gem install ffi -- --enable-libffi-alloc
   ```
 * Run
-
+  
   ```bash
   flutter doctor -v
   ```
-
+  
   in terminal to validate installation
 * Get Bladenight FLutter Project from Git
 * Setup firebase https://firebase.google.com/docs/crashlytics/get-started?platform=flutter&hl=de
@@ -71,37 +71,37 @@ You need the bladenight-server written in java to communicate routes, friends, p
 ## Helpful IntelliJ terminal commands:
 
 * clean project:
-
+  
   ```bash
   flutter clean
   ```
 * get packages
-
+  
   ```bash
   flutter packages pub get
   ```
 * add package
-
+  
   ```bash
   flutter packages pub add NAME_OF_PACKAGE
   ```
 * show dependencies tree
-
+  
   ```bash
   flutter pub deps
   ```
 * Rebuild mapping/riverpod provider after changing @Mappable @riverpod annotiations class / class not found
-
+  
   ```bash
   flutter clean
   flutter packages pub get
   ```
-
+  
   ```bash
   dart run build_runner build -d
   ```
 * Rebuild riverpod providers / Mapping watch on editing and save
-
+  
   ```bash
   dart run build_runner watch -d
   ```
@@ -164,11 +164,20 @@ sudo xattr -d com.apple.quarantine iproxy
   Add following two lines to Watchkit Extension
   [Info.plist](ios%2FRunner%2FInfo.plist)
   before last &lt;/dict&gt;
-
+  
   ```
   <key>WKCompanionAppBundleIdentifier</key>
   <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
   ```
+
+### XCode Release Build Error
+
+* Run the following commands from the project directory terminal :
+  ios/% pod deintegrate
+  ios/% pod install
+  Then start new build
+
+
 
 ### Rebuilding Flutter map
 
@@ -177,3 +186,4 @@ sudo xattr -d com.apple.quarantine iproxy
 ### Error Crash
 
 - Problematic is actual location 4.0 - watching out for a better solution
+

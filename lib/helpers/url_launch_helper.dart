@@ -7,10 +7,11 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'logger.dart';
 
 class Launch {
-  static void launchUrlFromString(String url) {
+  static void launchUrlFromString(String url,
+      {LaunchMode mode = LaunchMode.externalApplication}) {
     return runZonedGuarded(() async {
       if (await canLaunchUrlString(url)) {
-        await launchUrlString(url);
+        await launchUrlString(url, mode: mode);
       } else {
         if (!kIsWeb) {
           BnLog.error(className: 'Launch', text: 'Could not launch $url');
@@ -23,18 +24,17 @@ class Launch {
     });
   }
 
-  static void launchUrlFromUrl(Uri url) {
+  static void launchUrlFromUri(Uri uri,
+      {LaunchMode mode = LaunchMode.externalApplication}) {
     return runZonedGuarded(() async {
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: mode);
       } else {
-        if (!kIsWeb) {
-          BnLog.error(className: 'Launch', text: 'Could not launch $url');
-        }
+        BnLog.error(className: 'Launch', text: 'Could not launch $uri');
       }
     }, (error, stack) {
       BnLog.error(
-          className: 'Guarded launchUrlFromUrl', text: 'Could not launch $url');
+          className: 'Guarded launchUrlFromUrl', text: 'Could not launch $uri');
     });
   }
 }

@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'widgets/version_widget.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/export_import_data_helper.dart';
 import '../helpers/url_launch_helper.dart';
+import 'widgets/version_widget.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -104,8 +104,6 @@ Widget _aboutAppWidget(BuildContext context) {
   );
 }
 
-
-
 Widget _impressumWidget(BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +168,9 @@ Widget _feedBackWidget(BuildContext context) {
                       CupertinoTheme.of(context).textTheme.navTitleTextStyle),
               GestureDetector(
                 onTap: () async {
-                  Launch.launchUrlFromUrl(serviceurl);
+                  Launch.launchUrlFromUri(
+                    serviceurl,
+                  );
                 },
                 child: (Text(serviceurl.path,
                     style: CupertinoTheme.of(context)
@@ -190,7 +190,7 @@ Widget _feedBackWidget(BuildContext context) {
                       CupertinoTheme.of(context).textTheme.navActionTextStyle),
               GestureDetector(
                 onTap: () async {
-                  Launch.launchUrlFromUrl(supporturl);
+                  Launch.launchUrlFromUri(supporturl);
                 },
                 child: (Text(supporturl.path,
                     style: CupertinoTheme.of(context)

@@ -92,23 +92,26 @@ class MessagesLogic with ChangeNotifier {
       var isBladeGuard = HiveSettingsDB.isBladeGuard;
       var teamId = HiveSettingsDB.bgTeam;
       var skmMember = HiveSettingsDB.rcvSkatemunichInfos;
-      var oneSignalID = HiveSettingsDB.oneSignalId;
-      var parameter = EncryptData.encryptAES(
-          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$oneSignalID',
+      var appId = HiveSettingsDB.appId;
+      var parameter = CryptHelper.encryptAES(
+          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$appId',
           ServerConfigDb.restApiLinkPassword);
       if (parameter == null) {
         BnLog.error(text: "Couldn't encrypt Parameter");
         return;
       }
 
-      var host = ServerConfigDb.restApiLink;
-      var response = await dio.get('$host/msg/getMessages?$parameter',
-          options: options);
+      var host = ServerConfigDb.restApiLinkMsg;
+      var response =
+          await dio.post('$host/getMessages?$parameter', options: options);
       if (response.statusCode != 200) {
         await _loadMessages();
         return;
       }
-      var messages = ExternalAppMessagesMapper.fromJson(response.data);
+      var decodedMsg = CryptHelper.decryptAES(
+          response.data, ServerConfigDb.restApiLinkPassword);
+      if (decodedMsg == null) return;
+      var messages = ExternalAppMessagesMapper.fromJson(decodedMsg);
       await MessagesDb.updateMessages(messages);
       await _loadMessages();
       //var response = await http.get(Uri.parse("https://bladenight.app/api/?results=20"));

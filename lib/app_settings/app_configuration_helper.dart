@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/route.dart';
@@ -21,7 +22,9 @@ String defaultStartPoint =
     'Deutsches Verkehrsmuseum\nSchwanthalerhöhe\nMünchen';
 String startPoint = 'Deutsches Verkehrsmuseum\n Schwanthalerhöhe\nMünchen';
 
-const String mainSponsorPlaceholder = 'assets/images/bladenight_logo.png';
+const String mainSponsorPlaceholder = kIsWeb
+    ? 'assets/images/Giesinger-Bladenight-Logo.jpg'
+    : 'assets/images/bladenight_logo.png';
 const String secondLogoPlaceholder = 'assets/images/skatemunich.png';
 
 //globals

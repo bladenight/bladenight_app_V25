@@ -11,7 +11,7 @@ class OneSignalIdWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var oneSignalInfoData = HiveSettingsDB.oneSignalId;
-    return oneSignalInfoData.isNotEmpty
+    return oneSignalInfoData.isNotEmpty && HiveSettingsDB.pushNotificationsEnabled
         ? Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             CupertinoFormSection(
                 header: Text(Localize.of(context).oneSignalIdTitle),

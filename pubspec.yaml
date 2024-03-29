@@ -58,7 +58,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: any
-  internet_connection_checker: ^1.0.0+1
+  internet_connection_checker_plus: ^2.3.0
   intl: any
   intro_slider: ^4.2.0
   latlong2: ^0.9.0
@@ -99,6 +99,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   step_progress_indicator: ^1.0.2
   sticky_headers: ^0.3.0+2
+  synchronized: ^3.1.0+1
   timezone: any
   #uni_links: ^0.5.1
   #uni_links2: #Download from https://github.com/xunreal75/uni_links2.git and save to root
@@ -113,12 +114,10 @@ dependencies:
       path: wakelock/
       ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
       #path: ../wakelock/wakelock
-  web_socket_channel: ^2.4.0
+  web_socket_channel: ^2.4.4
   webview_flutter: ^4.0.7
 
 dev_dependencies:
-  chewie: ^1.7.0
-  chewie_audio: ^1.5.0
   build_runner: ^2.4.5
   custom_lint:
   dart_mappable_builder: ^4.2.0

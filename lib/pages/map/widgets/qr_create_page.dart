@@ -1,7 +1,8 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+import '../../../helpers/url_launch_helper.dart';
 
 class QRCreatePage extends StatefulWidget {
   const QRCreatePage(
@@ -72,14 +73,7 @@ class QRCreatePageState extends State<QRCreatePage> {
                 child: FittedBox(
                   child: GestureDetector(
                     onTap: () async {
-                      var uri = Uri.parse(widget.qrCodeText);
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri,
-                            mode: LaunchMode.externalApplication);
-                      } else {
-                        // can't launch url
-                      }
-                      //Launch.launchUrlFromString(widget.qrcodetext);
+                      Launch.launchUrlFromString(widget.qrCodeText);
                     },
                     child: Text(widget.infoText,
                         style: CupertinoTheme.of(context)

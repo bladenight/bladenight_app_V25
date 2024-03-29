@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
+as bg;
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,10 +23,10 @@ import '../pages/widgets/app_id_widget.dart';
 import '../pages/widgets/data_widget_left_right.dart';
 import '../providers/location_provider.dart';
 import '../providers/map/map_settings_provider.dart';
-import '../providers/settings/me_color_provider.dart';
 import '../providers/network_connection_provider.dart';
 import '../providers/settings/dark_color_provider.dart';
 import '../providers/settings/light_color_provider.dart';
+import '../providers/settings/me_color_provider.dart';
 import '../wamp/wamp_v2.dart';
 import 'bladeguard/bladeguard_page.dart';
 import 'widgets/one_signal_id_widget.dart';
@@ -344,7 +344,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     child: Column(
                       children: [
                         const AppIdWidget(),
-                        const OneSignalIdWidget(),
                         if (networkConnected.connectivityStatus ==
                                 ConnectivityStatus.online &&
                             !kIsWeb)
@@ -388,6 +387,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               ),
                             ],
                           ),
+                        const OneSignalIdWidget(),
                         if (!kIsWeb)
                           CupertinoFormSection(
                             header: Text(
@@ -477,19 +477,19 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                             Localize.of(context).setClearLogs),
                                         onPressed: () async {
                                           final clickedButton =
-                                              await FlutterPlatformAlert.showCustomAlert(
-                                                  windowTitle: Localize
-                                                      .current.clearLogsTitle,
-                                                  text: Localize.current
-                                                      .clearLogsQuestion,
-                                                  positiveButtonTitle:
-                                                      Localize.current.yes,
-                                                  neutralButtonTitle:
-                                                      Localize.current.cancel,
-                                                  windowPosition:
-                                                      AlertWindowPosition
-                                                          .screenCenter,
-                                                  );
+                                              await FlutterPlatformAlert
+                                                  .showCustomAlert(
+                                            windowTitle:
+                                                Localize.current.clearLogsTitle,
+                                            text: Localize
+                                                .current.clearLogsQuestion,
+                                            positiveButtonTitle:
+                                                Localize.current.yes,
+                                            neutralButtonTitle:
+                                                Localize.current.cancel,
+                                            windowPosition: AlertWindowPosition
+                                                .screenCenter,
+                                          );
                                           if (clickedButton ==
                                               CustomButton.positiveButton) {
                                             BnLog.clearLogs();
@@ -515,19 +515,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                               .setClearLogs),
                                           onPressed: () async {
                                             final clickedButton =
-                                                await FlutterPlatformAlert.showCustomAlert(
-                                                    windowTitle: Localize
-                                                        .current.clearLogsTitle,
-                                                    text: Localize.current
-                                                        .clearLogsQuestion,
-                                                    positiveButtonTitle:
-                                                        Localize.current.yes,
-                                                    neutralButtonTitle:
-                                                        Localize.current.cancel,
-                                                    windowPosition:
-                                                        AlertWindowPosition
-                                                            .screenCenter,
-                                                   );
+                                                await FlutterPlatformAlert
+                                                    .showCustomAlert(
+                                              windowTitle: Localize
+                                                  .current.clearLogsTitle,
+                                              text: Localize
+                                                  .current.clearLogsQuestion,
+                                              positiveButtonTitle:
+                                                  Localize.current.yes,
+                                              neutralButtonTitle:
+                                                  Localize.current.cancel,
+                                              windowPosition:
+                                                  AlertWindowPosition
+                                                      .screenCenter,
+                                            );
                                             if (clickedButton ==
                                                 CustomButton.positiveButton) {
                                               bg.Logger.destroyLog();

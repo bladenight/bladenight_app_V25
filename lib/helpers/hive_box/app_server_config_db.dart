@@ -14,7 +14,7 @@ class ServerConfigDb {
 
   ServerConfigDb._();
 
-  static const String restApiLinkKey = 'restApiLinkIalKey';
+  static const String restApiLinkKey = 'restApiUrlIalKey';
 
   static get serverConfigBox {
     return _appServerConfigBox;
@@ -33,11 +33,19 @@ class ServerConfigDb {
     _appServerConfigBox.put(restApiLinkKey, imageAndLink);
   }
 
-  static String get restApiLink {
+  static String get _restApiLink {
     if (restApiLinkConfig.link != null) {
       return restApiLinkConfig.link!;
     }
     return defaultBladenightRestApiServerLink;
+  }
+
+  static String get restApiLinkBg {
+    return '${_restApiLink}bg';
+  }
+
+  static String get restApiLinkMsg {
+    return '${_restApiLink}msg';
   }
 
   static String get restApiLinkPassword {

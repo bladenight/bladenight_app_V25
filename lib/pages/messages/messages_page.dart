@@ -25,7 +25,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _searchTextController.text = context.read(messageNameProvider);
+    _searchTextController.text = ref.read(messageNameProvider);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -38,7 +38,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context.read(messagesLogicProvider).reloadMessages();
+      ref.read(messagesLogicProvider.notifier).reloadMessages();
     }
   }
 
@@ -61,50 +61,48 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
             ),
             largeTitle: Text(Localize.of(context).messages),
             trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 0,
-                      child: const Icon(CupertinoIcons.trash),
-                      onPressed: () async {
-                        final clickedButton =
-                            await FlutterPlatformAlert.showCustomAlert(
-                                windowTitle:
-                                    Localize.current.clearMessagesTitle,
-                                text: Localize.current.clearMessages,
-                                positiveButtonTitle: Localize.current.yes,
-                                neutralButtonTitle: Localize.current.cancel,
-                                windowPosition:
-                                    AlertWindowPosition.screenCenter,
-                                );
-                        if (clickedButton == CustomButton.positiveButton) {
-                          if (!context.mounted) return;
-                          await context
-                              .read(messagesLogicProvider)
-                              .clearMessages();
-                        }
-                      }),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  CupertinoButton(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CupertinoButton(
                     padding: EdgeInsets.zero,
                     minSize: 0,
+                    child: const Icon(CupertinoIcons.trash),
                     onPressed: () async {
-                      await context
-                          .read(messagesLogicProvider)
-                          .reloadMessages();
-                    },
-                    child: const Icon(CupertinoIcons.refresh),
-                  ),
-                ],
-              ),
+                      final clickedButton =
+                          await FlutterPlatformAlert.showCustomAlert(
+                        windowTitle: Localize.current.clearMessagesTitle,
+                        text: Localize.current.clearMessages,
+                        positiveButtonTitle: Localize.current.yes,
+                        neutralButtonTitle: Localize.current.cancel,
+                        windowPosition: AlertWindowPosition.screenCenter,
+                      );
+                      if (clickedButton == CustomButton.positiveButton) {
+                        if (!context.mounted) return;
+                        await context
+                            .read(messagesLogicProvider)
+                            .clearMessages();
+                      }
+                    }),
+                const SizedBox(
+                  width: 10,
+                ),
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  minSize: 0,
+                  onPressed: () async {
+                    await ref
+                        .read(messagesLogicProvider.notifier)
+                        .updateServerMessages();
+                    await ref.read(messagesLogicProvider.notifier).reloadMessages();
+                  },
+                  child: const Icon(CupertinoIcons.refresh),
+                ),
+              ],
             ),
-
+          ),
           CupertinoSliverRefreshControl(
             onRefresh: () async {
-              return context.read(messagesLogicProvider).updateServerMessages();
+              return ref.read(messagesLogicProvider.notifier).updateServerMessages();
             },
           ),
           SliverToBoxAdapter(
@@ -116,13 +114,13 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                   child: CupertinoSearchTextField(
                     controller: _searchTextController,
                     onChanged: (value) {
-                      context.read(messageNameProvider.notifier).state = value;
+                      ref.read(messageNameProvider.notifier).state = value;
                     },
                     onSubmitted: (value) {
-                      context.read(messageNameProvider.notifier).state = value;
+                      ref.read(messageNameProvider.notifier).state = value;
                     },
                     onSuffixTap: () {
-                      context.read(messageNameProvider.notifier).state = '';
+                      ref.read(messageNameProvider.notifier).state = '';
                       _searchTextController.text = '';
                     },
                   ),
@@ -135,7 +133,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                 widthFactor: 0.9, child: ConnectionWarning()),
           ),
           Builder(builder: (context) {
-            var messages = context.watch(filteredMessages);
+            var messages = ref.watch(filteredMessages);
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
@@ -173,7 +171,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                                 messageDialogAction: MessagesAction.edit,
                                 message: message);
                             if (result == null || !mounted) return false;
-                            context.read(messagesLogicProvider).updateMessage(
+                            ref.read(messagesLogicProvider).updateMessage(
                                 message.copyWith(
                                     name: result.name,
                                     color: result.color,
@@ -222,13 +220,22 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
 
   _messageRow(BuildContext context, ExternalAppMessage message) {
     return Container(
-      color: message.read ? null : Colors.grey,
       padding: const EdgeInsets.only(left: 5, top: 8, bottom: 8, right: 5),
       child: Row(
         children: [
-          message.read
-              ? const Icon(Icons.mark_email_read)
-              : const Icon(Icons.mark_email_unread),
+          GestureDetector(
+            onTap: () async {
+              await context
+                  .read(messagesLogicProvider)
+                  .setReadMessage(message, !message.read);
+            },
+            child: message.read
+                ? const Icon(
+                    Icons.mark_email_read,
+                    color: Colors.green,
+                  )
+                : const Icon(Icons.mark_email_unread, color: Colors.redAccent),
+          ),
           const SizedBox(
             width: 5,
           ),
@@ -238,10 +245,9 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
               children: [
                 const SizedBox(width: 5),
                 DataWidgetLeftRightSmallTextContent(
-                    descriptionRight: Localize.of(context).dateTimeSecIntl(
-                        DateTime.fromMillisecondsSinceEpoch(message.timeStamp),
-                        DateTime.fromMillisecondsSinceEpoch(message.timeStamp)),
-                    descriptionLeft: Localize.of(context).on,
+                    descriptionRight:
+                        '${Localize.of(context).on} ${Localize.of(context).dateTimeSecIntl(DateTime.fromMillisecondsSinceEpoch(message.timeStamp), DateTime.fromMillisecondsSinceEpoch(message.timeStamp))}',
+                    descriptionLeft: '',
                     rightWidget: Container()),
                 Text(message.title,
                     style: const TextStyle(
@@ -264,7 +270,9 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         onPressed: () async {
                           if (message.button1Link != null &&
                               message.button1Link != '') {
-                            Launch.launchUrlFromString(message.button1Link!);
+                            Launch.launchUrlFromString(
+                              message.button1Link!,
+                            );
                           }
                         },
                         child: Text(message.button1Text!),

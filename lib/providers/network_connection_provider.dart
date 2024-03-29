@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:universal_io/io.dart';
 
 import '../helpers/logger.dart';
@@ -34,17 +34,11 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   StreamController<bool> serverConnectionStatusController =
       StreamController<bool>();
 
-  late dynamic _connectivity;
   static bool _wasOffline = false;
 
   ConnectivityStatus connectivityStatus = ConnectivityStatus.unknown;
   StreamSubscription? _icCheckerSubscription;
   StreamSubscription? _isServerConnectedSubscription;
-
-  final StreamController<InternetConnectionStatus> _currentState =
-      StreamController.broadcast();
-
-  Stream<InternetConnectionStatus> get updates => _currentState.stream;
 
   NetworkDetectorNotifier() : super(_initialNetworkState) {
     if (kIsWeb) {
@@ -56,22 +50,26 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   }
 
   _init() async {
-    _connectivity = InternetConnectionChecker();
-    _currentState.addStream(_connectivity.onStatusChange);
     _icCheckerSubscription =
-        _connectivity.onStatusChange.listen((InternetConnectionStatus result) {
-      if (result == InternetConnectionStatus.connected) {
-        _checkStatus(ConnectivityStatus.online);
-      } else {
-        _checkStatus(ConnectivityStatus.disconnected);
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
+      switch (status) {
+        case InternetStatus.connected:
+          // The internet is now connected
+          _checkStatus(ConnectivityStatus.online);
+          break;
+        case InternetStatus.disconnected:
+          // The internet is now disconnected
+          _checkStatus(ConnectivityStatus.disconnected);
+          break;
       }
     });
+
     _isServerConnectedSubscription =
-        WampV2.instance.connectedStreamController.stream.listen((event) {
+        WampV2.instance.wampConnectedStreamController.stream.listen((event) {
       if (event) {
-        _checkStatus(ConnectivityStatus.serverNotReachable);
-      } else {
         _checkStatus(ConnectivityStatus.serverReachable);
+      } else {
+        _checkStatus(ConnectivityStatus.serverNotReachable);
       }
     });
 
@@ -95,11 +93,13 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     if (result != null && result == ConnectivityStatus.serverReachable) {
       state = const NetworkStateModel(
           connectivityStatus: ConnectivityStatus.online, serverAvailable: true);
+      return;
     }
+
     bool isOnline = false;
     try {
-      isOnline = await InternetConnectionChecker()
-          .hasConnection; //; await InternetAddress.lookup('skatemunich.de');
+      isOnline = await InternetConnection()
+          .hasInternetAccess; //; await InternetAddress.lookup('skatemunich.de');
     } on SocketException catch (e) {
       if (!kIsWeb) {
         BnLog.error(

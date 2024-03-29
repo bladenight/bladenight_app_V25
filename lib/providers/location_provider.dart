@@ -36,8 +36,8 @@ import '../models/location.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
 import '../models/user_trackpoint.dart';
+import '../wamp/wamp_v2.dart';
 import 'active_event_provider.dart';
-import 'network_connection_provider.dart';
 import 'realtime_data_provider.dart';
 
 ///[LocationProvider] gets actual procession of Bladenight
@@ -169,7 +169,7 @@ class LocationProvider with ChangeNotifier {
   Stream<LocationMarkerHeading> get userLocationMarkerHeadingStream =>
       _userLocationMarkerHeadingStreamController.stream;
 
-  StreamSubscription<ConnectivityStatus>? _internetConnectionSubscription;
+  StreamSubscription<bool>? _wampConnectedSubscription;
 
   @override
   void dispose() {
@@ -177,14 +177,22 @@ class LocationProvider with ChangeNotifier {
     _userTrackPointsStreamController.close();
     _trainHeadStreamController.close();
     _userPositionStreamController.close();
-    _internetConnectionSubscription?.cancel();
+    _wampConnectedSubscription?.cancel();
     _userLocationMarkerPositionStreamController.close();
     _userLocationMarkerHeadingStreamController.close();
     super.dispose();
   }
 
   void init() async {
+    _wampConnectedSubscription =
+        WampV2.instance.wampConnectedStreamController.stream.listen((event) {
+      _networkConnected = event;
+      if (event) {
+        refresh(forceUpdate: true);
+      }
+    });
     if (kIsWeb) {
+      HiveSettingsDB.useAlternativeLocationProvider;
       notifyListeners();
       return;
     }
@@ -227,10 +235,10 @@ class LocationProvider with ChangeNotifier {
         ProviderContainer().read(activeEventProvider).status ==
             EventStatus.confirmed) {
       //restart tracking on reopen
-        BnLog.info(
-            className: 'locationProvider',
-            methodName: 'init',
-            text: 'restarting tracking');
+      BnLog.info(
+          className: 'locationProvider',
+          methodName: 'init',
+          text: 'restarting tracking');
       HiveSettingsDB.setUserIsParticipant(userIsParticipant);
       var state = await startTracking(_userIsParticipant);
       if (state) {
@@ -864,13 +872,16 @@ class LocationProvider with ChangeNotifier {
       }
       return;
     }
-    //only result of this message contains friend position - requested [RealTimeUpdates] without location
+    //only result of this message contains friend position -
+    //requested [RealTimeUpdates] with
     update = await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
       LocationInfo(
+          //location creation timestamp
+          locationTimeStamp: DateTime.now().millisecondsSinceEpoch - location.age,
           //6 digits => 1 m location accuracy
           coords: LatLng(location.coords.latitude.toShortenedDouble(6),
               location.coords.longitude.toShortenedDouble(6)),
-          deviceId:  DeviceId.appId,
+          deviceId: DeviceId.appId,
           isParticipating: _userIsParticipant,
           specialFunction: HiveSettingsDB.wantSeeFullOfProcession
               ? HiveSettingsDB.specialCodeValue
@@ -1317,8 +1328,8 @@ final isUserParticipatingProvider = Provider((ref) {
 
 ///Watch active [Event]
 final isActiveEventProvider = Provider((ref) {
-  return ref.watch(realtimeDataProvider
-      .select((l) => l == null ? false : l.eventIsActive));
+  return ref.watch(
+      realtimeDataProvider.select((l) => l == null ? false : l.eventIsActive));
 });
 
 final bgNetworkConnectedProvider = Provider((ref) {

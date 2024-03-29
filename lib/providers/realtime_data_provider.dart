@@ -14,6 +14,7 @@ part 'realtime_data_provider.g.dart';
 @Riverpod(keepAlive: true)
 class RealtimeData extends _$RealtimeData {
   int _maxFails = 3;
+  bool _isTracking = false;
   Timer? _timer;
   DateTime lastUpdate = DateTime(2000);
   StreamSubscription<RealtimeUpdate?>? _listener;
@@ -21,7 +22,15 @@ class RealtimeData extends _$RealtimeData {
 
   @override
   RealtimeUpdate? build() {
-    var isTracking = ref.watch(isTrackingProvider);
+    var wampConnectedListener =
+        WampV2.instance.wampConnectedStreamController.stream.listen((event) {
+      if (event) {
+        //resubscribe after offline if not tracking
+        _subscribeIfNeeded(_isTracking);
+      }
+    });
+
+    _isTracking = ref.watch(isTrackingProvider);
     _listener =
         WampV2.instance.realTimeUpdateStreamController.stream.listen((event) {
       BnLog.debug(text: 'rtEvent $event');
@@ -31,11 +40,17 @@ class RealtimeData extends _$RealtimeData {
 
     ref.onDispose(() {
       BnLog.debug(text: 'rtProvide dispose');
+      wampConnectedListener.cancel();
       _timer?.cancel();
       _realTimeDataSubscriptionId = 0;
       _listener?.cancel();
     });
+    _subscribeIfNeeded(_isTracking);
 
+    return stateOrNull;
+  }
+
+  void _subscribeIfNeeded(bool isTracking) {
     if (!isTracking) {
       _subscribe();
       _reStartTimer();
@@ -43,7 +58,6 @@ class RealtimeData extends _$RealtimeData {
       _unsubscribe();
       _stopTimer();
     }
-    return stateOrNull;
   }
 
   //call timer if subscription fails
@@ -107,7 +121,7 @@ class RealtimeData extends _$RealtimeData {
       _realTimeDataSubscriptionId = await subscribeMessage('RealtimeData');
       if (_realTimeDataSubscriptionId == 0) {
         //workaround if subscription fails
-        LocationProvider.instance.refresh();
+        //LocationProvider.instance.refresh();
       }
     }
   }

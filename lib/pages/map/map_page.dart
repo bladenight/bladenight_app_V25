@@ -22,7 +22,6 @@ import '../../providers/active_event_route_provider.dart';
 import '../../providers/is_tracking_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/map/use_open_street_map_provider.dart';
-import '../../providers/realtime_data_provider.dart';
 import '../widgets/no_connection_warning.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/gps_info_and_map_copyright.dart';
@@ -43,7 +42,6 @@ class MapPage extends ConsumerStatefulWidget {
 class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   late MapController _mapController;
   late CameraFollow followLocationState = CameraFollow.followOff;
-  bool _webStartedTrainFollow = false;
   Timer? _updateRealTimeDataTimer;
   bool _firstRefresh = true;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -107,7 +105,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       _firstRefresh = false;
     }
     //update data if not tracking
-    _updateRealTimeDataTimer = Timer.periodic(
+    /*_updateRealTimeDataTimer = Timer.periodic(
       //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
       const Duration(milliseconds: defaultRealtimeUpdateInterval),
       (timer) {
@@ -117,7 +115,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
         }
         ref.read(realtimeDataProvider.notifier).refresh();
       },
-    );
+    );*/
   }
 
   void pauseUpdates() async {

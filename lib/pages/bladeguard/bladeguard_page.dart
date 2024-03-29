@@ -15,6 +15,7 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
+import '../../helpers/url_launch_helper.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
@@ -66,28 +67,23 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
         ),
         slivers: [
           CupertinoSliverNavigationBar(
-            leading: CupertinoButton(
-              padding: EdgeInsets.zero,
-              minSize: 0,
-              onPressed: () async {
-                Navigator.of(context).pop();
-              },
-              child: const Icon(CupertinoIcons.back),
-            ),
             largeTitle: Text(Localize.of(context).bladeGuard),
-            trailing: (networkConnected.connectivityStatus ==
-                    ConnectivityStatus.online)
-                ? CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minSize: 0,
-                    onPressed: () async {
-                      var _ = ref.refresh(bgIsOnSiteProvider);
-                    },
-                    child: isBladeguard
-                        ? const Icon(CupertinoIcons.refresh)
-                        : Container(),
-                  )
-                : const Icon(Icons.offline_bolt_outlined),
+            trailing: Align(
+              alignment: Alignment.centerRight,
+              child: (networkConnected.connectivityStatus ==
+                      ConnectivityStatus.online)
+                  ? CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      minSize: 0,
+                      onPressed: () async {
+                        var _ = ref.refresh(bgIsOnSiteProvider);
+                      },
+                      child: isBladeguard
+                          ? const Icon(CupertinoIcons.refresh)
+                          : const SizedBox(), //Container hides gesture from back button
+                    )
+                  : const Icon(Icons.offline_bolt_outlined),
+            ),
           ),
           CupertinoSliverRefreshControl(
             onRefresh: () async {
@@ -113,12 +109,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             color: CupertinoTheme.of(context).primaryColor),
                         onTapUrl: (url) async {
                       var uri = Uri.parse(url);
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri,
-                            mode: LaunchMode.externalApplication);
-                      } else {
-                        return Future(false as FutureOr<bool> Function());
-                      }
+                      Launch.launchUrlFromUri(uri);
                       return Future(true as FutureOr<bool> Function());
                     },
                         Localize.of(context)
@@ -152,13 +143,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                       .scale(14),
                                   color: CupertinoTheme.of(context)
                                       .primaryColor), onTapUrl: (url) async {
-                            var uri = Uri.parse(url);
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri,
-                                  mode: LaunchMode.externalApplication);
-                            } else {
-                              return Future(false as FutureOr<bool> Function());
-                            }
+                            Launch.launchUrlFromString(url);
                             return Future(true as FutureOr<bool> Function());
                           },
                               Localize.of(context).bladeguardInfo(

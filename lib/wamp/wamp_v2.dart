@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:universal_io/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -17,6 +18,7 @@ import '../models/realtime_update.dart';
 import '../models/shake_hand_result.dart';
 import 'bn_wamp_message.dart';
 import 'http_overrides.dart';
+import 'wamp_endpoints.dart';
 import 'wamp_error.dart';
 
 ///TODO add keepalive with on error reopen
@@ -32,20 +34,22 @@ enum WampConnectionState {
 class WampV2 {
   static final WampV2 instance = WampV2._();
 
+  final _internetConnChecker = InternetConnection();
   var _busyTimeStamp = DateTime.now();
-
+  var _lock = Lock();
   WebSocketChannel? channel; //initialize a websocket channel
   static bool _isConnecting = false;
   static bool _hadShakeHands = false;
   static bool _startShakeHands = false;
   static int _startShakeHandsRetryCounter = 0;
+  static bool _isWebsocketRunning = false; //status of a websocket
   int _retryLimit = 3;
 
   bool _connectionErrorLogged = false;
   bool _lastConnectionStatus = false;
 
   bool get webSocketIsConnected => _isWebsocketRunning;
-  bool _isWebsocketRunning = false; //status of a websocket
+
   bool busy = false;
   final Map<int, BnWampMessage> calls = {};
 
@@ -55,10 +59,10 @@ class WampV2 {
   var eventStreamController = StreamController<dynamic>.broadcast();
   var resultStreamController = StreamController<dynamic>.broadcast();
 
-  StreamController<bool> get connectedStreamController =>
-      _connectedStreamController;
+  StreamController<bool> get wampConnectedStreamController =>
+      _wampConnectedStreamController;
 
-  final _connectedStreamController = StreamController<bool>.broadcast();
+  final _wampConnectedStreamController = StreamController<bool>.broadcast();
 
   StreamController<RealtimeUpdate?> get realTimeUpdateStreamController =>
       _realTimeUpdateStreamController;
@@ -67,26 +71,63 @@ class WampV2 {
 
   HashSet<int> get subscriptions => _subscriptions;
   final HashSet<int> _subscriptions = HashSet();
+  StreamSubscription? _icCheckerSubscription;
+
+  bool _isConnectedToInternet = true;
 
   WampV2._() {
     _init();
   }
 
-  void _init() async {
+  void _init() {
     BnLog.info(text: 'Wamp Init', methodName: '_init', className: toString());
+    if (!kIsWeb) {
+      _icCheckerSubscription =
+          _internetConnChecker!.onStatusChange.listen((InternetStatus result) {
+        if (result == InternetStatus.connected) {
+          _isConnectedToInternet = true;
+        } else {
+          _isConnectedToInternet = false;
+          _closeStream();
+        }
+      });
+    }
+    ;
     runner();
   }
 
-  void refresh() {
+  Future<WampConnectionState> _initWamp() async {
+    _isConnecting = true;
+    _retryLimit = 3;
+    var startResult = await _startStream();
+    _isConnecting = false;
+    if (startResult == false) {
+      return WampConnectionState.failed;
+    }
+    if (kIsWeb) {
+      _hadShakeHands = true;
+      return startResult == true
+          ? WampConnectionState.connected
+          : WampConnectionState.failed;
+    }
+    _shakeHands();
+    return startResult == true
+        ? WampConnectionState.connected
+        : WampConnectionState.failed;
+  }
+
+  void refresh() async {
     if (!kIsWeb) {
       BnLog.info(
           text: 'Wamp refresh after offline',
           methodName: 'refresh',
           className: toString());
     }
-    if (_isWebsocketRunning == false) {
-      _initWamp();
-    }
+    /*if (_isWebsocketRunning == false) {
+      await _lock.synchronized(() async {
+        await _initWamp();
+      }).timeout(const Duration(seconds: 2));
+    }*/
   }
 
   ///called from App and put to queue
@@ -109,44 +150,7 @@ class WampV2 {
           TimeoutException('WampV2_runner not started within 10 secs'));
       calls.remove(message.requestId);
     }
-
     channel?.sink.add(message.getMessageAsJson);
-  }
-
-  Future<WampConnectionState> _initWamp() async {
-    if (_isConnecting == true) {
-      await Future.delayed(const Duration(milliseconds: 1000));
-      if (!kIsWeb) {
-        BnLog.trace(
-            text: 'is connecting',
-            methodName: '_initWamp',
-            className: toString());
-      }
-      return WampConnectionState.delayed;
-    }
-    if (!kIsWeb) {
-      var connectedState = await InternetConnectionChecker().connectionStatus;
-      if (connectedState == InternetConnectionStatus.disconnected) {
-        return WampConnectionState.offline;
-      }
-    }
-    _isConnecting = true;
-    _retryLimit = 3;
-    var startResult = await _startStream();
-    _isConnecting = false;
-    if (startResult == false) {
-      return WampConnectionState.failed;
-    }
-    if (kIsWeb) {
-      _hadShakeHands = true;
-      return startResult == true
-          ? WampConnectionState.connected
-          : WampConnectionState.failed;
-    }
-    _shakeHands();
-    return startResult == true
-        ? WampConnectionState.connected
-        : WampConnectionState.failed;
   }
 
   Future<void> _shakeHands() async {
@@ -197,27 +201,31 @@ class WampV2 {
     wampCallStreamController.stream.listen((message) async {
       runZonedGuarded(() async {
         queue.add(message);
+
         while (_isWebsocketRunning == false) {
-          var res = await _initWamp()
-              .timeout(const Duration(seconds: 2))
-              .catchError((error) {
-            return WampConnectionState.failed;
-          });
+          try {
+            await Future.delayed(const Duration(milliseconds: 250));
+            if (_isConnectedToInternet == false) {
+              continue;
+            }
+            await _lock.synchronized(() async {
+              var res = await _initWamp();
+              if (res == WampConnectionState.connected) {
+                //if (kDebugMode) print('runner init wamp connected');
+                //await _getInitialRealTimeData();
+              }
+            }, timeout: const Duration(seconds: 10));
+          } on TimeoutException catch (_) {
+            BnLog.trace(text: 'Timeout initWamp');
+            _lock = Lock();
+            //if (kDebugMode) print('Timeout initWamp');
 
-            BnLog.trace(
-                text: 'wampRes init ${res.toString()}',
-                methodName: 'runner',
-                className: toString());
-
-          if (res == WampConnectionState.failed) {
-            await Future.delayed(const Duration(milliseconds: 500));
-            continue;
-          } else if (res == WampConnectionState.delayed) {
-            await Future.delayed(const Duration(milliseconds: 500));
-            continue;
-          } else if (res == WampConnectionState.offline) {
-            await Future.delayed(const Duration(milliseconds: 1000));
-            continue;
+            //unlock _lock
+          } catch (_) {
+            BnLog.trace(text: 'initWamp error $e', exception: e);
+            _lock = Lock();
+            //if (kDebugMode) print('initWamp error $e');
+            //other issue
           }
         }
         if (DateTime.now().difference(_busyTimeStamp) >
@@ -279,7 +287,7 @@ class WampV2 {
       channel = WebSocketChannel.connect(
         Uri.parse(url), //connect to a websocket
       );
-      await channel?.ready;
+      //await channel?.ready.timeout(const Duration(seconds: 1));
       var welcomeCompleter = Completer();
       channel!.stream.listen(
         (event) async {
@@ -405,7 +413,7 @@ class WampV2 {
         },
         onError: (err) async {
           if (_isWebsocketRunning == false && _lastConnectionStatus == true) {
-            _connectedStreamController.sink.add(false);
+            _wampConnectedStreamController.sink.add(false);
             _lastConnectionStatus == false;
           }
           _isWebsocketRunning = false;
@@ -413,20 +421,16 @@ class WampV2 {
           if (_retryLimit > 0) {
             await Future.delayed(const Duration(milliseconds: 500));
             _retryLimit--;
-            if (!kIsWeb) {
-              BnLog.trace(
-                  text: 'WampStream error ${err.toString()} restart Stream',
-                  methodName: 'startStream',
-                  className: toString());
-            }
+            BnLog.trace(
+                text: 'WampStream error ${err.toString()} restart Stream',
+                methodName: 'startStream',
+                className: toString());
             _startStream();
           } else {
-            if (!kIsWeb) {
-              BnLog.trace(
-                  text: 'WampStream error ${err.toString()} too much fails',
-                  methodName: 'startStream',
-                  className: toString());
-            }
+            BnLog.trace(
+                text: 'WampStream error ${err.toString()} too many fails',
+                methodName: 'startStream',
+                className: toString());
             if (!welcomeCompleter.isCompleted) {
               welcomeCompleter.completeError(e);
             }
@@ -435,16 +439,16 @@ class WampV2 {
           }
         },
       );
-      _connectedStreamController.sink.add(true);
+      _isWebsocketRunning = true;
+      _isConnecting = false;
+      _wampConnectedStreamController.sink.add(true);
       _lastConnectionStatus = true;
       await welcomeCompleter.future;
       _connectionErrorLogged = false;
-      _isWebsocketRunning = true;
-      _isConnecting = false;
       return true;
     }, (error, stack) {
       if (!_connectionErrorLogged) {
-        BnLog.error(text: 'Wamp Error Close Wamp', exception: error);
+        BnLog.error(text: 'Wamp error close Wamp', exception: error);
         _connectionErrorLogged = true;
       }
       _resetWampState();
@@ -456,15 +460,18 @@ class WampV2 {
     return true;
   }
 
-  void closeAndReconnect() {
+  void closeAndReconnect() async {
     _closeStream();
-    _initWamp();
+    /*await _lock.synchronized(() async {
+      await _initWamp();
+    });*/
   }
 
   void _closeStream() {
     //disposes of the stream
     if (channel != null) {
       channel!.sink.close();
+      channel = null;
     }
     _resetWampState();
   }
@@ -472,7 +479,7 @@ class WampV2 {
   void _resetWampState() {
     BnLog.warning(text: '_resetWampState');
     _lastConnectionStatus = false;
-    _connectedStreamController.sink.add(false);
+    _wampConnectedStreamController.sink.add(false);
     _isWebsocketRunning = false;
     _hadShakeHands = false;
     _startShakeHands = false;
@@ -498,13 +505,24 @@ class WampV2 {
     var hostAppend = isSecure ? 's' : '';
     var actualServerHost =
         'http$hostAppend://${linkUri.host}:${linkUri.port}/www/';
-    if (!kIsWeb) {
-      BnLog.debug(
-          className: 'Wamp_V2',
-          text: 'Will open new Session $actualServerHost',
-          methodName: 'getSession');
-    }
+
+    BnLog.trace(
+        className: 'Wamp_V2',
+        text: 'Will open new Session http$hostAppend://${linkUri.host}',
+        methodName: 'getSession');
+
     actualHttpSServerHost = actualServerHost;
     return link;
+  }
+
+  _getInitialRealTimeData() async {
+    var callList = calls.entries.toList();
+    for (var item in callList) {
+      if (item.value.endpoint == WampEndpoint.getrealtimeupdate) {
+        try {
+          calls.remove(item.key);
+        } catch (_) {}
+      }
+    }
   }
 }

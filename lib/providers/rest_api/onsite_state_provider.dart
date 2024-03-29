@@ -19,7 +19,7 @@ class BladeGuardApiRepository {
   final Dio dioClient;
 
   String _getUrl({String? parameter}) {
-    final url = ServerConfigDb.restApiLink;
+    final url = ServerConfigDb.restApiLinkBg;
     if (parameter != null) {
       return '$url$parameter';
     } else {
@@ -135,7 +135,7 @@ class BladeGuardApiRepository {
           '${birthday.year}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}',
     };
     try {
-      var host = ServerConfigDb.restApiLink;
+      var host = ServerConfigDb.restApiLinkBg;
       var apiLink = '$host/isOnSite';
       var response = await dioClient.get(apiLink, queryParameters: qParams);
       if (response.statusCode == 200) {
@@ -173,7 +173,7 @@ class BladeGuardApiRepository {
     };
 
     try {
-      var host = ServerConfigDb.restApiLink;
+      var host = ServerConfigDb.restApiLinkBg;
       var apiLink = '$host/setOnsite';
       var response = await dioClient.get(apiLink, queryParameters: qParams);
       if (response.statusCode == 200) {
@@ -181,8 +181,7 @@ class BladeGuardApiRepository {
           return ResultBoolOrError(null, Localize.current.failed);
         }
         if (response.data is Map && response.data.keys.contains('isOnSite')) {
-          return ResultBoolOrError(
-              response.data['isOnSite'], null);
+          return ResultBoolOrError(response.data['isOnSite'], null);
         }
       } else {
         BnLog.warning(
@@ -220,8 +219,7 @@ class BgIsOnSite extends _$BgIsOnSite {
   FutureOr<bool> build() async {
     final repo = ref.read(bladeGuardApiRepositoryProvider);
     try {
-      var res = await repo
-          .checkBladeguardIsOnSite();
+      var res = await repo.checkBladeguardIsOnSite();
       if (res.errorDescription != null) {
         state = AsyncValue.error(res.errorDescription!, StackTrace.current);
         return false;
@@ -238,7 +236,7 @@ class BgIsOnSite extends _$BgIsOnSite {
   }
 
   Future<void> setOnSiteState(bool isOnSite) async {
-    if (state == const AsyncValue.loading()){
+    if (state == const AsyncValue.loading()) {
       return;
     }
     state = const AsyncValue.loading();
@@ -246,8 +244,7 @@ class BgIsOnSite extends _$BgIsOnSite {
     var res = await repo.setBladeguardOnSite(isOnSite);
     if (res.errorDescription != null) {
       state = AsyncValue.error(res.errorDescription!, StackTrace.current);
-    }
-    else {
+    } else {
       state = AsyncValue.data(res.result!);
     }
   }

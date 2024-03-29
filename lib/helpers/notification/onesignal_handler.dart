@@ -22,15 +22,13 @@ const MethodChannel channel = MethodChannel('bladenightbgnotificationchannel');
 
 Future<void> initOneSignal() async {
   if (kIsWeb) {
-    BnLog.info(
-        text: 'Web - init OneSignal');
+    BnLog.info(text: 'Web - init OneSignal');
     await OnesignalHandler.initPushNotifications();
     return;
   }
   await Future.delayed(const Duration(seconds: 3)); //delay and wait
   if (Platform.isIOS) {
-    BnLog.info(
-        text: ' iOS - init OneSignal PushNotifications permissions OK');
+    BnLog.info(text: ' iOS - init OneSignal PushNotifications permissions OK');
     await OnesignalHandler.initPushNotifications();
     return;
   }
@@ -39,7 +37,7 @@ Future<void> initOneSignal() async {
       await DeviceHelper.isAndroidGreaterOrEqualVersion(9)) {
     BnLog.info(
         text:
-        'Android is greater than V9 OneSignal  PushNotifications permissions OK');
+            'Android is greater than V9 OneSignal  PushNotifications permissions OK');
     await OnesignalHandler.initPushNotifications();
     return;
   }
@@ -47,13 +45,14 @@ Future<void> initOneSignal() async {
   BnLog.info(text: 'Onesignal not available ${Platform.version}');
 }
 
-
 class OnesignalHandler {
   OnesignalHandler._privateConstructor() {
     OneSignal.User.pushSubscription.addObserver((changes) {
       //  print(changes.to.userId);
       String? userId = OneSignal.User.pushSubscription.id ?? '';
-      HiveSettingsDB.setOneSignalId(userId);
+      if (userId.isNotEmpty) {
+        HiveSettingsDB.setOneSignalId(userId);
+      }
     });
   }
 
@@ -160,8 +159,8 @@ class OnesignalHandler {
     } else {
       //allow onesignal
       await OneSignal.User.pushSubscription.optIn();
-      OneSignal.User.addAlias('App_id', DeviceId.appId);
-      OneSignal.User.addAlias('Team', 'test');
+      OneSignal.User.addAlias('external_id', DeviceId.appId);
+      OneSignal.User.addAlias('Team', HiveSettingsDB.bgTeam);
     }
     var optedIn = OneSignal.User.pushSubscription.optedIn;
     BnLog.info(text: 'setOneSignalChannels optIn is $optedIn');
@@ -176,9 +175,10 @@ class OnesignalHandler {
     BnLog.info(text: 'Bladeguard logged out from OneSignal');
   }
 
-  static Future<void> registerPushAsBladeGuard(bool value, String teamId) async {
+  static Future<void> registerPushAsBladeGuard(
+      bool value, String teamId) async {
     Map<String, String> map = {
-      'IsBladeguard': value ? teamId: '',
+      'IsBladeguard': value ? teamId : '',
     };
     BnLog.info(text: 'register IsBladeguard value $value $teamId');
     OneSignal.User.addTags(map).catchError((err) {

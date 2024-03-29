@@ -173,7 +173,6 @@ class RealtimeUpdate with RealtimeUpdateMappable {
         .read(friendsLogicProvider)
         .updateFriendInProcession(rtFriends, user.position, user.eta ?? 0,
             userdata?.latitude, userdata?.longitude);
-    //if (kDebugMode)return updateFriends.where((f) => f.name.isNotEmpty);
     return updatedFriends.where((f) => f.isOnline && f.isActive);
   }
 

@@ -16,7 +16,7 @@ class TimerModel {
 class TimerNotifier extends StateNotifier<TimerModel> {
   TimerNotifier() : super(_initialState);
 
-  static const int _initialDuration = defaultRealtimeUpdateInterval;
+  static  const int _initialDuration = 1400;
   static final _initialState =
       TimerModel(_durationInMilliSeconds(_initialDuration), 1.0);
 
@@ -45,7 +45,7 @@ class TimerNotifier extends StateNotifier<TimerModel> {
     _tickerSubscription?.cancel();
     _tickerSubscription =
         _ticker.tick(ticks: _initialDuration).listen((duration) {
-      state = TimerModel(duration, duration / defaultRealtimeUpdateInterval);
+      state = TimerModel(duration, duration / 1400);
     });
 
     _tickerSubscription?.onDone(() {
