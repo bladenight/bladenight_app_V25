@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
@@ -28,6 +28,7 @@ import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/route_providers.dart';
 import '../../widgets/align_map_icon.dart';
 import '../../widgets/positioned_visibility_opacity.dart';
+import '../../widgets/scroll_quick_alert.dart';
 import '../widgets/qr_create_page.dart';
 
 class MapButtonsLayer extends ConsumerStatefulWidget {
@@ -60,185 +61,186 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       //Right side buttons
       //#######################################################################
       //if (!kIsWeb)
-        Positioned(
-          right: 10,
-          bottom: 40,
-          child: Builder(builder: (context) {
-            var isTracking = ref.watch(isTrackingProvider);
-            var autoStop = ref.watch(isAutoStopProvider);
-            var userParticipating = ref.watch(isUserParticipatingProvider);
-            //for future implementations - if (isActive == EventStatus.confirmed) {
-            return GestureDetector(
-              onLongPress: () async {
-                LocationProvider.instance.toggleAutoStop();
-                await FlutterPlatformAlert.showCustomAlert(
-                  windowTitle: Localize.of(context).autoStopTracking,
-                  text: Localize.of(context).automatedStopInfo,
-                  positiveButtonTitle: Localize.of(context).ok,
-                );
-              },
-              child: FloatingActionButton(
-                onPressed: () async {
-                  if (isTracking && !userParticipating) {
-                    toggleViewerLocationService();
-                  } else if (isTracking) {
-                    if(kIsWeb){
-                      _toggleLocationService();
-                      return;
-                    }
-                    //&& !autoStop
-                    final clickedButton =
-                        await FlutterPlatformAlert.showCustomAlert(
-                            windowTitle:
-                                Localize.of(context).stopLocationTracking,
-                            text: Localize.of(context).friendswillmissyou,
-                            positiveButtonTitle: Localize.of(context).yes,
-                            negativeButtonTitle: Localize.of(context)
-                                .no); //no neutral button on android
-                    if (clickedButton == CustomButton.positiveButton) {
-                      _toggleLocationService();
-                    }
-                  } else {
-                    _toggleLocationService();
-                  }
-                },
-                backgroundColor: isTracking && autoStop
-                    ? CupertinoColors.systemYellow
-                    : isTracking
-                        ? CupertinoColors.systemRed
-                        : CupertinoColors.activeGreen,
-                heroTag: 'startStopTrackingBtnTag',
-                child: Builder(builder: (context) {
-                  return userParticipating
-                      ? Icon(
-                          isTracking && autoStop
-                              ? Icons.pause
-                              : isTracking
-                                  ? CupertinoIcons.stop_circle
-                                  : CupertinoIcons.play_fill,
-                        )
-                      : isTracking
-                          ? const ImageIcon(
-                              AssetImage('assets/images/eyestop.png'))
-                          : const Icon(CupertinoIcons.play_fill,
-                              color: CupertinoColors.white);
-                }),
-              ),
-            );
-          }),
-        ),
-      //if (!kIsWeb)
-        Positioned(
-          right: 10,
-          height: 40,
-          bottom: 160,
-          child: Visibility(
-            visible:
-                followLocationState == CameraFollow.followMe ? true : false,
-            child: Builder(builder: (context) {
-              var alignMap = ref.watch(alignFlutterMapProvider);
-              return FloatingActionButton(
-                onPressed: () {
-                  var controller = MapController.maybeOf(context);
-                  if (controller == null) return;
-                  var nextState =
-                      ref.read(alignFlutterMapProvider.notifier).setNext();
-                  switch (nextState) {
-                    case AlignFlutterMapState.alignNever:
-                      var mapController = MapController.of(context);
-                      mapController.rotate(0);
-                      showToast(message: Localize.of(context).alignNever);
-                      break;
-                    case AlignFlutterMapState.alignPositionOnUpdateOnly:
-                      showToast(
-                          message:
-                              Localize.of(context).alignPositionOnUpdateOnly);
-                      break;
-                    case AlignFlutterMapState.alignDirectionOnUpdateOnly:
-                      showToast(
-                          message:
-                              Localize.of(context).alignDirectionOnUpdateOnly);
-                      break;
-                    case AlignFlutterMapState.alignDirectionAndPositionOnUpdate:
-                      showToast(
-                          message: Localize.of(context)
-                              .alignDirectionAndPositionOnUpdate);
-                      break;
-                  }
-                },
-                heroTag: 'mapAlignBtnTag',
-                child: AlignMapIcon(
-                  alignMapStatus: alignMap,
-                ),
+      Positioned(
+        right: 10,
+        bottom: 40,
+        child: Builder(builder: (context) {
+          var isTracking = ref.watch(isTrackingProvider);
+          var autoStop = ref.watch(isAutoStopProvider);
+          var userParticipating = ref.watch(isUserParticipatingProvider);
+          //for future implementations - if (isActive == EventStatus.confirmed) {
+          return GestureDetector(
+            onLongPress: () async {
+              LocationProvider.instance.toggleAutoStop();
+              await ScrollQuickAlert.show(
+                context: context,
+                type: QuickAlertType.warning,
+                title: Localize.of(context).autoStopTracking,
+                text: Localize.of(context).automatedStopInfo,
+                confirmBtnText: Localize.of(context).ok,
               );
-            }),
-          ),
-        ),
-     // if (!kIsWeb)
-        Positioned(
-          right: 10,
-          bottom: 110,
-          height: 40,
+            },
+            child: FloatingActionButton(
+              onPressed: () async {
+                if (isTracking && !userParticipating) {
+                  _toggleViewerLocationService();
+                } else if (isTracking) {
+                  if (kIsWeb) {
+                    _toggleViewerLocationService();
+                    return;
+                  }
+                  //&& !autoStop
+                  await ScrollQuickAlert.show(
+                      context: context,
+                      showCancelBtn: true,
+                      type: QuickAlertType.warning,
+                      title: Localize.of(context).stopLocationTracking,
+                      text: Localize.of(context).friendswillmissyou,
+                      confirmBtnText: Localize.of(context).yes,
+                      cancelBtnText: Localize.of(context).no,
+                      onConfirmBtnTap: () {
+                        _toggleLocationService();
+                        if (!mounted) return;
+                        Navigator.of(context).pop();
+                      }); //no neutral button on android
+                } else {
+                  _toggleLocationService();
+                }
+              },
+              backgroundColor: isTracking && autoStop
+                  ? CupertinoColors.systemYellow
+                  : isTracking
+                      ? CupertinoColors.systemRed
+                      : CupertinoColors.activeGreen,
+              heroTag: 'startStopTrackingBtnTag',
+              child: Builder(builder: (context) {
+                return userParticipating
+                    ? Icon(
+                        isTracking && autoStop
+                            ? Icons.pause
+                            : isTracking
+                                ? CupertinoIcons.stop_circle
+                                : CupertinoIcons.play_fill,
+                      )
+                    : isTracking
+                        ? const ImageIcon(
+                            AssetImage('assets/images/eyestop.png'))
+                        : const Icon(CupertinoIcons.play_fill,
+                            color: CupertinoColors.white);
+              }),
+            ),
+          );
+        }),
+      ),
+      //if (!kIsWeb)
+      Positioned(
+        right: 10,
+        height: 40,
+        bottom: 160,
+        child: Visibility(
+          visible: followLocationState == CameraFollow.followMe ? true : false,
           child: Builder(builder: (context) {
+            var alignMap = ref.watch(alignFlutterMapProvider);
             return FloatingActionButton(
               onPressed: () {
-                var mapController = MapController.maybeOf(context);
-                if (mapController == null) return;
+                var controller = MapController.maybeOf(context);
+                if (controller == null) return;
                 var nextState =
-                    ref.read(cameraFollowLocationProvider.notifier).setNext();
+                    ref.read(alignFlutterMapProvider.notifier).setNext();
                 switch (nextState) {
-                  case CameraFollow.followOff:
-                    _moveMapToDefault(mapController);
-                    showToast(
-                        message: Localize.of(context).mapToStartNoFollowing);
-                    break;
-                  case CameraFollow.followMe:
-                    if (ref.read(alignFlutterMapProvider) ==
-                        AlignFlutterMapState.alignNever) {
-                      showToast(
-                          message:
-                              '${Localize.of(context).mapFollowLocation} \n'
-                              '${Localize.of(context).alignNever}');
-                    } else {
-                      showToast(
-                          message: Localize.of(context).mapFollowLocation);
-                    }
-                    break;
-                  case CameraFollow.followMeStopped:
-                    stopFollowingLocation();
-                    showToast(message: Localize.of(context).mapFollowStopped);
+                  case AlignFlutterMapState.alignNever:
+                    var mapController = MapController.of(context);
                     mapController.rotate(0);
+                    showToast(message: Localize.of(context).alignNever);
                     break;
-                  case CameraFollow.followTrain:
-                    startFollowingTrainHead(mapController);
-                    showToast(message: Localize.of(context).mapFollowTrain);
-
-                    break;
-                  case CameraFollow.followTrainStopped:
-                    stopFollowingLocation();
+                  case AlignFlutterMapState.alignPositionOnUpdateOnly:
                     showToast(
-                        message: Localize.of(context).mapFollowTrainStopped);
-
+                        message:
+                            Localize.of(context).alignPositionOnUpdateOnly);
                     break;
-                  default:
-                    if (locationSubscription != null) {
-                      stopFollowingLocation();
-                    } else {
-                      startFollowingMeLocation();
-                    }
+                  case AlignFlutterMapState.alignDirectionOnUpdateOnly:
+                    showToast(
+                        message:
+                            Localize.of(context).alignDirectionOnUpdateOnly);
+                    break;
+                  case AlignFlutterMapState.alignDirectionAndPositionOnUpdate:
+                    showToast(
+                        message: Localize.of(context)
+                            .alignDirectionAndPositionOnUpdate);
                     break;
                 }
               },
-              heroTag: 'locationBtnTag',
-              child: FollowingLocationIcon(
-                followLocationStatus: followLocationState,
+              heroTag: 'mapAlignBtnTag',
+              child: AlignMapIcon(
+                alignMapStatus: alignMap,
               ),
             );
           }),
         ),
+      ),
+      // if (!kIsWeb)
+      Positioned(
+        right: 10,
+        bottom: 110,
+        height: 40,
+        child: Builder(builder: (context) {
+          return FloatingActionButton(
+            onPressed: () {
+              var mapController = MapController.maybeOf(context);
+              if (mapController == null) return;
+              var nextState =
+                  ref.read(cameraFollowLocationProvider.notifier).setNext();
+              switch (nextState) {
+                case CameraFollow.followOff:
+                  _moveMapToDefault(mapController);
+                  showToast(
+                      message: Localize.of(context).mapToStartNoFollowing);
+                  break;
+                case CameraFollow.followMe:
+                  if (ref.read(alignFlutterMapProvider) ==
+                      AlignFlutterMapState.alignNever) {
+                    showToast(
+                        message: '${Localize.of(context).mapFollowLocation} \n'
+                            '${Localize.of(context).alignNever}');
+                  } else {
+                    showToast(message: Localize.of(context).mapFollowLocation);
+                  }
+                  break;
+                case CameraFollow.followMeStopped:
+                  stopFollowingLocation();
+                  showToast(message: Localize.of(context).mapFollowStopped);
+                  mapController.rotate(0);
+                  break;
+                case CameraFollow.followTrain:
+                  startFollowingTrainHead(mapController);
+                  showToast(message: Localize.of(context).mapFollowTrain);
+
+                  break;
+                case CameraFollow.followTrainStopped:
+                  stopFollowingLocation();
+                  showToast(
+                      message: Localize.of(context).mapFollowTrainStopped);
+
+                  break;
+                default:
+                  if (locationSubscription != null) {
+                    stopFollowingLocation();
+                  } else {
+                    startFollowingMeLocation();
+                  }
+                  break;
+              }
+            },
+            heroTag: 'locationBtnTag',
+            child: FollowingLocationIcon(
+              followLocationStatus: followLocationState,
+            ),
+          );
+        }),
+      ),
 
       //Left located button web
-     /* if (kIsWeb)
+      /* if (kIsWeb)
         AnimatedPositioned(
           duration: const Duration(milliseconds: 500),
           left: 10,
@@ -336,7 +338,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 heroTag: 'viewerBtnTag',
                 backgroundColor: Colors.blue,
                 onPressed: () {
-                  toggleViewerLocationService();
+                  _toggleViewerLocationService();
                 },
                 child: const Icon(CupertinoIcons.eye_solid,
                     color: CupertinoColors.white),
@@ -359,7 +361,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           heroTag: 'resetBtnTag',
           backgroundColor: Colors.blue,
           onPressed: () async {
-            await LocationProvider.instance.resetOdoMeterAndRoutePoints();
+            await LocationProvider.instance.resetOdoMeterAndRoutePoints(context);
           },
           visibility: ref.watch(mapMenuVisibleProvider),
           child: const Icon(
@@ -635,37 +637,14 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             ),
           ),
           //if (!kIsWeb)
-            Positioned(
-              right: 70,
-              bottom: 160 + bottomOffset,
-              child: Visibility(
-                visible: ref.read(cameraFollowLocationProvider) ==
-                        CameraFollow.followMe
-                    ? true
-                    : false,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(2),
-                  child: FadeTransition(
-                    opacity: animation!,
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Kartenausrichtung',
-                        style: TextStyle(
-                          color: CupertinoTheme.of(context).barBackgroundColor,
-                          backgroundColor:
-                              CupertinoTheme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-         // if (!kIsWeb)
-            Positioned(
-              right: 70,
-              bottom: 45 + bottomOffset,
+          Positioned(
+            right: 70,
+            bottom: 160 + bottomOffset,
+            child: Visibility(
+              visible: ref.read(cameraFollowLocationProvider) ==
+                      CameraFollow.followMe
+                  ? true
+                  : false,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(2),
                 child: FadeTransition(
@@ -673,7 +652,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      'Teilnahme starten',
+                      'Kartenausrichtung',
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -684,11 +663,33 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 ),
               ),
             ),
+          ),
+          // if (!kIsWeb)
+          Positioned(
+            right: 70,
+            bottom: 45 + bottomOffset,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: FadeTransition(
+                opacity: animation!,
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Teilnahme starten',
+                    style: TextStyle(
+                      color: CupertinoTheme.of(context).barBackgroundColor,
+                      backgroundColor: CupertinoTheme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Positioned(
             //right: kIsWeb ? null : 70,
             //left: kIsWeb ? 70 : null,
             right: 70,
-            bottom:  115 + bottomOffset,
+            bottom: 115 + bottomOffset,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(2),
               child: FadeTransition(
@@ -751,20 +752,24 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   }
 
   ///Toggles between user position and view with user pos
-  void toggleViewerLocationService() async {
+  void _toggleViewerLocationService() async {
     if (ref.read(isTrackingProvider)) {
       ref.read(isTrackingProvider.notifier).toggleTracking(false);
       return;
     }
-    final clickedButton = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.of(context).startLocationWithoutParticipating,
+    await ScrollQuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.warning,
+        title: Localize.of(context).startLocationWithoutParticipating,
         text: Localize.of(context).startLocationWithoutParticipatingInfo,
-        positiveButtonTitle: Localize.of(context).yes,
-        negativeButtonTitle:
-            Localize.of(context).no); //no neutral button on android
-    if (clickedButton == CustomButton.positiveButton) {
-      ref.read(isTrackingProvider.notifier).toggleTracking(false);
-    }
+        confirmBtnText: Localize.of(context).yes,
+        cancelBtnText: Localize.of(context).no,
+        onConfirmBtnTap: () {
+          ref.read(isTrackingProvider.notifier).toggleTracking(false);
+          if (!mounted) return;
+          Navigator.of(context).pop();
+        });
   }
 
   void _showLiveMapLink(String? link) {

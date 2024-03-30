@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Create a Positioned FloatingActionButton with animated Opacity on changing visibility
-class PositionedVisibilityOpacity extends StatelessWidget {
+class PositionedVisibilityOpacity extends StatefulWidget {
   final double? left;
   final double? top;
   final double? right;
@@ -40,34 +39,54 @@ class PositionedVisibilityOpacity extends StatelessWidget {
   });
 
   @override
+  State<PositionedVisibilityOpacity> createState() =>
+      _PositionedVisibilityOpacityState();
+}
+
+class _PositionedVisibilityOpacityState
+    extends State<PositionedVisibilityOpacity> {
+  bool v = true;
+
+  @override
   Widget build(BuildContext context) {
-    var v = true;
     return Positioned(
-      left: left,
-      top: top,
-      right: right,
-      bottom: bottom,
-      width: width,
-      height: height,
-      child: Visibility(
-        visible: v,
-        maintainAnimation: true,
-        maintainState: true,
-        child: AnimatedOpacity(
-          duration: duration,
-          onEnd: () => v = visibility,
-          opacity: visibility ? 1 : 0,
-          curve: curve,
-          child: Builder(builder: (context) {
-            return FloatingActionButton(
-              backgroundColor: backgroundColor,
-              onPressed: onPressed,
-              heroTag: heroTag,
-              child: child,
-            );
-          }),
-        ),
-      ),
+      left: widget.left,
+      top: widget.top,
+      right: widget.right,
+      bottom: widget.bottom,
+      width: widget.width,
+      height: widget.height,
+      child: !widget.visibility
+          ? const SizedBox()
+          : Visibility(
+              visible: widget.visibility,
+              maintainAnimation: true,
+              maintainState: true,
+              child: AnimatedOpacity(
+                duration: widget.duration,
+                onEnd: () {
+                  setState(() {
+                    v = widget.visibility;
+                  });
+                },
+                opacity: widget.visibility ? 1 : 0,
+                curve: widget.curve,
+                child: Builder(builder: (context) {
+                  return FloatingActionButton(
+                    backgroundColor: widget.backgroundColor,
+                    onPressed: () {
+                      if (v) {
+                        if (widget.onPressed != null) {
+                          widget.onPressed!();
+                        }
+                      }
+                    },
+                    heroTag: widget.heroTag,
+                    child: widget.child,
+                  );
+                }),
+              ),
+            ),
     );
   }
 }

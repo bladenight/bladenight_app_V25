@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
@@ -12,6 +12,7 @@ import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/friends_provider.dart';
 import '../../providers/network_connection_provider.dart';
+import '../widgets/scroll_quick_alert.dart';
 import 'widgets/edit_friend_dialog.dart';
 import 'widgets/friends_action_sheet.dart';
 import 'widgets/nearby_widget.dart';
@@ -116,7 +117,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                             context,
                             friendDialogAction: action,
                           );
-                         // if (result != null) {}
+                          // if (result != null) {}
                         },
                         child: const Icon(CupertinoIcons.plus_circle),
                       ),
@@ -182,21 +183,21 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                       child: _friendRow(context, friend),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.endToStart) {
-                          var deleteResult =
-                              await FlutterPlatformAlert.showCustomAlert(
-                                  windowTitle:
-                                      Localize.of(context).deletefriend,
-                                  text:
-                                      '${Localize.of(context).delete}: ${friend.name}',
-                                  iconStyle: IconStyle.warning,
-                                  positiveButtonTitle: Localize.current.delete,
-                                  negativeButtonTitle: Localize.current.cancel);
-                          if (deleteResult == CustomButton.positiveButton) {
-                            if (!context.mounted) return false;
-                            context
-                                .read(friendsLogicProvider)
-                                .deleteRelationShip(friend.friendId);
-                          }
+                          await ScrollQuickAlert.show(
+                              context: context,
+                              showCancelBtn: true,
+                              type: QuickAlertType.warning,
+                              title: Localize.of(context).deletefriend,
+                              text:
+                                  '${Localize.of(context).delete}: ${friend.name}',
+                              confirmBtnText: Localize.current.delete,
+                              cancelBtnText: Localize.current.cancel,
+                              onConfirmBtnTap: () {
+                                context
+                                    .read(friendsLogicProvider)
+                                    .deleteRelationShip(friend.friendId);
+                                Navigator.pop(context);
+                              });
                         } else {
                           var result = await EditFriendDialog.show(context,
                               friendDialogAction: FriendsAction.edit,

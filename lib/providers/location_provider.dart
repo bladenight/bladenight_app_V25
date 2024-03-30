@@ -7,11 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location2/location2.dart' hide PermissionStatus;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
 import 'package:vector_math/vector_math.dart' show radians;
 import 'package:wakelock/wakelock.dart';
@@ -31,6 +31,7 @@ import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/toast_notification.dart';
 import '../helpers/preferences_helper.dart';
 import '../helpers/watch_communication_helper.dart';
+import '../main.dart';
 import '../models/event.dart';
 import '../models/location.dart';
 import '../models/realtime_update.dart';
@@ -1101,32 +1102,31 @@ class LocationProvider with ChangeNotifier {
             NotificationHelper().showString(
                 id: DateTime.now().hashCode,
                 text: Localize.current.finishReachedStopedTracking);
-            FlutterPlatformAlert.showAlert(
-                windowTitle: Localize.current.finishReachedTitle,
+            QuickAlert.show(
+                context: navigatorKey.currentContext!,
+                type: QuickAlertType.warning,
+                title: Localize.current.finishReachedTitle,
                 text: Localize.current.finishReachedStopedTracking);
-            if (!kIsWeb) {
-              BnLog.info(
-                  className: 'locationProvider',
-                  methodName: 'checkUserFinishedOrEndEvent',
-                  text: 'User reached finish - auto stop');
-            }
+            BnLog.info(
+                className: 'locationProvider',
+                methodName: 'checkUserFinishedOrEndEvent',
+                text: 'User reached finish - auto stop');
             stopTracking();
           } else {
             NotificationHelper().showString(
                 id: DateTime.now().hashCode,
                 text: Localize
                     .current.finishReachedtargetReachedPleaseStopTracking);
-            FlutterPlatformAlert.showAlert(
-                windowTitle: Localize.current.finishReachedTitle,
+            QuickAlert.show(
+                context: navigatorKey.currentContext!,
+                type: QuickAlertType.warning,
+                title: Localize.current.finishReachedTitle,
                 text: Localize
                     .current.finishReachedtargetReachedPleaseStopTracking);
-
-            if (!kIsWeb) {
-              BnLog.info(
-                  className: 'locationProvider',
-                  methodName: 'checkUserFinishedOrEndEvent',
-                  text: 'User reached finish');
-            }
+            BnLog.info(
+                className: 'locationProvider',
+                methodName: 'checkUserFinishedOrEndEvent',
+                text: 'User reached finish');
           }
         }
       }
@@ -1148,8 +1148,10 @@ class LocationProvider with ChangeNotifier {
                 id: DateTime.now().hashCode,
                 text: Localize.current.finishStopTrackingEventOver);
           } else {
-            FlutterPlatformAlert.showAlert(
-                windowTitle: Localize.current.finishForceStopEventOverTitle,
+            QuickAlert.show(
+                context: navigatorKey.currentContext!,
+                type: QuickAlertType.info,
+                title: Localize.current.finishForceStopEventOverTitle,
                 text: Localize.current.finishStopTrackingEventOver);
           }
         } else {
@@ -1158,8 +1160,10 @@ class LocationProvider with ChangeNotifier {
                 id: DateTime.now().hashCode,
                 text: Localize.current.finishStopTrackingTimeout(maxDuration));
           } else {
-            FlutterPlatformAlert.showAlert(
-                windowTitle: Localize.current.finishForceStopTimeoutTitle,
+            QuickAlert.show(
+                context: navigatorKey.currentContext!,
+                type: QuickAlertType.warning,
+                title: Localize.current.finishForceStopTimeoutTitle,
                 text: Localize.current.finishStopTrackingTimeout(maxDuration));
           }
         }
@@ -1179,8 +1183,10 @@ class LocationProvider with ChangeNotifier {
               id: DateTime.now().hashCode,
               text: Localize.current.stopTrackingTimeOut(maxDuration));
         } else {
-          FlutterPlatformAlert.showAlert(
-              windowTitle: Localize.current.timeOutDurationExceedTitle,
+          QuickAlert.show(
+              context: navigatorKey.currentContext!,
+              type: QuickAlertType.warning,
+              title: Localize.current.timeOutDurationExceedTitle,
               text: Localize.current.stopTrackingTimeOut(maxDuration));
         }
         if (!kIsWeb) {
@@ -1289,24 +1295,29 @@ class LocationProvider with ChangeNotifier {
     refresh();
   }
 
-  Future resetOdoMeterAndRoutePoints() async {
+  Future resetOdoMeterAndRoutePoints(BuildContext context) async {
     var alwaysPermissionGranted =
         (gpsLocationPermissionsStatus == LocationPermissionStatus.always);
     var whenInusePermissionGranted =
         (gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse);
     if (alwaysPermissionGranted || whenInusePermissionGranted) {
-      var odometerResetResult = await FlutterPlatformAlert.showCustomAlert(
-          windowTitle: Localize.current.resetOdoMeterTitle,
+      QuickAlert.show(
+          context: navigatorKey.currentContext!,
+          type: QuickAlertType.warning,
+          showCancelBtn: true,
+          title: Localize.current.resetOdoMeterTitle,
           text:
               '${Localize.current.userSpeed}  ${realUserSpeedKmh == null ? '- km/h' : realUserSpeedKmh?.formatSpeedKmH()}\n'
               '${Localize.current.distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${odometer.toStringAsFixed(1)} km'} \n '
               '${Localize.current.resetOdoMeter}',
-          iconStyle: IconStyle.warning,
-          positiveButtonTitle: Localize.current.yes,
-          negativeButtonTitle: Localize.current.cancel);
-      if (odometerResetResult == CustomButton.positiveButton) {
-        return resetTrackPoints();
-      }
+          confirmBtnText: Localize.current.yes,
+          cancelBtnText: Localize.current.cancel,
+          onConfirmBtnTap: () {
+            resetTrackPoints();
+            notifyListeners();
+            if (!context.mounted) return;
+            Navigator.of(context).pop();
+          });
     }
   }
 }

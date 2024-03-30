@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
@@ -10,6 +10,7 @@ import '../../models/external_app_message.dart';
 import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/messages_provider.dart';
+import '../widgets/scroll_quick_alert.dart';
 //import 'widgets/show_message_dialog.dart';
 
 class MessagesPage extends ConsumerStatefulWidget {
@@ -68,20 +69,21 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                     minSize: 0,
                     child: const Icon(CupertinoIcons.trash),
                     onPressed: () async {
-                      final clickedButton =
-                          await FlutterPlatformAlert.showCustomAlert(
-                        windowTitle: Localize.current.clearMessagesTitle,
-                        text: Localize.current.clearMessages,
-                        positiveButtonTitle: Localize.current.yes,
-                        neutralButtonTitle: Localize.current.cancel,
-                        windowPosition: AlertWindowPosition.screenCenter,
-                      );
-                      if (clickedButton == CustomButton.positiveButton) {
-                        if (!context.mounted) return;
-                        await context
-                            .read(messagesLogicProvider)
-                            .clearMessages();
-                      }
+                      await ScrollQuickAlert.show(
+                          context: context,
+                          showCancelBtn: true,
+                          type: QuickAlertType.warning,
+                          title: Localize.current.clearMessagesTitle,
+                          text: Localize.current.clearMessages,
+                          confirmBtnText: Localize.current.yes,
+                          cancelBtnText: Localize.current.cancel,
+                          onConfirmBtnTap: () async {
+                            await context
+                                .read(messagesLogicProvider)
+                                .clearMessages();
+                            if (!context.mounted) return;
+                            Navigator.of(context).pop();
+                          });
                     }),
                 const SizedBox(
                   width: 10,
@@ -93,7 +95,9 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                     await ref
                         .read(messagesLogicProvider.notifier)
                         .updateServerMessages();
-                    await ref.read(messagesLogicProvider.notifier).reloadMessages();
+                    await ref
+                        .read(messagesLogicProvider.notifier)
+                        .reloadMessages();
                   },
                   child: const Icon(CupertinoIcons.refresh),
                 ),
@@ -102,7 +106,9 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
           ),
           CupertinoSliverRefreshControl(
             onRefresh: () async {
-              return ref.read(messagesLogicProvider.notifier).updateServerMessages();
+              return ref
+                  .read(messagesLogicProvider.notifier)
+                  .updateServerMessages();
             },
           ),
           SliverToBoxAdapter(
@@ -144,21 +150,22 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                       child: _messageRow(context, message),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.endToStart) {
-                          var deleteResult =
-                              await FlutterPlatformAlert.showCustomAlert(
-                                  windowTitle:
-                                      Localize.of(context).deleteMessage,
-                                  text:
-                                      '${Localize.of(context).delete}: ${message.body}',
-                                  iconStyle: IconStyle.warning,
-                                  positiveButtonTitle: Localize.current.delete,
-                                  negativeButtonTitle: Localize.current.cancel);
-                          if (deleteResult == CustomButton.positiveButton) {
-                            if (!context.mounted) return false;
-                            context
-                                .read(messagesLogicProvider)
-                                .deleteMessage(message);
-                          }
+                          await ScrollQuickAlert.show(
+                              context: context,
+                              showCancelBtn: true,
+                              type: QuickAlertType.warning,
+                              title: Localize.of(context).deleteMessage,
+                              text:
+                                  '${Localize.of(context).delete}: ${message.body}',
+                              confirmBtnText: Localize.current.delete,
+                              cancelBtnText: Localize.current.cancel,
+                              onConfirmBtnTap: () {
+                                context
+                                    .read(messagesLogicProvider)
+                                    .deleteMessage(message);
+                                if (!mounted) return;
+                                Navigator.of(context).pop();
+                              });
                         }
                         if (direction == DismissDirection.startToEnd) {
                           if (!context.mounted) return false;

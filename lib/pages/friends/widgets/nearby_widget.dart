@@ -5,9 +5,9 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 
@@ -20,6 +20,7 @@ import '../../../helpers/uuid_helper.dart';
 import '../../../models/color_mapper.dart';
 import '../../../models/friend.dart';
 import '../../../providers/friends_provider.dart';
+import '../../widgets/scroll_quick_alert.dart';
 import 'friends_action_sheet.dart';
 
 enum DeviceType { advertiser, browser }
@@ -72,9 +73,15 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
             '${Localize.of(context).friend} ${Localize.of(context).from} $dateString',
             getRandomColor());
         if (friend == null) {
-          FlutterPlatformAlert.showAlert(
-              windowTitle: Localize.current.addNearBy,
-              text: Localize.current.failedAddNearbyTryCode);
+          if (!mounted) return;
+          await ScrollQuickAlert.show(
+              context: context,
+              showCancelBtn: true,
+              showConfirmBtn: false,
+              type: QuickAlertType.warning,
+              title: Localize.current.addNearBy,
+              text: Localize.current.failedAddNearbyTryCode,
+              cancelBtnText: Localize.current.cancel);
           return;
         }
         //get a code from server
@@ -409,9 +416,14 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                 }
                 return;
               } else {
-                FlutterPlatformAlert.showAlert(
-                    windowTitle: Localize.current.addNearBy,
-                    text: Localize.current.failedAddNearbyTryCode);
+                await ScrollQuickAlert.show(
+                    context: context,
+                    showCancelBtn: true,
+                    showConfirmBtn: false,
+                    type: QuickAlertType.warning,
+                    title: Localize.current.addNearBy,
+                    text: Localize.current.failedAddNearbyTryCode,
+                    cancelBtnText: Localize.current.cancel);
                 return;
               }
             default:

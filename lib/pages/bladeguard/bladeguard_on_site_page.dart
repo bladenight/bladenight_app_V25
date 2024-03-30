@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
@@ -11,6 +11,7 @@ import '../../providers/network_connection_provider.dart';
 import '../../providers/realtime_data_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
+import '../widgets/scroll_quick_alert.dart';
 
 class BladeGuardOnsite extends ConsumerWidget {
   const BladeGuardOnsite({super.key});
@@ -70,23 +71,21 @@ class BladeGuardOnsite extends ConsumerWidget {
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: CupertinoButton(
                       onPressed: () async {
-                        var offSiteReq =
-                            await FlutterPlatformAlert.showCustomAlert(
-                                windowTitle:
-                                    Localize.of(context).requestOffSiteTitle,
-                                text: Localize.of(context).requestOffSite,
-                                iconStyle: IconStyle.exclamation,
-                                positiveButtonTitle:
-                                    Localize.of(context).todayNo,
-                                negativeButtonTitle:
-                                    Localize.of(context).cancel);
-                        if (offSiteReq == CustomButton.negativeButton) {
-                          //user denies request
-                          return;
-                        }
-                        ref
-                            .read(bgIsOnSiteProvider.notifier)
-                            .setOnSiteState(false);
+                        await ScrollQuickAlert.show(
+                            context: context,
+                            showCancelBtn: true,
+                            type: QuickAlertType.confirm,
+                            title: Localize.of(context).requestOffSiteTitle,
+                            text: Localize.of(context).requestOffSite,
+                            confirmBtnText: Localize.of(context).todayNo,
+                            cancelBtnText: Localize.of(context).cancel,
+                            onConfirmBtnTap: () {
+                              ref
+                                  .read(bgIsOnSiteProvider.notifier)
+                                  .setOnSiteState(false);
+                              if (!context.mounted) return;
+                              Navigator.of(context).pop();
+                            });
                       },
                       color: Colors.orange,
                       child: Text(Localize.of(context).bgTodayNotParticipation),

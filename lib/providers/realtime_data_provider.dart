@@ -7,7 +7,6 @@ import '../helpers/wamp/subscribe_message.dart';
 import '../models/realtime_update.dart';
 import '../wamp/wamp_v2.dart';
 import 'is_tracking_provider.dart';
-import 'location_provider.dart';
 
 part 'realtime_data_provider.g.dart';
 
@@ -19,6 +18,7 @@ class RealtimeData extends _$RealtimeData {
   DateTime lastUpdate = DateTime(2000);
   StreamSubscription<RealtimeUpdate?>? _listener;
   int _realTimeDataSubscriptionId = 0;
+  bool _isOnline = false;
 
   @override
   RealtimeUpdate? build() {
@@ -26,6 +26,7 @@ class RealtimeData extends _$RealtimeData {
         WampV2.instance.wampConnectedStreamController.stream.listen((event) {
       if (event) {
         //resubscribe after offline if not tracking
+        _isOnline = event;
         _subscribeIfNeeded(_isTracking);
       }
     });
@@ -67,7 +68,7 @@ class RealtimeData extends _$RealtimeData {
     _timer = Timer.periodic(const Duration(seconds: 15), (timer) async {
       var result = await refresh();
       if (result != null) {
-        lastUpdate = DateTime.now();
+        lastUpdate = result.timeStamp;
         state = result;
       }
     });
@@ -90,8 +91,14 @@ class RealtimeData extends _$RealtimeData {
         methodName: 'refresh',
         className: toString());
     if (!force && timeDiff < const Duration(seconds: 13)) {
+      return state;
+    }
+    if (!_isOnline && timeDiff < const Duration(seconds: 50)) {
+      return state;
+    } else if (!_isOnline) {
       return null;
     }
+
     var update = await RealtimeUpdate.wampUpdate();
     if (update.rpcException != null) {
       _maxFails--;

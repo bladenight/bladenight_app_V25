@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_io/io.dart';
 
@@ -30,15 +31,24 @@ import 'preferences_helper.dart';
 
 void exportData(BuildContext context) async {
   try {
-    var res = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.of(context).exportWarningTitle,
+    var res = false;
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.warning,
+        title: Localize.of(context).exportWarningTitle,
         text: Localize.of(context).exportWarning,
-        positiveButtonTitle: Localize.of(context).export,
-        negativeButtonTitle: Localize.of(context).cancel);
-    if (res == CustomButton.negativeButton) {
+        confirmBtnText: Localize.of(context).export,
+        cancelBtnText: Localize.of(context).cancel,
+        onConfirmBtnTap: () {
+          res = true;
+          if (!context.mounted) return;
+          Navigator.of(context).pop();
+        });
+    if (res == false) {
       return;
     }
-    var deviceID =  DeviceId.appId;
+    var deviceID = DeviceId.appId;
     var friends = await PreferencesHelper.getFriendsFromPrefs();
     String exportdata =
         'id=$deviceID&fri=${MapperContainer.globals.toJson(friends)}';
@@ -64,36 +74,48 @@ void exportData(BuildContext context) async {
   }
 }
 
-void importData(String dataString) async {
+void importData(BuildContext context, String dataString) async {
   try {
-    var res = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.current.importWarningTitle,
+    var res = false;
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.warning,
+        title: Localize.current.importWarningTitle,
         text: Localize.current.importWarning,
-        positiveButtonTitle: Localize.current.import,
-        negativeButtonTitle: Localize.current.cancel);
-    if (res == CustomButton.negativeButton) {
+        confirmBtnText: Localize.current.import,
+        cancelBtnText: Localize.current.cancel,
+        onConfirmBtnTap: () async {
+          res = true;
+          const String dataId = 'data=';
+          var dataPartIdx = dataString.indexOf(dataId);
+          if (dataPartIdx == -1) return;
+          var base64dataString = dataString.substring(
+              dataPartIdx + dataId.length, dataString.length);
+          var base64Decoded = utf8.decode(base64.decode(base64dataString));
+          var dataParts = base64Decoded.split('&');
+          var id = dataParts[0].substring(3);
+          HiveSettingsDB.setAppId(id);
+          var friendJson = dataParts[1].substring(4);
+          var friends =
+              MapperContainer.globals.fromJson<List<Friend>>(friendJson);
+          await PreferencesHelper.saveFriendsToPrefsAsync(friends);
+          ProviderContainer().refresh(friendsProvider);
+          ProviderContainer().read(friendsLogicProvider).reloadFriends();
+          if (!context.mounted) return;
+          await QuickAlert.show(
+            context: context,
+            showCancelBtn: false,
+            type: QuickAlertType.info,
+            title:
+                '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
+          );
+          if (!context.mounted) return;
+          Navigator.pop(context);
+        });
+    if (res == false) {
       return;
     }
-
-    const String dataId = 'data=';
-    var dataPartIdx = dataString.indexOf(dataId);
-    if (dataPartIdx == -1) return;
-    var base64dataString =
-        dataString.substring(dataPartIdx + dataId.length, dataString.length);
-    var base64Decoded = utf8.decode(base64.decode(base64dataString));
-    var dataParts = base64Decoded.split('&');
-    var id = dataParts[0].substring(3);
-    HiveSettingsDB.setAppId(id);
-    var friendJson = dataParts[1].substring(4);
-    var friends = MapperContainer.globals.fromJson<List<Friend>>(friendJson);
-    await PreferencesHelper.saveFriendsToPrefsAsync(friends);
-    ProviderContainer().refresh(friendsProvider);
-    ProviderContainer().read(friendsLogicProvider).reloadFriends();
-    showToast(
-        message:
-            '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
-        backgroundColor: CupertinoColors.activeGreen,
-        textColor: CupertinoColors.black);
   } catch (e) {
     BnLog.error(methodName: 'importData', text: 'failed to import $e');
     showToast(
@@ -158,7 +180,8 @@ Future<void> exportLogs() async {
     encoder.create(zipFilePath);
     await encoder.addFile(logfilePath);
     encoder.close();
-    showToast(message: '${fileContent.length.toString()}  ${Localize.current.ok}');
+    showToast(
+        message: '${fileContent.length.toString()}  ${Localize.current.ok}');
     var aV = await DeviceHelper.getAppVersionsData();
 
     final Email email = Email(

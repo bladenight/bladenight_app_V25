@@ -12,7 +12,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
-import '../../app_settings/app_constants.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../models/follow_location_state.dart';
@@ -173,11 +172,11 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               onPointerUp: (e, l) => _onPointerUp(e, l),
               //onPositionChanged: (p, g) => _onPositionChanged(p, g),
               cameraConstraint: osmEnabled ||
-                          ref.watch(activeEventProvider).hasSpecialStartPoint
-                      ? CameraConstraint.contain(
-                          bounds: MapSettings.mapOnlineBoundaries)
-                      : CameraConstraint.contain(
-                          bounds: MapSettings.mapOfflineBoundaries),
+                      ref.watch(activeEventProvider).hasSpecialStartPoint
+                  ? CameraConstraint.contain(
+                      bounds: MapSettings.mapOnlineBoundaries)
+                  : CameraConstraint.contain(
+                      bounds: MapSettings.mapOfflineBoundaries),
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all,
                 enableMultiFingerGestureRace: true,

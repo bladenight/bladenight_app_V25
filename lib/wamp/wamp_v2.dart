@@ -217,7 +217,7 @@ class WampV2 {
           if (_isConnectedToInternet == false) {
             continue;
           }
-          var res = await _initWamp();
+          var _ = await _initWamp();
         }
         if (DateTime.now().difference(_busyTimeStamp) >
             const Duration(milliseconds: 1000)) {

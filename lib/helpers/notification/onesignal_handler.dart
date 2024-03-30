@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
 
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
+import '../../main.dart';
 import '../../models/external_app_message.dart';
 import '../../providers/messages_provider.dart';
 import '../device_info_helper.dart';
@@ -208,14 +209,26 @@ class OnesignalHandler {
         timeStamp: DateTime.now().millisecondsSinceEpoch,
         lastChange: DateTime.now().millisecondsSinceEpoch);
 
-    CustomButton? buttonResult;
     if (buttons != null && buttons.length == 1) {
       var button1 = buttons.first;
       message.button1Text = button1.text;
-      buttonResult = await FlutterPlatformAlert.showCustomAlert(
-          windowTitle: title ?? Localize.current.notification,
+      await QuickAlert.show(
+          context: navigatorKey.currentContext!,
+          title: title ?? Localize.current.notification,
           text: body ?? '',
-          positiveButtonTitle: button1.text);
+          confirmBtnText: button1.text,
+          type: QuickAlertType.info,
+          onConfirmBtnTap: () {
+            if (data != null) {
+              var devId = DeviceId.appId;
+              if (data.keys.contains('url')) {
+                message.url = data['url'] + '/?id=$devId';
+                Launch.launchUrlFromString(data['url'] + '/?id=$devId');
+              }
+            }
+            ProviderContainer().read(messagesLogicProvider).addMessage(message);
+            return navigatorKey.currentState?.pop();
+          });
     }
     //2 buttons
     if (buttons != null && buttons.length == 2) {
@@ -223,22 +236,25 @@ class OnesignalHandler {
       var button2 = buttons.last;
       message.button1Text = button1.text;
       message.button2Text = button2.text;
-      buttonResult = await FlutterPlatformAlert.showCustomAlert(
-          windowTitle: title ?? Localize.current.notification,
+      await QuickAlert.show(
+          context: navigatorKey.currentContext!,
+          title: title ?? Localize.current.notification,
           text: body ?? '',
-          positiveButtonTitle: button1.text,
-          negativeButtonTitle: button2.text);
+          confirmBtnText: button1.text,
+          cancelBtnText: button2.text,
+          type: QuickAlertType.info,
+          onConfirmBtnTap: () {
+            if (data != null) {
+              var devId = DeviceId.appId;
+              if (data.keys.contains('url')) {
+                message.url = data['url'] + '/?id=$devId';
+                Launch.launchUrlFromString(data['url'] + '/?id=$devId');
+              }
+            }
+            ProviderContainer().read(messagesLogicProvider).addMessage(message);
+            return navigatorKey.currentState?.pop();
+          });
     }
-    if (buttonResult != null &&
-        data != null &&
-        buttonResult == CustomButton.positiveButton) {
-      var devId = DeviceId.appId;
-      if (data.keys.contains('url')) {
-        message.url = data['url'] + '/?id=$devId';
-        Launch.launchUrlFromString(data['url'] + '/?id=$devId');
-      }
-    }
-    ProviderContainer().read(messagesLogicProvider).addMessage(message);
   }
 
   @pragma('vm:entry-point')

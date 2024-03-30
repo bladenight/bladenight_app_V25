@@ -1,13 +1,14 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:bladenight_app_flutter/pages/widgets/scroll_quick_alert.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-as bg;
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+    as bg;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 import 'package:wakelock/wakelock.dart';
@@ -317,7 +318,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 Text(Localize.of(context).resetOdoMeterTitle),
                             onPressed: () async {
                               await LocationProvider.instance
-                                  .resetTrackPoints();
+                                .resetOdoMeterAndRoutePoints(context);
                               setState(() {});
                             },
                           ),
@@ -431,7 +432,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         .ignoreBatteriesOptimisationTitle),
                                     onPressed: () async =>
                                         await BackgroundGeolocationHelper
-                                            .openBatteriesSettings()),
+                                            .openBatteriesSettings(context)),
                               ]),
                         const SizedBox(height: 5),
                         CupertinoFormSection(
@@ -476,27 +477,26 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         child: Text(
                                             Localize.of(context).setClearLogs),
                                         onPressed: () async {
-                                          final clickedButton =
-                                              await FlutterPlatformAlert
-                                                  .showCustomAlert(
-                                            windowTitle:
-                                                Localize.current.clearLogsTitle,
-                                            text: Localize
-                                                .current.clearLogsQuestion,
-                                            positiveButtonTitle:
-                                                Localize.current.yes,
-                                            neutralButtonTitle:
-                                                Localize.current.cancel,
-                                            windowPosition: AlertWindowPosition
-                                                .screenCenter,
-                                          );
-                                          if (clickedButton ==
-                                              CustomButton.positiveButton) {
-                                            BnLog.clearLogs();
-                                            showToast(
-                                                message:
-                                                    Localize.current.finished);
-                                          }
+                                              await ScrollQuickAlert.show(
+                                                  context: context,
+                                                  showCancelBtn: true,
+                                                  type: QuickAlertType.warning,
+                                                  title: Localize
+                                                      .current.clearLogsTitle,
+                                                  text: Localize.current
+                                                      .clearLogsQuestion,
+                                                  confirmBtnText:
+                                                      Localize.current.yes,
+                                                  cancelBtnText:
+                                                      Localize.current.cancel,
+                                                  onConfirmBtnTap: () {
+                                                    BnLog.clearLogs();
+                                                    showToast(
+                                                        message: Localize
+                                                            .current.finished);
+                                                    if (!mounted) return;
+                                                    Navigator.of(context).pop();
+                                                  });
                                         }),
                                   ]),
                               if (HiveSettingsDB
@@ -514,28 +514,28 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           child: Text(Localize.of(context)
                                               .setClearLogs),
                                           onPressed: () async {
-                                            final clickedButton =
-                                                await FlutterPlatformAlert
-                                                    .showCustomAlert(
-                                              windowTitle: Localize
-                                                  .current.clearLogsTitle,
-                                              text: Localize
-                                                  .current.clearLogsQuestion,
-                                              positiveButtonTitle:
-                                                  Localize.current.yes,
-                                              neutralButtonTitle:
-                                                  Localize.current.cancel,
-                                              windowPosition:
-                                                  AlertWindowPosition
-                                                      .screenCenter,
-                                            );
-                                            if (clickedButton ==
-                                                CustomButton.positiveButton) {
-                                              bg.Logger.destroyLog();
-                                              showToast(
-                                                  message: Localize
-                                                      .current.finished);
-                                            }
+                                                await ScrollQuickAlert.show(
+                                                    context: context,
+                                                    showCancelBtn: true,
+                                                    type:
+                                                        QuickAlertType.warning,
+                                                    title: Localize
+                                                        .current.clearLogsTitle,
+                                                    text: Localize.current
+                                                        .clearLogsQuestion,
+                                                    confirmBtnText:
+                                                        Localize.current.yes,
+                                                    cancelBtnText:
+                                                        Localize.current.cancel,
+                                                    onConfirmBtnTap: () {
+                                                      bg.Logger.destroyLog();
+                                                      showToast(
+                                                          message: Localize
+                                                              .current
+                                                              .finished);
+                                                      if (!mounted) return;
+                                                      Navigator.of(context).pop();
+                                                    });
                                           }),
                                     ]),
                               const SizedBox(height: 10),
@@ -733,7 +733,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       });
                                     },
                                     onFieldSubmitted: (value) {
-                                      importData(value);
+                                      importData(context,value);
                                     },
                                   ),
                                   AnimatedOpacity(
@@ -747,7 +747,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           Localize.of(context).setStartImport),
                                       onPressed: () {
                                         inputText.length > 10
-                                            ? importData(inputText)
+                                            ? importData(context, inputText)
                                             : null;
                                       },
                                     ),

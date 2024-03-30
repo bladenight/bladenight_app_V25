@@ -45,7 +45,6 @@ dependencies:
   flutter_map_marker_popup: ^6.1.2
   flutter_native_splash: ^2.3.0
   flutter_nearby_connections: ^1.1.2
-  flutter_platform_alert: ^0.5.1 # not working on Android 6 fixed in git - sent pull request
   #to owner waiting for update
   #flutter_platform_alert:
   #  git:
@@ -89,6 +88,7 @@ dependencies:
   path_provider: ^2.0.15
   permission_handler: ^11.1.0
   popover: ^0.3.0
+  quickalert: ^1.1.0
   riverpod: ^2.4.9
   riverpod_annotation: ^2.3.3
   riverpod_context: ^0.3.0

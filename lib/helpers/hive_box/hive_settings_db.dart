@@ -130,7 +130,7 @@ class HiveSettingsDB {
 
   ///set if motion detection is disabled
   static void setHasShownProminentDisclosure(bool val) {
-    if (!kIsWeb) BnLog.info(text: 'set hasShownProminentDisclosure to $val');
+    BnLog.info(text: 'set hasShownProminentDisclosure to $val');
     _hiveBox.put(_hasShownProminentDisclosure, val);
   }
 

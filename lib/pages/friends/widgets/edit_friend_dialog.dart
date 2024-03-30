@@ -4,22 +4,22 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_io/io.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../app_settings/app_constants.dart';
 import '../../../generated/l10n.dart';
-import '../../../helpers/device_info_helper.dart';
 import '../../../helpers/logger.dart';
 import '../../../models/friend.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../wamp/wamp_error.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_connection_warning.dart';
+import '../../widgets/scroll_quick_alert.dart';
 import 'friends_action_sheet.dart';
 
 class EditFriendResult {
@@ -301,33 +301,41 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
       if (widget.action == FriendsAction.addNew) {
         var friend =
             await ref.read(friendsLogicProvider).addNewFriend(name, color!);
-        if (friend == null) {
-          FlutterPlatformAlert.showAlert(
-              windowTitle: Localize.current.addnewfriend,
-              text: Localize.current.failed);
+        if (friend == null && mounted) {
+          await ScrollQuickAlert.show(
+              context: context,
+              showCancelBtn: true,
+              showConfirmBtn: false,
+              type: QuickAlertType.error,
+              title: Localize.current.addnewfriend,
+              text: Localize.current.failed,
+              cancelBtnText: Localize.current.cancel);
           return;
         }
-//workaround for IPad , crashes when more as 2 buttons in alertView
-        var isIPad = await DeviceHelper.deviceIsIPad();
-        final clickedButton = await FlutterPlatformAlert.showCustomAlert(
-            windowTitle: Localize.current.invitebyname(friend.name),
+        if (friend == null) return;
+        if (!mounted) return;
+        await ScrollQuickAlert.show(
+            context: context,
+            showCancelBtn: true,
+            type: QuickAlertType.warning,
+            barrierDismissible: true,
+            title: Localize.current.invitebyname(friend.name),
             text: Localize.current.tellcode(friend.name, friend.requestId),
-            positiveButtonTitle: Localize.current.sendlink,
-            neutralButtonTitle: Localize.current.copy,
-            //removed - causes crash on iOS
-            negativeButtonTitle: isIPad ? null : Localize.current.understand,
-            windowPosition: AlertWindowPosition.screenCenter,
-            );
-        if (clickedButton == CustomButton.positiveButton) {
-          Share.share(
-              Localize.current.sendlinkdescription(
-                  friend.requestId, playStoreLink, iOSAppStoreLink),
-              subject: Localize.current.sendlink);
-        } else if (clickedButton == CustomButton.neutralButton) {
-          //Copy text to clipboard
-          await Clipboard.setData(
-              ClipboardData(text: friend.requestId.toString()));
-        }
+            confirmBtnText: Localize.current.sendlink,
+            cancelBtnText: Localize.current.copy,
+            onConfirmBtnTap: () {
+              Share.share(
+                  Localize.current.sendlinkdescription(
+                      friend.requestId, playStoreLink, iOSAppStoreLink),
+                  subject: Localize.current.sendlink);
+              Navigator.pop(context);
+            },
+            onCancelBtnTap: () async {
+              await Clipboard.setData(
+                  ClipboardData(text: friend.requestId.toString()));
+              if (!mounted) return;
+              Navigator.pop(context);
+            });
         if (!mounted) return;
         Navigator.of(context).pop(); //go back
       } else if (widget.action == FriendsAction.addWithCode) //validate code

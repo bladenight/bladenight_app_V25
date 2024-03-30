@@ -1,48 +1,55 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../generated/l10n.dart';
 import 'logger.dart';
 
 class BackgroundGeolocationHelper {
   static Future<bool> resetOdoMeter(BuildContext context) async {
-    var odometerResetResult = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.current.resetOdoMeterTitle,
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.warning,
+        title: Localize.current.resetOdoMeterTitle,
         text: Localize.current.resetOdoMeter,
-        iconStyle: IconStyle.warning,
-        positiveButtonTitle: Localize.of(context).yes,
-        negativeButtonTitle: Localize.of(context).cancel);
-    if (odometerResetResult == CustomButton.positiveButton) {
-      bg.BackgroundGeolocation.setOdometer(0.0)
-          .then((value) => true)
-          .catchError((error) {
-        if (!kIsWeb) BnLog.error(text: '[resetOdometer] ERROR: $error');
-        return false;
-      });
-    }
+        confirmBtnText: Localize.of(context).yes,
+        cancelBtnText: Localize.of(context).cancel,
+        onConfirmBtnTap: () {
+          bg.BackgroundGeolocation.setOdometer(0.0)
+              .then((value) => true)
+              .catchError((error) {
+            BnLog.error(text: '[resetOdometer] ERROR: $error');
+            Navigator.pop(context);
+            return false;
+          });
+        });
     return false;
   }
 
-  static Future<bool> openBatteriesSettings() async {
+  static Future<bool> openBatteriesSettings(BuildContext context) async {
     bool isIgnoring = await bg.DeviceSettings.isIgnoringBatteryOptimizations;
 
     bg.DeviceSettings.showIgnoreBatteryOptimizations()
         .then((bg.DeviceSettingsRequest request) async {
-      var res = await FlutterPlatformAlert.showCustomAlert(
-          windowTitle: Localize.current.ignoreBatteriesOptimisationTitle,
+      await QuickAlert.show(
+          context: context,
+          showCancelBtn: true,
+          type: QuickAlertType.warning,
+          title: Localize.current.ignoreBatteriesOptimisationTitle,
           text:
               '${Localize.current.isIgnoring}: $isIgnoring?${Localize.current.yes}:${Localize.current.no}\n${Localize.current.manufacturer}: ${request.manufacturer}\n${Localize.current.model}:${request.model}\n${Localize.current.version}:${request.version}\n${Localize.current.lastseen}: ${request.lastSeenAt}',
-          positiveButtonTitle: Localize.current.change,
-          negativeButtonTitle: Localize.current.cancel);
-      if (res == CustomButton.positiveButton) {
-        return await bg.DeviceSettings.show(request);
-      }
+          confirmBtnText: Localize.current.change,
+          cancelBtnText: Localize.current.cancel,
+          onConfirmBtnTap: () async {
+            await bg.DeviceSettings.show(request);
+            if (!context.mounted) return;
+            Navigator.of(context).pop();
+          });
     }).catchError((dynamic error) {
       BnLog.error(text: 'Batterieoptimierung fehlgeschlagen $error');
-      return false;
     });
     return false;
   }

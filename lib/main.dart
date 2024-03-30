@@ -36,6 +36,7 @@ import 'pages/home_screen.dart';
 import 'pages/widgets/intro_slider.dart';
 import 'pages/widgets/route_name_dialog.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
 const String openRouteMapRoute = '/eventRoute';
 const String openBladeguardOnSite = '/bgOnsite';
 
@@ -196,7 +197,7 @@ class BladeNightApp extends StatelessWidget {
                       fullscreenDialog: true);
                 }
                 if (uriString.name!.contains('?data=')) {
-                  importData(uriString.name!);
+                  importData(context, uriString.name!);
                 } else if (uriString.name!.contains('?addFriend')) {
                   //tabController.index = 3;
                   addFriendWithCodeFromUrl(context, uriString.name!)
@@ -224,6 +225,7 @@ class BladeNightApp extends StatelessWidget {
               supportedLocales: Localize.delegate.supportedLocales,
               // AppLocalizations.supportedLocales,
               home: const HomeScreen(),
+              navigatorKey: navigatorKey,
               routes: <String, WidgetBuilder>{
                 IntroScreen.openIntroRoute: (BuildContext context) =>
                     const IntroScreen(),

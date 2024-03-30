@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../generated/l10n.dart';
@@ -13,6 +13,7 @@ import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/location_permission_dialogs.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../widgets/scroll_quick_alert.dart';
 import 'open_street_map_copyright.dart';
 
 ///Shows a row at bottom with OSM copyright and GPS speed widget
@@ -144,31 +145,30 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                                     onPressed: () async {
                                       if (alwaysPermissionGranted) {
                                         await LocationProvider.instance
-                                            .resetOdoMeterAndRoutePoints();
+                                            .resetOdoMeterAndRoutePoints(context);
                                       } else {
-                                        var reqResult = await FlutterPlatformAlert
-                                            .showCustomAlert(
-                                                windowTitle: Localize.of(
-                                                        context)
-                                                    .openOperatingSystemSettings,
-                                                iconStyle:
-                                                    IconStyle.information,
-                                                text:
-                                                    '${alwaysPermissionGranted ? "" : "\n${Localize.of(context).onlyWhileInUse}"} \n'
-                                                    '${Localize.of(context).userSpeed} ${context.watch(realUserSpeedProvider) == null ? '- km/h' : currentUserSpeed.formatSpeedKmH()} \n'
-                                                    '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${currentUserOdoDriven.toStringAsFixed(1)} km'}\n'
-                                                    '${Localize.of(context).resetLongPress}',
-                                                positiveButtonTitle: Localize
-                                                        .of(context)
-                                                    .openOperatingSystemSettings,
-                                                negativeButtonTitle:
-                                                    Localize.of(context)
-                                                        .cancel);
-                                        if (reqResult ==
-                                            CustomButton.positiveButton) {
-                                          await LocationPermissionDialog
-                                              .openSystemSettings();
-                                        }
+                                        await ScrollQuickAlert.show(
+                                            context: context,
+                                            showCancelBtn: true,
+                                            type: QuickAlertType.info,
+                                            title: Localize.of(context)
+                                                .openOperatingSystemSettings,
+                                            text:
+                                                '${alwaysPermissionGranted ? "" : "\n${Localize.of(context).onlyWhileInUse}"} \n'
+                                                '${Localize.of(context).userSpeed} ${context.watch(realUserSpeedProvider) == null ? '- km/h' : currentUserSpeed.formatSpeedKmH()} \n'
+                                                '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${currentUserOdoDriven.toStringAsFixed(1)} km'}\n'
+                                                '${Localize.of(context).resetLongPress}',
+                                            confirmBtnText: Localize.of(context)
+                                                .openOperatingSystemSettings,
+                                            cancelBtnText:
+                                                Localize.of(context).cancel,
+                                            onConfirmBtnTap: () async {
+                                              await LocationPermissionDialog
+                                                  .openSystemSettings();
+                                              if (!context.mounted) return;
+                                              Navigator.of(context).pop();
+                                            });
+
                                       }
                                     },
                                   ),
@@ -181,12 +181,15 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                                       false) {
                                 return FloatingActionButton.extended(
                                   onPressed: () async {
-                                    FlutterPlatformAlert.showAlert(
-                                        windowTitle: Localize.of(context)
-                                            .noLocationPermissionGrantedAlertTitle,
-                                        text: Localize.of(context)
-                                            .locationServiceOff,
-                                        iconStyle: IconStyle.warning);
+                                    await ScrollQuickAlert.show(
+                                      context: context,
+                                      showCancelBtn: true,
+                                      type: QuickAlertType.warning,
+                                      title: Localize.of(context)
+                                          .noLocationPermissionGrantedAlertTitle,
+                                      text: Localize.of(context)
+                                          .locationServiceOff,
+                                    );
                                   },
                                   backgroundColor: CupertinoColors.activeOrange,
                                   foregroundColor: CupertinoColors.white,
