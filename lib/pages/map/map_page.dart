@@ -199,10 +199,11 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                 ),
               ),*/
                     const HeadingsLayer(),
+                    SpecialPointsLayer(_popupController),
                     CustomLocationLayer(_popupController, _hasGesture),
                     //needs map controller
                     MarkersLayer(_popupController),
-                    SpecialPointsLayer(_popupController),
+
 
                     TrackProgressOverlay(_mapController),
                     const MapButtonsLayer(),

@@ -67,12 +67,15 @@
             </intent-filter>
 
             <!-- App Links -->
-            <intent-filter android:label="bladenight_app_http_deep_link">
+            <intent-filter android:label="bladenight_app_http_deep_link" android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <!-- Accepts URIs that begin with https://YOUR_HOST -->
-                <data android:scheme="https" android:host="bladenight.app"/>
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+
+                <data android:host="bladenight.app"/>
             </intent-filter>
 
             <intent-filter>

@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:bladenight.app?mode=developer</string>
+		<string>applinks:bladenight.app</string>
 	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>

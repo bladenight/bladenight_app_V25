@@ -57,8 +57,8 @@ class _SpecialPointsLayerState extends ConsumerState<SpecialPointsLayer> {
                 headerText: Localize.of(context).collectionStop,
                 color: Colors.lightBlue,
                 point: sp.latLng,
-                width: iconSize * 1.2,
-                height: iconSize * 1.2,
+                width: iconSize * 0.9,
+                height: iconSize * 0.9,
                 child: Builder(
                   builder: (context) => Image(
                     image: AssetImage(

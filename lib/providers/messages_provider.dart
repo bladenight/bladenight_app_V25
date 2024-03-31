@@ -94,9 +94,10 @@ class MessagesLogic with ChangeNotifier {
       var teamId = HiveSettingsDB.bgTeam;
       var skmMember = HiveSettingsDB.rcvSkatemunichInfos;
       var appId = HiveSettingsDB.appId;
+      var paraString =
+          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$appId&plf=${Platform.operatingSystem}';
       var parameter = CryptHelper.encryptAES(
-          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$appId&plf=${Platform.operatingSystem}',
-          ServerConfigDb.restApiLinkPassword);
+          paraString, ServerConfigDb.restApiLinkPassword);
       if (parameter == null) {
         BnLog.error(text: "Couldn't encrypt Parameter");
         return;
