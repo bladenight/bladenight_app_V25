@@ -44,13 +44,13 @@ class ScrollQuickAlert {
     VoidCallback? onCancelBtnTap,
 
     /// Confirmation button text
-    String confirmBtnText = 'Okay',
+    String confirmBtnText = 'Ok',
 
     /// Cancel button text
     String cancelBtnText = 'Cancel',
 
     /// Color for confirm button
-    Color confirmBtnColor = Colors.blue,
+    Color? confirmBtnColor,
 
     /// TextStyle for confirm button
     TextStyle? confirmBtnTextStyle,
@@ -59,10 +59,10 @@ class ScrollQuickAlert {
     TextStyle? cancelBtnTextStyle,
 
     /// Background Color for dialog
-    Color backgroundColor = Colors.white,
+    Color? backgroundColor,
 
     /// Header Background Color for dialog
-    Color headerBackgroundColor = Colors.white,
+    Color? headerBackgroundColor,
 
     /// Color of title
     Color titleColor = Colors.black,
@@ -114,13 +114,13 @@ class ScrollQuickAlert {
       onCancelBtnTap: onCancelBtnTap,
       confirmBtnText: confirmBtnText,
       cancelBtnText: cancelBtnText,
-      confirmBtnColor: confirmBtnColor,
+      confirmBtnColor: confirmBtnColor ?? Colors.green,
       confirmBtnTextStyle: confirmBtnTextStyle,
       cancelBtnTextStyle: cancelBtnTextStyle,
-      backgroundColor: backgroundColor,
-      headerBackgroundColor: headerBackgroundColor,
-      titleColor: titleColor,
-      textColor: textColor,
+      backgroundColor: backgroundColor??CupertinoTheme.of(context).barBackgroundColor,
+      headerBackgroundColor: headerBackgroundColor??CupertinoTheme.of(context).barBackgroundColor,
+      titleColor: CupertinoTheme.of(context).primaryColor,
+      textColor: CupertinoTheme.of(context).primaryColor,
       showCancelBtn: showCancelBtn,
       showConfirmBtn: showConfirmBtn,
       borderRadius: borderRadius,
@@ -170,7 +170,7 @@ class ScrollQuickAlert {
     }
 
     return showGeneralDialog(
-      barrierColor: barrierColor ?? Colors.black.withOpacity(0.5),
+      barrierColor: barrierColor ?? CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.5),
       transitionBuilder: (context, anim1, __, widget) {
         switch (animType) {
           case QuickAlertAnimType.scale:
@@ -219,7 +219,10 @@ class ScrollText extends StatelessWidget {
         child: CupertinoScrollbar(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: Text(text),
+            child: Text(
+              text,
+              style: TextStyle(color: CupertinoTheme.of(context).primaryColor),
+            ),
           ),
         ),
       ),

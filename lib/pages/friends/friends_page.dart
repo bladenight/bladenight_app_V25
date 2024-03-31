@@ -191,6 +191,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                               text:
                                   '${Localize.of(context).delete}: ${friend.name}',
                               confirmBtnText: Localize.current.delete,
+                              confirmBtnColor: Colors.redAccent,
                               cancelBtnText: Localize.current.cancel,
                               onConfirmBtnTap: () {
                                 context

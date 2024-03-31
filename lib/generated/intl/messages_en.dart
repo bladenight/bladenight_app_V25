@@ -325,7 +325,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "friendScanQrCode": m6,
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
-            "Please support the exact presentation of BladeNight skater train.\nYour friends will miss you!"),
+            "Please support the exact presentation of BladeNight skater procession.\nYour friends will miss you!"),
         "from": MessageLookupByLibrary.simpleMessage("by"),
         "getwebdata": MessageLookupByLibrary.simpleMessage(
             "Loading data from server ..."),
@@ -501,7 +501,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select \'While using the App\'. Later we will ask you again, prefered is \'Allow all time\'. When you select \'When in use\' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much."),
         "prominentdisclosuretrackingprealertandroidToAndroid_V10x":
             MessageLookupByLibrary.simpleMessage(
-                "The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step.You should select \'While using the App\'. If you deny locationaccess, only the BladeNight skater train can be watched without location sharing. Please support the accuracy of the train"),
+                "The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step.You should select \'While using the App\'. If you deny locationaccess, only the BladeNight skater procession can be watched without location sharing. Please support the accuracy of the train"),
         "pushMessageParticipateAsBladeGuard":
             MessageLookupByLibrary.simpleMessage("Participate push req."),
         "pushMessageParticipateAsBladeGuardTitle":

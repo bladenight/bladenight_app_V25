@@ -332,7 +332,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "friendScanQrCode": m6,
         "friends": MessageLookupByLibrary.simpleMessage("Freunde"),
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
-            "Bitte unterstütze weiter die genaue Darstellung des BladeNightzuges.\nAusserdem werden deine Freunde dich vermissen!"),
+            "Bitte unterstütze weiter die genaue Darstellung des BladeNight-Zuges.\nAusserdem werden deine Freunde dich vermissen!"),
         "from": MessageLookupByLibrary.simpleMessage("vom"),
         "getwebdata":
             MessageLookupByLibrary.simpleMessage("Lade Serverdaten ..."),
@@ -510,10 +510,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "proceed": MessageLookupByLibrary.simpleMessage("Weiter"),
         "prominentdisclosuretrackingprealertandroidFromAndroid_V11":
             MessageLookupByLibrary.simpleMessage(
-                "Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNightzuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben.Hier sollte  \'Bei der Nutzung der App zulassen\' gewählt werden. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung \"Immer zulassen\" die zu einem späteren Zeitpunkt (2.Schritt über Systemeinstellungen) erfolgt. Dies ermöglicht das Tracking auch wenn du eine andere App im Vordergrund geöffnet hast. Mit \"Während der Benutzung\" musst du die BladeNight immer im Vordergrund offen halten um uns zu unterstützen und deinen Standort zu teilen.Weiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
+                "Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNight-Zuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben.Hier sollte  \'Bei der Nutzung der App zulassen\' gewählt werden. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung \"Immer zulassen\" die zu einem späteren Zeitpunkt (2.Schritt über Systemeinstellungen) erfolgt. Dies ermöglicht das Tracking auch wenn du eine andere App im Vordergrund geöffnet hast. Mit \"Während der Benutzung\" musst du die BladeNight immer im Vordergrund offen halten um uns zu unterstützen und deinen Standort zu teilen.Weiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
         "prominentdisclosuretrackingprealertandroidToAndroid_V10x":
             MessageLookupByLibrary.simpleMessage(
-                "Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNightzuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung \"Bei der Nutzung der App zulassen\"."),
+                "Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNight-Zuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung \"Bei der Nutzung der App zulassen\"."),
         "pushMessageParticipateAsBladeGuard":
             MessageLookupByLibrary.simpleMessage("Bladeguard-Abfrage Push"),
         "pushMessageParticipateAsBladeGuardTitle":

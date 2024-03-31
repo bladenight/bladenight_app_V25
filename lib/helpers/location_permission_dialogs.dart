@@ -96,10 +96,10 @@ class LocationPermissionDialog {
     final locationPermission = await loc2.getLocationPermissionStatus();
     if (locationPermission.locationPermissionId ==
         loc2.LocationPermission.denied.index) {
-      var res = await ScrollQuickAlert.show(
+      var acceptLocation = await ScrollQuickAlert.show(
           context: navigatorKey.currentContext!,
           showCancelBtn: true,
-          type: QuickAlertType.info,
+          type: QuickAlertType.confirm,
           title: Localize.current.requestLocationPermissionTitle,
           text: isAndroidPlatformGreater09BuildQ
               ? Localize.current
@@ -109,11 +109,12 @@ class LocationPermissionDialog {
           confirmBtnText: Localize.current.change,
           cancelBtnText: Localize.current.deny,
           onCancelBtnTap: () {
+            return navigatorKey.currentState?.pop(false);
+          },
+          onConfirmBtnTap: () {
             return navigatorKey.currentState?.pop(true);
           });
-      if (res == null || res == true) {
-        return false;
-      }
+      return acceptLocation ?? false;
     }
     //permanently denied or unknown
     return true;

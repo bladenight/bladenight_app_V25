@@ -1656,10 +1656,10 @@ class Localize {
     );
   }
 
-  /// `Please support the exact presentation of BladeNight skater train.\nYour friends will miss you!`
+  /// `Please support the exact presentation of BladeNight skater procession.\nYour friends will miss you!`
   String get friendswillmissyou {
     return Intl.message(
-      'Please support the exact presentation of BladeNight skater train.\nYour friends will miss you!',
+      'Please support the exact presentation of BladeNight skater procession.\nYour friends will miss you!',
       name: 'friendswillmissyou',
       desc: '',
       args: [],
@@ -2776,10 +2776,10 @@ class Localize {
     );
   }
 
-  /// `The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step.You should select 'While using the App'. If you deny locationaccess, only the BladeNight skater train can be watched without location sharing. Please support the accuracy of the train`
+  /// `The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step.You should select 'While using the App'. If you deny locationaccess, only the BladeNight skater procession can be watched without location sharing. Please support the accuracy of the train`
   String get prominentdisclosuretrackingprealertandroidToAndroid_V10x {
     return Intl.message(
-      'The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step.You should select \'While using the App\'. If you deny locationaccess, only the BladeNight skater train can be watched without location sharing. Please support the accuracy of the train',
+      'The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step.You should select \'While using the App\'. If you deny locationaccess, only the BladeNight skater procession can be watched without location sharing. Please support the accuracy of the train',
       name: 'prominentdisclosuretrackingprealertandroidToAndroid_V10x',
       desc: '',
       args: [],
