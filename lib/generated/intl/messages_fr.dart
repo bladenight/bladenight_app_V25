@@ -225,6 +225,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Code trop ancien ! Veuillez supprimer l\'entrée et réinviter un ami !"),
         "codecontainsonlydigits": MessageLookupByLibrary.simpleMessage(
             "Erreur, le code ne contient que des chiffres"),
+        "collectionStop": MessageLookupByLibrary.simpleMessage(
+            "Arrêt de collecte du cortège"),
         "confirmed": MessageLookupByLibrary.simpleMessage("Confirmé 😃"),
         "connected": MessageLookupByLibrary.simpleMessage("Connecté"),
         "connecting": MessageLookupByLibrary.simpleMessage("Connecter..."),

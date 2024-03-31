@@ -480,5 +480,6 @@
   "wasCanceledPleaseCheck": "is canceled! Please check this on https://bladenight-muenchen.de",
   "weekdayIntl": "{date}",
   "yes": "Yes",
-  "yesterday": "was yesterday"
+  "yesterday": "was yesterday",
+  "collectionStop": "Procession collection stop"
 }

@@ -53,6 +53,23 @@ class HeadingPoints extends _$HeadingPoints {
 }
 
 @riverpod
+class SpecialPoints extends _$SpecialPoints {
+  @override
+  Future<List<SpecialPoint>> build() async {
+    List<SpecialPoint> points = [];
+    points.add(SpecialPoint(const LatLng(48.15964, 11.52988),
+        'assets/images/skatemunich_child_stop.png'));
+    points.add(SpecialPoint(const LatLng(48.11015, 11.51962),
+        'assets/images/skatemunich_child_stop.png'));
+    points.add(SpecialPoint(const LatLng(48.12308, 11.56730),
+        'assets/images/skatemunich_child_stop.png'));
+    points.add(SpecialPoint(const LatLng(48.15726, 11.58417),
+        'assets/images/skatemunich_child_stop.png'));
+    return points;
+  }
+}
+
+@riverpod
 class ProcessionRoutePoints extends _$ProcessionRoutePoints {
   List<LatLng> rtData = <LatLng>[];
   int failCounter = 0;

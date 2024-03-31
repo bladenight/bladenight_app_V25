@@ -479,5 +479,6 @@
   "wasCanceledPleaseCheck": "wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de",
   "weekdayIntl": "{date}",
   "yes": "Ja",
-  "yesterday": "war gestern"
+  "yesterday": "war gestern",
+  "collectionStop": "Sammelstopp"
 }

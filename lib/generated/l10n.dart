@@ -3982,6 +3982,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Procession collection stop`
+  String get collectionStop {
+    return Intl.message(
+      'Procession collection stop',
+      name: 'collectionStop',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

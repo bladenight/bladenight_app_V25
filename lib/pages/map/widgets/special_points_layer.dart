@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../generated/l10n.dart';
+import '../../../helpers/location_bearing_distance.dart';
+import '../../../models/bn_map_marker.dart';
+import '../../../providers/active_event_route_provider.dart';
+import '../../../providers/map/icon_size_provider.dart';
+import 'map_marker_popup.dart';
+
+class SpecialPointsLayer extends ConsumerStatefulWidget {
+  SpecialPointsLayer(this.popupController, {super.key});
+
+  final PopupController popupController;
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SpecialPointsLayerState();
+}
+
+class _SpecialPointsLayerState extends ConsumerState<SpecialPointsLayer> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<SpecialPoint> specialPoints;
+    var specialPointsP = ref.watch(specialPointsProvider);
+    specialPoints = specialPointsP.value ?? <SpecialPoint>[];
+    var iconSize = ref.watch(iconSizeProvider);
+
+    return PopupMarkerLayer(
+      options: PopupMarkerLayerOptions(
+        popupDisplayOptions: PopupDisplayOptions(
+          builder: (BuildContext context, Marker marker) {
+            if (marker is BnMapMarker) {
+              return MapMarkerPopup(marker);
+            }
+            return Container();
+          },
+          snap: PopupSnap.markerBottom,
+          animation:
+              const PopupAnimation.fade(duration: Duration(milliseconds: 200)),
+        ),
+        markerCenterAnimation: const MarkerCenterAnimation(),
+
+        markers: [
+          if (specialPoints.isNotEmpty) ...[
+            for (var sp in specialPoints)
+              BnMapMarker(
+                buildContext: context,
+                headerText: Localize.of(context).collectionStop,
+                color: Colors.lightBlue,
+                point: sp.latLng,
+                width: iconSize * 1.2,
+                height: iconSize * 1.2,
+                child: Builder(
+                  builder: (context) => Image(
+                    image: AssetImage(
+                      sp.imageName,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ],
+        popupController: widget.popupController,
+        markerTapBehavior: MarkerTapBehavior.togglePopupAndHideRest(),
+        // : MarkerTapBehavior.togglePopupAndHideRest(),
+        onPopupEvent: (event, selectedMarkers) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
+      ),
+    );
+  }
+}

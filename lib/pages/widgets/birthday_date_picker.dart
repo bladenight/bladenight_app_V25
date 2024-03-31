@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
@@ -54,20 +55,21 @@ class _BirthdayTextFieldState extends ConsumerState<BirthdayDatePicker> {
             Text(Localize.of(context).birthday),
             CupertinoButton(
               // Display a CupertinoDatePicker in date picker mode.
-              onPressed: () => _showDialog(
-                CupertinoDatePicker(
-                  initialDateTime: date,
-                  mode: CupertinoDatePickerMode.date,
-                  use24hFormat: true,
-                  // This shows day of week alongside day of month
-                  showDayOfWeek: true,
-                  // This is called when the user changes the date.
-                  onDateTimeChanged: (DateTime newDate) {
-                    HiveSettingsDB.setBladeguardBirthday(newDate);
-                    setState(() => date = newDate);
-                  },
-                ),
-              ),
+              onPressed: () async{
+                final ThemeData theme = Theme.of(context);
+                var picked = await showDatePicker(
+                context: context,
+                  locale: const Locale('de', 'DE'),
+                  initialDate: DateTime.now().subtract(const Duration(days:365*16)),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now().subtract(const Duration(days:365*16)),
+
+                  );
+                if (picked != null){
+                  HiveSettingsDB.setBladeguardBirthday(picked);
+                  setState(() => date = picked);
+                }
+              },
               child: Text(
                 Localize.of(context).dateIntl(date),
               ),

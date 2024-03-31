@@ -479,5 +479,6 @@
   "wasCanceledPleaseCheck": "Est annulé ! Veuillez le vérifier sur https://bladenight-muenchen.de",
   "weekdayIntl": "{date}",
   "yes": "Oui",
-  "yesterday": "était hier"
+  "yesterday": "était hier",
+  "collectionStop": "Arrêt de collecte du cortège"
 }
