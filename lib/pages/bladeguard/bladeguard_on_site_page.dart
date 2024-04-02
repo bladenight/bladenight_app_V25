@@ -5,6 +5,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/network_connection_provider.dart';

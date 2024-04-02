@@ -480,5 +480,7 @@
   "weekdayIntl": "{date}",
   "yes": "Oui",
   "yesterday": "était hier",
-  "collectionStop": "Arrêt de collecte du cortège"
+  "collectionStop": "Arrêt de collecte du cortège",
+  "sendMail": "Send an email",
+  "updating": "Updating data"
 }

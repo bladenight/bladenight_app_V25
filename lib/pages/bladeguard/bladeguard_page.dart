@@ -25,6 +25,7 @@ import '../widgets/data_widget_left_right.dart';
 import '../widgets/data_widget_left_right_text.dart';
 import '../widgets/email_widget.dart';
 import '../widgets/phone_number.dart';
+import '../widgets/send_mail.dart';
 import 'bg_pin_dialog.dart';
 import 'bladeguard_on_site_page.dart';
 //import 'widgets/show_message_dialog.dart';
@@ -130,7 +131,13 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: SendMailWidget(),
+                        ),
+                      ),
                       if (!isBladeguard) ...[
                         const SizedBox(
                           height: 10,

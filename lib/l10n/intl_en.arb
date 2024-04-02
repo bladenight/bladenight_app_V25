@@ -481,5 +481,7 @@
   "weekdayIntl": "{date}",
   "yes": "Yes",
   "yesterday": "was yesterday",
-  "collectionStop": "Procession collection stop"
+  "collectionStop": "Procession collection stop",
+  "sendMail": "Send an email",
+  "updating": "Updating data"
 }

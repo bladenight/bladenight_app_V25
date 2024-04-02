@@ -75,7 +75,9 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
                 : AlignOnUpdate.never,
             style: LocationMarkerStyle(
               showAccuracyCircle: false,
+              showHeadingSector: false,
               headingSectorColor: ref.watch(meColorProvider),
+              accuracyCircleColor: CupertinoTheme.of(context).primaryColor,
               marker: DefaultLocationMarker(
                 color: CupertinoTheme.of(context).barBackgroundColor,
                 child: const UserLocationMarker(),

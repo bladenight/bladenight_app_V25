@@ -480,5 +480,7 @@
   "weekdayIntl": "{date}",
   "yes": "Ja",
   "yesterday": "war gestern",
-  "collectionStop": "Sammelstopp"
+  "collectionStop": "Sammelstopp",
+  "sendMail": "E-Mail Unterstützung",
+  "updating": "Aktualisiere Daten"
 }

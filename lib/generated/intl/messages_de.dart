@@ -559,6 +559,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Warte auf Internetverbindung ..."),
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Anfrage gesendet - Dauert ca. 30s."),
+        "sendMail":
+            MessageLookupByLibrary.simpleMessage("E-Mail Unterstützung"),
         "sendlink": MessageLookupByLibrary.simpleMessage("Link senden"),
         "sendlinkdescription": m11,
         "sendlinksubject": MessageLookupByLibrary.simpleMessage(
@@ -682,6 +684,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "unknown": MessageLookupByLibrary.simpleMessage("unbekannt"),
         "unknownerror": MessageLookupByLibrary.simpleMessage("unbek. Fehler"),
         "updatePhone": MessageLookupByLibrary.simpleMessage("UpdatePhone"),
+        "updating": MessageLookupByLibrary.simpleMessage("Aktualisiere Daten"),
         "userSpeed":
             MessageLookupByLibrary.simpleMessage("Meine GPS-Geschwindigkeit."),
         "validatefriend":

@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:bladenight_app_flutter/pages/widgets/no_connection_warning.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -120,8 +121,12 @@ class _EventsPageState extends ConsumerState<EventsPage>
         ),
         CupertinoSliverRefreshControl(
           onRefresh: () async {
-            return context.refresh(allEventsProvider);
+            return context.read(allEventsProvider);
           },
+        ),
+        const SliverToBoxAdapter(
+          child: FractionallySizedBox(
+              widthFactor: 0.9, child: ConnectionWarning()),
         ),
       ],
       body: Builder(builder: (context) {
@@ -166,7 +171,10 @@ class _EventsPageState extends ConsumerState<EventsPage>
                     effect: JumpingDotEffect(
                       dotHeight: 16,
                       dotWidth: 16,
-                      dotColor: CupertinoTheme.of(context).barBackgroundColor,
+                      dotColor: CupertinoTheme.of(context).brightness ==
+                              Brightness.dark
+                          ? Colors.grey
+                          : Colors.black,
                       activeDotColor: CupertinoTheme.of(context).primaryColor,
                     ),
                   ),

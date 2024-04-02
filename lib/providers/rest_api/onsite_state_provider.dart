@@ -217,6 +217,10 @@ Future<ResultStringOrError> checkBladeguardMail(CheckBladeguardMailRef ref,
 class BgIsOnSite extends _$BgIsOnSite {
   @override
   FutureOr<bool> build() async {
+    if (!HiveSettingsDB.bgSettingVisible) {
+      state = const AsyncValue.data(false);
+      return false;
+    }
     final repo = ref.read(bladeGuardApiRepositoryProvider);
     try {
       var res = await repo.checkBladeguardIsOnSite();

@@ -3992,6 +3992,26 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Send an email`
+  String get sendMail {
+    return Intl.message(
+      'Send an email',
+      name: 'sendMail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updating data`
+  String get updating {
+    return Intl.message(
+      'Updating data',
+      name: 'updating',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

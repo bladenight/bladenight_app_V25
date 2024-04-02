@@ -41,11 +41,11 @@ class ServerConfigDb {
   }
 
   static String get restApiLinkBg {
-    return '${_restApiLink}bg';
+    return '$_restApiLink/bg';
   }
 
   static String get restApiLinkMsg {
-    return '${_restApiLink}msg';
+    return '$_restApiLink/msg';
   }
 
   static String get restApiLinkPassword {

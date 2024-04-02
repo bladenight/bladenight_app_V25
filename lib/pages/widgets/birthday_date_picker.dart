@@ -56,11 +56,10 @@ class _BirthdayTextFieldState extends ConsumerState<BirthdayDatePicker> {
             CupertinoButton(
               // Display a CupertinoDatePicker in date picker mode.
               onPressed: () async{
-                final ThemeData theme = Theme.of(context);
                 var picked = await showDatePicker(
                 context: context,
                   locale: const Locale('de', 'DE'),
-                  initialDate: DateTime.now().subtract(const Duration(days:365*16)),
+                  initialDate: HiveSettingsDB.bladeguardBirthday,
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now().subtract(const Duration(days:365*16)),
 

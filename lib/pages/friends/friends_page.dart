@@ -144,6 +144,10 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
               return context.read(friendsLogicProvider).refreshFriends();
             },
           ),
+          const SliverToBoxAdapter(
+            child: FractionallySizedBox(
+                widthFactor: 0.9, child: ConnectionWarning()),
+          ),
           SliverToBoxAdapter(
             child: FractionallySizedBox(
               widthFactor: 0.9,
@@ -166,10 +170,6 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                 ),
               ),
             ),
-          ),
-          const SliverToBoxAdapter(
-            child: FractionallySizedBox(
-                widthFactor: 0.9, child: ConnectionWarning()),
           ),
           Builder(builder: (context) {
             var friends = context.watch(filteredFriends);

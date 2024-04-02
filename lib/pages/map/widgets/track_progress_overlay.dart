@@ -17,9 +17,9 @@ import '../../../providers/active_event_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
-import '../../../providers/settings/me_color_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
+import '../../../providers/settings/me_color_provider.dart';
 import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
 import 'special_function_info.dart';
@@ -70,7 +70,31 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     var actualOrNextEvent = ref.watch(activeEventProvider);
     var eventIsActive = actualOrNextEvent.status == EventStatus.running ||
         (rtu != null && rtu.eventIsActive);
-    if (actualOrNextEvent.status == EventStatus.noevent) {
+    if (rtu == null ||
+        rtu.rpcException != null ||
+        actualOrNextEvent.rpcException != null) {
+      return Positioned(
+        top: MediaQuery.of(context).padding.top + 20,
+        left: 15,
+        right: 15,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: CupertinoTheme.of(context).primaryColor,
+              width: 1.0,
+            ),
+          ),
+          child: Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: Text(Localize.of(context).updating),
+            ),
+          ),
+        ),
+      );
+    } else if (actualOrNextEvent.status == EventStatus.noevent) {
       return Stack(children: [
         Positioned(
           top: MediaQuery.of(context).padding.top + 10,
@@ -95,11 +119,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               .textTheme
                               .navTitleTextStyle,
                         ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        if (actualOrNextEvent.rpcException != null)
-                          Text(Localize.of(context).dataCouldBeOutdated),
                       ]),
                     ),
                   );
@@ -142,42 +161,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                   BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Builder(builder: (context) {
-                      if (rtu == null) {
-                        return Container(
-                          color: CupertinoDynamicColor.resolve(
-                              CupertinoColors.systemBackground.withOpacity(0.2),
-                              context),
-                          padding: const EdgeInsets.all(15),
-                          child: Center(
-                            child: Column(children: [
-                              Text(
-                                Localize.of(context).nodatareceived,
-                                style: CupertinoTheme.of(context)
-                                    .textTheme
-                                    .navTitleTextStyle,
-                              ),
-                              Center(
-                                child: Align(
-                                  child: SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: Stack(children: [
-                                      Align(
-                                        child: CircularProgressIndicator(
-                                          color: CupertinoTheme.of(context)
-                                              .primaryColor,
-                                          strokeWidth: 2,
-                                        ),
-                                      ),
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                            ]),
-                          ),
-                        );
-                      }
-
                       return Container(
                         color: CupertinoDynamicColor.resolve(
                             CupertinoColors.systemBackground.withOpacity(0.1),
@@ -345,7 +328,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                   .barBackgroundColor,
                                           child: CircleAvatar(
                                             backgroundColor:
-                                            CupertinoTheme.of(context).primaryColor,
+                                                CupertinoTheme.of(context)
+                                                    .primaryColor,
                                             child: ref.watch(
                                                     isUserParticipatingProvider)
                                                 ? ImageIcon(
@@ -641,24 +625,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               ),
                             ),
                           ],
-                          if (rtu.rpcException != null)
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color:
-                                      CupertinoTheme.of(context).primaryColor,
-                                  width: 3.0,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: FittedBox(
-                                  child:
-                                      Text(Localize.of(context).nodatareceived),
-                                ),
-                              ),
-                            ),
                           const SizedBox(
                             height: 5,
                           ),

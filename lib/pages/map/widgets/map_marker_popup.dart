@@ -23,7 +23,7 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
         width: MediaQuery.of(context).orientation ==
             Orientation.portrait?
         MediaQuery.of(context).size.width*0.8:
-          MediaQuery.of(context).size.width*0.5,
+          MediaQuery.of(context).size.width*0.8,
 
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

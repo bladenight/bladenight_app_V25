@@ -25,12 +25,14 @@ class ActiveEvent extends _$ActiveEvent {
   Future<void> refresh({bool forceUpdate = false}) async {
     try {
       //avoid permanent trigger
-      var lastUpdate =HiveSettingsDB.actualEventLastUpdate;
+      var lastUpdate = HiveSettingsDB.actualEventLastUpdate;
       var diffSec = DateTime.now().difference(lastUpdate).inSeconds;
       if (diffSec > 10 || forceUpdate) {
         var rpcEvent = await Event.getEventWamp(forceUpdate: forceUpdate);
         if (rpcEvent.rpcException != null) {
           state.rpcException = rpcEvent.rpcException;
+          await Future.delayed(const Duration(milliseconds: 500));
+          refresh(forceUpdate: true);
           //don't update
           return;
         }

@@ -454,7 +454,43 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       });
                                     }),
                           ],
-                        ),
+                        ), CupertinoFormSection(
+                            header: Text(Localize.of(context).setLogData),
+                            children: <Widget>[
+                              CupertinoButton(
+                                  child: Text(
+                                      'Loglevel ${BnLog.getActiveLogLevel().name}'),
+                                  onPressed: () async {
+                                    await BnLog.showLogLevelDialog(
+                                        context);
+                                    setState(() {});
+                                  }),
+                              CupertinoButton(
+                                  child: Text(
+                                      Localize.of(context).setClearLogs),
+                                  onPressed: () async {
+                                    await ScrollQuickAlert.show(
+                                        context: context,
+                                        showCancelBtn: true,
+                                        type: QuickAlertType.warning,
+                                        title: Localize
+                                            .current.clearLogsTitle,
+                                        text: Localize.current
+                                            .clearLogsQuestion,
+                                        confirmBtnText:
+                                        Localize.current.yes,
+                                        cancelBtnText:
+                                        Localize.current.cancel,
+                                        onConfirmBtnTap: () {
+                                          BnLog.clearLogs();
+                                          showToast(
+                                              message: Localize
+                                                  .current.finished);
+                                          if (!mounted) return;
+                                          Navigator.of(context).pop();
+                                        });
+                                  }),
+                            ]),
                         const SizedBox(
                           height: 10,
                         ),
@@ -462,43 +498,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           visible: _openInvisibleSettings,
                           child: Column(
                             children: [
-                              CupertinoFormSection(
-                                  header: Text(Localize.of(context).setLogData),
-                                  children: <Widget>[
-                                    CupertinoButton(
-                                        child: Text(
-                                            'Loglevel ${BnLog.getActiveLogLevel().name}'),
-                                        onPressed: () async {
-                                          await BnLog.showLogLevelDialog(
-                                              context);
-                                          setState(() {});
-                                        }),
-                                    CupertinoButton(
-                                        child: Text(
-                                            Localize.of(context).setClearLogs),
-                                        onPressed: () async {
-                                              await ScrollQuickAlert.show(
-                                                  context: context,
-                                                  showCancelBtn: true,
-                                                  type: QuickAlertType.warning,
-                                                  title: Localize
-                                                      .current.clearLogsTitle,
-                                                  text: Localize.current
-                                                      .clearLogsQuestion,
-                                                  confirmBtnText:
-                                                      Localize.current.yes,
-                                                  cancelBtnText:
-                                                      Localize.current.cancel,
-                                                  onConfirmBtnTap: () {
-                                                    BnLog.clearLogs();
-                                                    showToast(
-                                                        message: Localize
-                                                            .current.finished);
-                                                    if (!mounted) return;
-                                                    Navigator.of(context).pop();
-                                                  });
-                                        }),
-                                  ]),
                               if (HiveSettingsDB
                                       .useAlternativeLocationProvider ==
                                   false)
