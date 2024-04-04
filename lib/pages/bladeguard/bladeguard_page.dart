@@ -306,7 +306,6 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       if (!kIsWeb &&
                           (HiveSettingsDB.bgLeaderSettingVisible ||
                               Globals.adminPass != null ||
-                              HiveSettingsDB.hasSpecialRights ||
                               HiveSettingsDB.bgIsAdmin))
                         CupertinoFormSection(
                           header: Text(Localize.of(context).markMeAsHead),
@@ -335,7 +334,6 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       if (!kIsWeb &&
                           (HiveSettingsDB.bgLeaderSettingVisible ||
                               Globals.adminPass != null ||
-                              HiveSettingsDB.hasSpecialRights ||
                               HiveSettingsDB.bgIsAdmin))
                         CupertinoFormSection(
                           header: Text(Localize.of(context).markMeAsTail),

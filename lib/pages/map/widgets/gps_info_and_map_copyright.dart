@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
@@ -17,16 +18,17 @@ import '../../widgets/scroll_quick_alert.dart';
 import 'open_street_map_copyright.dart';
 
 ///Shows a row at bottom with OSM copyright and GPS speed widget
-class GPSInfoAndMapCopyright extends StatefulWidget {
+class GPSInfoAndMapCopyright extends ConsumerStatefulWidget {
   const GPSInfoAndMapCopyright({super.key, this.showOdoMeter = true});
 
   final bool showOdoMeter;
 
   @override
-  State<StatefulWidget> createState() => _GPSInfoAndMapCopyright();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _GPSInfoAndMapCopyright();
 }
 
-class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
+class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
   late final Stream<bg.Location?> _locationStream;
   late double currentUserSpeed = -1;
   late double currentUserOdoDriven = 0.0;
@@ -82,10 +84,10 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                         : SizedBox(
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: Builder(builder: (context) {
-                              if (context.watch(
+                              if (ref.read(
                                       gpsLocationPermissionsStatusProvider) !=
                                   LocationPermissionStatus.denied) {
-                                var alwaysPermissionGranted = (context.watch(
+                                var alwaysPermissionGranted = (ref.read(
                                         gpsLocationPermissionsStatusProvider) ==
                                     LocationPermissionStatus.always);
                                 return GestureDetector(
@@ -96,7 +98,7 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                                   },
                                   child: FloatingActionButton.extended(
                                     backgroundColor:
-                                        context.watch(isTrackingProvider)
+                                        ref.watch(isTrackingProvider)
                                             ? alwaysPermissionGranted
                                                 ? CupertinoTheme.of(context)
                                                     .barBackgroundColor
@@ -106,7 +108,7 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                                                 .barBackgroundColor
                                                 .withOpacity(0.4),
                                     foregroundColor:
-                                        context.watch(isTrackingProvider)
+                                        ref.watch(isTrackingProvider)
                                             ? alwaysPermissionGranted
                                                 ? CupertinoTheme.of(context)
                                                     .primaryColor
@@ -120,7 +122,7 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                                                   .primaryContrastingColor
                                               : CupertinoTheme.of(context)
                                                   .primaryColor),
-                                      context.watch(isUserParticipatingProvider)
+                                      ref.watch(isUserParticipatingProvider)
                                           ? ImageIcon(
                                               const AssetImage(
                                                   'assets/images/skater_icon_256.png'),
@@ -145,7 +147,8 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                                     onPressed: () async {
                                       if (alwaysPermissionGranted) {
                                         await LocationProvider.instance
-                                            .resetOdoMeterAndRoutePoints(context);
+                                            .resetOdoMeterAndRoutePoints(
+                                                context);
                                       } else {
                                         await ScrollQuickAlert.show(
                                             context: context,
@@ -155,7 +158,7 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                                                 .openOperatingSystemSettings,
                                             text:
                                                 '${alwaysPermissionGranted ? "" : "\n${Localize.of(context).onlyWhileInUse}"} \n'
-                                                '${Localize.of(context).userSpeed} ${context.watch(realUserSpeedProvider) == null ? '- km/h' : currentUserSpeed.formatSpeedKmH()} \n'
+                                                '${Localize.of(context).userSpeed} ${ref.read(realUserSpeedProvider) == null ? '- km/h' : currentUserSpeed.formatSpeedKmH()} \n'
                                                 '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${currentUserOdoDriven.toStringAsFixed(1)} km'}\n'
                                                 '${Localize.of(context).resetLongPress}',
                                             confirmBtnText: Localize.of(context)
@@ -168,7 +171,6 @@ class _GPSInfoAndMapCopyright extends State<GPSInfoAndMapCopyright> {
                                               if (!context.mounted) return;
                                               Navigator.of(context).pop();
                                             });
-
                                       }
                                     },
                                   ),

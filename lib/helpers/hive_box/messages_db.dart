@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -57,7 +58,7 @@ class MessagesDb {
     _messagesDbBox ??= await Hive.openBox(dbName);
     try {
       var json = message.toJson();
-      await _messagesDbBox!.put(message.uid,json);
+      await _messagesDbBox!.put(message.uid, json);
     } catch (e) {
       BnLog.error(text: 'Error addMessage ${e.toString()}', exception: e);
     }
@@ -77,7 +78,9 @@ class MessagesDb {
   static Future<bool> updateMessages(ExternalAppMessages messages) async {
     _messagesDbBox ??= await Hive.openBox(dbName);
     try {
-      int lastUpdateTimestamp = 0;
+
+      int lastUpdateTimestamp = await getLastMessagesUpdateTimestamp;
+      int lastFromDBTimestamp = await getLastMessagesUpdateTimestamp;
       for (var message in messages.messages) {
         updateMessage(message);
         //log last update
@@ -86,7 +89,7 @@ class MessagesDb {
         }
       }
       //update timestamp
-      setLastMessagesUpdateTimestamp(lastUpdateTimestamp);
+      setLastMessagesUpdateTimestamp(max(lastUpdateTimestamp, lastFromDBTimestamp));
       return true;
     } catch (e) {
       BnLog.error(text: 'Error addMessage ${e.toString()}', exception: e);
