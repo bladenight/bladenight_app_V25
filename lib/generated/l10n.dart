@@ -4012,6 +4012,26 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Open an external browser?`
+  String get leaveAppWarningTitle {
+    return Intl.message(
+      'Open an external browser?',
+      name: 'leaveAppWarningTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: `
+  String get leaveAppWarning {
+    return Intl.message(
+      'You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: ',
+      name: 'leaveAppWarning',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

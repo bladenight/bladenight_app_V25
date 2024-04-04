@@ -338,9 +338,7 @@ class WampV2 {
             // [SUBSCRIBED, SUBSCRIBE.Request|id, Subscription|id]
             //    [33, 713845233, 5512315355]
             var messageResult = wampMessage[2];
-            var id = int.parse(wampMessage[1]);
-            _subscriptions.add(id);
-
+            _subscriptions.add(wampMessage[2]);
             calls[requestId]?.completer.complete(messageResult);
             calls.remove(requestId);
             BnLog.debug(text: 'subscribed id:$messageResult');

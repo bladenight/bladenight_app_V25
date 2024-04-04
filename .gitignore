@@ -3,6 +3,7 @@
 *.log
 *.pyc
 *.swp
+*.mapper.dart
 .DS_Store
 .atom/
 .buildlog/
@@ -31,6 +32,7 @@
 .pub-cache/
 .pub/
 /build/
+
 
 # Web related
 

@@ -482,5 +482,7 @@
   "yesterday": "war gestern",
   "collectionStop": "Sammelstopp",
   "sendMail": "E-Mail Unterstützung",
-  "updating": "Aktualisiere Daten"
+  "updating": "Aktualisiere Daten",
+  "leaveAppWarningTitle": "Externen Browser öffnen?",
+  "leaveAppWarning": "Sie werden zu Ihrem Geräte-Internet-Browser weitergeleitet. Bitte wechseln Sie zu dieser App zurück, wenn Sie fertig sind. Die App läuft im Hintergrund weiter. \nÖffne: "
 }

@@ -70,10 +70,8 @@ mixin ExternalAppMessagesMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ExternalAppMessagesMapper.ensureInitialized()
-                .isValueEqual(this as ExternalAppMessages, other));
+    return ExternalAppMessagesMapper.ensureInitialized()
+        .equalsValue(this as ExternalAppMessages, other);
   }
 
   @override

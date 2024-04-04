@@ -366,6 +366,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "lastseen": MessageLookupByLibrary.simpleMessage("Last seen"),
         "lastupdate": MessageLookupByLibrary.simpleMessage("Last update"),
         "later": MessageLookupByLibrary.simpleMessage("Later"),
+        "leaveAppWarning": MessageLookupByLibrary.simpleMessage(
+            "You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: "),
+        "leaveAppWarningTitle":
+            MessageLookupByLibrary.simpleMessage("Open an external browser?"),
         "leavewheninuse":
             MessageLookupByLibrary.simpleMessage("Leave settings"),
         "length": MessageLookupByLibrary.simpleMessage("Length"),

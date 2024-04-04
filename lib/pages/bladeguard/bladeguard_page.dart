@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/globals.dart';
@@ -172,14 +171,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               child: CupertinoButton(
                                 onPressed: () async {
                                   var uri = Uri.parse(bladeguardRegisterLink);
-                                  if (await canLaunchUrl(uri)) {
-                                    await launchUrl(uri,
-                                        mode: LaunchMode.externalApplication);
-                                  } else {
-                                    if (!context.mounted) return;
-                                    showToast(
-                                        message: Localize.of(context).failed);
-                                  }
+                                  Launch.launchUrlFromUri(uri);
                                 },
                                 color: Colors.lightGreen,
                                 child: Text(Localize.of(context).register),

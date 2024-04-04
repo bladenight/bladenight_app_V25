@@ -381,6 +381,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Dernière observation"),
         "lastupdate":
             MessageLookupByLibrary.simpleMessage("Dernière mise à jour"),
+        "leaveAppWarning": MessageLookupByLibrary.simpleMessage(
+            "Vous êtes prêt à utiliser votre navigateur Internet. Bien que cette application soit disponible, lorsque vous êtes prêt à le faire. L\'application est disponible dans l\'arrière-plan plus loin. \n"),
+        "leaveAppWarningTitle": MessageLookupByLibrary.simpleMessage(
+            "Le navigateur externe est-il activé ?"),
         "leavewheninuse":
             MessageLookupByLibrary.simpleMessage("Laisser les paramètres"),
         "length": MessageLookupByLibrary.simpleMessage("Longueur"),

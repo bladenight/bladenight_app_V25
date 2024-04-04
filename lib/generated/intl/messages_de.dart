@@ -373,6 +373,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "lastseen": MessageLookupByLibrary.simpleMessage("Zuletzt gesehen"),
         "lastupdate": MessageLookupByLibrary.simpleMessage("Letztes Update"),
         "later": MessageLookupByLibrary.simpleMessage("Später"),
+        "leaveAppWarning": MessageLookupByLibrary.simpleMessage(
+            "Sie werden zu Ihrem Geräte-Internet-Browser weitergeleitet. Bitte wechseln Sie zu dieser App zurück, wenn Sie fertig sind. Die App läuft im Hintergrund weiter. \nÖffne: "),
+        "leaveAppWarningTitle":
+            MessageLookupByLibrary.simpleMessage("Externen Browser öffnen?"),
         "leavewheninuse":
             MessageLookupByLibrary.simpleMessage("Lasse Einstellung"),
         "length": MessageLookupByLibrary.simpleMessage("Länge"),

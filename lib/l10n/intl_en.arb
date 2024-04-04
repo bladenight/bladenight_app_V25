@@ -483,5 +483,7 @@
   "yesterday": "was yesterday",
   "collectionStop": "Procession collection stop",
   "sendMail": "Send an email",
-  "updating": "Updating data"
+  "updating": "Updating data",
+  "leaveAppWarningTitle": "Open an external browser?",
+  "leaveAppWarning": "You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: "
 }
