@@ -23,12 +23,6 @@ class UserIsBladeguard extends _$UserIsBladeguard {
       //switch off and unregister
       HiveSettingsDB.setBgSettingVisible(false);
       HiveSettingsDB.setBgLeaderSettingVisible(false);
-      HiveSettingsDB.setIsSpecialTail(false);
-      HiveSettingsDB.setIsSpecialHead(false);
-      HiveSettingsDB.setWantSeeFullOfProcession(false);
-      HiveSettingsDB.setSpecialRightsPrefs(false);
-      HiveSettingsDB.setIsBladeGuard(false);
-      HiveSettingsDB.setOneSignalRegisterBladeGuardPush(false);
       OnesignalHandler.registerPushAsBladeGuard(false,'');
       state = value;
       return;

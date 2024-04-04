@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -105,7 +106,7 @@ class MessagesLogic with ChangeNotifier {
 
       var host = ServerConfigDb.restApiLinkMsg;
       var response =
-          await dio.post('$host/getMessages?$parameter', options: options);
+          await dio.post('$host/getMessages?q=$parameter', options: options);
       if (response.statusCode != 200) {
         await _loadMessages();
         return;
@@ -113,8 +114,15 @@ class MessagesLogic with ChangeNotifier {
       var decodedMsg = CryptHelper.decryptAES(
           response.data, ServerConfigDb.restApiLinkPassword);
       if (decodedMsg == null) return;
-      var messages = ExternalAppMessagesMapper.fromJson(decodedMsg);
-      await MessagesDb.updateMessages(messages);
+      var msg = jsonDecode(decodedMsg);
+      List<ExternalAppMessage> msgList = [];
+      for (var mess in msg){
+        var detMsg = ExternalAppMessageMapper.fromMap(mess);
+        msgList.add(detMsg);
+      }
+      var mgges = ExternalAppMessages(messages: msgList);
+      //var messages = ExternalAppMessagesMapper.fromJson(decodedMsg);
+      await MessagesDb.updateMessages(mgges);
       await _loadMessages();
       //var response = await http.get(Uri.parse("https://bladenight.app/api/?results=20"));
     } catch (ex) {

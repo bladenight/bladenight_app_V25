@@ -45,6 +45,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      BnLog.trace(
+          text: 'Track_progress_overlay - initState');
       ref.read(locationProvider).refresh(forceUpdate: true); //update in map
       ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
       ref.read(refreshTimerProvider.notifier).start();
@@ -53,10 +55,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (Platform.isAndroid || Platform.isIOS) {
-      BnLog.debug(
+    BnLog.trace(
           text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
-    }
     if (state == AppLifecycleState.resumed) {
       ref.read(refreshTimerProvider.notifier).start();
     } else if (state == AppLifecycleState.paused) {

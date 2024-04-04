@@ -59,7 +59,7 @@ class BnLogOutput extends LogOutput {
         buffer.add(line);
       }
     }
-    _logBox.put(key, buffer.join(";"));
+    _logBox.put(key, buffer.join(';'));
   }
 
   String getTime(DateTime time) {

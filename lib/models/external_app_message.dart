@@ -12,7 +12,7 @@ class ExternalAppMessage with ExternalAppMessageMappable {
   final int lastChange;
   @MappableField(key: 'tim')
   final int timeStamp;
-  @MappableField(key: 'tit')
+  @MappableField(key: 'title')
   final String title;
   @MappableField(key: 'bod')
   final String body;
@@ -20,7 +20,7 @@ class ExternalAppMessage with ExternalAppMessageMappable {
   ///groupID
   @MappableField(key: 'gid')
   String? groupId;
-  @MappableField(key: 'read')
+  @MappableField(key: 'msgRead')
   bool read;
   @MappableField(key: 'del')
   bool deleted;
@@ -36,11 +36,11 @@ class ExternalAppMessage with ExternalAppMessageMappable {
   String? button2Text;
   @MappableField(key: 'bt3')
   String? button3Text;
-  @MappableField(key: 'bt1l')
+  @MappableField(key: 'btl1')
   String? button1Link;
-  @MappableField(key: 'bt2l')
+  @MappableField(key: 'btl2')
   String? button2Link;
-  @MappableField(key: 'bt3l')
+  @MappableField(key: 'btl3')
   String? button3Link;
 
   ExternalAppMessage(
@@ -56,6 +56,9 @@ class ExternalAppMessage with ExternalAppMessageMappable {
       this.button1Text,
       this.button2Text,
       this.button3Text,
+      this.button1Link,
+      this.button2Link,
+      this.button3Link,
       this.groupId,
       this.validToTimeStamp});
 

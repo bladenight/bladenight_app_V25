@@ -1,5 +1,4 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:bladenight_app_flutter/pages/widgets/scroll_quick_alert.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -31,6 +30,7 @@ import '../providers/settings/me_color_provider.dart';
 import '../wamp/wamp_v2.dart';
 import 'bladeguard/bladeguard_page.dart';
 import 'widgets/one_signal_id_widget.dart';
+import 'widgets/scroll_quick_alert.dart';
 import 'widgets/settings_invisible_offline.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -318,7 +318,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 Text(Localize.of(context).resetOdoMeterTitle),
                             onPressed: () async {
                               await LocationProvider.instance
-                                .resetOdoMeterAndRoutePoints(context);
+                                  .resetOdoMeterAndRoutePoints(context);
                               setState(() {});
                             },
                           ),
@@ -363,7 +363,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       ? const CircularProgressIndicator()
                                       : CupertinoSwitch(
                                           onChanged: (val) async {
-                                            HiveSettingsDB
+                                            await HiveSettingsDB
                                                 .setPushNotificationsEnabled(
                                                     val);
                                             setState(() {
@@ -454,43 +454,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       });
                                     }),
                           ],
-                        ), CupertinoFormSection(
-                            header: Text(Localize.of(context).setLogData),
-                            children: <Widget>[
-                              CupertinoButton(
-                                  child: Text(
-                                      'Loglevel ${BnLog.getActiveLogLevel().name}'),
-                                  onPressed: () async {
-                                    await BnLog.showLogLevelDialog(
-                                        context);
-                                    setState(() {});
-                                  }),
-                              CupertinoButton(
-                                  child: Text(
-                                      Localize.of(context).setClearLogs),
-                                  onPressed: () async {
-                                    await ScrollQuickAlert.show(
-                                        context: context,
-                                        showCancelBtn: true,
-                                        type: QuickAlertType.warning,
-                                        title: Localize
-                                            .current.clearLogsTitle,
-                                        text: Localize.current
-                                            .clearLogsQuestion,
-                                        confirmBtnText:
-                                        Localize.current.yes,
-                                        cancelBtnText:
-                                        Localize.current.cancel,
-                                        onConfirmBtnTap: () {
-                                          BnLog.clearLogs();
-                                          showToast(
-                                              message: Localize
-                                                  .current.finished);
-                                          if (!mounted) return;
-                                          Navigator.of(context).pop();
-                                        });
-                                  }),
-                            ]),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
@@ -498,9 +462,46 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           visible: _openInvisibleSettings,
                           child: Column(
                             children: [
-                              if (HiveSettingsDB
-                                      .useAlternativeLocationProvider ==
-                                  false)
+                              CupertinoFormSection(
+                                  header: Text(Localize.of(context).setLogData),
+                                  children: <Widget>[
+                                    CupertinoButton(
+                                        child: Text(
+                                            'Loglevel ${BnLog.getActiveLogLevel().name}'),
+                                        onPressed: () async {
+                                          await BnLog.showLogLevelDialog(
+                                              context);
+                                          setState(() {});
+                                        }),
+                                    CupertinoButton(
+                                        child: Text(
+                                            Localize.of(context).setClearLogs),
+                                        onPressed: () async {
+                                          await ScrollQuickAlert.show(
+                                              context: context,
+                                              showCancelBtn: true,
+                                              type: QuickAlertType.warning,
+                                              title: Localize
+                                                  .current.clearLogsTitle,
+                                              text: Localize
+                                                  .current.clearLogsQuestion,
+                                              confirmBtnText:
+                                                  Localize.current.yes,
+                                              cancelBtnText:
+                                                  Localize.current.cancel,
+                                              onConfirmBtnTap: () async {
+                                                await BnLog.clearLogs();
+                                                await bg.Logger.destroyLog();
+                                                showToast(
+                                                    message: Localize
+                                                        .current.finished);
+                                                if (!context.mounted) return;
+                                                Navigator.of(context).pop();
+                                              });
+                                        }),
+                                  ]),
+                              if (!HiveSettingsDB
+                                  .useAlternativeLocationProvider)
                                 CupertinoFormSection(
                                     header: const Text('Geolocation Log'),
                                     children: <Widget>[
@@ -509,33 +510,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                               .setExportLogSupport),
                                           onPressed: () =>
                                               exportBgLocationLogs()),
-                                      CupertinoButton(
-                                          child: Text(Localize.of(context)
-                                              .setClearLogs),
-                                          onPressed: () async {
-                                                await ScrollQuickAlert.show(
-                                                    context: context,
-                                                    showCancelBtn: true,
-                                                    type:
-                                                        QuickAlertType.warning,
-                                                    title: Localize
-                                                        .current.clearLogsTitle,
-                                                    text: Localize.current
-                                                        .clearLogsQuestion,
-                                                    confirmBtnText:
-                                                        Localize.current.yes,
-                                                    cancelBtnText:
-                                                        Localize.current.cancel,
-                                                    onConfirmBtnTap: () {
-                                                      bg.Logger.destroyLog();
-                                                      showToast(
-                                                          message: Localize
-                                                              .current
-                                                              .finished);
-                                                      if (!mounted) return;
-                                                      Navigator.of(context).pop();
-                                                    });
-                                          }),
                                     ]),
                               const SizedBox(height: 10),
                               Padding(
@@ -732,7 +706,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       });
                                     },
                                     onFieldSubmitted: (value) {
-                                      importData(context,value);
+                                      importData(context, value);
                                     },
                                   ),
                                   AnimatedOpacity(

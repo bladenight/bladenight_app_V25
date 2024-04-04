@@ -471,7 +471,7 @@ class WampV2 {
     _isWebsocketRunning = false;
     _hadShakeHands = false;
     _startShakeHands = false;
-    subscriptions.clear();
+    _subscriptions.clear();
   }
 
   String _getLink() {

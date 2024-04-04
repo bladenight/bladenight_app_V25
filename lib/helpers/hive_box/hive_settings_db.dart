@@ -14,6 +14,7 @@ import 'package:logger/logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/app_constants.dart';
+import '../../app_settings/globals.dart';
 import '../../models/event.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
@@ -188,9 +189,15 @@ class HiveSettingsDB {
   static void setBgSettingVisible(bool val) async {
     _hiveBox.put(bgSettingVisibleKey, val);
     if (val == false) {
+      setBgLeaderSettingVisible(false);
+      setIsSpecialTail(false);
+      setIsSpecialHead(false);
+      setWantSeeFullOfProcession(false);
+      setHasSpecialRightsPrefs(false);
+      setBgIsAdmin(false);
       setBladeguardPin(null);
-      setRcvSkatemunichInfos(false);
-      setOneSignalRegisterBladeGuardPush(false);
+      Globals.adminPass = null;
+
       await OnesignalHandler.unRegisterPushAsBladeGuard();
       //including remove special rights
     }
@@ -256,8 +263,8 @@ class HiveSettingsDB {
   ///set if  setFirstStart
   static void setFirstStart(bool val) {
     _hiveBox.put(_firstStartKey, val);
-  }  
-  
+  }
+
   static const String _hasShownIntroKey = 'hasShownIntroPref';
 
   ///get hasShownIntro
@@ -303,8 +310,8 @@ class HiveSettingsDB {
   }
 
   ///set if  setPushNotificationsEnabled were shown
-  static void setPushNotificationsEnabled(bool val) {
-    _hiveBox.put(_pushNotificationsEnabledKey, val);
+  static Future<void> setPushNotificationsEnabled(bool val) async {
+    await _hiveBox.put(_pushNotificationsEnabledKey, val);
   }
 
   static const String _appIdKey = 'appIdPref';
@@ -317,9 +324,8 @@ class HiveSettingsDB {
   ///set if  setAppId were shown
   static Future<void> setAppId(String val) async {
     await _hiveBox.put(_appIdKey, val);
+  }
 
-  }  
-  
   static const String _oneSignalIdKey = 'oneSignalIdPref';
 
   ///get oneSignalId
@@ -440,6 +446,18 @@ class HiveSettingsDB {
     _hiveBox.put(_bgTeamKey, val);
   }
 
+  static const String _bgIsAdminKey = 'bgIsAdminPref';
+
+  ///get isAdmin
+  static bool get bgIsAdmin {
+    return _hiveBox.get(_bgIsAdminKey, defaultValue: false);
+  }
+
+  ///set IsAdmin for Bladeguard
+  static void setBgIsAdmin(bool val) {
+    _hiveBox.put(_bgIsAdminKey, val);
+  }
+
   static const String _oneSignalRegisterBladeGuardPushKey =
       'oneSignalRegisterBladeGuardPushPref';
 
@@ -545,7 +563,7 @@ class HiveSettingsDB {
     return _hiveBox.get(_hasSpecialRightsPref, defaultValue: false);
   }
 
-  static void setSpecialRightsPrefs(bool value) {
+  static void setHasSpecialRightsPrefs(bool value) {
     _hiveBox.put(_hasSpecialRightsPref, value);
   }
 

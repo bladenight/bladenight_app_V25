@@ -42,7 +42,6 @@ class MapPage extends ConsumerStatefulWidget {
 class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   late MapController _mapController;
   late CameraFollow followLocationState = CameraFollow.followOff;
-  Timer? _updateRealTimeDataTimer;
   bool _firstRefresh = true;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -73,65 +72,32 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (Platform.isAndroid || Platform.isIOS) {
-      if (!kIsWeb) {
-        BnLog.debug(text: 'map_page - didChangeAppLifecycleState $state');
-      }
-    }
+    BnLog.debug(text: 'map_page - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       resumeUpdates(force: true);
       LocationProvider.instance.setToBackground(false);
     } else if (state == AppLifecycleState.paused) {
-      LocationProvider.instance.setToBackground(true);
-      if (!kIsWeb) {
         BnLog.trace(
             className: 'resumeUpdates',
             methodName: 'timer',
             text: 'LocProvider instance pause updates calling');
-      }
+      LocationProvider.instance.setToBackground(true);
       pauseUpdates();
     }
   }
 
   void resumeUpdates({bool force = false}) async {
-    BnLog.trace(
-      className: toString(),
-      methodName: 'didChangeAppLifecycleState',
-      text: 'resume updates calling',
-    );
-    _updateRealTimeDataTimer?.cancel(); //important
     if (force || _firstRefresh) {
       ref.read(locationProvider).refresh(forceUpdate: force);
       _firstRefresh = false;
     }
-    //update data if not tracking
-    /*_updateRealTimeDataTimer = Timer.periodic(
-      //realtimeUpdateProvider reads data on send-location - so it must not updated all 10 secs
-      const Duration(milliseconds: defaultRealtimeUpdateInterval),
-      (timer) {
-        if (kIsWeb & !_webStartedTrainFollow) {
-          startFollowingTrainHead();
-          _webStartedTrainFollow = true;
-        }
-        ref.read(realtimeDataProvider.notifier).refresh();
-      },
-    );*/
   }
 
   void pauseUpdates() async {
-    BnLog.trace(
-      className: toString(),
-      methodName: 'didChangeAppLifecycleState',
-      text: 'resume updates calling',
-    );
-    if (!kIsWeb) {
       BnLog.trace(
           className: toString(),
           methodName: 'pauseUpdates',
-          text: 'update Paused');
-    }
-    _updateRealTimeDataTimer?.cancel();
-    _updateRealTimeDataTimer = null;
+          text: 'update paused');
   }
 
   void startFollowingTrainHead() {

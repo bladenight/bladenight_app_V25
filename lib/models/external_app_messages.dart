@@ -6,7 +6,7 @@ part 'external_app_messages.mapper.dart';
 
 @MappableClass()
 class ExternalAppMessages with ExternalAppMessagesMappable {
-  @MappableField(key: 'messages')
+  //@MappableField(key: 'messages')
   final List<ExternalAppMessage> messages;
 
   ExternalAppMessages({required this.messages});

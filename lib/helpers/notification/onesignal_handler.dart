@@ -172,8 +172,6 @@ class OnesignalHandler {
     await OnesignalHandler.registerPushAsBladeGuard(false, '');
     HiveSettingsDB.setRcvSkatemunichInfos(false);
     await OnesignalHandler.registerSkateMunichInfo(false);
-    await OneSignal.User.pushSubscription.optOut();
-    BnLog.info(text: 'Bladeguard logged out from OneSignal');
   }
 
   static Future<void> registerPushAsBladeGuard(
@@ -182,6 +180,8 @@ class OnesignalHandler {
       'IsBladeguard': value ? teamId : '',
     };
     BnLog.info(text: 'register IsBladeguard value $value $teamId');
+    await OneSignal.User.pushSubscription.optIn();
+    BnLog.info(text: 'Bladeguard logged out from OneSignal');
     OneSignal.User.addTags(map).catchError((err) {
       BnLog.error(text: 'register IsBladeguard error $err', exception: err);
     });

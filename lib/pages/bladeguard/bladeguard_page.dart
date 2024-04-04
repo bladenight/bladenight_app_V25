@@ -20,6 +20,7 @@ import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
+import '../admin/widgets/admin_password_dialog.dart';
 import '../widgets/birthday_date_picker.dart';
 import '../widgets/data_widget_left_right.dart';
 import '../widgets/data_widget_left_right_text.dart';
@@ -222,9 +223,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         Column(
                           children: [
                             if (HiveSettingsDB.isBladeGuard &&
-                                (bladeguardSettingsVisible ||
-                                    HiveSettingsDB.bgLeaderSettingVisible ||
-                                    Globals.adminPass != null))
+                                ref.watch(isValidBladeGuardEmailProvider) &&
+                                bladeguardSettingsVisible)
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 15, right: 15),
@@ -232,7 +232,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   descriptionRight: HiveSettingsDB.bgTeam,
                                   leftWidget: CupertinoButton(
                                       child: Text(
-                                          Localize.of(context).updatePhone),
+                                          Localize.of(context).bgUpdatePhone),
                                       onPressed: () async {
                                         await checkOrUpdateBladeGuardData();
                                         setState(() {});
@@ -243,9 +243,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                       if (!kIsWeb &&
                           HiveSettingsDB.isBladeGuard &&
-                          (HiveSettingsDB.bgSettingVisible ||
-                              HiveSettingsDB.bgLeaderSettingVisible ||
-                              Globals.adminPass != null))
+                          HiveSettingsDB.bgSettingVisible)
                         CupertinoFormSection(
                           header: Text(Localize.of(context)
                               .pushMessageParticipateAsBladeGuardTitle),
@@ -277,9 +275,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                       if (!kIsWeb &&
                           HiveSettingsDB.isBladeGuard &&
-                          (HiveSettingsDB.bgSettingVisible ||
-                              HiveSettingsDB.bgLeaderSettingVisible ||
-                              Globals.adminPass != null))
+                          HiveSettingsDB.bgSettingVisible)
                         CupertinoFormSection(
                           header: Text(Localize.of(context)
                               .pushMessageSkateMunichInfosTitle),
@@ -307,8 +303,11 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             ),
                           ],
                         ),
-                      if (!kIsWeb && HiveSettingsDB.bgLeaderSettingVisible ||
-                          Globals.adminPass != null)
+                      if (!kIsWeb &&
+                          (HiveSettingsDB.bgLeaderSettingVisible ||
+                              Globals.adminPass != null ||
+                              HiveSettingsDB.hasSpecialRights ||
+                              HiveSettingsDB.bgIsAdmin))
                         CupertinoFormSection(
                           header: Text(Localize.of(context).markMeAsHead),
                           children: <Widget>[
@@ -333,8 +332,11 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             ),
                           ],
                         ),
-                      if (!kIsWeb && HiveSettingsDB.bgLeaderSettingVisible ||
-                          Globals.adminPass != null)
+                      if (!kIsWeb &&
+                          (HiveSettingsDB.bgLeaderSettingVisible ||
+                              Globals.adminPass != null ||
+                              HiveSettingsDB.hasSpecialRights ||
+                              HiveSettingsDB.bgIsAdmin))
                         CupertinoFormSection(
                           header: Text(Localize.of(context).markMeAsTail),
                           children: <Widget>[
@@ -361,10 +363,10 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                     ],
                   ),
-                if (Globals.adminPass != null ||
-                    HiveSettingsDB.hasSpecialRights &&
-                        networkConnected.connectivityStatus ==
-                            ConnectivityStatus.serverReachable)
+                if (!kIsWeb &&
+                    (Globals.adminPass != null ||
+                        HiveSettingsDB.hasSpecialRights ||
+                        HiveSettingsDB.bgIsAdmin))
                   CupertinoFormSection(
                     header: Text(Localize.of(context).showFullProcessionTitle),
                     children: <Widget>[
@@ -383,6 +385,23 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               },
                               value: HiveSettingsDB.wantSeeFullOfProcession),
                         ),
+                      ),
+                    ],
+                  ),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (!kIsWeb && HiveSettingsDB.bgIsAdmin)
+                  CupertinoFormSection(
+                    header: const Text('Server-Admin'),
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: CupertinoButton(
+                            child: const Text('Öffne Serveradmin'),
+                            onPressed: () async {
+                              await AdminPasswordDialog.show(context);
+                            }),
                       ),
                     ],
                   ),
@@ -510,6 +529,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
               _setBladeguardRole(role);
               HiveSettingsDB.setBgTeam(
                   '${resultMap['team']} ${role != null ? '($role)' : ''}');
+
               ref
                   .read(bladeguardSettingsVisibleProvider.notifier)
                   .setValue(true);
@@ -541,16 +561,23 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
     if (role == null) return;
     if (role.toLowerCase().contains('spec')) {
       HiveSettingsDB.setBgLeaderSettingVisible(false);
-      HiveSettingsDB.setSpecialRightsPrefs(true);
+      HiveSettingsDB.setHasSpecialRightsPrefs(true);
     } else if (role.toLowerCase().contains('lead')) {
       HiveSettingsDB.setBgLeaderSettingVisible(true);
-      HiveSettingsDB.setSpecialRightsPrefs(false);
-    } else if (role.toLowerCase() == 'admin') {
+      HiveSettingsDB.setHasSpecialRightsPrefs(false);
+    } else if (role.toLowerCase().contains('teamadmin')) {
       HiveSettingsDB.setBgLeaderSettingVisible(true);
-      HiveSettingsDB.setSpecialRightsPrefs(true);
+      HiveSettingsDB.setHasSpecialRightsPrefs(true);
     } else {
       HiveSettingsDB.setBgLeaderSettingVisible(false);
-      HiveSettingsDB.setSpecialRightsPrefs(false);
+      HiveSettingsDB.setHasSpecialRightsPrefs(false);
+    }
+    if (role.toLowerCase() == ('admin')) {
+      HiveSettingsDB.setBgIsAdmin(true);
+      HiveSettingsDB.setBgLeaderSettingVisible(true);
+      HiveSettingsDB.setHasSpecialRightsPrefs(true);
+    } else {
+      HiveSettingsDB.setBgIsAdmin(false);
     }
   }
 }

@@ -29,7 +29,7 @@ class BnLog {
 
   static init({Level? logLevel, LogFilter? filter}) async {
     _logBox = await Hive.openLazyBox('logBox');
-    _logBox.put('startLog',
+    _logBox.put(DateTime.now().millisecondsSinceEpoch.toString(),
         '${DateTime.now().toIso8601String()} start logging ${logLevel ?? HiveSettingsDB.flogLogLevel}');
     //add logger
     _logOutputs.clear();
@@ -40,7 +40,7 @@ class BnLog {
 
     //_logger.close();
     _logger = Logger(
-      filter: BnLogFilter(), //important for logging in releaseversion
+      filter: BnLogFilter(), //important for logging in release version
       output: MultiOutput(_logOutputs),
       level: logLevel ?? HiveSettingsDB.flogLogLevel,
       printer: BnLogPrinter(
@@ -217,7 +217,7 @@ class BnLog {
   ///
   /// endTimeInMillis
   static Future<bool> cleanUpLogsByFilter(Duration deleteOlderThan) async {
-    int counter =0;
+    int counter = 0;
     var leftDate =
         DateTime.now().subtract(deleteOlderThan).millisecondsSinceEpoch;
     for (var key in _logBox.keys) {
@@ -227,7 +227,9 @@ class BnLog {
         counter++;
       }
     }
-    BnLog.info(text: 'Tidied up logs before ${DateTime.fromMillisecondsSinceEpoch(leftDate)}  - $counter entries removed');
+    BnLog.info(
+        text:
+            'Tidied up logs before ${DateTime.fromMillisecondsSinceEpoch(leftDate)}  - $counter entries removed');
     return Future(() => true);
   }
 

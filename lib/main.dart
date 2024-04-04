@@ -203,9 +203,9 @@ class BladeNightApp extends StatelessWidget {
                   addFriendWithCodeFromUrl(context, uriString.name!)
                       .then((value) => null);
                 } else if (uriString.name!.contains('?$specialCode=1')) {
-                  HiveSettingsDB.setSpecialRightsPrefs(true);
+                  HiveSettingsDB.setHasSpecialRightsPrefs(true);
                 } else if (uriString.name!.contains('?$specialCode=0')) {
-                  HiveSettingsDB.setSpecialRightsPrefs(false);
+                  HiveSettingsDB.setHasSpecialRightsPrefs(false);
                 }
                 return null;
               },

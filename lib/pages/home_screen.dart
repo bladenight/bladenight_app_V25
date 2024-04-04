@@ -189,9 +189,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       tabController.index = 3;
       await addFriendWithCodeFromUrl(context, uriString);
     } else if (uriString.contains('?$specialCode=1')) {
-      HiveSettingsDB.setSpecialRightsPrefs(true);
+      HiveSettingsDB.setHasSpecialRightsPrefs(true);
     } else if (uriString.contains('?$specialCode=0')) {
-      HiveSettingsDB.setSpecialRightsPrefs(false);
+      HiveSettingsDB.setHasSpecialRightsPrefs(false);
     }
   }
 

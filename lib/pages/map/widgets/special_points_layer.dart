@@ -11,7 +11,7 @@ import '../../../providers/map/icon_size_provider.dart';
 import 'map_marker_popup.dart';
 
 class SpecialPointsLayer extends ConsumerStatefulWidget {
-  SpecialPointsLayer(this.popupController, {super.key});
+  const SpecialPointsLayer(this.popupController, {super.key});
 
   final PopupController popupController;
 

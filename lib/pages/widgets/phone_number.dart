@@ -17,7 +17,7 @@ class _PhoneTextFieldState extends ConsumerState<PhoneTextField> {
   bool validPhone = true;
 
   // validPhone = RegExp(r'^[0-9]{9,14}$').hasMatch(_phoneTextController.text);
-  RegExp regExp= RegExp(r'^[0-9+()]{10,14}?$');
+  RegExp regExp = RegExp(r'^[0-9+()]{10,14}?$');
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _PhoneTextFieldState extends ConsumerState<PhoneTextField> {
           controller: _phoneTextController,
           placeholder: Localize.of(context).phoneNumber,
           autocorrect: false,
-          prefix:validPhone
+          prefix: validPhone
               ? const Icon(CupertinoIcons.hand_thumbsup, color: Colors.green)
               : const Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red),
           maxLines: 1,
@@ -49,7 +49,11 @@ class _PhoneTextFieldState extends ConsumerState<PhoneTextField> {
             }
           },
           onFieldSubmitted: (value) {
-            _phoneTextController.text;
+            validPhone = regExp.hasMatch(_phoneTextController.text);
+            if (validPhone) {
+              HiveSettingsDB.setBladeguardPhone(
+                  _phoneTextController.text.toLowerCase());
+            }
           },
         ),
       ],

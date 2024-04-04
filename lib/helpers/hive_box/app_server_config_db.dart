@@ -14,7 +14,7 @@ class ServerConfigDb {
 
   ServerConfigDb._();
 
-  static const String restApiLinkKey = 'restApiUrlIalKey';
+  static const String restApiLinkKey = 'restApiIal_Key';
 
   static get serverConfigBox {
     return _appServerConfigBox;

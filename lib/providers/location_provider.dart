@@ -981,12 +981,10 @@ class LocationProvider with ChangeNotifier {
   ///necessary after app state switching in viewer mode
   Future<void> refresh({bool forceUpdate = false}) async {
     try {
-      if (!kIsWeb) {
         BnLog.trace(
             className: 'locationProvider',
             methodName: 'refresh',
             text: 'start refresh force $forceUpdate');
-      }
       var dtNow = DateTime.now();
       //avoid async re-trigger
       var timeDiff = dtNow.difference(_lastRefreshRequest);

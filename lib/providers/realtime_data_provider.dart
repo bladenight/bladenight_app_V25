@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../helpers/logger.dart';
@@ -13,26 +14,43 @@ part 'realtime_data_provider.g.dart';
 @Riverpod(keepAlive: true)
 class RealtimeData extends _$RealtimeData {
   int _maxFails = 3;
+  int _maxSubscribeFails = 3;
   bool _isTracking = false;
   Timer? _timer;
   DateTime lastUpdate = DateTime(2000);
-  StreamSubscription<RealtimeUpdate?>? _listener;
+  StreamSubscription<RealtimeUpdate?>? _realtTimeDataStreamListener;
   int _realTimeDataSubscriptionId = 0;
-  bool _isOnline = false;
+  bool _isWampConnected = false;
+  bool _isOnline = true;
+
+  StreamSubscription<bool>? _wampConnectedListener;
+  StreamSubscription<InternetStatus>? _onlineListener;
 
   @override
   RealtimeUpdate? build() {
-    var wampConnectedListener =
+    _wampConnectedListener =
         WampV2.instance.wampConnectedStreamController.stream.listen((event) {
       if (event) {
         //resubscribe after offline if not tracking
-        _isOnline = event;
+        _isWampConnected = event;
         _subscribeIfNeeded(_isTracking);
+      }
+    });
+    _onlineListener =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
+      switch (status) {
+        case InternetStatus.connected:
+          _isOnline = true;
+          _maxSubscribeFails = 3;
+          break;
+        case InternetStatus.disconnected:
+          _isOnline = false;
+          break;
       }
     });
 
     _isTracking = ref.watch(isTrackingProvider);
-    _listener =
+    _realtTimeDataStreamListener =
         WampV2.instance.realTimeUpdateStreamController.stream.listen((event) {
       BnLog.debug(text: 'rtEvent $event');
       state = event;
@@ -41,21 +59,28 @@ class RealtimeData extends _$RealtimeData {
 
     ref.onDispose(() {
       BnLog.debug(text: 'rtProvide dispose');
-      wampConnectedListener.cancel();
+      _wampConnectedListener?.cancel();
       _timer?.cancel();
       _realTimeDataSubscriptionId = 0;
-      _listener?.cancel();
+      _realtTimeDataStreamListener?.cancel();
     });
     _subscribeIfNeeded(_isTracking);
 
     return stateOrNull;
   }
 
-  void _subscribeIfNeeded(bool isTracking) {
+  void _subscribeIfNeeded(bool isTracking) async {
     if (!isTracking) {
-      _subscribe();
+      if (_maxSubscribeFails <= 0) {
+        return;
+      }
+      var res = await _subscribe();
+      if (res == false) {
+        _maxSubscribeFails--;
+      }
       _reStartTimer();
     } else {
+      _maxSubscribeFails = 3;
       _unsubscribe();
       _stopTimer();
     }
@@ -94,8 +119,17 @@ class RealtimeData extends _$RealtimeData {
       return state;
     }
     if (!_isOnline && timeDiff < const Duration(seconds: 50)) {
+      BnLog.trace(
+          text: '${timeDiff.inSeconds} not online < 50 sec. : $lastUpdate',
+          methodName: 'refresh',
+          className: toString());
       return state;
     } else if (!_isOnline) {
+      BnLog.trace(
+          text:
+              '${timeDiff.inSeconds} not online more than 50 sec. : $lastUpdate',
+          methodName: 'refresh',
+          className: toString());
       return null;
     }
 
@@ -122,14 +156,16 @@ class RealtimeData extends _$RealtimeData {
     }
   }
 
-  Future _subscribe() async {
+  Future<bool> _subscribe() async {
     if (!WampV2.instance.subscriptions.contains(3589978069) ||
         _realTimeDataSubscriptionId == 0) {
       _realTimeDataSubscriptionId = await subscribeMessage('RealtimeData');
       if (_realTimeDataSubscriptionId == 0) {
+        return false;
         //workaround if subscription fails
         //LocationProvider.instance.refresh();
       }
     }
+    return true;
   }
 }
