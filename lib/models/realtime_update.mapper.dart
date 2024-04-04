@@ -130,10 +130,8 @@ mixin RealtimeUpdateMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            RealtimeUpdateMapper.ensureInitialized()
-                .isValueEqual(this as RealtimeUpdate, other));
+    return RealtimeUpdateMapper.ensureInitialized()
+        .equalsValue(this as RealtimeUpdate, other);
   }
 
   @override

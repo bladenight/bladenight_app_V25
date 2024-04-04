@@ -66,10 +66,8 @@ mixin FriendsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            FriendsMapper.ensureInitialized()
-                .isValueEqual(this as Friends, other));
+    return FriendsMapper.ensureInitialized()
+        .equalsValue(this as Friends, other);
   }
 
   @override

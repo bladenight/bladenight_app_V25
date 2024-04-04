@@ -85,10 +85,8 @@ mixin KillServerMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            KillServerMessageMapper.ensureInitialized()
-                .isValueEqual(this as KillServerMessage, other));
+    return KillServerMessageMapper.ensureInitialized()
+        .equalsValue(this as KillServerMessage, other);
   }
 
   @override

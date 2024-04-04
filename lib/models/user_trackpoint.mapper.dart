@@ -98,10 +98,8 @@ mixin UserTrackPointMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            UserTrackPointMapper.ensureInitialized()
-                .isValueEqual(this as UserTrackPoint, other));
+    return UserTrackPointMapper.ensureInitialized()
+        .equalsValue(this as UserTrackPoint, other);
   }
 
   @override
@@ -235,10 +233,8 @@ mixin UserTrackPointsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            UserTrackPointsMapper.ensureInitialized()
-                .isValueEqual(this as UserTrackPoints, other));
+    return UserTrackPointsMapper.ensureInitialized()
+        .equalsValue(this as UserTrackPoints, other);
   }
 
   @override

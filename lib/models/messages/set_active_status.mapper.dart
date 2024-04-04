@@ -92,10 +92,8 @@ mixin SetActiveStatusMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SetActiveStatusMessageMapper.ensureInitialized()
-                .isValueEqual(this as SetActiveStatusMessage, other));
+    return SetActiveStatusMessageMapper.ensureInitialized()
+        .equalsValue(this as SetActiveStatusMessage, other);
   }
 
   @override

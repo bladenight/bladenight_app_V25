@@ -123,10 +123,8 @@ mixin WatchEventMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            WatchEventMapper.ensureInitialized()
-                .isValueEqual(this as WatchEvent, other));
+    return WatchEventMapper.ensureInitialized()
+        .equalsValue(this as WatchEvent, other);
   }
 
   @override
@@ -285,10 +283,8 @@ mixin WatchEventsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            WatchEventsMapper.ensureInitialized()
-                .isValueEqual(this as WatchEvents, other));
+    return WatchEventsMapper.ensureInitialized()
+        .equalsValue(this as WatchEvents, other);
   }
 
   @override

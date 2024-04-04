@@ -103,10 +103,8 @@ mixin LocationInfoMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            LocationInfoMapper.ensureInitialized()
-                .isValueEqual(this as LocationInfo, other));
+    return LocationInfoMapper.ensureInitialized()
+        .equalsValue(this as LocationInfo, other);
   }
 
   @override

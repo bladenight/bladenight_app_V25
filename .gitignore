@@ -4,6 +4,7 @@
 *.pyc
 *.swp
 *.mapper.dart
+*.g.dart
 .DS_Store
 .atom/
 .buildlog/

@@ -80,10 +80,8 @@ mixin RoutePointsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            RoutePointsMapper.ensureInitialized()
-                .isValueEqual(this as RoutePoints, other));
+    return RoutePointsMapper.ensureInitialized()
+        .equalsValue(this as RoutePoints, other);
   }
 
   @override

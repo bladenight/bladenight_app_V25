@@ -143,10 +143,8 @@ mixin SetProcessionModeMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SetProcessionModeMessageMapper.ensureInitialized()
-                .isValueEqual(this as SetProcessionModeMessage, other));
+    return SetProcessionModeMessageMapper.ensureInitialized()
+        .equalsValue(this as SetProcessionModeMessage, other);
   }
 
   @override

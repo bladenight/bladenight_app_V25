@@ -91,10 +91,8 @@ mixin SetActiveRouteMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SetActiveRouteMessageMapper.ensureInitialized()
-                .isValueEqual(this as SetActiveRouteMessage, other));
+    return SetActiveRouteMessageMapper.ensureInitialized()
+        .equalsValue(this as SetActiveRouteMessage, other);
   }
 
   @override

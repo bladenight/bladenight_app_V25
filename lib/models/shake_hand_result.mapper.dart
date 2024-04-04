@@ -78,10 +78,8 @@ mixin ShakeHandResultMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ShakeHandResultMapper.ensureInitialized()
-                .isValueEqual(this as ShakeHandResult, other));
+    return ShakeHandResultMapper.ensureInitialized()
+        .equalsValue(this as ShakeHandResult, other);
   }
 
   @override

@@ -71,10 +71,8 @@ mixin RouteNamesMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            RouteNamesMapper.ensureInitialized()
-                .isValueEqual(this as RouteNames, other));
+    return RouteNamesMapper.ensureInitialized()
+        .equalsValue(this as RouteNames, other);
   }
 
   @override
