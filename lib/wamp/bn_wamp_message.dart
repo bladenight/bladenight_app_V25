@@ -44,7 +44,7 @@ class UnsubscribeWampMessage extends BnWampMessage {
 
   @override
   toString() {
-    return 'UnsubscribeWampMessage ${messageType.toString()}, ,id:$requestId, subscriptionId:$subscriptionId';
+    return 'UnsubscribeWampMessage ${messageType.toString()}, id:$requestId, subscriptionId:$subscriptionId';
   }
 }
 

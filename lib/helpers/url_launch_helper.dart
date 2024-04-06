@@ -16,7 +16,8 @@ class Launch {
     return runZonedGuarded(() async {
       if (await canLaunchUrlString(url)) {
         var res = true;
-        if (mode == LaunchMode.externalApplication &&
+        if (!kIsWeb &&
+            mode == LaunchMode.externalApplication &&
             navigatorKey.currentContext != null) {
           res = await ScrollQuickAlert.show(
               context: navigatorKey.currentContext!,
@@ -48,7 +49,8 @@ class Launch {
     return runZonedGuarded(() async {
       if (await canLaunchUrl(uri)) {
         var res = true;
-        if (mode == LaunchMode.externalApplication &&
+        if (!kIsWeb &&
+            mode == LaunchMode.externalApplication &&
             navigatorKey.currentContext != null) {
           res = await ScrollQuickAlert.show(
               context: navigatorKey.currentContext!,
