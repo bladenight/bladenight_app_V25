@@ -74,10 +74,8 @@ mixin ImageAndLinkListMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ImageAndLinkListMapper.ensureInitialized()
-                .isValueEqual(this as ImageAndLinkList, other));
+    return ImageAndLinkListMapper.ensureInitialized()
+        .equalsValue(this as ImageAndLinkList, other);
   }
 
   @override

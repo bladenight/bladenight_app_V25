@@ -84,10 +84,8 @@ mixin RelationshipOutputMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            RelationshipOutputMessageMapper.ensureInitialized()
-                .isValueEqual(this as RelationshipOutputMessage, other));
+    return RelationshipOutputMessageMapper.ensureInitialized()
+        .equalsValue(this as RelationshipOutputMessage, other);
   }
 
   @override

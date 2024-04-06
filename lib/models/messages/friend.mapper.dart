@@ -128,10 +128,8 @@ mixin FriendMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            FriendMessageMapper.ensureInitialized()
-                .isValueEqual(this as FriendMessage, other));
+    return FriendMessageMapper.ensureInitialized()
+        .equalsValue(this as FriendMessage, other);
   }
 
   @override

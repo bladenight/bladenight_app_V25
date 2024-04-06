@@ -6,16 +6,14 @@ import 'location_provider.dart';
 
 part 'is_tracking_provider.g.dart';
 
-@Riverpod(keepAlive: true) //important not auto disposing when tracking is restarted
+@Riverpod(
+    keepAlive: true) //important not auto disposing when tracking is restarted
 class IsTracking extends _$IsTracking {
   @override
   bool build() {
+    var isTracking = ref.watch(locationProvider.select((tp) => tp.isTracking));
+    state = isTracking;
     return LocationProvider.instance.isTracking;
-    //return false;
-  }
-
-  setValue(bool value) {
-    state = value;
   }
 
   ///toggles tracking when user is in procession
@@ -23,15 +21,13 @@ class IsTracking extends _$IsTracking {
   ///set [userIsParticipant] to false if only in viewer-mode
   Future<bool> toggleTracking(bool userIsParticipant) async {
     if (kIsWeb) {
-      return false;
+     // return false;
     }
     HiveSettingsDB.setUserIsParticipant(userIsParticipant);
-    if (state) {
-      state = await ref.read(locationProvider.notifier).stopTracking();
+    if (LocationProvider.instance.isTracking) {
+      await LocationProvider.instance.stopTracking();
     } else {
-      state = await ref
-          .read(locationProvider.notifier)
-          .startTracking(userIsParticipant);
+      await LocationProvider.instance.startTracking(userIsParticipant);
     }
     return state;
   }
@@ -44,9 +40,7 @@ class IsTracking extends _$IsTracking {
       return false;
     }
     HiveSettingsDB.setUserIsParticipant(userIsParticipant);
-    state = await ref
-        .read(locationProvider.notifier)
-        .startTracking(userIsParticipant);
+    state = await LocationProvider.instance.startTracking(userIsParticipant);
     return state;
   }
 }

@@ -8,14 +8,13 @@ import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/route.dart';
-import '../../../providers/active_event_notifier_provider.dart';
+import '../../../providers/active_event_provider.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
-import '../../../providers/location_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
-import '../../../providers/refresh_timer_provider.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_data_warning.dart';
+import 'update_progress.dart';
 
 class MapEventInformation extends StatelessWidget {
   const MapEventInformation({super.key, required this.mapController});
@@ -68,37 +67,8 @@ class MapEventInformation extends StatelessWidget {
                           DataLeftRightContent(
                             descriptionLeft: Localize.of(context).lastupdate,
                             descriptionRight: DateFormatter(Localize.current)
-                                .getFullDateTimeString(
-                                    context.watch(locationLastUpdateProvider)),
-                            rightWidget: Align(
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: Stack(children: [
-                                  Center(
-                                    child: Align(
-                                      child: CircularProgressIndicator(
-                                        //show event is running by circular i
-                                        color: CupertinoTheme.of(context)
-                                            .primaryColor,
-                                        value:
-                                            context.watch(percentLeftProvider),
-                                        strokeWidth: 2,
-                                      ),
-                                    ),
-                                  ),
-                                  Center(
-                                    child: Align(
-                                      child: Icon(
-                                          CupertinoIcons.info_circle_fill,
-                                          size: 18,
-                                          color: CupertinoTheme.of(context)
-                                              .primaryColor),
-                                    ),
-                                  ),
-                                ]),
-                              ),
-                            ),
+                                .getFullDateTimeString(rtu.timeStamp),
+                            rightWidget: const UpdateProgress(),
                           ),
                           DataLeftRightContent(
                               descriptionLeft: Localize.of(context).route,
@@ -118,7 +88,7 @@ class MapEventInformation extends StatelessWidget {
                               descriptionRight:
                                   DateFormatter(Localize.of(context))
                                       .getLocalDayDateTimeRepresentation(
-                                          event.event.getUtcIso8601DateTime),
+                                          event.getUtcIso8601DateTime),
                               rightWidget: Container()),
                         ],
                       ),
@@ -397,7 +367,7 @@ class MapEventInformation extends StatelessWidget {
                                   Localize.of(context).mapFollowLocation,
                               descriptionRight: '',
                               rightWidget: const ImageIcon(
-                                AssetImage('assets/images/skaterIcon_256.png'),
+                                AssetImage('assets/images/skater_icon_256.png'),
                                 color: Colors.blue,
                               ),
                             ),

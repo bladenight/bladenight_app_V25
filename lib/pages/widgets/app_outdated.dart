@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
-import '../../providers/active_event_notifier_provider.dart';
+import '../../providers/app_outdated_provider.dart';
 
 Widget appOutdatedWidget(BuildContext context) {
   var pr =
-      context.watch(activeEventProvider.select((value) => value.appIsOutdated));
+      context.watch(appOutdatedProvider);
   if (!pr) {
     return Container();
   } else {

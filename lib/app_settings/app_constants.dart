@@ -1,11 +1,14 @@
 import 'dart:ui';
 
+const String hiveBoxSettingDbName = 'settings';
+const String hiveBoxServerConfigDBName = 'appServerConfigDb';
+
 ///factor to resize icons with MediaQuery (MediaQuery.of(context).size.width * mediaSizePercentage)
 double mediaSizePercentage = 0.05;
 double mediaSizeTrackProgressIconsPercentage = 0.03;
 
-///Default update interval to get [RealtimeData] when not tracking in seconds
-const int defaultRealtimeUpdateInterval = 14;
+///Default update interval to get [RealtimeData] when not tracking in milliseconds
+const int defaultRealtimeUpdateInterval = 14000;
 
 ///Default update interval to get [RealtimeData] when tracking in seconds
 const int defaultLocationUpdateInterval = 4;

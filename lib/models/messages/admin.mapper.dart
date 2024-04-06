@@ -82,10 +82,8 @@ mixin AdminMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AdminMessageMapper.ensureInitialized()
-                .isValueEqual(this as AdminMessage, other));
+    return AdminMessageMapper.ensureInitialized()
+        .equalsValue(this as AdminMessage, other);
   }
 
   @override

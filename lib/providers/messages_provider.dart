@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
+import 'package:universal_io/io.dart';
 
-import '../app_settings/server_connections.dart';
 import '../helpers/crypt_helper.dart';
+import '../helpers/hive_box/app_server_config_db.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/hive_box/messages_db.dart';
 import '../helpers/logger.dart';
@@ -32,6 +34,11 @@ class MessagesLogic with ChangeNotifier {
   }
 
   final Map<String, ExternalAppMessage> messages = {};
+  var dio = Dio();
+  var options = Options(
+      receiveTimeout: const Duration(seconds: 10),
+      sendTimeout: const Duration(seconds: 10),
+      contentType: 'application/json');
   int readMessages = 0;
 
   Future<void> _loadMessages() async {
@@ -85,26 +92,39 @@ class MessagesLogic with ChangeNotifier {
     try {
       var lastTimeStamp = await MessagesDb.getLastMessagesUpdateTimestamp;
       var isBladeGuard = HiveSettingsDB.isBladeGuard;
-      var teamId = HiveSettingsDB.teamId;
+      var teamId = HiveSettingsDB.bgTeam;
       var skmMember = HiveSettingsDB.rcvSkatemunichInfos;
-      var oneSignalID = HiveSettingsDB.oneSignalId;
-      var parameter = EncryptData.encryptAES(
-          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$oneSignalID',
-          messagePassword);
+      var appId = HiveSettingsDB.appId;
+      var paraString =
+          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$appId&plf=${Platform.operatingSystem}';
+      var parameter = CryptHelper.encryptAES(
+          paraString, ServerConfigDb.restApiLinkPassword);
       if (parameter == null) {
         BnLog.error(text: "Couldn't encrypt Parameter");
         return;
       }
-      var result = await http
-          .get(Uri.parse('$bladenightMessageServerLink/?$parameter'));
-      if (result.statusCode != 200) {
+
+      var host = ServerConfigDb.restApiLinkMsg;
+      var response =
+          await dio.post('$host/getMessages?q=$parameter', options: options);
+      if (response.statusCode != 200) {
         await _loadMessages();
         return;
       }
-      var messages = ExternalAppMessagesMapper.fromJson(result.body);
-      await MessagesDb.updateMessages(messages);
+      var decodedMsg = CryptHelper.decryptAES(
+          response.data, ServerConfigDb.restApiLinkPassword);
+      if (decodedMsg == null) return;
+      var msg = jsonDecode(decodedMsg);
+      List<ExternalAppMessage> msgList = [];
+      for (var mess in msg){
+        var detMsg = ExternalAppMessageMapper.fromMap(mess);
+        msgList.add(detMsg);
+      }
+      var mgges = ExternalAppMessages(messages: msgList);
+      //var messages = ExternalAppMessagesMapper.fromJson(decodedMsg);
+      await MessagesDb.updateMessages(mgges);
       await _loadMessages();
-      //var result = await http.get(Uri.parse("https://bladenight.app/api/?results=20"));
+      //var response = await http.get(Uri.parse("https://bladenight.app/api/?results=20"));
     } catch (ex) {
       BnLog.error(text: 'Error updateServerMessages', exception: ex);
     }

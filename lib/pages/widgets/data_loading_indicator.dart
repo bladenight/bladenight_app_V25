@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../../generated/l10n.dart';
+import 'no_connection_warning.dart';
 
 class DataLoadingIndicator extends StatelessWidget {
   const DataLoadingIndicator({super.key});
@@ -21,7 +22,8 @@ class DataLoadingIndicator extends StatelessWidget {
         Text(
           Localize.of(context).getwebdata,
           style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
-        )
+        ),
+        const ConnectionWarning(),
       ],
     );
   }

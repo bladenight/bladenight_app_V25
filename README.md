@@ -90,24 +90,21 @@ You need the bladenight-server written in java to communicate routes, friends, p
   ```bash
   flutter pub deps
   ```
-* Rebuild mapping/riverpod after changing @Mappable @riverpod annotiations class / class not found
-
-   ```bash
-   flutter clean
-   flutter packages pub get
-   ```
-
-   ```bash
-   dart run build_runner build -d
-   ```
-
-* Rebuild riverpod / Mapping watch on editing and save
+* Rebuild mapping/riverpod provider after changing @Mappable @riverpod annotiations class / class not found
+  
+  ```bash
+  flutter clean
+  flutter packages pub get
+  ```
+  
+  ```bash
+  dart run build_runner build -d
+  ```
+* Rebuild riverpod providers / Mapping watch on editing and save
   
   ```bash
   dart run build_runner watch -d
   ```
-
-
 
 ## Connection
 
@@ -172,6 +169,15 @@ sudo xattr -d com.apple.quarantine iproxy
   <key>WKCompanionAppBundleIdentifier</key>
   <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
   ```
+
+### XCode Release Build Error
+
+* Run the following commands from the project directory terminal :
+  ios/% pod deintegrate
+  ios/% pod install
+  Then start new build
+
+
 
 ### Rebuilding Flutter map
 

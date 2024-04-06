@@ -12,7 +12,7 @@ import '../../helpers/logger.dart';
 import '../../helpers/timeconverter_helper.dart';
 import '../../helpers/url_launch_helper.dart';
 import '../../models/event.dart';
-import '../../providers/active_event_notifier_provider.dart';
+import '../../providers/active_event_provider.dart';
 import '../../providers/images_and_links/main_sponsor_image_and_link_provider.dart';
 import '../../providers/images_and_links/second_sponsor_image_and_link_provider.dart';
 import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
@@ -36,7 +36,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
-      context.read(activeEventProvider).refresh(forceUpdate: true);
+      context.read(activeEventProvider.notifier).refresh(forceUpdate: true);
     });
   }
 
@@ -49,23 +49,20 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context.read(activeEventProvider).refresh(forceUpdate: true);
+      context.read(activeEventProvider.notifier).refresh(forceUpdate: true);
       context.read(locationProvider).refresh(forceUpdate: true);
     }
   }
 
   void initEventUpdates() async {
-    // firststart
-    context.read(activeEventProvider).refresh();
+    // first start
+    context.read(activeEventProvider.notifier).refresh();
     updateTimer?.cancel();
     updateTimer = Timer.periodic(
       const Duration(minutes: 5),
       (timer) {
         if (!mounted) return;
-        if (kDebugMode) {
-          print('refresh active Event periodic');
-        }
-        context.read(activeEventProvider).refresh();
+        context.read(activeEventProvider.notifier).refresh();
       },
     );
   }
@@ -81,11 +78,11 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
       mainAxisSize: MainAxisSize.max,
       children: [
         appOutdatedWidget(context),
-        if (nextEventProvider.event.status == EventStatus.noevent)
+        if (nextEventProvider.status == EventStatus.noevent)
           Text(Localize.of(context).noEventPlanned,
               textAlign: TextAlign.center,
               style: CupertinoTheme.of(context).textTheme.textStyle),
-        if (nextEventProvider.event.status != EventStatus.noevent)
+        if (nextEventProvider.status != EventStatus.noevent)
           Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -98,7 +95,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                    '${Localize.of(context).route} ${nextEventProvider.event.routeName}',
+                    '${Localize.of(context).route} ${nextEventProvider.routeName}',
                     textAlign: TextAlign.center,
                     style: CupertinoTheme.of(context)
                         .textTheme
@@ -111,7 +108,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                   child: Text(
                       DateFormatter(Localize.of(context))
                           .getLocalDayDateTimeRepresentation(
-                              nextEventProvider.event.getUtcIso8601DateTime),
+                              nextEventProvider.getUtcIso8601DateTime),
                       style: CupertinoTheme.of(context)
                           .textTheme
                           .navLargeTitleTextStyle),
@@ -122,13 +119,11 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color:
-                        nextEventProvider.event.status == EventStatus.cancelled
-                            ? Colors.redAccent
-                            : nextEventProvider.event.status ==
-                                    EventStatus.confirmed
-                                ? Colors.green
-                                : Colors.transparent,
+                    color: nextEventProvider.status == EventStatus.cancelled
+                        ? Colors.redAccent
+                        : nextEventProvider.status == EventStatus.confirmed
+                            ? Colors.green
+                            : Colors.transparent,
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(10.0),
                         bottomRight: Radius.circular(10.0),
@@ -137,7 +132,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                   ),
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text(nextEventProvider.event.statusText,
+                    child: Text(nextEventProvider.statusText,
                         style: CupertinoTheme.of(context)
                             .textTheme
                             .pickerTextStyle),
@@ -155,14 +150,14 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                 width: iwidth,
                 child: GestureDetector(
                   onTap: () {
-                    if (context.read(MainSponsorImageAndLink.provider).link !=
+                    if (ref.read(mainSponsorImageAndLinkProvider).link !=
                         null) {
                       Launch.launchUrlFromString(
-                          context.read(MainSponsorImageAndLink.provider).link!);
+                          ref.read(mainSponsorImageAndLinkProvider).link!);
                     }
                   },
                   child: Builder(builder: (context) {
-                    var ms = context.watch(MainSponsorImageAndLink.provider);
+                    var ms = ref.watch(mainSponsorImageAndLinkProvider);
                     //var nw = context.watch(networkAwareProvider);
                     return (ms.image != null)
                         // && nw.connectivityStatus == ConnectivityStatus.online)
@@ -191,15 +186,15 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                 width: iwidth,
                 child: GestureDetector(
                   onTap: () {
-                    if (context.read(SecondSponsorImageAndLink.provider).link !=
+                    if (context.read(secondSponsorImageAndLinkProvider).link !=
                         null) {
                       Launch.launchUrlFromString(context
-                          .read(SecondSponsorImageAndLink.provider)
+                          .read(secondSponsorImageAndLinkProvider)
                           .link!);
                     }
                   },
                   child: Builder(builder: (context) {
-                    var ssp = context.watch(SecondSponsorImageAndLink.provider);
+                    var ssp = context.watch(secondSponsorImageAndLinkProvider);
                     return ssp.image != null
                         ? FadeInImage.assetNetwork(
                             placeholder: secondLogoPlaceholder,
@@ -223,7 +218,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                 ),
               ),
             ]),
-        if (nextEventProvider.event.status != EventStatus.noevent)
+        if (nextEventProvider.status != EventStatus.noevent)
           GestureDetector(
             onTap: () async {
               ProviderContainer().refresh(activeEventProvider);
@@ -231,9 +226,9 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
             child: Column(
               children: [
                 //Don't show starting point when no event
-                if (nextEventProvider.event.status != EventStatus.noevent)
+                if (nextEventProvider.status != EventStatus.noevent)
                   Builder(builder: (context) {
-                    var spp = ref.watch(StartPointImageAndLink.provider);
+                    var spp = ref.watch(startpointImageAndLinkProvider);
                     return spp.text != null
                         ? FittedBox(
                             child: Text(
@@ -261,11 +256,11 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                   ),
                 ),
                 Text(
-                  nextEventProvider.event.lastupdate == null
+                  nextEventProvider.lastupdate == null
                       ? '-'
                       : Localize.current.dateTimeIntl(
-                          nextEventProvider.event.lastupdate as DateTime,
-                          nextEventProvider.event.lastupdate as DateTime,
+                          nextEventProvider.lastupdate as DateTime,
+                          nextEventProvider.lastupdate as DateTime,
                         ),
                   style: const TextStyle(
                     color: CupertinoDynamicColor.withBrightness(

@@ -24,7 +24,7 @@ class RoutePointsMapper extends ClassMapperBase<RoutePoints> {
   static String _$name(RoutePoints v) => v.name;
   static const Field<RoutePoints, String> _f$name =
       Field('name', _$name, key: 'nam');
-  static List<LatLng>? _$points(RoutePoints v) => v.points;
+  static List<LatLng> _$points(RoutePoints v) => v.points;
   static const Field<RoutePoints, List<LatLng>> _f$points =
       Field('points', _$points, key: 'nod');
   static Exception? _$rpcException(RoutePoints v) => v.rpcException;
@@ -80,10 +80,8 @@ mixin RoutePointsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            RoutePointsMapper.ensureInitialized()
-                .isValueEqual(this as RoutePoints, other));
+    return RoutePointsMapper.ensureInitialized()
+        .equalsValue(this as RoutePoints, other);
   }
 
   @override
@@ -100,7 +98,7 @@ extension RoutePointsValueCopy<$R, $Out>
 
 abstract class RoutePointsCopyWith<$R, $In extends RoutePoints, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, LatLng, ObjectCopyWith<$R, LatLng, LatLng>>? get points;
+  ListCopyWith<$R, LatLng, ObjectCopyWith<$R, LatLng, LatLng>> get points;
   $R call({String? name, List<LatLng>? points, Exception? rpcException});
   RoutePointsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -114,19 +112,14 @@ class _RoutePointsCopyWithImpl<$R, $Out>
   late final ClassMapperBase<RoutePoints> $mapper =
       RoutePointsMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, LatLng, ObjectCopyWith<$R, LatLng, LatLng>>? get points =>
-      $value.points != null
-          ? ListCopyWith($value.points!,
-              (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(points: v))
-          : null;
+  ListCopyWith<$R, LatLng, ObjectCopyWith<$R, LatLng, LatLng>> get points =>
+      ListCopyWith($value.points, (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(points: v));
   @override
-  $R call(
-          {String? name,
-          Object? points = $none,
-          Object? rpcException = $none}) =>
+  $R call({String? name, List<LatLng>? points, Object? rpcException = $none}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
-        if (points != $none) #points: points,
+        if (points != null) #points: points,
         if (rpcException != $none) #rpcException: rpcException
       }));
   @override

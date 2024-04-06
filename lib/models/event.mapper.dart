@@ -189,9 +189,7 @@ mixin EventMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            EventMapper.ensureInitialized().isValueEqual(this as Event, other));
+    return EventMapper.ensureInitialized().equalsValue(this as Event, other);
   }
 
   @override
@@ -343,10 +341,7 @@ mixin EventsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            EventsMapper.ensureInitialized()
-                .isValueEqual(this as Events, other));
+    return EventsMapper.ensureInitialized().equalsValue(this as Events, other);
   }
 
   @override

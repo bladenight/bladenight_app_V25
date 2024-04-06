@@ -1,18 +1,20 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uni_links2/uni_links.dart';
 
 import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/export_import_data_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
+import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../providers/get_images_and_links_provider.dart';
+import 'bladeguard/bladeguard_page.dart';
 import 'events_page.dart';
 import 'friends/friends_page.dart';
 import 'home_page.dart';
@@ -37,6 +39,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   StreamSubscription? _uniLinkStreamSubscription;
   StreamSubscription? _oneSignalOSNotificationOpenedResultSubSubscription;
   late CupertinoTabController tabController;
+  final _appLinks = AppLinks();
 
   @override
   void initState() {
@@ -70,12 +73,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _initURIHandler();
     _incomingLinkHandler();
     initFlutterChannel();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _openIntroScreenFirstTime();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //_openIntroScreenFirstTime();
+      _openBladeguardRequestFirstTime();
+      if (!kIsWeb) await initOneSignal();
+      await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
+    });
   }
 
   void _initImages() async {
@@ -97,15 +100,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           text: 'Will open IntroScreen');
 
       HiveSettingsDB.setHasShownIntro(true);
-      //navigator called but build not ready
-      await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
-      Navigator.of(context).push(
+      await Navigator.of(context).push(
         CupertinoPageRoute(
           builder: (context) => const IntroScreen(),
           fullscreenDialog: false,
         ),
       );
+    }
+  }
+
+  void _openBladeguardRequestFirstTime() async {
+    if (!kIsWeb && !HiveSettingsDB.hasShownBladeGuard) {
+      BnLog.info(
+          className: 'home_screen',
+          methodName: 'openBladeguardRequestFirstTime',
+          text: 'Will open BladeguardRequestFirstTime');
+
+      if (!mounted) return;
+      await Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (context) => const BladeGuardPage(),
+          fullscreenDialog: false,
+        ),
+      );
+      HiveSettingsDB.setHasShownBladeGuard(true);
     }
   }
 
@@ -123,7 +142,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _initialURILinkHandled = true;
 
       try {
-        Uri? initUri = await getInitialUri();
+        Uri? initUri = await _appLinks.getInitialAppLink();
         print('Invoked _initURIHandler');
         if (!kIsWeb) BnLog.info(text: 'Invoked _initURIHandler $initUri');
         if (initUri == null) return;
@@ -147,15 +166,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (kIsWeb) return;
     // It will handle app links while the app is already started - be it in
     // the foreground or in the background.
-    _uniLinkStreamSubscription = uriLinkStream.listen((Uri? uri) async {
+    _uniLinkStreamSubscription = _appLinks.allUriLinkStream.listen((uri) async {
       if (!kIsWeb) BnLog.info(text: 'Received URI: $uri');
       _handleIncomingUriResult(uri.toString());
 
       //uri received
       //check from terminal
-      //ios  /usr/bin/xcrun simctl openurl booted "bna://bladenight.app?code=620087"
+      //ios  /usr/bin/xcrun simctl openurl booted "bna://bladenight.app?addFriend&code=620087&name=Test"
       //android
-      // ~/Library/Android/sdk/platform-tools/adb adb -s devicename shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app/code/123456"'
+      // ~/Library/Android/sdk/platform-tools/adb adb -s devicename shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app?addFriend&code=620087&name=Test"'
     }, onError: (Object err) {
       print('Error occurred: $err');
     });
@@ -166,13 +185,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (uriString == null) return;
     if (uriString.contains('?data=')) {
       importData(context, uriString);
-    } else if (uriString.contains('?code=')) {
+    } else if (uriString.contains('?addFriend')) {
       tabController.index = 3;
       await addFriendWithCodeFromUrl(context, uriString);
     } else if (uriString.contains('?$specialCode=1')) {
-      HiveSettingsDB.setSpecialRightsPrefs(true);
+      HiveSettingsDB.setHasSpecialRightsPrefs(true);
     } else if (uriString.contains('?$specialCode=0')) {
-      HiveSettingsDB.setSpecialRightsPrefs(false);
+      HiveSettingsDB.setHasSpecialRightsPrefs(false);
     }
   }
 

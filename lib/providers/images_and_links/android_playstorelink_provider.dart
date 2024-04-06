@@ -1,34 +1,29 @@
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-
+import '../../app_settings/app_configuration_helper.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../models/image_and_link.dart';
-import '../shared_prefs_provider.dart';
 
-String androidLinkImageAndLinkKey = 'androidLinkKey';
-String _androidLinkImageAndLinkPrefJson =
-    '{"key":"androidPlayStoreLink","image":"","link":"https://play.google.com/store/apps/details?id=de.bladenight.bladenight_app_flutter","text":"BladenightApp Android"}';
+part 'android_playstorelink_provider.g.dart';
 
-class AndroidAppStoreImageAndLink extends StateNotifier<ImageAndLink> {
-  AndroidAppStoreImageAndLink(this.pref)
-      : super(MapperContainer.globals.fromJson(
-            pref?.getString(androidLinkImageAndLinkKey)?.toString() ??
-                _androidLinkImageAndLinkPrefJson));
+String androidIalKey = 'androidPlayStoreIalKey';
+ImageAndLink _defaultAndroidIal = ImageAndLink(
+    '', playStoreLink, 'BladenightPlay Android', 'androidPlayStoreLink');
 
-  final SharedPreferences? pref;
+@riverpod
+class AndroidPlaystoreImageAndLink extends _$AndroidPlaystoreImageAndLink {
+  @override
+  ImageAndLink build() {
+    HiveSettingsDB.settingsHiveBox
+        .watch(key: androidIalKey)
+        .listen((event) => state = event.value);
+    return  HiveSettingsDB.settingsHiveBox
+        .get(androidIalKey, defaultValue: _defaultAndroidIal);
 
-  static final provider =
-      StateNotifierProvider<AndroidAppStoreImageAndLink, ImageAndLink>((ref) {
-    final pref = ref.watch(sharedPrefs).maybeWhen(
-          data: (value) => value,
-          orElse: () => null,
-        );
-    return AndroidAppStoreImageAndLink(pref);
-  });
+  }
 
   void setValue(ImageAndLink imageAndLink) {
-    state = imageAndLink;
-    pref!.setString(androidLinkImageAndLinkKey, MapperContainer.globals.toJson(imageAndLink));
+    HiveSettingsDB.settingsHiveBox.put(androidIalKey, imageAndLink);
+    //state = imageAndLink;
   }
 }

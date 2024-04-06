@@ -39,6 +39,21 @@ class AdminCalls {
     return true;
   }
 
+  static Future<bool> setProcessionMode(Map<String, dynamic> message) async {
+    Completer completer = Completer();
+    BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
+        WampEndpoint.setProcessionMode, message);
+
+    var wampResult = await WampV2.instance
+        .addToWamp(bnWampMessage)
+        .timeout(wampTimeout)
+        .catchError((error, stackTrace) => WampError(error.toString()));
+    if (wampResult is WampError) {
+      return false;
+    }
+    return true;
+  }
+
   static Future<bool> killServer(Map<String, dynamic> message) async {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(

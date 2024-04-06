@@ -7,9 +7,10 @@ import '../models/event.dart';
 import '../models/moving_point.dart';
 import '../models/route.dart';
 import '../models/watch_event.dart';
-import '../providers/active_event_notifier_provider.dart';
+import '../providers/active_event_provider.dart';
 import '../providers/is_tracking_provider.dart';
 import '../providers/location_provider.dart';
+import '../providers/realtime_data_provider.dart';
 import 'logger.dart';
 
 const MethodChannel channel = MethodChannel('bladenightchannel');
@@ -109,9 +110,10 @@ Future<void> initFlutterChannel() async {
     // Receive data from Native
     switch (call.method) {
       case 'sendNavToggleToFlutter':
-        print('sendNavToggleToFlutter received');
+        //print('sendNavToggleToFlutter received');
         try {
-          ProviderContainer().read(isTrackingProvider.notifier)
+          ProviderContainer()
+              .read(isTrackingProvider.notifier)
               .toggleTracking(true);
         } catch (e) {
           if (!kIsWeb) {
@@ -126,7 +128,7 @@ Future<void> initFlutterChannel() async {
         print('getEventDataFromFlutter received');
         try {
           ProviderContainer()
-              .read(activeEventProvider)
+              .read(activeEventProvider.notifier)
               .refresh(forceUpdate: true);
           ProviderContainer().read(locationProvider).refresh(forceUpdate: true);
         } catch (e) {
@@ -141,7 +143,8 @@ Future<void> initFlutterChannel() async {
       case 'getLocationIsTracking':
         print('getLocationIsTrackingFromFlutter received');
         try {
-          SendToWatch.setIsLocationTracking(ProviderContainer().read(isTrackingProvider));
+          SendToWatch.setIsLocationTracking(
+              ProviderContainer().read(isTrackingProvider));
         } catch (e) {
           if (!kIsWeb) {
             BnLog.error(
@@ -167,10 +170,10 @@ Future<void> initFlutterChannel() async {
       case 'getRealtimeDataFromFlutter':
         print('getRealtimeDataFromFlutter received');
         try {
-          LocationProvider.instance.getLastRealtimeData();
-          if (LocationProvider.instance.realtimeUpdate != null) {
+          var rtData = ProviderContainer().read(realtimeDataProvider);
+          if (rtData != null) {
             SendToWatch.updateRealtimeData(
-                LocationProvider.instance.realtimeUpdate!.toJson());
+                rtData.toJson());
           }
         } catch (e) {
           if (!kIsWeb) {

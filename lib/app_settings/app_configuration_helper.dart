@@ -1,9 +1,10 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/shake_hand_result.dart';
 import '../models/route.dart';
+import '../models/shake_hand_result.dart';
 
 const Color systemPrimaryDefaultColor = Color(0xFF4097EA);
 const Color systemPrimaryDarkDefaultColor = Color(0xFFFCF250);
@@ -21,11 +22,15 @@ String defaultStartPoint =
     'Deutsches Verkehrsmuseum\nSchwanthalerhöhe\nMünchen';
 String startPoint = 'Deutsches Verkehrsmuseum\n Schwanthalerhöhe\nMünchen';
 
-const String mainSponsorPlaceholder = 'assets/images/bladenight_logo.png';
+const String mainSponsorPlaceholder = kIsWeb
+    ? 'assets/images/Giesinger-Bladenight-Logo.jpg'
+    : 'assets/images/bladenight_logo.png';
 const String secondLogoPlaceholder = 'assets/images/skatemunich.png';
 
 //globals
-String bladeguardLink = 'https://bladenight-muenchen.de/blade-guards/#anmelden';
+String bladeguardRegisterLink =
+    'https://bladenight-muenchen.de/blade-guards/#anmelden';
+String bladeguardPrivacyLink = 'https://bladenight-muenchen.de/datenschutz';
 String bladeguardLinkText = 'Bladeguard';
 
 String liveMapLink = 'https://bladenight-muenchen.de/bladenight-live-karte/';
@@ -39,7 +44,6 @@ String playStoreLink =
     'https://play.google.com/store/apps/details?id=de.bladenight.bladenight_app_flutter';
 String iOSAppStoreLink =
     'https://apps.apple.com/de/app/bladenight-vorab/id1629988473';
-
 
 SharedPreferences? globalSharedPrefs;
 ShakeHandResult? shakeHandAppOutdatedResult;

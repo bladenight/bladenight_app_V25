@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_io/io.dart';
 
@@ -23,21 +24,31 @@ import '../pages/friends/widgets/friends_action_sheet.dart';
 import '../providers/friends_provider.dart';
 import 'device_info_helper.dart';
 import 'deviceid_helper.dart';
+import 'hive_box/hive_settings_db.dart';
 import 'logger.dart';
 import 'notification/toast_notification.dart';
 import 'preferences_helper.dart';
 
 void exportData(BuildContext context) async {
   try {
-    var res = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.of(context).exportWarningTitle,
+    var res = false;
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.warning,
+        title: Localize.of(context).exportWarningTitle,
         text: Localize.of(context).exportWarning,
-        positiveButtonTitle: Localize.of(context).export,
-        negativeButtonTitle: Localize.of(context).cancel);
-    if (res == CustomButton.negativeButton) {
+        confirmBtnText: Localize.of(context).export,
+        cancelBtnText: Localize.of(context).cancel,
+        onConfirmBtnTap: () {
+          res = true;
+          if (!context.mounted) return;
+          Navigator.of(context).pop();
+        });
+    if (res == false) {
       return;
     }
-    var deviceID = await DeviceId.getId;
+    var deviceID = DeviceId.appId;
     var friends = await PreferencesHelper.getFriendsFromPrefs();
     String exportdata =
         'id=$deviceID&fri=${MapperContainer.globals.toJson(friends)}';
@@ -65,38 +76,48 @@ void exportData(BuildContext context) async {
 
 void importData(BuildContext context, String dataString) async {
   try {
-    var res = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.of(context).importWarningTitle,
-        text: Localize.of(context).importWarning,
-        positiveButtonTitle: Localize.current.import,
-        negativeButtonTitle: Localize.current.cancel);
-    if (res == CustomButton.negativeButton) {
+    var res = false;
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.warning,
+        title: Localize.current.importWarningTitle,
+        text: Localize.current.importWarning,
+        confirmBtnText: Localize.current.import,
+        cancelBtnText: Localize.current.cancel,
+        onConfirmBtnTap: () async {
+          res = true;
+          const String dataId = 'data=';
+          var dataPartIdx = dataString.indexOf(dataId);
+          if (dataPartIdx == -1) return;
+          var base64dataString = dataString.substring(
+              dataPartIdx + dataId.length, dataString.length);
+          var base64Decoded = utf8.decode(base64.decode(base64dataString));
+          var dataParts = base64Decoded.split('&');
+          var id = dataParts[0].substring(3);
+          HiveSettingsDB.setAppId(id);
+          var friendJson = dataParts[1].substring(4);
+          var friends =
+              MapperContainer.globals.fromJson<List<Friend>>(friendJson);
+          await PreferencesHelper.saveFriendsToPrefsAsync(friends);
+          ProviderContainer().refresh(friendsProvider);
+          ProviderContainer().read(friendsLogicProvider).reloadFriends();
+          if (!context.mounted) return;
+          await QuickAlert.show(
+            context: context,
+            showCancelBtn: false,
+            type: QuickAlertType.info,
+            title:
+                '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
+          );
+          if (!context.mounted) return;
+          Navigator.pop(context);
+        });
+    if (res == false) {
       return;
     }
-
-    const String dataId = 'data=';
-    var dataPartIdx = dataString.indexOf(dataId);
-    if (dataPartIdx == -1) return;
-    var base64dataString =
-        dataString.substring(dataPartIdx + dataId.length, dataString.length);
-    var base64Decoded = utf8.decode(base64.decode(base64dataString));
-    var dataParts = base64Decoded.split('&');
-    var id = dataParts[0].substring(3);
-    DeviceId.saveDeviceIdToPrefs(id);
-    var friendJson = dataParts[1].substring(4);
-    var friends = MapperContainer.globals.fromJson<List<Friend>>(friendJson);
-    await PreferencesHelper.saveFriendsToPrefsAsync(friends);
-    ProviderContainer().refresh(friendsProvider);
-    ProviderContainer().read(friendsLogicProvider).reloadFriends();
-    showToast(
-        message:
-            '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
-        backgroundColor: CupertinoColors.activeGreen,
-        textColor: CupertinoColors.black);
   } catch (e) {
-    if (!kIsWeb) {
-      BnLog.error(methodName: 'exportData', text: 'failed to export $e');
-    }
+    BnLog.error(methodName: 'importData', text: 'failed to import $e');
     showToast(
         message: '${Localize.current.import} ${Localize.current.failed}',
         backgroundColor: CupertinoColors.systemRed,
@@ -139,11 +160,10 @@ Future<File> _createLogFile(String fileName) async {
 
 Future<void> exportLogs() async {
   try {
-    var fileContent =
-        await BnLog.exportLogs().timeout(const Duration(seconds: 30));
+    var fileContent = await BnLog.collectLogs();
     if (kIsWeb) {
       print(fileContent);
-      showToast(message: 'siehe Console');
+      showToast(message: 'Siehe Console');
       return;
     }
     var fileName = '${DateTime.now().year}_'
@@ -160,7 +180,8 @@ Future<void> exportLogs() async {
     encoder.create(zipFilePath);
     await encoder.addFile(logfilePath);
     encoder.close();
-    showToast(message: '${Localize.current.ok})');
+    showToast(
+        message: '${fileContent.length.toString()}  ${Localize.current.ok}');
     var aV = await DeviceHelper.getAppVersionsData();
 
     final Email email = Email(
@@ -225,18 +246,30 @@ void exportBgLocationLogs() async {
 
 Future<bool> addFriendWithCodeFromUrl(
     BuildContext context, String uriString) async {
+  var dataStartIdx = uriString.indexOf('?');
+  var datas = uriString.substring(dataStartIdx + 1);
+  if (datas.length < 5) return false;
+  var content = datas.split('&');
   //import code
   const String codeId = 'code=';
   var code = '';
-  var codePartIdx = -1;
 
-  codePartIdx = uriString.indexOf(codeId);
-  if (codePartIdx == -1) return false;
-  if (uriString.substring(codePartIdx + codeId.length).length < 6) {
+  const String nameId = 'name=';
+  var name = '';
+
+  for (var part in content) {
+    if (part.contains(nameId) && part.length > nameId.length) {
+      name = part.split('=')[1].trim();
+    }
+    if (part.contains(codeId) && part.length > codeId.length) {
+      code = part.split('=')[1].trim();
+    }
+  }
+
+  if (code.length < 6) {
     return false;
   }
 
-  code = uriString.substring(codePartIdx + codeId.length);
   var intCode = int.tryParse(code);
   if (intCode == null) {
     showToast(
@@ -246,18 +279,23 @@ Future<bool> addFriendWithCodeFromUrl(
         textColor: Colors.black);
     return false;
   }
+
   showToast(
-      message: 'Code $intCode ${Localize.of(context).received}',
+      message:
+          '${Localize.of(context).friend} $name Code $intCode ${Localize.of(context).received}',
       backgroundColor: Colors.green,
       textColor: Colors.black);
 
-  var result = await EditFriendDialog.show(context,
-      friend: Friend(
-          name: '',
-          friendId: await PreferencesHelper.getNewFriendId(),
-          requestId: intCode,
-          isActive: true),
-      friendDialogAction: FriendsAction.addWithCode);
+  EditFriendResult? result;
+  if (context.mounted) {
+    result = await EditFriendDialog.show(context,
+        friend: Friend(
+            name: name,
+            friendId: await PreferencesHelper.getNewFriendId(),
+            requestId: intCode,
+            isActive: true),
+        friendDialogAction: FriendsAction.addWithCode);
+  }
   if (result != null) {
     ProviderContainer()
         .read(friendsLogicProvider)

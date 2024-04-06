@@ -2,14 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:universal_io/io.dart';
 
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
+import '../../main.dart';
 import '../../models/external_app_message.dart';
 import '../../providers/messages_provider.dart';
+import '../device_info_helper.dart';
 import '../deviceid_helper.dart';
 import '../hive_box/hive_settings_db.dart';
 import '../logger.dart';
@@ -18,13 +21,39 @@ import '../uuid_helper.dart';
 
 const MethodChannel channel = MethodChannel('bladenightbgnotificationchannel');
 
+Future<void> initOneSignal() async {
+  if (kIsWeb) {
+    BnLog.info(text: 'Web - init OneSignal');
+    await OnesignalHandler.initPushNotifications();
+    return;
+  }
+  await Future.delayed(const Duration(seconds: 3)); //delay and wait
+  if (Platform.isIOS) {
+    BnLog.info(text: ' iOS - init OneSignal PushNotifications permissions OK');
+    await OnesignalHandler.initPushNotifications();
+    return;
+  }
+  //workaround for android 8.1 Nexus
+  if (Platform.isAndroid &&
+      await DeviceHelper.isAndroidGreaterOrEqualVersion(9)) {
+    BnLog.info(
+        text:
+            'Android is greater than V9 OneSignal  PushNotifications permissions OK');
+    await OnesignalHandler.initPushNotifications();
+    return;
+  }
+
+  BnLog.info(text: 'Onesignal not available ${Platform.version}');
+}
+
 class OnesignalHandler {
   OnesignalHandler._privateConstructor() {
     OneSignal.User.pushSubscription.addObserver((changes) {
       //  print(changes.to.userId);
       String? userId = OneSignal.User.pushSubscription.id ?? '';
-
-      HiveSettingsDB.setOneSignalId(userId);
+      if (userId.isNotEmpty) {
+        HiveSettingsDB.setOneSignalId(userId);
+      }
     });
   }
 
@@ -41,11 +70,13 @@ class OnesignalHandler {
         OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
       } else {
         OneSignal.Debug.setAlertLevel(OSLogLevel.none);
-        OneSignal.Debug.setLogLevel(OSLogLevel.none);
+        OneSignal.Debug.setLogLevel(OSLogLevel.info);
       }
 
       OneSignal.initialize(oneSignalAppId);
       OneSignal.User.pushSubscription.lifecycleInit();
+      //String userId = OneSignal.User.pushSubscription.id ?? '';
+      //if (userId.isNotEmpty )HiveSettingsDB.setOneSignalId(userId);
       OneSignal.Location.setShared(false);
 
       setOneSignalChannels();
@@ -121,24 +152,36 @@ class OnesignalHandler {
 
   static Future<void> setOneSignalChannels() async {
     if (HiveSettingsDB.pushNotificationsEnabled == false) {
-      HiveSettingsDB.setBladeGuardClick(false);
-      await OnesignalHandler.registerPushAsBladeGuard(false, 0);
+      HiveSettingsDB.setOneSignalRegisterBladeGuardPush(false);
+      await OnesignalHandler.registerPushAsBladeGuard(false, '');
       HiveSettingsDB.setRcvSkatemunichInfos(false);
       await OnesignalHandler.registerSkateMunichInfo(false);
       await OneSignal.User.pushSubscription.optOut();
     } else {
       //allow onesignal
       await OneSignal.User.pushSubscription.optIn();
+      OneSignal.User.addAlias('external_id', DeviceId.appId);
+      OneSignal.User.addAlias('Team', HiveSettingsDB.bgTeam);
     }
     var optedIn = OneSignal.User.pushSubscription.optedIn;
     BnLog.info(text: 'setOneSignalChannels optIn is $optedIn');
   }
 
-  static Future<void> registerPushAsBladeGuard(bool value, int teamId) async {
+  static Future<void> unRegisterPushAsBladeGuard() async {
+    HiveSettingsDB.setOneSignalRegisterBladeGuardPush(false);
+    await OnesignalHandler.registerPushAsBladeGuard(false, '');
+    HiveSettingsDB.setRcvSkatemunichInfos(false);
+    await OnesignalHandler.registerSkateMunichInfo(false);
+  }
+
+  static Future<void> registerPushAsBladeGuard(
+      bool value, String teamId) async {
     Map<String, String> map = {
-      'IsBladeguard': value ? teamId.toString() : '0',
+      'IsBladeguard': value ? teamId : '',
     };
     BnLog.info(text: 'register IsBladeguard value $value $teamId');
+    await OneSignal.User.pushSubscription.optIn();
+    BnLog.info(text: 'Bladeguard logged out from OneSignal');
     OneSignal.User.addTags(map).catchError((err) {
       BnLog.error(text: 'register IsBladeguard error $err', exception: err);
     });
@@ -166,14 +209,26 @@ class OnesignalHandler {
         timeStamp: DateTime.now().millisecondsSinceEpoch,
         lastChange: DateTime.now().millisecondsSinceEpoch);
 
-    CustomButton? buttonResult;
     if (buttons != null && buttons.length == 1) {
       var button1 = buttons.first;
       message.button1Text = button1.text;
-      buttonResult = await FlutterPlatformAlert.showCustomAlert(
-          windowTitle: title ?? Localize.current.notification,
+      await QuickAlert.show(
+          context: navigatorKey.currentContext!,
+          title: title ?? Localize.current.notification,
           text: body ?? '',
-          positiveButtonTitle: button1.text);
+          confirmBtnText: button1.text,
+          type: QuickAlertType.info,
+          onConfirmBtnTap: () {
+            if (data != null) {
+              var devId = DeviceId.appId;
+              if (data.keys.contains('url')) {
+                message.url = data['url'] + '/?id=$devId';
+                Launch.launchUrlFromString(data['url'] + '/?id=$devId');
+              }
+            }
+            ProviderContainer().read(messagesLogicProvider).addMessage(message);
+            return navigatorKey.currentState?.pop();
+          });
     }
     //2 buttons
     if (buttons != null && buttons.length == 2) {
@@ -181,35 +236,38 @@ class OnesignalHandler {
       var button2 = buttons.last;
       message.button1Text = button1.text;
       message.button2Text = button2.text;
-      buttonResult = await FlutterPlatformAlert.showCustomAlert(
-          windowTitle: title ?? Localize.current.notification,
+      await QuickAlert.show(
+          context: navigatorKey.currentContext!,
+          title: title ?? Localize.current.notification,
           text: body ?? '',
-          positiveButtonTitle: button1.text,
-          negativeButtonTitle: button2.text);
+          confirmBtnText: button1.text,
+          cancelBtnText: button2.text,
+          type: QuickAlertType.info,
+          onConfirmBtnTap: () {
+            if (data != null) {
+              var devId = DeviceId.appId;
+              if (data.keys.contains('url')) {
+                message.url = data['url'] + '/?id=$devId';
+                Launch.launchUrlFromString(data['url'] + '/?id=$devId');
+              }
+            }
+            ProviderContainer().read(messagesLogicProvider).addMessage(message);
+            return navigatorKey.currentState?.pop();
+          });
     }
-    if (buttonResult != null &&
-        data != null &&
-        buttonResult == CustomButton.positiveButton) {
-      var devId = await DeviceId.getId;
-      if (data.keys.contains('url')) {
-        message.url = data['url'] + '/?id=$devId';
-        Launch.launchUrlFromString(data['url'] + '/?id=$devId');
-      }
-    }
-    ProviderContainer().read(messagesLogicProvider).addMessage(message);
   }
 
   @pragma('vm:entry-point')
   static void receivedBgRemoteMessage(MethodCall call) async {
     try {
-      print('remote notification received');
-      ProviderContainer().read(messagesLogicProvider).addMessage(ExternalAppMessage(
-          uid: UUID.createUuid(),
-          title: call.arguments,
-          body: 'Test',
-          timeStamp: DateTime.now().millisecondsSinceEpoch,
-          lastChange: DateTime.now().millisecondsSinceEpoch
-      ));
+      print('receivedBgRemoteMessage remote notification received');
+      ProviderContainer().read(messagesLogicProvider).addMessage(
+          ExternalAppMessage(
+              uid: UUID.createUuid(),
+              title: call.arguments,
+              body: 'test',
+              timeStamp: DateTime.now().millisecondsSinceEpoch,
+              lastChange: DateTime.now().millisecondsSinceEpoch));
     } catch (e) {
       BnLog.error(
           className: 'onesignal_handler',

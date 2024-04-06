@@ -11,6 +11,7 @@ import '../../../models/route.dart' hide Path;
 class EventInfoOverlay extends StatefulWidget {
   const EventInfoOverlay(
       {super.key, required this.event, required this.routePoints});
+
   final Event event;
   final RoutePoints? routePoints;
 
@@ -27,58 +28,87 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
+    return SafeArea(
+      child: Stack(children: [
         Positioned(
-          bottom: 10,
+          top: 20,
           left: 15,
           right: 15,
-          child: ClipPath(
-            clipper: EventInfoClipper(),
-            child: Stack(children: [
-              BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Column(children: [
-                  Center(
-                    child: FittedBox(
-                      child: Text(
-                        '${Localize.of(context).route}: ${widget.event.routeName}  '
-                        '${Localize.of(context).length}: ${widget.routePoints != null ? ((widget.routePoints!.getRoutePointsSummaryDistance) / 1000).toStringAsFixed(1) : '-'} km  ',
-                        overflow: TextOverflow.fade,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: FittedBox(
-                      child: FittedBox(
-                        child: Text(
-                          '${Localize.of(context).at} ${Localize.current.dateTimeIntl(widget.event.startDate, widget.event.startDate)}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
+          child: Stack(
+            children: [
+              ClipPath(
+                clipper: EventInfoClipper(),
+                child: Stack(children: [
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Column(children: [
+                      Center(
+                        child: FittedBox(
+                          child: Text(
+                            '${Localize.of(context).route}: ${widget.event.routeName}  '
+                            '${Localize.of(context).length}: ${widget.routePoints != null ? ((widget.routePoints!.getRoutePointsSummaryDistance) / 1000).toStringAsFixed(1) : '-'} km  ',
+                            overflow: TextOverflow.fade,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            maxLines: 1,
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  if (widget.event.startPoint!=null)
-                  Center(
-                    child: FittedBox(
-                      child: Text(
-                        '${Localize.of(context).startPointTitle} ${widget.event.startPoint}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
+                      if (widget.event.status != EventStatus.noevent)
+                        Center(
+                          child: FittedBox(
+                            child: FittedBox(
+                              child: Text(
+                                '${Localize.of(context).at} ${Localize.current.dateTimeIntl(widget.event.startDate, widget.event.startDate)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      textAlign: TextAlign.center,),
-                    ),
+                      if (widget.event.startPoint != null)
+                        Center(
+                          child: FittedBox(
+                            child: Text(
+                              '${Localize.of(context).startPointTitle} ${widget.event.startPoint}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      if (widget.event.participants != 0)
+                        Center(
+                          child: FittedBox(
+                            child: Text(
+                              '${Localize.of(context).participant}: ${widget.event.participants}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      Center(
+                        child: FittedBox(
+                          child: Text(
+                            '${Localize.of(context).status} ${widget.event.statusText}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ]),
                   ),
                 ]),
-              ),
-            ]),
+              )
+            ],
           ),
         ),
-      ],
+      ]),
     );
   }
 }

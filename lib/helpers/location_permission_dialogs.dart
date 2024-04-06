@@ -1,13 +1,16 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:permission_handler/permission_handler.dart'
-    hide PermissionStatus;
 import 'package:get/get.dart';
 import 'package:location2/location2.dart' as loc2;
+import 'package:permission_handler/permission_handler.dart'
+    hide PermissionStatus;
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../generated/l10n.dart';
+import '../main.dart';
+import '../pages/widgets/scroll_quick_alert.dart';
 import 'device_info_helper.dart';
 import 'hive_box/hive_settings_db.dart';
 import 'logger.dart';
@@ -52,18 +55,24 @@ class LocationPermissionDialog {
     final locationPermission = await loc2.getLocationPermissionStatus();
     if (locationPermission.locationPermissionId ==
         loc2.LocationPermission.denied.index) {
-      var prominentDisclosureResult =
-          await FlutterPlatformAlert.showCustomAlert(
-              windowTitle: Localize.current.requestLocationPermissionTitle,
-              text: isAndroidPlatformGreater09BuildQ
-                  ? Localize.current
-                      .prominentdisclosuretrackingprealertandroidFromAndroid_V11
-                  : Localize.current
-                      .prominentdisclosuretrackingprealertandroidToAndroid_V10x,
-              iconStyle: IconStyle.information,
-              positiveButtonTitle: Localize.current.change,
-              negativeButtonTitle: Localize.current.deny);
-      if (prominentDisclosureResult == CustomButton.negativeButton) {
+      var denied = false;
+      await QuickAlert.show(
+          context: navigatorKey.currentContext!,
+          showCancelBtn: true,
+          type: QuickAlertType.info,
+          title: Localize.current.requestLocationPermissionTitle,
+          text: isAndroidPlatformGreater09BuildQ
+              ? Localize.current
+                  .prominentdisclosuretrackingprealertandroidFromAndroid_V11
+              : Localize.current
+                  .prominentdisclosuretrackingprealertandroidToAndroid_V10x,
+          confirmBtnText: Localize.current.change,
+          cancelBtnText: Localize.current.deny,
+          onCancelBtnTap: () {
+            denied = true;
+            return navigatorKey.currentState?.pop();
+          });
+      if (denied) {
         //user denies request
         return LocationPermissionStatus.denied;
       }
@@ -85,22 +94,27 @@ class LocationPermissionDialog {
         platformVersion >= 10;
 
     final locationPermission = await loc2.getLocationPermissionStatus();
-
-    if (locationPermission.locationPermission == loc2.LocationPermission.denied) {
-      var prominentDisclosureResult =
-          await FlutterPlatformAlert.showCustomAlert(
-              windowTitle: Localize.current.requestLocationPermissionTitle,
-              text: isAndroidPlatformGreater09BuildQ
-                  ? Localize.current
-                      .prominentdisclosuretrackingprealertandroidFromAndroid_V11
-                  : Localize.current
-                      .prominentdisclosuretrackingprealertandroidToAndroid_V10x,
-              iconStyle: IconStyle.information,
-              positiveButtonTitle: Localize.current.change,
-              negativeButtonTitle: Localize.current.deny);
-      if (prominentDisclosureResult == CustomButton.negativeButton) {
-        return false;
-      }
+    if (locationPermission.locationPermissionId ==
+        loc2.LocationPermission.denied.index) {
+      var acceptLocation = await ScrollQuickAlert.show(
+          context: navigatorKey.currentContext!,
+          showCancelBtn: true,
+          type: QuickAlertType.confirm,
+          title: Localize.current.requestLocationPermissionTitle,
+          text: isAndroidPlatformGreater09BuildQ
+              ? Localize.current
+                  .prominentdisclosuretrackingprealertandroidFromAndroid_V11
+              : Localize.current
+                  .prominentdisclosuretrackingprealertandroidToAndroid_V10x,
+          confirmBtnText: Localize.current.change,
+          cancelBtnText: Localize.current.deny,
+          onCancelBtnTap: () {
+            return navigatorKey.currentState?.pop(false);
+          },
+          onConfirmBtnTap: () {
+            return navigatorKey.currentState?.pop(true);
+          });
+      return acceptLocation ?? false;
     }
     //permanently denied or unknown
     return true;
@@ -116,13 +130,19 @@ class LocationPermissionDialog {
       return permissions;
     }
     HiveSettingsDB.setHasAskedAlwaysAllowLocationPermission(true);
-    var prominentDisclosureResult = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.current.onlyWhenInUseEnabled,
+    var cancelPressed = false;
+    await QuickAlert.show(
+        context: navigatorKey.currentContext!,
+        showCancelBtn: true,
+        type: QuickAlertType.info,
+        title: Localize.current.onlyWhenInUseEnabled,
         text: Localize.current.enableAlwaysLocationInfotext,
-        iconStyle: IconStyle.information,
-        positiveButtonTitle: Localize.current.changetoalways,
-        negativeButtonTitle: Localize.current.leavewheninuse);
-    if (prominentDisclosureResult == CustomButton.negativeButton) {
+        confirmBtnText: Localize.current.changetoalways,
+        cancelBtnText: Localize.current.leavewheninuse,
+        onCancelBtnTap: () {
+          cancelPressed = true;
+        });
+    if (cancelPressed) {
       return getPermissionsStatus();
     } else {
       final res = await loc2
@@ -136,24 +156,25 @@ class LocationPermissionDialog {
               text: 'requestAlwaysOnAndroid permissions permanentlyDenied');
         }
 
-        var permanentDeniedResult = await FlutterPlatformAlert.showCustomAlert(
-            windowTitle: Localize.current.alwaysPermantlyDenied,
+        await QuickAlert.show(
+            context: navigatorKey.currentContext!,
+            showCancelBtn: true,
+            type: QuickAlertType.info,
+            title: Localize.current.alwaysPermantlyDenied,
             text: Localize.current.tryOpenAppSettings,
-            iconStyle: IconStyle.information,
-            positiveButtonTitle: Localize.current.openOperatingSystemSettings,
-            negativeButtonTitle: Localize.current.leavewheninuse);
-        if (permanentDeniedResult == CustomButton.positiveButton) {
-          var res = await openAppSettings();
-          if (res == false) {
-            Fluttertoast.showToast(
-                msg: Localize.current.couldNotOpenAppSettings);
-            if (!kIsWeb) {
-              BnLog.warning(
-                  text:
-                      'App settings could not opened while always location permissions are permanentlyDenied');
-            }
-          }
-        }
+            confirmBtnText: Localize.current.openOperatingSystemSettings,
+            cancelBtnText: Localize.current.leavewheninuse,
+            onConfirmBtnTap: () async {
+              var res = await openAppSettings();
+              if (res == false) {
+                Fluttertoast.showToast(
+                    msg: Localize.current.couldNotOpenAppSettings);
+                BnLog.warning(
+                    text:
+                        'App settings could not opened while always location permissions are permanentlyDenied');
+              }
+              return navigatorKey.currentState?.pop();
+            });
       }
     }
     return getPermissionsStatus();
@@ -170,21 +191,27 @@ class LocationPermissionDialog {
   }
 
   Future<bool> showMotionSensorProminentDisclosure() async {
-    var prominentMotionDisclosureResult =
-        await FlutterPlatformAlert.showCustomAlert(
-            windowTitle: Localize.current.fitnessPermissionInfoTextTitle,
-            text: Localize.current.fitnessPermissionInfoText,
-            iconStyle: IconStyle.information,
-            positiveButtonTitle: Localize.current.forward,
-            negativeButtonTitle: Localize.current.deny);
-    if (prominentMotionDisclosureResult == CustomButton.negativeButton) {
-      HiveSettingsDB.setIsMotionDetectionDisabled(true);
-      return false;
-    } else {
-      HiveSettingsDB.setIsMotionDetectionDisabled(false);
-      return true;
-      //await requestMotionSensorPermissions();
-    }
+    var prominentMotionDisclosureResult = true;
+    await QuickAlert.show(
+        context: navigatorKey.currentContext!,
+        showCancelBtn: true,
+        type: QuickAlertType.info,
+        title: Localize.current.fitnessPermissionInfoTextTitle,
+        text: Localize.current.fitnessPermissionInfoText,
+        confirmBtnText: Localize.current.forward,
+        cancelBtnText: Localize.current.deny,
+        onConfirmBtnTap: () {
+          HiveSettingsDB.setIsMotionDetectionDisabled(false);
+          prominentMotionDisclosureResult = false;
+          return navigatorKey.currentState?.pop();
+        },
+        onCancelBtnTap: () {
+          HiveSettingsDB.setIsMotionDetectionDisabled(true);
+          prominentMotionDisclosureResult = true;
+          //if (!mounted) return;
+          return navigatorKey.currentState?.pop();
+        });
+    return prominentMotionDisclosureResult;
   }
 
   ///Returns [LocationPermissionStatus] of device
@@ -198,11 +225,11 @@ class LocationPermissionDialog {
       BnLog.info(
           className: 'locationProvider',
           methodName: 'init',
-          text: 'init get permissions status ${sw.elapsedMicroseconds}micros');
+          text: 'init get permissions status ${sw.elapsedMicroseconds} micros');
     }
     if (kDebugMode) {
       print(
-          'init get permissions status ${sw.elapsedMicroseconds}micros /${sw.elapsedMilliseconds}ms');
+          'init get permissions status ${sw.elapsedMicroseconds} micros /${sw.elapsedMilliseconds}ms');
     }
     sw.stop();
     if (permissionStatus.locationPermissionId ==
@@ -217,13 +244,21 @@ class LocationPermissionDialog {
   }
 
   Future<bool> requestAndOpenAppSettings() async {
-    var permanentDeniedResult = await FlutterPlatformAlert.showCustomAlert(
-        windowTitle: Localize.current.noLocationPermissionGrantedAlertTitle,
+    var permanentDeniedResult = true;
+
+    await QuickAlert.show(
+        context: navigatorKey.currentContext!,
+        showCancelBtn: true,
+        type: QuickAlertType.info,
+        title: Localize.current.noLocationPermissionGrantedAlertTitle,
         text: Localize.current.tryOpenAppSettings,
-        iconStyle: IconStyle.information,
-        positiveButtonTitle: Localize.current.yes,
-        negativeButtonTitle: Localize.current.no);
-    if (permanentDeniedResult == CustomButton.positiveButton) {
+        confirmBtnText: Localize.current.yes,
+        cancelBtnText: Localize.current.no,
+        onConfirmBtnTap: () {
+          permanentDeniedResult = true;
+          return navigatorKey.currentState?.pop();
+        });
+    if (permanentDeniedResult) {
       var res = await openAppSettings();
       if (res == false) {
         Fluttertoast.showToast(msg: Localize.current.couldNotOpenAppSettings);

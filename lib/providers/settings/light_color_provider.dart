@@ -1,0 +1,24 @@
+import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../app_settings/app_constants.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
+
+part 'light_color_provider.g.dart';
+
+@Riverpod(keepAlive: true)
+class ThemePrimaryLightColor extends _$ThemePrimaryLightColor {
+  @override
+  Color build() {
+    Hive.box(hiveBoxSettingDbName)
+        .watch(key: HiveSettingsDB.themePrimaryLightColorKey)
+        .listen((event) => state = event.value);
+    return HiveSettingsDB.themePrimaryLightColor;
+  }
+
+  void setColor(Color color) {
+    HiveSettingsDB.setThemePrimaryLightColor(color);
+  }
+}

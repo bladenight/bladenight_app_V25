@@ -24,7 +24,7 @@ class ExternalAppMessageMapper extends ClassMapperBase<ExternalAppMessage> {
   static const Field<ExternalAppMessage, String> _f$uid = Field('uid', _$uid);
   static String _$title(ExternalAppMessage v) => v.title;
   static const Field<ExternalAppMessage, String> _f$title =
-      Field('title', _$title, key: 'tit');
+      Field('title', _$title);
   static String _$body(ExternalAppMessage v) => v.body;
   static const Field<ExternalAppMessage, String> _f$body =
       Field('body', _$body, key: 'bod');
@@ -39,7 +39,7 @@ class ExternalAppMessageMapper extends ClassMapperBase<ExternalAppMessage> {
       Field('deleted', _$deleted, key: 'del', opt: true, def: false);
   static bool _$read(ExternalAppMessage v) => v.read;
   static const Field<ExternalAppMessage, bool> _f$read =
-      Field('read', _$read, opt: true, def: false);
+      Field('read', _$read, key: 'msgRead', opt: true, def: false);
   static String? _$url(ExternalAppMessage v) => v.url;
   static const Field<ExternalAppMessage, String> _f$url =
       Field('url', _$url, opt: true);
@@ -57,21 +57,21 @@ class ExternalAppMessageMapper extends ClassMapperBase<ExternalAppMessage> {
   static String? _$button3Text(ExternalAppMessage v) => v.button3Text;
   static const Field<ExternalAppMessage, String> _f$button3Text =
       Field('button3Text', _$button3Text, key: 'bt3', opt: true);
+  static String? _$button1Link(ExternalAppMessage v) => v.button1Link;
+  static const Field<ExternalAppMessage, String> _f$button1Link =
+      Field('button1Link', _$button1Link, key: 'btl1', opt: true);
+  static String? _$button2Link(ExternalAppMessage v) => v.button2Link;
+  static const Field<ExternalAppMessage, String> _f$button2Link =
+      Field('button2Link', _$button2Link, key: 'btl2', opt: true);
+  static String? _$button3Link(ExternalAppMessage v) => v.button3Link;
+  static const Field<ExternalAppMessage, String> _f$button3Link =
+      Field('button3Link', _$button3Link, key: 'btl3', opt: true);
   static String? _$groupId(ExternalAppMessage v) => v.groupId;
   static const Field<ExternalAppMessage, String> _f$groupId =
       Field('groupId', _$groupId, key: 'gid', opt: true);
   static int? _$validToTimeStamp(ExternalAppMessage v) => v.validToTimeStamp;
   static const Field<ExternalAppMessage, int> _f$validToTimeStamp =
       Field('validToTimeStamp', _$validToTimeStamp, key: 'validTo', opt: true);
-  static String? _$button1Link(ExternalAppMessage v) => v.button1Link;
-  static const Field<ExternalAppMessage, String> _f$button1Link =
-      Field('button1Link', _$button1Link, key: 'bt1l');
-  static String? _$button2Link(ExternalAppMessage v) => v.button2Link;
-  static const Field<ExternalAppMessage, String> _f$button2Link =
-      Field('button2Link', _$button2Link, key: 'bt2l');
-  static String? _$button3Link(ExternalAppMessage v) => v.button3Link;
-  static const Field<ExternalAppMessage, String> _f$button3Link =
-      Field('button3Link', _$button3Link, key: 'bt3l');
 
   @override
   final MappableFields<ExternalAppMessage> fields = const {
@@ -87,11 +87,11 @@ class ExternalAppMessageMapper extends ClassMapperBase<ExternalAppMessage> {
     #button1Text: _f$button1Text,
     #button2Text: _f$button2Text,
     #button3Text: _f$button3Text,
-    #groupId: _f$groupId,
-    #validToTimeStamp: _f$validToTimeStamp,
     #button1Link: _f$button1Link,
     #button2Link: _f$button2Link,
     #button3Link: _f$button3Link,
+    #groupId: _f$groupId,
+    #validToTimeStamp: _f$validToTimeStamp,
   };
 
   static ExternalAppMessage _instantiate(DecodingData data) {
@@ -108,6 +108,9 @@ class ExternalAppMessageMapper extends ClassMapperBase<ExternalAppMessage> {
         button1Text: data.dec(_f$button1Text),
         button2Text: data.dec(_f$button2Text),
         button3Text: data.dec(_f$button3Text),
+        button1Link: data.dec(_f$button1Link),
+        button2Link: data.dec(_f$button2Link),
+        button3Link: data.dec(_f$button3Link),
         groupId: data.dec(_f$groupId),
         validToTimeStamp: data.dec(_f$validToTimeStamp));
   }
@@ -147,10 +150,8 @@ mixin ExternalAppMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ExternalAppMessageMapper.ensureInitialized()
-                .isValueEqual(this as ExternalAppMessage, other));
+    return ExternalAppMessageMapper.ensureInitialized()
+        .equalsValue(this as ExternalAppMessage, other);
   }
 
   @override
@@ -184,6 +185,9 @@ abstract class ExternalAppMessageCopyWith<$R, $In extends ExternalAppMessage,
       String? button1Text,
       String? button2Text,
       String? button3Text,
+      String? button1Link,
+      String? button2Link,
+      String? button3Link,
       String? groupId,
       int? validToTimeStamp});
   ExternalAppMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -220,6 +224,9 @@ class _ExternalAppMessageCopyWithImpl<$R, $Out>
           Object? button1Text = $none,
           Object? button2Text = $none,
           Object? button3Text = $none,
+          Object? button1Link = $none,
+          Object? button2Link = $none,
+          Object? button3Link = $none,
           Object? groupId = $none,
           Object? validToTimeStamp = $none}) =>
       $apply(FieldCopyWithData({
@@ -235,6 +242,9 @@ class _ExternalAppMessageCopyWithImpl<$R, $Out>
         if (button1Text != $none) #button1Text: button1Text,
         if (button2Text != $none) #button2Text: button2Text,
         if (button3Text != $none) #button3Text: button3Text,
+        if (button1Link != $none) #button1Link: button1Link,
+        if (button2Link != $none) #button2Link: button2Link,
+        if (button3Link != $none) #button3Link: button3Link,
         if (groupId != $none) #groupId: groupId,
         if (validToTimeStamp != $none) #validToTimeStamp: validToTimeStamp
       }));
@@ -252,6 +262,9 @@ class _ExternalAppMessageCopyWithImpl<$R, $Out>
       button1Text: data.get(#button1Text, or: $value.button1Text),
       button2Text: data.get(#button2Text, or: $value.button2Text),
       button3Text: data.get(#button3Text, or: $value.button3Text),
+      button1Link: data.get(#button1Link, or: $value.button1Link),
+      button2Link: data.get(#button2Link, or: $value.button2Link),
+      button3Link: data.get(#button3Link, or: $value.button3Link),
       groupId: data.get(#groupId, or: $value.groupId),
       validToTimeStamp:
           data.get(#validToTimeStamp, or: $value.validToTimeStamp));

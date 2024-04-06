@@ -17,16 +17,28 @@ import 'package:riverpod_context/riverpod_context.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_settings/app_configuration_helper.dart';
+import 'app_settings/app_constants.dart';
+import 'app_settings/globals.dart';
+import 'app_settings/server_connections.dart';
 import 'firebase_options.dart';
 import 'generated/l10n.dart';
+import 'helpers/deviceid_helper.dart';
+import 'helpers/export_import_data_helper.dart';
+import 'helpers/hive_box/adapter/color_adapter.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
 import 'helpers/logger.dart';
 import 'helpers/notification/notification_helper.dart';
 import 'helpers/preferences_helper.dart';
 import 'main.init.dart';
+import 'models/image_and_link.dart';
+import 'pages/bladeguard/bladeguard_page.dart';
 import 'pages/home_screen.dart';
 import 'pages/widgets/intro_slider.dart';
-import 'providers/shared_prefs_provider.dart';
+import 'pages/widgets/route_name_dialog.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
+const String openRouteMapRoute = '/eventRoute';
+const String openBladeguardOnSite = '/bgOnsite';
 
 void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -40,7 +52,7 @@ void main() async {
           FlutterError.presentError(details);
         };
       }
-      if (!kDebugMode && !kIsWeb)  {
+      if (!kDebugMode && !kIsWeb) {
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
@@ -49,13 +61,21 @@ void main() async {
         };
         // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
         PlatformDispatcher.instance.onError = (error, stack) {
-          FirebaseCrashlytics.instance.recordError(error, stack, fatal: false);
+          if (Globals.logToCrashlytics) {
+            FirebaseCrashlytics.instance
+                .recordError(error, stack, fatal: false);
+          }
           return true;
         };
       }
       initializeMappers();
       await Hive.initFlutter();
-      await Hive.openBox('settings');
+      Hive.registerAdapter(ColorAdapter());
+      Hive.registerAdapter(ImageAndLinkAdapter());
+      await Hive.openBox(hiveBoxSettingDbName);
+      await Hive.openBox(hiveBoxServerConfigDBName);
+      Globals.logToCrashlytics = HiveSettingsDB.chrashlyticsEnabled;
+      await DeviceId.initAppId();
       await initLogger();
       if (!kIsWeb) {
         await initNotifications();
@@ -121,8 +141,7 @@ class BladeNightApp extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
-
-         await showDialog<bool>(
+        await showDialog<bool>(
           context: context,
           builder: (context) {
             return AlertDialog(
@@ -145,22 +164,51 @@ class BladeNightApp extends StatelessWidget {
             );
           },
         );
-        return ;
+        return;
       },
       child: MediaQuery.fromView(
         view: View.of(context),
         child: CupertinoAdaptiveTheme(
           light: CupertinoThemeData(
               brightness: Brightness.light,
-              primaryColor: context.watch(ThemePrimaryColor.provider) ??
-                  systemPrimaryDefaultColor),
+              primaryColor: HiveSettingsDB.themePrimaryLightColor),
           dark: CupertinoThemeData(
             brightness: Brightness.dark,
-            primaryColor: context.watch(ThemePrimaryDarkColor.provider) ??
-                systemPrimaryDefaultColor,
+            primaryColor: HiveSettingsDB.themePrimaryDarkColor,
           ),
           initial: HiveSettingsDB.adaptiveThemeMode,
           builder: (theme) => CupertinoApp(
+              onGenerateRoute: (uriString) {
+                BnLog.info(text: 'onGenerateRoute requested ${uriString.name}');
+                if (uriString.name == null) return null;
+                if (uriString.name!.startsWith('/showroute')) {
+                  return CupertinoPageRoute(
+                      builder: (context) => RouteNameDialog(
+                            routeName: uriString.name
+                                .toString()
+                                .replaceAll('/showroute?', '')
+                                .trim(),
+                          ),
+                      fullscreenDialog: true);
+                }
+                if (uriString.name!.startsWith(openBladeguardOnSite)) {
+                  return CupertinoPageRoute(
+                      builder: (context) => const BladeGuardPage(),
+                      fullscreenDialog: true);
+                }
+                if (uriString.name!.contains('?data=')) {
+                  importData(context, uriString.name!);
+                } else if (uriString.name!.contains('?addFriend')) {
+                  //tabController.index = 3;
+                  addFriendWithCodeFromUrl(context, uriString.name!)
+                      .then((value) => null);
+                } else if (uriString.name!.contains('?$specialCode=1')) {
+                  HiveSettingsDB.setHasSpecialRightsPrefs(true);
+                } else if (uriString.name!.contains('?$specialCode=0')) {
+                  HiveSettingsDB.setHasSpecialRightsPrefs(false);
+                }
+                return null;
+              },
               title: 'BladeNight München',
               debugShowCheckedModeBanner: false,
               theme: theme,
@@ -177,8 +225,9 @@ class BladeNightApp extends StatelessWidget {
               supportedLocales: Localize.delegate.supportedLocales,
               // AppLocalizations.supportedLocales,
               home: const HomeScreen(),
+              navigatorKey: navigatorKey,
               routes: <String, WidgetBuilder>{
-                IntroScreen.routeName: (BuildContext context) =>
+                IntroScreen.openIntroRoute: (BuildContext context) =>
                     const IntroScreen(),
                 HomeScreen.routeName: (BuildContext context) =>
                     const HomeScreen(),

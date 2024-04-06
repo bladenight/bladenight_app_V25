@@ -1,6 +1,7 @@
 import UIKit
 import Flutter
 import AVKit
+import app_links
 import BackgroundTasks
 import WatchConnectivity
 //import workmanager
@@ -17,7 +18,7 @@ import WatchConnectivity
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        NSLog("Start Bladenight Runner")
+        NSLog("Starting BladeNightApp Runner")
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
             //not working on iOS registerBackgroundPlugins()
@@ -30,6 +31,10 @@ import WatchConnectivity
             session!.activate();
         }
         clearOldWatchTransfers()
+
+        if let url = AppLinks.shared.getLink(launchOptions: launchOptions) {
+              AppLinks.shared.handleLink(url: url)
+        }
         
         GeneratedPluginRegistrant.register(with: self);
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)

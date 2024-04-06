@@ -158,16 +158,16 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.delete(_openStreetMapDarkLinkKey);
   }
 
-  static const String _mapMenuVisibleKey = 'mapMenuVisiblePref';
+  static const String mapMenuVisibleKey = 'mapMenuVisiblePref';
 
   ///get mapMenuVisible
   static bool get mapMenuVisible {
-    return HiveSettingsDB._hiveBox.get(_mapMenuVisibleKey, defaultValue: true);
+    return HiveSettingsDB._hiveBox.get(mapMenuVisibleKey, defaultValue: true);
   }
 
   ///set mapMenuVisibleString
   static void setMapMenuVisible(bool val) {
-    HiveSettingsDB._hiveBox.put(_mapMenuVisibleKey, val);
+    HiveSettingsDB._hiveBox.put(mapMenuVisibleKey, val);
   }
 
   static const String showOwnTrackKey = 'showOwnTrackPref';
@@ -183,4 +183,42 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.put(showOwnTrackKey, val);
   }
 
+  static const String cameraFollowKey = 'cameraFollowPref';
+
+  /// Get last camera setting (global)
+  static CameraFollow get cameraFollow {
+    var value = HiveSettingsDB._hiveBox.get(cameraFollowKey, defaultValue: 0);
+    return CameraFollow.values.where((element) => element.index == value).first;
+  }
+
+  ///set cameraFollow
+  static void setCameraFollow(CameraFollow val) {
+    HiveSettingsDB._hiveBox.put(cameraFollowKey, val.index);
+  }
+
+  static const String alignFlutterMapKey = 'alignStreetMapPref';
+
+  /// Get last camera setting (global)
+  static AlignFlutterMapState get alignFlutterMap {
+    var value = HiveSettingsDB._hiveBox.get(alignFlutterMapKey, defaultValue: 0);
+    return AlignFlutterMapState.values.where((element) => element.index == value).first;
+  }
+
+  ///set alignStreetMap
+  static void setAlignFlutterMap(AlignFlutterMapState val) {
+    HiveSettingsDB._hiveBox.put(alignFlutterMapKey, val.index);
+  }
+
+  static const String openStreetMapEnabledKey = 'openStreetMapEnabledPref';
+
+  ///get openStreetMapEnabled
+  static bool get openStreetMapEnabled {
+    return HiveSettingsDB._hiveBox
+        .get(openStreetMapEnabledKey, defaultValue: false);
+  }
+
+  ///show openStreetMap setOpenStreetMapEnable
+  static void setOpenStreetMapEnabled(bool val) {
+    HiveSettingsDB._hiveBox.put(openStreetMapEnabledKey, val);
+  }
 }

@@ -1,8 +1,10 @@
 import 'dart:math';
 
-String randomId() {
+int randomId() {
   var random = Random();
-  var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  return List.generate(16, (index) => chars[random.nextInt(chars.length)])
+  var chars = '0123456789';
+  var number = List.generate(10, (index) => chars[random.nextInt(chars.length)])
       .join();
+  //return DateTime.now().millisecondsSinceEpoch.toInt();
+  return int.parse(number);
 }

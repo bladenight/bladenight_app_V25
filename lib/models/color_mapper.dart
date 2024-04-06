@@ -1,6 +1,9 @@
+import 'dart:math';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
+
+import '../app_settings/app_constants.dart';
 
 class ColorMapper extends SimpleMapper<Color> {
   const ColorMapper();
@@ -20,6 +23,11 @@ extension ColorString on Color {
   String toHexString() {
     return MapperContainer.globals.toValue(this) as String;
   }
+}
+
+Color getRandomColor() {
+  var amount = ColorConstants.friendPickerColors.length;
+  return ColorConstants.friendPickerColors[Random().nextInt(amount - 1)];
 }
 
 extension StringColor on String? {

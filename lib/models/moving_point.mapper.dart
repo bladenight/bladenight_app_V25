@@ -107,10 +107,8 @@ mixin MovingPointMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            MovingPointMapper.ensureInitialized()
-                .isValueEqual(this as MovingPoint, other));
+    return MovingPointMapper.ensureInitialized()
+        .equalsValue(this as MovingPoint, other);
   }
 
   @override

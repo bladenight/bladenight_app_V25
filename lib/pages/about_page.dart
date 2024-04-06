@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'widgets/version_widget.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/export_import_data_helper.dart';
 import '../helpers/url_launch_helper.dart';
+import 'widgets/about_page/privacy.dart';
+import 'widgets/version_widget.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -50,6 +51,8 @@ class _AboutPageState extends State<AboutPage> {
                 _sizedWidget(context),
                 _aboutAppWidget(context),
                 _sizedWidget(context),
+                const PrivacyContent(),
+                _sizedWidget(context),
                 _feedBackWidget(context),
                 _sizedWidget(context),
                 _homePageWidget(context),
@@ -63,17 +66,7 @@ class _AboutPageState extends State<AboutPage> {
                 _sizedWidget(context),
                 _serverAppWidget(context),
                 _sizedWidget(context),
-                _privacyWidget(context),
-                _sizedWidget(context),
                 _licenceWidget(context),
-                _sizedWidget(context),
-                _logWidget(context),
-                _sizedWidget(context),
-                _crashlyticsWidget(context),
-                _sizedWidget(context),
-                _oneSignalWidget(context),
-                _sizedWidget(context),
-                _mapKitWidget(context),
                 _sizedWidget(context),
               ],
             ),
@@ -103,8 +96,6 @@ Widget _aboutAppWidget(BuildContext context) {
     ],
   );
 }
-
-
 
 Widget _impressumWidget(BuildContext context) {
   return Column(
@@ -170,7 +161,9 @@ Widget _feedBackWidget(BuildContext context) {
                       CupertinoTheme.of(context).textTheme.navTitleTextStyle),
               GestureDetector(
                 onTap: () async {
-                  Launch.launchUrlFromUrl(serviceurl);
+                  Launch.launchUrlFromUri(
+                    serviceurl,
+                  );
                 },
                 child: (Text(serviceurl.path,
                     style: CupertinoTheme.of(context)
@@ -190,7 +183,7 @@ Widget _feedBackWidget(BuildContext context) {
                       CupertinoTheme.of(context).textTheme.navActionTextStyle),
               GestureDetector(
                 onTap: () async {
-                  Launch.launchUrlFromUrl(supporturl);
+                  Launch.launchUrlFromUri(supporturl);
                 },
                 child: (Text(supporturl.path,
                     style: CupertinoTheme.of(context)
@@ -296,22 +289,7 @@ Widget _serverAppWidget(BuildContext context) {
   );
 }
 
-Widget _privacyWidget(BuildContext context) {
-  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text(Localize.of(context).about_h_privacy,
-        style: CupertinoTheme.of(context).textTheme.navActionTextStyle),
-    Row(
-      children: <Widget>[
-        Expanded(
-          child: Text(Localize.of(context).about_appprivacy,
-              overflow: TextOverflow.clip,
-              style: CupertinoTheme.of(context).textTheme.navTitleTextStyle),
-        ),
-        // more widgets
-      ],
-    )
-  ]);
-}
+
 
 Widget _licenceWidget(BuildContext context) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

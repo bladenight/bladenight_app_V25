@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../generated/l10n.dart';
 import '../../providers/network_connection_provider.dart';
-import 'no_network_warning.dart';
-import 'no_server_reachable_warning.dart';
 
 class ConnectionWarning extends ConsumerWidget {
   const ConnectionWarning({super.key, this.reason});
@@ -15,20 +13,39 @@ class ConnectionWarning extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var networkAware = ref.watch(networkAwareProvider);
     if (networkAware.connectivityStatus == ConnectivityStatus.error ||
-        networkAware.connectivityStatus == ConnectivityStatus.offline) {
-      return GestureDetector(
-        onTap: (() {
-          ProviderContainer().refresh(networkAwareProvider);
-        }),
-        child: const NoNetworkWarning(),
+        networkAware.connectivityStatus == ConnectivityStatus.disconnected) {
+      return SizedBox(
+        height: 20,
+        child: FloatingActionButton.extended(
+          heroTag: 'wwwNotReachableTag',
+          onPressed: () => ref.read(networkAwareProvider.notifier).refresh(),
+          label: Text(Localize.of(context).seemsoffline),
+          icon: const SizedBox(
+            height: 15,
+            width: 15,
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.redAccent,
+            ),
+          ),
+        ),
+        //const ServerNotReachableWarning(),
       );
-    } else if (networkAware.connectivityStatus ==
-        ConnectivityStatus.serverNotReachable) {
-      return GestureDetector(
-        onTap: (() {
-          ProviderContainer().refresh(networkAwareProvider);
-        }),
-        child: const ServerNotReachableWarning(),
+    } else if (networkAware.serverAvailable == false) {
+      return SizedBox(
+        height: 20,
+        child: FloatingActionButton.extended(
+          heroTag: 'serverNotReachableTag',
+          onPressed: () => ref.read(networkAwareProvider.notifier).refresh(),
+          label: Text(Localize.of(context).serverNotReachable),
+          icon: const SizedBox(
+            height: 15,
+            width: 15,
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.redAccent,
+            ),
+          ),
+        ),
+        //const ServerNotReachableWarning(),
       );
     } else {
       return Container();

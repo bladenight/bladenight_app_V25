@@ -4,31 +4,37 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/timeconverter_helper.dart';
+import '../../helpers/url_launch_helper.dart';
 import '../../models/event.dart';
-import '../../providers/active_event_notifier_provider.dart';
+import '../../providers/active_event_provider.dart';
 import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/images_and_links/main_sponsor_image_and_link_provider.dart';
+import '../../providers/images_and_links/second_sponsor_image_and_link_provider.dart';
 import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
+import '../bladeguard/bladeguard_advertise.dart';
+import '../bladeguard/bladeguard_on_site_page.dart';
 import 'app_outdated.dart';
 import 'hidden_admin_button.dart';
 import 'no_connection_warning.dart';
 
-class EventInfo extends StatefulWidget {
+class EventInfo extends ConsumerStatefulWidget {
   const EventInfo({super.key});
 
   @override
-  State<EventInfo> createState() => _EventInfoState();
+  ConsumerState<EventInfo> createState() => _EventInfoState();
 }
 
-class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
+class _EventInfoState extends ConsumerState<EventInfo>
+    with WidgetsBindingObserver {
   Timer? _updateTimer;
 
   @override
@@ -36,10 +42,9 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       initEventUpdates();
       initLocation();
-       //call on first start
+      //call on first start
       //
     });
   }
@@ -68,20 +73,23 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
     // first start
     context.refresh(updateImagesAndLinksProvider);
     await Future.delayed(const Duration(seconds: 2));
-    ActiveEventProvider.instance.refresh(forceUpdate: forceUpdate);
-
+    if (mounted) {
+      context
+          .read(activeEventProvider.notifier)
+          .refresh(forceUpdate: forceUpdate);
+    }
 
     _updateTimer?.cancel();
     _updateTimer = Timer.periodic(
       const Duration(minutes: 10),
       (timer) {
         if (!mounted) return;
-        context.read(activeEventProvider).refresh();
+        context.read(activeEventProvider.notifier).refresh();
       },
     );
   }
 
-  void initLocation()async {
+  void initLocation() async {
     await Future.delayed(const Duration(seconds: 5));
     LocationProvider.instance.refresh(forceUpdate: true);
   }
@@ -95,25 +103,27 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
+          if (!kIsWeb) const ConnectionWarning(),
           if (!kIsWeb) appOutdatedWidget(context),
-          if (nextEventProvider.event.status == EventStatus.noevent)
+          if (nextEventProvider.status == EventStatus.noevent)
             HiddenAdminButton(
               child: Text(Localize.of(context).noEventPlanned,
                   textAlign: TextAlign.center,
                   style: CupertinoTheme.of(context).textTheme.textStyle),
             ),
-          if (nextEventProvider.event.status != EventStatus.noevent)
+          if (nextEventProvider.status != EventStatus.noevent)
             HiddenAdminButton(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const BladeGuardAdvertise(),
                   Text(Localize.of(context).nextEvent,
                       textAlign: TextAlign.center,
                       style: CupertinoTheme.of(context).textTheme.textStyle),
                   const SizedBox(height: 5),
                   FittedBox(
                     child: Text(
-                        '${Localize.of(context).route} ${nextEventProvider.event.routeName}',
+                        '${Localize.of(context).route} ${nextEventProvider.routeName}',
                         textAlign: TextAlign.center,
                         style: CupertinoTheme.of(context)
                             .textTheme
@@ -126,8 +136,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                       child: Text(
                           DateFormatter(Localize.of(context))
                               .getLocalDayDateTimeRepresentation(
-                                  nextEventProvider
-                                      .event.getUtcIso8601DateTime),
+                                  nextEventProvider.getUtcIso8601DateTime),
                           style: CupertinoTheme.of(context)
                               .textTheme
                               .navLargeTitleTextStyle),
@@ -138,11 +147,9 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: nextEventProvider.event.status ==
-                                EventStatus.cancelled
+                        color: nextEventProvider.status == EventStatus.cancelled
                             ? Colors.redAccent
-                            : nextEventProvider.event.status ==
-                                    EventStatus.confirmed
+                            : nextEventProvider.status == EventStatus.confirmed
                                 ? Colors.green
                                 : Colors.transparent,
                         borderRadius: const BorderRadius.only(
@@ -153,7 +160,7 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                       ),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
-                        child: Text(nextEventProvider.event.statusText,
+                        child: Text(nextEventProvider.statusText,
                             style: CupertinoTheme.of(context)
                                 .textTheme
                                 .pickerTextStyle),
@@ -163,25 +170,21 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                 ],
               ),
             ),
-          const SizedBox(
-            height: 1,
-          ),
-          if (!kIsWeb) const ConnectionWarning(),
+          const BladeGuardOnsite(),
           Column(children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 5.0),
               child: GestureDetector(
-                onTap: () {
-                  return; //
-                  /* var link =
-                      context.read(MainSponsorImageAndLink.provider).link;
+                onTap: () async {
+                  var link = context.read(mainSponsorImageAndLinkProvider).link;
                   if (link != null && link != '') {
-                    Launch.launchUrlFromString(
-                        context.read(MainSponsorImageAndLink.provider).link!);
-                  }*/
+                    var uri = Uri.parse(
+                        context.read(mainSponsorImageAndLinkProvider).link!);
+                    Launch.launchUrlFromUri(uri);
+                  }
                 },
                 child: Builder(builder: (context) {
-                  var ms = context.watch(MainSponsorImageAndLink.provider);
+                  var ms = context.watch(mainSponsorImageAndLinkProvider);
                   var nw = context.watch(networkAwareProvider);
                   return (ms.image != null &&
                           nw.connectivityStatus == ConnectivityStatus.online)
@@ -202,39 +205,45 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
             Padding(
               padding: const EdgeInsets.fromLTRB(50.0, 1.0, 50, 1.0),
               child: GestureDetector(
-                onTap: () {
-                  return; //removed because Apple privacy issue
-                  /*var link =
-                      context.read(SecondSponsorImageAndLink.provider).link;
+                onTap: () async {
+                  var link =
+                      context.read(secondSponsorImageAndLinkProvider).link;
                   if (link != null && link != '') {
-                    Launch.launchUrlFromString(
-                        context.read(SecondSponsorImageAndLink.provider).link!);
-                  }*/
+                    var uri = Uri.parse(
+                        context.read(secondSponsorImageAndLinkProvider).link!);
+                    Launch.launchUrlFromUri(uri);
+                  }
                 },
                 child: Builder(builder: (context) {
-                  return Image.asset(secondLogoPlaceholder,
-                      fit: BoxFit.fitWidth);
+                  var img = context.watch(secondSponsorImageAndLinkProvider);
+                  var nw = context.watch(networkAwareProvider);
+                  return (img.image != null &&
+                          nw.connectivityStatus == ConnectivityStatus.online)
+                      ? CachedNetworkImage(
+                          imageUrl: img.image!,
+                          placeholder: (context, url) => Image.asset(
+                              secondLogoPlaceholder,
+                              fit: BoxFit.fitWidth),
+                          errorWidget: (context, url, error) => Image.asset(
+                              secondLogoPlaceholder,
+                              fit: BoxFit.fitWidth),
+                        )
+                      : Image.asset(secondLogoPlaceholder,
+                          fit: BoxFit.fitWidth);
                 }),
               ),
             ),
           ]),
           GestureDetector(
             onTap: () async {
-              return; //removed because Apple privacy issue
-              /*context.read(activeEventProvider).refresh();
-              context.refresh(updateImagesAndLinksProvider);
-              var link = context.read(StartPointImageAndLink.provider).link;
-              if (link != null && link != '') {
-                Launch.launchUrlFromString(
-                    context.read(StartPointImageAndLink.provider).link!);
-              }*/
+              return;
             },
             child: Column(
               children: [
                 //Don't show starting point when no event
-                if (nextEventProvider.event.status != EventStatus.noevent)
+                if (nextEventProvider.status != EventStatus.noevent)
                   Builder(builder: (context) {
-                    var spp = context.watch(StartPointImageAndLink.provider);
+                    var spp = context.watch(startpointImageAndLinkProvider);
                     return spp.text != null
                         ? FittedBox(
                             child: Text(
@@ -262,11 +271,11 @@ class _EventInfoState extends State<EventInfo> with WidgetsBindingObserver {
                   ),
                 ),
                 Text(
-                  nextEventProvider.event.lastupdate == null
+                  nextEventProvider.lastupdate == null
                       ? '-'
                       : Localize.current.dateTimeIntl(
-                          nextEventProvider.event.lastupdate as DateTime,
-                          nextEventProvider.event.lastupdate as DateTime,
+                          nextEventProvider.lastupdate as DateTime,
+                          nextEventProvider.lastupdate as DateTime,
                         ),
                   style: const TextStyle(
                     color: CupertinoDynamicColor.withBrightness(

@@ -82,10 +82,8 @@ mixin RelationshipInputMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            RelationshipInputMessageMapper.ensureInitialized()
-                .isValueEqual(this as RelationshipInputMessage, other));
+    return RelationshipInputMessageMapper.ensureInitialized()
+        .equalsValue(this as RelationshipInputMessage, other);
   }
 
   @override
@@ -214,10 +212,8 @@ mixin GetFriendsListMessageMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            GetFriendsListMessageMapper.ensureInitialized()
-                .isValueEqual(this as GetFriendsListMessage, other));
+    return GetFriendsListMessageMapper.ensureInitialized()
+        .equalsValue(this as GetFriendsListMessage, other);
   }
 
   @override

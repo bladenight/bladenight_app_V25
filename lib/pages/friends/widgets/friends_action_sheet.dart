@@ -26,19 +26,8 @@ class FriendsActionModal extends StatelessWidget {
     return CupertinoActionSheet(
       actions: [
         CupertinoActionSheetAction(
-          child: Text(Localize.of(context).addNearBy),
-          onPressed: () {
-            Navigator.pop(context, FriendsAction.addNearby);
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text(Localize.of(context).linkNearBy),
-          onPressed: () {
-            Navigator.pop(context, FriendsAction.acceptNearby);
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text(Localize.of(context).addnewfriend),
+          child: Text(Localize.of(context)
+              .addnewfriend),
           onPressed: () {
             Navigator.pop(context, FriendsAction.addNew);
           },
@@ -49,11 +38,24 @@ class FriendsActionModal extends StatelessWidget {
             Navigator.pop(context, FriendsAction.addWithCode);
           },
         ),
+        CupertinoActionSheetAction(
+          child: Text(Localize.of(context)
+              .addNearBy),
+          onPressed: () {
+            Navigator.pop(context, FriendsAction.addNearby);
+          },
+        ),
+        CupertinoActionSheetAction(
+          child: Text(Localize.of(context).linkNearBy),
+          onPressed: () {
+            Navigator.pop(context, FriendsAction.acceptNearby);
+          },
+        ),
       ],
       cancelButton: CupertinoActionSheetAction(
         child: Text(Localize.of(context).cancel),
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.of(context).pop();
         },
       ),
     );

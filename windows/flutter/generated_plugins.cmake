@@ -3,8 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  app_links
+  connectivity_plus
   firebase_core
-  flutter_platform_alert
   geolocator_windows
   permission_handler_windows
   share_plus

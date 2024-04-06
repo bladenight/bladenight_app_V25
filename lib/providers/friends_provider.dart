@@ -2,14 +2,16 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/deviceid_helper.dart';
 import '../helpers/location_bearing_distance.dart';
 import '../helpers/logger.dart';
 import '../helpers/preferences_helper.dart';
+import '../main.dart';
 import '../models/friend.dart';
 import '../models/messages/friends.dart';
 import '../models/messages/relationship_input.dart';
@@ -50,7 +52,7 @@ class FriendsLogic with ChangeNotifier {
 
   Future<void> refreshFriends() async {
     try {
-      var deviceId = await DeviceId.getId;
+      var deviceId = DeviceId.appId;
 
       var result = await FriendsMessage.getFriends(deviceId);
       if (result.exception != null) {
@@ -184,7 +186,7 @@ class FriendsLogic with ChangeNotifier {
     var id = await PreferencesHelper.getNewFriendId();
     var friend = Friend(name: name, friendId: id, color: color);
 
-    var deviceId = await DeviceId.getId;
+    var deviceId = DeviceId.appId;
 
     var getFriendRelationshipResult =
         await RelationshipOutputMessage.createRelationShip(
@@ -192,8 +194,10 @@ class FriendsLogic with ChangeNotifier {
                 deviceId: deviceId, friendId: id, requestId: 0));
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
-      FlutterPlatformAlert.showAlert(
-          windowTitle: Localize.current.addnewfriend,
+      QuickAlert.show(
+          context: navigatorKey.currentContext!,
+          type: QuickAlertType.error,
+          title: Localize.current.addnewfriend,
           text: Localize.current.failed);
       return null;
     }
@@ -214,14 +218,14 @@ class FriendsLogic with ChangeNotifier {
     var getFriendRelationshipResult =
         await RelationshipOutputMessage.getRelationShip(
       RelationshipInputMessage(
-          deviceId: await DeviceId.getId,
-          friendId: id,
-          requestId: friend.requestId),
+          deviceId: DeviceId.appId, friendId: id, requestId: friend.requestId),
     );
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
-      FlutterPlatformAlert.showAlert(
-          windowTitle: Localize.current.addfriendwithcode,
+      QuickAlert.show(
+          context: navigatorKey.currentContext!,
+          type: QuickAlertType.error,
+          title: Localize.current.addfriendwithcode,
           text: Localize.current.failed);
       return null;
     }
@@ -238,7 +242,7 @@ class FriendsLogic with ChangeNotifier {
   Future<void> deleteRelationShip(int id) async {
     friends.remove(id);
     notifyListeners();
-    var deviceId = await DeviceId.getId;
+    var deviceId = DeviceId.appId;
     PreferencesHelper.saveFriendsToPrefs(friends.values.toList());
     var getFriendRelationshipResult =
         await RelationshipOutputMessage.getRelationShip(

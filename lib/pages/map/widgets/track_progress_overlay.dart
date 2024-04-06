@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -7,23 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
-import '../../../helpers/speed_to_color.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/event.dart';
-import '../../../pages/widgets/no_connection_warning.dart';
-import '../../../providers/active_event_notifier_provider.dart';
+import '../../../providers/active_event_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
-import '../../../providers/shared_prefs_provider.dart';
+import '../../../providers/settings/me_color_provider.dart';
 import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
+import 'special_function_info.dart';
+import 'update_progress.dart';
 
 ///Overlay to show progress in top of map
 ///
@@ -41,26 +40,24 @@ class TrackProgressOverlay extends ConsumerStatefulWidget {
 
 class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     with WidgetsBindingObserver {
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      BnLog.trace(
+          text: 'Track_progress_overlay - initState');
       ref.read(locationProvider).refresh(forceUpdate: true); //update in map
-      ref.read(activeEventProvider).refresh(forceUpdate: true);
+      ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
       ref.read(refreshTimerProvider.notifier).start();
     });
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (Platform.isAndroid || Platform.isIOS) {
-      BnLog.debug(
+    BnLog.trace(
           text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
-    }
     if (state == AppLifecycleState.resumed) {
       ref.read(refreshTimerProvider.notifier).start();
-
     } else if (state == AppLifecycleState.paused) {
       ref.read(refreshTimerProvider.notifier).stop();
     }
@@ -68,12 +65,35 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
 
   @override
   Widget build(BuildContext context) {
-
     var rtu = ref.watch(realtimeDataProvider);
-    var actualOrNextEvent = ref.watch(eventStatusProvider);
+    var actualOrNextEvent = ref.watch(activeEventProvider);
     var eventIsActive = actualOrNextEvent.status == EventStatus.running ||
         (rtu != null && rtu.eventIsActive);
-    if (actualOrNextEvent.status == EventStatus.noevent) {
+    if (rtu == null ||
+        rtu.rpcException != null ||
+        actualOrNextEvent.rpcException != null) {
+      return Positioned(
+        top: MediaQuery.of(context).padding.top + 20,
+        left: 15,
+        right: 15,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: CupertinoTheme.of(context).primaryColor,
+              width: 1.0,
+            ),
+          ),
+          child: Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: Text(Localize.of(context).updating),
+            ),
+          ),
+        ),
+      );
+    } else if (actualOrNextEvent.status == EventStatus.noevent) {
       return Stack(children: [
         Positioned(
           top: MediaQuery.of(context).padding.top + 10,
@@ -98,13 +118,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               .textTheme
                               .navTitleTextStyle,
                         ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        if (actualOrNextEvent.rpcException != null)
-                          Text(Localize.of(context).dataCouldBeOutdated),
-                        if (actualOrNextEvent.rpcException != null)
-                          const ConnectionWarning(),
                       ]),
                     ),
                   );
@@ -147,42 +160,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                   BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Builder(builder: (context) {
-                      if (rtu == null) {
-                        return Container(
-                          color: CupertinoDynamicColor.resolve(
-                              CupertinoColors.systemBackground.withOpacity(0.2),
-                              context),
-                          padding: const EdgeInsets.all(15),
-                          child: Center(
-                            child: Column(children: [
-                              Text(
-                                Localize.of(context).nodatareceived,
-                                style: CupertinoTheme.of(context)
-                                    .textTheme
-                                    .navTitleTextStyle,
-                              ),
-                              Center(
-                                child: Align(
-                                  child: SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: Stack(children: [
-                                      Align(
-                                        child: CircularProgressIndicator(
-                                          color: CupertinoTheme.of(context)
-                                              .primaryColor,
-                                          strokeWidth: 2,
-                                        ),
-                                      ),
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                            ]),
-                          ),
-                        );
-                      }
-
                       return Container(
                         color: CupertinoDynamicColor.resolve(
                             CupertinoColors.systemBackground.withOpacity(0.1),
@@ -205,18 +182,16 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     ),
                                   ),
                                 ),
-                                Stack(children: [
+                                Column(children: [
                                   SizedBox(
-                                    height: 22,
+                                    height: 10,
                                     child: Progresso(
+                                        //head and tail
+                                        progressStrokeWidth: 6,
                                         points: [
                                           rtu.runningLength == 0
                                               ? 0
                                               : rtu.tail.position /
-                                                  rtu.runningLength,
-                                          rtu.runningLength == 0
-                                              ? 0
-                                              : rtu.user.position /
                                                   rtu.runningLength,
                                           rtu.runningLength == 0
                                               ? 0
@@ -229,21 +204,46 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                             .primaryColor
                                             .withOpacity(0.8),
                                         progressColor:
-                                            CupertinoColors.activeGreen,
+                                            CupertinoTheme.of(context)
+                                                .primaryColor,
                                         start: rtu.runningLength == 0
                                             ? 0
                                             : rtu.tail.position /
                                                 (rtu.runningLength),
                                         progress: rtu.runningLength == 0
                                             ? 0
-                                            : rtu.head.position <
-                                                    rtu.user.position
-                                                ? rtu.user.position /
-                                                    rtu.runningLength
-                                                : rtu.head.position /
-                                                    rtu.runningLength),
+                                            : rtu.head.position /
+                                                rtu.runningLength),
+                                  ),
+                                  SizedBox(
+                                    height: 0,
+                                    child: Progresso(
+                                        //user
+                                        backgroundColor:
+                                            Colors.grey.withOpacity(0.5),
+                                        progressStrokeWidth: 6,
+                                        points: [
+                                          0,
+                                          rtu.runningLength == 0
+                                              ? 0
+                                              : rtu.user.position /
+                                                  rtu.runningLength
+                                        ],
+                                        pointColor: Colors.black,
+                                        progressColor: ref
+                                            .watch(meColorProvider)
+                                            .withOpacity(0.8),
+                                        start: 0,
+                                        progress: rtu.runningLength == 0
+                                            ? 0
+                                            : rtu.user.position /
+                                                rtu.runningLength),
                                   ),
                                 ]),
+                                if (eventIsActive)
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
                                 if (eventIsActive)
                                   Stack(children: [
                                     //tail
@@ -314,19 +314,42 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                       //need correction of center
                                       child: SizedBox(
                                         width: MediaQuery.textScalerOf(context)
-                                            .scale(20),
+                                            .scale(18),
                                         height: MediaQuery.textScalerOf(context)
-                                            .scale(20),
+                                            .scale(18),
                                         child: CircleAvatar(
+                                          radius: MediaQuery.textScalerOf(
+                                                  context)
+                                              .scale(
+                                                  ref.watch(iconSizeProvider)),
                                           backgroundColor:
-                                              ref.watch(MeColor.provider),
-
-                                          child: ref.watch(
-                                                  isUserParticipatingProvider)
-                                              ? const ImageIcon(AssetImage(
-                                                  'assets/images/skaterIcon_256.png'))
-                                              : const Icon(
-                                                  Icons.gps_fixed_sharp),
+                                              CupertinoTheme.of(context)
+                                                  .barBackgroundColor,
+                                          child: CircleAvatar(
+                                            backgroundColor:
+                                                CupertinoTheme.of(context)
+                                                    .primaryColor,
+                                            child: ref.watch(
+                                                    isUserParticipatingProvider)
+                                                ? ImageIcon(
+                                                    size: MediaQuery
+                                                            .textScalerOf(
+                                                                context)
+                                                        .scale(ref.watch(
+                                                                iconSizeProvider) -
+                                                            10),
+                                                    const AssetImage(
+                                                        'assets/images/skater_icon_256.png'),
+                                                    color: ref
+                                                        .watch(meColorProvider),
+                                                  )
+                                                : Icon(
+                                                    Icons
+                                                        .compass_calibration_rounded,
+                                                    color: ref
+                                                        .watch(meColorProvider),
+                                                  ),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -417,7 +440,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                   actualOrNextEvent.status ==
                                                       EventStatus.running)
                                               ? Text(
-                                                  '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(ref.watch(locationLastUpdateProvider))}') //Text when Event confirmed
+                                                  '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(rtu.timeStamp)}') //Text when Event confirmed
                                               : (actualOrNextEvent.status !=
                                                           EventStatus
                                                               .confirmed ||
@@ -440,15 +463,15 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                                         .getUtcIso8601DateTime),
                                                           ),
                                                         )
-                                                  : Container()) //empty when not confirmed no viewermode available
+                                                  : Container()) //empty when not confirmed no viewer mode available
                                       ),
                                 if (eventIsActive)
-                                  Stack(children: [
+                                  Column(children: [
                                     SizedBox(
-                                      height: 20,
+                                      height: 15,
                                       child: Progresso(
                                           backgroundColor:
-                                              Colors.grey.withOpacity(0.2),
+                                              Colors.grey.withOpacity(0.5),
                                           points: [
                                             rtu.runningLength == 0
                                                 ? 0
@@ -557,25 +580,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     ),
                                   )
                                 ]),
-                          if (HiveSettingsDB.wantSeeFullOfProcession)
-                            Align(
-                              child: StepProgressIndicator(
-                                totalSteps: SpeedToColor.speedColors.length,
-                                direction: Axis.horizontal,
-                                currentStep: SpeedToColor.speedColors.length,
-                                size: 12,
-                                unselectedGradientColor: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: SpeedToColor.speedColors,
-                                ),
-                                selectedGradientColor: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: SpeedToColor.speedColors,
-                                ),
-                              ),
-                            ),
+                          const SpecialFunctionInfo(),
                           if (!actualOrNextEvent.isActive ||
                               actualOrNextEvent.status ==
                                   EventStatus.cancelled ||
@@ -606,40 +611,23 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                 ),
                               ]),
                             ),
-                          Center(
-                            child: FittedBox(
-                              child: Text(
-                                '${Localize.of(context).route}: ${rtu.routeName}  '
-                                '${Localize.of(context).length}: ${((rtu.runningLength) / 1000).toStringAsFixed(1)} km  '
-                                '${actualOrNextEvent.status == EventStatus.confirmed || actualOrNextEvent.status == EventStatus.running ? "${rtu.usersTracking.toString()} ${Localize.of(context).trackers}" : ""}',
-                                overflow: TextOverflow.fade,
-                                maxLines: 1,
+                          if (rtu.rpcException == null) ...[
+                            Center(
+                              child: FittedBox(
+                                child: Text(
+                                  '${Localize.of(context).route}: ${rtu.routeName}  '
+                                  '${Localize.of(context).length}: ${((rtu.runningLength) / 1000).toStringAsFixed(1)} km  '
+                                  '${actualOrNextEvent.status == EventStatus.confirmed || actualOrNextEvent.status == EventStatus.running ? "${rtu.usersTracking.toString()} ${Localize.of(context).trackers}" : ""}',
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                ),
                               ),
                             ),
+                          ],
+                          const SizedBox(
+                            height: 5,
                           ),
-                          Builder(
-                            builder: (context) => Align(
-                              child: SizedBox(
-                                width: 25,
-                                height: 25,
-                                child: Stack(children: [
-                                  Align(
-                                    child: CircularProgressIndicator(
-                                      color: CupertinoTheme.of(context)
-                                          .primaryColor,
-                                      value: ref.watch(percentLeftProvider),
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                  Align(
-                                    child: Icon(CupertinoIcons.info_circle_fill,
-                                        color: CupertinoTheme.of(context)
-                                            .primaryColor),
-                                  ),
-                                ]),
-                              ),
-                            ),
-                          ),
+                          const UpdateProgress(),
                         ]),
                       );
                     }),
@@ -648,13 +636,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
               ),
             ),
           ),
-          if (!kIsWeb) const ConnectionWarning(),
         ],
       );
     }
   }
-
-
 }
 
 class InfoClipper extends CustomClipper<Path> {

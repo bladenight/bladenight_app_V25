@@ -38,11 +38,23 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string></string>
 			<key>CFBundleURLName</key>
 			<string>bladenight.app</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>bna</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>bladenight.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
 			</array>
 		</dict>
 	</array>
@@ -62,16 +74,18 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<false/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Um Freunde zu direkt zu koppeln wird Bluetooth benötigt</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_mp-connection._tcp</string>
 	</array>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung &quot;Immer zulassen &quot; erlauben</string>
+	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung "Immer zulassen " erlauben</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung &quot;Immer zulassen &quot; erlauben</string>
+	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung "Immer zulassen " erlauben</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung &quot;Immer zulassen &quot; erlauben</string>
+	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Das Tracking funktioniert Systembedingt nicht korrekt, wenn die App nicht im Hintergrund ausgeführt wird.\nEmpfehlung "Immer zulassen " erlauben</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Die Bewegungsaktivitätserkennung erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.</string>
 	<key>OneSignal_app_groups_key</key>
@@ -92,6 +106,8 @@
 	<string>Launch Screen.storyboard</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIRequiresPersistentWiFi</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -108,9 +124,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIRequiresPersistentWiFi</key>
-	<true/>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Um Freunde zu direkt zu koppeln wird Bluetooth benötigt</string>
 </dict>
 </plist>

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app_settings/app_configuration_helper.dart';
-import '../app_settings/server_connections.dart';
+import '../helpers/hive_box/app_server_config_db.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
 import '../models/image_and_link.dart';
@@ -39,22 +39,25 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
   for (ImageAndLink ial in ial.imagesAndLinks!) {
     switch (ial.key) {
       case 'mainSponsorLogo':
-        ref.read(MainSponsorImageAndLink.provider.notifier).setValue(ial);
+        ref.read(mainSponsorImageAndLinkProvider.notifier).setValue(ial);
         break;
       case 'secondLogo':
-        ref.read(SecondSponsorImageAndLink.provider.notifier).setValue(ial);
+        ref.read(secondSponsorImageAndLinkProvider.notifier).setValue(ial);
         break;
       case 'bladeguardLink':
-        ref.read(BladeguardLinkImageAndLink.provider.notifier).setValue(ial);
+        ref.read(bladeguardImageAndLinkProvider.notifier).setValue(ial);
         break;
-      case 'bnMessage':
-        bladenightMessageServerLink = (ial.link ?? '').trim();
+      case 'restApiLink':
+        ServerConfigDb.setRestApiLinkConfig(ial);
         break;
       case 'startPoint':
-        ref.read(StartPointImageAndLink.provider.notifier).setValue(ial);
+        ref.read(startpointImageAndLinkProvider.notifier).setValue(ial);
         break;
       case 'defaultLongitude':
-        if (ial.text == null) defaultLongitude = defaultAppLongitude;
+        if (ial.text == null) {
+          defaultLongitude = defaultAppLongitude;
+          break;
+        }
         defaultLongitude = double.tryParse(ial.text!) ?? defaultAppLongitude;
         break;
       case 'androidPlayStoreLink':
@@ -74,10 +77,10 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
         }
         if (ial.text != null && ial.text!.trim() == 'on') {
           //enable OSM via remote // if empty don't change
-          HiveSettingsDB.setOpenStreetMapEnabled(true);
+          MapSettings.setOpenStreetMapEnabled(true);
         }
         if (ial.text != null && ial.text!.trim() == 'off') {
-          HiveSettingsDB.setOpenStreetMapEnabled(false);
+          MapSettings.setOpenStreetMapEnabled(false);
         }
         if (ial.link != null && ial.link!.isNotEmpty) {
           try {

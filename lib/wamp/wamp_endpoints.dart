@@ -18,6 +18,7 @@ class WampEndpoint {
 //serveradmin
   static const verifyadminpassword = 'verifyAdminPassword';
   static const setminimumlinearposition = 'setMinimumLinearPosition';
+  static const setProcessionMode = 'setProcessionMode';
   static const killserver = 'killServer';
   static const shakeHand = 'shakeHand';
 

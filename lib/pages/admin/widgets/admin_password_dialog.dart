@@ -34,7 +34,7 @@ class AdminPasswordDialog extends StatefulWidget {
         //Add loading indicator
         var res = await AdminCalls.verifyAdminPassword(MapperContainer.globals
             .toMap(AdminMessage.authenticate(
-                password: password, deviceId: await DeviceId.getId)));
+                password: password, deviceId: DeviceId.appId)));
 
         if (res != 'OK') {
           throw WampError(kInvalidPassword);

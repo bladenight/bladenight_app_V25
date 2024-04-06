@@ -6,7 +6,7 @@ import 'lat_lng_mapper.dart';
 part 'location.mapper.dart';
 
 @MappableClass(includeCustomMappers: [LatLngMapper()])
-class LocationInfo with LocationInfoMappable{
+class LocationInfo with LocationInfoMappable {
   @MappableField(key: 'coo')
   final LatLng coords;
   @MappableField(key: 'par')
@@ -21,11 +21,14 @@ class LocationInfo with LocationInfoMappable{
   final double? realSpeed;
   @MappableField(key: 'acc')
   final double? accuracy;
+  @MappableField(key: 'lts')
+  final int locationTimeStamp;
 
   LocationInfo(
       {required this.coords,
       required this.isParticipating,
       required this.deviceId,
+      required this.locationTimeStamp,
       this.specialFunction,
       this.userSpeed,
       this.realSpeed,

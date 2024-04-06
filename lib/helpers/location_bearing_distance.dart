@@ -26,15 +26,15 @@ class GeoLocationHelper {
           distP1P2.toDouble()));
     }
     //max 20
-    if (headingPoints.length > 20) {
+    if (headingPoints.length > 30) {
       var sublist = <HeadingPoint>[];
-      int i = (headingPoints.length / 20).round();
-      var subcount = 0;
+      int i = (headingPoints.length / 30).round();
+      var subCount = 0;
       for (var hp in headingPoints) {
-        if (subcount == 0) sublist.add(hp);
-        subcount++;
-        if (subcount >= i) {
-          subcount = 0;
+        if (subCount == 0) sublist.add(hp);
+        subCount++;
+        if (subCount >= i) {
+          subCount = 0;
         }
       }
       return sublist;
@@ -107,7 +107,36 @@ class GeoLocationHelper {
 
     return degrees(atan2(y, x));
   }
+
+   static LatLng getLatLongForLinearPos(double linearPosition, double lat1, double long1, double lat2, double long2){
+    final double bearing  = bearingBetween(lat1, long1, lat2, long2);
+    return moveLatLng(LatLng(lat1, long1), linearPosition, bearing);
+  }
+
+   static LatLng moveLatLng(LatLng latLng, double range, double bearing) {
+   const double earthRadius = 6378137.0;
+   const degreesToRadians = pi / 180.0;
+   const radiansToDegrees = 180.0 / pi;
+
+    final double latA = latLng.latitude * degreesToRadians;
+    final double lonA = latLng.longitude * degreesToRadians;
+    final double angularDistance = range / earthRadius;
+    final double trueCourse = bearing * degreesToRadians;
+
+    final double lat = asin(
+        sin(latA) * cos(angularDistance) +
+            cos(latA) * sin(angularDistance) * cos(trueCourse));
+
+    final double dLon = atan2(
+        sin(trueCourse) * sin(angularDistance) * cos(latA),
+        cos(angularDistance) - sin(latA) * sin(lat));
+
+    final double lon = ((lonA + dLon + pi) % (pi * 2)) - pi;
+
+    return LatLng(lat * radiansToDegrees, lon * radiansToDegrees);
+  }
 }
+
 
 class HeadingPoint {
   HeadingPoint(this.latLng, this.heading, this.bearing, this.segmentLength);
@@ -117,3 +146,10 @@ class HeadingPoint {
   final double bearing;
   final double segmentLength;
 }
+
+class SpecialPoint {
+  SpecialPoint(this.latLng,this.imageName);
+  final LatLng latLng;
+  final String imageName;
+}
+

@@ -7,7 +7,7 @@ import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 
 class IntroScreen extends StatefulWidget {
-  static const String routeName = '/intro';
+  static const String openIntroRoute = '/intro';
 
   const IntroScreen({super.key});
 

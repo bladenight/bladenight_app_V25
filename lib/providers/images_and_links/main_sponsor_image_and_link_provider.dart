@@ -1,34 +1,28 @@
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-
+import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../models/image_and_link.dart';
-import '../shared_prefs_provider.dart';
 
-String mainSponsorImageAndLinkKey = 'mainSponsorImageAndLinkKey';
-String _mainSponsorImageAndLinkPrefJson =
-    '{"key":"mainSponsorLogo","image":"https://bladenight.app/main_sponsor.png","link":"","text":"t"}';
+part 'main_sponsor_image_and_link_provider.g.dart';
 
-class MainSponsorImageAndLink extends StateNotifier<ImageAndLink> {
-  MainSponsorImageAndLink(this.pref)
-      : super(MapperContainer.globals.fromJson(
-            pref?.getString(mainSponsorImageAndLinkKey)?.toString() ??
-                _mainSponsorImageAndLinkPrefJson));
+String mainSponsorImageAndLinkKey = 'mainSponsorIalKey';
+ImageAndLink _defaultLiveMapImageAndLinkKey = ImageAndLink(
+    'https://bladenight.app/main_sponsor.png', '', '', 'mainSponsorLogo');
 
-  final SharedPreferences? pref;
-
-  static final provider =
-      StateNotifierProvider<MainSponsorImageAndLink, ImageAndLink>((ref) {
-    final pref = ref.watch(sharedPrefs).maybeWhen(
-          data: (value) => value,
-          orElse: () => null,
-        );
-    return MainSponsorImageAndLink(pref);
-  });
+@riverpod
+class MainSponsorImageAndLink extends _$MainSponsorImageAndLink {
+  @override
+  ImageAndLink build() {
+    HiveSettingsDB.settingsHiveBox
+        .watch(key: mainSponsorImageAndLinkKey)
+        .listen((event) => state =
+            event.value);
+    return HiveSettingsDB.settingsHiveBox.get(mainSponsorImageAndLinkKey,
+        defaultValue: _defaultLiveMapImageAndLinkKey);
+  }
 
   void setValue(ImageAndLink imageAndLink) {
-    state = imageAndLink;
-    pref!.setString(mainSponsorImageAndLinkKey, MapperContainer.globals.toJson(imageAndLink));
+    HiveSettingsDB.settingsHiveBox.put(mainSponsorImageAndLinkKey,imageAndLink);
+    //state = imageAndLink;
   }
 }

@@ -1,14 +1,21 @@
 import 'dart:async';
-import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:universal_io/io.dart';
 
 import '../helpers/logger.dart';
 import '../wamp/wamp_v2.dart';
 
-enum ConnectivityStatus { unknown, online, offline, error, serverNotReachable }
+enum ConnectivityStatus {
+  unknown,
+  online,
+  disconnected,
+  error,
+  serverReachable,
+  serverNotReachable
+}
 
 class NetworkStateModel {
   const NetworkStateModel(
@@ -24,17 +31,14 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
 
   StreamController<ConnectivityStatus> connectionStatusController =
       StreamController<ConnectivityStatus>();
+  StreamController<bool> serverConnectionStatusController =
+      StreamController<bool>();
 
-  late dynamic _connectivity;
   static bool _wasOffline = false;
 
   ConnectivityStatus connectivityStatus = ConnectivityStatus.unknown;
   StreamSubscription? _icCheckerSubscription;
-
-  final StreamController<InternetConnectionStatus> _currentState =
-      StreamController.broadcast();
-
-  Stream<InternetConnectionStatus> get updates => _currentState.stream;
+  StreamSubscription? _isServerConnectedSubscription;
 
   NetworkDetectorNotifier() : super(_initialNetworkState) {
     if (kIsWeb) {
@@ -46,12 +50,29 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   }
 
   _init() async {
-    _connectivity = InternetConnectionChecker();
-    _currentState.addStream(_connectivity.onStatusChange);
     _icCheckerSubscription =
-        _connectivity.onStatusChange.listen((InternetConnectionStatus result) {
-      _checkStatus(result);
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
+      switch (status) {
+        case InternetStatus.connected:
+          // The internet is now connected
+          _checkStatus(ConnectivityStatus.online);
+          break;
+        case InternetStatus.disconnected:
+          // The internet is now disconnected
+          _checkStatus(ConnectivityStatus.disconnected);
+          break;
+      }
     });
+
+    _isServerConnectedSubscription =
+        WampV2.instance.wampConnectedStreamController.stream.listen((event) {
+      if (event) {
+        _checkStatus(ConnectivityStatus.serverReachable);
+      } else {
+        _checkStatus(ConnectivityStatus.serverNotReachable);
+      }
+    });
+
     Timer.periodic(const Duration(seconds: 30), (timer) {
       refresh();
     });
@@ -64,14 +85,21 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   @override
   void dispose() {
     _icCheckerSubscription?.cancel();
+    _isServerConnectedSubscription?.cancel();
     super.dispose();
   }
 
-  void _checkStatus(InternetConnectionStatus? result) async {
+  void _checkStatus(ConnectivityStatus? result) async {
+    if (result != null && result == ConnectivityStatus.serverReachable) {
+      state = const NetworkStateModel(
+          connectivityStatus: ConnectivityStatus.online, serverAvailable: true);
+      return;
+    }
+
     bool isOnline = false;
     try {
-      isOnline = await InternetConnectionChecker()
-          .hasConnection; //; await InternetAddress.lookup('skatemunich.de');
+      isOnline = await InternetConnection()
+          .hasInternetAccess; //; await InternetAddress.lookup('skatemunich.de');
     } on SocketException catch (e) {
       if (!kIsWeb) {
         BnLog.error(
@@ -87,23 +115,15 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
         WampV2.instance.refresh();
         _wasOffline = false;
       }
-      state = const NetworkStateModel(
-          connectivityStatus: ConnectivityStatus.online, serverAvailable: true);
+      state = NetworkStateModel(
+          connectivityStatus: ConnectivityStatus.online,
+          serverAvailable: WampV2.instance.webSocketIsConnected);
     } else {
       state = const NetworkStateModel(
-          connectivityStatus: ConnectivityStatus.offline,
+          connectivityStatus: ConnectivityStatus.disconnected,
           serverAvailable: false);
       _wasOffline = true;
     }
-  }
-
-  /// set connection Stat to WampServer
-  void setServerConnected(bool value) {
-    if (value == state.serverAvailable) {
-      return;
-    }
-    state = NetworkStateModel(
-        connectivityStatus: state.connectivityStatus, serverAvailable: value);
   }
 }
 

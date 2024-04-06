@@ -8,8 +8,8 @@ import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
 import '../generated/l10n.dart';
-import '../main.dart';
 import 'hive_box/hive_settings_db.dart';
+import 'log_filter.dart';
 import 'logger/bn_log_output.dart';
 import 'logger/console_output.dart';
 import 'logger/log_printer.dart';
@@ -18,34 +18,41 @@ class BnLog {
   static Logger _logger = Logger();
   static bool _isInitialized = false;
   static final List<LogOutput> _logOutputs = [];
-  static late Box<List<String>> _logBox;
+  static late LazyBox<String> _logBox;
+  static final DateTime _startTime = DateTime.now();
 
-  BnLog._(){
-    if (_isInitialized == false){
+  BnLog._() {
+    if (_isInitialized == false) {
       init();
     }
   }
 
   static init({Level? logLevel, LogFilter? filter}) async {
-    _logBox = await Hive.openBox('logBox');
-    _logBox.put('startLog', ['start logging']);
+    _logBox = await Hive.openLazyBox('logBox');
+    _logBox.put(DateTime.now().millisecondsSinceEpoch.toString(),
+        '${DateTime.now().toIso8601String()} start logging ${logLevel ?? HiveSettingsDB.flogLogLevel}');
     //add logger
     _logOutputs.clear();
-    _logOutputs.addAll({BnLogOutput(_logBox), ConsoleLogOutput()});
+    _logOutputs.add(BnLogOutput(_logBox, _startTime));
+    if (kDebugMode) {
+      _logOutputs.add(ConsoleLogOutput());
+    }
+
     //_logger.close();
     _logger = Logger(
-      filter: filter,
-      output: null,//MultiOutput(_logOutputs),
+      filter: BnLogFilter(), //important for logging in release version
+      output: MultiOutput(_logOutputs),
       level: logLevel ?? HiveSettingsDB.flogLogLevel,
       printer: BnLogPrinter(
-          logBox: _logBox,
-          methodCount: 2,
-          errorMethodCount: 8,
-          lineLength: 120,
-          colors: false,
-          printEmojis: true,
-          printTime: true,
-          ),
+        logBox: _logBox,
+        startTime: _startTime,
+        methodCount: 2,
+        errorMethodCount: 8,
+        lineLength: 120,
+        colors: false,
+        printEmojis: true,
+        printTime: true,
+      ),
     );
     _isInitialized = true;
   }
@@ -59,6 +66,18 @@ class BnLog {
     StackTrace? stacktrace,
   }) async {
     _logger.d('$text\n$className\n$methodName', error: exception);
+  }
+
+  ///Print extended info
+  static void infoExt(
+    String text, {
+    String? className,
+    String? methodName,
+    dynamic exception,
+    String? dataLogType,
+    StackTrace? stacktrace,
+  }) async {
+    _logger.i('$text\n$className\n$methodName', error: null, stackTrace: null);
   }
 
   static void info({
@@ -161,16 +180,30 @@ class BnLog {
         stackTrace: stacktrace);
   }
 
-  static Future<String> exportLogs() async {
+  static Future<String> collectLogs() async {
     await _logBox.flush();
-    var resString = '';
-    for (var key in _logBox.keys) {
-      var val = _logBox.get(key);
-      if (val != null) {
-        resString = '$resString$val\n';
+    List<String> valList = [];
+    for (var val in _logBox.keys) {
+      var str = await _logBox.get(val as String);
+      if (str != null) {
+        valList.add(str);
       }
     }
-    return resString;
+    return await compute(logValuesAsString, valList);
+  }
+
+  ///executed in isolate
+  static Future<String> logValuesAsString(List<String> valList) async {
+    return valList.reversed.join('\r\n');
+  }
+
+  ///Clean up log file and delete data's older than a week
+  void cleanupLog() async {
+    try {
+      await BnLog.cleanUpLogsByFilter(const Duration(minutes: 8));
+    } catch (e) {
+      BnLog.warning(text: 'Error clearing logs');
+    }
   }
 
   static Future<bool> clearLogs() async {
@@ -184,15 +217,19 @@ class BnLog {
   ///
   /// endTimeInMillis
   static Future<bool> cleanUpLogsByFilter(Duration deleteOlderThan) async {
+    int counter = 0;
     var leftDate =
         DateTime.now().subtract(deleteOlderThan).millisecondsSinceEpoch;
     for (var key in _logBox.keys) {
       var intVal = int.tryParse(key);
-      if (intVal!=null && intVal < leftDate) {
+      if (intVal != null && intVal < leftDate) {
         await _logBox.delete(key);
+        counter++;
       }
     }
-    BnLog.info(text: 'Cleared logs before $leftDate');
+    BnLog.info(
+        text:
+            'Tidied up logs before ${DateTime.fromMillisecondsSinceEpoch(leftDate)}  - $counter entries removed');
     return Future(() => true);
   }
 
@@ -200,10 +237,13 @@ class BnLog {
     return HiveSettingsDB.flogLogLevel;
   }
 
-  static void setActiveLogLevel(Level logLevel) {
+  static void setActiveLogLevel(Level logLevel) async {
     //_logger.close();
     HiveSettingsDB.setFlogLevel(logLevel);
-    initLogger();
+    BnLog.info(text: 'Loglevel changed to ${logLevel.name}');
+    await _logBox.flush();
+    await _logBox.close();
+    init();
   }
 
   static Future<Level?> showLogLevelDialog(BuildContext context,
@@ -242,12 +282,6 @@ class BnLog {
               onPressed: () {
                 if (logLevel != null) {
                   BnLog.setActiveLogLevel(logLevel!);
-                  if (!kIsWeb) {
-                    BnLog.info(
-                      text: 'Loglevel changed to ${logLevel?.name}',
-                    );
-                  }
-                  HiveSettingsDB.setFlogLevel(logLevel!);
 
                   if (!kIsWeb) {
                     if (logLevel == Level.all || logLevel == Level.trace) {

@@ -30,6 +30,9 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
   static String _$deviceId(LocationInfo v) => v.deviceId;
   static const Field<LocationInfo, String> _f$deviceId =
       Field('deviceId', _$deviceId, key: 'did');
+  static int _$locationTimeStamp(LocationInfo v) => v.locationTimeStamp;
+  static const Field<LocationInfo, int> _f$locationTimeStamp =
+      Field('locationTimeStamp', _$locationTimeStamp, key: 'lts');
   static int? _$specialFunction(LocationInfo v) => v.specialFunction;
   static const Field<LocationInfo, int> _f$specialFunction =
       Field('specialFunction', _$specialFunction, key: 'spf', opt: true);
@@ -48,6 +51,7 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
     #coords: _f$coords,
     #isParticipating: _f$isParticipating,
     #deviceId: _f$deviceId,
+    #locationTimeStamp: _f$locationTimeStamp,
     #specialFunction: _f$specialFunction,
     #userSpeed: _f$userSpeed,
     #realSpeed: _f$realSpeed,
@@ -59,6 +63,7 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
         coords: data.dec(_f$coords),
         isParticipating: data.dec(_f$isParticipating),
         deviceId: data.dec(_f$deviceId),
+        locationTimeStamp: data.dec(_f$locationTimeStamp),
         specialFunction: data.dec(_f$specialFunction),
         userSpeed: data.dec(_f$userSpeed),
         realSpeed: data.dec(_f$realSpeed),
@@ -98,10 +103,8 @@ mixin LocationInfoMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            LocationInfoMapper.ensureInitialized()
-                .isValueEqual(this as LocationInfo, other));
+    return LocationInfoMapper.ensureInitialized()
+        .equalsValue(this as LocationInfo, other);
   }
 
   @override
@@ -123,6 +126,7 @@ abstract class LocationInfoCopyWith<$R, $In extends LocationInfo, $Out>
       {LatLng? coords,
       bool? isParticipating,
       String? deviceId,
+      int? locationTimeStamp,
       int? specialFunction,
       double? userSpeed,
       double? realSpeed,
@@ -143,6 +147,7 @@ class _LocationInfoCopyWithImpl<$R, $Out>
           {LatLng? coords,
           bool? isParticipating,
           String? deviceId,
+          int? locationTimeStamp,
           Object? specialFunction = $none,
           Object? userSpeed = $none,
           Object? realSpeed = $none,
@@ -151,6 +156,7 @@ class _LocationInfoCopyWithImpl<$R, $Out>
         if (coords != null) #coords: coords,
         if (isParticipating != null) #isParticipating: isParticipating,
         if (deviceId != null) #deviceId: deviceId,
+        if (locationTimeStamp != null) #locationTimeStamp: locationTimeStamp,
         if (specialFunction != $none) #specialFunction: specialFunction,
         if (userSpeed != $none) #userSpeed: userSpeed,
         if (realSpeed != $none) #realSpeed: realSpeed,
@@ -161,6 +167,8 @@ class _LocationInfoCopyWithImpl<$R, $Out>
       coords: data.get(#coords, or: $value.coords),
       isParticipating: data.get(#isParticipating, or: $value.isParticipating),
       deviceId: data.get(#deviceId, or: $value.deviceId),
+      locationTimeStamp:
+          data.get(#locationTimeStamp, or: $value.locationTimeStamp),
       specialFunction: data.get(#specialFunction, or: $value.specialFunction),
       userSpeed: data.get(#userSpeed, or: $value.userSpeed),
       realSpeed: data.get(#realSpeed, or: $value.realSpeed),
