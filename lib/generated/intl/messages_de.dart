@@ -361,7 +361,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "invalidEMail":
             MessageLookupByLibrary.simpleMessage("Email nicht gefunden!"),
         "invalidLoginData": MessageLookupByLibrary.simpleMessage(
-            "Email not found or wrong birthday"),
+            "Email nicht gefunden oder falsches Geburtsdatum. Eventuell E-Mmail Unterstützung wählen."),
         "invalidcode": MessageLookupByLibrary.simpleMessage("Code unbekannt"),
         "invitebyname": m8,
         "invitenewfriend":

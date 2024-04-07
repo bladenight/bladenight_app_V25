@@ -266,7 +266,7 @@
   "internalerror_invalidcode": "ungültiger Code",
   "internalerror_seemslinked": "Fehler - Freund:in schon verlinkt?",
   "invalidEMail": "Email nicht gefunden!",
-  "invalidLoginData": "Email not found or wrong birthday",
+  "invalidLoginData": "Email nicht gefunden oder falsches Geburtsdatum. Eventuell E-Mmail Unterstützung wählen.",
   "invalidcode": "Code unbekannt",
   "invitebyname": "{name} einladen",
   "invitenewfriend": "Freund:in einladen",
