@@ -6,6 +6,7 @@ import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../helpers/hive_box/hive_settings_db.dart';
+import '../../../helpers/logger.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/map/use_open_street_map_provider.dart';
 import '../tiles_provider.dart';
@@ -24,7 +25,6 @@ class _MapTileState extends State<MapTileLayer> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //update map colors for static tiles
-
       CupertinoAdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
         setState(() {});
       });
@@ -41,7 +41,13 @@ class _MapTileState extends State<MapTileLayer> {
 
   @override
   void dispose() {
-    AdaptiveTheme.of(context).modeChangeNotifier.dispose();
+    BnLog.info(
+        text: 'mapTileLayer disposed',
+        methodName: 'dispose',
+        className: toString());
+    CupertinoAdaptiveTheme.of(context).modeChangeNotifier.removeListener(() {
+      setState(() {});
+    });
     super.dispose();
   }
 }
