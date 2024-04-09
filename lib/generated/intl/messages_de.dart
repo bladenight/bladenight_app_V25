@@ -21,7 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de';
 
   static String m0(bladeguardRegisterlink, bladeguardPrivacyLink) =>
-      "<h2>Voraussetzungen und Regeln:</h2><ul><li>Du bist mind. 16 Jahre alt.</li><li>Du stehst sicher auf Inline Skates und kannst bremsen.</li><li>Du kennst die Regeln im Straßenverkehr</li><li>Du bist hilfsbereit, freundlich und Teamplayer</li><li>Du nimmst vor deiner ersten Fahrt an unserer kostenlosen Schulung teil.</li></ul><p>Dir entstehen als Bladeguard keine Kosten. Du kannst dich jederzeit wieder abmelden. <h3>Hier gehts zur <a href=\"${bladeguardRegisterlink}\">Onlineanmeldung</a> und zum <a href=\"${bladeguardPrivacyLink}\">Datenschutz</a></p></h3>";
+      "<h2>Voraussetzungen und Regeln:</h2><ul><li>Du bist mind. 16 Jahre alt.</li><li>Du stehst sicher auf Inline Skates und kannst bremsen.</li><li>Du kennst die Regeln im Straßenverkehr</li><li>Du bist hilfsbereit, freundlich und Teamplayer</li><li>Du liest das Schulungsmodul und beantwortest die Verständnisfragen.</li></ul><p>Dir entstehen als Bladeguard keine Kosten. Du kannst dich jederzeit wieder abmelden. <h3>Hier gehts zur <a href=\"${bladeguardRegisterlink}\">Onlineanmeldung</a> und zum <a href=\"${bladeguardPrivacyLink}\">Datenschutz</a></p></h3>";
 
   static String m1(date) => "${date}";
 

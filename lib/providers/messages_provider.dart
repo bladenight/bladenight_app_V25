@@ -91,7 +91,7 @@ class MessagesLogic with ChangeNotifier {
   Future<void> updateServerMessages() async {
     try {
       var lastTimeStamp = await MessagesDb.getLastMessagesUpdateTimestamp;
-      var isBladeGuard = HiveSettingsDB.isBladeGuard;
+      var isBladeGuard = HiveSettingsDB.bgSettingVisible;
       var teamId = HiveSettingsDB.bgTeam;
       var skmMember = HiveSettingsDB.rcvSkatemunichInfos;
       var appId = HiveSettingsDB.appId;

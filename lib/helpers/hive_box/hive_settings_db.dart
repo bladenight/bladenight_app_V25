@@ -345,7 +345,7 @@ class HiveSettingsDB {
     return _hiveBox.get(isBladeGuardKey, defaultValue: false);
   }
 
-  ///set if  setIsBladeGuard were shown
+  ///set if  setIsBladeGuard user is bg
   static void setIsBladeGuard(bool val) {
     _hiveBox.put(isBladeGuardKey, val);
   }
