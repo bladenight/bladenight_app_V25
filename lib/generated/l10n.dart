@@ -760,11 +760,11 @@ class Localize {
     );
   }
 
-  /// `<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="{bladeguardRegisterlink}">Online registration</a> and <a href="{ bladeguardPrivacyLink}">Data protection</a></p></h3>`
+  /// `<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You read our Bladeguard-training module before your first trip and answers the questions.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="{bladeguardRegisterlink}">Online registration</a> and <a href="{ bladeguardPrivacyLink}">Data protection</a></p></h3>`
   String bladeguardInfo(
       Object bladeguardRegisterlink, Object bladeguardPrivacyLink) {
     return Intl.message(
-      '<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You take part in our free training before your first trip.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="$bladeguardRegisterlink">Online registration</a> and <a href="$bladeguardPrivacyLink">Data protection</a></p></h3>',
+      '<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You read our Bladeguard-training module before your first trip and answers the questions.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="$bladeguardRegisterlink">Online registration</a> and <a href="$bladeguardPrivacyLink">Data protection</a></p></h3>',
       name: 'bladeguardInfo',
       desc: '',
       args: [bladeguardRegisterlink, bladeguardPrivacyLink],
