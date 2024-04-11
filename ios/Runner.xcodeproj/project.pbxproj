@@ -205,6 +205,7 @@
 		E2584CC12A7D1F3100346A03 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		E2C23F2129D4E87C00E06959 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		E2EEFEA12BC7F022005205C4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -425,6 +426,7 @@
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				4668157828A8F76200504AF6 /* ConnectivityRequestHandler.swift */,
 				E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */,
+				E2EEFEA12BC7F022005205C4 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Runner;
 			sourceTree = "<group>";

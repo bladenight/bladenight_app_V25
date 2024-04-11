@@ -11,7 +11,6 @@ import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/messages_provider.dart';
 import '../widgets/scroll_quick_alert.dart';
-//import 'widgets/show_message_dialog.dart';
 
 class MessagesPage extends ConsumerStatefulWidget {
   const MessagesPage({super.key});
@@ -256,9 +255,16 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         '${Localize.of(context).on} ${Localize.of(context).dateTimeSecIntl(DateTime.fromMillisecondsSinceEpoch(message.timeStamp), DateTime.fromMillisecondsSinceEpoch(message.timeStamp))}',
                     descriptionLeft: '',
                     rightWidget: Container()),
-                Text(message.title,
-                    style: const TextStyle(
-                        fontSize: 16.0, fontWeight: FontWeight.bold)),
+                GestureDetector(
+                  onTap: () async {
+                    await context
+                        .read(messagesLogicProvider)
+                        .setReadMessage(message, true);
+                  },
+                  child: Text(message.title,
+                      style: const TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold)),
+                ),
                 Divider(
                   color: CupertinoTheme.of(context).primaryColor,
                   height: 1,
@@ -275,6 +281,9 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         padding: const EdgeInsets.all(2),
                         minSize: 0,
                         onPressed: () async {
+                          await context
+                              .read(messagesLogicProvider)
+                              .setReadMessage(message, true);
                           if (message.button1Link != null &&
                               message.button1Link != '') {
                             Launch.launchUrlFromString(
@@ -295,6 +304,9 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         padding: const EdgeInsets.all(2),
                         minSize: 0,
                         onPressed: () async {
+                          await context
+                              .read(messagesLogicProvider)
+                              .setReadMessage(message, true);
                           if (message.button2Link != null &&
                               message.button2Link != '') {
                             Launch.launchUrlFromString(message.button2Link!);
@@ -313,6 +325,9 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         padding: const EdgeInsets.all(2),
                         minSize: 0,
                         onPressed: () async {
+                          await context
+                              .read(messagesLogicProvider)
+                              .setReadMessage(message, true);
                           if (message.button3Link != null &&
                               message.button3Link != '') {
                             Launch.launchUrlFromString(message.button3Link!);
@@ -330,6 +345,9 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
             CupertinoButton(
               child: const Icon(CupertinoIcons.globe),
               onPressed: () async {
+                await context
+                    .read(messagesLogicProvider)
+                    .setReadMessage(message, true);
                 if (message.url != null) {
                   Launch.launchUrlFromString(message.url!);
                 }
