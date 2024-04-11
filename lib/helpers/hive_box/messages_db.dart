@@ -78,7 +78,6 @@ class MessagesDb {
   static Future<bool> updateMessages(ExternalAppMessages messages) async {
     _messagesDbBox ??= await Hive.openBox(dbName);
     try {
-
       int lastUpdateTimestamp = await getLastMessagesUpdateTimestamp;
       int lastFromDBTimestamp = await getLastMessagesUpdateTimestamp;
       for (var message in messages.messages) {
@@ -89,7 +88,13 @@ class MessagesDb {
         }
       }
       //update timestamp
-      setLastMessagesUpdateTimestamp(max(lastUpdateTimestamp, lastFromDBTimestamp));
+      var actualTs = DateTime.now().millisecondsSinceEpoch;
+      var lts = max(lastUpdateTimestamp, lastFromDBTimestamp);
+      if (lts > actualTs) {
+        setLastMessagesUpdateTimestamp(actualTs);
+      } else if (lts != 0) {
+        setLastMessagesUpdateTimestamp(lts);
+      }
       return true;
     } catch (e) {
       BnLog.error(text: 'Error addMessage ${e.toString()}', exception: e);

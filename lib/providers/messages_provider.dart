@@ -95,8 +95,9 @@ class MessagesLogic with ChangeNotifier {
       var teamId = HiveSettingsDB.bgTeam;
       var skmMember = HiveSettingsDB.rcvSkatemunichInfos;
       var appId = HiveSettingsDB.appId;
+      var oneSignalId = HiveSettingsDB.oneSignalId;
       var paraString =
-          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$appId&plf=${Platform.operatingSystem}';
+          'lts=$lastTimeStamp&bg=$isBladeGuard&team=$teamId&skm=$skmMember&osID=$oneSignalId&plf=${Platform.operatingSystem}&aid=$appId';
       var parameter = CryptHelper.encryptAES(
           paraString, ServerConfigDb.restApiLinkPassword);
       if (parameter == null) {

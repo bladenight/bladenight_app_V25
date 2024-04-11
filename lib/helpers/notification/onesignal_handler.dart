@@ -47,15 +47,7 @@ Future<void> initOneSignal() async {
 }
 
 class OnesignalHandler {
-  OnesignalHandler._privateConstructor() {
-    OneSignal.User.pushSubscription.addObserver((changes) {
-      //  print(changes.to.userId);
-      String? userId = OneSignal.User.pushSubscription.id ?? '';
-      if (userId.isNotEmpty) {
-        HiveSettingsDB.setOneSignalId(userId);
-      }
-    });
-  }
+  OnesignalHandler._privateConstructor();
 
   static final OnesignalHandler _instance =
       OnesignalHandler._privateConstructor();
@@ -67,17 +59,41 @@ class OnesignalHandler {
       //Remove this method to stop OneSignal Debugging
       if (kDebugMode) {
         OneSignal.Debug.setAlertLevel(OSLogLevel.none);
-        OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+        OneSignal.Debug.setLogLevel(OSLogLevel.none);
       } else {
         OneSignal.Debug.setAlertLevel(OSLogLevel.none);
         OneSignal.Debug.setLogLevel(OSLogLevel.info);
       }
 
       OneSignal.initialize(oneSignalAppId);
-      OneSignal.User.pushSubscription.lifecycleInit();
-      //String userId = OneSignal.User.pushSubscription.id ?? '';
-      //if (userId.isNotEmpty )HiveSettingsDB.setOneSignalId(userId);
+      // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+      await OneSignal.Notifications.requestPermission(true);
+      //OneSignal.consentGiven(true);
+      //OneSignal.consentRequired(true);
+      //Handler for silent notifications
+
+      await OneSignal.User.pushSubscription.lifecycleInit();
+      String userId = await OneSignal.User.getOnesignalId() ?? '';
+      if (userId.isNotEmpty) HiveSettingsDB.setOneSignalId(userId);
       OneSignal.Location.setShared(false);
+
+      OneSignal.User.pushSubscription.addObserver((changes) {
+        //  print(changes.to.userId);
+        BnLog.info(text: 'optIn:${OneSignal.User.pushSubscription.optedIn}');
+        BnLog.info(text: 'ps_id:${OneSignal.User.pushSubscription.id}');
+        BnLog.info(text: 'token:${OneSignal.User.pushSubscription.token}');
+        BnLog.info(text: 'json:${changes.current.jsonRepresentation()}');
+
+        String? userId = OneSignal.User.pushSubscription.id ?? '';
+        if (userId.isNotEmpty) {
+          HiveSettingsDB.setOneSignalId(userId);
+        }
+      });
+
+      OneSignal.User.addObserver((state) {
+        var userState = state.jsonRepresentation();
+        print('OneSignal user changed: $userState');
+      });
 
       setOneSignalChannels();
 
@@ -137,9 +153,7 @@ class OnesignalHandler {
           }
         }
       });
-      // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-      OneSignal.Notifications.requestPermission(true);
-      //Handler for silent notifications
+
       channel.setMethodCallHandler((call) async {
         receivedBgRemoteMessage(call);
       });
@@ -160,8 +174,8 @@ class OnesignalHandler {
     } else {
       //allow onesignal
       await OneSignal.User.pushSubscription.optIn();
-      OneSignal.User.addAlias('external_id', DeviceId.appId);
-      OneSignal.User.addAlias('Team', HiveSettingsDB.bgTeam);
+      OneSignal.User.addAlias('app_id', DeviceId.appId);
+      OneSignal.User.addAlias('team', HiveSettingsDB.bgTeam);
     }
     var optedIn = OneSignal.User.pushSubscription.optedIn;
     BnLog.info(text: 'setOneSignalChannels optIn is $optedIn');
