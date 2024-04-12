@@ -388,6 +388,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               ),
                             ],
                           ),
+                        if (HiveSettingsDB.pushNotificationsEnabled)
                         const OneSignalIdWidget(),
                         if (!kIsWeb)
                           CupertinoFormSection(

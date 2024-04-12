@@ -84,9 +84,9 @@ class OnesignalHandler {
         BnLog.info(text: 'token:${OneSignal.User.pushSubscription.token}');
         BnLog.info(text: 'json:${changes.current.jsonRepresentation()}');
 
-        String? userId = OneSignal.User.pushSubscription.id ?? '';
-        if (userId.isNotEmpty) {
-          HiveSettingsDB.setOneSignalId(userId);
+        String? oneSignalUserId = OneSignal.User.pushSubscription.id ?? '';
+        if (oneSignalUserId.isNotEmpty) {
+          HiveSettingsDB.setOneSignalId(oneSignalUserId);
         }
       });
 
@@ -177,31 +177,53 @@ class OnesignalHandler {
       OneSignal.User.addAlias('app_id', DeviceId.appId);
       OneSignal.User.addAlias('team', HiveSettingsDB.bgTeam);
     }
+    if (HiveSettingsDB.oneSignalRegisterBladeGuardPush &&
+        HiveSettingsDB.bladeguardSHA512Hash.isNotEmpty) {
+      OneSignal.login(HiveSettingsDB.bladeguardSHA512Hash);
+    }
+
     var optedIn = OneSignal.User.pushSubscription.optedIn;
     BnLog.info(text: 'setOneSignalChannels optIn is $optedIn');
   }
 
   static Future<void> unRegisterPushAsBladeGuard() async {
-    HiveSettingsDB.setOneSignalRegisterBladeGuardPush(false);
     await OnesignalHandler.registerPushAsBladeGuard(false, '');
-    HiveSettingsDB.setRcvSkatemunichInfos(false);
     await OnesignalHandler.registerSkateMunichInfo(false);
   }
 
   static Future<void> registerPushAsBladeGuard(
       bool value, String teamId) async {
+    HiveSettingsDB.setOneSignalRegisterBladeGuardPush(value);
+    if (value == false) {
+      await OneSignal.User.removeTag('IsBladeguard').catchError((err) {
+        BnLog.error(text: 'unregister IsBladeguard error $err', exception: err);
+      });
+      return;
+    }
+
     Map<String, String> map = {
       'IsBladeguard': value ? teamId : '',
     };
     BnLog.info(text: 'register IsBladeguard value $value $teamId');
     await OneSignal.User.pushSubscription.optIn();
-    BnLog.info(text: 'Bladeguard logged out from OneSignal');
+    BnLog.info(
+        text: 'Bladeguard logged in to OneSignal',
+        methodName: 'registerPushAsBladeGuard');
     OneSignal.User.addTags(map).catchError((err) {
       BnLog.error(text: 'register IsBladeguard error $err', exception: err);
     });
   }
 
   static Future<void> registerSkateMunichInfo(bool value) async {
+    HiveSettingsDB.setRcvSkatemunichInfos(value);
+    if(value==false){
+      OneSignal.User.removeTag('RcvSkateMunichInfos')
+          .catchError((err) {
+        BnLog.error(text: 'unregisterSkateMunichInfo error $err', exception: err);
+      });
+      return;
+    }
+
     BnLog.info(text: 'registerSkateMunichInfo  $value');
     OneSignal.User.addTagWithKey('RcvSkateMunichInfos', value.toString())
         .catchError((err) {
