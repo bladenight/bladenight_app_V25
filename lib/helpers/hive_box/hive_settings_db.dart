@@ -253,7 +253,7 @@ class HiveSettingsDB {
     _hiveBox.put(_hasAskedAlwaysAllowLocationPermissionKey, val);
   }
 
-  static const String _firstStartKey = '2403firstStartPref';
+  static const String _firstStartKey = '2404firstStartPref';
 
   ///get firstStart
   static bool get firstStart {
