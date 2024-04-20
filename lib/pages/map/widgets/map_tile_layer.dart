@@ -45,9 +45,11 @@ class _MapTileState extends State<MapTileLayer> {
         text: 'mapTileLayer disposed',
         methodName: 'dispose',
         className: toString());
+    /*   context.dependOnInheritedWidgetOfExactType<
+        InheritedAdaptiveTheme<CupertinoThemeData>>()!; crashes because null value
     CupertinoAdaptiveTheme.of(context).modeChangeNotifier.removeListener(() {
       setState(() {});
-    });
+    });*/
     super.dispose();
   }
 }
