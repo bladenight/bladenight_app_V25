@@ -13,6 +13,7 @@ import 'map_buttons_light.dart';
 import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
 import 'map_tile_layer.dart';
+import 'special_points_layer.dart';
 
 class MapLayer extends StatefulWidget {
   const MapLayer({
@@ -42,7 +43,7 @@ class MapLayer extends StatefulWidget {
 
 class _MapLayerState extends State<MapLayer> {
   /// Used to trigger showing/hiding of popups.
-  final PopupController _popupMarkerController = PopupController();
+  final PopupController _popupController = PopupController();
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class _MapLayerState extends State<MapLayer> {
           flags: InteractiveFlag.all,
           enableMultiFingerGestureRace: true,
         ),
-        onTap: (_, __) => _popupMarkerController.hideAllPopups(),
+        onTap: (_, __) => _popupController.hideAllPopups(),
       ),
       children: [
         const MapTileLayer(),
@@ -79,6 +80,7 @@ class _MapLayerState extends State<MapLayer> {
           polylines: widget
               .polyLines, // context.watch(polyLinesProvider),// widget.polyLines,
         ),
+        SpecialPointsLayer(_popupController),
         PopupMarkerLayer(
           options: PopupMarkerLayerOptions(
             popupDisplayOptions: PopupDisplayOptions(
@@ -96,7 +98,7 @@ class _MapLayerState extends State<MapLayer> {
             ),
             markerCenterAnimation: const MarkerCenterAnimation(),
             markers: widget.markers,
-            popupController: _popupMarkerController,
+            popupController: _popupController,
 
             markerTapBehavior: MarkerTapBehavior.togglePopup(),
             // : MarkerTapBehavior.togglePopupAndHideRest(),

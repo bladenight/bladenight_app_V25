@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/url_launch_helper.dart';
@@ -269,7 +273,15 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                   color: CupertinoTheme.of(context).primaryColor,
                   height: 1,
                 ),
-                Text(
+                HtmlWidget(
+                  textStyle: TextStyle(
+                      fontSize: MediaQuery.textScalerOf(context).scale(14),
+                      color: CupertinoTheme.of(context).primaryColor),
+                  onTapUrl: (url) async {
+                    var uri = Uri.parse(url);
+                    Launch.launchUrlFromUri(uri);
+                    return Future(true as FutureOr<bool> Function());
+                  },
                   message.body,
                 ),
                 if (message.button1Text != null)
@@ -330,7 +342,8 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                               .setReadMessage(message, true);
                           if (message.button3Link != null &&
                               message.button3Link != '') {
-                            Launch.launchUrlFromString(message.button3Link!);
+                            Launch.launchUrlFromString(message.button3Link!,
+                                mode: LaunchMode.inAppWebView);
                           }
                         },
                         child: Text(message.button3Text!),

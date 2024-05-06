@@ -373,7 +373,7 @@ class HiveSettingsDB {
   static String get bladeguardSHA512Hash {
     var email = _hiveBox.get(bladeguardEmailKey, defaultValue: '');
     if (email != null && email != '') {
-      return sha512.convert(utf8.encode(email)).toString();
+      return sha512.convert(utf8.encode(email.toLowerCase())).toString();
     }
     return '';
   }
@@ -381,7 +381,7 @@ class HiveSettingsDB {
   ///set BladeguardEmail for Bladeguard
   static void setBladeguardEmail(String val) {
     checkBladeguardEmailValid(val);
-    _hiveBox.put(bladeguardEmailKey, val);
+    _hiveBox.put(bladeguardEmailKey, val.toLowerCase());
   }
 
   static const String isBladeguardEmailValidKey = 'bladeguardEmailValidPref';

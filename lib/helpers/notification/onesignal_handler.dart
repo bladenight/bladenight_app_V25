@@ -231,6 +231,10 @@ class OnesignalHandler {
     });
   }
 
+
+
+
+
   static void handleNotificationOpenedResult(
       OSNotificationWillDisplayEvent result) async {
     var data = result.notification.additionalData;

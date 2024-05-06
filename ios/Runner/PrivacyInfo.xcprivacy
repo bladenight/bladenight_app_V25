@@ -5,12 +5,12 @@
 	<key>NSPrivacyAccessedAPITypes</key>
 	<array>
 		<dict>
-			<key>NSPrivacyAccessedAPITypeReasons</key>
-			<array>
-				<string>Saving userdate aka app id,and store app settings like colors to User defaults</string>
-			</array>
 			<key>NSPrivacyAccessedAPIType</key>
 			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>1C8F.1</string>
+			</array>
 		</dict>
 	</array>
 </dict>

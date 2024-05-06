@@ -16,7 +16,6 @@ class EmailTextField extends ConsumerStatefulWidget {
 
 class _EmailTextFieldState extends ConsumerState<EmailTextField> {
   final TextEditingController _emailTextController = TextEditingController();
-  bool validEmail = true;
 
   @override
   void initState() {
@@ -38,11 +37,8 @@ class _EmailTextFieldState extends ConsumerState<EmailTextField> {
               : const Icon(CupertinoIcons.hand_thumbsdown, color: Colors.red),
           maxLines: 1,
           onChanged: (value) {
-            var validEmail = validateEmail(_emailTextController.text);
-            if (validEmail || _emailTextController.text == '') {
-              HiveSettingsDB.setBladeguardEmail(_emailTextController.text.toLowerCase());
-            }
-            setState(() {});
+            HiveSettingsDB.setBladeguardEmail(_emailTextController.text);
+            //setState(() {});
           },
           onFieldSubmitted: (value) {
             _emailTextController.text;
