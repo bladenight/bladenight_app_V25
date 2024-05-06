@@ -25,9 +25,9 @@ class _MapTileState extends State<MapTileLayer> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //update map colors for static tiles
-      CupertinoAdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
+     /* CupertinoAdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
         setState(() {});
-      });
+      });*/
     });
   }
 

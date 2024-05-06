@@ -80,7 +80,6 @@ class _MapLayerState extends State<MapLayer> {
           polylines: widget
               .polyLines, // context.watch(polyLinesProvider),// widget.polyLines,
         ),
-        SpecialPointsLayer(_popupController),
         PopupMarkerLayer(
           options: PopupMarkerLayerOptions(
             popupDisplayOptions: PopupDisplayOptions(
@@ -107,6 +106,7 @@ class _MapLayerState extends State<MapLayer> {
             },
           ),
         ),
+        SpecialPointsLayer(_popupController),
         EventInfoOverlay(event: widget.event, routePoints: widget.routePoints),
         const MapButtonsLayerLight(),
       ],
