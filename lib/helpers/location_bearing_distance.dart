@@ -147,9 +147,4 @@ class HeadingPoint {
   final double segmentLength;
 }
 
-class SpecialPoint {
-  SpecialPoint(this.latLng,this.imageName);
-  final LatLng latLng;
-  final String imageName;
-}
 

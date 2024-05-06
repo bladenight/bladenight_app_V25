@@ -40,9 +40,6 @@ class _EmailTextFieldState extends ConsumerState<EmailTextField> {
             HiveSettingsDB.setBladeguardEmail(_emailTextController.text);
             //setState(() {});
           },
-          onFieldSubmitted: (value) {
-            _emailTextController.text;
-          },
         ),
       ],
     );

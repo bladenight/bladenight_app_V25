@@ -26,6 +26,7 @@ const String mainSponsorPlaceholder = kIsWeb
     ? 'assets/images/Giesinger-Bladenight-Logo.jpg'
     : 'assets/images/bladenight_logo.png';
 const String secondLogoPlaceholder = 'assets/images/skatemunich.png';
+const String specialPointImagePlaceHolder = 'assets/images/skatemunich_child_stop.png';
 
 //globals
 String bladeguardRegisterLink =

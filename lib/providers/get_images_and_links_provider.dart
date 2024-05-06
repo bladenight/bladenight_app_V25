@@ -12,6 +12,7 @@ import '../models/images_and_links.dart';
 import 'images_and_links/bladeguard_link_image_and_link_provider.dart';
 import 'images_and_links/main_sponsor_image_and_link_provider.dart';
 import 'images_and_links/second_sponsor_image_and_link_provider.dart';
+import 'images_and_links/special_points_image_and_link_provider.dart';
 import 'images_and_links/startpoint_image_and_link_provider.dart';
 import 'network_connection_provider.dart';
 
@@ -46,6 +47,9 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
         break;
       case 'bladeguardLink':
         ref.read(bladeguardImageAndLinkProvider.notifier).setValue(ial);
+        break;
+      case 'specialPoints':
+        ref.read(specialPointsImageAndLinkProvider.notifier).setValue(ial);
         break;
       case 'restApiLink':
         ServerConfigDb.setRestApiLinkConfig(ial);

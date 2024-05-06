@@ -25,7 +25,7 @@ class BladeguardImageAndLink extends _$BladeguardImageAndLink {
 
   void setValue(ImageAndLink imageAndLink) {
     HiveSettingsDB.settingsHiveBox
-        .put(bladeguardImageAndLinkKey, (imageAndLink));
+        .put(bladeguardImageAndLinkKey, imageAndLink);
     //state = imageAndLink;
   }
 }

@@ -26,8 +26,9 @@ import 'models/route.dart' as p19;
 import 'models/route_names.dart' as p20;
 import 'models/shake_hand_result.dart' as p21;
 import 'models/shake_hands.dart' as p22;
-import 'models/user_trackpoint.dart' as p23;
-import 'models/watch_event.dart' as p24;
+import 'models/special_point.dart' as p23;
+import 'models/user_trackpoint.dart' as p24;
+import 'models/watch_event.dart' as p25;
 
 void initializeMappers() {
   p0.EventMapper.ensureInitialized();
@@ -57,8 +58,10 @@ void initializeMappers() {
   p20.RouteNamesMapper.ensureInitialized();
   p21.ShakeHandResultMapper.ensureInitialized();
   p22.ShakeHandMapper.ensureInitialized();
-  p23.UserTrackPointMapper.ensureInitialized();
-  p23.UserTrackPointsMapper.ensureInitialized();
-  p24.WatchEventMapper.ensureInitialized();
-  p24.WatchEventsMapper.ensureInitialized();
+  p23.SpecialPointMapper.ensureInitialized();
+  p23.SpecialPointsMapper.ensureInitialized();
+  p24.UserTrackPointMapper.ensureInitialized();
+  p24.UserTrackPointsMapper.ensureInitialized();
+  p25.WatchEventMapper.ensureInitialized();
+  p25.WatchEventsMapper.ensureInitialized();
 }

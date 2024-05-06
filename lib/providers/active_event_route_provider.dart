@@ -2,9 +2,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location_bearing_distance.dart';
+import '../helpers/logger.dart';
 import '../models/event.dart';
 import '../models/route.dart';
+import '../models/special_point.dart';
 import 'active_event_provider.dart';
+import 'images_and_links/special_points_image_and_link_provider.dart';
 import 'realtime_data_provider.dart';
 
 part 'active_event_route_provider.g.dart';
@@ -57,14 +60,15 @@ class SpecialPoints extends _$SpecialPoints {
   @override
   Future<List<SpecialPoint>> build() async {
     List<SpecialPoint> points = [];
-    points.add(SpecialPoint(const LatLng(48.15964, 11.52988),
-        'assets/images/skatemunich_child_stop.png'));
-    points.add(SpecialPoint(const LatLng(48.11015, 11.51962),
-        'assets/images/skatemunich_child_stop.png'));
-    points.add(SpecialPoint(const LatLng(48.12308, 11.56730),
-        'assets/images/skatemunich_child_stop.png'));
-    points.add(SpecialPoint(const LatLng(48.15726, 11.58417),
-        'assets/images/skatemunich_child_stop.png'));
+    var pointsJson = ref.read(specialPointsImageAndLinkProvider).text;
+    if (pointsJson != null) {
+      try {
+        var spPoints = SpecialPointsMapper.fromJson(pointsJson);
+        points = spPoints.specialPoints;
+      } catch (e) {
+        BnLog.error(text: 'SpecialPoints parse error $e', className: toString());
+      }
+    }
     return points;
   }
 }

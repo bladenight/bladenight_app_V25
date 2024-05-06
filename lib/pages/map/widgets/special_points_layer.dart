@@ -1,11 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
-import '../../../helpers/location_bearing_distance.dart';
 import '../../../models/bn_map_marker.dart';
+import '../../../models/special_point.dart';
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
 import 'map_marker_popup.dart';
@@ -56,13 +58,17 @@ class _SpecialPointsLayerState extends ConsumerState<SpecialPointsLayer> {
                 buildContext: context,
                 headerText: Localize.of(context).collectionStop,
                 color: Colors.lightBlue,
-                point: sp.latLng,
+                point: sp.latLon,
                 width: iconSize * 0.9,
                 height: iconSize * 0.9,
                 child: Builder(
-                  builder: (context) => Image(
-                    image: AssetImage(
-                      sp.imageName,
+                  builder: (context) => CachedNetworkImage(
+                    imageUrl: sp.imageUrl,
+                    placeholder: (context, url) => Image.asset(
+                      specialPointImagePlaceHolder,
+                    ),
+                    errorWidget: (context, url, error) => Image.asset(
+                      specialPointImagePlaceHolder,
                     ),
                   ),
                 ),
