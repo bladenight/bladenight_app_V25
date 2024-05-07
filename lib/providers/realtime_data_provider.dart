@@ -21,7 +21,6 @@ class RealtimeData extends _$RealtimeData {
   DateTime lastUpdate = DateTime(2000);
   StreamSubscription<RealtimeUpdate?>? _realTimeDataStreamListener;
   int _realTimeDataSubscriptionId = 0;
-  bool _isWampConnected = false;
   bool _isOnline = true;
 
   StreamSubscription<bool>? _wampConnectedListener;
@@ -33,8 +32,6 @@ class RealtimeData extends _$RealtimeData {
         .instance.wampConnectedStreamController.stream
         .listen((event) async {
       if (event) {
-        //resubscribe after offline if not tracking
-        _isWampConnected = event;
         await (Future.delayed(const Duration(seconds: 10)));
         _maxSubscribeFails = 3;
         _subscribeIfNeeded(_isTracking);

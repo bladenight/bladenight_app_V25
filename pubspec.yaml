@@ -44,7 +44,10 @@ dependencies:
   flutter_map_location_marker: ^8.0.4
   flutter_map_marker_popup: ^6.1.2
   flutter_native_splash: ^2.3.0
-  flutter_nearby_connections: ^1.1.2
+  flutter_nearby_connections:
+    git:
+      url: https://github.com/xunreal75/flutter_nearby_connections.git
+  #flutter_nearby_connections: ^1.1.2
   #to owner waiting for update
   #flutter_platform_alert:
   #  git:
