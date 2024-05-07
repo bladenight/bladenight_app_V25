@@ -5,7 +5,6 @@ import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
-import '../../../generated/l10n.dart';
 import '../../../models/bn_map_marker.dart';
 import '../../../models/special_point.dart';
 import '../../../providers/active_event_route_provider.dart';

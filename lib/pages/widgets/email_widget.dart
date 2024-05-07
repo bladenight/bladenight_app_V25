@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/validator.dart';
 import '../../providers/settings/bladeguard_provider.dart';
 
 class EmailTextField extends ConsumerStatefulWidget {
