@@ -547,7 +547,7 @@ class LocationProvider with ChangeNotifier {
           .read(bgIsOnSiteProvider.notifier)
           .setOnSiteState(true);
       NotificationHelper()
-          .showString(id: 3234, text: 'Bladguard Geofence Event vor Ort ');
+          .showString(id: 3234, text: 'Bladeguard Geofence Info du bist vor Ort angemeldet',title: 'Bladeguard am Startpunkt');
     }
   }
 
