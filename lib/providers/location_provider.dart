@@ -40,6 +40,7 @@ import '../models/user_trackpoint.dart';
 import '../wamp/wamp_v2.dart';
 import 'active_event_provider.dart';
 import 'realtime_data_provider.dart';
+import 'rest_api/onsite_state_provider.dart';
 
 ///[LocationProvider] gets actual procession of Bladenight
 ///when tracking is active is result included users position and friends
@@ -200,11 +201,13 @@ class LocationProvider with ChangeNotifier {
     if (!HiveSettingsDB.useAlternativeLocationProvider) {
       _state = await _startBackgroundGeolocation();
       if (_state == null) {
-        if (!kIsWeb) BnLog.error(text: 'bg-locationState is null');
+        BnLog.error(text: 'bg-locationState is null');
         _gpsGranted = false;
         notifyListeners();
         return;
       }
+      setGeoFence();
+      await startStopGeoFencing();
     }
 
     _autoStop = await PreferencesHelper.getAutoStopFromPrefs();
@@ -245,6 +248,8 @@ class LocationProvider with ChangeNotifier {
       if (state) {
         showToast(message: Localize.current.trackingRestarted);
       }
+    } else {
+      startStopGeoFencing();
     }
     notifyListeners();
     if (!kIsWeb) {
@@ -268,6 +273,7 @@ class LocationProvider with ChangeNotifier {
       bg.BackgroundGeolocation.onHeartbeat(_onHeartBeat);
       bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
       bg.BackgroundGeolocation.onConnectivityChange(_onConnectionChange);
+      bg.BackgroundGeolocation.onGeofence(_onGeoFence);
 
       var isMotionDetectionDisabled = HiveSettingsDB.isMotionDetectionDisabled;
       var bgLogLevel = HiveSettingsDB.getBackgroundLocationLogLevel;
@@ -534,6 +540,17 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  _onGeoFence(bg.GeofenceEvent event) {
+    if (HiveSettingsDB.isBladeGuard && HiveSettingsDB.onsiteGeoFencingActive) {
+      BnLog.info(text: '[geofence] ${event.identifier}, ${event.action}');
+      ProviderContainer()
+          .read(bgIsOnSiteProvider.notifier)
+          .setOnSiteState(true);
+      NotificationHelper()
+          .showString(id: 3234, text: 'Bladguard Geofence Event vor Ort ');
+    }
+  }
+
   void toggleAutoStop() async {
     _autoStop = !_autoStop;
     notifyListeners();
@@ -561,7 +578,7 @@ class LocationProvider with ChangeNotifier {
       HiveSettingsDB.setTrackingActive(false);
       LocationStore.saveUserTrackPointList(_userTrackingPoints);
     }
-    bg.BackgroundGeolocation.stop().then((bg.State state) {
+    bg.BackgroundGeolocation.stop().then((bg.State state) async {
       BnLog.info(
           text: 'location tracking stopped ${state.enabled}',
           className: 'location_provider',
@@ -580,11 +597,69 @@ class LocationProvider with ChangeNotifier {
       HiveSettingsDB.setTrackingActive(false);
       LocationStore.saveUserTrackPointList(_userTrackingPoints);
       notifyListeners();
+      await startStopGeoFencing();
     }).catchError((error) {
-      BnLog.error(text: 'Stopping ERROR: $error');
+      BnLog.error(text: 'Stopping location error: $error');
     });
     notifyListeners();
     return _isTracking;
+  }
+
+  ///Starts or stops geofencing
+  Future<void> startStopGeoFencing() async {
+    if (!HiveSettingsDB.isBladeGuard ||
+        !HiveSettingsDB.onsiteGeoFencingActive) {
+      if (!_isTracking) {
+        bg.BackgroundGeolocation.stop().catchError((error) {
+          BnLog.error(text: 'Stopping geofence error: $error');
+          return bg.State({'err': error});
+        });
+      }
+      return;
+    }
+    try {
+      var gpsLocationPermissionsStatus =
+          await LocationPermissionDialog().getPermissionsStatus();
+      if (gpsLocationPermissionsStatus != LocationPermissionStatus.always) {
+        BnLog.warning(
+            text:
+                'startGeoFencing not possible - LocationPermission is $gpsLocationPermissionsStatus');
+      }
+      setGeoFence();
+      bg.BackgroundGeolocation.startGeofences().catchError((error) {
+        BnLog.error(text: 'start Geofence error: $error');
+        return bg.State({'err': error});
+      });
+    } catch (e) {
+      BnLog.error(text: 'startGeoFencing failed: $e');
+    }
+  }
+
+  void setGeoFence() {
+    if (!HiveSettingsDB.bgSettingVisible ||
+        !HiveSettingsDB.onsiteGeoFencingActive) return;
+    bg.BackgroundGeolocation.addGeofences([
+      bg.Geofence(
+          identifier: 'startPoint',
+          radius: 200,
+          latitude: defaultLatitude,
+          longitude: defaultAppLongitude,
+          notifyOnEntry: true,
+          notifyOnExit: false,
+          extras: {'routeId': 1234}),
+      bg.Geofence(
+          identifier: 'test',
+          radius: 200,
+          latitude: 52.521900,
+          longitude: 8.372809,
+          notifyOnEntry: true,
+          notifyOnExit: true,
+          extras: {'routeId': 4332})
+    ]).then((bool success) {
+      BnLog.info(text: '[addGeofence] success');
+    }).catchError((dynamic error) {
+      BnLog.warning(text: '[addGeofence] FAILURE: $error');
+    });
   }
 
   Future<bool> startTracking(bool userIsParticipant) async {
@@ -981,10 +1056,10 @@ class LocationProvider with ChangeNotifier {
   ///necessary after app state switching in viewer mode
   Future<void> refresh({bool forceUpdate = false}) async {
     try {
-        BnLog.trace(
-            className: 'locationProvider',
-            methodName: 'refresh',
-            text: 'start refresh force $forceUpdate');
+      BnLog.trace(
+          className: 'locationProvider',
+          methodName: 'refresh',
+          text: 'start refresh force $forceUpdate');
       var dtNow = DateTime.now();
       //avoid async re-trigger
       var timeDiff = dtNow.difference(_lastRefreshRequest);

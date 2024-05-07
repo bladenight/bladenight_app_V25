@@ -458,6 +458,25 @@ class HiveSettingsDB {
     _hiveBox.put(_bgIsAdminKey, val);
   }
 
+  static const String _setOnsiteGeoFencingKey =
+      'setOnsiteGeoFencingPref';
+
+  ///Bladeguard is registered for GeoFencing
+  static bool get onsiteGeoFencingActive {
+    return _hiveBox.get(_setOnsiteGeoFencingKey,
+        defaultValue: true);
+  }
+
+  ///Set if Bladeguard is registered for OneSignalPush
+  static void setSetOnsiteGeoFencingActive(bool val) {
+    _hiveBox.put(_setOnsiteGeoFencingKey, val);
+  }
+  ///Set if Bladeguard is registered for OneSignalPush
+  static Future<void> setSetOnsiteGeoFencingActiveAsync(bool val) {
+    return _hiveBox.put(_setOnsiteGeoFencingKey, val);
+  }
+
+  
   static const String _oneSignalRegisterBladeGuardPushKey =
       'oneSignalRegisterBladeGuardPushPref';
 

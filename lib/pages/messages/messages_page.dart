@@ -279,8 +279,8 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                       color: CupertinoTheme.of(context).primaryColor),
                   onTapUrl: (url) async {
                     var uri = Uri.parse(url);
-                    Launch.launchUrlFromUri(uri);
-                    return Future(true as FutureOr<bool> Function());
+                    Launch.launchUrlFromUri(uri,mode: LaunchMode.platformDefault);
+                    return true;
                   },
                   message.body,
                 ),

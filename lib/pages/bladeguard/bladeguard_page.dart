@@ -16,6 +16,7 @@ import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../helpers/url_launch_helper.dart';
 import '../../pages/widgets/no_connection_warning.dart';
+import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
@@ -235,7 +236,33 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                       if (!kIsWeb &&
                           HiveSettingsDB.isBladeGuard &&
-                          HiveSettingsDB.bgSettingVisible)
+                          HiveSettingsDB.bgSettingVisible) ...[
+                        CupertinoFormSection(
+                          header: Text(Localize.of(context).geoFencingTitle),
+                          children: <Widget>[
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              child: DataLeftRightContent(
+                                descriptionLeft:
+                                    Localize.of(context).geoFencing,
+                                rightWidget: CupertinoSwitch(
+                                  onChanged: (val) async {
+                                    await HiveSettingsDB
+                                        .setSetOnsiteGeoFencingActiveAsync(val);
+                                    await LocationProvider.instance
+                                        .startStopGeoFencing();
+                                    setState(() {
+
+                                    });
+                                  },
+                                  value: HiveSettingsDB.onsiteGeoFencingActive,
+                                ),
+                                descriptionRight: '',
+                              ),
+                            ),
+                          ],
+                        ),
                         CupertinoFormSection(
                           header: Text(Localize.of(context)
                               .pushMessageParticipateAsBladeGuardTitle),
@@ -265,9 +292,6 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             ),
                           ],
                         ),
-                      if (!kIsWeb &&
-                          HiveSettingsDB.isBladeGuard &&
-                          HiveSettingsDB.bgSettingVisible)
                         CupertinoFormSection(
                           header: Text(Localize.of(context)
                               .pushMessageSkateMunichInfosTitle),
@@ -295,6 +319,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             ),
                           ],
                         ),
+                      ],
                       if (!kIsWeb &&
                           (HiveSettingsDB.bgLeaderSettingVisible ||
                               Globals.adminPass != null ||

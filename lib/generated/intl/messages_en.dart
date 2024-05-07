@@ -329,6 +329,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
             "Please support the exact presentation of BladeNight skater procession.\nYour friends will miss you!"),
         "from": MessageLookupByLibrary.simpleMessage("by"),
+        "geoFencing": MessageLookupByLibrary.simpleMessage("Geofencing aktiv"),
+        "geoFencingTitle": MessageLookupByLibrary.simpleMessage(
+            "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)"),
         "getwebdata": MessageLookupByLibrary.simpleMessage(
             "Loading data from server ..."),
         "head": MessageLookupByLibrary.simpleMessage("Head"),

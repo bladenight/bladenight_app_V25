@@ -5,18 +5,17 @@ import '../../models/image_and_link.dart';
 
 part 'special_points_image_and_link_provider.g.dart';
 
-String specialPointsImageAndLinkKey = 'specialPointsIalKey';
+String specialPointsImageAndLinkKey = 'specialPointsIalDbÏKey';
 ImageAndLink _defaultSpecialPoints = ImageAndLink(
     '',
     '',
     '{"spp":['
-        '{"lat":48.098390,"lon":11.508354,"url":"https://bladenight.app/images/skatemunich_child_stop.png"},' //Süd Höglwörther
-        '{"lat":48.12308,"lon":11.56730,"url":"https://bladenight.app/images/skatemunich_child_stop.png"},' //Ost Wittelsbacher
-        '{"lat":48.15726,"lon":11.58417,"url":"https://bladenight.app/images/skatemunich_child_stop.png"}' //Nord Leopold
+        '{"lat":48.098390,"lon":11.508354,"url":"https://bladenight.app/images/skatemunich_child_stop.png","des":"Sammelstopp"},' //Süd Höglwörther
+        '{"lat":48.12308,"lon":11.56730,"url":"https://bladenight.app/images/skatemunich_child_stop.png","des":"Sammelstopp"},' //Ost Wittelsbacher
+        '{"lat":48.15726,"lon":11.58417,"url":"https://bladenight.app/images/skatemunich_child_stop.png","des":"Sammelstopp"}' //Nord Leopold
         ']'
         '}',
     'specialPoints');
-
 
 @riverpod
 class SpecialPointsImageAndLink extends _$SpecialPointsImageAndLink {

@@ -335,6 +335,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
             "Bitte unterstütze weiter die genaue Darstellung des BladeNight-Zuges.\nAusserdem werden deine Freunde dich vermissen!"),
         "from": MessageLookupByLibrary.simpleMessage("vom"),
+        "geoFencing": MessageLookupByLibrary.simpleMessage("Geofencing aktiv"),
+        "geoFencingTitle": MessageLookupByLibrary.simpleMessage(
+            "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet. Location service muss auf immer stehen (beta)"),
         "getwebdata":
             MessageLookupByLibrary.simpleMessage("Lade Serverdaten ..."),
         "head": MessageLookupByLibrary.simpleMessage("Zugkopf"),

@@ -4032,6 +4032,26 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)`
+  String get geoFencingTitle {
+    return Intl.message(
+      'Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)',
+      name: 'geoFencingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Geofencing aktiv`
+  String get geoFencing {
+    return Intl.message(
+      'Geofencing aktiv',
+      name: 'geoFencing',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

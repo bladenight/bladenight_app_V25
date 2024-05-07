@@ -56,7 +56,7 @@ class _SpecialPointsLayerState extends ConsumerState<SpecialPointsLayer> {
             for (var sp in specialPoints)
               BnMapMarker(
                 buildContext: context,
-                headerText: Localize.of(context).collectionStop,
+                headerText: sp.description,
                 color: Colors.lightBlue,
                 point: sp.latLon,
                 width: iconSize * 0.9,

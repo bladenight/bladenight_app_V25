@@ -174,8 +174,8 @@ class OnesignalHandler {
     } else {
       //allow onesignal
       await OneSignal.User.pushSubscription.optIn();
-      OneSignal.User.addAlias('app_id', DeviceId.appId);
-      OneSignal.User.addAlias('team', HiveSettingsDB.bgTeam);
+      //OneSignal.User.addAlias('app_id', DeviceId.appId); error claimed by another user
+      //OneSignal.User.addAlias('team', HiveSettingsDB.bgTeam);
     }
     if (HiveSettingsDB.oneSignalRegisterBladeGuardPush &&
         HiveSettingsDB.bladeguardSHA512Hash.isNotEmpty) {

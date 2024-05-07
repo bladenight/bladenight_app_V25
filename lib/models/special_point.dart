@@ -12,9 +12,11 @@ class SpecialPoint with SpecialPointMappable
   final double lon;
   @MappableField(key: 'url')
   final String imageUrl;
+  @MappableField(key: 'des')
+  final String description;
   late LatLng latLon;
 
-  SpecialPoint(this.lat, this.lon, this.imageUrl) {
+  SpecialPoint(this.lat, this.lon, this.imageUrl,this.description) {
     latLon = LatLng(lat, lon);
   }
 }

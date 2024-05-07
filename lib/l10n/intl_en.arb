@@ -485,5 +485,7 @@
   "sendMail": "Send an email",
   "updating": "Updating data",
   "leaveAppWarningTitle": "Open an external browser?",
-  "leaveAppWarning": "You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: "
+  "leaveAppWarning": "You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: ",
+  "geoFencingTitle": "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)",
+  "geoFencing": "Geofencing aktiv"
 }
