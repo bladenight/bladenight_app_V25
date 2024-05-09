@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:math' as math;
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,7 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
+import '../../../providers/map/compass_provider.dart';
 import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/route_providers.dart';
@@ -60,7 +62,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       //#######################################################################
       //Right side buttons
       //#######################################################################
-      //if (!kIsWeb)
       Positioned(
         right: 10,
         bottom: 40,
@@ -239,6 +240,27 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         }),
       ),
 
+      if (!kIsWeb)
+        Positioned(
+          right: 10,
+          bottom: 220,
+          child: Builder(builder: (context) {
+            var direction = ref.watch(compassProvider);
+            return FloatingActionButton(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              onPressed: () {
+                final controller = MapController.of(context);
+                controller.rotate(0);
+              },
+              child: Transform.rotate(
+                angle: (direction * (math.pi / 180) * -1),
+                child: Image.asset('assets/images/compass.png'),
+              ),
+            );
+          }),
+        ),
+
       //Left located button web
       /* if (kIsWeb)
         AnimatedPositioned(
@@ -361,7 +383,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           heroTag: 'resetBtnTag',
           backgroundColor: Colors.blue,
           onPressed: () async {
-            await LocationProvider.instance.resetOdoMeterAndRoutePoints(context);
+            await LocationProvider.instance
+                .resetOdoMeterAndRoutePoints(context);
           },
           visibility: ref.watch(mapMenuVisibleProvider),
           child: const Icon(

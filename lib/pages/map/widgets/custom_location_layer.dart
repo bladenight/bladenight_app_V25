@@ -9,6 +9,7 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
+import '../../../providers/map/compass_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/settings/me_color_provider.dart';
 import 'location_marker_widget.dart';
@@ -47,6 +48,8 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
     var cameraFollow = ref.watch(cameraFollowLocationProvider);
     var alignMap = ref.watch(alignFlutterMapProvider);
     var iconSize = ref.watch(iconSizeProvider);
+    //var headingStream = ref.watch(rawStreamProvider);
+    
     //print('Widget has gesture ${widget.hasGesture}');
     return !isTracking
         ? Container()
@@ -75,7 +78,7 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
                 : AlignOnUpdate.never,
             style: LocationMarkerStyle(
               showAccuracyCircle: false,
-              showHeadingSector: false,
+              showHeadingSector: true,
               headingSectorColor: ref.watch(meColorProvider),
               accuracyCircleColor: CupertinoTheme.of(context).primaryColor,
               marker: DefaultLocationMarker(

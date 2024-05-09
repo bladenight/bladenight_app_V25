@@ -125,6 +125,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
+              onMapEvent: mapEvent,
               keepAlive: true,
               initialZoom: 13.0,
               minZoom:
@@ -214,5 +215,9 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
         _hasGesture = g;
       });
     }
+  }
+
+  void mapEvent(MapEvent event) {
+
   }
 }
