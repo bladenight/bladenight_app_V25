@@ -9,6 +9,7 @@ import '../../helpers/hive_box/app_server_config_db.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../models/result_or_error.dart';
+import '../location_provider.dart';
 import 'dio_rest_api_provider.dart';
 
 part 'onsite_state_provider.g.dart';
@@ -221,6 +222,12 @@ class BgIsOnSite extends _$BgIsOnSite {
       state = const AsyncValue.data(false);
       return false;
     }
+    var gfEvPrv = ref.listen(geoFenceEventProvider, (previous, next) {
+      ref.invalidateSelf();
+    });
+    ref.onDispose(() {
+      gfEvPrv.close();
+    });
     final repo = ref.read(bladeGuardApiRepositoryProvider);
     try {
       var res = await repo.checkBladeguardIsOnSite();

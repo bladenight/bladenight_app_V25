@@ -148,6 +148,10 @@ class LocationProvider with ChangeNotifier {
   //Stream controllers private
   final _userPositionStreamController =
       StreamController<bg.Location>.broadcast();
+
+  final _geoFenceEventStreamController =
+      StreamController<bg.GeofenceEvent>.broadcast();
+
   final _trainHeadStreamController = StreamController<LatLng>.broadcast();
   final _userTrackPointsStreamController =
       StreamController<UserTrackPoint>.broadcast();
@@ -159,6 +163,9 @@ class LocationProvider with ChangeNotifier {
   //Stream controllers public
   Stream<bg.Location> get userBgLocationStream =>
       _userPositionStreamController.stream;
+
+  Stream<bg.GeofenceEvent> get geoFenceEventStream =>
+      _geoFenceEventStreamController.stream;
 
   Stream<LatLng> get trainHeadUpdateStream => _trainHeadStreamController.stream;
 
@@ -541,14 +548,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   _onGeoFence(bg.GeofenceEvent event) {
-    if (HiveSettingsDB.isBladeGuard && HiveSettingsDB.onsiteGeoFencingActive) {
-      BnLog.info(text: '[geofence] ${event.identifier}, ${event.action}');
-      ProviderContainer()
-          .read(bgIsOnSiteProvider.notifier)
-          .setOnSiteState(true);
-      NotificationHelper()
-          .showString(id: 3234, text: 'Bladeguard Geofence Info du bist vor Ort angemeldet',title: 'Bladeguard am Startpunkt');
-    }
+    _onGeoFenceEvent(event);
   }
 
   void toggleAutoStop() async {
@@ -1393,6 +1393,37 @@ class LocationProvider with ChangeNotifier {
           });
     }
   }
+
+  void _onGeoFenceEvent(bg.GeofenceEvent event) async {
+    if (HiveSettingsDB.isBladeGuard && HiveSettingsDB.onsiteGeoFencingActive) {
+      if (event.action != 'ENTER') {
+        return;
+      }
+      var lastTimeStamp = HiveSettingsDB.bladeguardLastSetOnsite;
+      var now = DateTime.now();
+      var diff = now.difference(lastTimeStamp);
+      var minTimeDiff =
+          kDebugMode ? const Duration(seconds: 5) : const Duration(hours: 3);
+      if (diff < minTimeDiff) {
+        return;
+      }
+      HiveSettingsDB.setBladeguardLastSetOnsite(now);
+      BnLog.info(text: '[geofence] ${event.identifier}, ${event.action}');
+      final repo = ProviderContainer().read(bladeGuardApiRepositoryProvider);
+      var res = await repo.checkBladeguardIsOnSite();
+      if (res.result != null && res.result == true) {
+        return;
+      }
+      var setRes = await ProviderContainer()
+          .read(bgIsOnSiteProvider.notifier)
+          .setOnSiteState(true);
+      _geoFenceEventStreamController.sink.add(event);
+      NotificationHelper().showString(
+          id: 3234,
+          text: 'Bladeguard Geofence Info du bist vor Ort angemeldet',
+          title: 'Bladeguard am Startpunkt');
+    }
+  }
 }
 
 //Providers
@@ -1451,6 +1482,12 @@ final bgNetworkConnectedProvider = Provider((ref) {
 final locationUpdateProvider = StreamProvider<LatLng?>((ref) {
   return LocationProvider.instance.userBgLocationStream.map((location) {
     return LatLng(location.coords.latitude, location.coords.longitude);
+  });
+});
+
+final geoFenceEventProvider = StreamProvider<bg.GeofenceEvent>((ref) {
+  return LocationProvider.instance.geoFenceEventStream.map((event) {
+    return event;
   });
 });
 

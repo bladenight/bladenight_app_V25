@@ -362,6 +362,20 @@ class HiveSettingsDB {
     _hiveBox.put(_wasBladeGuardReqShownKey, val);
   }
 
+  static const String bladeguardLastSetOnsiteKey =
+      'bladeguardLastSetOnsitePref';
+
+  ///get bladeguardLastSetOnsite
+  static DateTime get bladeguardLastSetOnsite {
+    return _hiveBox.get(bladeguardLastSetOnsiteKey,
+        defaultValue: DateTime.now().subtract(const Duration(days: 365)));
+  }
+
+  ///set Bladeguard onsite timestamp for Bladeguard
+  static void setBladeguardLastSetOnsite(DateTime val) {
+    _hiveBox.put(bladeguardLastSetOnsiteKey, val);
+  }
+
   static const String bladeguardEmailKey = 'bladeguardEmailPref';
 
   ///get bladeguardEmail
@@ -458,25 +472,23 @@ class HiveSettingsDB {
     _hiveBox.put(_bgIsAdminKey, val);
   }
 
-  static const String _setOnsiteGeoFencingKey =
-      'setOnsiteGeoFencingPref';
+  static const String _setOnsiteGeoFencingKey = 'setOnsiteGeoFencingPref';
 
   ///Bladeguard is registered for GeoFencing
   static bool get onsiteGeoFencingActive {
-    return _hiveBox.get(_setOnsiteGeoFencingKey,
-        defaultValue: true);
+    return _hiveBox.get(_setOnsiteGeoFencingKey, defaultValue: false);
   }
 
   ///Set if Bladeguard is registered for OneSignalPush
   static void setSetOnsiteGeoFencingActive(bool val) {
     _hiveBox.put(_setOnsiteGeoFencingKey, val);
   }
+
   ///Set if Bladeguard is registered for OneSignalPush
   static Future<void> setSetOnsiteGeoFencingActiveAsync(bool val) {
     return _hiveBox.put(_setOnsiteGeoFencingKey, val);
   }
 
-  
   static const String _oneSignalRegisterBladeGuardPushKey =
       'oneSignalRegisterBladeGuardPushPref';
 

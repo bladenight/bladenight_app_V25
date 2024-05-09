@@ -9,6 +9,7 @@ import '../generated/l10n.dart';
 import '../pages/widgets/event_info.dart';
 import '../providers/active_event_provider.dart';
 import '../providers/messages_provider.dart';
+import '../providers/rest_api/onsite_state_provider.dart';
 import '../providers/route_providers.dart';
 import 'about_page.dart';
 import 'messages/messages_page.dart';
@@ -150,6 +151,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 ref
                     .read(activeEventProvider.notifier)
                     .refresh(forceUpdate: true);
+                var __ = ref.refresh(bgIsOnSiteProvider);
               },
             ),
             const SliverFillRemaining(

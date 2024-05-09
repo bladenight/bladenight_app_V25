@@ -523,10 +523,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNight-Zuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung \"Bei der Nutzung der App zulassen\"."),
         "pushMessageParticipateAsBladeGuard":
-            MessageLookupByLibrary.simpleMessage("Bladeguard-Abfrage Push"),
+            MessageLookupByLibrary.simpleMessage("Bladeguard Push"),
         "pushMessageParticipateAsBladeGuardTitle":
             MessageLookupByLibrary.simpleMessage(
-                "Bladeguard--Teilnahme-Abfrage per Push-Mitteilung durchführen?"),
+                "Bladeguard-Informationen per Push-Mitteilung erhalten?"),
         "pushMessageSkateMunichInfos":
             MessageLookupByLibrary.simpleMessage("Skatemunich Infos"),
         "pushMessageSkateMunichInfosTitle": MessageLookupByLibrary.simpleMessage(
@@ -546,6 +546,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Information, warum die Standortfreigeben notwendig wäre."),
         "requestOffSite": MessageLookupByLibrary.simpleMessage(
             "Du möchtest dich heute wirklich als Bladeguard wieder abmelden. Wir brauchen jeden. Überlege es Dir noch einmal. "),
+        "requestOffSiteTitle":
+            MessageLookupByLibrary.simpleMessage("Vor-Ort-Abmeldung ?"),
         "resetInSettings":
             MessageLookupByLibrary.simpleMessage("Reset in Einstellungen"),
         "resetLongPress": MessageLookupByLibrary.simpleMessage(
