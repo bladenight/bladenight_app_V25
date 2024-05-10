@@ -486,5 +486,7 @@
   "leaveAppWarningTitle": "Le navigateur externe est-il activé ?",
   "leaveAppWarning": "Vous êtes prêt à utiliser votre navigateur Internet. Bien que cette application soit disponible, lorsque vous êtes prêt à le faire. L'application est disponible dans l'arrière-plan plus loin. \n",
   "geoFencingTitle": "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)",
-  "geoFencing": "Geofencing aktiv"
+  "geoFencing": "Geofencing aktiv",
+  "showCompassTitle": "Show Compass on map",
+  "showCompass": "Show it"
 }

@@ -286,6 +286,29 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ]),
                   if (!kIsWeb)
                     CupertinoFormSection(
+                        header: Text(Localize.of(context).showCompassTitle),
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: DataLeftRightContent(
+                              descriptionLeft:
+                              Localize.of(context).showCompass,
+                              descriptionRight: '',
+                              rightWidget: CupertinoSwitch(
+                                onChanged: (val) {
+                                  setState(() {
+                                    context
+                                        .read(showCompassProvider.notifier)
+                                        .setValue(val);
+                                  });
+                                },
+                                value: context.watch(showCompassProvider),
+                              ),
+                            ),
+                          ),
+                        ]),
+                  if (!kIsWeb)
+                    CupertinoFormSection(
                       header:
                           Text(Localize.of(context).exportUserTrackingHeader),
                       children: <Widget>[

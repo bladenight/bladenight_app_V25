@@ -487,5 +487,7 @@
   "leaveAppWarningTitle": "Externen Browser öffnen?",
   "leaveAppWarning": "Sie werden zu Ihrem Geräte-Internet-Browser weitergeleitet. Bitte wechseln Sie zu dieser App zurück, wenn Sie fertig sind. Die App läuft im Hintergrund weiter. \nÖffne: ",
   "geoFencingTitle": "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet. Location service muss auf immer stehen (beta)",
-  "geoFencing": "Geofencing aktiv"
+  "geoFencing": "Geofencing aktiv",
+  "showCompassTitle": "Zeige Kompass auf Karte",
+  "showCompass": "Compass ein"
 }

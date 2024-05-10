@@ -170,6 +170,18 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.put(mapMenuVisibleKey, val);
   }
 
+  static const String compassVisibleKey = 'compassVisiblePref';
+
+  ///get compassVisible
+  static bool get compassVisible {
+    return HiveSettingsDB._hiveBox.get(compassVisibleKey, defaultValue: false);
+  }
+
+  ///set compassVisibleString
+  static void setCompassVisible(bool val) {
+    HiveSettingsDB._hiveBox.put(compassVisibleKey, val);
+  }
+
   static const String showOwnTrackKey = 'showOwnTrackPref';
 
   /// Get value
@@ -200,8 +212,11 @@ extension MapSettings on HiveSettingsDB {
 
   /// Get last camera setting (global)
   static AlignFlutterMapState get alignFlutterMap {
-    var value = HiveSettingsDB._hiveBox.get(alignFlutterMapKey, defaultValue: 0);
-    return AlignFlutterMapState.values.where((element) => element.index == value).first;
+    var value =
+        HiveSettingsDB._hiveBox.get(alignFlutterMapKey, defaultValue: 0);
+    return AlignFlutterMapState.values
+        .where((element) => element.index == value)
+        .first;
   }
 
   ///set alignStreetMap

@@ -599,6 +599,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "setexportIdAndFriends":
             MessageLookupByLibrary.simpleMessage("Export Id and friends"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "showCompass": MessageLookupByLibrary.simpleMessage("Show it"),
+        "showCompassTitle":
+            MessageLookupByLibrary.simpleMessage("Show Compass on map"),
         "showFullProcession": MessageLookupByLibrary.simpleMessage(
             "Show procession participants"),
         "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(

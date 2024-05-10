@@ -4052,6 +4052,26 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Show Compass on map`
+  String get showCompassTitle {
+    return Intl.message(
+      'Show Compass on map',
+      name: 'showCompassTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show it`
+  String get showCompass {
+    return Intl.message(
+      'Show it',
+      name: 'showCompass',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

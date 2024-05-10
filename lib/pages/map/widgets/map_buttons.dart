@@ -27,7 +27,9 @@ import '../../../providers/map/camera_follow_location_provider.dart';
 import '../../../providers/map/compass_provider.dart';
 import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
+import '../../../providers/messages_provider.dart';
 import '../../../providers/route_providers.dart';
+import '../../messages/messages_page.dart';
 import '../../widgets/align_map_icon.dart';
 import '../../widgets/positioned_visibility_opacity.dart';
 import '../../widgets/scroll_quick_alert.dart';
@@ -57,7 +59,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   @override
   Widget build(BuildContext context) {
     CameraFollow followLocationState = ref.watch(cameraFollowLocationProvider);
-
     return Stack(fit: StackFit.passthrough, children: [
       //#######################################################################
       //Right side buttons
@@ -240,13 +241,14 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         }),
       ),
 
-      if (!kIsWeb)
+      if (!kIsWeb && MapSettings.compassVisible)
         Positioned(
           right: 10,
           bottom: 220,
           child: Builder(builder: (context) {
             var direction = ref.watch(compassProvider);
             return FloatingActionButton(
+              heroTag: 'compassHeroTag',
               backgroundColor: Colors.transparent,
               elevation: 0,
               onPressed: () {
@@ -358,12 +360,13 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             if (!isTracking) {
               return FloatingActionButton(
                 heroTag: 'viewerBtnTag',
-                backgroundColor: Colors.blue,
+                //backgroundColor: Colors.blue,
                 onPressed: () {
                   _toggleViewerLocationService();
                 },
                 child: const Icon(CupertinoIcons.eye_solid,
-                    color: CupertinoColors.white),
+                    //color: CupertinoColors.white
+                ),
                 /*CupertinoAdaptiveTheme.of(context).brightness ==
                                 Brightness.light
                             ? ref.watch(ThemePrimaryDarkColor.provider)
@@ -496,6 +499,30 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   child: Icon(
                     Icons.help,
                   )));
+        }),
+      ),
+      Positioned(
+        bottom: ref.watch(mapMenuVisibleProvider) ? 350 : 140,
+        left: kIsWeb ? 10 : 10,
+        height: 30,
+        child: Builder(builder: (context) {
+          var messageProvider = context.watch(messagesLogicProvider);
+          return FloatingActionButton(
+              heroTag: 'messageBtnTag',
+              onPressed: () async {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (context) => const MessagesPage(),
+                    fullscreenDialog: false,
+                  ),
+                );
+              },
+              child: messageProvider.messages.isNotEmpty
+                  ? Badge(
+                      label: Text(messageProvider.readMessages.toString()),
+                      child: const Icon(Icons.mark_email_unread),
+                    )
+                  : const Icon(CupertinoIcons.envelope));
         }),
       ),
     ]);

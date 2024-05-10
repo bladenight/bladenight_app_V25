@@ -20,3 +20,18 @@ class ShowOwnTrack extends _$ShowOwnTrack {
     MapSettings.setShowOwnTrack(val);
   }
 }
+
+@riverpod
+class ShowCompass extends _$ShowOwnTrack {
+  @override
+  bool build() {
+    Hive.box(hiveBoxSettingDbName)
+        .watch(key: MapSettings.compassVisibleKey)
+        .listen((event) => state = event.value);
+    return MapSettings.compassVisible;
+  }
+
+  void setValue(bool val) {
+    MapSettings.setCompassVisible(val);
+  }
+}
