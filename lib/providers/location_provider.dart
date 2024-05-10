@@ -213,8 +213,7 @@ class LocationProvider with ChangeNotifier {
         notifyListeners();
         return;
       }
-      setGeoFence();
-      await startStopGeoFencing();
+      startStopGeoFencing();
     }
 
     _autoStop = await PreferencesHelper.getAutoStopFromPrefs();
@@ -647,14 +646,14 @@ class LocationProvider with ChangeNotifier {
           notifyOnEntry: true,
           notifyOnExit: false,
           extras: {'routeId': 1234}),
-      bg.Geofence(
+      /*bg.Geofence(
           identifier: 'test',
           radius: 200,
           latitude: 52.521900,
           longitude: 8.372809,
           notifyOnEntry: true,
           notifyOnExit: true,
-          extras: {'routeId': 4332})
+          extras: {'routeId': 4332})*/
     ]).then((bool success) {
       BnLog.info(text: '[addGeofence] success');
     }).catchError((dynamic error) {

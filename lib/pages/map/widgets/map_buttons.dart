@@ -354,7 +354,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       if (!kIsWeb)
         Positioned(
           left: 10,
-          bottom: ref.watch(mapMenuVisibleProvider) ? 300 : 90,
+          bottom: ref.watch(mapMenuVisibleProvider) ? 340 : 130,
           height: 40,
           child: Builder(builder: (context) {
             var isTracking = ref.watch(isTrackingProvider);
@@ -379,6 +379,31 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             }
           }),
         ),
+      Positioned(
+        bottom: ref.watch(mapMenuVisibleProvider) ? 300 : 90,
+        left: kIsWeb ? 10 : 10,
+        height: 30,
+        child: Builder(builder: (context) {
+          var messageProvider = context.watch(messagesLogicProvider);
+          return FloatingActionButton(
+              heroTag: 'messageBtnTag',
+              onPressed: () async {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (context) => const MessagesPage(),
+                    fullscreenDialog: false,
+                  ),
+                );
+              },
+              child: messageProvider.messages.isNotEmpty &&
+                  messageProvider.readMessages > 0
+                  ? Badge(
+                label: Text(messageProvider.readMessages.toString()),
+                child: const Icon(Icons.mark_email_unread),
+              )
+                  : const Icon(CupertinoIcons.envelope));
+        }),
+      ),
       if (!kIsWeb)
         PositionedVisibilityOpacity(
           left: 10,
@@ -503,37 +528,13 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   )));
         }),
       ),
-      Positioned(
-        bottom: ref.watch(mapMenuVisibleProvider) ? 350 : 140,
-        left: kIsWeb ? 10 : 10,
-        height: 30,
-        child: Builder(builder: (context) {
-          var messageProvider = context.watch(messagesLogicProvider);
-          return FloatingActionButton(
-              heroTag: 'messageBtnTag',
-              onPressed: () async {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (context) => const MessagesPage(),
-                    fullscreenDialog: false,
-                  ),
-                );
-              },
-              child: messageProvider.messages.isNotEmpty &&
-                      messageProvider.readMessages > 0
-                  ? Badge(
-                      label: Text(messageProvider.readMessages.toString()),
-                      child: const Icon(Icons.mark_email_unread),
-                    )
-                  : const Icon(CupertinoIcons.envelope));
-        }),
-      ),
+
     ]);
   }
 
   void _showOverlay(BuildContext context, {required String text}) async {
     var bottomOffset =
-        kIsWeb ? kBottomNavigationBarHeight : kBottomNavigationBarHeight + 38;
+        kIsWeb ? kBottomNavigationBarHeight : kBottomNavigationBarHeight + 45;
 
     OverlayState? overlayState = Overlay.of(context);
     OverlayEntry overlayEntry;
@@ -577,8 +578,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             Positioned(
               left: 70,
               bottom: ref.watch(mapMenuVisibleProvider)
-                  ? 290 + bottomOffset
-                  : 80 + bottomOffset,
+                  ? 340 + bottomOffset
+                  : 120 + bottomOffset,
               height: 40,
               child: Builder(builder: (context) {
                 var isTracking = ref.watch(isTrackingProvider);
@@ -597,6 +598,40 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                                 CupertinoTheme.of(context).barBackgroundColor,
                             backgroundColor:
                                 CupertinoTheme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              }),
+            ),
+          if (!kIsWeb)
+            Positioned(
+              left: 70,
+              bottom: ref.watch(mapMenuVisibleProvider)
+                  ? 290 + bottomOffset
+                  : 80 + bottomOffset,
+              height: 40,
+              child: Builder(builder: (context) {
+                var isTracking = ref.watch(isTrackingProvider);
+                if (!isTracking) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: FadeTransition(
+                      opacity: animation!,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          Localize.of(context)
+                              .messages,
+                          style: TextStyle(
+                            color:
+                            CupertinoTheme.of(context).barBackgroundColor,
+                            backgroundColor:
+                            CupertinoTheme.of(context).primaryColor,
                           ),
                         ),
                       ),
