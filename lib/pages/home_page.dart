@@ -89,7 +89,8 @@ class _HomePageState extends ConsumerState<HomePage>
                         ),
                       );
                     },
-                    child: messageProvider.messages.isNotEmpty
+                    child: messageProvider.messages.isNotEmpty &&
+                        messageProvider.readMessages > 0
                         ? Badge(
                             label:
                                 Text(messageProvider.readMessages.toString()),

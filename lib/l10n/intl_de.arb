@@ -489,5 +489,5 @@
   "geoFencingTitle": "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet. Location service muss auf immer stehen (beta)",
   "geoFencing": "Geofencing aktiv",
   "showCompassTitle": "Zeige Kompass auf Karte",
-  "showCompass": "Compass ein"
+  "showCompass": "Kompass zeigen"
 }

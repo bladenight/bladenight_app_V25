@@ -26,6 +26,7 @@ import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
 import '../../../providers/map/compass_provider.dart';
 import '../../../providers/map/heading_marker_size_provider.dart';
+import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/messages_provider.dart';
 import '../../../providers/route_providers.dart';
@@ -241,7 +242,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         }),
       ),
 
-      if (!kIsWeb && MapSettings.compassVisible)
+      if (!kIsWeb && ref.watch(showCompassProvider))
         Positioned(
           right: 10,
           bottom: 220,
@@ -364,8 +365,9 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 onPressed: () {
                   _toggleViewerLocationService();
                 },
-                child: const Icon(CupertinoIcons.eye_solid,
-                    //color: CupertinoColors.white
+                child: const Icon(
+                  CupertinoIcons.eye_solid,
+                  //color: CupertinoColors.white
                 ),
                 /*CupertinoAdaptiveTheme.of(context).brightness ==
                                 Brightness.light
@@ -384,7 +386,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           //same height as qrcode in web
           height: 40,
           heroTag: 'resetBtnTag',
-          backgroundColor: Colors.blue,
+          //backgroundColor: Colors.blue,
           onPressed: () async {
             await LocationProvider.instance
                 .resetOdoMeterAndRoutePoints(context);
@@ -392,7 +394,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           visibility: ref.watch(mapMenuVisibleProvider),
           child: const Icon(
             Icons.restart_alt,
-            color: Colors.white,
+            //color: Colors.white,
           ),
         ),
 
@@ -517,7 +519,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   ),
                 );
               },
-              child: messageProvider.messages.isNotEmpty
+              child: messageProvider.messages.isNotEmpty &&
+                      messageProvider.readMessages > 0
                   ? Badge(
                       label: Text(messageProvider.readMessages.toString()),
                       child: const Icon(Icons.mark_email_unread),
