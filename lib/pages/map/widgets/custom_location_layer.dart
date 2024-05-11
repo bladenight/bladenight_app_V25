@@ -15,9 +15,8 @@ import '../../../providers/settings/me_color_provider.dart';
 import 'location_marker_widget.dart';
 
 class CustomLocationLayer extends ConsumerStatefulWidget {
-  const CustomLocationLayer(this.popupController, this.hasGesture, {super.key});
+  const CustomLocationLayer(this.hasGesture, {super.key});
 
-  final PopupController popupController;
   final bool hasGesture;
 
   @override

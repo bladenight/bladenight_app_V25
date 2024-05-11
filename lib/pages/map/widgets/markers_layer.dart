@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
@@ -11,6 +12,7 @@ import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
 import '../../../models/route.dart';
+import '../../../models/special_point.dart';
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
@@ -52,6 +54,9 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
         : processionRoutePoints = <LatLng>[];
     var sizeValue = ref.watch(iconSizeProvider);
     var realtimeData = ref.watch(realtimeDataProvider);
+    var specialPointsP = ref.watch(specialPointsProvider);
+    List<SpecialPoint> specialPoints = specialPointsP.value ?? <SpecialPoint>[];
+    var iconSize = ref.watch(iconSizeProvider);
 
     return PopupMarkerLayer(
       options: PopupMarkerLayerOptions(
@@ -70,6 +75,28 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
         ),
         markerCenterAnimation: const MarkerCenterAnimation(),
         markers: [
+          if (specialPoints.isNotEmpty) ...[
+            for (var sp in specialPoints)
+              BnMapMarker(
+                buildContext: context,
+                headerText: sp.description,
+                color: Colors.lightBlue,
+                point: sp.latLon,
+                width: iconSize * 0.9,
+                height: iconSize * 0.9,
+                child: Builder(
+                  builder: (context) => CachedNetworkImage(
+                    imageUrl: sp.imageUrl,
+                    placeholder: (context, url) => Image.asset(
+                      specialPointImagePlaceHolder,
+                    ),
+                    errorWidget: (context, url, error) => Image.asset(
+                      specialPointImagePlaceHolder,
+                    ),
+                  ),
+                ),
+              ),
+          ],
           //beginn finish marker
           ...[
             BnMapMarker(

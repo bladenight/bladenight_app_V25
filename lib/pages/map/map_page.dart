@@ -163,8 +163,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                 ),
               ),*/
                     const HeadingsLayer(),
-                    SpecialPointsLayer(_popupController),
-                    CustomLocationLayer(_popupController, _hasGesture),
+                    //SpecialPointsLayer(_popupController), //crashes with global key multi usage on open Popup
+                    CustomLocationLayer(_hasGesture),
                     //needs map controller
                     MarkersLayer(_popupController),
 
@@ -186,8 +186,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       ),
     );
   }
-
-  /// TODO
+  
   /// Disable align position and align direction temporarily when user is
   /// manipulating the map.
   int _pointerCount = 0;
