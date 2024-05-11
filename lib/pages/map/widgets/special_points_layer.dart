@@ -22,6 +22,7 @@ class SpecialPointsLayer extends ConsumerStatefulWidget {
 }
 
 class _SpecialPointsLayerState extends ConsumerState<SpecialPointsLayer> {
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});

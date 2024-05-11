@@ -5,7 +5,7 @@ import '../../models/image_and_link.dart';
 
 part 'special_points_image_and_link_provider.g.dart';
 
-String specialPointsImageAndLinkKey = 'specialPointsIalDbÏKey';
+String specialPointsImageAndLinkKey = 'specialPointsIalDbKey';
 ImageAndLink _defaultSpecialPoints = ImageAndLink(
     '',
     '',
