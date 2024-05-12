@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
@@ -154,7 +155,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                 return Stack(
                   children: [
                     const PolyLinesLayer(),
-                    // CurrentLocationLayer(),
+                     //CurrentLocationLayer(),
                     /*AnimatedLocationMarkerLayer(
                 position: LocationMarkerPosition(
                     latitude: ref.watch(realtimeDataProvider)!.head.latitude!,
@@ -186,7 +187,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       ),
     );
   }
-  
+
   /// Disable align position and align direction temporarily when user is
   /// manipulating the map.
   int _pointerCount = 0;

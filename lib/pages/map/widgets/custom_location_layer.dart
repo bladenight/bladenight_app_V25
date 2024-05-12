@@ -24,16 +24,10 @@ class CustomLocationLayer extends ConsumerStatefulWidget {
 }
 
 class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
-  late final Stream<LocationMarkerPosition?> _positionStream;
-  late final Stream<LocationMarkerHeading?> _headingStream;
-  ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
 
   @override
   void initState() {
     super.initState();
-    _positionStream =
-        LocationProvider.instance.userLocationMarkerPositionStream;
-    _headingStream = LocationProvider.instance.userLocationMarkerHeadingStream;
   }
 
   @override
@@ -53,9 +47,9 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
     return !isTracking
         ? Container()
         : CurrentLocationLayer(
-            positionStream: _positionStream,
+
             //indicators: const LocationMarkerIndicators(),
-            headingStream: _headingStream,
+
             alignDirectionAnimationDuration: const Duration(milliseconds: 300),
             alignPositionOnUpdate: cameraFollow == CameraFollow.followMe &&
                     !widget.hasGesture &&
@@ -78,99 +72,11 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
             style: LocationMarkerStyle(
               showAccuracyCircle: false,
               showHeadingSector: true,
-              headingSectorColor: ref.watch(meColorProvider),
-              accuracyCircleColor: CupertinoTheme.of(context).primaryColor,
+              headingSectorColor: CupertinoTheme.of(context).primaryColor,
+              accuracyCircleColor: ref.watch(meColorProvider),
               marker: DefaultLocationMarker(
                 color: CupertinoTheme.of(context).barBackgroundColor,
                 child: const UserLocationMarker(),
-
-                /*
-                var locationUpdate = ref.watch(locationProvider);
-
-                child: PopupMarkerLayer(
-                  options: PopupMarkerLayerOptions(
-                    popupDisplayOptions: PopupDisplayOptions(
-                      builder: (BuildContext context, Marker marker) {
-                        if (marker is BnMapMarker) {
-                          return MapMarkerPopup(marker);
-                        }
-                        return Container();
-                      },
-                      snap: PopupSnap.markerBottom,
-                    ),
-                    markerCenterAnimation: const MarkerCenterAnimation(),
-                    markers: [
-                      BnMapMarker(
-                        buildContext: context,
-                        headerText: '${Localize.of(context).me} '
-                            '${locationUpdate.isHead ? "${Localize.of(context).iam} ${Localize.of(context).head}" : ''} '
-                            '${locationUpdate.isTail ? "${Localize.of(context).iam} ${Localize.of(context).tail}" : ''} ',
-                        speedText:
-                            '${locationUpdate.realUserSpeedKmh == null ? '- km/h' : locationUpdate.realUserSpeedKmh.formatSpeedKmH()} ∑${locationUpdate.odometer.toStringAsFixed(1)} km',
-                        drivenDistanceText:
-                            '${((locationUpdate.realtimeUpdate?.user.position) ?? '-')} m',
-                        timeUserToHeadText:
-                            '${(TimeConverter.millisecondsToDateTimeString(value: locationUpdate.realtimeUpdate?.timeUserToHead() ?? 0))}',
-                        distanceUserToHeadText:
-                            '${((locationUpdate.realtimeUpdate?.distanceOfUserToHead()) ?? '-')} m',
-                        timeUserToTailText:
-                            '${(TimeConverter.millisecondsToDateTimeString(value: locationUpdate.realtimeUpdate?.timeUserToTail() ?? 0))}',
-                        distanceUserToTailText:
-                            '${((locationUpdate.realtimeUpdate?.distanceOfUserToTail()) ?? '-')} m',
-                        color: ref.watch(MeColor.provider),
-                        point: locationUpdate.userLatLng!,
-                        width: iconSize,
-                        height: iconSize,
-                        child: Builder(builder: (context) {
-                          if (locationUpdate.isHead) {
-                            return Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: const BoxDecoration(
-                                  color: Colors.red, shape: BoxShape.circle),
-                              child: CircleAvatar(
-                                radius: iconSize - 5,
-                                backgroundImage: const AssetImage(
-                                    'assets/images/skater_icon_256.png'),
-                                backgroundColor: ref
-                                    .watch(MeColor.provider)
-                                    .withOpacity(0.6),
-                              ),
-                            );
-                          } else if (locationUpdate.isTail) {
-                            return Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: const BoxDecoration(
-                                  color: Colors.purple, shape: BoxShape.circle),
-                              child: CircleAvatar(
-                                radius: iconSize - 5,
-                                backgroundImage: const AssetImage(
-                                    'assets/images/skater_icon_256.png'),
-                                backgroundColor: ref
-                                    .watch(MeColor.provider)
-                                    .withOpacity(0.6),
-                              ),
-                            );
-                          }
-                          return CircleAvatar(
-                            backgroundColor:
-                                ref.watch(MeColor.provider).withOpacity(0.6),
-                            child: locationUpdate.userIsParticipant
-                                ? const ImageIcon(AssetImage(
-                                    'assets/images/skater_icon_256.png'))
-                                : const Icon(Icons.gps_fixed_sharp),
-                          );
-                        }),
-                      ),
-                    ],
-                    popupController: widget.popupController,
-                    markerTapBehavior:
-                        MarkerTapBehavior.togglePopupAndHideRest(),
-                    // : MarkerTapBehavior.togglePopupAndHideRest(),
-                    onPopupEvent: (event, selectedMarkers) {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    },
-                  ),
-                ),*/
               ),
               markerSize: Size(
                 MediaQuery.textScalerOf(context).scale(iconSize),

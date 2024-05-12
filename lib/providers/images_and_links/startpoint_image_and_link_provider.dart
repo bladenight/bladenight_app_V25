@@ -25,7 +25,7 @@ class StartpointImageAndLink extends _$StartpointImageAndLink {
 
   void setValue(ImageAndLink imageAndLink) {
     HiveSettingsDB.settingsHiveBox
-        .put(startpointImageAndLinkKey, (imageAndLink));
+        .put(startpointImageAndLinkKey, imageAndLink);
     //state = imageAndLink;
   }
 }

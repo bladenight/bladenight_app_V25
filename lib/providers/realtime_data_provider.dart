@@ -149,6 +149,7 @@ class RealtimeData extends _$RealtimeData {
       return update;
     }
     _maxFails = 3;
+    WampV2.instance.subscriptions.clear();
     _subscribeIfNeeded(_isTracking);
     return update;
   }
