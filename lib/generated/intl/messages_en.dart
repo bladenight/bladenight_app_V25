@@ -693,7 +693,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "version": MessageLookupByLibrary.simpleMessage("Version:"),
         "visibleOnMap": MessageLookupByLibrary.simpleMessage("Shown on map."),
         "waiting": MessageLookupByLibrary.simpleMessage("Waiting..."),
-        "waittime": MessageLookupByLibrary.simpleMessage("Waittime"),
+        "waittime": MessageLookupByLibrary.simpleMessage("Waiting"),
         "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
             "is canceled! Please check this on https://bladenight-muenchen.de"),
         "weekdayIntl": m15,

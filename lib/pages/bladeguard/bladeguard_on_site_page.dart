@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -19,10 +20,12 @@ class BladeGuardOnsite extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var nextEventProvider = context.watch(activeEventProvider);
-    var diff =
-        DateTime.now().toUtc().difference(nextEventProvider.startDateUtc);
+    var diff = nextEventProvider.startDateUtc
+        .difference(DateTime.now().toUtc())
+        .inMinutes;
     var canRegisterOnSite = false;
-    if (diff < const Duration(hours: 3) && diff < const Duration(seconds: 0)) {
+    var minPreTime = kDebugMode ? 2000 : 180;
+    if (diff < minPreTime && diff > 0) {
       canRegisterOnSite = true;
     }
     var eventActive =
@@ -41,7 +44,9 @@ class BladeGuardOnsite extends ConsumerWidget {
             var _ = ref.refresh(bgIsOnSiteProvider);
           },
           color: Colors.redAccent,
-          child: Text(Localize.of(context).networkerror),
+          child: e == ''
+              ? Text(Localize.of(context).networkerror)
+              : Text(e.toString()),
         ),
       );
     }, loading: () {

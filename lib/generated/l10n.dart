@@ -3930,10 +3930,10 @@ class Localize {
     );
   }
 
-  /// `Waittime`
+  /// `Waiting`
   String get waittime {
     return Intl.message(
-      'Waittime',
+      'Waiting',
       name: 'waittime',
       desc: '',
       args: [],

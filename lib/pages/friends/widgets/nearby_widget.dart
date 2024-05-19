@@ -128,7 +128,8 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
               Text(
                 Localize.of(context).linkOnOtherDevice(devInfo),
               ),*/
-                if (widget.deviceType == DeviceType.advertiser && _canSearchNearby)
+                if (widget.deviceType == DeviceType.advertiser &&
+                    _canSearchNearby)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10.0, 5, 10, 5),
                     child: HtmlWidget(
@@ -154,9 +155,8 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                       },
                     ),
                   ),
-                if(!_canSearchNearby)
+                if (!_canSearchNearby)
                   Text(Localize.of(context).noNearbyService),
-
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 5),
                   child: CupertinoFormRow(
@@ -366,7 +366,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       setState(() {
         devInfo =
-            '${androidInfo.model}_${HiveSettingsDB.myName}_${HiveSettingsDB.sessionShortUUID}';
+            '${HiveSettingsDB.myName}_${androidInfo.model}_${HiveSettingsDB.sessionShortUUID}';
       });
       // location permission
       await Permission.location.isGranted; // Check Permission
@@ -422,7 +422,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       setState(() {
         devInfo =
-            '${iosInfo.localizedModel}_${HiveSettingsDB.myName}_${HiveSettingsDB.sessionShortUUID}';
+            '${HiveSettingsDB.myName}_${iosInfo.localizedModel}_${HiveSettingsDB.sessionShortUUID}';
       });
       _canSearchNearby = true;
     }
@@ -451,7 +451,6 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
         BnLog.info(
             text:
                 'NearbyService deviceId: ${element.deviceId} | deviceName: ${element.deviceName} | state: ${element.state}');
-
         if (Platform.isAndroid) {
           if (element.state == SessionState.connected) {
             nearbyService.stopBrowsingForPeers();
@@ -469,8 +468,10 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                     element.deviceId, _tempServerFriend!.toJson());
                 await Future.delayed(const Duration(milliseconds: 200));
                 if (mounted) {
-                  //go back
-                  Navigator.of(context).pop();
+                  if (Navigator.of(context).canPop()) {
+                    //go back
+                    Navigator.of(context).pop();
+                  }
                 }
                 return;
               } else {

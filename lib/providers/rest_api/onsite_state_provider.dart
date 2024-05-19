@@ -184,6 +184,9 @@ class BladeGuardApiRepository {
         if (response.data is Map && response.data.keys.contains('isOnSite')) {
           return ResultBoolOrError(response.data['isOnSite'], null);
         }
+        else if (response.data is Map && response.data.keys.contains('fail')) {
+          return ResultBoolOrError(null, response.data['error']);
+        }
       } else {
         BnLog.warning(
             text: response.statusCode.toString(),
