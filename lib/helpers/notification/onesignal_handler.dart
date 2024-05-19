@@ -37,8 +37,7 @@ Future<void> initOneSignal() async {
   if (Platform.isAndroid &&
       await DeviceHelper.isAndroidGreaterOrEqualVersion(9)) {
     BnLog.info(
-        text:
-            'Android is greater than V9 OneSignal  PushNotifications permissions OK');
+        text: 'Android is greater than V9 OneSignal - init Notifications');
     await OnesignalHandler.initPushNotifications();
     return;
   }
@@ -59,7 +58,7 @@ class OnesignalHandler {
       //Remove this method to stop OneSignal Debugging
       if (kDebugMode) {
         OneSignal.Debug.setAlertLevel(OSLogLevel.none);
-        OneSignal.Debug.setLogLevel(OSLogLevel.none);
+        OneSignal.Debug.setLogLevel(OSLogLevel.info);
       } else {
         OneSignal.Debug.setAlertLevel(OSLogLevel.none);
         OneSignal.Debug.setLogLevel(OSLogLevel.info);
@@ -67,7 +66,12 @@ class OnesignalHandler {
 
       OneSignal.initialize(oneSignalAppId);
       // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-      await OneSignal.Notifications.requestPermission(true);
+      if (HiveSettingsDB.pushNotificationsEnabled) {
+        var perm = await OneSignal.Notifications.requestPermission(true);
+        if (perm==false){ //avoid permanent re-request on android
+          HiveSettingsDB.setPushNotificationsEnabled(false);
+        }
+      }
       //OneSignal.consentGiven(true);
       //OneSignal.consentRequired(true);
       //Handler for silent notifications
@@ -216,10 +220,10 @@ class OnesignalHandler {
 
   static Future<void> registerSkateMunichInfo(bool value) async {
     HiveSettingsDB.setRcvSkatemunichInfos(value);
-    if(value==false){
-      OneSignal.User.removeTag('RcvSkateMunichInfos')
-          .catchError((err) {
-        BnLog.error(text: 'unregisterSkateMunichInfo error $err', exception: err);
+    if (value == false) {
+      OneSignal.User.removeTag('RcvSkateMunichInfos').catchError((err) {
+        BnLog.error(
+            text: 'unregisterSkateMunichInfo error $err', exception: err);
       });
       return;
     }
@@ -230,10 +234,6 @@ class OnesignalHandler {
       BnLog.error(text: 'registerSkateMunichInfo error $err', exception: err);
     });
   }
-
-
-
-
 
   static void handleNotificationOpenedResult(
       OSNotificationWillDisplayEvent result) async {
