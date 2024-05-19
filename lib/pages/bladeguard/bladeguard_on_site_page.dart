@@ -19,6 +19,12 @@ class BladeGuardOnsite extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var nextEventProvider = context.watch(activeEventProvider);
+    var diff =
+        DateTime.now().toUtc().difference(nextEventProvider.startDateUtc);
+    var canRegisterOnSite = false;
+    if (diff < const Duration(hours: 3) && diff < const Duration(seconds: 0)) {
+      canRegisterOnSite = true;
+    }
     var eventActive =
         ref.watch(realtimeDataProvider.select((rt) => rt?.eventIsActive)) ??
             false;
@@ -43,6 +49,7 @@ class BladeGuardOnsite extends ConsumerWidget {
     }, data: (status) {
       return ((nextEventProvider.status == EventStatus.confirmed &&
                   !eventActive) &&
+              canRegisterOnSite &&
               networkConnected == ConnectivityStatus.online &&
               bladeguardSettingsVisible)
           ? Column(
