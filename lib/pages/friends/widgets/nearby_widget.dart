@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 
 import '../../../app_settings/server_connections.dart';
 import '../../../generated/l10n.dart';
+import '../../../helpers/device_info_helper.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
 import '../../../helpers/notification/toast_notification.dart';
@@ -54,6 +56,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
   late String devInfo = UUID.createUuid();
 
   var isInit = false;
+  var _canSearchNearby = false;
   var _qrCodeText = '';
   Friend? _tempServerFriend;
 
@@ -119,13 +122,13 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
             ),
             SliverToBoxAdapter(
               child: Column(children: [
-                if (widget.deviceType == DeviceType.browser)
+                if (widget.deviceType == DeviceType.browser && _canSearchNearby)
                   Text(Localize.of(context).chooseDeviceToLink),
                 /*if (widget.deviceType == DeviceType.advertiser)
               Text(
                 Localize.of(context).linkOnOtherDevice(devInfo),
               ),*/
-                if (widget.deviceType == DeviceType.advertiser)
+                if (widget.deviceType == DeviceType.advertiser && _canSearchNearby)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10.0, 5, 10, 5),
                     child: HtmlWidget(
@@ -151,6 +154,9 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                       },
                     ),
                   ),
+                if(!_canSearchNearby)
+                  Text(Localize.of(context).noNearbyService),
+
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 5),
                   child: CupertinoFormRow(
@@ -213,70 +219,72 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                       height: 200,
                     ),
                   ),
+                const SizedBox(height: 80)
               ]),
             ),
-            Builder(builder: (context) {
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(childCount: getItemCount(),
-                    (context, index) {
-                  final device = widget.deviceType == DeviceType.advertiser
-                      ? connectedDevices[index]
-                      : devices[index];
-                  return Container(
-                    margin: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                                child: GestureDetector(
-                              onTap: () => _onTabItemListener(device),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(device.deviceName),
-                                  Text(
-                                    getStateName(device.state),
-                                    style: TextStyle(
-                                        color: getStateColor(device.state)),
-                                  ),
-                                ],
-                              ),
-                            )),
-                            // Request connect
-                            if (widget.deviceType == DeviceType.browser)
-                              CupertinoButton(
-                                onPressed: () => _onButtonClicked(device),
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  padding: const EdgeInsets.all(8.0),
-                                  color: getButtonColor(device.state),
-                                  child: Center(
-                                    child: Text(
-                                      getButtonStateName(device.state),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+            if (_canSearchNearby)
+              Builder(builder: (context) {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                      childCount: getItemCount(), (context, index) {
+                    final device = widget.deviceType == DeviceType.advertiser
+                        ? connectedDevices[index]
+                        : devices[index];
+                    return Container(
+                      margin: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: GestureDetector(
+                                onTap: () => _onTabItemListener(device),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(device.deviceName),
+                                    Text(
+                                      getStateName(device.state),
+                                      style: TextStyle(
+                                          color: getStateColor(device.state)),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                              // Request connect
+                              if (widget.deviceType == DeviceType.browser)
+                                CupertinoButton(
+                                  onPressed: () => _onButtonClicked(device),
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    padding: const EdgeInsets.all(8.0),
+                                    color: getButtonColor(device.state),
+                                    child: Center(
+                                      child: Text(
+                                        getButtonStateName(device.state),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 8.0,
-                        ),
-                        Divider(
-                          height: 1,
-                          color: CupertinoTheme.of(context).primaryColor,
-                        )
-                      ],
-                    ),
-                  );
-                }),
-              );
-            }),
+                                )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 8.0,
+                          ),
+                          Divider(
+                            height: 1,
+                            color: CupertinoTheme.of(context).primaryColor,
+                          )
+                        ],
+                      ),
+                    );
+                  }),
+                );
+              }),
           ]),
     );
   }
@@ -360,6 +368,55 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
         devInfo =
             '${androidInfo.model}_${HiveSettingsDB.myName}_${HiveSettingsDB.sessionShortUUID}';
       });
+      // location permission
+      await Permission.location.isGranted; // Check Permission
+      await Permission.location.request(); // Ask
+
+      if (await DeviceHelper.isAndroidGreaterOrEqualVersion(12)) {
+        // Bluetooth permissions
+        bool bluetoothGranted = (await Future.wait([
+          // Check Permissions
+          Permission.bluetooth.isGranted,
+          Permission.bluetoothAdvertise.isGranted,
+          Permission.bluetoothConnect.isGranted,
+          Permission.bluetoothScan.isGranted,
+        ]))
+            .any((element) => false);
+
+        if (!bluetoothGranted) {
+          [
+            // Ask Permissions
+            Permission.bluetooth,
+            Permission.bluetoothAdvertise,
+            Permission.bluetoothConnect,
+            Permission.bluetoothScan
+          ].request();
+          bluetoothGranted = (await Future.wait([
+            // Check Permissions
+            Permission.bluetooth.isGranted,
+            Permission.bluetoothAdvertise.isGranted,
+            Permission.bluetoothConnect.isGranted,
+            Permission.bluetoothScan.isGranted,
+          ]))
+              .any((element) => false);
+        }
+
+        var nearbyWifiDevicesEnabled =
+            await Permission.nearbyWifiDevices.isGranted;
+        if (!nearbyWifiDevicesEnabled) {
+          var nearbyWifiDevicesReqResult =
+              await Permission.nearbyWifiDevices.request();
+          if (nearbyWifiDevicesReqResult == PermissionStatus.granted) {
+            nearbyWifiDevicesEnabled = true;
+          }
+        }
+        setState(() {
+          _canSearchNearby = nearbyWifiDevicesEnabled;
+        });
+        if (!_canSearchNearby) {
+          return;
+        }
+      }
     }
     if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
@@ -367,6 +424,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
         devInfo =
             '${iosInfo.localizedModel}_${HiveSettingsDB.myName}_${HiveSettingsDB.sessionShortUUID}';
       });
+      _canSearchNearby = true;
     }
     await nearbyService.init(
         serviceType: 'mp-connection',

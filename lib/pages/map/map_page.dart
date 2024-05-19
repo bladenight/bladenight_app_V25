@@ -3,7 +3,6 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
@@ -27,7 +26,6 @@ import 'widgets/map_buttons.dart';
 import 'widgets/map_tile_layer.dart';
 import 'widgets/markers_layer.dart';
 import 'widgets/poly_lines.dart';
-import 'widgets/special_points_layer.dart';
 import 'widgets/track_progress_overlay.dart';
 
 class MapPage extends ConsumerStatefulWidget {

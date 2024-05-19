@@ -1,15 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../../models/follow_location_state.dart';
 import '../../../providers/is_tracking_provider.dart';
-import '../../../providers/location_provider.dart';
 import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
-import '../../../providers/map/compass_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/settings/me_color_provider.dart';
 import 'location_marker_widget.dart';

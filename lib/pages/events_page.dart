@@ -1,5 +1,4 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'widgets/no_connection_warning.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +15,7 @@ import '../pages/widgets/no_data_warning.dart';
 import '../pages/widgets/route_dialog.dart';
 import '../providers/event_providers.dart';
 import '../providers/network_connection_provider.dart';
+import 'widgets/no_connection_warning.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
   const EventsPage({super.key});
@@ -156,7 +156,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
                       },
                       itemCount: pages.length,
                       padEnds: false,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      clipBehavior: Clip.hardEdge,
                       itemBuilder: (_, index) {
                         return pages[index % pages.length];
                       },

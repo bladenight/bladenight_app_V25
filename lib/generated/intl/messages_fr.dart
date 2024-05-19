@@ -474,6 +474,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Veuillez vérifier les autorisations de localisation dans les paramètres d\'iOS. Regardez dans Confidentialité - Localisation - BladnightApp. Réglez-la sur toujours ou lorsqu\'elle est utilisée !"),
         "noLocationPermitted": MessageLookupByLibrary.simpleMessage(
             "No location permission, please check device settings"),
+        "noNearbyService": MessageLookupByLibrary.simpleMessage(
+            "Nearby service not activated"),
         "nodatareceived":
             MessageLookupByLibrary.simpleMessage("No Data received !"),
         "nogps": MessageLookupByLibrary.simpleMessage("Pas de GPS"),

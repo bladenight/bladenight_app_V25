@@ -486,8 +486,9 @@
   "updating": "Updating data",
   "leaveAppWarningTitle": "Open an external browser?",
   "leaveAppWarning": "You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: ",
-  "geoFencingTitle": "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)",
-  "geoFencing": "Geofencing aktiv",
-  "showCompassTitle": "Show Compass on map",
-  "showCompass": "Show it"
+  "geoFencingTitle": "Bladeguard on site – allow via geofencing. If you are within the radius of the starting point, you will automatically be logged in as BladeGuard digital (Beta)",
+  "geoFencing": "allow geofencing",
+  "showCompassTitle": "Show compass on map",
+  "showCompass": "Show compass",
+  "noNearbyService": "Nearby service not activated"
 }

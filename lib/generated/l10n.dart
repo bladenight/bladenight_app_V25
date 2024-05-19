@@ -4033,41 +4033,51 @@ class Localize {
     );
   }
 
-  /// `Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)`
+  /// `Bladeguard on site – allow via geofencing. If you are within the radius of the starting point, you will automatically be logged in as BladeGuard digital (Beta)`
   String get geoFencingTitle {
     return Intl.message(
-      'Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)',
+      'Bladeguard on site – allow via geofencing. If you are within the radius of the starting point, you will automatically be logged in as BladeGuard digital (Beta)',
       name: 'geoFencingTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Geofencing aktiv`
+  /// `allow geofencing`
   String get geoFencing {
     return Intl.message(
-      'Geofencing aktiv',
+      'allow geofencing',
       name: 'geoFencing',
       desc: '',
       args: [],
     );
   }
 
-  /// `Show Compass on map`
+  /// `Show compass on map`
   String get showCompassTitle {
     return Intl.message(
-      'Show Compass on map',
+      'Show compass on map',
       name: 'showCompassTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Show it`
+  /// `Show compass`
   String get showCompass {
     return Intl.message(
-      'Show it',
+      'Show compass',
       name: 'showCompass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nearby service not activated`
+  String get noNearbyService {
+    return Intl.message(
+      'Nearby service not activated',
+      name: 'noNearbyService',
       desc: '',
       args: [],
     );

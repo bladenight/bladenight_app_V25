@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
+as bg;
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -147,18 +147,18 @@ class LocationProvider with ChangeNotifier {
 
   //Stream controllers private
   final _userPositionStreamController =
-      StreamController<bg.Location>.broadcast();
+  StreamController<bg.Location>.broadcast();
 
   final _geoFenceEventStreamController =
-      StreamController<bg.GeofenceEvent>.broadcast();
+  StreamController<bg.GeofenceEvent>.broadcast();
 
   final _trainHeadStreamController = StreamController<LatLng>.broadcast();
   final _userTrackPointsStreamController =
-      StreamController<UserTrackPoint>.broadcast();
+  StreamController<UserTrackPoint>.broadcast();
   final _userLocationMarkerPositionStreamController =
-      StreamController<LocationMarkerPosition>.broadcast();
+  StreamController<LocationMarkerPosition>.broadcast();
   final _userLocationMarkerHeadingStreamController =
-      StreamController<LocationMarkerHeading>.broadcast();
+  StreamController<LocationMarkerHeading>.broadcast();
 
   //Stream controllers public
   Stream<bg.Location> get userBgLocationStream =>
@@ -195,11 +195,11 @@ class LocationProvider with ChangeNotifier {
   void init() async {
     _wampConnectedSubscription =
         WampV2.instance.wampConnectedStreamController.stream.listen((event) {
-      _networkConnected = event;
-      if (event) {
-        refresh(forceUpdate: true);
-      }
-    });
+          _networkConnected = event;
+          if (event) {
+            refresh(forceUpdate: true);
+          }
+        });
     if (kIsWeb) {
       HiveSettingsDB.useAlternativeLocationProvider;
       notifyListeners();
@@ -219,7 +219,7 @@ class LocationProvider with ChangeNotifier {
     _autoStop = await PreferencesHelper.getAutoStopFromPrefs();
 
     _gpsLocationPermissionsStatus =
-        await LocationPermissionDialog().getPermissionsStatus();
+    await LocationPermissionDialog().getPermissionsStatus();
 
     _hasLocationPermissions =
         _gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse ||
@@ -242,7 +242,9 @@ class LocationProvider with ChangeNotifier {
     }
     if (_trackingWasActive &&
         !_isTracking &&
-        ProviderContainer().read(activeEventProvider).status ==
+        ProviderContainer()
+            .read(activeEventProvider)
+            .status ==
             EventStatus.confirmed) {
       //restart tracking on reopen
       BnLog.info(
@@ -352,7 +354,7 @@ class LocationProvider with ChangeNotifier {
           //iOS only
           locationAuthorizationAlert: {
             'titleWhenNotEnabled':
-                Localize.current.noLocationPermissionGrantedAlertTitle,
+            Localize.current.noLocationPermissionGrantedAlertTitle,
             'titleWhenOff': Localize.current.locationServiceOff,
             'instructions': Localize.current.enableAlwaysLocationInfotext,
             'cancelButton': Localize.current.cancel,
@@ -407,11 +409,11 @@ class LocationProvider with ChangeNotifier {
     }
 
     var userLatLng =
-        LatLng(location.coords.latitude, location.coords.longitude);
+    LatLng(location.coords.latitude, location.coords.longitude);
 
     _userLatLng = userLatLng;
     _realUserSpeedKmh =
-        location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6;
+    location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6;
     _odometer = location.odometer / 1000;
     var userTrackingPoint = UserTrackPoint(
         location.coords.latitude,
@@ -569,7 +571,10 @@ class LocationProvider with ChangeNotifier {
       //avoid second autostart on an event , reset after end
       var activeEventData = ProviderContainer().read(activeEventProvider);
       if (_startedTrackingTime != null &&
-          DateTime.now().difference(_startedTrackingTime!).inMinutes >
+          DateTime
+              .now()
+              .difference(_startedTrackingTime!)
+              .inMinutes >
               activeEventData.duration.inMinutes) {
         _startedTrackingTime = null;
       }
@@ -588,7 +593,10 @@ class LocationProvider with ChangeNotifier {
       //avoid second autostart on an event , reset after end
       var activeEventData = ProviderContainer().read(activeEventProvider);
       if (_startedTrackingTime != null &&
-          DateTime.now().difference(_startedTrackingTime!).inMinutes >
+          DateTime
+              .now()
+              .difference(_startedTrackingTime!)
+              .inMinutes >
               activeEventData.duration.inMinutes) {
         _startedTrackingTime = null;
       }
@@ -618,11 +626,11 @@ class LocationProvider with ChangeNotifier {
     }
     try {
       var gpsLocationPermissionsStatus =
-          await LocationPermissionDialog().getPermissionsStatus();
+      await LocationPermissionDialog().getPermissionsStatus();
       if (gpsLocationPermissionsStatus != LocationPermissionStatus.always) {
         BnLog.warning(
             text:
-                'startGeoFencing not possible - LocationPermission is $gpsLocationPermissionsStatus');
+            'startGeoFencing not possible - LocationPermission is $gpsLocationPermissionsStatus');
       }
       setGeoFence();
       bg.BackgroundGeolocation.startGeofences().catchError((error) {
@@ -637,15 +645,17 @@ class LocationProvider with ChangeNotifier {
   void setGeoFence() {
     if (!HiveSettingsDB.bgSettingVisible ||
         !HiveSettingsDB.onsiteGeoFencingActive) return;
+    /*var points =ProviderContainer().read(geofenceImageAndLinkProvider);
+    var geofencePoints = GeofencePoints.getGeofenceList(points);*/
     bg.BackgroundGeolocation.addGeofences([
-      bg.Geofence(
-          identifier: 'startPoint',
-          radius: 200,
-          latitude: defaultLatitude,
-          longitude: defaultAppLongitude,
-          notifyOnEntry: true,
-          notifyOnExit: false,
-          extras: {'routeId': 1234}),
+    bg.Geofence(
+    identifier: 'startPoint',
+    radius: 200,
+    latitude: defaultLatitude,
+    longitude: defaultAppLongitude,
+    notifyOnEntry: true,
+    notifyOnExit: false,
+    )
       /*bg.Geofence(
           identifier: 'test',
           radius: 200,
@@ -678,7 +688,7 @@ class LocationProvider with ChangeNotifier {
         locationPermission.isPermanentlyDenied ||
         locationPermission.isDenied) {
       var acceptLocation =
-          await LocationPermissionDialog().showProminentAndroidDisclosure();
+      await LocationPermissionDialog().showProminentAndroidDisclosure();
 
       if (!acceptLocation) {
         BnLog.warning(
@@ -740,17 +750,17 @@ class LocationProvider with ChangeNotifier {
         }
       } else {
         _gpsLocationPermissionsStatus =
-            await LocationPermissionDialog().getPermissionsStatus();
+        await LocationPermissionDialog().getPermissionsStatus();
 
         _hasLocationPermissions = _gpsLocationPermissionsStatus ==
-                LocationPermissionStatus.whenInUse ||
+            LocationPermissionStatus.whenInUse ||
             _gpsLocationPermissionsStatus == LocationPermissionStatus.always;
         if (HiveSettingsDB.useAlternativeLocationProvider &&
             _hasLocationPermissions) {
           _gpsLocationPermissionsStatus =
-              _gpsLocationPermissionsStatus == LocationPermissionStatus.always
-                  ? LocationPermissionStatus.always
-                  : LocationPermissionStatus.whenInUse;
+          _gpsLocationPermissionsStatus == LocationPermissionStatus.always
+              ? LocationPermissionStatus.always
+              : LocationPermissionStatus.whenInUse;
         }
       }
       _listenLocationWithAlternativePackage();
@@ -799,8 +809,8 @@ class LocationProvider with ChangeNotifier {
           locationUpdateInterval: 1000,
           stopTimeout: 1000, // <-- a very long stopTimeout
           disableStopDetection:
-              true // <-- Don't interrupt location updates when Motion API says "still"
-          ));
+          true // <-- Don't interrupt location updates when Motion API says "still"
+      ));
       await bg.BackgroundGeolocation.changePace(true);
     }
     return _isTracking;
@@ -815,7 +825,7 @@ class LocationProvider with ChangeNotifier {
     if (enabled) {
       _saveLocationsTimer = Timer.periodic(
         const Duration(minutes: 5),
-        (timer) {
+            (timer) {
           if (!_isTracking) {
             return;
           }
@@ -841,11 +851,15 @@ class LocationProvider with ChangeNotifier {
         //realtimeUpdateProvider reads data on send-location -
         //so it must not updated all 10 secs
         const Duration(seconds: defaultLocationUpdateInterval),
-        (timer) {
-          int lastUpdate = DateTime.now().difference(_lastUpdate).inSeconds;
+            (timer) {
+          int lastUpdate = DateTime
+              .now()
+              .difference(_lastUpdate)
+              .inSeconds;
           if (kDebugMode) {
             print(
-                '${DateTime.now().toIso8601String()} update timer internal  lastupdate ${lastUpdate}s ago');
+                '${DateTime.now()
+                    .toIso8601String()} update timer internal  lastupdate ${lastUpdate}s ago');
           }
           if (lastUpdate >= defaultLocationUpdateInterval) {
             if (!kIsWeb) {
@@ -864,37 +878,37 @@ class LocationProvider with ChangeNotifier {
   Future<void> _listenLocationWithAlternativePackage() async {
     setLocationSettings(
         rationaleMessageForGPSRequest:
-            Localize.current.requestAlwaysPermissionTitle,
+        Localize.current.requestAlwaysPermissionTitle,
         rationaleMessageForPermissionRequest:
-            Localize.current.enableAlwaysLocationInfotext,
+        Localize.current.enableAlwaysLocationInfotext,
         askForPermission: true);
     _locationSubscription =
         onLocationChanged(inBackground: true).handleError((dynamic err) {
-      if (err is PlatformException) {
-        //_onLocationError(bg.LocationError(err));
-        if (_lastKnownPoint != null) {
-          sendLocation(_lastKnownPoint!);
-        }
-      }
-      _locationSubscription?.cancel();
-      _locationSubscription = null;
-      _isTracking = false;
-      notifyListeners();
-    }).listen((LocationData currentLocation) async {
-      if (currentLocation.longitude == null ||
-          currentLocation.latitude == null) {
-        return;
-      }
+          if (err is PlatformException) {
+            //_onLocationError(bg.LocationError(err));
+            if (_lastKnownPoint != null) {
+              sendLocation(_lastKnownPoint!);
+            }
+          }
+          _locationSubscription?.cancel();
+          _locationSubscription = null;
+          _isTracking = false;
+          notifyListeners();
+        }).listen((LocationData currentLocation) async {
+          if (currentLocation.longitude == null ||
+              currentLocation.latitude == null) {
+            return;
+          }
 
-      var newLoc = currentLocation.convertToBGLocation();
-      _onLocation(newLoc);
+          var newLoc = currentLocation.convertToBGLocation();
+          _onLocation(newLoc);
 
-      await updateBackgroundNotification(
-        title: Localize.current.bgNotificationTitle,
-        subtitle: Localize.current.bgNotificationText,
-        onTapBringToFront: true,
-      );
-    });
+          await updateBackgroundNotification(
+            title: Localize.current.bgNotificationTitle,
+            subtitle: Localize.current.bgNotificationText,
+            onTapBringToFront: true,
+          );
+        });
   }
 
   ///get location and send to server
@@ -978,9 +992,11 @@ class LocationProvider with ChangeNotifier {
     //requested [RealTimeUpdates] with
     update = await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
       LocationInfo(
-          //location creation timestamp
+        //location creation timestamp
           locationTimeStamp:
-              DateTime.now().millisecondsSinceEpoch - location.age,
+          DateTime
+              .now()
+              .millisecondsSinceEpoch - location.age,
           //6 digits => 1 m location accuracy
           coords: LatLng(location.coords.latitude.toShortenedDouble(6),
               location.coords.longitude.toShortenedDouble(6)),
@@ -1023,7 +1039,7 @@ class LocationProvider with ChangeNotifier {
     }
     if (_realtimeUpdate != null && _realtimeUpdate?.friends != null) {
       var friendList =
-          _realtimeUpdate?.updateMapPointFriends(_realtimeUpdate!.friends);
+      _realtimeUpdate?.updateMapPointFriends(_realtimeUpdate!.friends);
       if (friendList != null) {
         var friends = friendList.where((x) => x.specialValue == 0).toList();
         var friendListAsJson = MapperContainer.globals.toJson(friends);
@@ -1156,7 +1172,7 @@ class LocationProvider with ChangeNotifier {
       var activeEventData = ProviderContainer().read(activeEventProvider);
       //Check for 'user reached finish' event and inform user
       Duration eventRuntime =
-          DateTime.now().toUtc().difference(activeEventData.startDate.toUtc());
+      DateTime.now().toUtc().difference(activeEventData.startDate.toUtc());
       int userPos = _realtimeUpdate?.user.position ?? 0;
       double runLength = _realtimeUpdate?.runningLength ?? double.maxFinite;
 
@@ -1172,7 +1188,9 @@ class LocationProvider with ChangeNotifier {
           _userReachedFinishDateTime = DateTime.now();
           if (autoStop) {
             NotificationHelper().showString(
-                id: DateTime.now().hashCode,
+                id: DateTime
+                    .now()
+                    .hashCode,
                 text: Localize.current.finishReachedStopedTracking);
             QuickAlert.show(
                 context: navigatorKey.currentContext!,
@@ -1186,7 +1204,9 @@ class LocationProvider with ChangeNotifier {
             stopTracking();
           } else {
             NotificationHelper().showString(
-                id: DateTime.now().hashCode,
+                id: DateTime
+                    .now()
+                    .hashCode,
                 text: Localize
                     .current.finishReachedtargetReachedPleaseStopTracking);
             QuickAlert.show(
@@ -1205,7 +1225,7 @@ class LocationProvider with ChangeNotifier {
       var maxDuration = activeEventData.duration.inMinutes;
       if (maxDuration == 0) return;
       if ((activeEventData.status == EventStatus.finished ||
-              eventRuntime.inMinutes > maxDuration) &&
+          eventRuntime.inMinutes > maxDuration) &&
           _isTracking &&
           _autoStop &&
           !_stoppedAfterMaxTime) {
@@ -1217,7 +1237,9 @@ class LocationProvider with ChangeNotifier {
         if (activeEventData.status == EventStatus.finished) {
           if (_isInBackground) {
             NotificationHelper().showString(
-                id: DateTime.now().hashCode,
+                id: DateTime
+                    .now()
+                    .hashCode,
                 text: Localize.current.finishStopTrackingEventOver);
           } else {
             QuickAlert.show(
@@ -1229,7 +1251,9 @@ class LocationProvider with ChangeNotifier {
         } else {
           if (_isInBackground) {
             NotificationHelper().showString(
-                id: DateTime.now().hashCode,
+                id: DateTime
+                    .now()
+                    .hashCode,
                 text: Localize.current.finishStopTrackingTimeout(maxDuration));
           } else {
             QuickAlert.show(
@@ -1244,7 +1268,8 @@ class LocationProvider with ChangeNotifier {
               className: 'locationProvider',
               methodName: 'checkUserFinishedOrEndEvent',
               text:
-                  'forced tracking stop finished${activeEventData.status == EventStatus.finished}');
+              'forced tracking stop finished${activeEventData.status ==
+                  EventStatus.finished}');
         }
       } else if (eventRuntime.inMinutes > maxDuration &&
           _isTracking &&
@@ -1252,7 +1277,9 @@ class LocationProvider with ChangeNotifier {
         _stoppedAfterMaxTime = true;
         if (_isInBackground) {
           NotificationHelper().showString(
-              id: DateTime.now().hashCode,
+              id: DateTime
+                  .now()
+                  .hashCode,
               text: Localize.current.stopTrackingTimeOut(maxDuration));
         } else {
           QuickAlert.show(
@@ -1304,7 +1331,7 @@ class LocationProvider with ChangeNotifier {
       }
       //Triggers start location service
       var odoResetResult =
-          await bg.BackgroundGeolocation.setOdometer(0.0).then((value) {
+      await bg.BackgroundGeolocation.setOdometer(0.0).then((value) {
         _odometer = value.odometer;
       }).catchError((error) {
         if (!kIsWeb) {
@@ -1333,7 +1360,8 @@ class LocationProvider with ChangeNotifier {
   }
 
   void refreshRealtimeData() {
-    int lastUpdate = DateTime.now()
+    int lastUpdate = DateTime
+        .now()
         .difference(LocationProvider.instance.lastUpdate)
         .inMilliseconds;
     if (_isTracking || lastUpdate < defaultRealtimeUpdateInterval) {
@@ -1352,7 +1380,8 @@ class LocationProvider with ChangeNotifier {
     if (_realtimeUpdate != null) {
       _updateWatchData();
     }
-    int lastUpdate = DateTime.now()
+    int lastUpdate = DateTime
+        .now()
         .difference(LocationProvider.instance.lastUpdate)
         .inMilliseconds;
     if (_isTracking || lastUpdate < defaultRealtimeUpdateInterval) {
@@ -1369,9 +1398,9 @@ class LocationProvider with ChangeNotifier {
 
   Future resetOdoMeterAndRoutePoints(BuildContext context) async {
     var alwaysPermissionGranted =
-        (gpsLocationPermissionsStatus == LocationPermissionStatus.always);
+    (gpsLocationPermissionsStatus == LocationPermissionStatus.always);
     var whenInusePermissionGranted =
-        (gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse);
+    (gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse);
     if (alwaysPermissionGranted || whenInusePermissionGranted) {
       QuickAlert.show(
           context: navigatorKey.currentContext!,
@@ -1379,8 +1408,12 @@ class LocationProvider with ChangeNotifier {
           showCancelBtn: true,
           title: Localize.current.resetOdoMeterTitle,
           text:
-              '${Localize.current.userSpeed}  ${realUserSpeedKmh == null ? '- km/h' : realUserSpeedKmh?.formatSpeedKmH()}\n'
-              '${Localize.current.distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${odometer.toStringAsFixed(1)} km'} \n '
+          '${Localize.current.userSpeed}  ${realUserSpeedKmh == null
+              ? '- km/h'
+              : realUserSpeedKmh?.formatSpeedKmH()}\n'
+              '${Localize.current.distanceDrivenOdo} ${HiveSettingsDB
+              .useAlternativeLocationProvider ? '' : '${odometer
+              .toStringAsFixed(1)} km'} \n '
               '${Localize.current.resetOdoMeter}',
           confirmBtnText: Localize.current.yes,
           cancelBtnText: Localize.current.cancel,
@@ -1402,7 +1435,7 @@ class LocationProvider with ChangeNotifier {
       var now = DateTime.now();
       var diff = now.difference(lastTimeStamp);
       var minTimeDiff =
-          kDebugMode ? const Duration(seconds: 5) : const Duration(hours: 3);
+      kDebugMode ? const Duration(seconds: 5) : const Duration(hours: 3);
       if (diff < minTimeDiff) {
         return;
       }
@@ -1428,7 +1461,7 @@ class LocationProvider with ChangeNotifier {
 //Providers
 
 final locationProvider =
-    ChangeNotifierProvider((ref) => LocationProvider.instance);
+ChangeNotifierProvider((ref) => LocationProvider.instance);
 
 final isAutoStopProvider = Provider((ref) {
   return ref.watch(locationProvider.select((l) => l.autoStop));

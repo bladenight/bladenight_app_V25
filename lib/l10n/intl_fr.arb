@@ -488,5 +488,6 @@
   "geoFencingTitle": "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)",
   "geoFencing": "Geofencing aktiv",
   "showCompassTitle": "Show Compass on map",
-  "showCompass": "Show it"
+  "showCompass": "Show it",
+  "noNearbyService": "Nearby service not activated"
 }

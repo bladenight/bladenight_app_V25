@@ -329,9 +329,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
             "Please support the exact presentation of BladeNight skater procession.\nYour friends will miss you!"),
         "from": MessageLookupByLibrary.simpleMessage("by"),
-        "geoFencing": MessageLookupByLibrary.simpleMessage("Geofencing aktiv"),
+        "geoFencing": MessageLookupByLibrary.simpleMessage("allow geofencing"),
         "geoFencingTitle": MessageLookupByLibrary.simpleMessage(
-            "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet (beta)"),
+            "Bladeguard on site – allow via geofencing. If you are within the radius of the starting point, you will automatically be logged in as BladeGuard digital (Beta)"),
         "getwebdata": MessageLookupByLibrary.simpleMessage(
             "Loading data from server ..."),
         "head": MessageLookupByLibrary.simpleMessage("Head"),
@@ -454,6 +454,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please check location-permissions in iOS Settings. Look at Privacy - Location - BladnightApp. Set it to always or when in use!"),
         "noLocationPermitted": MessageLookupByLibrary.simpleMessage(
             "No location permission, please check device settings"),
+        "noNearbyService": MessageLookupByLibrary.simpleMessage(
+            "Nearby service not activated"),
         "nodatareceived":
             MessageLookupByLibrary.simpleMessage("No Data received !"),
         "nogps": MessageLookupByLibrary.simpleMessage("No GPS"),
@@ -599,9 +601,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "setexportIdAndFriends":
             MessageLookupByLibrary.simpleMessage("Export Id and friends"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
-        "showCompass": MessageLookupByLibrary.simpleMessage("Show it"),
+        "showCompass": MessageLookupByLibrary.simpleMessage("Show compass"),
         "showCompassTitle":
-            MessageLookupByLibrary.simpleMessage("Show Compass on map"),
+            MessageLookupByLibrary.simpleMessage("Show compass on map"),
         "showFullProcession": MessageLookupByLibrary.simpleMessage(
             "Show procession participants"),
         "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(

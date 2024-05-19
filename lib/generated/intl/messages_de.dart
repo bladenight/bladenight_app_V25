@@ -464,6 +464,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Bitte iOS Einstellunge prüfen, da keine Standortfreigabe. Diese müsste in den Telefon-Einstellungen unter Datenschutz - Ortungsdienste - BladnightApp freigegeben werden."),
         "noLocationPermitted": MessageLookupByLibrary.simpleMessage(
             "Keine Standortfreigabe, Bitte Einstellungen des Gerätes prüfen"),
+        "noNearbyService":
+            MessageLookupByLibrary.simpleMessage("Nah-Gerätesuche nicht aktiv"),
         "nodatareceived":
             MessageLookupByLibrary.simpleMessage("Keine Daten empfangen!"),
         "nogps": MessageLookupByLibrary.simpleMessage("Kein GPS"),
