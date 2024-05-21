@@ -72,7 +72,7 @@ class _MapLayerState extends State<MapLayer> {
         onTap: (_, __) => _popupController.hideAllPopups(),
       ),
       children: [
-        const MapTileLayer(),
+        MapTileLayer(hasSpecialStartPoint: widget.event.hasSpecialStartPoint),
         const GPSInfoAndMapCopyright(
           showOdoMeter: false,
         ),

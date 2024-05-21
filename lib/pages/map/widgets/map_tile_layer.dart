@@ -12,7 +12,9 @@ import '../tiles_provider.dart';
 import 'bn_dark_container.dart';
 
 class MapTileLayer extends StatefulWidget {
-  const MapTileLayer({super.key});
+  const MapTileLayer({super.key, this.hasSpecialStartPoint = false});
+
+  final bool hasSpecialStartPoint;
 
   @override
   State<StatefulWidget> createState() => _MapTileState();
@@ -24,7 +26,7 @@ class _MapTileState extends State<MapTileLayer> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //update map colors for static tiles
-     /* CupertinoAdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
+      /* CupertinoAdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
         setState(() {});
       });*/
     });
@@ -33,9 +35,11 @@ class _MapTileState extends State<MapTileLayer> {
   @override
   Widget build(BuildContext context) {
     if (CupertinoTheme.brightnessOf(context) == Brightness.light) {
-      return const MapTileLayerWidget();
+      return MapTileLayerWidget(
+          hasSpecialStartPoint: widget.hasSpecialStartPoint);
     }
-    return bnDarkModeTilesContainerBuilder(context, const MapTileLayerWidget());
+    return bnDarkModeTilesContainerBuilder(context,
+        MapTileLayerWidget(hasSpecialStartPoint: widget.hasSpecialStartPoint));
   }
 
   @override
@@ -54,7 +58,9 @@ class _MapTileState extends State<MapTileLayer> {
 }
 
 class MapTileLayerWidget extends ConsumerStatefulWidget {
-  const MapTileLayerWidget({super.key});
+  const MapTileLayerWidget({super.key, this.hasSpecialStartPoint = false});
+
+  final bool hasSpecialStartPoint;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MapTileLayerState();
@@ -63,7 +69,8 @@ class MapTileLayerWidget extends ConsumerStatefulWidget {
 class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
   @override
   Widget build(BuildContext context) {
-    var osmEnabled = ref.watch(useOpenStreetMapProvider);
+    var osmEnabled = ref.watch(useOpenStreetMapProvider) ||
+    widget.hasSpecialStartPoint;
     return TileLayer(
       minNativeZoom: osmEnabled
           ? MapSettings.minNativeZoom
@@ -73,10 +80,10 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
           : MapSettings.maxNativeZoomDefault,
       minZoom: osmEnabled ? MapSettings.minZoom : MapSettings.minZoomDefault,
       maxZoom: osmEnabled ? MapSettings.maxZoom : MapSettings.maxZoomDefault,
-      urlTemplate:
-          osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
-              ? MapSettings.openStreetMapLinkString //use own ts
-              : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
+      urlTemplate: osmEnabled ||
+              ref.watch(activeEventProvider).hasSpecialStartPoint
+          ? MapSettings.openStreetMapLinkString //use own ts
+          : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
       tileProvider: osmEnabled ||
               ref.watch(activeEventProvider).hasSpecialStartPoint
