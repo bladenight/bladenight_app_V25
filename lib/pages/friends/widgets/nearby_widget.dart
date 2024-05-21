@@ -54,6 +54,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
   late StreamSubscription subscription;
   late StreamSubscription receivedDataSubscription;
   late String devInfo = UUID.createUuid();
+  late bool communicationStarted = false;
 
   var isInit = false;
   var _canSearchNearby = false;
@@ -451,14 +452,16 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
         BnLog.info(
             text:
                 'NearbyService deviceId: ${element.deviceId} | deviceName: ${element.deviceName} | state: ${element.state}');
-        if (Platform.isAndroid) {
+        /*if (Platform.isAndroid) {
           if (element.state == SessionState.connected) {
             nearbyService.stopBrowsingForPeers();
           } else {
             nearbyService.startBrowsingForPeers();
           }
-        }
+        }*/
         if (element.state == SessionState.connected) {
+          if (communicationStarted) return;
+          communicationStarted = true;
           switch (widget.friendsAction) {
             case FriendsAction.addNearby:
               if (_tempServerFriend != null) {
@@ -467,11 +470,9 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                 nearbyService.sendMessage(
                     element.deviceId, _tempServerFriend!.toJson());
                 await Future.delayed(const Duration(milliseconds: 200));
-                if (mounted) {
-                  if (Navigator.of(context).canPop()) {
-                    //go back
-                    Navigator.of(context).pop();
-                  }
+                if (mounted && Navigator.of(context).canPop()) {
+                  //go back
+                  Navigator.of(context).pop();
                 }
                 return;
               } else {
@@ -504,6 +505,8 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
     receivedDataSubscription =
         nearbyService.dataReceivedSubscription(callback: (data) async {
       try {
+        if (communicationStarted) return;
+        communicationStarted = true;
         if (widget.deviceType == DeviceType.browser) {
           Map<dynamic, dynamic> dataMap = data;
           if (dataMap.containsKey(messageKey)) {
@@ -522,7 +525,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                   .refreshFriends();
               nearbyService.disconnectPeer(
                   deviceID: dataMap[senderDeviceIdKey]);
-              if (mounted) {
+              if (mounted && Navigator.of(context).canPop()) {
                 Navigator.of(context).pop(true);
               }
             } else {
