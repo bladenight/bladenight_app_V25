@@ -918,7 +918,7 @@ class LocationProvider with ChangeNotifier {
   ///get location and send to server
   ///will send new location to server if sendLoc != false
   Future<bg.Location?> _subToUpdates(
-      {var sendLoc = true, force = false}) async {
+      {var sendLoc = true}) async {
     var timeDiff = DateTime.now().difference(_lastUpdate);
     if (timeDiff < const Duration(seconds: defaultSendNewLocationDelay)) {
       return _lastKnownPoint;
@@ -1434,7 +1434,7 @@ class LocationProvider with ChangeNotifier {
       if (res.result != null && res.result == true) {
         return;
       }
-      var setRes = await ProviderContainer()
+      var _ = await ProviderContainer()
           .read(bgIsOnSiteProvider.notifier)
           .setOnSiteState(true);
       _geoFenceEventStreamController.sink.add(event);

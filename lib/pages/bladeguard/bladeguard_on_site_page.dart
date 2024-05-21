@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
+import '../../app_settings/app_constants.dart';
 import '../../generated/l10n.dart';
 import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';
@@ -28,7 +29,7 @@ class BladeGuardOnsite extends ConsumerWidget {
         ref.watch(realtimeDataProvider.select((rt) => rt?.eventIsActive)) ??
             false;
 
-    var minPreTime = 180;
+    var minPreTime = defaultMinPreOnsiteLogin;
     if (diff < minPreTime && diff > 0 && !eventActive) {
       canRegisterOnSite = true;
     }
@@ -51,7 +52,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(5),
                   child: CupertinoButton(
-                    padding:  const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     onPressed: () async {
                       var _ = ref.refresh(bgIsOnSiteProvider);
                     },
@@ -102,7 +103,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.all(5),
                             child: CupertinoButton(
-                              padding:  const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(10.0),
                               onPressed: () async {
                                 ref
                                     .read(bgIsOnSiteProvider.notifier)
@@ -146,7 +147,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.all(5),
                             child: CupertinoButton(
-                              padding:  const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(10.0),
                               onPressed: () async {
                                 await ScrollQuickAlert.show(
                                     context: context,
@@ -200,11 +201,14 @@ class BladeGuardOnsite extends ConsumerWidget {
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     ),
                     child: CupertinoButton(
-                      padding:  const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       onPressed: () async {},
                       color: Colors.yellow,
-                      child: Text(Localize.of(context).loginThreeHoursBefore,
-                          style: const TextStyle(color: Colors.black),textAlign: TextAlign.center,),
+                      child: Text(
+                        Localize.of(context).loginThreeHoursBefore,
+                        style: const TextStyle(color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 )

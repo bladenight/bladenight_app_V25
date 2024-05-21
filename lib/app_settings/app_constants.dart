@@ -21,6 +21,7 @@ const int defaultSendNewLocationDelay = 4;
 ///Default minimum running interval in minutes before auto stop.
 ///Issue can occur when user goes around finish on startup and tracking is switched on
 const int defaultMinimumDurationBeforeAutoStopInMin = 60;
+const int defaultMinPreOnsiteLogin = 180;
 
 ///Maximum duration in Server in milli sec bnserver.relationships.collector.maxage=3600000
 const int maxDurationCodeIsValid = 3600000; //1hour
