@@ -6,7 +6,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
+as bg;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
@@ -25,6 +25,7 @@ import '../uuid_helper.dart';
 import '../validator.dart';
 
 part 'location_store_db.dart';
+
 part 'map_settings_db.dart';
 
 final hiveDBProvider =
@@ -379,15 +380,15 @@ class HiveSettingsDB {
   static const String bladeguardEmailKey = 'bladeguardEmailPref';
 
   ///get bladeguardEmail
-  static String? get bladeguardEmail {
-    return _hiveBox.get(bladeguardEmailKey, defaultValue: null);
+  static String get bladeguardEmail {
+    return _hiveBox.get(bladeguardEmailKey, defaultValue: '');
   }
 
   ///get Bladeguard email as SHA512
   static String get bladeguardSHA512Hash {
     var email = _hiveBox.get(bladeguardEmailKey, defaultValue: '');
     if (email != null && email != '') {
-      return sha512.convert(utf8.encode(email.toLowerCase())).toString();
+      return sha512.convert(utf8.encode(email.trim().toLowerCase())).toString();
     }
     return '';
   }
@@ -395,7 +396,7 @@ class HiveSettingsDB {
   ///set BladeguardEmail for Bladeguard
   static void setBladeguardEmail(String val) {
     checkBladeguardEmailValid(val);
-    _hiveBox.put(bladeguardEmailKey, val.toLowerCase());
+    _hiveBox.put(bladeguardEmailKey, val.toLowerCase().trim());
   }
 
   static const String isBladeguardEmailValidKey = 'bladeguardEmailValidPref';
@@ -406,8 +407,8 @@ class HiveSettingsDB {
   }
 
   ///set if  setBladeguardEmailValid were shown
-  static void checkBladeguardEmailValid(String val) {
-    _hiveBox.put(isBladeguardEmailValidKey, validateEmail(val));
+  static checkBladeguardEmailValid(String val) {
+    _hiveBox.put(isBladeguardEmailValidKey, validateEmail(val.toLowerCase().trim()));
   }
 
   static const String bladeguardBirthdayKey = 'bladeguardBirthdayPref';

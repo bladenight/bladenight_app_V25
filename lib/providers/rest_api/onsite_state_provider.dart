@@ -1,14 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/app_server_config_db.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
+import '../../helpers/location_bearing_distance.dart';
 import '../../helpers/logger.dart';
 import '../../models/result_or_error.dart';
+import '../images_and_links/geofence_image_and_link_provider.dart';
 import '../location_provider.dart';
 import 'dio_rest_api_provider.dart';
 
@@ -30,17 +34,20 @@ class BladeGuardApiRepository {
 
   ///Get TeamId
   Future<ResultStringOrError> checkBladeguardEmail(
-      String hashcode, DateTime birthday, String phone, String? pin) async {
-    if (hashcode.contains('@')) {
+      String email, DateTime birthday, String phone, String? pin) async {
+    if (!email.contains('@')) {
       BnLog.error(
           text: 'invalid parameter --> not hashed',
           methodName: 'checkBladeguardEmail');
-      return ResultStringOrError(null, 'invalid parameter --> not hashed');
+      return ResultStringOrError(null, 'invalid parameter --> email');
     }
     Map<String, String> qParams = {
-      'code': hashcode,
+      'code':
+          sha512.convert(utf8.encode(email.trim().toLowerCase())).toString(),
+      'email': email.toLowerCase().trim(),
       'birth':
-          '${birthday.year}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}'
+          '${birthday.year}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}',
+      'oneSignalId': HiveSettingsDB.oneSignalId
     };
 
     if (phone.length > 7) {
@@ -83,15 +90,17 @@ class BladeGuardApiRepository {
     return res;
   }
 
-  Future<ResultStringOrError> checkLoginState(String hashcode) async {
-    if (hashcode.contains('@')) {
+  Future<ResultStringOrError> checkLoginState(String email) async {
+    if (!email.contains('@')) {
       BnLog.error(
-          text: 'invalid parameter --> not hashed',
+          text: 'invalid parameter --> email invalid $email',
           methodName: 'checkBladeguardEmail');
-      return ResultStringOrError(null, 'invalid parameter --> not hashed');
+      return ResultStringOrError(null, 'invalid parameter --> email');
     }
     Map<String, String> qParams = {
-      'code': hashcode,
+      'code':
+          sha512.convert(utf8.encode(email.trim().toLowerCase())).toString(),
+      'email': email.toLowerCase().trim(),
     };
 
     try {
@@ -132,6 +141,7 @@ class BladeGuardApiRepository {
     var birthday = HiveSettingsDB.bladeguardBirthday;
     Map<String, dynamic> qParams = {
       'code': HiveSettingsDB.bladeguardSHA512Hash,
+      'email': HiveSettingsDB.bladeguardEmail,
       'birth':
           '${birthday.year}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}',
     };
@@ -168,6 +178,7 @@ class BladeGuardApiRepository {
     Map<String, dynamic> qParams = {
       'onSite': onSite,
       'code': HiveSettingsDB.bladeguardSHA512Hash,
+      'email': HiveSettingsDB.bladeguardEmail,
       'birth':
           '${birthday.year}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}',
       'oneSignalId': HiveSettingsDB.oneSignalId
@@ -183,8 +194,8 @@ class BladeGuardApiRepository {
         }
         if (response.data is Map && response.data.keys.contains('isOnSite')) {
           return ResultBoolOrError(response.data['isOnSite'], null);
-        }
-        else if (response.data is Map && response.data.keys.contains('fail')) {
+        } else if (response.data is Map &&
+            response.data.keys.contains('fail')) {
           return ResultBoolOrError(null, response.data['error']);
         }
       } else {
@@ -212,9 +223,9 @@ BladeGuardApiRepository bladeGuardApiRepository(
 
 @riverpod
 Future<ResultStringOrError> checkBladeguardMail(CheckBladeguardMailRef ref,
-    String emailHash, DateTime birthday, String phone, String? pin) async {
+    String email, DateTime birthday, String phone, String? pin) async {
   final repo = ref.read(bladeGuardApiRepositoryProvider);
-  return repo.checkBladeguardEmail(emailHash, birthday, phone, pin);
+  return repo.checkBladeguardEmail(email, birthday, phone, pin);
 }
 
 @riverpod
@@ -249,13 +260,47 @@ class BgIsOnSite extends _$BgIsOnSite {
     return true;
   }
 
-  Future<void> setOnSiteState(bool isOnSite) async {
+  Future<void> setOnSiteState(bool isOnsite) async {
+    var minDist = double.maxFinite;
     if (state == const AsyncValue.loading()) {
       return;
     }
     state = const AsyncValue.loading();
+    if (!isOnsite) {
+      await _sendToServer(isOnsite);
+      return;
+    }
+    //validate position
+    var geofence = await ref.read(geofencePointsProvider.future);
+    if (!LocationProvider.instance.hasLocationPermissions) {
+      state = AsyncValue.error(
+          Localize.current.noLocationPermitted, StackTrace.current);
+      return;
+    }
+    var location = await LocationProvider.instance.getLocation();
+    if (location == null) {
+      state = AsyncValue.error(
+          Localize.current.noLocationAvailable, StackTrace.current);
+      return;
+    }
+    for (var geofencePoint in geofence) {
+      var dist = GeoLocationHelper.haversine(location.coords.latitude,
+          location.coords.longitude, geofencePoint.lat, geofencePoint.lon);
+      minDist = min(dist, minDist);
+      if (dist <= geofencePoint.radius) {
+        _sendToServer(isOnsite);
+        return;
+      }
+    }
+    state = AsyncValue.error(
+        Localize.current.mustNearbyStartingPoint(minDist.toStringAsFixed(0)),
+        StackTrace.current);
+    return;
+  }
+
+  Future<void> _sendToServer(bool isOnsite) async {
     final repo = ref.read(bladeGuardApiRepositoryProvider);
-    var res = await repo.setBladeguardOnSite(isOnSite);
+    var res = await repo.setBladeguardOnSite(isOnsite);
     if (res.errorDescription != null) {
       state = AsyncValue.error(res.errorDescription!, StackTrace.current);
     } else {

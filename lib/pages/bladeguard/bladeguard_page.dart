@@ -252,9 +252,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                         .setSetOnsiteGeoFencingActiveAsync(val);
                                     await LocationProvider.instance
                                         .startStopGeoFencing();
-                                    setState(() {
-
-                                    });
+                                    setState(() {});
                                   },
                                   value: HiveSettingsDB.onsiteGeoFencingActive,
                                 ),
@@ -482,7 +480,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
       try {
         String? role;
         final res = await ref.read(checkBladeguardMailProvider(
-          HiveSettingsDB.bladeguardSHA512Hash,
+          HiveSettingsDB.bladeguardEmail,
           HiveSettingsDB.bladeguardBirthday,
           HiveSettingsDB.bladeguardPhone,
           HiveSettingsDB.bladeguardPin,
@@ -497,7 +495,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                 var pinRes = await PinDialog.show(context);
                 if (pinRes == null) return;
                 final resPin = await ref.read(checkBladeguardMailProvider(
-                  HiveSettingsDB.bladeguardSHA512Hash,
+                  HiveSettingsDB.bladeguardEmail,
                   HiveSettingsDB.bladeguardBirthday,
                   HiveSettingsDB.bladeguardPhone,
                   pinRes,
@@ -514,8 +512,9 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       role = resPinMap['role'];
                     }
                     _setBladeguardRole(role);
+                    var translatedRole = _translateRole(role);
                     HiveSettingsDB.setBgTeam(
-                        '${resPinMap['team']} ${role != null ? '($role)' : ''}');
+                        '${resPinMap['team']} $translatedRole');
                     ref
                         .read(bladeguardSettingsVisibleProvider.notifier)
                         .setValue(true);
@@ -541,9 +540,9 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
               if (resultMap.keys.contains('role')) {
                 role = resultMap['role'];
               }
+              var translatedRole = _translateRole(role);
               _setBladeguardRole(role);
-              HiveSettingsDB.setBgTeam(
-                  '${resultMap['team']} ${role != null ? '($role)' : ''}');
+              HiveSettingsDB.setBgTeam('${resultMap['team']} $translatedRole');
 
               ref
                   .read(bladeguardSettingsVisibleProvider.notifier)
@@ -566,6 +565,15 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
     }
   }
 
+  String _translateRole(String? role) {
+    if (role == null) return '';
+    if (role == 'spec') return '(${Localize.current.spec})';
+    if (role == 'lead') return '(${Localize.current.lead})';
+    if (role == 'leadspec') return '(${Localize.current.leadspec})';
+    if (role == 'admin') return '(${Localize.current.admin})';
+    return '';
+  }
+
   _activatePush() async {
     HiveSettingsDB.setOneSignalRegisterBladeGuardPush(true);
     await OnesignalHandler.registerPushAsBladeGuard(
@@ -574,13 +582,13 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
 
   _setBladeguardRole(String? role) {
     if (role == null) return;
-    if (role.toLowerCase().contains('spec')) {
+    if (role.toLowerCase() == 'spec') {
       HiveSettingsDB.setBgLeaderSettingVisible(false);
       HiveSettingsDB.setHasSpecialRightsPrefs(true);
-    } else if (role.toLowerCase().contains('lead')) {
+    } else if (role.toLowerCase() == 'lead') {
       HiveSettingsDB.setBgLeaderSettingVisible(true);
       HiveSettingsDB.setHasSpecialRightsPrefs(false);
-    } else if (role.toLowerCase().contains('teamadmin')) {
+    } else if (role.toLowerCase() == 'leadspec') {
       HiveSettingsDB.setBgLeaderSettingVisible(true);
       HiveSettingsDB.setHasSpecialRightsPrefs(true);
     } else {

@@ -116,6 +116,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const BladeGuardOnsite(),
                   const BladeGuardAdvertise(),
                   Text(Localize.of(context).nextEvent,
                       textAlign: TextAlign.center,
@@ -152,11 +153,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
                             : nextEventProvider.status == EventStatus.confirmed
                                 ? Colors.green
                                 : Colors.transparent,
-                        borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
-                            topLeft: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0)),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
                       ),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
@@ -170,7 +169,6 @@ class _EventInfoState extends ConsumerState<EventInfo>
                 ],
               ),
             ),
-          const BladeGuardOnsite(),
           Column(children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 5.0),

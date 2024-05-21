@@ -7,15 +7,15 @@ import '../../models/image_and_link.dart';
 
 part 'geofence_image_and_link_provider.g.dart';
 
-String geofenceImageAndLinkKey = 'geofenceIalDbKey';
+String geofenceImageAndLinkKey = 'geofenceLocIalDbKey';
 ImageAndLink _defaultGeofence = ImageAndLink(
     '',
     '',
     '{"gfp":['
-        '{"lat":48.131092,"lon":11.542514,"des":"central","id"=1,radius=400.0},'
-        '{"lat":48.132384,"lon":11.539843,"des":"left","id"=2,radius=400.0},'
-        '{"lat":48.133737,"lon":11.541330,"des":"subway","id"=3,radius=400.0}'
-        '{"lat":48.132381,"lon":11.545835,"des":"rechts Zahnradbahn","id"=4,radius=400.0}'
+        '{"lat":48.131092,"lon":11.542514,"des":"central","id":1,"radius":400.0},'
+        '{"lat":48.132384,"lon":11.539843,"des":"left","id":2,"radius":400.0},'
+        '{"lat":48.133737,"lon":11.541330,"des":"subway","id":3,"radius":400.0},'
+        '{"lat":48.132381,"lon":11.545835,"des":"rechts Zahnradbahn","id":4,"radius":400.0}'
         ']'
         '}',
     'geofence');

@@ -4082,6 +4082,66 @@ class Localize {
       args: [],
     );
   }
+
+  /// `You can set yourself onsite 3 hours before start! You must nearby starting point!`
+  String get loginThreeHoursBefore {
+    return Intl.message(
+      'You can set yourself onsite 3 hours before start! You must nearby starting point!',
+      name: 'loginThreeHoursBefore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Du musst in der Nähe des Startpunktes sein, bist aber min. {distInMeter} m entfernt. Falls du dich verspätest bitte deinen Teamleiter informieren.`
+  String mustNearbyStartingPoint(Object distInMeter) {
+    return Intl.message(
+      'Du musst in der Nähe des Startpunktes sein, bist aber min. $distInMeter m entfernt. Falls du dich verspätest bitte deinen Teamleiter informieren.',
+      name: 'mustNearbyStartingPoint',
+      desc: '',
+      args: [distInMeter],
+    );
+  }
+
+  /// `Spezial`
+  String get spec {
+    return Intl.message(
+      'Spezial',
+      name: 'spec',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zuganfang/ende`
+  String get lead {
+    return Intl.message(
+      'Zuganfang/ende',
+      name: 'lead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zug+Spezial`
+  String get leadspec {
+    return Intl.message(
+      'Zug+Spezial',
+      name: 'leadspec',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Administrator`
+  String get admin {
+    return Intl.message(
+      'Administrator',
+      name: 'admin',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

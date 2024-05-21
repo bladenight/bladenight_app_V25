@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -24,31 +23,55 @@ class BladeGuardOnsite extends ConsumerWidget {
         .difference(DateTime.now().toUtc())
         .inMinutes;
     var canRegisterOnSite = false;
-    var minPreTime = kDebugMode ? 2000 : 180;
-    if (diff < minPreTime && diff > 0) {
-      canRegisterOnSite = true;
-    }
+
     var eventActive =
         ref.watch(realtimeDataProvider.select((rt) => rt?.eventIsActive)) ??
             false;
+
+    var minPreTime = 180;
+    if (diff < minPreTime && diff > 0 && !eventActive) {
+      canRegisterOnSite = true;
+    }
     final isOnSiteAsync = ref.watch(bgIsOnSiteProvider);
     var bladeguardSettingsVisible =
         ref.watch(bladeguardSettingsVisibleProvider);
     var networkConnected = context.watch(
         networkAwareProvider.select((value) => value.connectivityStatus));
     return isOnSiteAsync.when(error: (e, st) {
-      return SizedBox(
-        width: MediaQuery.of(context).size.width * 0.9,
-        child: CupertinoButton(
-          onPressed: () async {
-            var _ = ref.refresh(bgIsOnSiteProvider);
-          },
-          color: Colors.redAccent,
-          child: e == ''
-              ? Text(Localize.of(context).networkerror)
-              : Text(e.toString()),
-        ),
-      );
+      return Column(mainAxisSize: MainAxisSize.max, children: [
+        Padding(
+            padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              child: Column(mainAxisSize: MainAxisSize.max, children: [
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: CupertinoButton(
+                    padding:  const EdgeInsets.all(10.0),
+                    onPressed: () async {
+                      var _ = ref.refresh(bgIsOnSiteProvider);
+                    },
+                    color: Colors.redAccent,
+                    child: e == ''
+                        ? Text(
+                            Localize.of(context).networkerror,
+                            style: const TextStyle(color: Colors.black),
+                            textAlign: TextAlign.center,
+                          )
+                        : Text(
+                            e.toString(),
+                            style: const TextStyle(color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                  ),
+                )
+              ]),
+            ))
+      ]);
     }, loading: () {
       return const CircularProgressIndicator();
     }, data: (status) {
@@ -60,56 +83,132 @@ class BladeGuardOnsite extends ConsumerWidget {
           ? Column(
               children: [
                 if (status == false) ...[
-                  Text(Localize.of(context).bgTodayRegister),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: CupertinoButton(
-                      onPressed: () async {
-                        ref
-                            .read(bgIsOnSiteProvider.notifier)
-                            .setOnSiteState(true);
-                      },
-                      color: Colors.lightGreen,
-                      child: Text(Localize.of(context).bgTodayOnSite),
+                  Column(mainAxisSize: MainAxisSize.max, children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: Colors.yellowAccent,
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                        child:
+                            Column(mainAxisSize: MainAxisSize.max, children: [
+                          Text(
+                            Localize.of(context).bgTodayRegister,
+                            style: const TextStyle(color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: CupertinoButton(
+                              padding:  const EdgeInsets.all(10.0),
+                              onPressed: () async {
+                                ref
+                                    .read(bgIsOnSiteProvider.notifier)
+                                    .setOnSiteState(true);
+                              },
+                              color: Colors.green,
+                              child: Text(
+                                Localize.of(context).bgTodayOnSite,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                  ]),
                 ],
                 if (status == true) ...[
-                  Text(Localize.of(context).bgTodayNotOnSite),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: CupertinoButton(
-                      onPressed: () async {
-                        await ScrollQuickAlert.show(
-                            context: context,
-                            showCancelBtn: true,
-                            type: QuickAlertType.confirm,
-                            title: Localize.of(context).requestOffSiteTitle,
-                            text: Localize.of(context).requestOffSite,
-                            confirmBtnText: Localize.of(context).todayNo,
-                            cancelBtnText: Localize.of(context).cancel,
-                            onConfirmBtnTap: () {
-                              ref
-                                  .read(bgIsOnSiteProvider.notifier)
-                                  .setOnSiteState(false);
-                              if (!context.mounted) return;
-                              Navigator.of(context).pop();
-                            });
-                      },
-                      color: Colors.orange,
-                      child: Text(Localize.of(context).bgTodayNotParticipation),
+                  Column(mainAxisSize: MainAxisSize.max, children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                        child:
+                            Column(mainAxisSize: MainAxisSize.max, children: [
+                          Text(
+                            Localize.of(context).bgTodayNotOnSite,
+                            style: const TextStyle(color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: CupertinoButton(
+                              padding:  const EdgeInsets.all(10.0),
+                              onPressed: () async {
+                                await ScrollQuickAlert.show(
+                                    context: context,
+                                    showCancelBtn: true,
+                                    type: QuickAlertType.confirm,
+                                    title: Localize.of(context)
+                                        .requestOffSiteTitle,
+                                    text: Localize.of(context).requestOffSite,
+                                    confirmBtnText:
+                                        Localize.of(context).todayNo,
+                                    cancelBtnText: Localize.of(context).cancel,
+                                    onConfirmBtnTap: () {
+                                      ref
+                                          .read(bgIsOnSiteProvider.notifier)
+                                          .setOnSiteState(false);
+                                      if (!context.mounted) return;
+                                      Navigator.of(context).pop();
+                                    });
+                              },
+                              color: Colors.orange,
+                              child: Text(
+                                Localize.of(context).bgTodayNotParticipation,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
                     ),
-                  ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                  ]),
                   const SizedBox(
                     height: 5,
                   ),
                 ],
               ],
             )
-          : Container();
+          : (nextEventProvider.status == EventStatus.confirmed &&
+                  !canRegisterOnSite)
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Colors.lightGreen,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    child: CupertinoButton(
+                      padding:  const EdgeInsets.all(10.0),
+                      onPressed: () async {},
+                      color: Colors.yellow,
+                      child: Text(Localize.of(context).loginThreeHoursBefore,
+                          style: const TextStyle(color: Colors.black),textAlign: TextAlign.center,),
+                    ),
+                  ),
+                )
+              : Container();
     });
   }
 }

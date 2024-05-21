@@ -490,5 +490,11 @@
   "geoFencing": "allow geofencing",
   "showCompassTitle": "Show compass on map",
   "showCompass": "Show compass",
-  "noNearbyService": "Nearby service not activated"
+  "noNearbyService": "Nearby service not activated",
+  "loginThreeHoursBefore": "You can set yourself onsite 3 hours before start! You must nearby starting point!",
+  "mustNearbyStartingPoint": "Du musst in der Nähe des Startpunktes sein, bist aber min. {distInMeter} m entfernt. Falls du dich verspätest bitte deinen Teamleiter informieren.",
+  "spec": "Spezial",
+  "lead": "Zuganfang/ende",
+  "leadspec": "Zug+Spezial",
+  "admin": "Administrator"
 }
