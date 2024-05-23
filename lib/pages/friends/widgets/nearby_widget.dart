@@ -22,6 +22,7 @@ import '../../../helpers/uuid_helper.dart';
 import '../../../models/color_mapper.dart';
 import '../../../models/friend.dart';
 import '../../../providers/friends_provider.dart';
+import '../../widgets/data_loading_indicator.dart';
 import '../../widgets/scroll_quick_alert.dart';
 import 'friends_action_sheet.dart';
 
@@ -55,6 +56,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
   late StreamSubscription receivedDataSubscription;
   late String devInfo = UUID.createUuid();
   late bool communicationStarted = false;
+  late int communicationcount = 0;
 
   var isInit = false;
   var _canSearchNearby = false;
@@ -86,6 +88,9 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
               title: Localize.current.addNearBy,
               text: Localize.current.failedAddNearbyTryCode,
               cancelBtnText: Localize.current.cancel);
+          if (mounted && Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
           return;
         }
         //get a code from server
@@ -99,11 +104,11 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     subscription.cancel();
     receivedDataSubscription.cancel();
-    nearbyService.stopBrowsingForPeers();
-    nearbyService.stopAdvertisingPeer();
+    await nearbyService.stopBrowsingForPeers();
+    await nearbyService.stopAdvertisingPeer();
     super.dispose();
   }
 
@@ -220,7 +225,12 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                       height: 200,
                     ),
                   ),
-                const SizedBox(height: 80)
+                if (_qrCodeText == '' &&
+                    widget.deviceType == DeviceType.advertiser &&
+                    _canSearchNearby) ...[
+                  const DataLoadingIndicator(),
+                  const SizedBox(height: 80)
+                ]
               ]),
             ),
             if (_canSearchNearby)
@@ -256,6 +266,8 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                               if (widget.deviceType == DeviceType.browser)
                                 CupertinoButton(
                                   onPressed: () => _onButtonClicked(device),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(5)),
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
@@ -265,8 +277,8 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
                                       child: Text(
                                         getButtonStateName(device.state),
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
                                       ),
                                     ),
                                   ),
@@ -460,8 +472,8 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
           }
         }*/
         if (element.state == SessionState.connected) {
-          if (communicationStarted) return;
-          communicationStarted = true;
+          communicationcount++;
+          if (communicationcount > 2) return;
           switch (widget.friendsAction) {
             case FriendsAction.addNearby:
               if (_tempServerFriend != null) {
@@ -505,8 +517,8 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
     receivedDataSubscription =
         nearbyService.dataReceivedSubscription(callback: (data) async {
       try {
-        if (communicationStarted) return;
-        communicationStarted = true;
+        communicationcount++;
+        if (communicationcount > 2) return;
         if (widget.deviceType == DeviceType.browser) {
           Map<dynamic, dynamic> dataMap = data;
           if (dataMap.containsKey(messageKey)) {

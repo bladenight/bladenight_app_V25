@@ -191,7 +191,7 @@ class BladeGuardOnsite extends ConsumerWidget {
               ],
             )
           : (nextEventProvider.status == EventStatus.confirmed &&
-                  !canRegisterOnSite)
+                  !canRegisterOnSite && !eventActive)
               ? Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
                   child: Container(

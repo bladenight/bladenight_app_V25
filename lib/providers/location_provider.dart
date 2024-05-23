@@ -33,12 +33,14 @@ import '../helpers/preferences_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
 import '../models/event.dart';
+import '../models/geofence_point.dart' as gfp;
 import '../models/location.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
 import '../models/user_trackpoint.dart';
 import '../wamp/wamp_v2.dart';
 import 'active_event_provider.dart';
+import 'images_and_links/geofence_image_and_link_provider.dart';
 import 'realtime_data_provider.dart';
 import 'rest_api/onsite_state_provider.dart';
 
@@ -255,7 +257,7 @@ class LocationProvider with ChangeNotifier {
         showToast(message: Localize.current.trackingRestarted);
       }
     } else {
-      startStopGeoFencing();
+      //startStopGeoFencing();
     }
     notifyListeners();
     if (!kIsWeb) {
@@ -634,29 +636,12 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  void setGeoFence() {
+  void setGeoFence() async {
     if (!HiveSettingsDB.bgSettingVisible ||
         !HiveSettingsDB.onsiteGeoFencingActive) return;
-    /*var points =ProviderContainer().read(geofenceImageAndLinkProvider);
-    var geofencePoints = GeofencePoints.getGeofenceList(points);*/
-    bg.BackgroundGeolocation.addGeofences([
-      bg.Geofence(
-        identifier: 'startPoint',
-        radius: 200,
-        latitude: defaultLatitude,
-        longitude: defaultAppLongitude,
-        notifyOnEntry: true,
-        notifyOnExit: false,
-      )
-      /*bg.Geofence(
-          identifier: 'test',
-          radius: 200,
-          latitude: 52.521900,
-          longitude: 8.372809,
-          notifyOnEntry: true,
-          notifyOnExit: true,
-          extras: {'routeId': 4332})*/
-    ]).then((bool success) {
+    var points = await ProviderContainer().read(geofencePointsProvider.future);
+    var geofencePoints = gfp.GeofencePoints.getGeofenceList(points);
+    bg.BackgroundGeolocation.addGeofences(geofencePoints).then((bool success) {
       BnLog.info(text: '[addGeofence] success');
     }).catchError((dynamic error) {
       BnLog.warning(text: '[addGeofence] FAILURE: $error');
@@ -917,8 +902,7 @@ class LocationProvider with ChangeNotifier {
 
   ///get location and send to server
   ///will send new location to server if sendLoc != false
-  Future<bg.Location?> _subToUpdates(
-      {var sendLoc = true}) async {
+  Future<bg.Location?> _subToUpdates({var sendLoc = true}) async {
     var timeDiff = DateTime.now().difference(_lastUpdate);
     if (timeDiff < const Duration(seconds: defaultSendNewLocationDelay)) {
       return _lastKnownPoint;
@@ -1423,7 +1407,7 @@ class LocationProvider with ChangeNotifier {
       var now = DateTime.now();
       var diff = now.difference(lastTimeStamp);
       var minTimeDiff =
-          kDebugMode ? const Duration(seconds: 5) : const Duration(hours: 3);
+          kDebugMode ? const Duration(seconds: 5) : const Duration(hours: 1);
       if (diff < minTimeDiff) {
         return;
       }

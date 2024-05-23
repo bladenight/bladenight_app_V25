@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +32,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _searchTextController.text = context.read(friendNameProvider);
+    _searchTextController.text = ref.read(friendNameProvider);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -43,7 +45,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context.read(friendsLogicProvider).refreshFriends();
+      ref.read(friendsLogicProvider).refreshFriends();
     }
   }
 
@@ -55,6 +57,15 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
       currentFocus.unfocus();
     }
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+  }
+
+  _runRefreshtimer() {
+    final timer = Timer(
+      const Duration(seconds: 3),
+      () {
+        ref.read(friendsLogicProvider).refreshFriends();
+      },
+    );
   }
 
   @override
@@ -86,7 +97,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           if (action == null || !mounted) return;
                           if (action == FriendsAction.addNearby &&
                               context.mounted) {
-                            Navigator.of(context).push(
+                            var res = await Navigator.of(context).push(
                               CupertinoPageRoute(
                                 builder: (context) =>
                                     const LinkFriendDevicePage(
@@ -96,11 +107,12 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                 fullscreenDialog: false,
                               ),
                             );
+                            _runRefreshtimer();
                             return;
                           }
                           if (action == FriendsAction.acceptNearby &&
                               context.mounted) {
-                            Navigator.of(context).push(
+                            var res = Navigator.of(context).push(
                               CupertinoPageRoute(
                                 builder: (context) =>
                                     const LinkFriendDevicePage(
@@ -110,6 +122,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                 fullscreenDialog: false,
                               ),
                             );
+                            _runRefreshtimer();
                             return;
                           }
                           if (!context.mounted) return;
@@ -128,7 +141,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                         padding: EdgeInsets.zero,
                         minSize: 0,
                         onPressed: () async {
-                          context.read(friendsLogicProvider).refreshFriends();
+                          ref.read(friendsLogicProvider).refreshFriends();
                         },
                         child: const Icon(CupertinoIcons.refresh),
                       ),
@@ -141,7 +154,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
               if (mounted) {
                 _dismissKeyboard(context);
               }
-              return context.read(friendsLogicProvider).refreshFriends();
+              return ref.read(friendsLogicProvider).refreshFriends();
             },
           ),
           const SliverToBoxAdapter(
@@ -157,13 +170,13 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                   child: CupertinoSearchTextField(
                     controller: _searchTextController,
                     onChanged: (value) {
-                      context.read(friendNameProvider.notifier).state = value;
+                      ref.read(friendNameProvider.notifier).state = value;
                     },
                     onSubmitted: (value) {
-                      context.read(friendNameProvider.notifier).state = value;
+                      ref.read(friendNameProvider.notifier).state = value;
                     },
                     onSuffixTap: () {
-                      context.read(friendNameProvider.notifier).state = '';
+                      ref.read(friendNameProvider.notifier).state = '';
                       _searchTextController.text = '';
                     },
                   ),
@@ -172,7 +185,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
             ),
           ),
           Builder(builder: (context) {
-            var friends = context.watch(filteredFriends);
+            var friends = ref.watch(filteredFriends);
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
@@ -204,7 +217,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                               friendDialogAction: FriendsAction.edit,
                               friend: friend);
                           if (result == null || !context.mounted) return false;
-                          context.read(friendsLogicProvider).updateFriend(
+                          ref.read(friendsLogicProvider).updateFriend(
                               friend.copyWith(
                                   name: result.name,
                                   color: result.color,
@@ -399,11 +412,10 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     friend: friend, friendDialogAction: FriendsAction.edit);
                 if (result != null) {
                   if (!context.mounted) return;
-                  context.read(friendsLogicProvider).updateFriend(
-                      friend.copyWith(
-                          name: result.name,
-                          color: result.color,
-                          isActive: result.active));
+                  ref.read(friendsLogicProvider).updateFriend(friend.copyWith(
+                      name: result.name,
+                      color: result.color,
+                      isActive: result.active));
                 }
               } else if (action == FriendsAction.delete) {
                 if (!context.mounted) return;
