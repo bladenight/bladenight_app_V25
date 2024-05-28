@@ -77,7 +77,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        appOutdatedWidget(context),
+        const AppOutdatedWidget(),
         if (nextEventProvider.status == EventStatus.noevent)
           Text(Localize.of(context).noEventPlanned,
               textAlign: TextAlign.center,
@@ -171,7 +171,6 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                                   text:
                                       'mainSponsorPlaceholder ${ms.image}) could not been loaded',
                                   exception: error);
-
                               return Image.asset(mainSponsorPlaceholder,
                                   fit: BoxFit.fitWidth);
                             },

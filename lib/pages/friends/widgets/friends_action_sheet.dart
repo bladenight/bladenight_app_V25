@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 
 import '../../../generated/l10n.dart';
@@ -25,30 +27,32 @@ class FriendsActionModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoActionSheet(
       actions: [
-        CupertinoActionSheetAction(
-          child: Text(Localize.of(context)
-              .addnewfriend),
-          onPressed: () {
-            Navigator.pop(context, FriendsAction.addNew);
-          },
-        ),
+        if (Platform.isIOS) ...[
+          CupertinoActionSheetAction(
+            child: Text(Localize.of(context).addNearBy),
+            onPressed: () {
+              Navigator.pop(context, FriendsAction.addNearby);
+            },
+          ),
+          CupertinoActionSheetAction(
+            child: Text(Localize.of(context).linkNearBy),
+            onPressed: () {
+              Navigator.pop(context, FriendsAction.acceptNearby);
+            },
+          ),
+        ],
+        if (!Platform.isIOS) ...[
+          CupertinoActionSheetAction(
+            child: Text(Localize.of(context).addnewfriend),
+            onPressed: () {
+              Navigator.pop(context, FriendsAction.addNew);
+            },
+          ),
+        ],
         CupertinoActionSheetAction(
           child: Text(Localize.of(context).addfriendwithcode),
           onPressed: () {
             Navigator.pop(context, FriendsAction.addWithCode);
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text(Localize.of(context)
-              .addNearBy),
-          onPressed: () {
-            Navigator.pop(context, FriendsAction.addNearby);
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text(Localize.of(context).linkNearBy),
-          onPressed: () {
-            Navigator.pop(context, FriendsAction.acceptNearby);
           },
         ),
       ],

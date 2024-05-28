@@ -71,6 +71,8 @@ class LocationProvider with ChangeNotifier {
   String _lastRouteName = '';
   EventStatus? _eventState;
 
+  EventStatus? get eventState => _eventState;
+
   DateTime get lastUpdate => _lastUpdate;
 
   bool _eventIsActive = false;
@@ -887,7 +889,7 @@ class LocationProvider with ChangeNotifier {
   Future<bg.Location?> getLocation() async {
     try {
       var loc = await bg.BackgroundGeolocation.getCurrentPosition(
-        timeout: 3,
+        timeout: 2,
         maximumAge: 5000,
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_MEDIUM,
         samples: 3, // How many location samples to attempt.
@@ -1408,9 +1410,10 @@ class LocationProvider with ChangeNotifier {
       var diff = now.difference(lastTimeStamp);
       var minTimeDiff =
           kDebugMode ? const Duration(seconds: 5) : const Duration(hours: 1);
-      if (diff < minTimeDiff) {
+      if (diff < minTimeDiff || eventIsActive) {
         return;
       }
+
       HiveSettingsDB.setBladeguardLastSetOnsite(now);
       BnLog.info(text: '[geofence] ${event.identifier}, ${event.action}');
       final repo = ProviderContainer().read(bladeGuardApiRepositoryProvider);

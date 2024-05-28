@@ -304,7 +304,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 rightWidget: CupertinoSwitch(
                                   onChanged: (val) async {
                                     setState(() {
-                                      HiveSettingsDB.setRcvSkatemunichInfos(
+                                     HiveSettingsDB.setRcvSkatemunichInfos(
                                           val);
                                     });
                                     HiveSettingsDB.setRcvSkatemunichInfos(val);

@@ -55,8 +55,6 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
   late StreamSubscription subscription;
   late StreamSubscription receivedDataSubscription;
   late String devInfo = UUID.createUuid();
-  late bool communicationStarted = false;
-  late int communicationcount = 0;
 
   var isInit = false;
   var _canSearchNearby = false;
@@ -472,8 +470,6 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
           }
         }*/
         if (element.state == SessionState.connected) {
-          communicationcount++;
-          if (communicationcount > 2) return;
           switch (widget.friendsAction) {
             case FriendsAction.addNearby:
               if (_tempServerFriend != null) {
@@ -517,8 +513,6 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
     receivedDataSubscription =
         nearbyService.dataReceivedSubscription(callback: (data) async {
       try {
-        communicationcount++;
-        if (communicationcount > 2) return;
         if (widget.deviceType == DeviceType.browser) {
           Map<dynamic, dynamic> dataMap = data;
           if (dataMap.containsKey(messageKey)) {
@@ -542,6 +536,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
               }
             } else {
               nearbyService.sendMessage(dataMap[senderDeviceIdKey], failedKey);
+
             }
           }
         }

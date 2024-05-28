@@ -5,7 +5,7 @@ import '../../models/image_and_link.dart';
 
 part 'main_sponsor_image_and_link_provider.g.dart';
 
-String mainSponsorImageAndLinkKey = 'mainSponsorIalKey';
+String mainSponsorImageAndLinkKey = 'mainSponsorIaLKey';
 ImageAndLink _defaultLiveMapImageAndLinkKey = ImageAndLink(
     'https://bladenight.app/main_sponsor.png', '', '', 'mainSponsorLogo');
 
@@ -15,14 +15,17 @@ class MainSponsorImageAndLink extends _$MainSponsorImageAndLink {
   ImageAndLink build() {
     HiveSettingsDB.settingsHiveBox
         .watch(key: mainSponsorImageAndLinkKey)
-        .listen((event) => state =
-            event.value);
+        .listen((event) => state = event.value);
     return HiveSettingsDB.settingsHiveBox.get(mainSponsorImageAndLinkKey,
         defaultValue: _defaultLiveMapImageAndLinkKey);
   }
 
   void setValue(ImageAndLink imageAndLink) {
-    HiveSettingsDB.settingsHiveBox.put(mainSponsorImageAndLinkKey,imageAndLink);
+    var oldVal = HiveSettingsDB.settingsHiveBox.get(mainSponsorImageAndLinkKey);
+    if (oldVal != imageAndLink) {
+      HiveSettingsDB.settingsHiveBox
+          .put(mainSponsorImageAndLinkKey, imageAndLink);
+    }
     //state = imageAndLink;
   }
 }

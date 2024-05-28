@@ -36,12 +36,17 @@ class EventInfo extends ConsumerStatefulWidget {
 class _EventInfoState extends ConsumerState<EventInfo>
     with WidgetsBindingObserver {
   Timer? _updateTimer;
+  Orientation? _currentOrientation;
+  late var _width = double.infinity;
+  late var _height = double.infinity;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _width = MediaQuery.of(context).size.width;
+      _height = MediaQuery.of(context).size.height;
       initEventUpdates();
       initLocation();
       //call on first start
@@ -54,6 +59,18 @@ class _EventInfoState extends ConsumerState<EventInfo>
     WidgetsBinding.instance.removeObserver(this);
     _updateTimer?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    _currentOrientation = MediaQuery.of(context).orientation;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        _currentOrientation = MediaQuery.of(context).orientation;
+        _width = MediaQuery.of(context).size.width;
+        _height = MediaQuery.of(context).size.height;
+      });
+    });
   }
 
   @override
@@ -104,7 +121,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
         mainAxisSize: MainAxisSize.max,
         children: [
           if (!kIsWeb) const ConnectionWarning(),
-          if (!kIsWeb) appOutdatedWidget(context),
+          if (!kIsWeb) const AppOutdatedWidget(),
+          const BladeGuardOnsite(),
+          const BladeGuardAdvertise(),
           if (nextEventProvider.status == EventStatus.noevent)
             HiddenAdminButton(
               child: Text(Localize.of(context).noEventPlanned,
@@ -116,8 +135,6 @@ class _EventInfoState extends ConsumerState<EventInfo>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const BladeGuardOnsite(),
-                  const BladeGuardAdvertise(),
                   Text(Localize.of(context).nextEvent,
                       textAlign: TextAlign.center,
                       style: CupertinoTheme.of(context).textTheme.textStyle),
@@ -187,6 +204,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                   return (ms.image != null &&
                           nw.connectivityStatus == ConnectivityStatus.online)
                       ? CachedNetworkImage(
+                          width: _width * .7,
                           imageUrl: ms.image!,
                           placeholder: (context, url) => Image.asset(
                               mainSponsorPlaceholder,
@@ -194,6 +212,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
                           errorWidget: (context, url, error) => Image.asset(
                               mainSponsorPlaceholder,
                               fit: BoxFit.fitWidth),
+                          errorListener: (e) {
+                            BnLog.warning(text: 'Could not load ${ms.image}');
+                          },
                         )
                       : Image.asset(mainSponsorPlaceholder,
                           fit: BoxFit.fitWidth);
@@ -218,6 +239,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                   return (img.image != null &&
                           nw.connectivityStatus == ConnectivityStatus.online)
                       ? CachedNetworkImage(
+                          width: _width * .7,
                           imageUrl: img.image!,
                           placeholder: (context, url) => Image.asset(
                               secondLogoPlaceholder,
@@ -225,6 +247,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
                           errorWidget: (context, url, error) => Image.asset(
                               secondLogoPlaceholder,
                               fit: BoxFit.fitWidth),
+                          errorListener: (e) {
+                            BnLog.warning(text: 'Could not load ${img.image}');
+                          },
                         )
                       : Image.asset(secondLogoPlaceholder,
                           fit: BoxFit.fitWidth);

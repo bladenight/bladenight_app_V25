@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../generated/l10n.dart';
@@ -11,7 +12,9 @@ import '../../helpers/hive_box/app_server_config_db.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/location_bearing_distance.dart';
 import '../../helpers/logger.dart';
+import '../../models/event.dart';
 import '../../models/result_or_error.dart';
+import '../active_event_provider.dart';
 import '../images_and_links/geofence_image_and_link_provider.dart';
 import '../location_provider.dart';
 import 'dio_rest_api_provider.dart';
@@ -277,6 +280,24 @@ class BgIsOnSite extends _$BgIsOnSite {
           Localize.current.noLocationPermitted, StackTrace.current);
       return;
     }
+    var event = ref.read(activeEventProvider);
+    if (event.status != EventStatus.confirmed) {
+      final repo = ref.read(bladeGuardApiRepositoryProvider);
+      try {
+        var res = await repo.checkBladeguardIsOnSite();
+        if (res.errorDescription != null) {
+          state = AsyncValue.error(res.errorDescription!, StackTrace.current);
+          return;
+        }
+        if (res.result != null) {
+          state = AsyncValue.data(res.result!);
+          return;
+        }
+      } catch (e) {
+        state = AsyncValue.error(Localize.current.failed, StackTrace.current);
+      }
+      return;
+    }
     var location = await LocationProvider.instance.getLocation();
     if (location == null) {
       state = AsyncValue.error(
@@ -287,7 +308,7 @@ class BgIsOnSite extends _$BgIsOnSite {
       var dist = GeoLocationHelper.haversine(location.coords.latitude,
           location.coords.longitude, geofencePoint.lat, geofencePoint.lon);
       minDist = min(dist, minDist);
-      if (dist <= geofencePoint.radius) {
+      if (dist <= geofencePoint.radius || kDebugMode) {
         _sendToServer(isOnsite);
         return;
       }

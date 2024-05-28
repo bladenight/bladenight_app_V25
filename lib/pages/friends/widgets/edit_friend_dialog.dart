@@ -171,7 +171,6 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
                           nameOk = value.isNotEmpty;
                         });
                       },
-                      textInputAction: TextInputAction.next,
                     ),
                     if (widget.action == FriendsAction.addWithCode) ...[
                       const SizedBox(height: 5),

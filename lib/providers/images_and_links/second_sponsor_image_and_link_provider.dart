@@ -21,8 +21,11 @@ class SecondSponsorImageAndLink extends _$SecondSponsorImageAndLink {
   }
 
   void setValue(ImageAndLink imageAndLink) {
-    HiveSettingsDB.settingsHiveBox
-        .put(secondSponsorImageAndLinkKey, imageAndLink);
-    //state = imageAndLink;
+    var oldVal =
+        HiveSettingsDB.settingsHiveBox.get(secondSponsorImageAndLinkKey);
+    if (oldVal != imageAndLink) {
+      HiveSettingsDB.settingsHiveBox
+          .put(secondSponsorImageAndLinkKey, imageAndLink);
+    }
   }
 }
