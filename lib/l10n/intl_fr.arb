@@ -495,5 +495,6 @@
   "spec": "Spezial",
   "lead": "Zuganfang/ende",
   "leadspec": "Zug+Spezial",
-  "admin": "Administrator"
+  "admin": "Administrator",
+  "bladeguardAtStartPointTitle": "BladenightApp - Vor Ort registriert"
 }

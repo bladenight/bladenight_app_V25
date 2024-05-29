@@ -66,6 +66,7 @@ class RealtimeData extends _$RealtimeData {
       _timer?.cancel();
       _realTimeDataSubscriptionId = 0;
       _realTimeDataStreamListener?.cancel();
+      _onlineListener?.cancel();
     });
     _subscribeIfNeeded(_isTracking);
 

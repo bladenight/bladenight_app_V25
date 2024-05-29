@@ -12,6 +12,7 @@ import '../../helpers/hive_box/app_server_config_db.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/location_bearing_distance.dart';
 import '../../helpers/logger.dart';
+import '../../helpers/notification/notification_helper.dart';
 import '../../models/event.dart';
 import '../../models/result_or_error.dart';
 import '../active_event_provider.dart';
@@ -263,7 +264,9 @@ class BgIsOnSite extends _$BgIsOnSite {
     return true;
   }
 
-  Future<void> setOnSiteState(bool isOnsite) async {
+  /// Set onsite state related to current position
+  Future<void> setOnSiteState(bool isOnsite,
+      {bool triggeredByGeofence = false}) async {
     var minDist = double.maxFinite;
     if (state == const AsyncValue.loading()) {
       return;
@@ -273,6 +276,11 @@ class BgIsOnSite extends _$BgIsOnSite {
       await _sendToServer(isOnsite);
       return;
     }
+
+    if (state == const AsyncValue.data(true)) {
+      return;
+    }
+
     //validate position
     var geofence = await ref.read(geofencePointsProvider.future);
     if (!LocationProvider.instance.hasLocationPermissions) {
@@ -281,6 +289,7 @@ class BgIsOnSite extends _$BgIsOnSite {
       return;
     }
     var event = ref.read(activeEventProvider);
+
     if (event.status != EventStatus.confirmed) {
       final repo = ref.read(bladeGuardApiRepositoryProvider);
       try {
@@ -298,19 +307,30 @@ class BgIsOnSite extends _$BgIsOnSite {
       }
       return;
     }
-    var location = await LocationProvider.instance.getLocation();
-    if (location == null) {
-      state = AsyncValue.error(
-          Localize.current.noLocationAvailable, StackTrace.current);
-      return;
-    }
-    for (var geofencePoint in geofence) {
-      var dist = GeoLocationHelper.haversine(location.coords.latitude,
-          location.coords.longitude, geofencePoint.lat, geofencePoint.lon);
-      minDist = min(dist, minDist);
-      if (dist <= geofencePoint.radius || kDebugMode) {
-        _sendToServer(isOnsite);
+
+    if (triggeredByGeofence) {
+      var res = await _sendToServer(isOnsite);
+      if (res == true) {
+        NotificationHelper().showString(
+            id: Random().nextInt(2 ^ 8),
+            text:  Localize.current.bgTodayNotOnSite,
+            title: 'Bladeguard am Startpunkt');
+      }
+    } else {
+      var location = await LocationProvider.instance.getLocation();
+      if (location == null) {
+        state = AsyncValue.error(
+            Localize.current.noLocationAvailable, StackTrace.current);
         return;
+      }
+      for (var geofencePoint in geofence) {
+        var dist = GeoLocationHelper.haversine(location.coords.latitude,
+            location.coords.longitude, geofencePoint.lat, geofencePoint.lon);
+        minDist = min(dist, minDist);
+        if (dist <= geofencePoint.radius || kDebugMode) {
+          await _sendToServer(isOnsite);
+          return;
+        }
       }
     }
     state = AsyncValue.error(
@@ -319,13 +339,15 @@ class BgIsOnSite extends _$BgIsOnSite {
     return;
   }
 
-  Future<void> _sendToServer(bool isOnsite) async {
+  Future<bool> _sendToServer(bool isOnsite) async {
     final repo = ref.read(bladeGuardApiRepositoryProvider);
     var res = await repo.setBladeguardOnSite(isOnsite);
     if (res.errorDescription != null) {
       state = AsyncValue.error(res.errorDescription!, StackTrace.current);
+      return false;
     } else {
       state = AsyncValue.data(res.result!);
+      return true;
     }
   }
 }

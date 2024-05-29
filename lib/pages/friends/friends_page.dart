@@ -60,7 +60,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
   }
 
   _runRefreshtimer() {
-    final timer = Timer(
+    final _ = Timer(
       const Duration(seconds: 3),
       () {
         ref.read(friendsLogicProvider).refreshFriends();
@@ -97,7 +97,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           if (action == null || !mounted) return;
                           if (action == FriendsAction.addNearby &&
                               context.mounted) {
-                            var res = await Navigator.of(context).push(
+                            await Navigator.of(context).push(
                               CupertinoPageRoute(
                                 builder: (context) =>
                                     const LinkFriendDevicePage(
@@ -112,7 +112,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           }
                           if (action == FriendsAction.acceptNearby &&
                               context.mounted) {
-                            var res = Navigator.of(context).push(
+                            await Navigator.of(context).push(
                               CupertinoPageRoute(
                                 builder: (context) =>
                                     const LinkFriendDevicePage(

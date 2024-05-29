@@ -193,6 +193,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Bladeguard settings"),
         "bladeGuardSettingsTitle": MessageLookupByLibrary.simpleMessage(
             "Open Bladeguard settings page"),
+        "bladeguardAtStartPointTitle": MessageLookupByLibrary.simpleMessage(
+            "BladenightApp - Vor Ort registriert"),
         "bladeguardInfo": m0,
         "bladenight": MessageLookupByLibrary.simpleMessage("BladeNight"),
         "bladenightUpdate":

@@ -38,7 +38,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
   Timer? _updateTimer;
   Orientation? _currentOrientation;
   late var _width = double.infinity;
-  late var _height = double.infinity;
+  //late var _height = double.infinity;
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _width = MediaQuery.of(context).size.width;
-      _height = MediaQuery.of(context).size.height;
+      //_height = MediaQuery.of(context).size.height;
       initEventUpdates();
       initLocation();
       //call on first start
@@ -68,7 +68,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
       setState(() {
         _currentOrientation = MediaQuery.of(context).orientation;
         _width = MediaQuery.of(context).size.width;
-        _height = MediaQuery.of(context).size.height;
+        //_height = MediaQuery.of(context).size.height;
       });
     });
   }

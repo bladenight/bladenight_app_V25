@@ -1402,6 +1402,7 @@ class LocationProvider with ChangeNotifier {
 
   void _onGeoFenceEvent(bg.GeofenceEvent event) async {
     if (HiveSettingsDB.isBladeGuard && HiveSettingsDB.onsiteGeoFencingActive) {
+      BnLog.info(text: 'geofence recognized ${event.toString()}');
       if (event.action != 'ENTER') {
         return;
       }
@@ -1418,17 +1419,16 @@ class LocationProvider with ChangeNotifier {
       BnLog.info(text: '[geofence] ${event.identifier}, ${event.action}');
       final repo = ProviderContainer().read(bladeGuardApiRepositoryProvider);
       var res = await repo.checkBladeguardIsOnSite();
+      //is is already onsite do nothing
       if (res.result != null && res.result == true) {
         return;
       }
+      //set onsite and notify user
       var _ = await ProviderContainer()
           .read(bgIsOnSiteProvider.notifier)
-          .setOnSiteState(true);
+          .setOnSiteState(true, triggeredByGeofence: true);
+      //invalidate provider to reload state
       _geoFenceEventStreamController.sink.add(event);
-      NotificationHelper().showString(
-          id: 3234,
-          text: 'Bladeguard Geofence Info du bist vor Ort angemeldet',
-          title: 'Bladeguard am Startpunkt');
     }
   }
 }

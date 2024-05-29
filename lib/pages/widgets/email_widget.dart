@@ -18,7 +18,7 @@ class _EmailTextFieldState extends ConsumerState<EmailTextField> {
 
   @override
   void initState() {
-    _emailTextController.text = HiveSettingsDB.bladeguardEmail ?? '';
+    _emailTextController.text = HiveSettingsDB.bladeguardEmail;
     super.initState();
   }
 

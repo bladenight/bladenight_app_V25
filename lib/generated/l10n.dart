@@ -4142,6 +4142,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `BladenightApp - Vor Ort registriert`
+  String get bladeguardAtStartPointTitle {
+    return Intl.message(
+      'BladenightApp - Vor Ort registriert',
+      name: 'bladeguardAtStartPointTitle',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {
