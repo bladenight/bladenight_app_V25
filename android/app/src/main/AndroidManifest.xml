@@ -44,7 +44,7 @@
 
     <application
             tools:replace="android:label"
-            android:label="Bladenight München"
+            android:label="BladeNight!"
             android:name="${applicationName}"
             android:icon="@mipmap/launcher_icon"
             android:roundIcon="@drawable/app_icon_round"
