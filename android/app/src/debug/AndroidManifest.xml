@@ -21,7 +21,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
     <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"/>
     <application
-            android:label="Bladenight München"
+            tools:replace="android:label"
+            android:label="BladeNight!"
             android:name="${applicationName}"
             android:icon="@mipmap/launcher_icon"
             android:roundIcon="@drawable/app_icon_round"
