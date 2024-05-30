@@ -1414,9 +1414,6 @@ class LocationProvider with ChangeNotifier {
       if (diff < minTimeDiff || eventIsActive) {
         return;
       }
-
-      HiveSettingsDB.setBladeguardLastSetOnsite(now);
-      BnLog.info(text: '[geofence] ${event.identifier}, ${event.action}');
       final repo = ProviderContainer().read(bladeGuardApiRepositoryProvider);
       var res = await repo.checkBladeguardIsOnSite();
       //is is already onsite do nothing

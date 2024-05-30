@@ -315,6 +315,7 @@ class BgIsOnSite extends _$BgIsOnSite {
             id: Random().nextInt(2 ^ 8),
             text:  Localize.current.bgTodayNotOnSite,
             title: 'Bladeguard am Startpunkt');
+        HiveSettingsDB.setBladeguardLastSetOnsite( DateTime.now());
       }
     } else {
       var location = await LocationProvider.instance.getLocation();
@@ -340,13 +341,16 @@ class BgIsOnSite extends _$BgIsOnSite {
   }
 
   Future<bool> _sendToServer(bool isOnsite) async {
+    BnLog.info(text: 'SendOnsite to Server $isOnsite',methodName: '_sendToServer',className: toString());
     final repo = ref.read(bladeGuardApiRepositoryProvider);
     var res = await repo.setBladeguardOnSite(isOnsite);
     if (res.errorDescription != null) {
       state = AsyncValue.error(res.errorDescription!, StackTrace.current);
+      BnLog.info(text: 'SendOnsite to Server $isOnsite failed',methodName: '_sendToServer',className: toString());
       return false;
     } else {
       state = AsyncValue.data(res.result!);
+      BnLog.info(text: 'SendOnsite to Server $isOnsite successful ',methodName: '_sendToServer',className: toString());
       return true;
     }
   }
