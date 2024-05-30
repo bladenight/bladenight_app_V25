@@ -6,9 +6,9 @@ part 'dio_rest_api_provider.g.dart';
 @riverpod
 Dio dio(DioRef ref) {
   var options = BaseOptions(
-      receiveTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 10),
       contentType: 'application/json',
       headers: {'Access-Control-Allow-Origin': '*'},
-      sendTimeout: const Duration(seconds: 5));
+      sendTimeout: const Duration(seconds: 10));
   return Dio(options);
 }
