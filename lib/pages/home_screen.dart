@@ -142,7 +142,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _initialURILinkHandled = true;
 
       try {
-        Uri? initUri = await _appLinks.getInitialAppLink();
+        Uri? initUri = await _appLinks.getInitialLink();
         print('Invoked _initURIHandler');
         if (!kIsWeb) BnLog.info(text: 'Invoked _initURIHandler $initUri');
         if (initUri == null) return;
@@ -166,7 +166,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (kIsWeb) return;
     // It will handle app links while the app is already started - be it in
     // the foreground or in the background.
-    _uniLinkStreamSubscription = _appLinks.allUriLinkStream.listen((uri) async {
+    _uniLinkStreamSubscription = _appLinks.uriLinkStream.listen((uri) async {
       if (!kIsWeb) BnLog.info(text: 'Received URI: $uri');
       _handleIncomingUriResult(uri.toString());
 
