@@ -41,7 +41,7 @@ class BladeGuardOnsite extends ConsumerWidget {
     return isOnSiteAsync.when(error: (e, st) {
       return Column(mainAxisSize: MainAxisSize.max, children: [
         Padding(
-            padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+            padding: const EdgeInsets.fromLTRB(15.0, 1, 15.0, 1),
             child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(

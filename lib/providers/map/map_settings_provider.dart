@@ -22,7 +22,7 @@ class ShowOwnTrack extends _$ShowOwnTrack {
 }
 
 @riverpod
-class ShowCompass extends _$ShowOwnTrack {
+class ShowCompass extends _$ShowCompass {
   @override
   bool build() {
     Hive.box(hiveBoxSettingDbName)

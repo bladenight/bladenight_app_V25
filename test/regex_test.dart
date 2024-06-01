@@ -4,13 +4,11 @@ void main() {
   String text =
       'Dein Freund muss in max. 2 m Entfernung von Dir sein!<li><ul>Bitte bei deinem Freund in der Bladenight-App den Tab Freunde öffnen lassen.</ul><ul>Dort Plus oben rechts wählen</ul><ul>Freund:in neben Dir annehmen wählen</ul><ul>Nun mit diesem Gerät <b>{deviceName}</b> koppeln.</ul><li>Du kannst deinen übermittelten Namen im Textfeld oben ändern.';
   var res = _getHtmlTags(text);
-  //var result = _createWidgetList(text);
+  var result = _createWidgetList(text);
   assert(res.length == 11);
 }
 
 List<InlineSpan> _createWidgetList(String text) {
-
-
   final widgets = <InlineSpan>[];
   final regexAll = RegExp('<([a-z]+)(?![^>]*/>)[^>]*>');
   final matches = regexAll.allMatches(text);

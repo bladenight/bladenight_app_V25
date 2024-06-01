@@ -11,6 +11,7 @@ import '../../generated/l10n.dart';
 import '../../helpers/hive_box/app_server_config_db.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/location_bearing_distance.dart';
+import '../../helpers/location_permission_dialogs.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/notification/notification_helper.dart';
 import '../../models/event.dart';
@@ -283,11 +284,6 @@ class BgIsOnSite extends _$BgIsOnSite {
 
     //validate position
     var geofence = await ref.read(geofencePointsProvider.future);
-    if (!LocationProvider.instance.hasLocationPermissions) {
-      state = AsyncValue.error(
-          Localize.current.noLocationPermitted, StackTrace.current);
-      return;
-    }
     var event = ref.read(activeEventProvider);
 
     if (event.status != EventStatus.confirmed) {
@@ -313,11 +309,19 @@ class BgIsOnSite extends _$BgIsOnSite {
       if (res == true) {
         NotificationHelper().showString(
             id: Random().nextInt(2 ^ 8),
-            text:  Localize.current.bgTodayNotOnSite,
+            text: Localize.current.bgTodayNotOnSite,
             title: 'Bladeguard am Startpunkt');
-        HiveSettingsDB.setBladeguardLastSetOnsite( DateTime.now());
+        HiveSettingsDB.setBladeguardLastSetOnsite(DateTime.now());
       }
     } else {
+      if (LocationProvider.instance.gpsLocationPermissionsStatus !=
+              LocationPermissionStatus.always &&
+          LocationProvider.instance.gpsLocationPermissionsStatus !=
+              LocationPermissionStatus.whenInUse) {
+        state = AsyncValue.error(
+            Localize.current.noLocationPermitted, StackTrace.current);
+      }
+
       var location = await LocationProvider.instance.getLocation();
       if (location == null) {
         state = AsyncValue.error(
@@ -341,16 +345,25 @@ class BgIsOnSite extends _$BgIsOnSite {
   }
 
   Future<bool> _sendToServer(bool isOnsite) async {
-    BnLog.info(text: 'SendOnsite to Server $isOnsite',methodName: '_sendToServer',className: toString());
+    BnLog.info(
+        text: 'SendOnsite to Server $isOnsite',
+        methodName: '_sendToServer',
+        className: toString());
     final repo = ref.read(bladeGuardApiRepositoryProvider);
     var res = await repo.setBladeguardOnSite(isOnsite);
     if (res.errorDescription != null) {
       state = AsyncValue.error(res.errorDescription!, StackTrace.current);
-      BnLog.info(text: 'SendOnsite to Server $isOnsite failed',methodName: '_sendToServer',className: toString());
+      BnLog.info(
+          text: 'SendOnsite to Server $isOnsite failed',
+          methodName: '_sendToServer',
+          className: toString());
       return false;
     } else {
       state = AsyncValue.data(res.result!);
-      BnLog.info(text: 'SendOnsite to Server $isOnsite successful ',methodName: '_sendToServer',className: toString());
+      BnLog.info(
+          text: 'SendOnsite to Server $isOnsite successful ',
+          methodName: '_sendToServer',
+          className: toString());
       return true;
     }
   }
