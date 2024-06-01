@@ -446,7 +446,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "never": MessageLookupByLibrary.simpleMessage("nie"),
         "newGPSDatareceived":
             MessageLookupByLibrary.simpleMessage("Neue GPS Daten"),
-        "nextEvent": MessageLookupByLibrary.simpleMessage("Nächste BladeNight"),
+        "nextEvent":
+            MessageLookupByLibrary.simpleMessage("Nächste BladeNight!"),
         "no": MessageLookupByLibrary.simpleMessage("Nein"),
         "noBackgroundlocationLeaveAppOpen": MessageLookupByLibrary.simpleMessage(
             "Standort \'Während der Benutzung\' ist eingestellt. Daher ist keine Hintergrundaktualisierung aktiviert. Um die Darstellung des BladeNight-Zuges so genau wie möglich zu bekommen und deine Postion ohne Einschränkung mit Freunden zu teilen, bitten wir Dich die App offen halten oder die Einstellung auf \'Immer zulassen\' zu ändern. Danke."),
@@ -493,12 +494,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Die BladeNight wurde leider abgesagt."),
         "note_bladenightStartInFiveMinutesStartTracking":
             MessageLookupByLibrary.simpleMessage(
-                "Nächste BladeNight startet in 5 minuten. Tracking einschalten nicht vergessen !!"),
+                "Nächste BladeNight! startet in 5 minuten. Tracking einschalten nicht vergessen !!"),
         "note_bladenightStartInSixHoursStartTracking":
             MessageLookupByLibrary.simpleMessage(
-                "Nächste BladeNight startet in 6 Stunden."),
+                "Nächste BladeNight! startet in 6 Stunden."),
         "note_statuschanged": MessageLookupByLibrary.simpleMessage(
-            "BladeNight Status geändert - Bitte in App prüfen"),
+            "BladeNight! Status geändert - Bitte in App prüfen"),
         "notification": MessageLookupByLibrary.simpleMessage("Notification"),
         "notracking": MessageLookupByLibrary.simpleMessage("Kein Tracking!"),
         "now": MessageLookupByLibrary.simpleMessage("Jetzt"),

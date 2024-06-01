@@ -580,30 +580,30 @@ class LocationProvider with ChangeNotifier {
       SendToWatch.setIsLocationTracking(false);
       HiveSettingsDB.setTrackingActive(false);
       LocationStore.saveUserTrackPointList(_userTrackingPoints);
+    } else {
+      bg.BackgroundGeolocation.stop().then((bg.State state) async {
+        BnLog.info(
+            text: 'location tracking stopped ${state.enabled}',
+            className: 'location_provider',
+            methodName: '_stopTracking');
+        _realUserSpeedKmh = null;
+        _userLatLng = null;
+        //reset autostart
+        //avoid second autostart on an event , reset after end
+        var activeEventData = ProviderContainer().read(activeEventProvider);
+        if (_startedTrackingTime != null &&
+            DateTime.now().difference(_startedTrackingTime!).inMinutes >
+                activeEventData.duration.inMinutes) {
+          _startedTrackingTime = null;
+        }
+        SendToWatch.setIsLocationTracking(false);
+        HiveSettingsDB.setTrackingActive(false);
+        LocationStore.saveUserTrackPointList(_userTrackingPoints);
+        await startStopGeoFencing();
+      }).catchError((error) {
+        BnLog.error(text: 'Stopping location error: $error');
+      });
     }
-    bg.BackgroundGeolocation.stop().then((bg.State state) async {
-      BnLog.info(
-          text: 'location tracking stopped ${state.enabled}',
-          className: 'location_provider',
-          methodName: '_stopTracking');
-      _realUserSpeedKmh = null;
-      _userLatLng = null;
-      //reset autostart
-      //avoid second autostart on an event , reset after end
-      var activeEventData = ProviderContainer().read(activeEventProvider);
-      if (_startedTrackingTime != null &&
-          DateTime.now().difference(_startedTrackingTime!).inMinutes >
-              activeEventData.duration.inMinutes) {
-        _startedTrackingTime = null;
-      }
-      SendToWatch.setIsLocationTracking(false);
-      HiveSettingsDB.setTrackingActive(false);
-      LocationStore.saveUserTrackPointList(_userTrackingPoints);
-      notifyListeners();
-      await startStopGeoFencing();
-    }).catchError((error) {
-      BnLog.error(text: 'Stopping location error: $error');
-    });
     notifyListeners();
     return _isTracking;
   }

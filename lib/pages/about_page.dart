@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 import '../generated/l10n.dart';
-import '../helpers/export_import_data_helper.dart';
 import '../helpers/url_launch_helper.dart';
 import 'widgets/about_page/privacy.dart';
 import 'widgets/version_widget.dart';

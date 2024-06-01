@@ -6,6 +6,7 @@ void main() {
   var res = _getHtmlTags(text);
   var result = _createWidgetList(text);
   assert(res.length == 11);
+  assert(result.length == 1);
 }
 
 List<InlineSpan> _createWidgetList(String text) {
