@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -8,13 +9,22 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../generated/l10n.dart';
 import '../main.dart';
 import '../pages/widgets/scroll_quick_alert.dart';
+import 'hive_box/hive_settings_db.dart';
 import 'logger.dart';
 
 class Launch {
-  static void launchUrlFromString(String url,
-      {LaunchMode mode = LaunchMode.externalApplication}) {
+  static void launchUrlFromString(String inUrl,
+      {LaunchMode mode = LaunchMode.externalApplication, addData = false}) {
     return runZonedGuarded(() async {
-      if (await canLaunchUrlString(url)) {
+      var callUrl = inUrl.toString();
+      if (addData) {
+        callUrl += '?email=${HiveSettingsDB.bladeguardEmail}';
+        DateFormat df = DateFormat('yyyy-MM-dd');
+        var ds = df.format(HiveSettingsDB.bladeguardBirthday);
+        callUrl += '&birth=$ds';
+      }
+
+      if (await canLaunchUrlString(callUrl)) {
         var res = true;
         if (!kIsWeb &&
             mode == LaunchMode.externalApplication &&
@@ -22,7 +32,7 @@ class Launch {
           res = await ScrollQuickAlert.show(
               context: navigatorKey.currentContext!,
               title: Localize.current.leaveAppWarningTitle,
-              text: '${Localize.current.leaveAppWarning}\n$url',
+              text: '${Localize.current.leaveAppWarning}\n$inUrl',
               type: QuickAlertType.info,
               onConfirmBtnTap: () {
                 navigatorKey.currentState?.pop(true);
@@ -31,21 +41,21 @@ class Launch {
                 navigatorKey.currentState?.pop(false);
               });
         }
-        if (res) await launchUrlString(url, mode: mode);
+        if (res) await launchUrlString(callUrl, mode: mode);
       } else {
         if (!kIsWeb) {
-          BnLog.error(className: 'Launch', text: 'Could not launch $url');
+          BnLog.error(className: 'Launch', text: 'Could not launch $callUrl');
         }
       }
     }, (error, stack) {
       BnLog.error(
           className: 'Guarded launchUrlFromString',
-          text: 'Could not launch $url');
+          text: 'Could not launch $inUrl');
     });
   }
 
   static void launchUrlFromUri(Uri uri,
-      {LaunchMode mode = LaunchMode.externalApplication}) {
+      {LaunchMode mode = LaunchMode.externalApplication, addData = false}) {
     return runZonedGuarded(() async {
       if (await canLaunchUrl(uri)) {
         var res = true;

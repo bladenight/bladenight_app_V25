@@ -123,12 +123,14 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
                                           ? Builder(builder: (context) {
                                               var direction =
                                                   ref.watch(compassProvider);
-                                              return  RotatedBox(
-                                                quarterTurns: (direction *
+                                              return Transform.rotate(
+                                                angle: (direction *
                                                     (math.pi / 180) *
-                                                    -1).toInt(),
-                                                child: Image.asset(width: 30,height: 30,
-                                                    'assets/images/compass.png'),
+                                                    -1),
+                                                child: Image.asset(
+                                                    width: 30,
+                                                    height: 30,
+                                                    'assets/images/compass_3.png'),
                                               );
                                             })
                                           : Icon(CupertinoIcons.gauge,

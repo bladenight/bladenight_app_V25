@@ -299,7 +299,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                           if (message.button1Link != null &&
                               message.button1Link != '') {
                             Launch.launchUrlFromString(
-                              message.button1Link!,
+                              message.button1Link!
                             );
                           }
                         },
@@ -343,7 +343,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                           if (message.button3Link != null &&
                               message.button3Link != '') {
                             Launch.launchUrlFromString(message.button3Link!,
-                                mode: LaunchMode.inAppWebView);
+                                mode: LaunchMode.inAppWebView,addData: true);
                           }
                         },
                         child: Text(message.button3Text!),
