@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/location_permission_dialogs.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/map/compass_provider.dart';
+import '../../../providers/map/map_settings_provider.dart';
 import '../../widgets/scroll_quick_alert.dart';
 import 'open_street_map_copyright.dart';
 
@@ -116,12 +119,25 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
                                                 : CupertinoColors.black
                                             : CupertinoColors.black,
                                     icon: Row(children: [
-                                      Icon(CupertinoIcons.gauge,
-                                          color: context.watch(isMovingProvider)
-                                              ? CupertinoTheme.of(context)
-                                                  .primaryContrastingColor
-                                              : CupertinoTheme.of(context)
-                                                  .primaryColor),
+                                      !kIsWeb && ref.watch(showCompassProvider)
+                                          ? Builder(builder: (context) {
+                                              var direction =
+                                                  ref.watch(compassProvider);
+                                              return  RotatedBox(
+                                                quarterTurns: (direction *
+                                                    (math.pi / 180) *
+                                                    -1).toInt(),
+                                                child: Image.asset(width: 30,height: 30,
+                                                    'assets/images/compass.png'),
+                                              );
+                                            })
+                                          : Icon(CupertinoIcons.gauge,
+                                              color: context
+                                                      .watch(isMovingProvider)
+                                                  ? CupertinoTheme.of(context)
+                                                      .primaryContrastingColor
+                                                  : CupertinoTheme.of(context)
+                                                      .primaryColor),
                                       ref.watch(isUserParticipatingProvider)
                                           ? ImageIcon(
                                               const AssetImage(

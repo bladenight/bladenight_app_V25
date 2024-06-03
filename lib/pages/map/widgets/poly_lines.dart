@@ -53,7 +53,7 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
               : Colors.transparent,
           useStrokeWidthInMeter: true,
           borderStrokeWidth: context.watch(isTrackingProvider) ? 4 : 7,
-          isDotted: false, //ref.watch(isTrackingProvider),
+          //ref.watch(isTrackingProvider),
         ),
 
       if (processionRoutePoints.isNotEmpty)
@@ -64,7 +64,7 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
                 darkColor: ref.watch(themePrimaryDarkColorProvider)),
             strokeWidth: 3,
             borderStrokeWidth: 5.0,
-            isDotted: true),
+            pattern: const StrokePattern.dotted()),
       //user track
       if (locationUpdate.userLatLongs.isNotEmpty &&
           context.watch(showOwnTrackProvider))
@@ -77,8 +77,7 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
                   color: CupertinoColors.white,
                   darkColor: CupertinoColors.systemBlue)
               : CupertinoColors.white,
-          borderStrokeWidth: 3.0,
-          isDotted: false, // ref.watch(isTrackingProvider),
+          borderStrokeWidth: 3.0, // ref.watch(isTrackingProvider),
         ),
     ]);
   }

@@ -15,7 +15,6 @@ import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/active_event_route_provider.dart';
-import '../../providers/is_tracking_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/map/use_open_street_map_provider.dart';
 import '../widgets/no_connection_warning.dart';
@@ -124,7 +123,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              onMapEvent: mapEvent,
               keepAlive: true,
               initialZoom: 13.0,
               minZoom:
@@ -207,15 +205,4 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
     }
   }
 
-  _onPositionChanged(MapPosition p, bool g) {
-    if (ref.read(isTrackingProvider)) {
-      setState(() {
-        _hasGesture = g;
-      });
-    }
-  }
-
-  void mapEvent(MapEvent event) {
-
-  }
 }

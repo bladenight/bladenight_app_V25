@@ -5,7 +5,9 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_compass/flutter_map_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -241,28 +243,27 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           );
         }),
       ),
-
-      if (!kIsWeb && ref.watch(showCompassProvider))
-        Positioned(
-          right: 10,
-          bottom: 220,
-          child: Builder(builder: (context) {
-            var direction = ref.watch(compassProvider);
-            return FloatingActionButton(
-              heroTag: 'compassHeroTag',
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              onPressed: () {
-                final controller = MapController.of(context);
-                controller.rotate(0);
-              },
-              child: Transform.rotate(
-                angle: (direction * (math.pi / 180) * -1),
-                child: Image.asset('assets/images/compass.png'),
-              ),
-            );
-          }),
-        ),
+      Positioned(
+        right: 10,
+        bottom: 220,
+        child: Builder(builder: (context) {
+          return FloatingActionButton(
+            heroTag: 'mapCompassHeroTag',
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            onPressed: () {
+              final controller = MapController.of(context);
+              controller.rotate(0);
+            },
+            child: MapCompass(
+              hideIfRotatedNorth: true,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(0),
+              icon: Image.asset('assets/images/compass_2.png'),
+            ),
+          );
+        }),
+      ),
 
       //Left located button web
       /* if (kIsWeb)
@@ -396,11 +397,11 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 );
               },
               child: messageProvider.messages.isNotEmpty &&
-                  messageProvider.readMessages > 0
+                      messageProvider.readMessages > 0
                   ? Badge(
-                label: Text(messageProvider.readMessages.toString()),
-                child: const Icon(Icons.mark_email_unread),
-              )
+                      label: Text(messageProvider.readMessages.toString()),
+                      child: const Icon(Icons.mark_email_unread),
+                    )
                   : const Icon(CupertinoIcons.envelope));
         }),
       ),
@@ -528,7 +529,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   )));
         }),
       ),
-
     ]);
   }
 
@@ -625,13 +625,12 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                       child: Container(
                         alignment: Alignment.center,
                         child: Text(
-                          Localize.of(context)
-                              .messages,
+                          Localize.of(context).messages,
                           style: TextStyle(
                             color:
-                            CupertinoTheme.of(context).barBackgroundColor,
+                                CupertinoTheme.of(context).barBackgroundColor,
                             backgroundColor:
-                            CupertinoTheme.of(context).primaryColor,
+                                CupertinoTheme.of(context).primaryColor,
                           ),
                         ),
                       ),
