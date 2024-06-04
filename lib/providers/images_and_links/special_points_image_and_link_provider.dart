@@ -10,9 +10,9 @@ ImageAndLink _defaultSpecialPoints = ImageAndLink(
     '',
     '',
     '{"spp":['
-        '{"lat":48.098390,"lon":11.508354,"url":"https://bladenight.app/images/skatemunich_child_stop.png","des":"Sammelstopp"},' //Süd Höglwörther
-        '{"lat":48.12308,"lon":11.56730,"url":"https://bladenight.app/images/skatemunich_child_stop.png","des":"Sammelstopp"},' //Ost Wittelsbacher
-        '{"lat":48.15726,"lon":11.58417,"url":"https://bladenight.app/images/skatemunich_child_stop.png","des":"Sammelstopp"}' //Nord Leopold
+        '{"lat":48.098390,"lon":11.508354,"url":"https://bladenight.app/images/skatemunich_child_orange_circle.png","des":"Sammelstopp"},' //Süd Höglwörther
+        '{"lat":48.12308,"lon":11.56730,"url":"https://bladenight.app/images/skatemunich_child_orange_circle.png","des":"Sammelstopp"},' //Ost Wittelsbacher
+        '{"lat":48.15726,"lon":11.58417,"url":"https://bladenight.app/images/skatemunich_child_orange_circle.png","des":"Sammelstopp"}' //Nord Leopold
         ']'
         '}',
     'specialPoints');

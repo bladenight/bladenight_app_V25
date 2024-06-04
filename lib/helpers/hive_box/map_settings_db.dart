@@ -174,7 +174,7 @@ extension MapSettings on HiveSettingsDB {
 
   ///get compassVisible
   static bool get compassVisible {
-    return HiveSettingsDB._hiveBox.get(compassVisibleKey, defaultValue: false);
+    return HiveSettingsDB._hiveBox.get(compassVisibleKey, defaultValue: true);
   }
 
   ///set compassVisibleString
