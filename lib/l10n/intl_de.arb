@@ -279,7 +279,8 @@
   "leavewheninuse": "Lasse Einstellung",
   "length": "Länge",
   "linkNearBy": "Freund:in neben Dir annehmen",
-  "linkOnOtherDevice": "<h2>Wichtige Hinweise!</h2><ul><li>Dein Freund muss den gleichen Telefontyp verwenden Apple zu Android funktioniert nicht. Nutze in dem Fall das Code pairing.</li><li>Dein Freund muss in max. 2 m Entfernung von Dir sein!</li><li>Bitte bei deinem Freund in der Bladenight-App den Tab Freunde öffnen lassen.</li><li>Dort Plus oben rechts wählen<span class=\"icon\">plus</span></li><li>Freund:in neben Dir annehmen wählen</li><li>Nun mit diesem Gerät <b><em>{deviceName}</em></b> koppeln.</li></ul>Du kannst deinen übermittelten Namen im Textfeld ändern. Dieser ist nur ausschließlich zum übertragen per Direktverbindung / Scan.",
+  "linkOnOtherDevice": "<h3>Wichtige Hinweise!</h3><ul><li>Dein Freund kann via Freund:in mit Code hinzufügen den <br>Code <b>{code}</b> eingeben oder den Barcode mit der Kamera scannen</li><li>Alternativ: Dein Freund muss den gleichen Telefontyp verwenden. Apple zu Android funktioniert nicht.</li><li>Dein Freund muss in max. 2 m Entfernung von Dir sein!</li><li>Bitte bei deinem Freund in der BladeNight!-App den Tab Freunde öffnen lassen.</li><li>Dort Plus oben rechts wählen<span class=\"icon\">plus</span></li><li>Freund:in neben Dir annehmen wählen</li><li>Nun mit diesem Gerät <b><em>{deviceName}</em></b> koppeln.</li></ul>Du kannst deinen übermittelten Namen im Textfeld ändern. Dieser ist nur ausschließlich zum übertragen per Direktverbindung / Scan.",
+  "linkAsBrowserDevice": "<h3>Wichtige Hinweise!</h3><ul><li>Dein Freund muss den gleichen Telefontyp verwenden. Apple zu Android funktioniert nicht. Nutze in dem Fall das Code pairing.</li><li>Dein Freund muss in max. 2 m Entfernung von Dir sein!</li><li>Bitte bei deinem Freund in der BladeNight!-App den Tab Freunde öffnen lassen.</li><li>Dort Plus oben rechts wählen<span class=\"icon\">plus</span></li><li>Freund:in neben Dir hinzufügen wählen</li><li>Nun mit diesem Gerät <b><em>{deviceName}</em></b> koppeln.</li><li>Alternativ kannst du von deinem Freund den Barcode mit der Kamera scannen oder die Verbindung mit der Option Freund mit Code hinzufügen nutzen</li></ul>Du kannst deinen übermittelten Namen im Textfeld ändern. Dieser ist nur ausschließlich zum übertragen per Direktverbindung.",
   "linkingFailed": "Verknüpfung fehlgeschlagen",
   "linkingSuccessful": "Verknüpfung erfolgreich",
   "liveMapInBrowser": "Verfolgt die Bladnight ohne App im Browser",
@@ -497,5 +498,7 @@
   "lead": "Zuganfang/ende",
   "leadspec": "Zug+Spezial",
   "admin": "Administrator",
-  "bladeguardAtStartPointTitle": "BladenightApp - Vor Ort registriert"
+  "bladeguardAtStartPointTitle": "BladenightApp - Vor Ort registriert",
+  "checkNearbyCounterSide": "Bitte das Gerät deines Freundes zum Koppeln bestätigen",
+  "searchNearby" : "Suche Geräte in der Nähe ..."
 }

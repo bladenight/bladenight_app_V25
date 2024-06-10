@@ -70,10 +70,10 @@ class Localize {
     );
   }
 
-  /// `This app uses a unique ID that is saved locally when the app is first started.\nThis ID is used on the server to link friends and share the position. This is only transferred between your own app and server. \nThe app version number and phone manufacturer (Apple or Android) are also transmitted to check correct communication.\nThe ID is stored on the server with the linked friends.\nDeleting and reinstalling the app deletes the ID and the friends must be relinked \nThe data will not be passed on to third parties or used in any other way.\nYour location data will be used during the event to calculate and display the start and end of the train on the route and to calculate the distance to friends and to the destination.\nNo personal data is collected. The names of friends are only stored locally in the app.\nThe use of the app, email function, Bladeguard functions and website https://bladenight-muenchen.de is subject to the data protection regulations of Skatemunich e.V.\n These can be found at https:/ /bladenight-muenchen.de/datenschutzerklaerung can be viewed. The personal data is collected and processed exclusively for the purpose of organizing the Munich BladeNight. If you have any questions, please use the contact form,`
+  /// `This app uses a unique ID that is saved locally when the app is first started.\nThis ID is used on the server to pair friends and share the position. This is only transferred between your own app and server. \nThe app version number and phone manufacturer (Apple or Android) are also transmitted to check correct communication.\nThe ID is stored on the server with the linked friends.\nDeleting and reinstalling the app deletes the ID and the friends must be relinked \nThe data will not be passed on to third parties or used in any other way.\nYour location data will be used during the event to calculate and display the start and end of the train on the route and to calculate the distance to friends and to the destination.\nNo personal data is collected. The names of friends are only stored locally in the app.\nThe use of the app, email function, Bladeguard functions and website https://bladenight-muenchen.de is subject to the data protection regulations of Skatemunich e.V.\n These can be found at https:/ /bladenight-muenchen.de/datenschutzerklaerung can be viewed. The personal data is collected and processed exclusively for the purpose of organizing the Munich BladeNight. If you have any questions, please use the contact form,`
   String get about_appprivacy {
     return Intl.message(
-      'This app uses a unique ID that is saved locally when the app is first started.\nThis ID is used on the server to link friends and share the position. This is only transferred between your own app and server. \nThe app version number and phone manufacturer (Apple or Android) are also transmitted to check correct communication.\nThe ID is stored on the server with the linked friends.\nDeleting and reinstalling the app deletes the ID and the friends must be relinked \nThe data will not be passed on to third parties or used in any other way.\nYour location data will be used during the event to calculate and display the start and end of the train on the route and to calculate the distance to friends and to the destination.\nNo personal data is collected. The names of friends are only stored locally in the app.\nThe use of the app, email function, Bladeguard functions and website https://bladenight-muenchen.de is subject to the data protection regulations of Skatemunich e.V.\n These can be found at https:/ /bladenight-muenchen.de/datenschutzerklaerung can be viewed. The personal data is collected and processed exclusively for the purpose of organizing the Munich BladeNight. If you have any questions, please use the contact form,',
+      'This app uses a unique ID that is saved locally when the app is first started.\nThis ID is used on the server to pair friends and share the position. This is only transferred between your own app and server. \nThe app version number and phone manufacturer (Apple or Android) are also transmitted to check correct communication.\nThe ID is stored on the server with the linked friends.\nDeleting and reinstalling the app deletes the ID and the friends must be relinked \nThe data will not be passed on to third parties or used in any other way.\nYour location data will be used during the event to calculate and display the start and end of the train on the route and to calculate the distance to friends and to the destination.\nNo personal data is collected. The names of friends are only stored locally in the app.\nThe use of the app, email function, Bladeguard functions and website https://bladenight-muenchen.de is subject to the data protection regulations of Skatemunich e.V.\n These can be found at https:/ /bladenight-muenchen.de/datenschutzerklaerung can be viewed. The personal data is collected and processed exclusively for the purpose of organizing the Munich BladeNight. If you have any questions, please use the contact form,',
       name: 'about_appprivacy',
       desc: '',
       args: [],
@@ -760,11 +760,11 @@ class Localize {
     );
   }
 
-  /// `<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You read our Bladeguard-training module before your first trip and answers the questions.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="{bladeguardRegisterlink}">Online registration</a> and <a href="{ bladeguardPrivacyLink}">Data protection</a></p></h3>`
+  /// `<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You read our Bladeguard-training module before your first trip and answers the questions.</li></ul><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="{bladeguardRegisterlink}">Online registration</a> and <a href="{ bladeguardPrivacyLink}">Data protection</a></p></h3>`
   String bladeguardInfo(
       Object bladeguardRegisterlink, Object bladeguardPrivacyLink) {
     return Intl.message(
-      '<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li ><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You read our Bladeguard-training module before your first trip and answers the questions.</li></ul ><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="$bladeguardRegisterlink">Online registration</a> and <a href="$bladeguardPrivacyLink">Data protection</a></p></h3>',
+      '<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You read our Bladeguard-training module before your first trip and answers the questions.</li></ul><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="$bladeguardRegisterlink">Online registration</a> and <a href="$bladeguardPrivacyLink">Data protection</a></p></h3>',
       name: 'bladeguardInfo',
       desc: '',
       args: [bladeguardRegisterlink, bladeguardPrivacyLink],
@@ -861,10 +861,10 @@ class Localize {
     );
   }
 
-  /// `Please select your friend's device to link !`
+  /// `Please select your friend's device to pair !`
   String get chooseDeviceToLink {
     return Intl.message(
-      'Please select your friend\'s device to link !',
+      'Please select your friend\'s device to pair !',
       name: 'chooseDeviceToLink',
       desc: '',
       args: [],
@@ -1956,11 +1956,21 @@ class Localize {
     );
   }
 
-  /// `<h2>Important information</h2><ul><li>Your friend must have same mobile type. Apple to Android doesn't work. Use Code pairing instead.</li><li>Your friend must be within a maximum of 2 m of you!</li><li>Please open the Friends tab for your friend in the Bladenight app.</li><li>Select Plus at the top right<span class= "icon">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>{deviceName}</em></b> Pair.</li></ul>You can change your submitted name in the text field. This is only for transferring via direct connection / scan.`
-  String linkOnOtherDevice(Object deviceName) {
+  /// `<h2>Important information!</h2><ul><li>Your friend must use the same type of phone. Apple to Android does not work. In this case, use the code pairing.</li><li> Your friend must be within a maximum distance of 2 m from you!</li><li>Please open the Friends tab for your friend in the BladeNight! app.</li><li>Select Plus at the top right<span class="icon">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>{deviceName}</em></b> pair.</li><li>Alternatively, your friend can scan the barcode with the camera or connect you with <br>code <b>{code}</b></li></ul>You can change your submitted name in the text field. This is only for transfer via direct connection / scan.`
+  String linkOnOtherDevice(Object deviceName, Object code) {
     return Intl.message(
-      '<h2>Important information</h2><ul><li>Your friend must have same mobile type. Apple to Android doesn\'t work. Use Code pairing instead.</li><li>Your friend must be within a maximum of 2 m of you!</li><li>Please open the Friends tab for your friend in the Bladenight app.</li><li>Select Plus at the top right<span class= "icon">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>$deviceName</em></b> Pair.</li></ul>You can change your submitted name in the text field. This is only for transferring via direct connection / scan.',
+      '<h2>Important information!</h2><ul><li>Your friend must use the same type of phone. Apple to Android does not work. In this case, use the code pairing.</li><li> Your friend must be within a maximum distance of 2 m from you!</li><li>Please open the Friends tab for your friend in the BladeNight! app.</li><li>Select Plus at the top right<span class="icon">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>$deviceName</em></b> pair.</li><li>Alternatively, your friend can scan the barcode with the camera or connect you with <br>code <b>$code</b></li></ul>You can change your submitted name in the text field. This is only for transfer via direct connection / scan.',
       name: 'linkOnOtherDevice',
+      desc: '',
+      args: [deviceName, code],
+    );
+  }
+
+  /// `<h2>Important information!</h2><ul><li>Your friend must use the same type of phone. Apple to Android does not work. In this case, use the code pairing.</li><li> Your friend must be within a maximum distance of 2 m from you!</li><li>Please open the Friends tab for your friend in the BladeNight! app.</li><li>Select Plus at the top right<span class="icon">plus</span></li><li>Select Add friend next to you</li><li>Now with this device <b><em>{deviceName}</em></b> Pair.</li><li>Alternatively, you can scan your friend's barcode with the camera or use the connection with the Add friend with code option </li></ul>You can enter your transmitted name change in the text field. This is only for transferring via direct connection.`
+  String linkAsBrowserDevice(Object deviceName) {
+    return Intl.message(
+      '<h2>Important information!</h2><ul><li>Your friend must use the same type of phone. Apple to Android does not work. In this case, use the code pairing.</li><li> Your friend must be within a maximum distance of 2 m from you!</li><li>Please open the Friends tab for your friend in the BladeNight! app.</li><li>Select Plus at the top right<span class="icon">plus</span></li><li>Select Add friend next to you</li><li>Now with this device <b><em>$deviceName</em></b> Pair.</li><li>Alternatively, you can scan your friend\'s barcode with the camera or use the connection with the Add friend with code option </li></ul>You can enter your transmitted name change in the text field. This is only for transferring via direct connection.',
+      name: 'linkAsBrowserDevice',
       desc: '',
       args: [deviceName],
     );
@@ -4093,40 +4103,40 @@ class Localize {
     );
   }
 
-  /// `Du musst in der Nähe des Startpunktes sein, bist aber min. {distInMeter} m entfernt. Falls du dich verspätest bitte deinen Teamleiter informieren.`
+  /// `You have to be close to the starting point, but you are at least {distInMeter} m away. If you are late, please inform your team leader.`
   String mustNearbyStartingPoint(Object distInMeter) {
     return Intl.message(
-      'Du musst in der Nähe des Startpunktes sein, bist aber min. $distInMeter m entfernt. Falls du dich verspätest bitte deinen Teamleiter informieren.',
+      'You have to be close to the starting point, but you are at least $distInMeter m away. If you are late, please inform your team leader.',
       name: 'mustNearbyStartingPoint',
       desc: '',
       args: [distInMeter],
     );
   }
 
-  /// `Spezial`
+  /// `Special`
   String get spec {
     return Intl.message(
-      'Spezial',
+      'Special',
       name: 'spec',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zuganfang/ende`
+  /// `Procession start/end`
   String get lead {
     return Intl.message(
-      'Zuganfang/ende',
+      'Procession start/end',
       name: 'lead',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zug+Spezial`
+  /// `Procession + Special`
   String get leadspec {
     return Intl.message(
-      'Zug+Spezial',
+      'Procession + Special',
       name: 'leadspec',
       desc: '',
       args: [],
@@ -4143,11 +4153,31 @@ class Localize {
     );
   }
 
-  /// `BladenightApp - Vor Ort registriert`
+  /// `BladenightApp - registered onsite`
   String get bladeguardAtStartPointTitle {
     return Intl.message(
-      'BladenightApp - Vor Ort registriert',
+      'BladenightApp - registered onsite',
       name: 'bladeguardAtStartPointTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select your friends device to get App-friends`
+  String get checkNearbyCounterSide {
+    return Intl.message(
+      'Please select your friends device to get App-friends',
+      name: 'checkNearbyCounterSide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Searching nearby devices`
+  String get searchNearby {
+    return Intl.message(
+      'Searching nearby devices',
+      name: 'searchNearby',
       desc: '',
       args: [],
     );

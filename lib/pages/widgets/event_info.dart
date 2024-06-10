@@ -188,7 +188,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
             ),
           Column(children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 5.0),
+              padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 0.0),
               child: GestureDetector(
                 onTap: () async {
                   var link = context.read(mainSponsorImageAndLinkProvider).link;
@@ -204,7 +204,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                   return (ms.image != null &&
                           nw.connectivityStatus == ConnectivityStatus.online)
                       ? CachedNetworkImage(
-                          width: _width * .7,
+                          width: _width * .6,
                           imageUrl: ms.image!,
                           placeholder: (context, url) => Image.asset(
                               mainSponsorPlaceholder,
@@ -222,7 +222,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(50.0, 1.0, 50, 1.0),
+              padding: const EdgeInsets.fromLTRB(50.0, 0.0, 50, 1.0),
               child: GestureDetector(
                 onTap: () async {
                   var link =
@@ -239,7 +239,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                   return (img.image != null &&
                           nw.connectivityStatus == ConnectivityStatus.online)
                       ? CachedNetworkImage(
-                          width: _width * .7,
+                          width: _width * .6,
                           imageUrl: img.image!,
                           placeholder: (context, url) => Image.asset(
                               secondLogoPlaceholder,

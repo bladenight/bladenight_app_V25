@@ -74,7 +74,7 @@ class BladeGuardOnsite extends ConsumerWidget {
             ))
       ]);
     }, loading: () {
-      return const CircularProgressIndicator();
+      return const CupertinoActivityIndicator();
     }, data: (status) {
       return ((nextEventProvider.status == EventStatus.confirmed &&
                   !eventActive) &&
@@ -191,7 +191,7 @@ class BladeGuardOnsite extends ConsumerWidget {
               ],
             )
           : (nextEventProvider.status == EventStatus.confirmed &&
-                  !canRegisterOnSite && !eventActive)
+                  !canRegisterOnSite && !eventActive && bladeguardSettingsVisible)
               ? Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
                   child: Container(

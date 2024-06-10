@@ -131,7 +131,7 @@ import WatchConnectivity
                         i += 1
                         //print("\(df.string(from:Date())) flutterToWatchTransferUserInfo delete \(i) outstanding \(String(describing: item.userInfo[method as! String]))")
                         let userInfo = item.userInfo
-                        var values = userInfo[method as! String]
+                        let values = userInfo[method as! String]
                         if (values != nil){
                             item.cancel()
                         }

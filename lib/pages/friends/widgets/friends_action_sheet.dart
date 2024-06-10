@@ -7,7 +7,11 @@ import '../../../generated/l10n.dart';
 enum FriendsAction {
   addNew,
   addWithCode,
+
+  /// send as advertiser
   addNearby,
+
+  /// be browser and create a connection
   acceptNearby,
   edit,
   delete
@@ -27,7 +31,7 @@ class FriendsActionModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoActionSheet(
       actions: [
-        if (Platform.isIOS) ...[
+        if (Platform.isIOS || Platform.isAndroid) ...[
           CupertinoActionSheetAction(
             child: Text(Localize.of(context).addNearBy),
             onPressed: () {
@@ -41,14 +45,12 @@ class FriendsActionModal extends StatelessWidget {
             },
           ),
         ],
-        if (!Platform.isIOS) ...[
-          CupertinoActionSheetAction(
-            child: Text(Localize.of(context).addnewfriend),
-            onPressed: () {
-              Navigator.pop(context, FriendsAction.addNew);
-            },
-          ),
-        ],
+        CupertinoActionSheetAction(
+          child: Text(Localize.of(context).addnewfriend),
+          onPressed: () {
+            Navigator.pop(context, FriendsAction.addNew);
+          },
+        ),
         CupertinoActionSheetAction(
           child: Text(Localize.of(context).addfriendwithcode),
           onPressed: () {

@@ -1,11 +1,9 @@
 import 'dart:core';
-import 'dart:math' as math;
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_compass/flutter_map_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,9 +24,7 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
-import '../../../providers/map/compass_provider.dart';
 import '../../../providers/map/heading_marker_size_provider.dart';
-import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/messages_provider.dart';
 import '../../../providers/route_providers.dart';

@@ -2,7 +2,7 @@ name: bladenight_app_flutter
 description: Bladenight App
 
 publish_to: 'none'
-version: 1.24.14
+version: 1.24.15
 
 environment:
   sdk: ">=2.17.0 <4.0.0"
@@ -47,8 +47,9 @@ dependencies:
   flutter_map_marker_popup: #^6.1.2
     path: ../flutter_map_marker_popup
   flutter_native_splash: ^2.3.0
-  flutter_nearby_connections:
-    path: ../flutter_nearby_connections
+  nearby_service: ^0.0.8
+    #flutter_nearby_connections:
+    #path: ../flutter_nearby_connections
     #git:
       #url: https://github.com/xunreal75/flutter_nearby_connections.git
   #flutter_nearby_connections: ^1.1.2
@@ -71,7 +72,7 @@ dependencies:
     #location:
     #git:
     #url: https://github.com/fairuzmn/flutterlocation.git
-    #ref: location-v5.5.0.0-dev.9-fix
+  #ref: location-v5.5.0.0-dev.9-fix
   #path: packages/location
   #geolocator:
   #git:
@@ -90,7 +91,7 @@ dependencies:
   #    url: https://github.com/followthemoney1/modal_bottom_sheet.git
   #    ref: main
   #    path: modal_bottom_sheet
-  onesignal_flutter: ^5.1.4
+  onesignal_flutter: ^5.2.0
   package_info_plus: ^8.0.0
   path_provider: ^2.0.15
   permission_handler: ^11.1.0
@@ -168,7 +169,7 @@ dependency_overrides:
 
 # can't compile mapper if generate is set to true --> solve it by set to false , clean and rebuild
 flutter:
-  generate: false
+  generate: true
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:

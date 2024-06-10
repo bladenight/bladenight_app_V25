@@ -13,7 +13,6 @@ import '../../main.dart';
 import '../../models/external_app_message.dart';
 import '../../providers/messages_provider.dart';
 import '../device_info_helper.dart';
-import '../deviceid_helper.dart';
 import '../hive_box/hive_settings_db.dart';
 import '../logger.dart';
 import '../url_launch_helper.dart';
@@ -260,10 +259,8 @@ class OnesignalHandler {
           type: QuickAlertType.info,
           onConfirmBtnTap: () {
             if (data != null) {
-              var devId = DeviceId.appId;
               if (data.keys.contains('url')) {
-                message.url = data['url'] + '/?id=$devId';
-                Launch.launchUrlFromString(data['url'] + '/?id=$devId');
+                Launch.launchUrlFromString(data['url']);
               }
             }
             ProviderContainer().read(messagesLogicProvider).addMessage(message);
@@ -285,10 +282,8 @@ class OnesignalHandler {
           type: QuickAlertType.info,
           onConfirmBtnTap: () {
             if (data != null) {
-              var devId = DeviceId.appId;
               if (data.keys.contains('url')) {
-                message.url = data['url'] + '/?id=$devId';
-                Launch.launchUrlFromString(data['url'] + '/?id=$devId');
+                Launch.launchUrlFromString(data['url']);
               }
             }
             ProviderContainer().read(messagesLogicProvider).addMessage(message);
