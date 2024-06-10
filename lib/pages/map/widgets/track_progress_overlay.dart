@@ -44,8 +44,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      BnLog.trace(
-          text: 'Track_progress_overlay - initState');
+      BnLog.trace(text: 'Track_progress_overlay - initState');
       ref.read(locationProvider).refresh(forceUpdate: true); //update in map
       ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
       ref.read(refreshTimerProvider.notifier).start();
@@ -55,7 +54,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     BnLog.trace(
-          text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
+        text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       ref.read(refreshTimerProvider.notifier).start();
     } else if (state == AppLifecycleState.paused) {
@@ -432,39 +431,40 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                       .bladenightViewerTracking),
                                     ),
                                   ),
-                                if (kIsWeb)
+                                if (kIsWeb) ...[
                                   SizedBox(
-                                      child: Center(
-                                          child: (actualOrNextEvent.status ==
-                                                      EventStatus.confirmed ||
-                                                  actualOrNextEvent.status ==
-                                                      EventStatus.running)
-                                              ? Text(
-                                                  '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(rtu.timeStamp)}') //Text when Event confirmed
-                                              : (actualOrNextEvent.status !=
-                                                          EventStatus
-                                                              .confirmed ||
-                                                      actualOrNextEvent
-                                                              .status ==
-                                                          EventStatus.running)
-                                                  ? kIsWeb
-                                                      ? FittedBox(
-                                                          child: Text(
-                                                            '${Localize.of(context).nextEvent} ${DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(actualOrNextEvent.getUtcIso8601DateTime)}',
-                                                          ),
-                                                        )
-                                                      : FittedBox(
-                                                          child: Text(
-                                                            DateFormatter(
-                                                                    Localize.of(
-                                                                        context))
-                                                                .getLocalDayDateTimeRepresentation(
-                                                                    actualOrNextEvent
-                                                                        .getUtcIso8601DateTime),
-                                                          ),
-                                                        )
-                                                  : Container()) //empty when not confirmed no viewer mode available
+                                    child: Center(
+                                        child: ((actualOrNextEvent.status ==
+                                                        EventStatus.confirmed ||
+                                                    actualOrNextEvent.status ==
+                                                        EventStatus.running) &&
+                                                eventIsActive)
+                                            ? Text(
+                                                '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(rtu.timeStamp)}') //Text when Event confirmed
+                                            : Container()),
+                                  ),
+                                  if (actualOrNextEvent.status !=
+                                          EventStatus.confirmed &&
+                                      actualOrNextEvent.status !=
+                                          EventStatus.noevent)
+                                    FittedBox(
+                                      child: Text(
+                                        '${Localize.of(context).nextEvent} ${DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(actualOrNextEvent.getUtcIso8601DateTime)}',
                                       ),
+                                    ),
+                                  if (actualOrNextEvent.status ==
+                                      EventStatus.confirmed &&
+                                      actualOrNextEvent.status !=
+                                          EventStatus.noevent)
+                                  FittedBox(
+                                    child: Text(
+                                      DateFormatter(Localize.of(context))
+                                          .getLocalDayDateTimeRepresentation(
+                                              actualOrNextEvent
+                                                  .getUtcIso8601DateTime),
+                                    ),
+                                  ),
+                                ],
                                 if (eventIsActive)
                                   Column(children: [
                                     SizedBox(

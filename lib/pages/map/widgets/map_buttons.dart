@@ -376,31 +376,32 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             }
           }),
         ),
-      Positioned(
-        bottom: ref.watch(mapMenuVisibleProvider) ? 300 : 90,
-        left: kIsWeb ? 10 : 10,
-        height: 30,
-        child: Builder(builder: (context) {
-          var messageProvider = context.watch(messagesLogicProvider);
-          return FloatingActionButton(
-              heroTag: 'messageBtnTag',
-              onPressed: () async {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (context) => const MessagesPage(),
-                    fullscreenDialog: false,
-                  ),
-                );
-              },
-              child: messageProvider.messages.isNotEmpty &&
-                      messageProvider.readMessages > 0
-                  ? Badge(
-                      label: Text(messageProvider.readMessages.toString()),
-                      child: const Icon(Icons.mark_email_unread),
-                    )
-                  : const Icon(CupertinoIcons.envelope));
-        }),
-      ),
+      if (!kIsWeb)
+        Positioned(
+          bottom: ref.watch(mapMenuVisibleProvider) ? 300 : 90,
+          left: kIsWeb ? 10 : 10,
+          height: 30,
+          child: Builder(builder: (context) {
+            var messageProvider = context.watch(messagesLogicProvider);
+            return FloatingActionButton(
+                heroTag: 'messageBtnTag',
+                onPressed: () async {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (context) => const MessagesPage(),
+                      fullscreenDialog: false,
+                    ),
+                  );
+                },
+                child: messageProvider.messages.isNotEmpty &&
+                        messageProvider.readMessages > 0
+                    ? Badge(
+                        label: Text(messageProvider.readMessages.toString()),
+                        child: const Icon(Icons.mark_email_unread),
+                      )
+                    : const Icon(CupertinoIcons.envelope));
+          }),
+        ),
       if (!kIsWeb)
         PositionedVisibilityOpacity(
           left: 10,
