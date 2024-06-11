@@ -253,7 +253,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             ),
             const SizedBox(height: 15),
             CupertinoButton.filled(
-              child: const Text('Kill Server'),
+              child: const Text('Restart BN-Server'),
               onPressed: () async {
                 var status = await showKillServerDialog(
                   context,
@@ -269,14 +269,14 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   } catch (e) {
                     if (!kIsWeb) {
                       BnLog.error(
-                          text: 'Error KillServer',
+                          text: 'Error Restart Server',
                           className: toString(),
-                          methodName: 'Adminpage KillServer');
+                          methodName: 'Adminpage Restart server');
                     }
                   }
 
                   _activityVisible = false;
-                  _resultText = 'Kill Server sent!';
+                  _resultText = 'Restart Server sent!';
                   setState(() {});
 
                   if (context.mounted) {
