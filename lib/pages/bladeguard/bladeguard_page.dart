@@ -132,13 +132,6 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: SendMailWidget(),
-                        ),
-                      ),
                       if (!isBladeguard) ...[
                         const SizedBox(
                           height: 10,
@@ -196,22 +189,38 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       ],
                       //---------
                       if (isBladeguard) ...[
-                        if (!bladeguardSettingsVisible) const EmailTextField(),
-                        if (!bladeguardSettingsVisible)
+                        if (!bladeguardSettingsVisible) ...[
+                          const EmailTextField(),
                           const BirthdayDatePicker(),
+                        ],
                         const PhoneTextField(),
+                        if (networkConnected.connectivityStatus ==
+                                ConnectivityStatus.online &&
+                            !bladeguardSettingsVisible &&
+                            ref.watch(isValidBladeGuardEmailProvider))
+                          Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: CupertinoButton(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(20)),
+                                color: Colors.yellowAccent,
+                                child: Text(
+                                  Localize.of(context).checkBgRegistration,
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                                onPressed: () async {
+                                  await checkOrUpdateBladeGuardData();
+                                }),
+                          ),
+
                       ],
-                      if (networkConnected.connectivityStatus ==
-                              ConnectivityStatus.online &&
-                          !bladeguardSettingsVisible &&
-                          isBladeguard &&
-                          ref.watch(isValidBladeGuardEmailProvider))
-                        CupertinoButton(
-                            child:
-                                Text(Localize.of(context).checkBgRegistration),
-                            onPressed: () async {
-                              await checkOrUpdateBladeGuardData();
-                            }),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: SendMailWidget(),
+                        ),
+                      ),
                       if (!kIsWeb)
                         Column(
                           children: [
@@ -304,7 +313,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 rightWidget: CupertinoSwitch(
                                   onChanged: (val) async {
                                     setState(() {
-                                     HiveSettingsDB.setRcvSkatemunichInfos(
+                                      HiveSettingsDB.setRcvSkatemunichInfos(
                                           val);
                                     });
                                     HiveSettingsDB.setRcvSkatemunichInfos(val);

@@ -19,6 +19,12 @@ class BladeGuardOnsite extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var bladeguardSettingsVisible =
+        ref.watch(bladeguardSettingsVisibleProvider);
+    if (!bladeguardSettingsVisible) {
+      return Container();
+    }
+
     var nextEventProvider = context.watch(activeEventProvider);
     var diff = nextEventProvider.startDateUtc
         .difference(DateTime.now().toUtc())
@@ -34,8 +40,6 @@ class BladeGuardOnsite extends ConsumerWidget {
       canRegisterOnSite = true;
     }
     final isOnSiteAsync = ref.watch(bgIsOnSiteProvider);
-    var bladeguardSettingsVisible =
-        ref.watch(bladeguardSettingsVisibleProvider);
     var networkConnected = context.watch(
         networkAwareProvider.select((value) => value.connectivityStatus));
     return isOnSiteAsync.when(error: (e, st) {
@@ -79,8 +83,7 @@ class BladeGuardOnsite extends ConsumerWidget {
       return ((nextEventProvider.status == EventStatus.confirmed &&
                   !eventActive) &&
               canRegisterOnSite &&
-              networkConnected == ConnectivityStatus.online &&
-              bladeguardSettingsVisible)
+              networkConnected == ConnectivityStatus.online)
           ? Column(
               children: [
                 if (status == false) ...[
@@ -191,7 +194,8 @@ class BladeGuardOnsite extends ConsumerWidget {
               ],
             )
           : (nextEventProvider.status == EventStatus.confirmed &&
-                  !canRegisterOnSite && !eventActive && bladeguardSettingsVisible)
+                  !canRegisterOnSite &&
+                  !eventActive)
               ? Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
                   child: Container(

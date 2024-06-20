@@ -212,8 +212,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "change": MessageLookupByLibrary.simpleMessage("Ändern"),
         "changetoalways": MessageLookupByLibrary.simpleMessage(
             "Zu \'Immer zulassen\' ändern"),
-        "checkBgRegistration": MessageLookupByLibrary.simpleMessage(
-            "Prüfen ob die E-Mail registriert wurde."),
+        "checkBgRegistration":
+            MessageLookupByLibrary.simpleMessage("Prüfen du registriert bist."),
         "checkNearbyCounterSide": MessageLookupByLibrary.simpleMessage(
             "Bitte das Gerät deines Freundes zum Koppeln bestätigen"),
         "chooseDeviceToLink": MessageLookupByLibrary.simpleMessage(
@@ -590,8 +590,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Warte auf Internetverbindung ..."),
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Anfrage gesendet - Dauert ca. 30s."),
-        "sendMail":
-            MessageLookupByLibrary.simpleMessage("E-Mail Unterstützung"),
+        "sendMail": MessageLookupByLibrary.simpleMessage(
+            "Ich habe ein Problem! (Email-Support)"),
         "sendlink": MessageLookupByLibrary.simpleMessage("Link senden"),
         "sendlinkdescription": m13,
         "sendlinksubject": MessageLookupByLibrary.simpleMessage(
