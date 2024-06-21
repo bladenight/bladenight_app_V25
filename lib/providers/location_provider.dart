@@ -993,7 +993,7 @@ class LocationProvider with ChangeNotifier {
               location.coords.longitude.toShortenedDouble(6)),
           deviceId: DeviceId.appId,
           isParticipating: _userIsParticipant,
-          specialFunction: HiveSettingsDB.wantSeeFullOfProcession
+          specialFunction: HiveSettingsDB.specialCodeValue != 0
               ? HiveSettingsDB.specialCodeValue
               : null,
           userSpeed: location.coords.speed < 0
