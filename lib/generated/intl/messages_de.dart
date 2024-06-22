@@ -212,8 +212,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "change": MessageLookupByLibrary.simpleMessage("Ändern"),
         "changetoalways": MessageLookupByLibrary.simpleMessage(
             "Zu \'Immer zulassen\' ändern"),
-        "checkBgRegistration":
-            MessageLookupByLibrary.simpleMessage("Prüfen du registriert bist."),
+        "checkBgRegistration": MessageLookupByLibrary.simpleMessage(
+            "Prüfen ob du registriert bist."),
         "checkNearbyCounterSide": MessageLookupByLibrary.simpleMessage(
             "Bitte das Gerät deines Freundes zum Koppeln bestätigen"),
         "chooseDeviceToLink": MessageLookupByLibrary.simpleMessage(

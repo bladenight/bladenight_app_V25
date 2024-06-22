@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 import '../../generated/l10n.dart';
@@ -10,11 +11,21 @@ class SendMailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoButton(
-        child: Text(Localize.of(context).sendMail),
-        onPressed: () async {
-          await _sendMail();
-        });
+    return Padding(
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      child: CupertinoButton(
+          color: Colors.orange.shade500,
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              Localize.of(context).sendMail,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+          onPressed: () async {
+            await _sendMail();
+          }),
+    );
   }
 }
 
@@ -23,8 +34,8 @@ _sendMail() async {
     var aV = await DeviceHelper.getAppVersionsData();
     final Email email = Email(
       subject:
-          'Bladenight München Anfrage (App V${aV.version} build${aV.buildNumber})',
-      body: 'Ich möchte ...:\n',
+          'BladeNight! München Anfrage (App V${aV.version} build${aV.buildNumber})',
+      body: 'Ich habe ein Problem und bitte um Unterstützung:\n',
       recipients: ['it@huth.app'],
       cc: ['service@skatemunich.de'],
       //bcc: ['bcc@example.com'],

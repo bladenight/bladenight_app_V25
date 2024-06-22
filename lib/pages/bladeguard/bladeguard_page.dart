@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
@@ -198,29 +199,30 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 ConnectivityStatus.online &&
                             !bladeguardSettingsVisible &&
                             ref.watch(isValidBladeGuardEmailProvider))
-                          Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: CupertinoButton(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(20)),
-                                color: Colors.yellowAccent,
-                                child: Text(
-                                  Localize.of(context).checkBgRegistration,
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                onPressed: () async {
-                                  await checkOrUpdateBladeGuardData();
-                                }),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 5, bottom: 5),
+                              child: CupertinoButton(
+                                  color: Colors.yellowAccent,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      Localize.of(context).checkBgRegistration,
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    await checkOrUpdateBladeGuardData();
+                                  }),
+                            ),
                           ),
-
-                      ],
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: SendMailWidget(),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: const SendMailWidget(),
                         ),
-                      ),
+                      ],
                       if (!kIsWeb)
                         Column(
                           children: [
