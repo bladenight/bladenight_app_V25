@@ -531,117 +531,139 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
 
   void _showOverlay(BuildContext context, {required String text}) async {
     var bottomOffset =
-        kIsWeb ? kBottomNavigationBarHeight : kBottomNavigationBarHeight + 45;
+        kIsWeb ? kBottomNavigationBarHeight : kBottomNavigationBarHeight;
 
     OverlayState? overlayState = Overlay.of(context);
     OverlayEntry overlayEntry;
     overlayEntry = OverlayEntry(builder: (context) {
-      return Stack(
-        children: [
-          Positioned(
-            left: 00,
-            top: kIsWeb ? 0 : kToolbarHeight,
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 180.0,
-                  child: Center(
+      return SafeArea(
+        child: Stack(
+          children: [
+            Positioned(
+              left: 00,
+              top: kIsWeb ? 0 : kToolbarHeight,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 180.0,
+                    child: Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: CupertinoTheme.of(context).primaryColor,
+                            width: 4.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_upward,
+                    color: CupertinoTheme.of(context).primaryColor,
+                  ),
+                  Text(
+                    Localize.of(context).actualInformations,
+                    style: TextStyle(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).barBackgroundColor),
+                  ),
+                ],
+              ),
+            ),
+            if (!kIsWeb)
+              Positioned(
+                left: 70,
+                bottom: ref.watch(mapMenuVisibleProvider)
+                    ? 340 + bottomOffset
+                    : 120 + bottomOffset,
+                height: 40,
+                child: Builder(builder: (context) {
+                  var isTracking = ref.watch(isTrackingProvider);
+                  if (!isTracking) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: FadeTransition(
+                        opacity: animation!,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            Localize.of(context)
+                                .startLocationWithoutParticipating,
+                            style: TextStyle(
+                              color:
+                                  CupertinoTheme.of(context).barBackgroundColor,
+                              backgroundColor:
+                                  CupertinoTheme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
+                }),
+              ),
+            if (!kIsWeb)
+              Positioned(
+                left: 70,
+                bottom: ref.watch(mapMenuVisibleProvider)
+                    ? 290 + bottomOffset
+                    : 80 + bottomOffset,
+                height: 40,
+                child: Builder(builder: (context) {
+                  var isTracking = ref.watch(isTrackingProvider);
+                  if (!isTracking) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: FadeTransition(
+                        opacity: animation!,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            Localize.of(context).messages,
+                            style: TextStyle(
+                              color:
+                                  CupertinoTheme.of(context).barBackgroundColor,
+                              backgroundColor:
+                                  CupertinoTheme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
+                }),
+              ),
+            if (!kIsWeb)
+              Positioned(
+                left: 70,
+                bottom: 250 + bottomOffset,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: FadeTransition(
+                    opacity: animation!,
                     child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: CupertinoTheme.of(context).primaryColor,
-                          width: 4.0,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Reset Tacho',
+                        style: TextStyle(
+                          color: CupertinoTheme.of(context).barBackgroundColor,
+                          backgroundColor:
+                              CupertinoTheme.of(context).primaryColor,
                         ),
                       ),
                     ),
                   ),
                 ),
-                Icon(
-                  Icons.arrow_upward,
-                  color: CupertinoTheme.of(context).primaryColor,
-                ),
-                Text(
-                  Localize.of(context).actualInformations,
-                  style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).barBackgroundColor),
-                ),
-              ],
-            ),
-          ),
-          if (!kIsWeb)
+              ),
             Positioned(
               left: 70,
-              bottom: ref.watch(mapMenuVisibleProvider)
-                  ? 340 + bottomOffset
-                  : 120 + bottomOffset,
-              height: 40,
-              child: Builder(builder: (context) {
-                var isTracking = ref.watch(isTrackingProvider);
-                if (!isTracking) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
-                    child: FadeTransition(
-                      opacity: animation!,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          Localize.of(context)
-                              .startLocationWithoutParticipating,
-                          style: TextStyle(
-                            color:
-                                CupertinoTheme.of(context).barBackgroundColor,
-                            backgroundColor:
-                                CupertinoTheme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return Container();
-                }
-              }),
-            ),
-          if (!kIsWeb)
-            Positioned(
-              left: 70,
-              bottom: ref.watch(mapMenuVisibleProvider)
-                  ? 290 + bottomOffset
-                  : 80 + bottomOffset,
-              height: 40,
-              child: Builder(builder: (context) {
-                var isTracking = ref.watch(isTrackingProvider);
-                if (!isTracking) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
-                    child: FadeTransition(
-                      opacity: animation!,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          Localize.of(context).messages,
-                          style: TextStyle(
-                            color:
-                                CupertinoTheme.of(context).barBackgroundColor,
-                            backgroundColor:
-                                CupertinoTheme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return Container();
-                }
-              }),
-            ),
-          if (!kIsWeb)
-            Positioned(
-              left: 70,
-              bottom: 250 + bottomOffset,
+              bottom: 190 + bottomOffset,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(2),
                 child: FadeTransition(
@@ -649,7 +671,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      'Reset Tacho',
+                      'Zoom -',
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -660,75 +682,9 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 ),
               ),
             ),
-          Positioned(
-            left: 70,
-            bottom: 190 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Zoom -',
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor: CupertinoTheme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 70,
-            bottom: 140 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Zoom +',
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor: CupertinoTheme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 70,
-            bottom: 90 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    Localize.of(context).setDarkMode,
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor: CupertinoTheme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          //if (!kIsWeb)
-          Positioned(
-            right: 70,
-            bottom: 160 + bottomOffset,
-            child: Visibility(
-              visible: ref.read(cameraFollowLocationProvider) ==
-                      CameraFollow.followMe
-                  ? true
-                  : false,
+            Positioned(
+              left: 70,
+              bottom: 140 + bottomOffset,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(2),
                 child: FadeTransition(
@@ -736,7 +692,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      'Kartenausrichtung',
+                      'Zoom +',
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -747,53 +703,58 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 ),
               ),
             ),
-          ),
-          // if (!kIsWeb)
-          Positioned(
-            right: 70,
-            bottom: 45 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Teilnahme starten',
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor: CupertinoTheme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            //right: kIsWeb ? null : 70,
-            //left: kIsWeb ? 70 : null,
-            right: 70,
-            bottom: 115 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Auf Karte verfolgen',
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).barBackgroundColor,
-                      backgroundColor: CupertinoTheme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          if (kIsWeb)
             Positioned(
               left: 70,
+              bottom: 90 + bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      Localize.of(context).setDarkMode,
+                      style: TextStyle(
+                        color: CupertinoTheme.of(context).barBackgroundColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            //if (!kIsWeb)
+            Positioned(
+              right: 70,
+              bottom: 160 + bottomOffset,
+              child: Visibility(
+                visible: ref.read(cameraFollowLocationProvider) ==
+                        CameraFollow.followMe
+                    ? true
+                    : false,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: FadeTransition(
+                    opacity: animation!,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Kartenausrichtung',
+                        style: TextStyle(
+                          color: CupertinoTheme.of(context).barBackgroundColor,
+                          backgroundColor:
+                              CupertinoTheme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // if (!kIsWeb)
+            Positioned(
+              right: 70,
               bottom: 45 + bottomOffset,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(2),
@@ -802,7 +763,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      'Menu',
+                      'Teilnahme starten',
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -813,7 +774,53 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 ),
               ),
             ),
-        ],
+            Positioned(
+              //right: kIsWeb ? null : 70,
+              //left: kIsWeb ? 70 : null,
+              right: 70,
+              bottom: 115 + bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Auf Karte verfolgen',
+                      style: TextStyle(
+                        color: CupertinoTheme.of(context).barBackgroundColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            if (kIsWeb)
+              Positioned(
+                left: 70,
+                bottom: 45 + bottomOffset,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: FadeTransition(
+                    opacity: animation!,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Menu',
+                        style: TextStyle(
+                          color: CupertinoTheme.of(context).barBackgroundColor,
+                          backgroundColor:
+                              CupertinoTheme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       );
     });
     animationController!.addListener(() {

@@ -19,7 +19,8 @@ class MapButtonsLayerLight extends ConsumerStatefulWidget {
   const MapButtonsLayerLight({super.key});
 
   @override
-  ConsumerState<MapButtonsLayerLight> createState() => _MapButtonsLayerLightOverlay();
+  ConsumerState<MapButtonsLayerLight> createState() =>
+      _MapButtonsLayerLightOverlay();
 }
 
 class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
@@ -39,9 +40,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
 
   @override
   Widget build(BuildContext context) {
-
     return Stack(fit: StackFit.passthrough, children: [
-
       //#######################################################################
       //Left side buttons
       //#######################################################################
@@ -132,7 +131,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
         }),
       ),
       Positioned(
-        top: kIsWeb ? 10 : kBottomNavigationBarHeight+60,
+        top: kIsWeb ? 10 : kBottomNavigationBarHeight + 60,
         right: kIsWeb ? 10 : 10,
         height: 30,
         child: Builder(builder: (context) {
@@ -154,134 +153,136 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
   }
 
   void _showOverlay(BuildContext context, {required String text}) async {
-    var bottomOffset  = 8.0;
+    var bottomOffset = kIsWeb ? kBottomNavigationBarHeight : 0.0;
 
     OverlayState? overlayState = Overlay.of(context);
     OverlayEntry overlayEntry;
     overlayEntry = OverlayEntry(builder: (context) {
-      return Stack(
-        children: [
-          Positioned(
-            left: 00,
-            top: kToolbarHeight,
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 180.0,
-                  child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: CupertinoTheme.of(context).primaryColor,
-                          width: 4.0,
+      return SafeArea(
+        child: Stack(
+          children: [
+            Positioned(
+              left: 00,
+              top: kToolbarHeight,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 140.0,
+                    child: Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: CupertinoTheme.of(context).primaryColor,
+                            width: 4.0,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Icon(
-                  Icons.arrow_upward,
-                  color: CupertinoTheme.of(context).primaryColor,
-                ),
-                Text(
-                  Localize.of(context).actualInformations,
-                  style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      backgroundColor:
-                      CupertinoTheme.of(context).barBackgroundColor),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            left: 70,
-            bottom: 190 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Zoom -',
+                  Icon(
+                    Icons.arrow_upward,
+                    color: CupertinoTheme.of(context).primaryColor,
+                  ),
+                  Text(
+                    Localize.of(context).actualInformations,
                     style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).barBackgroundColor,
+                        color: CupertinoTheme.of(context).primaryColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).barBackgroundColor),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 70,
+              bottom: 190 + bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Zoom -',
+                      style: TextStyle(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).barBackgroundColor,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 70,
-            bottom: 140 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: CupertinoTheme.of(context).barBackgroundColor,
-                  child: Text(
-                    'Zoom +',
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).barBackgroundColor,
+            Positioned(
+              left: 70,
+              bottom: 140 + bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: CupertinoTheme.of(context).barBackgroundColor,
+                    child: Text(
+                      'Zoom +',
+                      style: TextStyle(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).barBackgroundColor,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 70,
-            bottom: 90 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: CupertinoTheme.of(context).barBackgroundColor,
-                  child: Text(
-                    Localize.of(context).setDarkMode,
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      backgroundColor:
-                          CupertinoTheme.of(context).barBackgroundColor,
+            Positioned(
+              left: 70,
+              bottom: 90 + bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: CupertinoTheme.of(context).barBackgroundColor,
+                    child: Text(
+                      Localize.of(context).setDarkMode,
+                      style: TextStyle(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).barBackgroundColor,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 70,
-            bottom: 40 + bottomOffset,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: CupertinoTheme.of(context).barBackgroundColor,
-                  child: Text(
-                    'Menu',
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      backgroundColor:
-                      CupertinoTheme.of(context).barBackgroundColor,
+            Positioned(
+              left: 70,
+              bottom: 40 + bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: CupertinoTheme.of(context).barBackgroundColor,
+                    child: Text(
+                      'Menu',
+                      style: TextStyle(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        backgroundColor:
+                            CupertinoTheme.of(context).barBackgroundColor,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     });
     animationController!.addListener(() {

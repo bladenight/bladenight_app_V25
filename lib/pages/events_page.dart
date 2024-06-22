@@ -294,93 +294,95 @@ class _EventsPageState extends ConsumerState<EventsPage>
     OverlayState? overlayState = Overlay.of(context);
     OverlayEntry overlayEntry;
     overlayEntry = OverlayEntry(builder: (context) {
-      return Stack(
-        children: [
-          Positioned(
-            left: 00,
-            top: kToolbarHeight,
-            child: Column(
-              children: <Widget>[
-                Stack(
-                  children: [
-                    Positioned(
-                      top: 1,
-                      bottom: 1,
-                      left: 1,
-                      right: 1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        //Center Row contents horizontally,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        //Center Row contents vertically,
-                        children: [
-                          Icon(
-                            Icons.arrow_back_sharp,
-                            color: CupertinoTheme.of(context).primaryColor,
+      return SafeArea(
+        child: Stack(
+          children: [
+            Positioned(
+              left: 00,
+              top: kToolbarHeight,
+              child: Column(
+                children: <Widget>[
+                  Stack(
+                    children: [
+                      Positioned(
+                        top: 1,
+                        bottom: 1,
+                        left: 1,
+                        right: 1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          //Center Row contents horizontally,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          //Center Row contents vertically,
+                          children: [
+                            Icon(
+                              Icons.arrow_back_sharp,
+                              color: CupertinoTheme.of(context).primaryColor,
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: Lottie.asset('assets/lottie/swipe.json',
+                                    alignment: Alignment.center),
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_sharp,
+                              color: CupertinoTheme.of(context).primaryColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height -
+                            kBottomNavigationBarHeight * 3,
+                        child: Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: CupertinoTheme.of(context).primaryColor,
+                                width: 4.0,
+                              ),
+                            ),
                           ),
-                          Expanded(
-                            child: Center(
-                              child: Lottie.asset('assets/lottie/swipe.json',
-                                  alignment: Alignment.center),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Positioned(
+              left: 1,
+              right: 1,
+              bottom: bottomOffset,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: FadeTransition(
+                  opacity: animation!,
+                  child: Container(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Seitenanzeige',
+                            style: TextStyle(
+                              color: CupertinoTheme.of(context).primaryColor,
+                              backgroundColor:
+                                  CupertinoTheme.of(context).barBackgroundColor,
                             ),
                           ),
                           Icon(
-                            Icons.arrow_forward_sharp,
+                            Icons.arrow_downward_sharp,
                             color: CupertinoTheme.of(context).primaryColor,
                           ),
                         ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height -
-                          kBottomNavigationBarHeight * 3,
-                      child: Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: CupertinoTheme.of(context).primaryColor,
-                              width: 4.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            left: 1,
-            right: 1,
-            bottom: bottomOffset + 30,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: FadeTransition(
-                opacity: animation!,
-                child: Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Seitenanzeige',
-                          style: TextStyle(
-                            color: CupertinoTheme.of(context).primaryColor,
-                            backgroundColor:
-                                CupertinoTheme.of(context).barBackgroundColor,
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_downward_sharp,
-                          color: CupertinoTheme.of(context).primaryColor,
-                        ),
-                      ],
-                    )),
+                      )),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     });
     animationController!.addListener(() {
