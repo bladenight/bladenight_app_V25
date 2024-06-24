@@ -4,10 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
+import '../../helpers/device_info_helper.dart';
+import '../../helpers/notification/toast_notification.dart';
 import '../../helpers/timeconverter_helper.dart';
 import '../../models/friend.dart';
 import '../../pages/widgets/data_widget_left_right_small_text.dart';
@@ -92,6 +95,15 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                         onPressed: () async {
                           if (mounted) {
                             _dismissKeyboard(context);
+                          }
+                          if (GetPlatform.isAndroid &&
+                              !await DeviceHelper
+                                  .isAndroidGreaterOrEqualVersion(7)) {
+                            showToast(message: 'No support Android < 7');
+                            return;
+                          }
+                          if (!context.mounted) {
+                            return;
                           }
                           var action = await FriendsActionModal.show(context);
                           if (action == null || !mounted) return;

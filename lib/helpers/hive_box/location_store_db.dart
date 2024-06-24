@@ -23,12 +23,16 @@ extension LocationStore on HiveSettingsDB {
       if (MapSettings.showOwnTrack == false) {
         return;
       }
-      print('Save user track points list with an amount of ${val.length}');
+      BnLog.debug(
+          text:
+              'Saving user track points list with an amount of ${val.length}');
       UserTrackPoints utp = UserTrackPoints(val);
       HiveSettingsDB._hiveBox.put(_userTrackPointsKey, utp.toJson());
       setUserTrackPointsLastUpdate(DateTime.now());
     } catch (e) {
-      print('Error saveUserTrackPointList ${e.toString()}');
+      BnLog.error(
+          text: 'Error saveUserTrackPointList ${e.toString()}',
+          methodName: 'saveUserTrackPointList');
     }
   }
 

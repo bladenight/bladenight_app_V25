@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
+import '../../../helpers/logger.dart';
 import '../../../models/images_and_links.dart';
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
@@ -30,11 +31,15 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
     activeEventRouteP.hasValue
         ? activeEventRoutePoints = activeEventRouteP.value!.points
         : <LatLng>[];
+
     var processionRoutePoints = <LatLng>[];
     processionRoutePointsP.hasValue
         ? processionRoutePoints = processionRoutePointsP.value!
         : <LatLng>[];
-
+    if (!processionRoutePointsP.hasValue || processionRoutePoints.isEmpty) {
+      BnLog.debug(
+          text: 'ProcessionRoutePointsCount = ${processionRoutePoints.length}');
+    }
     return PolylineLayer(polylines: [
       if (activeEventRoutePoints.isNotEmpty)
         Polyline(
@@ -55,17 +60,7 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
           borderStrokeWidth: context.watch(isTrackingProvider) ? 4 : 7,
           //ref.watch(isTrackingProvider),
         ),
-
-      if (processionRoutePoints.isNotEmpty)
-        Polyline(
-            points: processionRoutePoints,
-            color: CupertinoDynamicColor.withBrightness(
-                color: context.watch(themePrimaryLightColorProvider),
-                darkColor: ref.watch(themePrimaryDarkColorProvider)),
-            strokeWidth: 3,
-            borderStrokeWidth: 5.0,
-            pattern: const StrokePattern.dotted()),
-      //user track
+      //user‘s trackpoints
       if (locationUpdate.userLatLongs.isNotEmpty &&
           context.watch(showOwnTrackProvider))
         Polyline(
@@ -74,10 +69,23 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
           borderColor: context.watch(meColorProvider),
           color: context.watch(isTrackingProvider)
               ? const CupertinoDynamicColor.withBrightness(
-                  color: CupertinoColors.white,
-                  darkColor: CupertinoColors.systemBlue)
+              color: CupertinoColors.white,
+              darkColor: CupertinoColors.systemBlue)
               : CupertinoColors.white,
           borderStrokeWidth: 3.0, // ref.watch(isTrackingProvider),
+        ),
+      if (processionRoutePoints.isNotEmpty)
+        Polyline(
+          points: processionRoutePoints,
+          color: CupertinoDynamicColor.withBrightness(
+              color: ref.watch(themePrimaryDarkColorProvider),
+              darkColor: ref.watch(themePrimaryLightColorProvider)),
+          borderColor: CupertinoDynamicColor.withBrightness(
+              color: ref.watch(themePrimaryLightColorProvider),
+              darkColor: ref.watch(themePrimaryDarkColorProvider)),
+          strokeWidth: 15,
+          borderStrokeWidth: 3.0,
+          pattern: const StrokePattern.dotted(),
         ),
     ]);
   }

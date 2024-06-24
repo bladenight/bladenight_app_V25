@@ -48,6 +48,9 @@ class DeviceHelper {
 
   static Future<bool> isAndroidGreaterOrEqualVersion(int version) async {
     double? platformVersion;
+    if (!GetPlatform.isAndroid){
+      return true;
+    }
     if (GetPlatform.isAndroid) {
       var androidDeviceInfo = await DeviceInfoPlugin().androidInfo;
       platformVersion = double.tryParse(androidDeviceInfo.version.release);

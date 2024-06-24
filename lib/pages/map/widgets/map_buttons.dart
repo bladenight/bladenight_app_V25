@@ -540,8 +540,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         child: Stack(
           children: [
             Positioned(
-              left: 00,
-              top: kIsWeb ? 0 : kToolbarHeight,
+              left: 0,
+              top: kIsWeb ? 0 : 0,
               child: Column(
                 children: <Widget>[
                   SizedBox(
