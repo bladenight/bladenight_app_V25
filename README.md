@@ -58,8 +58,10 @@ You need the bladenight-server written in java to communicate routes, friends, p
   flutter build appbundle --no-tree-shake-icons
   ```
 * for iOS
+    * in ios/Podfile update Onesignal version >= 5.x.x 
   ```bash
-  flutter build ios
+   pod repo update
+   flutter build ios
   ```
 * for Web
   ```bash
@@ -136,7 +138,7 @@ Known issues
   flutter.buildMode=release
   flutter.sdk=/pathToFolder/development/flutter
   sdk.dir=/pathToFolder/Android/sdk
-  flutter.versionName=1.24.16
+  flutter.versionName=1.24.19
   ```
 
 ### Cant't run on iPhone. message:„iproxy“ kann nicht geöffnet werden, da der Entwickler nicht verifiziert werden kann.

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4668152E28A8F45200504AF6"
-               BuildableName = "BladeNight.app"
+               BuildableName = "BladeNight!.app"
                BlueprintName = "Bladenight Watch"
                ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4668152E28A8F45200504AF6"
-            BuildableName = "BladeNight.app"
+            BuildableName = "BladeNight!.app"
             BlueprintName = "Bladenight Watch"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
@@ -98,7 +98,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4668152E28A8F45200504AF6"
-            BuildableName = "BladeNight.app"
+            BuildableName = "BladeNight!.app"
             BlueprintName = "Bladenight Watch"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>

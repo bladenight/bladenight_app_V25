@@ -74,10 +74,6 @@
 	<string>Um Akku zu sparen wird die Bewegung des Telefones genutzt und Location nur bei Bewegung aktiviert </string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Das Mikrofon wird won dieser App nicht benutzt - die Anfrage kann verneint werden.</string>
-	<key>NSNearbyInteractionUsageDescription</key>
-	<string>Die Nearby Funktion wird benötigt um Freunde neben dir zu finden und zu koppeln. Dies kann auch abgelehnt werden und muss dann über den Code erfolgen.</string>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Das Lokale Netzwerk wird benötigt um Freunde neben dir zu finden und zu koppeln. Dies kann auch abgelehnt werden und muss dann über den Code erfolgen.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

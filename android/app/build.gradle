@@ -17,12 +17,12 @@ if (localPropertiesFile.exists()) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '2416'
+    flutterVersionCode = '2419'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.24.16'
+    flutterVersionName = '1.24.19'
 }
 
 def keystoreProperties = new Properties()
@@ -57,7 +57,8 @@ android {
 
     defaultConfig {
         applicationId "de.bladenight.bladenight_app_flutter"
-        minSdkVersion rootProject.ext.minSdkVersion
+        //minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 21
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -67,6 +68,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources false
+            defaultConfig.minSdkVersion 21
             // background_geolocation requires custom Proguard Rules with minifyEnabled
             proguardFiles "${background_geolocation.projectDir}/proguard-rules.pro"
             // Signing with the debug keys for now, so `flutter run --release` works.

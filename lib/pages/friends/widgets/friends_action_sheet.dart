@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 
@@ -31,7 +30,7 @@ class FriendsActionModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoActionSheet(
       actions: [
-        if (Platform.isIOS || Platform.isAndroid) ...[
+        /*if (Platform.isIOS || Platform.isAndroid) ...[
           CupertinoActionSheetAction(
             child: Text(Localize.of(context).addNearBy),
             onPressed: () {
@@ -44,7 +43,7 @@ class FriendsActionModal extends StatelessWidget {
               Navigator.pop(context, FriendsAction.acceptNearby);
             },
           ),
-        ],
+        ],*/
         CupertinoActionSheetAction(
           child: Text(Localize.of(context).addnewfriend),
           onPressed: () {

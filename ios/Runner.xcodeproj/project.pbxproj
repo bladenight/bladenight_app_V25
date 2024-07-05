@@ -30,7 +30,7 @@
 		4668155628A8F45600504AF6 /* Bladenight_WatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4668155528A8F45600504AF6 /* Bladenight_WatchTests.swift */; };
 		4668156028A8F45600504AF6 /* Bladenight_WatchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4668155F28A8F45600504AF6 /* Bladenight_WatchUITests.swift */; };
 		4668156228A8F45700504AF6 /* Bladenight_WatchUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4668156128A8F45700504AF6 /* Bladenight_WatchUITestsLaunchTests.swift */; };
-		4668156528A8F45700504AF6 /* BladeNight.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4668152F28A8F45200504AF6 /* BladeNight.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4668156528A8F45700504AF6 /* BladeNight!.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4668152F28A8F45200504AF6 /* BladeNight!.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4668157928A8F76200504AF6 /* ConnectivityRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4668157828A8F76200504AF6 /* ConnectivityRequestHandler.swift */; };
 		4668157E28A8FF5600504AF6 /* CommunicationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4668157D28A8FF5600504AF6 /* CommunicationHandler.swift */; };
 		4668158028A96D6000504AF6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4668157F28A96D6000504AF6 /* Assets.xcassets */; };
@@ -97,7 +97,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				4668156528A8F45700504AF6 /* BladeNight.app in Embed Watch Content */,
+				4668156528A8F45700504AF6 /* BladeNight!.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,7 +151,7 @@
 		4618B21028BFFD7A006D3F6A /* FriendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendModel.swift; sourceTree = "<group>"; };
 		4618B21228C0042F006D3F6A /* HandleReceivedConnectivityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleReceivedConnectivityData.swift; sourceTree = "<group>"; };
 		4618B21428C010E2006D3F6A /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
-		4668152F28A8F45200504AF6 /* BladeNight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BladeNight.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4668152F28A8F45200504AF6 /* BladeNight!.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BladeNight!.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4668153728A8F45400504AF6 /* Bladenight Watch WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Bladenight Watch WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4668153C28A8F45500504AF6 /* RunnerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerApp.swift; sourceTree = "<group>"; };
 		4668153E28A8F45500504AF6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -401,7 +401,7 @@
 			isa = PBXGroup;
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
-				4668152F28A8F45200504AF6 /* BladeNight.app */,
+				4668152F28A8F45200504AF6 /* BladeNight!.app */,
 				4668153728A8F45400504AF6 /* Bladenight Watch WatchKit Extension.appex */,
 				4668155128A8F45600504AF6 /* Bladenight WatchTests.xctest */,
 				4668155B28A8F45600504AF6 /* Bladenight WatchUITests.xctest */,
@@ -461,7 +461,7 @@
 			);
 			name = "Bladenight Watch";
 			productName = "Bladenight Watch";
-			productReference = 4668152F28A8F45200504AF6 /* BladeNight.app */;
+			productReference = 4668152F28A8F45200504AF6 /* BladeNight!.app */;
 			productType = "com.apple.product-type.application.watchapp2";
 		};
 		4668153628A8F45400504AF6 /* Bladenight Watch WatchKit Extension */ = {
@@ -825,7 +825,6 @@
 				"${BUILT_PRODUCTS_DIR}/just_audio/just_audio.framework",
 				"${BUILT_PRODUCTS_DIR}/location2_ios/location2_ios.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
-				"${BUILT_PRODUCTS_DIR}/nearby_service/nearby_service.framework",
 				"${BUILT_PRODUCTS_DIR}/package_info_plus/package_info_plus.framework",
 				"${BUILT_PRODUCTS_DIR}/path_provider_foundation/path_provider_foundation.framework",
 				"${BUILT_PRODUCTS_DIR}/share_plus/share_plus.framework",
@@ -877,7 +876,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/just_audio.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/location2_ios.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nearby_service.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/package_info_plus.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/path_provider_foundation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/share_plus.framework",
@@ -1078,11 +1076,11 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Debug.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = BladeNight;
+				INFOPLIST_KEY_CFBundleDisplayName = "BladeNight!";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.2;
@@ -1090,7 +1088,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1119,18 +1117,18 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
-				PRODUCT_NAME = BladeNight;
+				PRODUCT_NAME = "BladeNight!";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1156,7 +1154,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1164,10 +1162,10 @@
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
-				PRODUCT_NAME = BladeNight;
+				PRODUCT_NAME = "BladeNight!";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1193,17 +1191,17 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
-				PRODUCT_NAME = BladeNight;
+				PRODUCT_NAME = "BladeNight!";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1225,7 +1223,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1243,7 +1241,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
@@ -1270,7 +1268,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1288,7 +1286,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1313,7 +1311,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1331,7 +1329,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1526,7 +1524,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1539,7 +1537,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
@@ -1566,7 +1564,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1579,7 +1577,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1605,7 +1603,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1618,7 +1616,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1755,11 +1753,11 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Debug.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = BladeNight;
+				INFOPLIST_KEY_CFBundleDisplayName = "BladeNight!";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.2;
@@ -1767,7 +1765,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1794,11 +1792,11 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2416;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Release.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = BladeNight;
+				INFOPLIST_KEY_CFBundleDisplayName = "BladeNight!";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.2;
@@ -1806,7 +1804,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.24.16;
+				MARKETING_VERSION = 1.24.19;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
