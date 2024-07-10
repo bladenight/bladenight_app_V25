@@ -66,7 +66,8 @@ class SpecialPoints extends _$SpecialPoints {
         var spPoints = SpecialPointsMapper.fromJson(pointsJson);
         points = spPoints.specialPoints;
       } catch (e) {
-        BnLog.error(text: 'SpecialPoints parse error $e', className: toString());
+        BnLog.error(
+            text: 'SpecialPoints parse error $e', className: toString());
       }
     }
     return points;
@@ -100,6 +101,7 @@ class ProcessionRoutePoints extends _$ProcessionRoutePoints {
   List<LatLng> runningRoute(List<LatLng> points, int headPos, int tailPos) {
     var running = <LatLng>[];
     var length = 0.0;
+    bool tailExactFound = false;
 
     for (var i = 0; i < points.length - 1; i++) {
       var a = points[i], b = points[i + 1];
@@ -118,10 +120,25 @@ class ProcessionRoutePoints extends _$ProcessionRoutePoints {
       if (length + segmentLength < tailPos) {
         length += segmentLength;
         continue;
-      } else if (length + segmentLength == tailPos) {
+      } else if (!tailExactFound && length + segmentLength >= tailPos) {
+        //calculate exact end marker
+        double missingLength = tailPos - length;
+        if (missingLength <= segmentLength) {
+          double relativePositionOnSegment = missingLength / segmentLength;
+          double lat = a.latitude +
+              relativePositionOnSegment * (b.latitude - a.latitude);
+          double lon = a.longitude +
+              relativePositionOnSegment * (b.longitude - a.longitude);
+          var endLatLong = LatLng(lat, lon);
+          running.add(endLatLong);
+        }
+        else{
+          running.add(a);
+        }
         length += segmentLength;
-        running.add(a);
+        tailExactFound = true;
         continue;
+        //find exact point for tail
       } else {
         if (length + segmentLength >= headPos) {
           running.add(a);
