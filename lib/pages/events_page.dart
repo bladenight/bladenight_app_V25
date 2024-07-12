@@ -44,7 +44,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
     //workaround for missing 3ßpx at bottom of Listview
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge) {
-        bool isTop = _scrollController.position.pixels >= 30;
+        bool isTop = _scrollController.position.pixels <= 30;
         if (isTop) {
           setState(() {
             _stickyHeaderSize = 30;
@@ -63,7 +63,15 @@ class _EventsPageState extends ConsumerState<EventsPage>
   }
 
   _scrollToActualEvent() async {
+
+
     await Future.delayed(const Duration(milliseconds: 400));
+    const widgetHeight = 100.0; // <-- The height of each widget
+    _scrollController.animateTo(
+      widgetHeight * 80,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.bounceIn,
+    );
     if (_dataKey.currentContext != null) {
       Scrollable.ensureVisible(_dataKey.currentContext!,
           curve: Curves.slowMiddle, alignment: 0.5);
@@ -234,53 +242,56 @@ class _EventsPageState extends ConsumerState<EventsPage>
             onRefresh: () async {
               return context.refresh(allEventsProvider);
             },
-            child: MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              removeBottom: true,
-              child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: itemsCount * 2 - 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index % 2 == 0) {
-                      var event = pageEvents[(index / 2).round()];
-                      var eventStartState = EventStartState.eventOver;
-                      var eventOver = event.startDateUtc
-                          .add(event.duration)
-                          .difference(DateTime.now().toUtc())
-                          .isNegative;
-                      var eventActual = !eventOver &&
-                          event.startDateUtc
-                                  .difference(DateTime.now().toUtc())
-                                  .inDays <
-                              7;
-                      var eventFuture = !eventOver &&
-                          event.startDateUtc
-                                  .difference(DateTime.now().toUtc())
-                                  .inDays >
-                              7;
-                      if (eventActual) {
-                        eventStartState = EventStartState.eventActual;
+            child: SafeArea(
+              child: MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                removeBottom: true,
+                child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: itemsCount * 2 - 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index % 2 == 0) {
+                        var event = pageEvents[(index / 2).round()];
+                        var eventStartState = EventStartState.eventOver;
+                        var eventOver = event.startDateUtc
+                            .add(event.duration)
+                            .difference(DateTime.now().toUtc())
+                            .isNegative;
+                        var eventActual = !eventOver &&
+                            event.startDateUtc
+                                    .difference(DateTime.now().toUtc())
+                                    .inDays <
+                                7;
+                        var eventFuture = !eventOver &&
+                            event.startDateUtc
+                                    .difference(DateTime.now().toUtc())
+                                    .inDays >
+                                7;
+                        if (eventActual) {
+                          eventStartState = EventStartState.eventActual;
+                        }
+                        if (eventFuture) {
+                          eventStartState = EventStartState.eventFuture;
+                        }
+                        if (eventActual && !_noActualEventFound) {
+                          _noActualEventFound = true;
+                          return Container(
+                              key: _dataKey,
+                              child:
+                                  _listTile(context, event, eventStartState));
+                        }
+                        return _listTile(context, event, eventStartState);
+                      } else {
+                        return Divider(
+                          color: CupertinoTheme.of(context).primaryColor,
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                        );
                       }
-                      if (eventFuture) {
-                        eventStartState = EventStartState.eventFuture;
-                      }
-                      if (eventActual && _noActualEventFound) {
-                        _noActualEventFound = true;
-                        return Container(
-                            key: _dataKey,
-                            child: _listTile(context, event, eventStartState));
-                      }
-                      return _listTile(context, event, eventStartState);
-                    } else {
-                      return Divider(
-                        color: CupertinoTheme.of(context).primaryColor,
-                        height: 1,
-                        indent: 16,
-                        endIndent: 16,
-                      );
-                    }
-                  }),
+                    }),
+              ),
             ),
           ),
         ),

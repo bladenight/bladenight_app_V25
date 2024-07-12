@@ -4,7 +4,7 @@ extension LocationStore on HiveSettingsDB {
   static const String _userTrackPointsKey = 'userTrackPointsJsonPref';
 
   ///get stored track points
-  static List<UserTrackPoint> get userTrackPointsList {
+  static List<UserGpxPoint> get userTrackPointsList {
     try {
       var tp = HiveSettingsDB._hiveBox.get(_userTrackPointsKey);
       if (MapSettings.showOwnTrack == false || tp == null) {
@@ -18,7 +18,7 @@ extension LocationStore on HiveSettingsDB {
   }
 
   ///set store track points
-  static void saveUserTrackPointList(List<UserTrackPoint> val) {
+  static void saveUserTrackPointList(List<UserGpxPoint> val) {
     try {
       if (MapSettings.showOwnTrack == false) {
         return;
@@ -26,7 +26,7 @@ extension LocationStore on HiveSettingsDB {
       BnLog.debug(
           text:
               'Saving user track points list with an amount of ${val.length}');
-      UserTrackPoints utp = UserTrackPoints(val);
+      var utp = UserTrackPoints(val);
       HiveSettingsDB._hiveBox.put(_userTrackPointsKey, utp.toJson());
       setUserTrackPointsLastUpdate(DateTime.now());
     } catch (e) {

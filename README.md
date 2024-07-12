@@ -60,6 +60,7 @@ You need the bladenight-server written in java to communicate routes, friends, p
 * for iOS
     * in ios/Podfile update Onesignal version >= 5.x.x 
   ```bash
+   pod install --repo-update
    pod repo update
    flutter build ios
   ```

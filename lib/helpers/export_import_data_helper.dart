@@ -18,7 +18,7 @@ import 'package:universal_io/io.dart';
 
 import '../generated/l10n.dart';
 import '../models/friend.dart';
-import '../models/user_trackpoint.dart';
+import '../models/user_gpx_point.dart';
 import '../pages/friends/widgets/edit_friend_dialog.dart';
 import '../pages/friends/widgets/friends_action_sheet.dart';
 import '../providers/friends_provider.dart';
@@ -212,7 +212,7 @@ Future<void> exportLogs() async {
   }
 }
 
-String exportUserTracking(List<UserTrackPoint> userTrackPoints) {
+String exportUserTracking(List<UserGpxPoint> userTrackPoints) {
   if (kIsWeb) return '';
   var trkPts =
       UserTrackPoints(userTrackPoints).toXML(); // jsonEncode(userTrackPoints);

@@ -323,7 +323,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               });
                               await compute(
                                 exportUserTracking,
-                                LocationProvider.instance.userTrackingPoints,
+                                LocationProvider.instance.userGpxPoints,
                               ).then(
                                   (value) => shareExportedTrackingData(value));
                               _exportTrackingInProgress = false;

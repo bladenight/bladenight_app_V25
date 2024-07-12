@@ -20,11 +20,9 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
     return Padding(
       padding: const EdgeInsets.all(30),
       child: Container(
-        width: MediaQuery.of(context).orientation ==
-            Orientation.portrait?
-        MediaQuery.of(context).size.width*0.8:
-          MediaQuery.of(context).size.width*0.8,
-
+        width: MediaQuery.of(context).orientation == Orientation.portrait
+            ? MediaQuery.of(context).size.width * 0.8
+            : MediaQuery.of(context).size.width * 0.5,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color:
@@ -103,9 +101,13 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
                 descriptionRight: widget.marker.drivenDistanceText ?? '',
                 rightWidget: Container()),
           DataLeftRightContent(
-              descriptionLeft: Localize.of(context).position,
+              descriptionLeft: 'Lat:',
+              descriptionRight: widget.marker.point.latitude.toStringAsFixed(6),
+              rightWidget: Container()),
+          DataLeftRightContent(
+              descriptionLeft: 'Lon:',
               descriptionRight:
-                  'Lat:${widget.marker.point.latitude.toStringAsFixed(6)} Lon:${widget.marker.point.longitude.toStringAsFixed(6)}',
+                  widget.marker.point.longitude.toStringAsFixed(6),
               rightWidget: Container()),
           if (widget.marker.timeUserToHeadText != null)
             Divider(

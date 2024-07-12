@@ -1,11 +1,15 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-part 'user_trackpoint.mapper.dart';
+import '../helpers/speed_to_color.dart';
+import 'images_and_links.dart';
+
+part 'user_gpx_point.mapper.dart';
 
 @MappableClass()
-class UserTrackPoint with UserTrackPointMappable {
-  UserTrackPoint(this.latitude, this.longitude, this.realSpeedKmh, this.heading,
+class UserGpxPoint with UserGpxPointMappable {
+  UserGpxPoint(this.latitude, this.longitude, this.realSpeedKmh, this.heading,
       this.altitude, this.odometer, this.timeStamp);
 
   final double latitude;
@@ -15,6 +19,10 @@ class UserTrackPoint with UserTrackPointMappable {
   final double altitude;
   final double odometer;
   final DateTime timeStamp;
+
+  Color get color => SpeedToColor.getColorFromSpeed(realSpeedKmh);
+
+  LatLng get latLng => LatLng(latitude, longitude);
 
   String toXML() {
     final f = DateFormat('yyyy-MM-ddTHH:mm:ss');
@@ -32,7 +40,7 @@ class UserTrackPoint with UserTrackPointMappable {
 class UserTrackPoints with UserTrackPointsMappable {
   UserTrackPoints(this.utps);
 
-  final List<UserTrackPoint> utps;
+  final List<UserGpxPoint> utps;
 
   //String toJson() => jsonEncode(utps);
   String toXML() {

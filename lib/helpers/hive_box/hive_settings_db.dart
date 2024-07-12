@@ -18,7 +18,7 @@ import '../../app_settings/globals.dart';
 import '../../models/event.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
-import '../../models/user_trackpoint.dart';
+import '../../models/user_gpx_point.dart';
 import '../logger.dart';
 import '../notification/onesignal_handler.dart';
 import '../uuid_helper.dart';

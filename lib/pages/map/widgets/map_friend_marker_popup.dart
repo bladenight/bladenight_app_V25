@@ -21,6 +21,9 @@ class _MapFriendMarkerPopupState extends State<MapFriendMarkerPopup> {
     return Padding(
       padding: const EdgeInsets.all(30),
       child: Container(
+        width: MediaQuery.of(context).orientation == Orientation.portrait
+            ? MediaQuery.of(context).size.width * 0.8
+            : MediaQuery.of(context).size.width * 0.5,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color:
@@ -109,22 +112,25 @@ class _MapFriendMarkerPopupState extends State<MapFriendMarkerPopup> {
                   '${widget.marker.friend.specialValue > 0 ? widget.marker.friend.absolutePosition : widget.marker.friend.relativeDistance} m',
               rightWidget: Container()),
           DataLeftRightContent(
-              descriptionLeft: Localize.of(context).position,
-              descriptionRight:
-              'Lat:${widget.marker.point.latitude.toStringAsFixed(6)} Lon:${widget.marker.point.longitude.toStringAsFixed(6)}',
+              descriptionLeft: 'Lat:',
+              descriptionRight: widget.marker.point.latitude.toStringAsFixed(6),
               rightWidget: Container()),
-
+          DataLeftRightContent(
+              descriptionLeft: 'Lon:',
+              descriptionRight:
+                  widget.marker.point.longitude.toStringAsFixed(6),
+              rightWidget: Container()),
           Divider(
             height: 2,
             color: CupertinoTheme.of(context).primaryColor,
             endIndent: 20,
           ),
           if (widget.marker.friend.specialValue == 0)
-          DataLeftRightContent(
-              descriptionLeft: Localize.of(context).timeToFinish,
-              descriptionRight:
-                  '${widget.marker.friend.relativeTime != null ? TimeConverter.millisecondsToDateTimeString(value: widget.marker.friend.relativeTime ?? 0) : '-'}',
-              rightWidget: Container()),
+            DataLeftRightContent(
+                descriptionLeft: Localize.of(context).timeToFinish,
+                descriptionRight:
+                    '${widget.marker.friend.relativeTime != null ? TimeConverter.millisecondsToDateTimeString(value: widget.marker.friend.relativeTime ?? 0) : '-'}',
+                rightWidget: Container()),
           if (widget.marker.friend.specialValue == 0)
             Divider(
               height: 2,

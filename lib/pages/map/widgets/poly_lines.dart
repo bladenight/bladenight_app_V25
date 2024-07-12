@@ -9,6 +9,7 @@ import '../../../models/images_and_links.dart';
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
+import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/settings/dark_color_provider.dart';
 import '../../../providers/settings/light_color_provider.dart';
@@ -46,11 +47,7 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
           //active route points
           points: activeEventRoutePoints,
           strokeWidth: context.watch(isTrackingProvider) ? 5 : 3,
-          borderColor: context.watch(isTrackingProvider)
-              ? const CupertinoDynamicColor.withBrightness(
-                  color: CupertinoColors.activeGreen,
-                  darkColor: CupertinoColors.white)
-              : CupertinoTheme.of(context).primaryColor,
+          borderColor: context.watch(meColorProvider),
           color: context.watch(isTrackingProvider)
               ? const CupertinoDynamicColor.withBrightness(
                   color: CupertinoColors.white,
@@ -60,20 +57,30 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
           borderStrokeWidth: context.watch(isTrackingProvider) ? 4 : 7,
           //ref.watch(isTrackingProvider),
         ),
-      //user‘s trackpoints
-      if (locationUpdate.userLatLongs.isNotEmpty &&
+      //user‘s track points
+      if (locationUpdate.userSpeedPoints.userSpeedPoints.isNotEmpty &&
           context.watch(showOwnTrackProvider))
-        Polyline(
-          points: locationUpdate.userLatLongs,
+        for (var part in locationUpdate.userSpeedPoints.userSpeedPoints)
+          Polyline(
+            points: part.latLngList,
+            color: part.color,
+            strokeWidth: context.watch(isTrackingProvider) ? 7 : 6,
+            borderStrokeWidth: 4.0,
+            useStrokeWidthInMeter: true,
+            borderColor: part.color
+          ),
+
+      /* Polyline(
+          points: locationUpdate.userLatLongs.latLngList,
           strokeWidth: context.watch(isTrackingProvider) ? 4 : 3,
           borderColor: context.watch(meColorProvider),
           color: context.watch(isTrackingProvider)
               ? const CupertinoDynamicColor.withBrightness(
-              color: CupertinoColors.white,
-              darkColor: CupertinoColors.systemBlue)
+                  color: CupertinoColors.white,
+                  darkColor: CupertinoColors.systemBlue)
               : CupertinoColors.white,
           borderStrokeWidth: 3.0, // ref.watch(isTrackingProvider),
-        ),
+        ),*/
       if (processionRoutePoints.isNotEmpty)
         Polyline(
           points: processionRoutePoints,
@@ -83,7 +90,7 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
           borderColor: CupertinoDynamicColor.withBrightness(
               color: ref.watch(themePrimaryLightColorProvider),
               darkColor: ref.watch(themePrimaryDarkColorProvider)),
-          strokeWidth: 15,
+          strokeWidth: ref.watch(iconSizeProvider) - 3,
           borderStrokeWidth: 3.0,
           pattern: const StrokePattern.dotted(),
         ),

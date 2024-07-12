@@ -37,7 +37,8 @@ import '../models/geofence_point.dart' as gfp;
 import '../models/location.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
-import '../models/user_trackpoint.dart';
+import '../models/user_speed_point.dart';
+import '../models/user_gpx_point.dart';
 import '../wamp/wamp_v2.dart';
 import 'active_event_provider.dart';
 import 'images_and_links/geofence_image_and_link_provider.dart';
@@ -142,12 +143,12 @@ class LocationProvider with ChangeNotifier {
 
   bool get isTail => _isTail;
 
-  List<LatLng> get userLatLongs => _userLatLongs;
-  List<LatLng> _userLatLongs = <LatLng>[];
+  UserSpeedPoints get userSpeedPoints => _userSpeedPoints;
+  UserSpeedPoints _userSpeedPoints = UserSpeedPoints([]);
 
-  List<UserTrackPoint> get userTrackingPoints => _userTrackingPoints;
+  List<UserGpxPoint> get userGpxPoints => _userGpxPoints;
 
-  final _userTrackingPoints = <UserTrackPoint>[];
+  final _userGpxPoints = <UserGpxPoint>[];
 
   //Stream controllers private
   final _userPositionStreamController =
@@ -158,7 +159,7 @@ class LocationProvider with ChangeNotifier {
 
   final _trainHeadStreamController = StreamController<LatLng>.broadcast();
   final _userTrackPointsStreamController =
-      StreamController<UserTrackPoint>.broadcast();
+      StreamController<UserGpxPoint>.broadcast();
   final _userLocationMarkerPositionStreamController =
       StreamController<LocationMarkerPosition>.broadcast();
   final _userLocationMarkerHeadingStreamController =
@@ -173,7 +174,7 @@ class LocationProvider with ChangeNotifier {
 
   Stream<LatLng> get trainHeadUpdateStream => _trainHeadStreamController.stream;
 
-  Stream<UserTrackPoint> get userTrackPointsControllerStream =>
+  Stream<UserGpxPoint> get userTrackPointsControllerStream =>
       _userTrackPointsStreamController.stream;
 
   Stream<LocationMarkerPosition> get userLocationMarkerPositionStream =>
@@ -186,7 +187,7 @@ class LocationProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    LocationStore.saveUserTrackPointList(_userTrackingPoints);
+    LocationStore.saveUserTrackPointList(_userGpxPoints);
     _userTrackPointsStreamController.close();
     _trainHeadStreamController.close();
     _userPositionStreamController.close();
@@ -293,7 +294,7 @@ class LocationProvider with ChangeNotifier {
           locationAuthorizationRequest: 'Any',
           reset: true,
           debug: false,
-          desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
+          desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
           allowIdenticalLocations: true,
           distanceFilter: 0,
           heartbeatInterval: 60,
@@ -330,7 +331,7 @@ class LocationProvider with ChangeNotifier {
           debug: false,
           //ALL
           logLevel: bgLogLevel,
-          desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
+          desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
           distanceFilter: 0.5,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
           heartbeatInterval: 60,
@@ -379,7 +380,7 @@ class LocationProvider with ChangeNotifier {
     }
     if (!kIsWeb) {
       BnLog.warning(
-          text: 'No Valid device for bg.BackgroundGeolocation',
+          text: 'No valid device for bg.BackgroundGeolocation',
           className: toString(),
           methodName: '_startBackgroundGeolocation');
     }
@@ -410,14 +411,11 @@ class LocationProvider with ChangeNotifier {
       }
     }
 
-    var userLatLng =
-        LatLng(location.coords.latitude, location.coords.longitude);
-
-    _userLatLng = userLatLng;
+    _userLatLng = LatLng(location.coords.latitude, location.coords.longitude);
     _realUserSpeedKmh =
         location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6;
     _odometer = location.odometer / 1000;
-    var userTrackingPoint = UserTrackPoint(
+    var userTrackingPoint = UserGpxPoint(
         location.coords.latitude,
         location.coords.longitude,
         _realUserSpeedKmh!,
@@ -425,36 +423,77 @@ class LocationProvider with ChangeNotifier {
         location.coords.altitude,
         odometer,
         DateTime.now());
-    if (_userTrackingPoints.isNotEmpty) {
-      var userLastPoint = _userTrackingPoints.last;
+    if (_userGpxPoints.isNotEmpty) {
+      var userLastPoint = _userGpxPoints.last;
       var lon = location.coords.longitude;
       var lat = location.coords.latitude;
       if (userLastPoint.latitude != lat && userLastPoint.longitude != lon) {
-        _userTrackingPoints.add(userTrackingPoint);
+        _userGpxPoints.add(userTrackingPoint);
       }
     } else {
-      _userTrackingPoints.add(userTrackingPoint);
+      _userGpxPoints.add(userTrackingPoint);
     }
     _lastKnownPoint = location;
     SendToWatch.setUserSpeed('${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
-    int maxSize = 250;
-    if (_userTrackingPoints.length > maxSize) {
-      var smallTrackPointList = <LatLng>[];
-      var divider = _userTrackingPoints.length ~/ maxSize;
 
-      for (var counter = 0; counter < _userTrackingPoints.length - divider;) {
-        smallTrackPointList.add(LatLng(_userTrackingPoints[counter].latitude,
-            _userTrackingPoints[counter].longitude));
+    int maxSize = 2500;
+    if (_userSpeedPoints.latLngList.isEmpty) {
+      //first point
+      UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+        location.coords.latitude,
+        location.coords.longitude,
+        location.coords.speed,
+        LatLng(location.coords.latitude, location.coords.longitude),
+      );
+      _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+    } else if (_userGpxPoints.length > maxSize) {
+      //decrease numbers of poly lines
+      var smallTrackPointList = UserSpeedPoints([]);
+      var divider = _userGpxPoints.length ~/ maxSize;
+      LatLng? lastLatLng;
+      for (var counter = 0; counter < _userGpxPoints.length - divider;) {
+        if (counter == 0) {
+          //no followed polylinePoint first line has same endpoint
+          smallTrackPointList.add(
+              _userGpxPoints[counter].latitude,
+              _userGpxPoints[counter].longitude,
+              _userGpxPoints[counter].realSpeedKmh,
+              _userGpxPoints[counter].latLng);
+          lastLatLng = _userGpxPoints[counter].latLng;
+        } else {
+          smallTrackPointList.add(
+              _userGpxPoints[counter].latitude,
+              _userGpxPoints[counter].longitude,
+              _userGpxPoints[counter].realSpeedKmh,
+              lastLatLng!);
+          lastLatLng= _userGpxPoints[counter].latLng;
+        }
         counter = counter + divider.toInt();
       }
       //avoid jumping of tracking if list is large
-      var last5 = _userTrackingPoints.reversed.take(maxSize ~/ 10);
-      for (var last in last5) {
-        smallTrackPointList.add(LatLng(last.latitude, last.longitude));
+
+      var last6userGPXPoints =
+          _userGpxPoints.reversed.take(6).toList(growable: false);
+      for (int i = 5; i >= 0; i--) {
+        var lastSmTrackPointListEntry = smallTrackPointList.lastSpeedPoint;
+        if (last6userGPXPoints[i].latLng == lastSmTrackPointListEntry!.latLng) {
+          continue;
+        }
+        smallTrackPointList.add(
+            last6userGPXPoints[i].latitude,
+            last6userGPXPoints[i].longitude,
+            last6userGPXPoints[i].realSpeedKmh,
+            lastSmTrackPointListEntry.latLng);
       }
-      _userLatLongs = smallTrackPointList;
+      _userSpeedPoints = smallTrackPointList;
     } else {
-      _userLatLongs.add(userLatLng);
+      UserSpeedPoint userLatLng = UserSpeedPoint(
+        location.coords.latitude,
+        location.coords.longitude,
+        location.coords.speed,
+        _userSpeedPoints.lastSpeedPointLatLng,
+      );
+      _userSpeedPoints.addUserSpeedPoint(userLatLng);
     }
     if (!_isInBackground) {
       notifyListeners();
@@ -501,7 +540,7 @@ class LocationProvider with ChangeNotifier {
       newLocation = await bg.BackgroundGeolocation.getCurrentPosition(
         timeout: 2,
         maximumAge: 60000,
-        desiredAccuracy: bg.Config.DESIRED_ACCURACY_NAVIGATION,
+        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         samples: 2, // How many location samples to attempt.
       );
       //triggers onLocation
@@ -579,7 +618,7 @@ class LocationProvider with ChangeNotifier {
       }
       SendToWatch.setIsLocationTracking(false);
       HiveSettingsDB.setTrackingActive(false);
-      LocationStore.saveUserTrackPointList(_userTrackingPoints);
+      LocationStore.saveUserTrackPointList(_userGpxPoints);
     } else {
       bg.BackgroundGeolocation.stop().then((bg.State state) async {
         BnLog.info(
@@ -598,7 +637,7 @@ class LocationProvider with ChangeNotifier {
         }
         SendToWatch.setIsLocationTracking(false);
         HiveSettingsDB.setTrackingActive(false);
-        LocationStore.saveUserTrackPointList(_userTrackingPoints);
+        LocationStore.saveUserTrackPointList(_userGpxPoints);
         await startStopGeoFencing();
       }).catchError((error) {
         BnLog.error(text: 'Stopping location error: $error');
@@ -696,14 +735,28 @@ class LocationProvider with ChangeNotifier {
     }
 
     _userReachedFinishDateTime == null;
-    if (_userTrackingPoints.length <= 1 &&
+    if (_userGpxPoints.length <= 1 &&
         MapSettings.showOwnTrack &&
         LocationStore.storedDataAreFromToday) {
       //reload data
-      _userTrackingPoints.addAll(LocationStore.userTrackPointsList);
-      _userLatLongs.clear();
-      for (var tp in _userTrackingPoints) {
-        _userLatLongs.add(LatLng(tp.latitude, tp.longitude));
+      _userGpxPoints.addAll(LocationStore.userTrackPointsList);
+      _userSpeedPoints.clear();
+      for (int i = 0; i < _userGpxPoints.length - 1; i++) {
+        if (i == 0) {
+          _userSpeedPoints.add(
+            _userGpxPoints[0].latitude,
+            _userGpxPoints[0].longitude,
+            _userGpxPoints[0].realSpeedKmh,
+            _userGpxPoints[0].latLng,
+          );
+        } else {
+          _userSpeedPoints.add(
+            _userGpxPoints[i].latitude,
+            _userGpxPoints[i].longitude,
+            _userGpxPoints[i].realSpeedKmh,
+            _userGpxPoints[i - 1].latLng,
+          );
+        }
       }
     }
 
@@ -808,7 +861,7 @@ class LocationProvider with ChangeNotifier {
           if (!_isTracking) {
             return;
           }
-          LocationStore.saveUserTrackPointList(_userTrackingPoints);
+          LocationStore.saveUserTrackPointList(_userGpxPoints);
         },
       );
     } else {
@@ -1304,8 +1357,8 @@ class LocationProvider with ChangeNotifier {
   Future<bool> resetTrackPoints() async {
     try {
       if (HiveSettingsDB.useAlternativeLocationProvider) {
-        _userTrackingPoints.clear();
-        _userLatLongs.clear();
+        _userGpxPoints.clear();
+        _userSpeedPoints.clear();
         LocationStore.clearTrackPointStore();
         return true;
       }
@@ -1326,8 +1379,8 @@ class LocationProvider with ChangeNotifier {
         _isTracking = bgGeoLocState.enabled;
         notifyListeners();
       }
-      _userTrackingPoints.clear();
-      _userLatLongs.clear();
+      _userGpxPoints.clear();
+      _userSpeedPoints.clear();
       LocationStore.clearTrackPointStore();
       return odoResetResult == null ? false : true;
     } catch (e) {
@@ -1457,7 +1510,7 @@ final realUserSpeedProvider = Provider((ref) {
 });
 
 final userLatLongProvider = Provider((ref) {
-  return ref.watch(locationProvider.select((l) => l.userLatLongs));
+  return ref.watch(locationProvider.select((l) => l.userSpeedPoints));
 });
 
 final isGPSGrantedProvider = Provider((ref) {

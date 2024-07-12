@@ -117,8 +117,10 @@ class ScrollQuickAlert {
       confirmBtnColor: confirmBtnColor ?? Colors.green,
       confirmBtnTextStyle: confirmBtnTextStyle,
       cancelBtnTextStyle: cancelBtnTextStyle,
-      backgroundColor: backgroundColor??CupertinoTheme.of(context).barBackgroundColor,
-      headerBackgroundColor: headerBackgroundColor??CupertinoTheme.of(context).barBackgroundColor,
+      backgroundColor:
+          backgroundColor ?? CupertinoTheme.of(context).barBackgroundColor,
+      headerBackgroundColor: headerBackgroundColor ??
+          CupertinoTheme.of(context).barBackgroundColor,
       titleColor: CupertinoTheme.of(context).primaryColor,
       textColor: CupertinoTheme.of(context).primaryColor,
       showCancelBtn: showCancelBtn,
@@ -141,13 +143,16 @@ class ScrollQuickAlert {
         }
         return !disableBackBtn;
       },
-      child: AlertDialog(
-        contentPadding: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        content: QuickAlertContainer(
-          options: options,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.4,
+        child: AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+          content: QuickAlertContainer(
+            options: options,
+          ),
         ),
       ),
     );
@@ -170,7 +175,8 @@ class ScrollQuickAlert {
     }
 
     return showGeneralDialog(
-      barrierColor: barrierColor ?? CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.5),
+      barrierColor: barrierColor ??
+          CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.5),
       transitionBuilder: (context, anim1, __, widget) {
         switch (animType) {
           case QuickAlertAnimType.scale:
