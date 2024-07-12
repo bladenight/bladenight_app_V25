@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../generated/l10n.dart';
+import '../../../helpers/export_import_data_helper.dart';
 import '../../../helpers/speed_to_color.dart';
 import '../../../providers/is_tracking_provider.dart';
+import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/special_procession_function_provider.dart';
 
 class SpecialFunctionInfo extends ConsumerWidget {
@@ -63,7 +65,40 @@ class SpecialFunctionInfo extends ConsumerWidget {
               ),
             ]),
           ),
-        if (isTracking && wantSeeFullProcession)
+        if (isTracking && ref.watch(showOwnTrackProvider) || wantSeeFullProcession ) ...[
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '0 km/h',
+                  style: TextStyle(fontSize: 10),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  '15 km/h',
+                  style: TextStyle(fontSize: 10),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  '25 km/h',
+                  style: TextStyle(fontSize: 10),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  '40+ km/h',
+                  style: TextStyle(fontSize: 10),
+                ),
+              ),
+            ],
+          ),
           Align(
             child: StepProgressIndicator(
               totalSteps: SpeedToColor.speedColors.length,
@@ -82,6 +117,7 @@ class SpecialFunctionInfo extends ConsumerWidget {
               ),
             ),
           ),
+        ],
       ],
     );
   }

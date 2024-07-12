@@ -508,7 +508,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         }),
       ),
       Positioned(
-        top: kIsWeb ? 10 : kToolbarHeight,
+        top: kIsWeb ? 10 : 15,
         right: kIsWeb ? 10 : 10,
         height: 30,
         child: Builder(builder: (context) {

@@ -269,14 +269,14 @@ class Events with EventsMappable {
     return Events.rpcError(Exception(WampError('unknown')));
   }
 
-  Map<int, Events> groupByYear() {
-    var resultMap = <int, Events>{};
+  Map<String, Events> groupByYear() {
+    var resultMap = <String, Events>{};
     for (var event in events) {
-      if (!resultMap.keys.contains(event.startDate.year)) {
-        resultMap[event.startDate.year] = Events([event]);
+      if (!resultMap.keys.contains(event.startDate.year.toString())) {
+        resultMap[event.startDate.year.toString()] = Events([event]);
         continue;
       }
-      var eventsList = resultMap[event.startDate.year]!.events;
+      var eventsList = resultMap[event.startDate.year.toString()]!.events;
       eventsList.add(event);
     }
     var sortedByKeyMap = Map.fromEntries(

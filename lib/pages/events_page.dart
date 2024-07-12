@@ -31,7 +31,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
   final _pageController = PageController(viewportFraction: 1, keepPage: true);
   final ScrollController _scrollController = ScrollController();
   String _header = '';
-  double _stickyHeaderSize = 30;
+  double _stickyHeaderSize = 20;
   AnimationController? animationController;
   Animation<double>? animation;
 
@@ -47,15 +47,16 @@ class _EventsPageState extends ConsumerState<EventsPage>
         bool isTop = _scrollController.position.pixels <= 30;
         if (isTop) {
           setState(() {
-            _stickyHeaderSize = 30;
+            _stickyHeaderSize = 20;
           });
         } else {
           setState(() {
-            _stickyHeaderSize = 0;
+            _stickyHeaderSize = 00;
           });
         }
       }
     });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() => _header = Localize.of(context).events);
       _scrollToActualEvent();
@@ -63,15 +64,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
   }
 
   _scrollToActualEvent() async {
-
-
     await Future.delayed(const Duration(milliseconds: 400));
-    const widgetHeight = 100.0; // <-- The height of each widget
-    _scrollController.animateTo(
-      widgetHeight * 80,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.bounceIn,
-    );
     if (_dataKey.currentContext != null) {
       Scrollable.ensureVisible(_dataKey.currentContext!,
           curve: Curves.slowMiddle, alignment: 0.5);
@@ -95,7 +88,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
     var networkAvailable = ref.watch(networkAwareProvider);
     return NestedScrollView(
       controller: _scrollController,
-      floatHeaderSlivers: false,
+      floatHeaderSlivers: true,
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         CupertinoSliverNavigationBar(
           leading: const Icon(CupertinoIcons.ticket),
@@ -126,11 +119,6 @@ class _EventsPageState extends ConsumerState<EventsPage>
                   ],
                 )
               : const Icon(Icons.offline_bolt_outlined),
-        ),
-        CupertinoSliverRefreshControl(
-          onRefresh: () async {
-            return context.read(allEventsProvider);
-          },
         ),
         const SliverToBoxAdapter(
           child: FractionallySizedBox(
@@ -204,22 +192,43 @@ class _EventsPageState extends ConsumerState<EventsPage>
     );
   }
 
-  buildPagesList(Events events) {
+  Events _findActualEvents(Events events) {
+    var resEvents = Events([]);
     if (events.events.isEmpty) {
-      return Text(Localize.of(context).nodatareceived);
+      return resEvents;
     }
-    return _buildPages(context, events);
+    var actualDate = DateTime.now();
+
+    for (var event in events.events) {
+      if (event.startDate
+              .isAfter(DateTime.now().subtract(const Duration(days: 15)))
+          /*&&event.startDate.isBefore(DateTime.now().add(const Duration(days: 15)))*/
+          ) {
+        resEvents.events.add(event);
+      }
+    }
+    return resEvents;
   }
 
   List<StickyHeader> _buildPages(BuildContext context, Events events) {
-    var groupedEvents = events.groupByYear();
+    var groupedEvents = <String, Events>{};
+    var pagedEvents = events.groupByYear();
+    var nearEvents = _findActualEvents(events);
+    if (nearEvents.events.isNotEmpty) {
+      groupedEvents[Localize.of(context).actualInformations] = nearEvents;
+      for (var entry in pagedEvents.entries) {
+        groupedEvents[entry.key] = entry.value;
+      }
+    } else {
+      groupedEvents = events.groupByYear();
+    }
     var lst = List.generate(groupedEvents.keys.length, (pageIndex) {
       var itemsCount =
           groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events.length;
       var pageEvents =
           groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events;
       return StickyHeader(
-        controller: _scrollController, // Optional
+        //controller: _innerScrollController, // Optional
         header: Container(
           height: _stickyHeaderSize,
           color: CupertinoTheme.of(context).barBackgroundColor,
@@ -242,7 +251,6 @@ class _EventsPageState extends ConsumerState<EventsPage>
             onRefresh: () async {
               return context.refresh(allEventsProvider);
             },
-            child: SafeArea(
               child: MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
@@ -294,7 +302,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
               ),
             ),
           ),
-        ),
+
       );
     });
     return lst;
