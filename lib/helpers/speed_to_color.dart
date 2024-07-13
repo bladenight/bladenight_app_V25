@@ -26,7 +26,7 @@ class SpeedToColor {
     if (speed <= 38) return Colors.red.shade600;
     if (speed <= 40) return Colors.red.shade700;
     if (speed <= 42) return Colors.red.shade800;
-    return Colors.red.shade900;
+    return Colors.red;
   }
 
   static List<Color> speedColors = [
@@ -52,6 +52,6 @@ class SpeedToColor {
     Colors.red.shade600,
     Colors.red.shade700,
     Colors.red.shade800,
-    Colors.grey.shade800
+    Colors.red
   ];
 }

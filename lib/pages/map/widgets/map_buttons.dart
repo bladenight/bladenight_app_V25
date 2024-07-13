@@ -739,8 +739,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     opacity: animation!,
                     child: Container(
                       alignment: Alignment.center,
-                      child: Text(
-                        'Kartenausrichtung',
+                      child: Text(Localize.of(context).mapAlign,
                         style: TextStyle(
                           color: CupertinoTheme.of(context).barBackgroundColor,
                           backgroundColor:
@@ -762,8 +761,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   opacity: animation!,
                   child: Container(
                     alignment: Alignment.center,
-                    child: Text(
-                      'Teilnahme starten',
+                    child: Text(Localize.of(context).startParticipation,
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -785,8 +783,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   opacity: animation!,
                   child: Container(
                     alignment: Alignment.center,
-                    child: Text(
-                      'Auf Karte verfolgen',
+                    child: Text(Localize.of(context).mapFollow,
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -807,8 +804,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     opacity: animation!,
                     child: Container(
                       alignment: Alignment.center,
-                      child: Text(
-                        'Menu',
+                      child: Text(Localize.of(context).menu,
                         style: TextStyle(
                           color: CupertinoTheme.of(context).barBackgroundColor,
                           backgroundColor:

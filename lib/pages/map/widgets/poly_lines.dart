@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -49,12 +50,13 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
           strokeWidth: context.watch(isTrackingProvider) ? 5 : 3,
           borderColor: context.watch(meColorProvider),
           color: context.watch(isTrackingProvider)
-              ? const CupertinoDynamicColor.withBrightness(
-                  color: CupertinoColors.white,
-                  darkColor: CupertinoColors.lightBackgroundGray)
+              ? CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                      Brightness.light
+                  ? CupertinoColors.white
+                  : CupertinoColors.lightBackgroundGray
               : Colors.transparent,
-          useStrokeWidthInMeter: true,
-          borderStrokeWidth: context.watch(isTrackingProvider) ? 4 : 7,
+          useStrokeWidthInMeter: false,
+          borderStrokeWidth: context.watch(isTrackingProvider) ? 4 : 5,
           //ref.watch(isTrackingProvider),
         ),
       //user‘s track points
@@ -62,13 +64,16 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
           context.watch(showOwnTrackProvider))
         for (var part in locationUpdate.userSpeedPoints.userSpeedPoints)
           Polyline(
-            points: part.latLngList,
-            color: part.color,
-            strokeWidth: context.watch(isTrackingProvider) ? 7 : 6,
-            borderStrokeWidth: 4.0,
-            useStrokeWidthInMeter: true,
-            borderColor: part.color
-          ),
+              points: part.latLngList,
+              color: part.color,
+              strokeWidth: context.watch(isTrackingProvider) ? 7 : 6,
+              borderStrokeWidth: 2.0,
+              useStrokeWidthInMeter: false,
+              borderColor:
+                  CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                          Brightness.light
+                      ? CupertinoColors.black
+                      : part.color),
 
       /* Polyline(
           points: locationUpdate.userLatLongs.latLngList,
@@ -84,12 +89,14 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
       if (processionRoutePoints.isNotEmpty)
         Polyline(
           points: processionRoutePoints,
-          color: CupertinoDynamicColor.withBrightness(
-              color: ref.watch(themePrimaryDarkColorProvider),
-              darkColor: ref.watch(themePrimaryLightColorProvider)),
-          borderColor: CupertinoDynamicColor.withBrightness(
-              color: ref.watch(themePrimaryLightColorProvider),
-              darkColor: ref.watch(themePrimaryDarkColorProvider)),
+          color: CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                  Brightness.light
+              ? ref.watch(themePrimaryDarkColorProvider)
+              : ref.watch(themePrimaryLightColorProvider),
+          borderColor: CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                  Brightness.light
+              ? ref.watch(themePrimaryLightColorProvider)
+              : ref.watch(themePrimaryDarkColorProvider),
           strokeWidth: ref.watch(iconSizeProvider) - 3,
           borderStrokeWidth: 3.0,
           pattern: const StrokePattern.dotted(),
