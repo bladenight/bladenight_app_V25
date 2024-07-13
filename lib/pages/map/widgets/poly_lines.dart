@@ -45,15 +45,18 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
     return PolylineLayer(polylines: [
       if (activeEventRoutePoints.isNotEmpty)
         Polyline(
-          //active route points
+          //current and active route points
           points: activeEventRoutePoints,
           strokeWidth: context.watch(isTrackingProvider) ? 5 : 3,
-          borderColor: context.watch(meColorProvider),
+          borderColor: CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                  Brightness.light
+              ? Colors.blue
+              : Colors.yellow,
           color: context.watch(isTrackingProvider)
               ? CupertinoAdaptiveTheme.of(context).theme.brightness ==
                       Brightness.light
                   ? CupertinoColors.white
-                  : CupertinoColors.lightBackgroundGray
+                  : CupertinoColors.darkBackgroundGray
               : Colors.transparent,
           useStrokeWidthInMeter: false,
           borderStrokeWidth: context.watch(isTrackingProvider) ? 4 : 5,
