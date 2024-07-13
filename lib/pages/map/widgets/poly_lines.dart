@@ -69,8 +69,8 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
           Polyline(
               points: part.latLngList,
               color: part.color,
-              strokeWidth: context.watch(isTrackingProvider) ? 7 : 6,
-              borderStrokeWidth: 2.0,
+              strokeWidth: context.watch(isTrackingProvider) ? 6 : 6,
+              borderStrokeWidth: 1.0,
               useStrokeWidthInMeter: false,
               borderColor:
                   CupertinoAdaptiveTheme.of(context).theme.brightness ==

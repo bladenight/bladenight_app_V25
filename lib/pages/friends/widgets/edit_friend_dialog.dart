@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -144,77 +145,86 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
                 widthFactor: 0.9,
                 child: Column(
                   children: [
-                    Text(
-                      Localize.of(context).enterfriendname,
-                      textAlign: TextAlign.start,
-                    ),
-                    CupertinoTextFormFieldRow(
-                      controller: nameController,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (String? value) {
-                        if (value == null || value.isEmpty) {
-                          return Localize.of(context).missingName;
-                        }
-                        return null;
-                      },
-                      decoration: const BoxDecoration(
-                        color: CupertinoDynamicColor.withBrightness(
-                          color: CupertinoColors.white,
-                          darkColor: CupertinoColors.black,
-                        ),
-                      ),
-                      placeholder: Localize.of(context).enterfriendname,
-                      autofocus: true,
-                      onChanged: (value) {
-                        setState(() {
-                          name = value;
-                          nameOk = value.isNotEmpty;
-                        });
-                      },
-                    ),
+                    CupertinoFormSection(
+                        header: Text(Localize.current.enterfriendname),
+                        children: <Widget>[
+                          CupertinoTextFormFieldRow(
+                            controller: nameController,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return Localize.of(context).missingName;
+                              }
+                              return null;
+                            },
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: nameOk
+                                    ? CupertinoAdaptiveTheme.of(context)
+                                                .theme
+                                                .brightness ==
+                                            Brightness.light
+                                        ? CupertinoColors.black
+                                        : CupertinoColors.white
+                                    : Colors.red,
+                                width: 2.0,
+                              ),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5.0)),
+                            ),
+                            placeholder: Localize.of(context).enterfriendname,
+                            autofocus: true,
+                            autocorrect: false,
+                            onChanged: (value) {
+                              setState(() {
+                                name = value;
+                                nameOk = value.isNotEmpty;
+                              });
+                            },
+                          ),
+                        ]),
                     if (widget.action == FriendsAction.addWithCode) ...[
-                      const SizedBox(height: 5),
-                      Text(
-                        Localize.of(context).enter6digitcode,
-                        textAlign: TextAlign.start,
-                      ),
-                      CupertinoTextFormFieldRow(
-                        placeholder: Localize.of(context).enter6digitcode,
-                        maxLength: 6,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (String? value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.length != 6) {
-                            return Localize.of(context).enter6digitcode;
-                          }
-                          return null;
-                        },
-                        controller: codeController,
-                        decoration: BoxDecoration(
-                          color: const CupertinoDynamicColor.withBrightness(
-                            color: CupertinoColors.white,
-                            darkColor: CupertinoColors.black,
-                          ),
-                          border: Border.all(
-                            color: code == null || isCodeValid
-                                ? const CupertinoDynamicColor.withBrightness(
-                                    color: Color(0x33000000),
-                                    darkColor: Color(0x33FFFFFF),
-                                  )
-                                : CupertinoColors.destructiveRed,
-                            width: 0.0,
-                          ),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5.0)),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          setState(() {
-                            code = value;
-                          });
-                        },
-                      ),
+                      CupertinoFormSection(
+                          header: Text(Localize.current.enter6digitcode),
+                          children: <Widget>[
+                            CupertinoTextFormFieldRow(
+                              placeholder: Localize.of(context).enter6digitcode,
+                              maxLength: 6,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (String? value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.length != 6) {
+                                  return Localize.of(context).enter6digitcode;
+                                }
+                                return null;
+                              },
+                              controller: codeController,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: code == null || isCodeValid
+                                      ? CupertinoAdaptiveTheme.of(context)
+                                                  .theme
+                                                  .brightness ==
+                                              Brightness.light
+                                          ? CupertinoColors.black
+                                          : CupertinoColors.white
+                                      : CupertinoColors.destructiveRed,
+                                  width: 2.0,
+                                ),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(5.0)),
+                              ),
+                              keyboardType: TextInputType.number,
+                              onChanged: (value) {
+                                setState(() {
+                                  code = value;
+                                });
+                              },
+                            ),
+                          ]),
                     ],
                     if (errorText != null)
                       FittedBox(
@@ -240,7 +250,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     ColorPicker(onColorChanged: (c) {
                       setState(() {
                         color = c;

@@ -289,7 +289,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Deine Mobiltelefonnummer.(Nur für die Bladenight und falls die Polizei bei der Ordnerprüfung dich sehen möchte."),
         "entercode": MessageLookupByLibrary.simpleMessage("Code: "),
         "enterfriendname":
-            MessageLookupByLibrary.simpleMessage("Name eingeben."),
+            MessageLookupByLibrary.simpleMessage("Name eingeben"),
         "entername": MessageLookupByLibrary.simpleMessage("Name:"),
         "eventNotStarted":
             MessageLookupByLibrary.simpleMessage("Noch nicht gestartet"),
