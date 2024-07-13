@@ -494,11 +494,15 @@
   "loginThreeHoursBefore": "Vous pouvez vous présenter sur place 3 heures avant le départ ! Vous devez être à proximité du point de départ !",
   "mustNearbyStartingPoint": "Il faut que dans le voisinage des points de démarrage, il y ait moins de min. {distInMeter} m entfernt. Vous avez le temps de vous informer de votre équipe.",
   "spec": "Spécial",
-  "lead": "Zuganfang/ende",
   "leadspec": "Zug+Spécial",
   "admin": "Administrateur",
   "bladeguardAtStartPointTitle": "BladenightApp - Pour votre enregistrement",
   "checkNearbyCounterSide": "Veuillez sélectionner l'appareil de vos amis pour obtenir des amis sur l'application",
-  "searchNearby" : "Searching nearby devices"
+  "searchNearby" : "Recherche d'appareils à proximité",
+  "mapAlign": "Alignement de la carte",
+  "startParticipation": "Démarrer la participation",
+  "mapFollow": "Suivi sur la carte",
+  "menu": "Menu",
+  "lead": "Procession Start / Fin"
 }
 

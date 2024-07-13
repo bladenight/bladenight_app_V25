@@ -340,7 +340,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
             "Please support the exact presentation of BladeNight skater procession.\nYour friends will miss you!"),
         "from": MessageLookupByLibrary.simpleMessage("by"),
-        "geoFencing": MessageLookupByLibrary.simpleMessage("allow geofencing"),
+        "geoFencing": MessageLookupByLibrary.simpleMessage("Allow geofencing"),
         "geoFencingTitle": MessageLookupByLibrary.simpleMessage(
             "Bladeguard on site – allow via geofencing. If you are within the radius of the starting point, you will automatically be logged in as BladeGuard digital (Beta)"),
         "getwebdata": MessageLookupByLibrary.simpleMessage(
@@ -408,9 +408,11 @@ class MessageLookup extends MessageLookupByLibrary {
             "Location sharing was started and is active."),
         "login": MessageLookupByLibrary.simpleMessage("login"),
         "loginThreeHoursBefore": MessageLookupByLibrary.simpleMessage(
-            "You can set yourself onsite 3 hours before start! You must nearby starting point!"),
+            "You can register yourself onsite 3 hours before start! You must nearby starting point!"),
         "manufacturer": MessageLookupByLibrary.simpleMessage("Manufacturer"),
         "map": MessageLookupByLibrary.simpleMessage("Map"),
+        "mapAlign": MessageLookupByLibrary.simpleMessage("Map alignment"),
+        "mapFollow": MessageLookupByLibrary.simpleMessage("Following on map"),
         "mapFollowLocation":
             MessageLookupByLibrary.simpleMessage("Map follows my position"),
         "mapFollowStopped":
@@ -426,6 +428,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "markMeAsTail": MessageLookupByLibrary.simpleMessage(
             "Mark me as tail of procession"),
         "me": MessageLookupByLibrary.simpleMessage("Me"),
+        "menu": MessageLookupByLibrary.simpleMessage("Menu"),
         "message": MessageLookupByLibrary.simpleMessage("Message"),
         "messages": MessageLookupByLibrary.simpleMessage("Messages"),
         "metersOnRoute": MessageLookupByLibrary.simpleMessage("Driven route"),
@@ -556,7 +559,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "requestLocationPermissionTitle": MessageLookupByLibrary.simpleMessage(
             "Information why location sharing would be necessary."),
         "requestOffSite": MessageLookupByLibrary.simpleMessage(
-            "You really want to deregister as a Bladeguard today. We need everyone. Think again."),
+            "You really want to unregister as a Bladeguard today. We need everyone. Think again."),
         "requestOffSiteTitle":
             MessageLookupByLibrary.simpleMessage("No Bladeguard today?"),
         "resetInSettings":
@@ -650,6 +653,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "startLocationWithoutParticipatingInfo":
             MessageLookupByLibrary.simpleMessage(
                 "Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and tracking data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?"),
+        "startParticipation":
+            MessageLookupByLibrary.simpleMessage("Start participation"),
         "startParticipationTracking":
             MessageLookupByLibrary.simpleMessage("Start participation"),
         "startPoint": MessageLookupByLibrary.simpleMessage(

@@ -500,5 +500,9 @@
   "admin": "Administrator",
   "bladeguardAtStartPointTitle": "BladenightApp - Vor Ort registriert",
   "checkNearbyCounterSide": "Bitte das Gerät deines Freundes zum Koppeln bestätigen",
-  "searchNearby" : "Suche Geräte in der Nähe ..."
+  "searchNearby" : "Suche Geräte in der Nähe ...",
+  "mapAlign": "Kartenausrichtung",
+  "startParticipation": "Teilnahme starten",
+  "mapFollow": "Auf Karte verfolgen",
+  "menu": "Auswahl"
 }

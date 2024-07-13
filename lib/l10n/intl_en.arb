@@ -377,7 +377,7 @@
   "remove": "Remove",
   "requestAlwaysPermissionTitle": "Location always permissions",
   "requestLocationPermissionTitle": "Information why location sharing would be necessary.",
-  "requestOffSite": "You really want to deregister as a Bladeguard today. We need everyone. Think again.",
+  "requestOffSite": "You really want to unregister as a Bladeguard today. We need everyone. Think again.",
   "requestOffSiteTitle": "No Bladeguard today?",
   "resetInSettings": "Reset in settings-page",
   "resetLongPress": "Press gauge long to reset the ODO meter",
@@ -488,11 +488,11 @@
   "leaveAppWarningTitle": "Open an external browser?",
   "leaveAppWarning": "You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: ",
   "geoFencingTitle": "Bladeguard on site – allow via geofencing. If you are within the radius of the starting point, you will automatically be logged in as BladeGuard digital (Beta)",
-  "geoFencing": "allow geofencing",
+  "geoFencing": "Allow geofencing",
   "showCompassTitle": "Show compass on map",
   "showCompass": "Show compass",
   "noNearbyService": "Nearby service not activated",
-  "loginThreeHoursBefore": "You can set yourself onsite 3 hours before start! You must nearby starting point!",
+  "loginThreeHoursBefore": "You can register yourself onsite 3 hours before start! You must nearby starting point!",
   "mustNearbyStartingPoint": "You have to be close to the starting point, but you are at least {distInMeter} m away. If you are late, please inform your team leader.",
   "spec": "Special",
   "lead": "Procession start/end",
@@ -500,5 +500,9 @@
   "admin": "Administrator",
   "bladeguardAtStartPointTitle": "BladenightApp - registered onsite",
   "checkNearbyCounterSide": "Please select your friends device to get App-friends",
-  "searchNearby" : "Searching nearby devices"
+  "searchNearby" : "Searching nearby devices",
+  "mapAlign": "Map alignment",
+  "startParticipation": "Start participation",
+  "mapFollow": "Following on map",
+  "menu": "Menu"
 }

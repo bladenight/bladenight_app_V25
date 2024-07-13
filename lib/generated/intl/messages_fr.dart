@@ -396,7 +396,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Dernière observation"),
         "lastupdate":
             MessageLookupByLibrary.simpleMessage("Dernière mise à jour"),
-        "lead": MessageLookupByLibrary.simpleMessage("Zuganfang/ende"),
+        "lead": MessageLookupByLibrary.simpleMessage("Procession Start / Fin"),
         "leadspec": MessageLookupByLibrary.simpleMessage("Zug+Spécial"),
         "leaveAppWarning": MessageLookupByLibrary.simpleMessage(
             "Vous êtes prêt à utiliser votre navigateur Internet. Bien que cette application soit disponible, lorsque vous êtes prêt à le faire. L\'application est disponible dans l\'arrière-plan plus loin. \n"),
@@ -428,6 +428,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Vous pouvez vous présenter sur place 3 heures avant le départ ! Vous devez être à proximité du point de départ !"),
         "manufacturer": MessageLookupByLibrary.simpleMessage("Fabricant"),
         "map": MessageLookupByLibrary.simpleMessage("Carte"),
+        "mapAlign":
+            MessageLookupByLibrary.simpleMessage("Alignement de la carte"),
+        "mapFollow": MessageLookupByLibrary.simpleMessage("Suivi sur la carte"),
         "mapFollowLocation":
             MessageLookupByLibrary.simpleMessage("La carte suit ma position"),
         "mapFollowStopped":
@@ -443,6 +446,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "markMeAsTail": MessageLookupByLibrary.simpleMessage(
             "Marquez-moi comme queue de cortège"),
         "me": MessageLookupByLibrary.simpleMessage("moi"),
+        "menu": MessageLookupByLibrary.simpleMessage("Menu"),
         "message": MessageLookupByLibrary.simpleMessage("Message"),
         "messages": MessageLookupByLibrary.simpleMessage("Messages"),
         "metersOnRoute":
@@ -597,8 +601,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "scrollMapTo": MessageLookupByLibrary.simpleMessage(
             "Faire défiler la carte pour ..."),
-        "searchNearby":
-            MessageLookupByLibrary.simpleMessage("Searching nearby devices"),
+        "searchNearby": MessageLookupByLibrary.simpleMessage(
+            "Recherche d\'appareils à proximité"),
         "seemsoffline": MessageLookupByLibrary.simpleMessage(
             "Attente de la connexion internet ..."),
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
@@ -679,6 +683,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "startLocationWithoutParticipatingInfo":
             MessageLookupByLibrary.simpleMessage(
                 "Veuillez lire attentivement.\nCeci démarre l\'affichage de la position sur la carte sans participer au procession et transfère votre position au serveur pour calculer les temps. Vos amis dans le procession seront affichés. La durée du trajet entre le début et la fin du procession à partir de votre position sera calculée. En outre, votre vitesse et vos données de suivi seront enregistrées et vous pourrez les sauvegarder. N\'utilisez pas cette fonction si vous participez à la BladeNight. Le mode doit être arrêté manuellement.\nVous voulez démarrer ceci ?"),
+        "startParticipation":
+            MessageLookupByLibrary.simpleMessage("Démarrer la participation"),
         "startParticipationTracking":
             MessageLookupByLibrary.simpleMessage("Démarrer la participation"),
         "startPoint": MessageLookupByLibrary.simpleMessage(

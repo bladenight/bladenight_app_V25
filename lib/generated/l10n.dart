@@ -2936,10 +2936,10 @@ class Localize {
     );
   }
 
-  /// `You really want to deregister as a Bladeguard today. We need everyone. Think again.`
+  /// `You really want to unregister as a Bladeguard today. We need everyone. Think again.`
   String get requestOffSite {
     return Intl.message(
-      'You really want to deregister as a Bladeguard today. We need everyone. Think again.',
+      'You really want to unregister as a Bladeguard today. We need everyone. Think again.',
       name: 'requestOffSite',
       desc: '',
       args: [],
@@ -4053,10 +4053,10 @@ class Localize {
     );
   }
 
-  /// `allow geofencing`
+  /// `Allow geofencing`
   String get geoFencing {
     return Intl.message(
-      'allow geofencing',
+      'Allow geofencing',
       name: 'geoFencing',
       desc: '',
       args: [],
@@ -4093,10 +4093,10 @@ class Localize {
     );
   }
 
-  /// `You can set yourself onsite 3 hours before start! You must nearby starting point!`
+  /// `You can register yourself onsite 3 hours before start! You must nearby starting point!`
   String get loginThreeHoursBefore {
     return Intl.message(
-      'You can set yourself onsite 3 hours before start! You must nearby starting point!',
+      'You can register yourself onsite 3 hours before start! You must nearby starting point!',
       name: 'loginThreeHoursBefore',
       desc: '',
       args: [],
@@ -4178,6 +4178,46 @@ class Localize {
     return Intl.message(
       'Searching nearby devices',
       name: 'searchNearby',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map alignment`
+  String get mapAlign {
+    return Intl.message(
+      'Map alignment',
+      name: 'mapAlign',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start participation`
+  String get startParticipation {
+    return Intl.message(
+      'Start participation',
+      name: 'startParticipation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Following on map`
+  String get mapFollow {
+    return Intl.message(
+      'Following on map',
+      name: 'mapFollow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Menu`
+  String get menu {
+    return Intl.message(
+      'Menu',
+      name: 'menu',
       desc: '',
       args: [],
     );

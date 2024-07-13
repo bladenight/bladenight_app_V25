@@ -418,6 +418,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Digitale Anmeldung 3 Stunden vor Start in der Nähe des Startpunktes möglich!"),
         "manufacturer": MessageLookupByLibrary.simpleMessage("Hersteller"),
         "map": MessageLookupByLibrary.simpleMessage("Karte"),
+        "mapAlign": MessageLookupByLibrary.simpleMessage("Kartenausrichtung"),
+        "mapFollow":
+            MessageLookupByLibrary.simpleMessage("Auf Karte verfolgen"),
         "mapFollowLocation": MessageLookupByLibrary.simpleMessage(
             "Karte folgt meiner Position."),
         "mapFollowStopped":
@@ -433,6 +436,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "markMeAsTail": MessageLookupByLibrary.simpleMessage(
             "Markiere meine Position als Zugende"),
         "me": MessageLookupByLibrary.simpleMessage("Ich"),
+        "menu": MessageLookupByLibrary.simpleMessage("Auswahl"),
         "message": MessageLookupByLibrary.simpleMessage("Nachricht"),
         "messages": MessageLookupByLibrary.simpleMessage("Nachrichten"),
         "metersOnRoute": MessageLookupByLibrary.simpleMessage("gef.Strecke"),
@@ -662,6 +666,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "startLocationWithoutParticipatingInfo":
             MessageLookupByLibrary.simpleMessage(
                 "Bitte Aufmerksam lesen.\nDies startet die Standortdarstellung auf der Karte ohne Teilnahme an der BladeNight und überträgt zur Berechnung der Zeiten deinen Standort auf den Server. Deine Freunde im Zug werden Dir angezeigt. Die Zeit zum Zuganfang /-ende von deinem Standort werden berechnet. Weiterhin, werden deine Geschwindigkeit und Trackingdaten aufgezeichnet die du speichern kannst. Bitte diese Funktion nicht verwenden, wenn du an der BladeNight teilnimmst. Der Modus muss manuell beendet werden. \nSoll dies gestartet werden?"),
+        "startParticipation":
+            MessageLookupByLibrary.simpleMessage("Teilnahme starten"),
         "startParticipationTracking": MessageLookupByLibrary.simpleMessage(
             "Teilnahme an BladeNight starten"),
         "startPoint": MessageLookupByLibrary.simpleMessage(
