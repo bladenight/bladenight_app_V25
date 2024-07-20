@@ -453,17 +453,17 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                       ),
                                     ),
                                   if (actualOrNextEvent.status ==
-                                      EventStatus.confirmed &&
+                                          EventStatus.confirmed &&
                                       actualOrNextEvent.status !=
                                           EventStatus.noevent)
-                                  FittedBox(
-                                    child: Text(
-                                      DateFormatter(Localize.of(context))
-                                          .getLocalDayDateTimeRepresentation(
-                                              actualOrNextEvent
-                                                  .getUtcIso8601DateTime),
+                                    FittedBox(
+                                      child: Text(
+                                        DateFormatter(Localize.of(context))
+                                            .getLocalDayDateTimeRepresentation(
+                                                actualOrNextEvent
+                                                    .getUtcIso8601DateTime),
+                                      ),
                                     ),
-                                  ),
                                 ],
                                 if (eventIsActive)
                                   Column(children: [
@@ -580,7 +580,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     ),
                                   )
                                 ]),
-                          const SpecialFunctionInfo(),
                           if (!actualOrNextEvent.isActive ||
                               actualOrNextEvent.status ==
                                   EventStatus.cancelled ||
@@ -624,6 +623,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               ),
                             ),
                           ],
+                          const SpecialFunctionInfo(),
                           const SizedBox(
                             height: 5,
                           ),
