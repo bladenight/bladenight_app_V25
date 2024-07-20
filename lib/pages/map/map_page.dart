@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
@@ -9,8 +10,10 @@ import 'package:latlong2/latlong.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
+import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
+import '../../helpers/notification/toast_notification.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../providers/active_event_provider.dart';
@@ -72,10 +75,10 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       resumeUpdates(force: true);
       LocationProvider.instance.setToBackground(false);
     } else if (state == AppLifecycleState.paused) {
-        BnLog.trace(
-            className: 'resumeUpdates',
-            methodName: 'timer',
-            text: 'LocProvider instance pause updates calling');
+      BnLog.trace(
+          className: 'resumeUpdates',
+          methodName: 'timer',
+          text: 'LocProvider instance pause updates calling');
       LocationProvider.instance.setToBackground(true);
       pauseUpdates();
     }
@@ -89,10 +92,10 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   }
 
   void pauseUpdates() async {
-      BnLog.trace(
-          className: toString(),
-          methodName: 'pauseUpdates',
-          text: 'update paused');
+    BnLog.trace(
+        className: toString(),
+        methodName: 'pauseUpdates',
+        text: 'update paused');
   }
 
   void startFollowingTrainHead() {
@@ -133,7 +136,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               onPointerDown: (e, l) => _onPointerDown(e, l),
               onPointerUp: (e, l) => _onPointerUp(e, l),
               //onPositionChanged: (p, g) => _onPositionChanged(p, g),
-              cameraConstraint: osmEnabled ||
+              /*cameraConstraint: osmEnabled ||
                       ref.watch(activeEventProvider).hasSpecialStartPoint
                   ? CameraConstraint.contain(
                       bounds: MapSettings.mapOnlineBoundaries)
@@ -142,7 +145,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all,
                 enableMultiFingerGestureRace: true,
-              ),
+              ),*/
               onTap: (_, __) => _popupController.hideAllPopups(),
             ),
             children: [
@@ -150,8 +153,29 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               Builder(builder: (context) {
                 return Stack(
                   children: [
-                    const PolyLinesLayer(),
-                     //CurrentLocationLayer(),
+                    MouseRegion(
+                      hitTestBehavior: HitTestBehavior.deferToChild,
+                      cursor: SystemMouseCursors.click,
+                      // Use a special cursor to indicate interactivity
+                      child: GestureDetector(
+                        onTap: () {
+                          final LayerHitResult? hitResult = hitNotifier.value;
+                          if (hitResult == null) return;
+                          // If running frequently (such as on a hover handler), and heavy work or state changes are performed here, store each result so it can be compared to the newest result, then avoid work if they are equal
+                          for (final hitValue  in hitResult.hitValues) {
+                            if (kDebugMode) {
+                              print(hitValue);
+                            }
+                            showToast(message:  '${Localize.current.speed} $hitValue km/h');
+
+                            break;
+                          }
+                        },
+                        child: const PolyLinesLayer(),
+                      ),
+                    ),
+
+                    //CurrentLocationLayer(),
                     /*AnimatedLocationMarkerLayer(
                 position: LocationMarkerPosition(
                     latitude: ref.watch(realtimeDataProvider)!.head.latitude!,
@@ -164,7 +188,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     CustomLocationLayer(_hasGesture),
                     //needs map controller
                     MarkersLayer(_popupController),
-
 
                     TrackProgressOverlay(_mapController),
                     const MapButtonsLayer(),
@@ -204,5 +227,4 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       });
     }
   }
-
 }

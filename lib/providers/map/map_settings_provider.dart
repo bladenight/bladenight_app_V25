@@ -21,6 +21,22 @@ class ShowOwnTrack extends _$ShowOwnTrack {
   }
 }
 
+
+@riverpod
+class ShowOwnColoredTrack extends _$ShowOwnColoredTrack {
+  @override
+  bool build() {
+    Hive.box(hiveBoxSettingDbName)
+        .watch(key: MapSettings.showOwnColoredTrackKey)
+        .listen((event) => state = event.value);
+    return MapSettings.showOwnColoredTrack;
+  }
+
+  void setValue(bool val) {
+    MapSettings.setShowOwnColoredTrack(val);
+  }
+}
+
 @riverpod
 class ShowCompass extends _$ShowCompass {
   @override

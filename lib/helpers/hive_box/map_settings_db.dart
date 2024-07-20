@@ -195,6 +195,20 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.put(showOwnTrackKey, val);
   }
 
+  static const String showOwnColoredTrackKey = 'showOwnColoredTrackPref';
+
+  /// Get value
+  /// if own driven track should bei shown on map
+  static bool get showOwnColoredTrack {
+    return HiveSettingsDB._hiveBox
+        .get(showOwnColoredTrackKey, defaultValue: true);
+  }
+
+  ///set showOwnColoredTrack
+  static void setShowOwnColoredTrack(bool val) {
+    HiveSettingsDB._hiveBox.put(showOwnColoredTrackKey, val);
+  }
+
   static const String cameraFollowKey = 'cameraFollowPref';
 
   /// Get last camera setting (global)

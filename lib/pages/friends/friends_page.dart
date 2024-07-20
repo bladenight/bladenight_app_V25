@@ -337,6 +337,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                         .tellcode(friend.name, friend.requestId),
                     style: TextStyle(
                         fontSize: MediaQuery.textScalerOf(context).scale(14),
+                        fontWeight: FontWeight.bold,
                         color: CupertinoTheme.of(context).primaryColor),
                   ),
                 if (friend.requestId > 0 && friend.codeExpired)

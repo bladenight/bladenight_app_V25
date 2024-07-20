@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -66,7 +67,7 @@ class LocationProvider with ChangeNotifier {
   static DateTime _lastRefreshRequest = DateTime(2022, 1, 1, 0, 0, 0);
 
   DateTime? _userReachedFinishDateTime, _startedTrackingTime;
-  Timer? _updateTimer, _saveLocationsTimer;
+  Timer? _updateTimer, _saveLocationsTimer, _trackingUpdateTimer;
 
   bool _isMoving = false;
   String _lastRouteName = '';
@@ -121,6 +122,11 @@ class LocationProvider with ChangeNotifier {
 
   ///Users position LatLng
   LatLng? get userLatLng => _userLatLng;
+
+  List<LatLng> _userLatLngList = <LatLng>[];
+
+  ///Users position LatLng
+  List<LatLng> get userLatLngList => _userLatLngList;
 
   double? _realUserSpeedKmh;
 
@@ -194,6 +200,9 @@ class LocationProvider with ChangeNotifier {
     _wampConnectedSubscription?.cancel();
     _userLocationMarkerPositionStreamController.close();
     _userLocationMarkerHeadingStreamController.close();
+    _trackingUpdateTimer?.cancel();
+    _saveLocationsTimer?.cancel();
+    _updateTimer?.cancel();
     super.dispose();
   }
 
@@ -239,6 +248,7 @@ class LocationProvider with ChangeNotifier {
     _trackingWasActive = HiveSettingsDB.trackingActive;
     _userIsParticipant = HiveSettingsDB.userIsParticipant;
     _odometer = HiveSettingsDB.odometerValue;
+    // option for autostart _startTrackingUpdateTimer(true);
     if (!kIsWeb) {
       BnLog.trace(
           className: 'locationProvider',
@@ -247,14 +257,12 @@ class LocationProvider with ChangeNotifier {
     }
     if (_trackingWasActive &&
         !_isTracking &&
-        ProviderContainer().read(activeEventProvider).status ==
-            EventStatus.confirmed) {
+        ProviderContainer().read(activeEventProvider).isActive) {
       //restart tracking on reopen
       BnLog.info(
           className: 'locationProvider',
           methodName: 'init',
           text: 'restarting tracking');
-      HiveSettingsDB.setUserIsParticipant(userIsParticipant);
       var state = await startTracking(_userIsParticipant);
       if (state) {
         showToast(message: Localize.current.trackingRestarted);
@@ -263,12 +271,10 @@ class LocationProvider with ChangeNotifier {
       //startStopGeoFencing();
     }
     notifyListeners();
-    if (!kIsWeb) {
-      BnLog.trace(
-          className: 'locationProvider',
-          methodName: 'init',
-          text: 'init finished');
-    }
+    BnLog.trace(
+        className: 'locationProvider',
+        methodName: 'init',
+        text: 'init finished');
   }
 
   void setToBackground(bool value) {
@@ -395,6 +401,7 @@ class LocationProvider with ChangeNotifier {
 
   ///Update user location and track points list
   void updateUserLocation(bg.Location location) {
+    if (!_isTracking) return;
     _userPositionStreamController.add(location);
     _userLocationMarkerPositionStreamController.sink.add(LocationMarkerPosition(
         latitude: location.coords.latitude,
@@ -406,94 +413,127 @@ class LocationProvider with ChangeNotifier {
     if (_lastKnownPoint != null) {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp).toUtc();
       var diff = DateTime.now().toUtc().difference(ts);
-      if (diff < const Duration(seconds: 1)) {
+      if (diff < const Duration(milliseconds: 2500)) {
         return;
       }
     }
 
     _userLatLng = LatLng(location.coords.latitude, location.coords.longitude);
+
     _realUserSpeedKmh =
-        location.coords.speed < 0 ? 0.0 : location.coords.speed * 3.6;
+        location.coords.speed <= 0 ? 0.0 : location.coords.speed * 3.6;
+    _realUserSpeedKmh = _realUserSpeedKmh!.toShortenedDouble(3);
     _odometer = location.odometer / 1000;
-    var userTrackingPoint = UserGpxPoint(
-        location.coords.latitude,
-        location.coords.longitude,
-        _realUserSpeedKmh!,
-        location.coords.heading,
-        location.coords.altitude,
-        odometer,
-        DateTime.now());
-    if (_userGpxPoints.isNotEmpty) {
-      var userLastPoint = _userGpxPoints.last;
-      var lon = location.coords.longitude;
-      var lat = location.coords.latitude;
-      if (userLastPoint.latitude != lat && userLastPoint.longitude != lon) {
+
+    if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
+      _userLatLngList
+          .add(LatLng(location.coords.latitude, location.coords.longitude));
+    } else if (MapSettings.showOwnTrack && MapSettings.showOwnColoredTrack) {
+      var userTrackingPoint = UserGpxPoint(
+          location.coords.latitude,
+          location.coords.longitude,
+          _realUserSpeedKmh!,
+          location.coords.heading,
+          location.coords.altitude,
+          odometer,
+          DateTime.now());
+      if (_userGpxPoints.isNotEmpty) {
+        var userLastPoint = _userGpxPoints.last;
+        var lon = location.coords.longitude;
+        var lat = location.coords.latitude;
+        if (userLastPoint.latitude != lat && userLastPoint.longitude != lon) {
+          _userGpxPoints.add(userTrackingPoint);
+        }
+      } else {
         _userGpxPoints.add(userTrackingPoint);
       }
-    } else {
-      _userGpxPoints.add(userTrackingPoint);
     }
     _lastKnownPoint = location;
     SendToWatch.setUserSpeed('${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
 
-    int maxSize = 2500;
-    if (_userSpeedPoints.latLngList.isEmpty) {
-      //first point
-      UserSpeedPoint userSpeedPoint = UserSpeedPoint(
-        location.coords.latitude,
-        location.coords.longitude,
-        location.coords.speed,
-        LatLng(location.coords.latitude, location.coords.longitude),
-      );
-      _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
-    } else if (_userGpxPoints.length > maxSize) {
-      //decrease numbers of poly lines
-      var smallTrackPointList = UserSpeedPoints([]);
-      var divider = _userGpxPoints.length ~/ maxSize;
-      LatLng? lastLatLng;
-      for (var counter = 0; counter < _userGpxPoints.length - divider;) {
-        if (counter == 0) {
-          //no followed polylinePoint first line has same endpoint
-          smallTrackPointList.add(
-              _userGpxPoints[counter].latitude,
-              _userGpxPoints[counter].longitude,
-              _userGpxPoints[counter].realSpeedKmh,
-              _userGpxPoints[counter].latLng);
-          lastLatLng = _userGpxPoints[counter].latLng;
-        } else {
-          smallTrackPointList.add(
-              _userGpxPoints[counter].latitude,
-              _userGpxPoints[counter].longitude,
-              _userGpxPoints[counter].realSpeedKmh,
-              lastLatLng!);
-          lastLatLng= _userGpxPoints[counter].latLng;
-        }
-        counter = counter + divider.toInt();
-      }
-      //avoid jumping of tracking if list is large
 
-      var last6userGPXPoints =
-          _userGpxPoints.reversed.take(6).toList(growable: false);
-      for (int i = 5; i >= 0; i--) {
-        var lastSmTrackPointListEntry = smallTrackPointList.lastSpeedPoint;
-        if (last6userGPXPoints[i].latLng == lastSmTrackPointListEntry!.latLng) {
-          continue;
+    //Create poly lines for user tracking
+    int maxSize = 500;
+    if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
+      if (_userGpxPoints.length > maxSize) {
+        var smallTrackPointList = <LatLng>[];
+        var divider = _userGpxPoints.length ~/ maxSize;
+
+        for (var counter = 0; counter < _userGpxPoints.length - divider;) {
+          smallTrackPointList.add(LatLng(_userGpxPoints[counter].latitude,
+              _userGpxPoints[counter].longitude));
+          counter = counter + divider.toInt();
         }
-        smallTrackPointList.add(
-            last6userGPXPoints[i].latitude,
-            last6userGPXPoints[i].longitude,
-            last6userGPXPoints[i].realSpeedKmh,
-            lastSmTrackPointListEntry.latLng);
+        //avoid jumping of tracking if list is large
+        var last5 = _userGpxPoints.reversed.take(maxSize ~/ 10);
+        for (var last in last5) {
+          smallTrackPointList.add(LatLng(last.latitude, last.longitude));
+        }
+        _userLatLngList = smallTrackPointList;
+      } else {
+        _userLatLngList
+            .add(LatLng(location.coords.latitude, location.coords.longitude));
       }
-      _userSpeedPoints = smallTrackPointList;
-    } else {
-      UserSpeedPoint userLatLng = UserSpeedPoint(
-        location.coords.latitude,
-        location.coords.longitude,
-        location.coords.speed,
-        _userSpeedPoints.lastSpeedPointLatLng,
-      );
-      _userSpeedPoints.addUserSpeedPoint(userLatLng);
+    } else if (MapSettings.showOwnTrack && MapSettings.showOwnColoredTrack) {
+      if (_userSpeedPoints.latLngList.isEmpty) {
+        //first point
+        UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+          location.coords.latitude,
+          location.coords.longitude,
+          _realUserSpeedKmh!,
+          LatLng(location.coords.latitude, location.coords.longitude),
+        );
+        _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+      } else if (_userGpxPoints.length > maxSize) {
+        //decrease numbers of poly lines
+        var smallTrackPointList = UserSpeedPoints([]);
+        var divider = _userGpxPoints.length ~/ maxSize;
+        LatLng? lastLatLng;
+        for (var counter = 0; counter < _userGpxPoints.length - divider;) {
+          if (counter == 0) {
+            //no followed polylinePoint first line has same endpoint
+            smallTrackPointList.add(
+                _userGpxPoints[counter].latitude,
+                _userGpxPoints[counter].longitude,
+                _userGpxPoints[counter].realSpeedKmh,
+                _userGpxPoints[counter].latLng);
+            lastLatLng = _userGpxPoints[counter].latLng;
+          } else {
+            smallTrackPointList.add(
+                _userGpxPoints[counter].latitude,
+                _userGpxPoints[counter].longitude,
+                _userGpxPoints[counter].realSpeedKmh,
+                lastLatLng!);
+            lastLatLng = _userGpxPoints[counter].latLng;
+          }
+          counter = counter + divider.toInt();
+        }
+        //avoid jumping of tracking if list is large
+
+        var last6userGPXPoints =
+            _userGpxPoints.reversed.take(6).toList(growable: false);
+        for (int i = 5; i >= 0; i--) {
+          var lastSmTrackPointListEntry = smallTrackPointList.lastSpeedPoint;
+          if (last6userGPXPoints[i].latLng ==
+              lastSmTrackPointListEntry!.latLng) {
+            continue;
+          }
+          smallTrackPointList.add(
+              last6userGPXPoints[i].latitude,
+              last6userGPXPoints[i].longitude,
+              last6userGPXPoints[i].realSpeedKmh,
+              lastSmTrackPointListEntry.latLng);
+        }
+        _userSpeedPoints = smallTrackPointList;
+      } else {
+        UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+          location.coords.latitude,
+          location.coords.longitude,
+          _realUserSpeedKmh!,
+          _userSpeedPoints.lastSpeedPointLatLng,
+        );
+        _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+      }
     }
     if (!_isInBackground) {
       notifyListeners();
@@ -528,14 +568,13 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _getHeartBeatLocation() async {
+    if (!_isTracking) return;
     try {
-      if (!kIsWeb) {
-        BnLog.trace(
-          className: toString(),
-          methodName: '_getHeartBeatLocation',
-          text: 'started',
-        );
-      }
+      BnLog.trace(
+        className: toString(),
+        methodName: '_getHeartBeatLocation',
+        text: 'started',
+      );
       bg.Location? newLocation;
       newLocation = await bg.BackgroundGeolocation.getCurrentPosition(
         timeout: 2,
@@ -544,22 +583,18 @@ class LocationProvider with ChangeNotifier {
         samples: 2, // How many location samples to attempt.
       );
       //triggers onLocation
-      if (!kIsWeb) {
-        BnLog.trace(
-          className: toString(),
-          methodName: '_getHeartBeatLocation',
-          text: '_subUpdates sent new location $newLocation',
-        );
-      }
+      BnLog.trace(
+        className: toString(),
+        methodName: '_getHeartBeatLocation',
+        text: '_subUpdates sent new location $newLocation',
+      );
       return;
     } catch (e) {
-      if (!kIsWeb) {
-        BnLog.warning(
-            className: toString(),
-            methodName: '_subToUpdates',
-            text: '_subUpdates Failed:',
-            exception: e);
-      }
+      BnLog.warning(
+          className: toString(),
+          methodName: '_subToUpdates',
+          text: '_subUpdates Failed:',
+          exception: e);
     }
     refresh();
   }
@@ -603,6 +638,7 @@ class LocationProvider with ChangeNotifier {
     _locationSubscription?.cancel();
     _locationSubscription = null;
     _isTracking = false;
+    _lastKnownPoint = null;
     setUpdateTimer(false);
     Wakelock.disable();
     if (HiveSettingsDB.useAlternativeLocationProvider) {
@@ -850,9 +886,7 @@ class LocationProvider with ChangeNotifier {
 
   ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
   void startSaveLocationsUpdateTimer(bool enabled) {
-    if (!kIsWeb) {
-      BnLog.trace(text: 'init startSaveLocationsUpdateTimer to $enabled');
-    }
+    BnLog.trace(text: 'init startSaveLocationsUpdateTimer to $enabled');
     _saveLocationsTimer?.cancel();
     if (enabled) {
       _saveLocationsTimer = Timer.periodic(
@@ -865,8 +899,8 @@ class LocationProvider with ChangeNotifier {
         },
       );
     } else {
-      _updateTimer?.cancel();
-      _updateTimer = null;
+      _saveLocationsTimer?.cancel();
+      _saveLocationsTimer = null;
     }
   }
 
@@ -900,6 +934,27 @@ class LocationProvider with ChangeNotifier {
     } else {
       _updateTimer = null;
       _saveLocationsTimer = null;
+    }
+  }
+
+  void _startTrackingUpdateTimer(bool enabled) {
+    BnLog.trace(text: 'init startTrackingUpdateTimer to $enabled');
+    _trackingUpdateTimer?.cancel();
+    if (enabled) {
+      _trackingUpdateTimer = Timer.periodic(
+        const Duration(minutes: 5),
+        (timer) {
+          if (_isTracking || !autoStop || !trackingWasActive) {
+            return;
+          }
+          if (eventIsActive) {
+            startTracking(userIsParticipant);
+          }
+        },
+      );
+    } else {
+      _trackingUpdateTimer?.cancel();
+      _trackingUpdateTimer = null;
     }
   }
 

@@ -2,34 +2,38 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:riverpod_context/riverpod_context.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
+import '../../../helpers/speed_to_color.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/route.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
+import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_data_warning.dart';
+import 'speed_info_colors.dart';
 import 'update_progress.dart';
 
-class MapEventInformation extends StatelessWidget {
+class MapEventInformation extends ConsumerWidget {
   const MapEventInformation({super.key, required this.mapController});
 
   final MapController mapController;
 
   @override
-  Widget build(BuildContext context) {
-    var rtu = context.watch(realtimeDataProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    var rtu = ref.watch(realtimeDataProvider);
     if (rtu == null) {
       return NoDataWarning(onReload: () {});
     }
-    var friends = context.watch(friendsProvider.select(
+    var friends = ref.watch(friendsProvider.select(
         (fr) => fr.where((element) => element.isOnline && element.isActive)));
-    var event = context.watch(activeEventProvider);
+    var event = ref.watch(activeEventProvider);
     return CupertinoScrollbar(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -114,7 +118,7 @@ class MapEventInformation extends StatelessWidget {
                                 width: 20,
                               ),
                             ),
-                            if (context.watch(isTrackingProvider))
+                            if (ref.watch(isTrackingProvider))
                               DataLeftRightContent(
                                 descriptionLeft:
                                     Localize.of(context).timeToHead,
@@ -131,7 +135,7 @@ class MapEventInformation extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            if (context.watch(isTrackingProvider))
+                            if (ref.watch(isTrackingProvider))
                               DataLeftRightContent(
                                 descriptionLeft:
                                     Localize.of(context).timeToTail,
@@ -207,13 +211,27 @@ class MapEventInformation extends StatelessWidget {
                           ]),
                     ),
                   ),
-                  if (!kIsWeb)
+                  if (ref.watch(showOwnColoredTrackProvider)) ...[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                       child: Text(Localize.of(context).me,
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
-                  if (context.watch(isTrackingProvider))
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                      child: Text(
+                        Localize.of(context).mySpeed,
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                      child: SpeedInfoColors(),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    )
+                  ],
+                  if (ref.watch(isTrackingProvider))
                     GestureDetector(
                       child: Container(
                         color: CupertinoDynamicColor.resolve(

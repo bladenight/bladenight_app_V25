@@ -4222,6 +4222,26 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Colorize my track`
+  String get showOwnColoredTrack {
+    return Intl.message(
+      'Colorize my track',
+      name: 'showOwnColoredTrack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My speed on track`
+  String get mySpeed {
+    return Intl.message(
+      'My speed on track',
+      name: 'mySpeed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

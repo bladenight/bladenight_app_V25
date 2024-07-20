@@ -441,6 +441,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "myName": MessageLookupByLibrary.simpleMessage("My name is"),
         "myNameHeader": MessageLookupByLibrary.simpleMessage(
             "The specified name is transferred to the 2nd device when you connect to your friend. The name is only saved locally and is used for simplified linking via the local connection."),
+        "mySpeed": MessageLookupByLibrary.simpleMessage("My speed on track"),
         "nameexists":
             MessageLookupByLibrary.simpleMessage("Sorry, name exists"),
         "networkerror":
@@ -631,6 +632,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Show procession participants"),
         "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(
             "Show procession participants (limited to 100 in procession) on map. Works only if self-tracking."),
+        "showOwnColoredTrack":
+            MessageLookupByLibrary.simpleMessage("Colorize my track"),
         "showOwnTrack":
             MessageLookupByLibrary.simpleMessage("Show own track in map"),
         "showProcession": MessageLookupByLibrary.simpleMessage(

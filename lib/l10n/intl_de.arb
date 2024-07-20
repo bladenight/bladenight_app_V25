@@ -504,5 +504,7 @@
   "mapAlign": "Kartenausrichtung",
   "startParticipation": "Teilnahme starten",
   "mapFollow": "Auf Karte verfolgen",
-  "menu": "Auswahl"
+  "menu": "Auswahl",
+  "showOwnColoredTrack": "Coloriere Route",
+  "mySpeed": "Meine Geschwindigkeit auf Route"
 }

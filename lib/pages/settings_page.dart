@@ -8,7 +8,6 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -59,7 +58,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var networkConnected = context.watch(networkAwareProvider);
+    var networkConnected = ref.watch(networkAwareProvider);
     return CupertinoPageScaffold(
       child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -158,8 +157,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       primaryColor: res),
                                   dark: CupertinoThemeData(
                                     brightness: Brightness.dark,
-                                    primaryColor: context
-                                        .read(themePrimaryDarkColorProvider),
+                                    primaryColor:
+                                        ref.read(themePrimaryDarkColorProvider),
                                   ));
                             },
                           ),
@@ -188,7 +187,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               CupertinoAdaptiveTheme.of(context).setTheme(
                                   light: CupertinoThemeData(
                                       brightness: Brightness.light,
-                                      primaryColor: context.read(
+                                      primaryColor: ref.read(
                                           themePrimaryLightColorProvider)),
                                   dark: CupertinoThemeData(
                                     brightness: Brightness.dark,
@@ -242,8 +241,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 divisions: 100,
                                 min: 15.0,
                                 max: 60,
-                                activeColor: context.watch(meColorProvider),
-                                thumbColor: context.watch(meColorProvider),
+                                activeColor: ref.watch(meColorProvider),
+                                thumbColor: ref.watch(meColorProvider),
                                 onChanged: (double value) {
                                   setState(() {
                                     _iconSize = value;
@@ -256,7 +255,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               Center(
                                 child: Icon(CupertinoIcons.circle_filled,
                                     size: _iconSize,
-                                    color: context.watch(meColorProvider)),
+                                    color: ref.watch(meColorProvider)),
                               ),
                             ]),
                       ]),
@@ -274,15 +273,36 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               rightWidget: CupertinoSwitch(
                                 onChanged: (val) {
                                   setState(() {
-                                    context
+                                    ref
                                         .read(showOwnTrackProvider.notifier)
                                         .setValue(val);
                                   });
                                 },
-                                value: context.watch(showOwnTrackProvider),
+                                value: ref.watch(showOwnTrackProvider),
                               ),
                             ),
                           ),
+                          if (ref.watch(showOwnTrackProvider))
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              child: DataLeftRightContent(
+                                descriptionLeft:
+                                    Localize.of(context).showOwnColoredTrack,
+                                descriptionRight: '',
+                                rightWidget: CupertinoSwitch(
+                                  onChanged: (val) {
+                                    setState(() {
+                                      ref
+                                          .read(showOwnColoredTrackProvider
+                                              .notifier)
+                                          .setValue(val);
+                                    });
+                                  },
+                                  value: ref.watch(showOwnColoredTrackProvider),
+                                ),
+                              ),
+                            ),
                         ]),
                   if (!kIsWeb)
                     CupertinoFormSection(
@@ -291,18 +311,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           Padding(
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             child: DataLeftRightContent(
-                              descriptionLeft:
-                              Localize.of(context).showCompass,
+                              descriptionLeft: Localize.of(context).showCompass,
                               descriptionRight: '',
                               rightWidget: CupertinoSwitch(
                                 onChanged: (val) {
                                   setState(() {
-                                    context
+                                    ref
                                         .read(showCompassProvider.notifier)
                                         .setValue(val);
                                   });
                                 },
-                                value: context.watch(showCompassProvider),
+                                value: ref.watch(showCompassProvider),
                               ),
                             ),
                           ),
@@ -412,7 +431,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             ],
                           ),
                         if (HiveSettingsDB.pushNotificationsEnabled)
-                        const OneSignalIdWidget(),
+                          const OneSignalIdWidget(),
                         if (!kIsWeb)
                           CupertinoFormSection(
                             header: Text(

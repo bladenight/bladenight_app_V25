@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class SpeedToColor {
   static Color getColorFromSpeed(double speed) {
-    if (speed <= 0) return Colors.blue;
     if (speed <= 2) return Colors.blueAccent;
     if (speed <= 4) return Colors.green.shade100;
     if (speed <= 6) return Colors.green.shade200;
@@ -30,7 +29,6 @@ class SpeedToColor {
   }
 
   static List<Color> speedColors = [
-    Colors.blue,
     Colors.blueAccent,
     Colors.green.shade100,
     Colors.green.shade200,

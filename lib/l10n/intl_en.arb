@@ -504,5 +504,7 @@
   "mapAlign": "Map alignment",
   "startParticipation": "Start participation",
   "mapFollow": "Following on map",
-  "menu": "Menu"
+  "menu": "Menu",
+  "showOwnColoredTrack": "Colorize my track",
+  "mySpeed": "My speed on track"
 }

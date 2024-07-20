@@ -16,6 +16,8 @@ import '../../../providers/settings/dark_color_provider.dart';
 import '../../../providers/settings/light_color_provider.dart';
 import '../../../providers/settings/me_color_provider.dart';
 
+final LayerHitNotifier hitNotifier = ValueNotifier(null);
+
 class PolyLinesLayer extends ConsumerStatefulWidget {
   const PolyLinesLayer({super.key});
 
@@ -42,7 +44,7 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
       BnLog.debug(
           text: 'ProcessionRoutePointsCount = ${processionRoutePoints.length}');
     }
-    return PolylineLayer(polylines: [
+    return PolylineLayer(hitNotifier: hitNotifier, polylines: [
       if (activeEventRoutePoints.isNotEmpty)
         Polyline(
           //current and active route points
@@ -64,7 +66,8 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
         ),
       //user‘s track points
       if (locationUpdate.userSpeedPoints.userSpeedPoints.isNotEmpty &&
-          context.watch(showOwnTrackProvider))
+          context.watch(showOwnTrackProvider) &&
+          ref.watch(showOwnColoredTrackProvider))
         for (var part in locationUpdate.userSpeedPoints.userSpeedPoints)
           Polyline(
               points: part.latLngList,
@@ -72,14 +75,16 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
               strokeWidth: context.watch(isTrackingProvider) ? 6 : 6,
               borderStrokeWidth: 1.0,
               useStrokeWidthInMeter: false,
+              hitValue: part.realSpeedKmh,
               borderColor:
                   CupertinoAdaptiveTheme.of(context).theme.brightness ==
                           Brightness.light
                       ? CupertinoColors.black
                       : part.color),
-
-      /* Polyline(
-          points: locationUpdate.userLatLongs.latLngList,
+      if (context.watch(showOwnTrackProvider) &&
+          !ref.watch(showOwnColoredTrackProvider))
+        Polyline(
+          points: locationUpdate.userLatLngList,
           strokeWidth: context.watch(isTrackingProvider) ? 4 : 3,
           borderColor: context.watch(meColorProvider),
           color: context.watch(isTrackingProvider)
@@ -87,8 +92,8 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
                   color: CupertinoColors.white,
                   darkColor: CupertinoColors.systemBlue)
               : CupertinoColors.white,
-          borderStrokeWidth: 3.0, // ref.watch(isTrackingProvider),
-        ),*/
+          borderStrokeWidth: 2.0, // ref.watch(isTrackingProvider),
+        ),
       if (processionRoutePoints.isNotEmpty)
         Polyline(
           points: processionRoutePoints,

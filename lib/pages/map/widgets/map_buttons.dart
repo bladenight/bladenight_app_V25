@@ -42,10 +42,13 @@ class MapButtonsLayer extends ConsumerStatefulWidget {
 }
 
 class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
   AnimationController? animationController;
   Animation<double>? animation;
+  Orientation? _currentOrientation;
+  late var _width = double.infinity;
+  late var _height = double.infinity;
 
   @override
   void initState() {
@@ -56,213 +59,231 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   }
 
   @override
+  void didChangeMetrics() {
+    _currentOrientation = MediaQuery.of(context).orientation;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        _currentOrientation = MediaQuery.of(context).orientation;
+        _width = MediaQuery.of(context).size.width;
+        _height = MediaQuery.of(context).size.height;
+        //_height = MediaQuery.of(context).size.height;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     CameraFollow followLocationState = ref.watch(cameraFollowLocationProvider);
-    return Stack(fit: StackFit.passthrough, children: [
-      //#######################################################################
-      //Right side buttons
-      //#######################################################################
-      Positioned(
-        right: 10,
-        bottom: 40,
-        child: Builder(builder: (context) {
-          var isTracking = ref.watch(isTrackingProvider);
-          var autoStop = ref.watch(isAutoStopProvider);
-          var userParticipating = ref.watch(isUserParticipatingProvider);
-          //for future implementations - if (isActive == EventStatus.confirmed) {
-          return GestureDetector(
-            onLongPress: () async {
-              LocationProvider.instance.toggleAutoStop();
-              await ScrollQuickAlert.show(
-                context: context,
-                type: QuickAlertType.warning,
-                title: Localize.of(context).autoStopTracking,
-                text: Localize.of(context).automatedStopInfo,
-                confirmBtnText: Localize.of(context).ok,
-              );
-            },
-            child: FloatingActionButton(
-              onPressed: () async {
-                if (isTracking && !userParticipating) {
-                  _toggleViewerLocationService();
-                } else if (isTracking) {
-                  if (kIsWeb) {
-                    _toggleViewerLocationService();
-                    return;
-                  }
-                  //&& !autoStop
-                  await ScrollQuickAlert.show(
-                      context: context,
-                      showCancelBtn: true,
-                      type: QuickAlertType.warning,
-                      title: Localize.of(context).stopLocationTracking,
-                      text: Localize.of(context).friendswillmissyou,
-                      confirmBtnText: Localize.of(context).yes,
-                      cancelBtnText: Localize.of(context).no,
-                      onConfirmBtnTap: () {
-                        _toggleLocationService();
-                        if (!mounted) return;
-                        Navigator.of(context).pop();
-                      }); //no neutral button on android
-                } else {
-                  _toggleLocationService();
-                }
-              },
-              backgroundColor: isTracking && autoStop
-                  ? CupertinoColors.systemYellow
-                  : isTracking
-                      ? CupertinoColors.systemRed
-                      : CupertinoColors.activeGreen,
-              heroTag: 'startStopTrackingBtnTag',
-              child: Builder(builder: (context) {
-                return userParticipating
-                    ? Icon(
-                        isTracking && autoStop
-                            ? Icons.pause
-                            : isTracking
-                                ? CupertinoIcons.stop_circle
-                                : CupertinoIcons.play_fill,
-                      )
-                    : isTracking
-                        ? const ImageIcon(
-                            AssetImage('assets/images/eyestop.png'))
-                        : const Icon(CupertinoIcons.play_fill,
-                            color: CupertinoColors.white);
-              }),
-            ),
-          );
-        }),
-      ),
-      //if (!kIsWeb)
-      Positioned(
-        right: 10,
-        height: 40,
-        bottom: 160,
-        child: Visibility(
-          visible: followLocationState == CameraFollow.followMe ? true : false,
+    var height = MediaQuery.of(context).size.height;
+    return SafeArea(
+      child: Stack(fit: StackFit.passthrough, children: [
+        //#######################################################################
+        //Right side buttons
+        //#######################################################################
+        Positioned(
+          right: 10,
+          bottom: 40,
           child: Builder(builder: (context) {
-            var alignMap = ref.watch(alignFlutterMapProvider);
-            return FloatingActionButton(
-              onPressed: () {
-                var controller = MapController.maybeOf(context);
-                if (controller == null) return;
-                var nextState =
-                    ref.read(alignFlutterMapProvider.notifier).setNext();
-                switch (nextState) {
-                  case AlignFlutterMapState.alignNever:
-                    var mapController = MapController.of(context);
-                    mapController.rotate(0);
-                    showToast(message: Localize.of(context).alignNever);
-                    break;
-                  case AlignFlutterMapState.alignPositionOnUpdateOnly:
-                    showToast(
-                        message:
-                            Localize.of(context).alignPositionOnUpdateOnly);
-                    break;
-                  case AlignFlutterMapState.alignDirectionOnUpdateOnly:
-                    showToast(
-                        message:
-                            Localize.of(context).alignDirectionOnUpdateOnly);
-                    break;
-                  case AlignFlutterMapState.alignDirectionAndPositionOnUpdate:
-                    showToast(
-                        message: Localize.of(context)
-                            .alignDirectionAndPositionOnUpdate);
-                    break;
-                }
+            var isTracking = ref.watch(isTrackingProvider);
+            var autoStop = ref.watch(isAutoStopProvider);
+            var userParticipating = ref.watch(isUserParticipatingProvider);
+            //for future implementations - if (isActive == EventStatus.confirmed) {
+            return GestureDetector(
+              onLongPress: () async {
+                LocationProvider.instance.toggleAutoStop();
+                await ScrollQuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.warning,
+                  title: Localize.of(context).autoStopTracking,
+                  text: Localize.of(context).automatedStopInfo,
+                  confirmBtnText: Localize.of(context).ok,
+                );
               },
-              heroTag: 'mapAlignBtnTag',
-              child: AlignMapIcon(
-                alignMapStatus: alignMap,
+              child: FloatingActionButton(
+                onPressed: () async {
+                  if (isTracking && !userParticipating) {
+                    _toggleViewerLocationService();
+                  } else if (isTracking) {
+                    if (kIsWeb) {
+                      _toggleViewerLocationService();
+                      return;
+                    }
+                    //&& !autoStop
+                    await ScrollQuickAlert.show(
+                        context: context,
+                        showCancelBtn: true,
+                        type: QuickAlertType.warning,
+                        title: Localize.of(context).stopLocationTracking,
+                        text: Localize.of(context).friendswillmissyou,
+                        confirmBtnText: Localize.of(context).yes,
+                        cancelBtnText: Localize.of(context).no,
+                        onConfirmBtnTap: () {
+                          _toggleLocationService();
+                          if (!mounted) return;
+                          Navigator.of(context).pop();
+                        }); //no neutral button on android
+                  } else {
+                    _toggleLocationService();
+                  }
+                },
+                backgroundColor: isTracking && autoStop
+                    ? CupertinoColors.systemYellow
+                    : isTracking
+                        ? CupertinoColors.systemRed
+                        : CupertinoColors.activeGreen,
+                heroTag: 'startStopTrackingBtnTag',
+                child: Builder(builder: (context) {
+                  return userParticipating
+                      ? Icon(
+                          isTracking && autoStop
+                              ? Icons.pause
+                              : isTracking
+                                  ? CupertinoIcons.stop_circle
+                                  : CupertinoIcons.play_fill,
+                        )
+                      : isTracking
+                          ? const ImageIcon(
+                              AssetImage('assets/images/eyestop.png'))
+                          : const Icon(CupertinoIcons.play_fill,
+                              color: CupertinoColors.white);
+                }),
               ),
             );
           }),
         ),
-      ),
-      // if (!kIsWeb)
-      Positioned(
-        right: 10,
-        bottom: 110,
-        height: 40,
-        child: Builder(builder: (context) {
-          return FloatingActionButton(
-            onPressed: () {
-              var mapController = MapController.maybeOf(context);
-              if (mapController == null) return;
-              var nextState =
-                  ref.read(cameraFollowLocationProvider.notifier).setNext();
-              switch (nextState) {
-                case CameraFollow.followOff:
-                  _moveMapToDefault(mapController);
-                  showToast(
-                      message: Localize.of(context).mapToStartNoFollowing);
-                  break;
-                case CameraFollow.followMe:
-                  if (ref.read(alignFlutterMapProvider) ==
-                      AlignFlutterMapState.alignNever) {
+        //if (!kIsWeb)
+        Positioned(
+          right: 10,
+          height: 40,
+          bottom: 160,
+          child: Visibility(
+            visible:
+                followLocationState == CameraFollow.followMe ? true : false,
+            child: Builder(builder: (context) {
+              var alignMap = ref.watch(alignFlutterMapProvider);
+              return FloatingActionButton(
+                onPressed: () {
+                  var controller = MapController.maybeOf(context);
+                  if (controller == null) return;
+                  var nextState =
+                      ref.read(alignFlutterMapProvider.notifier).setNext();
+                  switch (nextState) {
+                    case AlignFlutterMapState.alignNever:
+                      var mapController = MapController.of(context);
+                      mapController.rotate(0);
+                      showToast(message: Localize.of(context).alignNever);
+                      break;
+                    case AlignFlutterMapState.alignPositionOnUpdateOnly:
+                      showToast(
+                          message:
+                              Localize.of(context).alignPositionOnUpdateOnly);
+                      break;
+                    case AlignFlutterMapState.alignDirectionOnUpdateOnly:
+                      showToast(
+                          message:
+                              Localize.of(context).alignDirectionOnUpdateOnly);
+                      break;
+                    case AlignFlutterMapState.alignDirectionAndPositionOnUpdate:
+                      showToast(
+                          message: Localize.of(context)
+                              .alignDirectionAndPositionOnUpdate);
+                      break;
+                  }
+                },
+                heroTag: 'mapAlignBtnTag',
+                child: AlignMapIcon(
+                  alignMapStatus: alignMap,
+                ),
+              );
+            }),
+          ),
+        ),
+        // if (!kIsWeb)
+        Positioned(
+          right: 10,
+          bottom: 110,
+          height: 40,
+          child: Builder(builder: (context) {
+            return FloatingActionButton(
+              onPressed: () {
+                var mapController = MapController.maybeOf(context);
+                if (mapController == null) return;
+                var nextState =
+                    ref.read(cameraFollowLocationProvider.notifier).setNext();
+                switch (nextState) {
+                  case CameraFollow.followOff:
+                    _moveMapToDefault(mapController);
                     showToast(
-                        message: '${Localize.of(context).mapFollowLocation} \n'
-                            '${Localize.of(context).alignNever}');
-                  } else {
-                    showToast(message: Localize.of(context).mapFollowLocation);
-                  }
-                  break;
-                case CameraFollow.followMeStopped:
-                  stopFollowingLocation();
-                  showToast(message: Localize.of(context).mapFollowStopped);
-                  mapController.rotate(0);
-                  break;
-                case CameraFollow.followTrain:
-                  startFollowingTrainHead(mapController);
-                  showToast(message: Localize.of(context).mapFollowTrain);
-
-                  break;
-                case CameraFollow.followTrainStopped:
-                  stopFollowingLocation();
-                  showToast(
-                      message: Localize.of(context).mapFollowTrainStopped);
-
-                  break;
-                default:
-                  if (locationSubscription != null) {
+                        message: Localize.of(context).mapToStartNoFollowing);
+                    break;
+                  case CameraFollow.followMe:
+                    if (ref.read(alignFlutterMapProvider) ==
+                        AlignFlutterMapState.alignNever) {
+                      showToast(
+                          message:
+                              '${Localize.of(context).mapFollowLocation} \n'
+                              '${Localize.of(context).alignNever}');
+                    } else {
+                      showToast(
+                          message: Localize.of(context).mapFollowLocation);
+                    }
+                    break;
+                  case CameraFollow.followMeStopped:
                     stopFollowingLocation();
-                  } else {
-                    startFollowingMeLocation();
-                  }
-                  break;
-              }
-            },
-            heroTag: 'locationBtnTag',
-            child: FollowingLocationIcon(
-              followLocationStatus: followLocationState,
-            ),
-          );
-        }),
-      ),
-      Positioned(
-        right: 10,
-        bottom: 220,
-        child: Builder(builder: (context) {
-          return FloatingActionButton(
-            heroTag: 'mapCompassHeroTag',
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            onPressed: () {
-              final controller = MapController.of(context);
-              controller.rotate(0);
-            },
-            child: MapCompass(
-              hideIfRotatedNorth: true,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(0),
-              icon: Image.asset('assets/images/compass_2.png'),
-            ),
-          );
-        }),
-      ),
+                    showToast(message: Localize.of(context).mapFollowStopped);
+                    mapController.rotate(0);
+                    break;
+                  case CameraFollow.followTrain:
+                    startFollowingTrainHead(mapController);
+                    showToast(message: Localize.of(context).mapFollowTrain);
 
-      //Left located button web
-      /* if (kIsWeb)
+                    break;
+                  case CameraFollow.followTrainStopped:
+                    stopFollowingLocation();
+                    showToast(
+                        message: Localize.of(context).mapFollowTrainStopped);
+
+                    break;
+                  default:
+                    if (locationSubscription != null) {
+                      stopFollowingLocation();
+                    } else {
+                      startFollowingMeLocation();
+                    }
+                    break;
+                }
+              },
+              heroTag: 'locationBtnTag',
+              child: FollowingLocationIcon(
+                followLocationStatus: followLocationState,
+              ),
+            );
+          }),
+        ),
+        Positioned(
+          right: 10,
+          bottom: 220,
+          child: Builder(builder: (context) {
+            return FloatingActionButton(
+              heroTag: 'mapCompassHeroTag',
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              onPressed: () {
+                final controller = MapController.of(context);
+                controller.rotate(0);
+              },
+              child: MapCompass(
+                hideIfRotatedNorth: true,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(0),
+                icon: Image.asset('assets/images/compass_2.png'),
+              ),
+            );
+          }),
+        ),
+
+        //Left located button web
+        /* if (kIsWeb)
         AnimatedPositioned(
           duration: const Duration(milliseconds: 500),
           left: 10,
@@ -312,221 +333,225 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             );
           }),
         ),*/
-      //#######################################################################
-      //Left side buttons
-      //#######################################################################
-      if (!kIsWeb)
-        Positioned(
-          left: 80,
-          bottom: 40,
-          //same height as qrcode in web
-          height: 40,
-          width: 40,
-          child: Builder(builder: (context) {
-            if (ref.watch(isActiveEventProvider)) {
-              var currentRoute = ref.watch(currentRouteProvider);
-              return currentRoute.when(data: (data) {
-                return FloatingActionButton(
-                    heroTag: 'barcodeBtnTag',
-                    backgroundColor: Colors.blue,
+
+        //#######################################################################
+        //Left side buttons
+        //#######################################################################
+        if (MediaQuery.of(context).size.height > 400) ...[
+          if (!kIsWeb)
+            Positioned(
+              left: 80,
+              bottom: 40,
+              //same height as qrcode in web
+              height: 40,
+              width: 40,
+              child: Builder(builder: (context) {
+                if (ref.watch(isActiveEventProvider)) {
+                  var currentRoute = ref.watch(currentRouteProvider);
+                  return currentRoute.when(data: (data) {
+                    return FloatingActionButton(
+                        heroTag: 'barcodeBtnTag',
+                        backgroundColor: Colors.blue,
+                        onPressed: () {
+                          _showLiveMapLink(
+                              ref.read(liveMapImageAndLinkProvider).link);
+                        },
+                        child: const Icon(
+                          CupertinoIcons.qrcode,
+                          color: Colors.white,
+                        ));
+                  }, error: (err, stack) {
+                    return Container();
+                  }, loading: () {
+                    return Container();
+                  });
+                } else {
+                  return Container();
+                }
+              }),
+            ),
+          if (!kIsWeb)
+            Positioned(
+              left: 10,
+              bottom: ref.watch(mapMenuVisibleProvider) ? 340 : 130,
+              height: 40,
+              child: Builder(builder: (context) {
+                var isTracking = ref.watch(isTrackingProvider);
+                if (!isTracking) {
+                  return FloatingActionButton(
+                    heroTag: 'viewerBtnTag',
+                    //backgroundColor: Colors.blue,
                     onPressed: () {
-                      _showLiveMapLink(
-                          ref.read(liveMapImageAndLinkProvider).link);
+                      _toggleViewerLocationService();
                     },
                     child: const Icon(
-                      CupertinoIcons.qrcode,
-                      color: Colors.white,
-                    ));
-              }, error: (err, stack) {
-                return Container();
-              }, loading: () {
-                return Container();
-              });
-            } else {
-              return Container();
-            }
-          }),
-        ),
-
-      if (!kIsWeb)
-        Positioned(
-          left: 10,
-          bottom: ref.watch(mapMenuVisibleProvider) ? 340 : 130,
-          height: 40,
-          child: Builder(builder: (context) {
-            var isTracking = ref.watch(isTrackingProvider);
-            if (!isTracking) {
-              return FloatingActionButton(
-                heroTag: 'viewerBtnTag',
-                //backgroundColor: Colors.blue,
-                onPressed: () {
-                  _toggleViewerLocationService();
-                },
-                child: const Icon(
-                  CupertinoIcons.eye_solid,
-                  //color: CupertinoColors.white
-                ),
-                /*CupertinoAdaptiveTheme.of(context).brightness ==
+                      CupertinoIcons.eye_solid,
+                      //color: CupertinoColors.white
+                    ),
+                    /*CupertinoAdaptiveTheme.of(context).brightness ==
                                 Brightness.light
                             ? ref.watch(ThemePrimaryDarkColor.provider)
                             : ref.watch(ThemePrimaryColor.provider)),*/
-              );
-            } else {
-              return Container();
-            }
-          }),
-        ),
-      if (!kIsWeb)
-        Positioned(
-          bottom: ref.watch(mapMenuVisibleProvider) ? 300 : 90,
-          left: kIsWeb ? 10 : 10,
-          height: 30,
-          child: Builder(builder: (context) {
-            var messageProvider = context.watch(messagesLogicProvider);
-            return FloatingActionButton(
-                heroTag: 'messageBtnTag',
-                onPressed: () async {
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (context) => const MessagesPage(),
-                      fullscreenDialog: false,
-                    ),
                   );
-                },
-                child: messageProvider.messages.isNotEmpty &&
-                        messageProvider.readMessages > 0
-                    ? Badge(
-                        label: Text(messageProvider.readMessages.toString()),
-                        child: const Icon(Icons.mark_email_unread),
-                      )
-                    : const Icon(CupertinoIcons.envelope));
-          }),
-        ),
-      if (!kIsWeb)
-        PositionedVisibilityOpacity(
-          left: 10,
-          bottom: 250,
-          //same height as qrcode in web
-          height: 40,
-          heroTag: 'resetBtnTag',
-          //backgroundColor: Colors.blue,
-          onPressed: () async {
-            await LocationProvider.instance
-                .resetOdoMeterAndRoutePoints(context);
-          },
-          visibility: ref.watch(mapMenuVisibleProvider),
-          child: const Icon(
-            Icons.restart_alt,
-            //color: Colors.white,
-          ),
-        ),
-
-      PositionedVisibilityOpacity(
-        left: 10,
-        bottom: 190,
-        height: 40,
-        heroTag: 'zoomOutTag',
-        onPressed: () {
-          final controller = MapController.maybeOf(context);
-          final camera = MapCamera.maybeOf(context);
-          if (controller == null || camera == null) {
-            return;
-          }
-          controller.move(controller.camera.center, camera.zoom - 0.5);
-          ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
-        },
-        visibility: ref.watch(mapMenuVisibleProvider),
-        child: Icon(
-          CupertinoIcons.zoom_out,
-          semanticLabel: MapController.of(context).camera.zoom.toString(),
-        ),
-      ),
-      PositionedVisibilityOpacity(
-        heroTag: 'zoomInTag',
-        left: 10,
-        bottom: 140,
-        height: 40,
-        visibility: ref.watch(mapMenuVisibleProvider),
-        onPressed: () {
-          final controller = MapController.of(context);
-          final camera = MapCamera.of(context);
-          controller.move(controller.camera.center, camera.zoom + 0.5);
-          ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
-        },
-        child: Icon(
-          CupertinoIcons.zoom_in,
-          semanticLabel: MapController.of(context).camera.zoom.toString(),
-        ),
-      ),
-      PositionedVisibilityOpacity(
-        left: 10,
-        bottom: 90,
-        height: 40,
-        visibility: ref.watch(mapMenuVisibleProvider),
-        onPressed: () {
-          var theme = CupertinoAdaptiveTheme.of(context).theme;
-          if (theme.brightness == Brightness.light) {
-            CupertinoAdaptiveTheme.of(context).setDark();
-            HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.dark);
-          } else {
-            CupertinoAdaptiveTheme.of(context).setLight();
-            HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.light);
-          }
-        },
-        heroTag: 'darkLightTag',
-        child: CupertinoAdaptiveTheme.of(context).theme.brightness ==
-                Brightness.light
-            ? const Icon(CupertinoIcons.moon)
-            : const Icon(CupertinoIcons.sun_min),
-      ),
-      Positioned(
-        left: 10,
-        bottom: 40,
-        height: 40,
-        child: Builder(builder: (context) {
-          return FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                MapSettings.setMapMenuVisible(!MapSettings.mapMenuVisible);
-              });
-            },
-            tooltip: 'Menu',
-            heroTag: 'showMenuTag',
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
-              child: ref.watch(mapMenuVisibleProvider)
-                  ? const Icon(
-                      Icons.menu_open,
-                      key: ValueKey<int>(1),
-                    )
-                  : const Icon(
-                      Icons.menu,
-                      key: ValueKey<int>(2),
-                    ),
+                } else {
+                  return Container();
+                }
+              }),
             ),
-          );
-        }),
-      ),
-      Positioned(
-        top: kIsWeb ? 10 : 15,
-        right: kIsWeb ? 10 : 10,
-        height: 30,
-        child: Builder(builder: (context) {
-          return GestureDetector(
-              onTap: () {
-                setState(() {
-                  MapSettings.setMapMenuVisible(true);
-                });
-                _showOverlay(context, text: '');
+          if (!kIsWeb)
+            Positioned(
+              bottom: ref.watch(mapMenuVisibleProvider) ? 300 : 90,
+              left: kIsWeb ? 10 : 10,
+              height: 30,
+              child: Builder(builder: (context) {
+                var messageProvider = context.watch(messagesLogicProvider);
+                return FloatingActionButton(
+                    heroTag: 'messageBtnTag',
+                    onPressed: () async {
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (context) => const MessagesPage(),
+                          fullscreenDialog: false,
+                        ),
+                      );
+                    },
+                    child: messageProvider.messages.isNotEmpty &&
+                            messageProvider.readMessages > 0
+                        ? Badge(
+                            label:
+                                Text(messageProvider.readMessages.toString()),
+                            child: const Icon(Icons.mark_email_unread),
+                          )
+                        : const Icon(CupertinoIcons.envelope));
+              }),
+            ),
+          if (!kIsWeb)
+            PositionedVisibilityOpacity(
+              left: 10,
+              bottom: 250,
+              //same height as qrcode in web
+              height: 40,
+              heroTag: 'resetBtnTag',
+              //backgroundColor: Colors.blue,
+              onPressed: () async {
+                await LocationProvider.instance
+                    .resetOdoMeterAndRoutePoints(context);
               },
-              child: const AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: Icon(
-                    Icons.help,
-                  )));
-        }),
-      ),
-    ]);
+              visibility: ref.watch(mapMenuVisibleProvider),
+              child: const Icon(
+                Icons.restart_alt,
+                //color: Colors.white,
+              ),
+            ),
+          PositionedVisibilityOpacity(
+            left: 10,
+            bottom: 190,
+            height: 40,
+            heroTag: 'zoomOutTag',
+            onPressed: () {
+              final controller = MapController.maybeOf(context);
+              final camera = MapCamera.maybeOf(context);
+              if (controller == null || camera == null) {
+                return;
+              }
+              controller.move(controller.camera.center, camera.zoom - 0.5);
+              ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+            },
+            visibility: ref.watch(mapMenuVisibleProvider),
+            child: Icon(
+              CupertinoIcons.zoom_out,
+              semanticLabel: MapController.of(context).camera.zoom.toString(),
+            ),
+          ),
+          PositionedVisibilityOpacity(
+            heroTag: 'zoomInTag',
+            left: 10,
+            bottom: 140,
+            height: 40,
+            visibility: ref.watch(mapMenuVisibleProvider),
+            onPressed: () {
+              final controller = MapController.of(context);
+              final camera = MapCamera.of(context);
+              controller.move(controller.camera.center, camera.zoom + 0.5);
+              ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+            },
+            child: Icon(
+              CupertinoIcons.zoom_in,
+              semanticLabel: MapController.of(context).camera.zoom.toString(),
+            ),
+          ),
+          PositionedVisibilityOpacity(
+            left: 10,
+            bottom: 90,
+            height: 40,
+            visibility: ref.watch(mapMenuVisibleProvider),
+            onPressed: () {
+              var theme = CupertinoAdaptiveTheme.of(context).theme;
+              if (theme.brightness == Brightness.light) {
+                CupertinoAdaptiveTheme.of(context).setDark();
+                HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.dark);
+              } else {
+                CupertinoAdaptiveTheme.of(context).setLight();
+                HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.light);
+              }
+            },
+            heroTag: 'darkLightTag',
+            child: CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                    Brightness.light
+                ? const Icon(CupertinoIcons.moon)
+                : const Icon(CupertinoIcons.sun_min),
+          ),
+          Positioned(
+            left: 10,
+            bottom: 40,
+            height: 40,
+            child: Builder(builder: (context) {
+              return FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    MapSettings.setMapMenuVisible(!MapSettings.mapMenuVisible);
+                  });
+                },
+                tooltip: 'Menu',
+                heroTag: 'showMenuTag',
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: ref.watch(mapMenuVisibleProvider)
+                      ? const Icon(
+                          Icons.menu_open,
+                          key: ValueKey<int>(1),
+                        )
+                      : const Icon(
+                          Icons.menu,
+                          key: ValueKey<int>(2),
+                        ),
+                ),
+              );
+            }),
+          ),
+          Positioned(
+            top: 0,
+            right: kIsWeb ? 10 : 10,
+            height: 30,
+            child: Builder(builder: (context) {
+              var color = CupertinoTheme.of(context).primaryColor;
+              return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      MapSettings.setMapMenuVisible(true);
+                    });
+                    _showOverlay(context, text: '');
+                  },
+                  child: const AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      child: Icon(
+                        Icons.help,
+                      )));
+            }),
+          ),
+        ],
+      ]),
+    );
   }
 
   void _showOverlay(BuildContext context, {required String text}) async {
@@ -537,6 +562,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
     OverlayEntry overlayEntry;
     overlayEntry = OverlayEntry(builder: (context) {
       return SafeArea(
+        maintainBottomViewPadding: true,
         child: Stack(
           children: [
             Positioned(
@@ -739,7 +765,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     opacity: animation!,
                     child: Container(
                       alignment: Alignment.center,
-                      child: Text(Localize.of(context).mapAlign,
+                      child: Text(
+                        Localize.of(context).mapAlign,
                         style: TextStyle(
                           color: CupertinoTheme.of(context).barBackgroundColor,
                           backgroundColor:
@@ -761,7 +788,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   opacity: animation!,
                   child: Container(
                     alignment: Alignment.center,
-                    child: Text(Localize.of(context).startParticipation,
+                    child: Text(
+                      Localize.of(context).startParticipation,
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -783,7 +811,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   opacity: animation!,
                   child: Container(
                     alignment: Alignment.center,
-                    child: Text(Localize.of(context).mapFollow,
+                    child: Text(
+                      Localize.of(context).mapFollow,
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -804,7 +833,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     opacity: animation!,
                     child: Container(
                       alignment: Alignment.center,
-                      child: Text(Localize.of(context).menu,
+                      child: Text(
+                        Localize.of(context).menu,
                         style: TextStyle(
                           color: CupertinoTheme.of(context).barBackgroundColor,
                           backgroundColor:

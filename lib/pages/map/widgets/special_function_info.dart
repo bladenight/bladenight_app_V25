@@ -8,6 +8,7 @@ import '../../../helpers/speed_to_color.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/special_procession_function_provider.dart';
+import 'speed_info_colors.dart';
 
 class SpecialFunctionInfo extends ConsumerWidget {
   const SpecialFunctionInfo({super.key});
@@ -19,106 +20,55 @@ class SpecialFunctionInfo extends ConsumerWidget {
     var isProcessionTail = ref.watch(isProcessionTailProvider);
     var wantSeeFullProcession = ref.watch(wantSeeFullProcessionProvider);
 
-    return Column(
-      children: [
-        if (isTracking && isProcessionHead)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: ([
-              Expanded(
-                child: SizedBox(
-                  height: MediaQuery.textScalerOf(context).scale(25),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    child: ColoredBox(
-                      color: Colors.yellowAccent,
-                      child: FittedBox(
-                        child: Text(
-                          Localize.of(context).head,
-                        ),
+    return Column(children: [
+      if (isTracking && isProcessionHead)
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: ([
+            Expanded(
+              child: SizedBox(
+                height: MediaQuery.textScalerOf(context).scale(25),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  child: ColoredBox(
+                    color: Colors.yellowAccent,
+                    child: FittedBox(
+                      child: Text(
+                        Localize.of(context).head,
                       ),
                     ),
                   ),
                 ),
-              ),
-            ]),
-          ),
-        if (isTracking && isProcessionTail)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: ([
-              Expanded(
-                child: SizedBox(
-                  height: MediaQuery.textScalerOf(context).scale(25),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    child: ColoredBox(
-                      color: Colors.redAccent,
-                      child: FittedBox(
-                        child: Text(
-                          Localize.of(context).tail,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ]),
-          ),
-        if (isTracking && ref.watch(showOwnTrackProvider) || wantSeeFullProcession ) ...[
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '0 km/h',
-                  style: TextStyle(fontSize: 10),
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  '15 km/h',
-                  style: TextStyle(fontSize: 10),
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  '25 km/h',
-                  style: TextStyle(fontSize: 10),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  '40+ km/h',
-                  style: TextStyle(fontSize: 10),
-                ),
-              ),
-            ],
-          ),
-          Align(
-            child: StepProgressIndicator(
-              totalSteps: SpeedToColor.speedColors.length,
-              direction: Axis.horizontal,
-              currentStep: SpeedToColor.speedColors.length,
-              size: 12,
-              unselectedGradientColor: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: SpeedToColor.speedColors,
-              ),
-              selectedGradientColor: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: SpeedToColor.speedColors,
               ),
             ),
-          ),
-        ],
+          ]),
+        ),
+      if (isTracking && isProcessionTail)
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: ([
+            Expanded(
+              child: SizedBox(
+                height: MediaQuery.textScalerOf(context).scale(25),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  child: ColoredBox(
+                    color: Colors.redAccent,
+                    child: FittedBox(
+                      child: Text(
+                        Localize.of(context).tail,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ]),
+        ),
+      if (ref.watch(showOwnColoredTrackProvider) ||
+          (isTracking && wantSeeFullProcession)) ...[
+        const SpeedInfoColors(),
       ],
-    );
+    ]);
   }
 }

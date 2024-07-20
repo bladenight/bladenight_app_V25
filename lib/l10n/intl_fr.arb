@@ -503,6 +503,8 @@
   "startParticipation": "Démarrer la participation",
   "mapFollow": "Suivi sur la carte",
   "menu": "Menu",
-  "lead": "Procession Start / Fin"
+  "lead": "Procession Start / Fin",
+  "showOwnColoredTrack": "Colorize my track",
+  "mySpeed": "My speed on track"
 }
 

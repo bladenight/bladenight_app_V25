@@ -38,6 +38,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
   Timer? _updateTimer;
   Orientation? _currentOrientation;
   late var _width = double.infinity;
+
   //late var _height = double.infinity;
 
   @override
@@ -116,204 +117,215 @@ class _EventInfoState extends ConsumerState<EventInfo>
     BuildContext context,
   ) {
     var nextEventProvider = context.watch(activeEventProvider);
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          if (!kIsWeb) const ConnectionWarning(),
-          if (!kIsWeb) const AppOutdatedWidget(),
-          const BladeGuardOnsite(),
-          const BladeGuardAdvertise(),
-          if (nextEventProvider.status == EventStatus.noevent)
-            HiddenAdminButton(
-              child: Text(Localize.of(context).noEventPlanned,
-                  textAlign: TextAlign.center,
-                  style: CupertinoTheme.of(context).textTheme.textStyle),
-            ),
-          if (nextEventProvider.status != EventStatus.noevent)
-            HiddenAdminButton(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(Localize.of(context).nextEvent,
-                      textAlign: TextAlign.center,
-                      style: CupertinoTheme.of(context).textTheme.textStyle),
-                  const SizedBox(height: 5),
-                  FittedBox(
-                    child: Text(
-                        '${Localize.of(context).route} ${nextEventProvider.routeName}',
+    return SizedBox(
+      height: double.infinity,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const ConnectionWarning(),
+            const AppOutdatedWidget(),
+            const BladeGuardOnsite(),
+            const BladeGuardAdvertise(),
+            if (nextEventProvider.status == EventStatus.noevent)
+              HiddenAdminButton(
+                child: Text(Localize.of(context).noEventPlanned,
+                    textAlign: TextAlign.center,
+                    style: CupertinoTheme.of(context).textTheme.textStyle),
+              ),
+            if (nextEventProvider.status != EventStatus.noevent)
+              HiddenAdminButton(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(Localize.of(context).nextEvent,
                         textAlign: TextAlign.center,
-                        style: CupertinoTheme.of(context)
-                            .textTheme
-                            .navLargeTitleTextStyle),
-                  ),
-                  const SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 5, 15, 5),
-                    child: FittedBox(
+                        style: CupertinoTheme.of(context).textTheme.textStyle),
+                    const SizedBox(height: 5),
+                    FittedBox(
                       child: Text(
-                          DateFormatter(Localize.of(context))
-                              .getLocalDayDateTimeRepresentation(
-                                  nextEventProvider.getUtcIso8601DateTime),
+                          '${Localize.of(context).route} ${nextEventProvider.routeName}',
+                          textAlign: TextAlign.center,
                           style: CupertinoTheme.of(context)
                               .textTheme
                               .navLargeTitleTextStyle),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: nextEventProvider.status == EventStatus.cancelled
-                            ? Colors.redAccent
-                            : nextEventProvider.status == EventStatus.confirmed
-                                ? Colors.green
-                                : Colors.transparent,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10.0),
-                        ),
-                      ),
+                    const SizedBox(height: 5),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15.0, 5, 15, 5),
                       child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(nextEventProvider.statusText,
+                        child: Text(
+                            DateFormatter(Localize.of(context))
+                                .getLocalDayDateTimeRepresentation(
+                                    nextEventProvider.getUtcIso8601DateTime),
                             style: CupertinoTheme.of(context)
                                 .textTheme
-                                .pickerTextStyle),
+                                .navLargeTitleTextStyle),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color:
+                              nextEventProvider.status == EventStatus.cancelled
+                                  ? Colors.redAccent
+                                  : nextEventProvider.status ==
+                                          EventStatus.confirmed
+                                      ? Colors.green
+                                      : Colors.transparent,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(nextEventProvider.statusText,
+                              style: CupertinoTheme.of(context)
+                                  .textTheme
+                                  .pickerTextStyle),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Column(children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 0.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    var link =
+                        context.read(mainSponsorImageAndLinkProvider).link;
+                    if (link != null && link != '') {
+                      var uri = Uri.parse(
+                          context.read(mainSponsorImageAndLinkProvider).link!);
+                      Launch.launchUrlFromUri(uri);
+                    }
+                  },
+                  child: Builder(builder: (context) {
+                    var ms = context.watch(mainSponsorImageAndLinkProvider);
+                    var nw = context.watch(networkAwareProvider);
+                    return (ms.image != null &&
+                            nw.connectivityStatus == ConnectivityStatus.online)
+                        ? CachedNetworkImage(
+                            width: _width * .6,
+                            imageUrl: ms.image!,
+                            placeholder: (context, url) => Image.asset(
+                                mainSponsorPlaceholder,
+                                fit: BoxFit.fitWidth),
+                            errorWidget: (context, url, error) => Image.asset(
+                                mainSponsorPlaceholder,
+                                fit: BoxFit.fitWidth),
+                            errorListener: (e) {
+                              BnLog.warning(text: 'Could not load ${ms.image}');
+                            },
+                          )
+                        : Image.asset(mainSponsorPlaceholder,
+                            fit: BoxFit.fitWidth);
+                  }),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(50.0, 0.0, 50, 1.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    var link =
+                        context.read(secondSponsorImageAndLinkProvider).link;
+                    if (link != null && link != '') {
+                      var uri = Uri.parse(context
+                          .read(secondSponsorImageAndLinkProvider)
+                          .link!);
+                      Launch.launchUrlFromUri(uri);
+                    }
+                  },
+                  child: Builder(builder: (context) {
+                    var img = context.watch(secondSponsorImageAndLinkProvider);
+                    var nw = context.watch(networkAwareProvider);
+                    return (img.image != null &&
+                            nw.connectivityStatus == ConnectivityStatus.online)
+                        ? CachedNetworkImage(
+                            width: _width * .6,
+                            imageUrl: img.image!,
+                            placeholder: (context, url) => Image.asset(
+                                secondLogoPlaceholder,
+                                fit: BoxFit.fitWidth),
+                            errorWidget: (context, url, error) => Image.asset(
+                                secondLogoPlaceholder,
+                                fit: BoxFit.fitWidth),
+                            errorListener: (e) {
+                              BnLog.warning(
+                                  text: 'Could not load ${img.image}');
+                            },
+                          )
+                        : Image.asset(secondLogoPlaceholder,
+                            fit: BoxFit.fitWidth);
+                  }),
+                ),
+              ),
+            ]),
+            GestureDetector(
+              onTap: () async {
+                return;
+              },
+              child: Column(
+                children: [
+                  //Don't show starting point when no event
+                  if (nextEventProvider.status != EventStatus.noevent)
+                    Builder(builder: (context) {
+                      var spp = context.watch(startpointImageAndLinkProvider);
+                      return spp.text != null
+                          ? FittedBox(
+                              child: Text(
+                                spp.text!,
+                                maxLines: 10,
+                                softWrap: true,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color:
+                                      CupertinoTheme.of(context).primaryColor,
+                                ),
+                              ),
+                            )
+                          : Container();
+                    }),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    Localize.of(context).lastupdate,
+                    style: const TextStyle(
+                      color: CupertinoDynamicColor.withBrightness(
+                        color: CupertinoColors.systemGrey,
+                        darkColor: CupertinoColors.systemGrey,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    nextEventProvider.lastupdate == null
+                        ? '-'
+                        : Localize.current.dateTimeIntl(
+                            nextEventProvider.lastupdate as DateTime,
+                            nextEventProvider.lastupdate as DateTime,
+                          ),
+                    style: const TextStyle(
+                      color: CupertinoDynamicColor.withBrightness(
+                        color: CupertinoColors.systemGrey,
+                        darkColor: CupertinoColors.systemGrey,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-          Column(children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 0.0),
-              child: GestureDetector(
-                onTap: () async {
-                  var link = context.read(mainSponsorImageAndLinkProvider).link;
-                  if (link != null && link != '') {
-                    var uri = Uri.parse(
-                        context.read(mainSponsorImageAndLinkProvider).link!);
-                    Launch.launchUrlFromUri(uri);
-                  }
-                },
-                child: Builder(builder: (context) {
-                  var ms = context.watch(mainSponsorImageAndLinkProvider);
-                  var nw = context.watch(networkAwareProvider);
-                  return (ms.image != null &&
-                          nw.connectivityStatus == ConnectivityStatus.online)
-                      ? CachedNetworkImage(
-                          width: _width * .6,
-                          imageUrl: ms.image!,
-                          placeholder: (context, url) => Image.asset(
-                              mainSponsorPlaceholder,
-                              fit: BoxFit.fitWidth),
-                          errorWidget: (context, url, error) => Image.asset(
-                              mainSponsorPlaceholder,
-                              fit: BoxFit.fitWidth),
-                          errorListener: (e) {
-                            BnLog.warning(text: 'Could not load ${ms.image}');
-                          },
-                        )
-                      : Image.asset(mainSponsorPlaceholder,
-                          fit: BoxFit.fitWidth);
-                }),
-              ),
+            const SizedBox(
+              height: 5,
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(50.0, 0.0, 50, 1.0),
-              child: GestureDetector(
-                onTap: () async {
-                  var link =
-                      context.read(secondSponsorImageAndLinkProvider).link;
-                  if (link != null && link != '') {
-                    var uri = Uri.parse(
-                        context.read(secondSponsorImageAndLinkProvider).link!);
-                    Launch.launchUrlFromUri(uri);
-                  }
-                },
-                child: Builder(builder: (context) {
-                  var img = context.watch(secondSponsorImageAndLinkProvider);
-                  var nw = context.watch(networkAwareProvider);
-                  return (img.image != null &&
-                          nw.connectivityStatus == ConnectivityStatus.online)
-                      ? CachedNetworkImage(
-                          width: _width * .6,
-                          imageUrl: img.image!,
-                          placeholder: (context, url) => Image.asset(
-                              secondLogoPlaceholder,
-                              fit: BoxFit.fitWidth),
-                          errorWidget: (context, url, error) => Image.asset(
-                              secondLogoPlaceholder,
-                              fit: BoxFit.fitWidth),
-                          errorListener: (e) {
-                            BnLog.warning(text: 'Could not load ${img.image}');
-                          },
-                        )
-                      : Image.asset(secondLogoPlaceholder,
-                          fit: BoxFit.fitWidth);
-                }),
-              ),
-            ),
-          ]),
-          GestureDetector(
-            onTap: () async {
-              return;
-            },
-            child: Column(
-              children: [
-                //Don't show starting point when no event
-                if (nextEventProvider.status != EventStatus.noevent)
-                  Builder(builder: (context) {
-                    var spp = context.watch(startpointImageAndLinkProvider);
-                    return spp.text != null
-                        ? FittedBox(
-                            child: Text(
-                              spp.text!,
-                              maxLines: 10,
-                              softWrap: true,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: CupertinoTheme.of(context).primaryColor,
-                              ),
-                            ),
-                          )
-                        : Container();
-                  }),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  Localize.of(context).lastupdate,
-                  style: const TextStyle(
-                    color: CupertinoDynamicColor.withBrightness(
-                      color: CupertinoColors.systemGrey,
-                      darkColor: CupertinoColors.systemGrey,
-                    ),
-                  ),
-                ),
-                Text(
-                  nextEventProvider.lastupdate == null
-                      ? '-'
-                      : Localize.current.dateTimeIntl(
-                          nextEventProvider.lastupdate as DateTime,
-                          nextEventProvider.lastupdate as DateTime,
-                        ),
-                  style: const TextStyle(
-                    color: CupertinoDynamicColor.withBrightness(
-                      color: CupertinoColors.systemGrey,
-                      darkColor: CupertinoColors.systemGrey,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-        ],
+          ],
+        ),
       ),
     );
 

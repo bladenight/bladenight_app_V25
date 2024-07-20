@@ -460,6 +460,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "myName": MessageLookupByLibrary.simpleMessage("Mon nom est"),
         "myNameHeader": MessageLookupByLibrary.simpleMessage(
             "Le nom spécifié est transféré au deuxième appareil lorsque vous vous connectez à votre ami. Le nom n\'est sauvegardé que localement et est utilisé pour simplifier la liaison via la connexion locale."),
+        "mySpeed": MessageLookupByLibrary.simpleMessage("My speed on track"),
         "nameexists":
             MessageLookupByLibrary.simpleMessage("Désolé, le nom existe"),
         "networkerror": MessageLookupByLibrary.simpleMessage(
@@ -661,6 +662,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Afficher les participants à la procession"),
         "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(
             "Afficher les participants au cortège (limité à 100 dans le cortège) sur la carte. Ne fonctionne qu\'en cas d\'autopistage"),
+        "showOwnColoredTrack":
+            MessageLookupByLibrary.simpleMessage("Colorize my track"),
         "showOwnTrack": MessageLookupByLibrary.simpleMessage(
             "Afficher sa propre piste sur la carte"),
         "showProcession": MessageLookupByLibrary.simpleMessage(

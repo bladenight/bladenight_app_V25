@@ -449,6 +449,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "myName": MessageLookupByLibrary.simpleMessage("Mein Name:"),
         "myNameHeader": MessageLookupByLibrary.simpleMessage(
             "Der angegebene Name wird bei der Verknüpfung mit deinem Freund an das 2. Gerät übertragen. Der Name ist nur lokal gespeichert und dient der vereinfachten Verknüpfung per lokaler Verbindung.Es muss auf beiden Geräten eine Internetverbindung bestehen um den Code vom Server abzuholen. Alternativ kann auch ohne Name per Code verknüpft werden."),
+        "mySpeed": MessageLookupByLibrary.simpleMessage(
+            "Meine Geschwindigkeit auf Route"),
         "nameexists":
             MessageLookupByLibrary.simpleMessage("Sorry, Name schon vergeben!"),
         "networkerror": MessageLookupByLibrary.simpleMessage(
@@ -645,6 +647,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Zeige Teilnehmer"),
         "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(
             "Zeige Teilnehmer (auf 100 aus dem Zug limitiert) in der Karte. Funktioniert nur bei eigener Standortfreigabe."),
+        "showOwnColoredTrack":
+            MessageLookupByLibrary.simpleMessage("Coloriere Route"),
         "showOwnTrack":
             MessageLookupByLibrary.simpleMessage("Eigene Fahrlinie zeigen"),
         "showProcession": MessageLookupByLibrary.simpleMessage(
