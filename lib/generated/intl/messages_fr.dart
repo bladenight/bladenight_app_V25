@@ -173,10 +173,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "apptrackingtransparancy": MessageLookupByLibrary.simpleMessage(
             "Nous nous soucions de votre vie privée et de la sécurité de vos données.nPour nous aider à améliorer l\'expérience BladeNight, nous transférons votre position sur notre serveur. Ces informations comprennent un identifiant unique créé lorsque vous démarrez l\'application pour permettre l\'attribution d\'amis. Ces données ne sont jamais transmises à des tiers ni utilisées à des fins publicitaires."),
         "at": MessageLookupByLibrary.simpleMessage("at"),
+        "autoStartTracking": MessageLookupByLibrary.simpleMessage(
+            "Le partage de position a démarré automatiquement. Pour désactiver le comportement, accédez aux paramètres et désactivez le partage de position Auto-Start/Stop"),
+        "autoStartTrackingInfo": MessageLookupByLibrary.simpleMessage(
+            "Démarrer automatiquement le partage de position"),
+        "autoStartTrackingInfoTitle": MessageLookupByLibrary.simpleMessage(
+            "Lors du démarrage de BladeNight, il est possible de démarrer automatiquement le partage de position si l\'application est ouverte. Dès que l\'application est fermée ou que l\'activité en arrière-plan n\'est pas activée, le partage de position n\'est pas activé. Si la fonction de partage de position démarre automatiquement lorsque l\'application est ouverte ?"),
+        "autoStartTrackingTitle": MessageLookupByLibrary.simpleMessage(
+            "Le partage de position a démarré automatiquement..."),
         "autoStopTracking": MessageLookupByLibrary.simpleMessage(
             "Info - à lire - Arrêt automatique à l\'arrivée"),
         "automatedStopInfo": MessageLookupByLibrary.simpleMessage(
             "En cas d\'appui long sur ▶️, l\'arrêt automatique du suivi sera activé. Cela signifie que tant que l\'application est active et que le suivi s\'arrête à la fin de BladeNight, le suivi s\'arrête automatiquement.\nRépétez un appui long sur ▶️,⏸︎,⏹︎ ︎ pour passer à l\'arrêt manuel et au partage de la localisation avec l\'arrêt automatique."),
+        "automatedStopSettingText": MessageLookupByLibrary.simpleMessage(
+            "Arrêter automatiquement le partage de position"),
+        "automatedStopSettingTitle": MessageLookupByLibrary.simpleMessage(
+            "Arrêter automatiquement le partage de position en fonction de l\'événement"),
         "becomeBladeguard":
             MessageLookupByLibrary.simpleMessage("Devenir un Bladeguard"),
         "behindMe": MessageLookupByLibrary.simpleMessage("derrière moi"),
@@ -460,7 +472,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "myName": MessageLookupByLibrary.simpleMessage("Mon nom est"),
         "myNameHeader": MessageLookupByLibrary.simpleMessage(
             "Le nom spécifié est transféré au deuxième appareil lorsque vous vous connectez à votre ami. Le nom n\'est sauvegardé que localement et est utilisé pour simplifier la liaison via la connexion locale."),
-        "mySpeed": MessageLookupByLibrary.simpleMessage("My speed on track"),
+        "mySpeed": MessageLookupByLibrary.simpleMessage("Ma vitesse sur piste"),
         "nameexists":
             MessageLookupByLibrary.simpleMessage("Désolé, le nom existe"),
         "networkerror": MessageLookupByLibrary.simpleMessage(
@@ -663,7 +675,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(
             "Afficher les participants au cortège (limité à 100 dans le cortège) sur la carte. Ne fonctionne qu\'en cas d\'autopistage"),
         "showOwnColoredTrack":
-            MessageLookupByLibrary.simpleMessage("Colorize my track"),
+            MessageLookupByLibrary.simpleMessage("Coloriser ma trace"),
         "showOwnTrack": MessageLookupByLibrary.simpleMessage(
             "Afficher sa propre piste sur la carte"),
         "showProcession": MessageLookupByLibrary.simpleMessage(

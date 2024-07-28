@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:bladenight_app_flutter/pages/widgets/scroll_quick_alert.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -29,8 +29,6 @@ import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
 import '../helpers/logger.dart';
 import '../helpers/notification/notification_helper.dart';
-import '../helpers/notification/toast_notification.dart';
-import '../helpers/preferences_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
 import '../models/event.dart';
@@ -70,6 +68,7 @@ class LocationProvider with ChangeNotifier {
   Timer? _updateTimer, _saveLocationsTimer, _trackingUpdateTimer;
 
   bool _isMoving = false;
+  bool _autoTrackingStarted = false;
   String _lastRouteName = '';
   EventStatus? _eventState;
 
@@ -77,9 +76,9 @@ class LocationProvider with ChangeNotifier {
 
   DateTime get lastUpdate => _lastUpdate;
 
-  bool _eventIsActive = false;
+  bool _eventIsRunning = false;
 
-  bool get eventIsActive => _eventIsActive;
+  bool get eventIsActive => _eventIsRunning;
 
   bool get isMoving => _isMoving;
 
@@ -109,9 +108,13 @@ class LocationProvider with ChangeNotifier {
 
   bool _userIsParticipant = false;
 
-  bool _autoStop = false;
+  bool _autoStopTracking = true;
 
-  bool get autoStop => _autoStop;
+  bool _autoStartTracking = false;
+
+  bool get autoStopTracking => _autoStopTracking;
+
+  bool get autoStartTracking => _autoStartTracking;
 
   bool _trackingWasActive = false;
 
@@ -219,6 +222,7 @@ class LocationProvider with ChangeNotifier {
       notifyListeners();
       return;
     }
+
     if (!HiveSettingsDB.useAlternativeLocationProvider) {
       _state = await _startBackgroundGeolocation();
       if (_state == null) {
@@ -230,7 +234,8 @@ class LocationProvider with ChangeNotifier {
       startStopGeoFencing();
     }
 
-    _autoStop = await PreferencesHelper.getAutoStopFromPrefs();
+    _autoStopTracking = HiveSettingsDB.autoStopTrackingEnabled;
+    _autoStartTracking = HiveSettingsDB.autoStartTrackingEnabled;
 
     _gpsLocationPermissionsStatus =
         await LocationPermissionDialog().getPermissionsStatus();
@@ -248,29 +253,9 @@ class LocationProvider with ChangeNotifier {
     _trackingWasActive = HiveSettingsDB.trackingActive;
     _userIsParticipant = HiveSettingsDB.userIsParticipant;
     _odometer = HiveSettingsDB.odometerValue;
-    // option for autostart _startTrackingUpdateTimer(true);
-    if (!kIsWeb) {
-      BnLog.trace(
-          className: 'locationProvider',
-          methodName: 'init',
-          text: 'check _trackingWasActive');
-    }
-    if (_trackingWasActive &&
-        !_isTracking &&
-        ProviderContainer().read(activeEventProvider).isActive) {
-      //restart tracking on reopen
-      BnLog.info(
-          className: 'locationProvider',
-          methodName: 'init',
-          text: 'restarting tracking');
-      var state = await startTracking(_userIsParticipant);
-      if (state) {
-        showToast(message: Localize.current.trackingRestarted);
-      }
-    } else {
-      //startStopGeoFencing();
-    }
+
     notifyListeners();
+    _startTrackingUpdateTimer();
     BnLog.trace(
         className: 'locationProvider',
         methodName: 'init',
@@ -451,7 +436,6 @@ class LocationProvider with ChangeNotifier {
     _lastKnownPoint = location;
     SendToWatch.setUserSpeed('${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
 
-
     //Create poly lines for user tracking
     int maxSize = 500;
     if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
@@ -629,9 +613,9 @@ class LocationProvider with ChangeNotifier {
   }
 
   void toggleAutoStop() async {
-    _autoStop = !_autoStop;
+    _autoStopTracking = !_autoStopTracking;
     notifyListeners();
-    PreferencesHelper.saveAutoStopToPrefs(_autoStop);
+    HiveSettingsDB.setAutoStopTrackingEnabled(_autoStopTracking);
   }
 
   Future<bool> stopTracking() async {
@@ -733,9 +717,6 @@ class LocationProvider with ChangeNotifier {
     _isTail = HiveSettingsDB.specialCodeValue == 2 ||
         HiveSettingsDB.specialCodeValue == 6;
 
-    if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
-      Wakelock.enable();
-    }
     var permissionWithService = Permission.location;
     var locationPermission = await permissionWithService.status;
     if (HiveSettingsDB.hasShownProminentDisclosure == false ||
@@ -770,6 +751,23 @@ class LocationProvider with ChangeNotifier {
       return false;
     }
 
+    if (HiveSettingsDB.trackingFirstStart) {
+      await ScrollQuickAlert.show(
+          context: navigatorKey.currentContext!,
+          type: QuickAlertType.confirm,
+          showCancelBtn: true,
+          confirmBtnColor: Colors.orange,
+          title: Localize.current.autoStartTrackingInfoTitle,
+          text: Localize.current.autoStartTrackingInfo,
+          onConfirmBtnTap: () =>
+              HiveSettingsDB.setAutoStartTrackingEnabled(true),
+          onCancelBtnTap: () =>
+              HiveSettingsDB.setAutoStartTrackingEnabled(false),
+          confirmBtnText: 'Auto-Start',
+          cancelBtnText: Localize.current.no);
+      HiveSettingsDB.setTrackingFirstStart(false);
+    }
+
     _userReachedFinishDateTime == null;
     if (_userGpxPoints.length <= 1 &&
         MapSettings.showOwnTrack &&
@@ -794,6 +792,10 @@ class LocationProvider with ChangeNotifier {
           );
         }
       }
+    }
+
+    if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
+      Wakelock.enable();
     }
 
     if (kIsWeb || HiveSettingsDB.useAlternativeLocationProvider) {
@@ -906,9 +908,7 @@ class LocationProvider with ChangeNotifier {
 
   ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
   void setUpdateTimer(bool enabled) {
-    if (!kIsWeb) {
-      BnLog.trace(text: 'init setLocationTimer to $enabled');
-    }
+    BnLog.trace(text: 'init setLocationTimer to $enabled');
     _updateTimer?.cancel();
     _saveLocationsTimer?.cancel();
     if (enabled) {
@@ -937,24 +937,48 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  void _startTrackingUpdateTimer(bool enabled) {
-    BnLog.trace(text: 'init startTrackingUpdateTimer to $enabled');
+  void _startTrackingUpdateTimer() {
+    BnLog.trace(text: 'init startTrackingUpdateTimer');
     _trackingUpdateTimer?.cancel();
-    if (enabled) {
-      _trackingUpdateTimer = Timer.periodic(
-        const Duration(minutes: 5),
-        (timer) {
-          if (_isTracking || !autoStop || !trackingWasActive) {
-            return;
-          }
-          if (eventIsActive) {
-            startTracking(userIsParticipant);
-          }
-        },
-      );
-    } else {
-      _trackingUpdateTimer?.cancel();
-      _trackingUpdateTimer = null;
+    _trackingUpdateTimer = Timer.periodic(
+      const Duration(minutes: 1),
+      (timer) async {
+        await _autoStartTimerCallBack();
+      },
+    );
+    _autoStartTimerCallBack();
+  }
+
+  Future<void> _autoStartTimerCallBack() async {
+    if (_isTracking ||
+        !HiveSettingsDB.autoStartTrackingEnabled ||
+        _autoTrackingStarted) {
+      return;
+    }
+    await ProviderContainer()
+        .read(activeEventProvider.notifier)
+        .refresh(forceUpdate: true);
+    _eventIsRunning = ProviderContainer().read(activeEventProvider).status ==
+            EventStatus.running ||
+        (_realtimeUpdate != null && _realtimeUpdate!.eventIsActive);
+    if (_eventIsRunning) {
+      startTracking(userIsParticipant);
+      _autoTrackingStarted = true;
+      BnLog.trace(text: '_autoStartTimerCallBack autostart tracking via timer');
+      if (_isInBackground) {
+        NotificationHelper().showString(
+            id: DateTime.now().hashCode,
+            text: Localize.current.autoStartTracking);
+      } else {
+        QuickAlert.show(
+            context: navigatorKey.currentContext!,
+            type: QuickAlertType.info,
+            title: Localize.current.autoStartTrackingTitle,
+            text: Localize.current.autoStartTracking);
+      }
+    }
+    if (!_eventIsRunning) {
+      _autoTrackingStarted = false; //reset auto tracking start
     }
   }
 
@@ -1080,13 +1104,11 @@ class LocationProvider with ChangeNotifier {
     _lastLocationRealtimeRequest = dtNow;
 
     if (!_networkConnected) {
-      if (!kIsWeb) {
-        BnLog.trace(
-          className: toString(),
-          methodName: 'sendLocation',
-          text: 'no network ignore send location',
-        );
-      }
+      BnLog.trace(
+        className: toString(),
+        methodName: 'sendLocation',
+        text: 'no network ignore send location',
+      );
       return;
     }
     //only result of this message contains friend position -
@@ -1119,19 +1141,19 @@ class LocationProvider with ChangeNotifier {
 
     _lastUpdate = DateTime.now();
     _realtimeUpdate = update;
-    if (!kIsWeb) {
-      BnLog.trace(
-          className: 'locationProvider',
-          methodName: 'sendLocation',
-          text: 'sent loc update with result  $update');
-    }
+
+    BnLog.trace(
+        className: 'locationProvider',
+        methodName: 'sendLocation',
+        text: 'sent loc update with result $update');
+
     if (realtimeUpdate != null &&
         (_lastRouteName != _realtimeUpdate?.routeName ||
             _eventState != _realtimeUpdate?.eventState ||
-            _eventIsActive != _realtimeUpdate?.eventIsActive)) {
+            _eventIsRunning != _realtimeUpdate?.eventIsActive)) {
       _lastRouteName = _realtimeUpdate!.routeName;
       _eventState = _realtimeUpdate!.eventState;
-      _eventIsActive = _realtimeUpdate!.eventIsActive;
+      _eventIsRunning = _realtimeUpdate!.eventIsActive;
       ProviderContainer()
           .read(activeEventProvider.notifier)
           .refresh(forceUpdate: true);
@@ -1285,7 +1307,7 @@ class LocationProvider with ChangeNotifier {
         //check event is running for a minimum interval to avoid stop of auto tracking
         if (_userReachedFinishDateTime == null) {
           _userReachedFinishDateTime = DateTime.now();
-          if (autoStop) {
+          if (HiveSettingsDB.autoStopTrackingEnabled) {
             NotificationHelper().showString(
                 id: DateTime.now().hashCode,
                 text: Localize.current.finishReachedStopedTracking);
@@ -1322,7 +1344,7 @@ class LocationProvider with ChangeNotifier {
       if ((activeEventData.status == EventStatus.finished ||
               eventRuntime.inMinutes > maxDuration) &&
           _isTracking &&
-          _autoStop &&
+          HiveSettingsDB.autoStopTrackingEnabled &&
           !_stoppedAfterMaxTime) {
         _stoppedAfterMaxTime = true;
         _userReachedFinishDateTime == null;
@@ -1542,10 +1564,6 @@ class LocationProvider with ChangeNotifier {
 
 final locationProvider =
     ChangeNotifierProvider((ref) => LocationProvider.instance);
-
-final isAutoStopProvider = Provider((ref) {
-  return ref.watch(locationProvider.select((l) => l.autoStop));
-});
 
 final locationLastUpdateProvider = Provider((ref) {
   return ref.watch(locationProvider.select((l) => l.lastUpdate));

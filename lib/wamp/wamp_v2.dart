@@ -108,7 +108,7 @@ class WampV2 {
     try {
       startResult = await _lock.synchronized(() async {
         return await _startStream();
-      }, timeout: const Duration(seconds: 10));
+      }, timeout: const Duration(seconds: 5));
     } on TimeoutException catch (_) {
       BnLog.trace(text: 'Timeout _startStream');
       _lock = Lock();

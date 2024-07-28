@@ -20,6 +20,7 @@ import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/notification/toast_notification.dart';
 import '../pages/widgets/app_id_widget.dart';
 import '../pages/widgets/data_widget_left_right.dart';
+import '../providers/is_tracking_provider.dart';
 import '../providers/location_provider.dart';
 import '../providers/map/map_settings_provider.dart';
 import '../providers/network_connection_provider.dart';
@@ -259,51 +260,93 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               ),
                             ]),
                       ]),
-
-                  if (!kIsWeb)
-                    CupertinoFormSection(
-                        header: Text(Localize.of(context).showOwnTrack),
-                        children: <Widget>[
+                  CupertinoFormSection(
+                      header:
+                          Text(Localize.of(context).automatedStopSettingTitle),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).automatedStopSettingText,
+                            descriptionRight: '',
+                            rightWidget: CupertinoSwitch(
+                              onChanged: (val) {
+                                setState(() {
+                                  ref
+                                      .read(autoStopTrackingProvider.notifier)
+                                      .setValue(val);
+                                });
+                              },
+                              value: ref.watch(autoStopTrackingProvider),
+                            ),
+                          ),
+                        ),
+                      ]),
+                  CupertinoFormSection(
+                      header:
+                          Text(Localize.of(context).autoStartTrackingInfoTitle),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).autoStartTrackingInfo,
+                            descriptionRight: '',
+                            rightWidget: CupertinoSwitch(
+                              onChanged: (val) {
+                                setState(() {
+                                  ref
+                                      .read(autoStartTrackingProvider.notifier)
+                                      .setValue(val);
+                                });
+                              },
+                              value: ref.watch(autoStartTrackingProvider),
+                            ),
+                          ),
+                        ),
+                      ]),
+                  CupertinoFormSection(
+                      header: Text(Localize.of(context).showOwnTrack),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).showOwnTrack,
+                            descriptionRight: '',
+                            rightWidget: CupertinoSwitch(
+                              onChanged: (val) {
+                                setState(() {
+                                  ref
+                                      .read(showOwnTrackProvider.notifier)
+                                      .setValue(val);
+                                });
+                              },
+                              value: ref.watch(showOwnTrackProvider),
+                            ),
+                          ),
+                        ),
+                        if (ref.watch(showOwnTrackProvider))
                           Padding(
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             child: DataLeftRightContent(
                               descriptionLeft:
-                                  Localize.of(context).showOwnTrack,
+                                  Localize.of(context).showOwnColoredTrack,
                               descriptionRight: '',
                               rightWidget: CupertinoSwitch(
                                 onChanged: (val) {
                                   setState(() {
                                     ref
-                                        .read(showOwnTrackProvider.notifier)
+                                        .read(showOwnColoredTrackProvider
+                                            .notifier)
                                         .setValue(val);
                                   });
                                 },
-                                value: ref.watch(showOwnTrackProvider),
+                                value: ref.watch(showOwnColoredTrackProvider),
                               ),
                             ),
                           ),
-                          if (ref.watch(showOwnTrackProvider))
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).showOwnColoredTrack,
-                                descriptionRight: '',
-                                rightWidget: CupertinoSwitch(
-                                  onChanged: (val) {
-                                    setState(() {
-                                      ref
-                                          .read(showOwnColoredTrackProvider
-                                              .notifier)
-                                          .setValue(val);
-                                    });
-                                  },
-                                  value: ref.watch(showOwnColoredTrackProvider),
-                                ),
-                              ),
-                            ),
-                        ]),
+                      ]),
                   if (!kIsWeb)
                     CupertinoFormSection(
                         header: Text(Localize.of(context).showCompassTitle),
@@ -365,7 +408,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             },
                           ),
                         ]),
-                  settingsInvisibleOfflineWidget(context),
+
+                  const SettingsInvisibleOfflineWidget(),
 
                   if (!kIsWeb)
                     const SizedBox(

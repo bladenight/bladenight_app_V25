@@ -6,7 +6,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-as bg;
+    as bg;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
@@ -408,7 +408,8 @@ class HiveSettingsDB {
 
   ///set if  setBladeguardEmailValid were shown
   static checkBladeguardEmailValid(String val) {
-    _hiveBox.put(isBladeguardEmailValidKey, validateEmail(val.toLowerCase().trim()));
+    _hiveBox.put(
+        isBladeguardEmailValidKey, validateEmail(val.toLowerCase().trim()));
   }
 
   static const String bladeguardBirthdayKey = 'bladeguardBirthdayPref';
@@ -526,6 +527,44 @@ class HiveSettingsDB {
   ///set if  setTrackingActive were requested
   static void setTrackingActive(bool val) {
     _hiveBox.put(_trackingActiveKey, val);
+  }
+
+  static const String autoStopTrackingEnabledKey = 'autoStopTrackingEnabledKey';
+
+  ///get Tracking is Active means locations updating is active
+  static bool get autoStopTrackingEnabled {
+    return _hiveBox.get(autoStopTrackingEnabledKey, defaultValue: true);
+  }
+
+  ///set if  setAutoStopTrackingEnabled were requested
+  static void setAutoStopTrackingEnabled(bool val) {
+    _hiveBox.put(autoStopTrackingEnabledKey, val);
+  }
+
+  static const String autoStartTrackingEnabledKey =
+      'autoStartTrackingEnabledKey';
+
+  ///get Tracking is Active means locations updating is active
+  static bool get autoStartTrackingEnabled {
+    return _hiveBox.get(autoStartTrackingEnabledKey, defaultValue: false);
+  }
+
+  ///set if  setAutoStopEnabled were requested
+  static void setAutoStartTrackingEnabled(bool val) {
+    _hiveBox.put(autoStartTrackingEnabledKey, val);
+  }
+
+  static const String trackingFirstStartKey = 'trackingFirstStartKey';
+
+  ///get Tracking is Active means locations updating is active
+  static bool get trackingFirstStart {
+    if (kDebugMode) return true;
+    return _hiveBox.get(trackingFirstStartKey, defaultValue: true);
+  }
+
+  ///set if  setAutoStopEnabled were requested
+  static void setTrackingFirstStart(bool val) {
+    _hiveBox.put(trackingFirstStartKey, val);
   }
 
   static const String _wakeLockEnabledKey = 'wakeLockEnabledKey';

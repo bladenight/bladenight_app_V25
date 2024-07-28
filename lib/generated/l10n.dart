@@ -470,10 +470,10 @@ class Localize {
     );
   }
 
-  /// `App stays on while the app is open and tracking is active. Disables at 20% battery level. Leave switched on.`
+  /// `Display keeps on while the app is open and location sharing is active. Disables at 20% battery level. Leave switched on.`
   String get allowWakeLockHeader {
     return Intl.message(
-      'App stays on while the app is open and tracking is active. Disables at 20% battery level. Leave switched on.',
+      'Display keeps on while the app is open and location sharing is active. Disables at 20% battery level. Leave switched on.',
       name: 'allowWakeLockHeader',
       desc: '',
       args: [],
@@ -610,10 +610,10 @@ class Localize {
     );
   }
 
-  /// `On long press at ▶️ automatic tracking stop will activated. This means, as long the app is active and tracking on reaching finish BladeNight the tracking stops automatic.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and locationsharing with autostop.`
+  /// `On long press at ▶️ automatic location sharing stop will activated. This means, as long the app is active and reaching the finish, location sharing will stopped automatically.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and location sharing with auto stop.`
   String get automatedStopInfo {
     return Intl.message(
-      'On long press at ▶️ automatic tracking stop will activated. This means, as long the app is active and tracking on reaching finish BladeNight the tracking stops automatic.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and locationsharing with autostop.',
+      'On long press at ▶️ automatic location sharing stop will activated. This means, as long the app is active and reaching the finish, location sharing will stopped automatically.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and location sharing with auto stop.',
       name: 'automatedStopInfo',
       desc: '',
       args: [],
@@ -650,10 +650,10 @@ class Localize {
     );
   }
 
-  /// `BladeNight background tracking`
+  /// `BladeNight background location sharing`
   String get bgNotificationTitle {
     return Intl.message(
-      'BladeNight background tracking',
+      'BladeNight background location sharing',
       name: 'bgNotificationTitle',
       desc: '',
       args: [],
@@ -1386,10 +1386,10 @@ class Localize {
     );
   }
 
-  /// `Export user tracking`
+  /// `Export user locations (tracking)`
   String get exportUserTracking {
     return Intl.message(
-      'Export user tracking',
+      'Export user locations (tracking)',
       name: 'exportUserTracking',
       desc: '',
       args: [],
@@ -1456,30 +1456,30 @@ class Localize {
     );
   }
 
-  /// `Tracking stopped - BladeNight finished`
+  /// `Location sharing stopped - BladeNight finished`
   String get finishForceStopEventOverTitle {
     return Intl.message(
-      'Tracking stopped - BladeNight finished',
+      'Location sharing stopped - BladeNight finished',
       name: 'finishForceStopEventOverTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tracking stopped - Timeout`
+  /// `Location sharing stopped - Timeout`
   String get finishForceStopTimeoutTitle {
     return Intl.message(
-      'Tracking stopped - Timeout',
+      'Location sharing stopped - Timeout',
       name: 'finishForceStopTimeoutTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Finish reached - location tracking stopped.`
+  /// `Finish reached - Location sharing stopped.`
   String get finishReachedStopedTracking {
     return Intl.message(
-      'Finish reached - location tracking stopped.',
+      'Finish reached - Location sharing stopped.',
       name: 'finishReachedStopedTracking',
       desc: '',
       args: [],
@@ -1496,30 +1496,30 @@ class Localize {
     );
   }
 
-  /// `Finish reached - Please stop location tracking.`
+  /// `Finish reached - Please stop Location sharing.`
   String get finishReachedtargetReachedPleaseStopTracking {
     return Intl.message(
-      'Finish reached - Please stop location tracking.',
+      'Finish reached - Please stop Location sharing.',
       name: 'finishReachedtargetReachedPleaseStopTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Automatic tracking stop, because this BladeNight event is finished. (Press long on ▶️ to deactivate Automatic tracking stop)`
+  /// `Automatic location sharing stopped, because this BladeNight event is finished. (Press long on ▶️ to deactivate automatic location sharing stop)`
   String get finishStopTrackingEventOver {
     return Intl.message(
-      'Automatic tracking stop, because this BladeNight event is finished. (Press long on ▶️ to deactivate Automatic tracking stop)',
+      'Automatic location sharing stopped, because this BladeNight event is finished. (Press long on ▶️ to deactivate automatic location sharing stop)',
       name: 'finishStopTrackingEventOver',
       desc: '',
       args: [],
     );
   }
 
-  /// `Location tracking after {timeout} min of BladeNight automatic stopped. (Press long on ▶️ to deactivate Automatic tracking stop)`
+  /// `Location sharing after {timeout} min of BladeNight automatic stopped. (Press long on ▶️ to deactivate automatic location sharing stop)`
   String finishStopTrackingTimeout(Object timeout) {
     return Intl.message(
-      'Location tracking after $timeout min of BladeNight automatic stopped. (Press long on ▶️ to deactivate Automatic tracking stop)',
+      'Location sharing after $timeout min of BladeNight automatic stopped. (Press long on ▶️ to deactivate automatic location sharing stop)',
       name: 'finishStopTrackingTimeout',
       desc: '',
       args: [timeout],
@@ -1556,10 +1556,10 @@ class Localize {
     );
   }
 
-  /// `Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps.`
+  /// `Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps.`
   String get fitnessPermissionInfoText {
     return Intl.message(
-      'Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps.',
+      'Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps.',
       name: 'fitnessPermissionInfoText',
       desc: '',
       args: [],
@@ -1576,10 +1576,10 @@ class Localize {
     );
   }
 
-  /// `Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. (Default inactive)`
+  /// `Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. (Default inactive)`
   String get fitnessPermissionSettingsText {
     return Intl.message(
-      'Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. (Default inactive)',
+      'Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. (Default inactive)',
       name: 'fitnessPermissionSettingsText',
       desc: '',
       args: [],
@@ -2026,10 +2026,10 @@ class Localize {
     );
   }
 
-  /// `Location is turned off in settings. Tracking not possible. Press Play ▶️ or go to OS-Settings.`
+  /// `Location is turned off in settings. Location sharing not possible. Press Play ▶️ or go to OS-Settings.`
   String get locationServiceOff {
     return Intl.message(
-      'Location is turned off in settings. Tracking not possible. Press Play ▶️ or go to OS-Settings.',
+      'Location is turned off in settings. Location sharing not possible. Press Play ▶️ or go to OS-Settings.',
       name: 'locationServiceOff',
       desc: '',
       args: [],
@@ -2296,10 +2296,10 @@ class Localize {
     );
   }
 
-  /// `Location 'When in use' is selected. Warning, there is no background update enabled. Your position data to show exact Bladnight train and share your position with your friends is only possible when the app is open in foreground. Please confirm it or change your settings to 'Allow all time'.\nFurthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.`
+  /// `Location 'When in use' is selected. Warning, there is no background update enabled. Your position data to show exact Bladnight train and share your position with your friends is only possible when the app is open in foreground. Please confirm it or change your settings to 'Allow all time'.\nFurthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.`
   String get noBackgroundlocationLeaveAppOpen {
     return Intl.message(
-      'Location \'When in use\' is selected. Warning, there is no background update enabled. Your position data to show exact Bladnight train and share your position with your friends is only possible when the app is open in foreground. Please confirm it or change your settings to \'Allow all time\'.\nFurthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.',
+      'Location \'When in use\' is selected. Warning, there is no background update enabled. Your position data to show exact Bladnight train and share your position with your friends is only possible when the app is open in foreground. Please confirm it or change your settings to \'Allow all time\'.\nFurthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.',
       name: 'noBackgroundlocationLeaveAppOpen',
       desc: '',
       args: [],
@@ -2366,10 +2366,10 @@ class Localize {
     );
   }
 
-  /// `No Event active since more than {timeout} min. - Tracking stopped automatically.`
+  /// `No Event active since more than {timeout} min. - Location sharing stopped automatically.`
   String noEventTimeOut(Object timeout) {
     return Intl.message(
-      'No Event active since more than $timeout min. - Tracking stopped automatically.',
+      'No Event active since more than $timeout min. - Location sharing stopped automatically.',
       name: 'noEventTimeOut',
       desc: '',
       args: [timeout],
@@ -2516,10 +2516,10 @@ class Localize {
     );
   }
 
-  /// `Next BladeNight will start in 5 minutes. Don't forget to turn tracking on !`
+  /// `Next BladeNight will start in 5 minutes. Don't forget to turn location sharing on !`
   String get note_bladenightStartInFiveMinutesStartTracking {
     return Intl.message(
-      'Next BladeNight will start in 5 minutes. Don\'t forget to turn tracking on !',
+      'Next BladeNight will start in 5 minutes. Don\'t forget to turn location sharing on !',
       name: 'note_bladenightStartInFiveMinutesStartTracking',
       desc: '',
       args: [],
@@ -2556,10 +2556,10 @@ class Localize {
     );
   }
 
-  /// `No tracking!`
+  /// `No location sharing!`
   String get notracking {
     return Intl.message(
-      'No tracking!',
+      'No location sharing!',
       name: 'notracking',
       desc: '',
       args: [],
@@ -2776,10 +2776,10 @@ class Localize {
     );
   }
 
-  /// `The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select 'While using the App'. Later we will ask you again, prefered is 'Allow all time'. When you select 'When in use' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much.`
+  /// `The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select 'While using the App'. Later we will ask you again, prefered is 'Allow all time'. When you select 'When in use' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much.`
   String get prominentdisclosuretrackingprealertandroidFromAndroid_V11 {
     return Intl.message(
-      'The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select \'While using the App\'. Later we will ask you again, prefered is \'Allow all time\'. When you select \'When in use\' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much.',
+      'The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select \'While using the App\'. Later we will ask you again, prefered is \'Allow all time\'. When you select \'When in use\' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much.',
       name: 'prominentdisclosuretrackingprealertandroidFromAndroid_V11',
       desc: '',
       args: [],
@@ -3347,10 +3347,10 @@ class Localize {
     );
   }
 
-  /// `Show procession participants (limited to 100 in procession) on map. Works only if self-tracking.`
+  /// `Show procession participants (limited to 100 in procession) on map. Works only when your location is shared.`
   String get showFullProcessionTitle {
     return Intl.message(
-      'Show procession participants (limited to 100 in procession) on map. Works only if self-tracking.',
+      'Show procession participants (limited to 100 in procession) on map. Works only when your location is shared.',
       name: 'showFullProcessionTitle',
       desc: '',
       args: [],
@@ -3457,10 +3457,10 @@ class Localize {
     );
   }
 
-  /// `Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and tracking data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?`
+  /// `Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and location data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?`
   String get startLocationWithoutParticipatingInfo {
     return Intl.message(
-      'Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and tracking data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?',
+      'Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and location data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?',
       name: 'startLocationWithoutParticipatingInfo',
       desc: '',
       args: [],
@@ -3567,30 +3567,30 @@ class Localize {
     );
   }
 
-  /// `Stop location without participating`
+  /// `Stop location sharing without participating`
   String get stopLocationWithoutParticipating {
     return Intl.message(
-      'Stop location without participating',
+      'Stop location sharing without participating',
       name: 'stopLocationWithoutParticipating',
       desc: '',
       args: [],
     );
   }
 
-  /// `Stop participation tracking`
+  /// `Stop participation location sharing`
   String get stopParticipationTracking {
     return Intl.message(
-      'Stop participation tracking',
+      'Stop participation location sharing',
       name: 'stopParticipationTracking',
       desc: '',
       args: [],
     );
   }
 
-  /// `Event timed out ({timeout} min). Don't forget to stop tracking.`
+  /// `Event timed out ({timeout} min). Don't forget to stop location sharing.`
   String stopTrackingTimeOut(Object timeout) {
     return Intl.message(
-      'Event timed out ($timeout min). Don\'t forget to stop tracking.',
+      'Event timed out ($timeout min). Don\'t forget to stop location sharing.',
       name: 'stopTrackingTimeOut',
       desc: '',
       args: [timeout],
@@ -3800,10 +3800,10 @@ class Localize {
     );
   }
 
-  /// `Tracking restartet`
+  /// `Location sharing restartet`
   String get trackingRestarted {
     return Intl.message(
-      'Tracking restartet',
+      'Location sharing restartet',
       name: 'trackingRestarted',
       desc: '',
       args: [],
@@ -4093,20 +4093,20 @@ class Localize {
     );
   }
 
-  /// `You can register yourself onsite 3 hours before start! You must nearby starting point!`
+  /// `You can sign up as a Bladeguard for tonight’s Bladenight when you are already registered as a Bladeguard, you are near the starting point, and it’s less than 3 hours before the start.`
   String get loginThreeHoursBefore {
     return Intl.message(
-      'You can register yourself onsite 3 hours before start! You must nearby starting point!',
+      'You can sign up as a Bladeguard for tonight’s Bladenight when you are already registered as a Bladeguard, you are near the starting point, and it’s less than 3 hours before the start.',
       name: 'loginThreeHoursBefore',
       desc: '',
       args: [],
     );
   }
 
-  /// `You have to be close to the starting point, but you are at least {distInMeter} m away. If you are late, please inform your team leader.`
+  /// `You have to be close to the starting point, but you are at least {distInMeter} m away. If you are late, inform your team leader, please!`
   String mustNearbyStartingPoint(Object distInMeter) {
     return Intl.message(
-      'You have to be close to the starting point, but you are at least $distInMeter m away. If you are late, please inform your team leader.',
+      'You have to be close to the starting point, but you are at least $distInMeter m away. If you are late, inform your team leader, please!',
       name: 'mustNearbyStartingPoint',
       desc: '',
       args: [distInMeter],
@@ -4153,10 +4153,10 @@ class Localize {
     );
   }
 
-  /// `BladenightApp - registered onsite`
+  /// `BladeNight!-App - registered onsite`
   String get bladeguardAtStartPointTitle {
     return Intl.message(
-      'BladenightApp - registered onsite',
+      'BladeNight!-App - registered onsite',
       name: 'bladeguardAtStartPointTitle',
       desc: '',
       args: [],
@@ -4238,6 +4238,66 @@ class Localize {
     return Intl.message(
       'My speed on track',
       name: 'mySpeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto-Stop location sharing`
+  String get automatedStopSettingText {
+    return Intl.message(
+      'Auto-Stop location sharing',
+      name: 'automatedStopSettingText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stop location sharing automatically dependent on event`
+  String get automatedStopSettingTitle {
+    return Intl.message(
+      'Stop location sharing automatically dependent on event',
+      name: 'automatedStopSettingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location sharing started automatically. To disable behaviour go to settings and switch Auto-Start/Stop location sharing off`
+  String get autoStartTracking {
+    return Intl.message(
+      'Location sharing started automatically. To disable behaviour go to settings and switch Auto-Start/Stop location sharing off',
+      name: 'autoStartTracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location sharing started automatically ...`
+  String get autoStartTrackingTitle {
+    return Intl.message(
+      'Location sharing started automatically ...',
+      name: 'autoStartTrackingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start location sharing automatically`
+  String get autoStartTrackingInfo {
+    return Intl.message(
+      'Start location sharing automatically',
+      name: 'autoStartTrackingInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `When starting BladeNight, it is possible to start location sharing automatically if the app is open. As soon as the app is closed or the background activity is not enabled, location sharing is not activated. Should the location sharing function start automatically when the app is open?`
+  String get autoStartTrackingInfoTitle {
+    return Intl.message(
+      'When starting BladeNight, it is possible to start location sharing automatically if the app is open. As soon as the app is closed or the background activity is not enabled, location sharing is not activated. Should the location sharing function start automatically when the app is open?',
+      name: 'autoStartTrackingInfoTitle',
       desc: '',
       args: [],
     );

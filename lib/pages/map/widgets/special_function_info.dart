@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../helpers/export_import_data_helper.dart';
-import '../../../helpers/speed_to_color.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/special_procession_function_provider.dart';

@@ -170,10 +170,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "apptrackingtransparancy": MessageLookupByLibrary.simpleMessage(
             "Wir schützen uns um Ihre Privatsphäre und Datensicherheit.\nUm uns dabei zu helfen, das BladeNight-Erlebnis zu verbessern, übertragen wir Ihren Standort auf unseren Server. Dies Information beinhaltet eine beim ersten Start der App erstellte eindeutige ID, um die Zuordnung der Freunde zu ermöglichen. Diese Daten werden niemals an Dritte weitergegeben oder für Werbezwecke verwendet."),
         "at": MessageLookupByLibrary.simpleMessage("am"),
+        "autoStartTracking": MessageLookupByLibrary.simpleMessage(
+            "Tracking autom. gestartet während BladeNight - Autostart aktiv. Um dies zu deaktivieren, bitte Auto-Start/Stop-Tracking in Einstellung ausschalten"),
+        "autoStartTrackingInfo": MessageLookupByLibrary.simpleMessage(
+            "Starte Standortfreigabe automatisch"),
+        "autoStartTrackingInfoTitle": MessageLookupByLibrary.simpleMessage(
+            "Es besteht die Möglichkeit beim Start der BladeNight, die Standortfreigabe automatisch zu starten, wenn die App geöffnet ist. Sobald die App geschlossen wurde oder die Hintergrundaktivität nicht freigegeben ist, wird auch keine Standortfreigabe aktiviert. Soll die Funktion Standortfreigabe automatisch starten, wenn die App im geöffnet ist aktiviert werden? "),
+        "autoStartTrackingTitle": MessageLookupByLibrary.simpleMessage(
+            "Tracking automatisch gestartet..."),
         "autoStopTracking":
             MessageLookupByLibrary.simpleMessage("Stoppe Tracking automatisch"),
         "automatedStopInfo": MessageLookupByLibrary.simpleMessage(
             "Durch langes drücken auf ▶️ wird der automatische Trackingstopp aktiviert. Das heißt, solange die App geöffnet ist, wird nach dem erreichen des Zieles der BladeNight das Tracking und Freundefreigabe automatisch gestoppt.\nWiederholt langes drücken auf  ▶️,⏸︎,⏹︎ stellt auf manuell Stopp oder Autostopp um."),
+        "automatedStopSettingText":
+            MessageLookupByLibrary.simpleMessage("Tracking Auto-Stopp "),
+        "automatedStopSettingTitle": MessageLookupByLibrary.simpleMessage(
+            "Stoppe des Bladenight-Trackings automatisch."),
         "becomeBladeguard":
             MessageLookupByLibrary.simpleMessage("Werde Bladeguard"),
         "behindMe": MessageLookupByLibrary.simpleMessage("hinter mir"),

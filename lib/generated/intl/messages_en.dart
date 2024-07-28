@@ -32,7 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m4(date, time) => "${date} ${time}Uhr";
 
   static String m5(timeout) =>
-      "Location tracking after ${timeout} min of BladeNight automatic stopped. (Press long on ▶️ to deactivate Automatic tracking stop)";
+      "Location sharing after ${timeout} min of BladeNight automatic stopped. (Press long on ▶️ to deactivate automatic location sharing stop)";
 
   static String m6(code) =>
       "Alternative can your friend scan the barcode below or manually enter the code ${code} in his app";
@@ -49,16 +49,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "<h2>Important information!</h2><ul><li>Your friend must use the same type of phone. Apple to Android does not work. In this case, use the code pairing.</li><li> Your friend must be within a maximum distance of 2 m from you!</li><li>Please open the Friends tab for your friend in the BladeNight! app.</li><li>Select Plus at the top right<span class=\"icon\">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>${deviceName}</em></b> pair.</li><li>Alternatively, your friend can scan the barcode with the camera or connect you with <br>code <b>${code}</b></li></ul>You can change your submitted name in the text field. This is only for transfer via direct connection / scan.";
 
   static String m11(distInMeter) =>
-      "You have to be close to the starting point, but you are at least ${distInMeter} m away. If you are late, please inform your team leader.";
+      "You have to be close to the starting point, but you are at least ${distInMeter} m away. If you are late, inform your team leader, please!";
 
   static String m12(timeout) =>
-      "No Event active since more than ${timeout} min. - Tracking stopped automatically.";
+      "No Event active since more than ${timeout} min. - Location sharing stopped automatically.";
 
   static String m13(requestid, playStoreLink, iosAppStoreLink) =>
       "Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: ${requestid} in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: bna://bladenight.app?addFriend&code=${requestid} on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n${playStoreLink} and on Apple App Store \n${iosAppStoreLink}";
 
   static String m14(timeout) =>
-      "Event timed out (${timeout} min). Don\'t forget to stop tracking.";
+      "Event timed out (${timeout} min). Don\'t forget to stop location sharing.";
 
   static String m15(name, requestid) =>
       "Please tell \'${name}\' this code \n\n${requestid}\nHe/she/it has to confirm this in his/her/it \'BladeNight-App\'.\nThe Code is only 60 minutes valid!\nPlease update with ↻ button the status manually.";
@@ -148,7 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "allowWakeLock":
             MessageLookupByLibrary.simpleMessage("Leave app waked up?"),
         "allowWakeLockHeader": MessageLookupByLibrary.simpleMessage(
-            "App stays on while the app is open and tracking is active. Disables at 20% battery level. Leave switched on."),
+            "Display keeps on while the app is open and location sharing is active. Disables at 20% battery level. Leave switched on."),
         "alternativeLocationProvider":
             MessageLookupByLibrary.simpleMessage("Use alternative driver"),
         "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
@@ -169,17 +169,29 @@ class MessageLookup extends MessageLookupByLibrary {
         "apptrackingtransparancy": MessageLookupByLibrary.simpleMessage(
             "We care about your privacy and data security.\nTo help us improve the BladeNight experience, we transfer your location to our server. This information includes a unique ID created when you first start the app to enable friends to be assigned. This data is never passed on to third parties or used for advertising purposes."),
         "at": MessageLookupByLibrary.simpleMessage("at"),
+        "autoStartTracking": MessageLookupByLibrary.simpleMessage(
+            "Location sharing started automatically. To disable behaviour go to settings and switch Auto-Start/Stop location sharing off"),
+        "autoStartTrackingInfo": MessageLookupByLibrary.simpleMessage(
+            "Start location sharing automatically"),
+        "autoStartTrackingInfoTitle": MessageLookupByLibrary.simpleMessage(
+            "When starting BladeNight, it is possible to start location sharing automatically if the app is open. As soon as the app is closed or the background activity is not enabled, location sharing is not activated. Should the location sharing function start automatically when the app is open?"),
+        "autoStartTrackingTitle": MessageLookupByLibrary.simpleMessage(
+            "Location sharing started automatically ..."),
         "autoStopTracking": MessageLookupByLibrary.simpleMessage(
             "Info - please read - Stop automatic on finish"),
         "automatedStopInfo": MessageLookupByLibrary.simpleMessage(
-            "On long press at ▶️ automatic tracking stop will activated. This means, as long the app is active and tracking on reaching finish BladeNight the tracking stops automatic.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and locationsharing with autostop."),
+            "On long press at ▶️ automatic location sharing stop will activated. This means, as long the app is active and reaching the finish, location sharing will stopped automatically.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and location sharing with auto stop."),
+        "automatedStopSettingText":
+            MessageLookupByLibrary.simpleMessage("Auto-Stop location sharing"),
+        "automatedStopSettingTitle": MessageLookupByLibrary.simpleMessage(
+            "Stop location sharing automatically dependent on event"),
         "becomeBladeguard":
             MessageLookupByLibrary.simpleMessage("Become a Bladeguard"),
         "behindMe": MessageLookupByLibrary.simpleMessage("behind me"),
         "bgNotificationText": MessageLookupByLibrary.simpleMessage(
             "Background location update is active. Thank you for participating."),
         "bgNotificationTitle": MessageLookupByLibrary.simpleMessage(
-            "BladeNight background tracking"),
+            "BladeNight background location sharing"),
         "bgTeam": MessageLookupByLibrary.simpleMessage("Bladeguard team"),
         "bgTodayNotOnSite":
             MessageLookupByLibrary.simpleMessage("You\'re not on site today?"),
@@ -197,7 +209,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "bladeGuardSettingsTitle": MessageLookupByLibrary.simpleMessage(
             "Open Bladeguard settings page"),
         "bladeguardAtStartPointTitle": MessageLookupByLibrary.simpleMessage(
-            "BladenightApp - registered onsite"),
+            "BladeNight!-App - registered onsite"),
         "bladeguardInfo": m0,
         "bladenight": MessageLookupByLibrary.simpleMessage("BladeNight"),
         "bladenightUpdate":
@@ -291,8 +303,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "export": MessageLookupByLibrary.simpleMessage("Export"),
         "exportLogData": MessageLookupByLibrary.simpleMessage(
             "Send logger data for support oder feature purposes"),
-        "exportUserTracking":
-            MessageLookupByLibrary.simpleMessage("Export user tracking"),
+        "exportUserTracking": MessageLookupByLibrary.simpleMessage(
+            "Export user locations (tracking)"),
         "exportUserTrackingHeader": MessageLookupByLibrary.simpleMessage(
             "Export recorded location data (visible track on map) as GPX"),
         "exportWarning": MessageLookupByLibrary.simpleMessage(
@@ -304,18 +316,18 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please try to establish the connection with a code. Ask your friend for the code displayed in their \'Friends\' overview. You can only connect to the same friend once."),
         "finish": MessageLookupByLibrary.simpleMessage("Finish"),
         "finishForceStopEventOverTitle": MessageLookupByLibrary.simpleMessage(
-            "Tracking stopped - BladeNight finished"),
-        "finishForceStopTimeoutTitle":
-            MessageLookupByLibrary.simpleMessage("Tracking stopped - Timeout"),
+            "Location sharing stopped - BladeNight finished"),
+        "finishForceStopTimeoutTitle": MessageLookupByLibrary.simpleMessage(
+            "Location sharing stopped - Timeout"),
         "finishReachedStopedTracking": MessageLookupByLibrary.simpleMessage(
-            "Finish reached - location tracking stopped."),
+            "Finish reached - Location sharing stopped."),
         "finishReachedTitle":
             MessageLookupByLibrary.simpleMessage("Finish reached"),
         "finishReachedtargetReachedPleaseStopTracking":
             MessageLookupByLibrary.simpleMessage(
-                "Finish reached - Please stop location tracking."),
+                "Finish reached - Please stop Location sharing."),
         "finishStopTrackingEventOver": MessageLookupByLibrary.simpleMessage(
-            "Automatic tracking stop, because this BladeNight event is finished. (Press long on ▶️ to deactivate Automatic tracking stop)"),
+            "Automatic location sharing stopped, because this BladeNight event is finished. (Press long on ▶️ to deactivate automatic location sharing stop)"),
         "finishStopTrackingTimeout": m5,
         "finished": MessageLookupByLibrary.simpleMessage("Finished"),
         "fireBaseCrashlytics":
@@ -323,11 +335,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "fireBaseCrashlyticsHeader": MessageLookupByLibrary.simpleMessage(
             "To improve the app, crash events will be send to Crashlytics. This can be suppressed here."),
         "fitnessPermissionInfoText": MessageLookupByLibrary.simpleMessage(
-            "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps."),
+            "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps."),
         "fitnessPermissionInfoTextTitle":
             MessageLookupByLibrary.simpleMessage("Fitness Activity"),
         "fitnessPermissionSettingsText": MessageLookupByLibrary.simpleMessage(
-            "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function. (Default inactive)"),
+            "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. (Default inactive)"),
         "fitnessPermissionSwitchSettingsText":
             MessageLookupByLibrary.simpleMessage("Fitness Activity disabled"),
         "forgotPassword":
@@ -403,12 +415,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Live map in browser"),
         "loading": MessageLookupByLibrary.simpleMessage("Loading ..."),
         "locationServiceOff": MessageLookupByLibrary.simpleMessage(
-            "Location is turned off in settings. Tracking not possible. Press Play ▶️ or go to OS-Settings."),
+            "Location is turned off in settings. Location sharing not possible. Press Play ▶️ or go to OS-Settings."),
         "locationServiceRunning": MessageLookupByLibrary.simpleMessage(
             "Location sharing was started and is active."),
         "login": MessageLookupByLibrary.simpleMessage("login"),
         "loginThreeHoursBefore": MessageLookupByLibrary.simpleMessage(
-            "You can register yourself onsite 3 hours before start! You must nearby starting point!"),
+            "You can sign up as a Bladeguard for tonight’s Bladenight when you are already registered as a Bladeguard, you are near the starting point, and it’s less than 3 hours before the start."),
         "manufacturer": MessageLookupByLibrary.simpleMessage("Manufacturer"),
         "map": MessageLookupByLibrary.simpleMessage("Map"),
         "mapAlign": MessageLookupByLibrary.simpleMessage("Map alignment"),
@@ -452,7 +464,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "nextEvent": MessageLookupByLibrary.simpleMessage("Next BladeNight"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
         "noBackgroundlocationLeaveAppOpen": MessageLookupByLibrary.simpleMessage(
-            "Location \'When in use\' is selected. Warning, there is no background update enabled. Your position data to show exact Bladnight train and share your position with your friends is only possible when the app is open in foreground. Please confirm it or change your settings to \'Allow all time\'.\nFurthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function."),
+            "Location \'When in use\' is selected. Warning, there is no background update enabled. Your position data to show exact Bladnight train and share your position with your friends is only possible when the app is open in foreground. Please confirm it or change your settings to \'Allow all time\'.\nFurthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function."),
         "noBackgroundlocationTitle": MessageLookupByLibrary.simpleMessage(
             "No background update possible."),
         "noChoiceNoAction":
@@ -493,14 +505,15 @@ class MessageLookup extends MessageLookupByLibrary {
             "The BladeNight was canceled."),
         "note_bladenightStartInFiveMinutesStartTracking":
             MessageLookupByLibrary.simpleMessage(
-                "Next BladeNight will start in 5 minutes. Don\'t forget to turn tracking on !"),
+                "Next BladeNight will start in 5 minutes. Don\'t forget to turn location sharing on !"),
         "note_bladenightStartInSixHoursStartTracking":
             MessageLookupByLibrary.simpleMessage(
                 "Next BladeNight will start in 6 hours."),
         "note_statuschanged": MessageLookupByLibrary.simpleMessage(
             "BladeNight Status was changed - Please check in app"),
         "notification": MessageLookupByLibrary.simpleMessage("Notification"),
-        "notracking": MessageLookupByLibrary.simpleMessage("No tracking!"),
+        "notracking":
+            MessageLookupByLibrary.simpleMessage("No location sharing!"),
         "now": MessageLookupByLibrary.simpleMessage("Now"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
@@ -531,7 +544,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "proceed": MessageLookupByLibrary.simpleMessage("Proceed"),
         "prominentdisclosuretrackingprealertandroidFromAndroid_V11":
             MessageLookupByLibrary.simpleMessage(
-                "The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select \'While using the App\'. Later we will ask you again, prefered is \'Allow all time\'. When you select \'When in use\' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location tracking when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much."),
+                "The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select \'While using the App\'. Later we will ask you again, prefered is \'Allow all time\'. When you select \'When in use\' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much."),
         "prominentdisclosuretrackingprealertandroidToAndroid_V10x":
             MessageLookupByLibrary.simpleMessage(
                 "The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step.You should select \'While using the App\'. If you deny locationaccess, only the BladeNight skater procession can be watched without location sharing. Please support the accuracy of the train"),
@@ -631,7 +644,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "showFullProcession": MessageLookupByLibrary.simpleMessage(
             "Show procession participants"),
         "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(
-            "Show procession participants (limited to 100 in procession) on map. Works only if self-tracking."),
+            "Show procession participants (limited to 100 in procession) on map. Works only when your location is shared."),
         "showOwnColoredTrack":
             MessageLookupByLibrary.simpleMessage("Colorize my track"),
         "showOwnTrack":
@@ -655,7 +668,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Start location without participating"),
         "startLocationWithoutParticipatingInfo":
             MessageLookupByLibrary.simpleMessage(
-                "Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and tracking data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?"),
+                "Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and location data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?"),
         "startParticipation":
             MessageLookupByLibrary.simpleMessage("Start participation"),
         "startParticipationTracking":
@@ -674,9 +687,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Stop location sharing?"),
         "stopLocationWithoutParticipating":
             MessageLookupByLibrary.simpleMessage(
-                "Stop location without participating"),
-        "stopParticipationTracking":
-            MessageLookupByLibrary.simpleMessage("Stop participation tracking"),
+                "Stop location sharing without participating"),
+        "stopParticipationTracking": MessageLookupByLibrary.simpleMessage(
+            "Stop participation location sharing"),
         "stopTrackingTimeOut": m14,
         "submit": MessageLookupByLibrary.simpleMessage("Senden"),
         "symbols": MessageLookupByLibrary.simpleMessage("Symbols"),
@@ -704,7 +717,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "trackingPoints":
             MessageLookupByLibrary.simpleMessage("Recorded route points"),
         "trackingRestarted":
-            MessageLookupByLibrary.simpleMessage("Tracking restartet"),
+            MessageLookupByLibrary.simpleMessage("Location sharing restartet"),
         "train": MessageLookupByLibrary.simpleMessage("Train"),
         "trainlength": MessageLookupByLibrary.simpleMessage("Trainlength"),
         "tryOpenAppSettings": MessageLookupByLibrary.simpleMessage(

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
@@ -28,9 +27,9 @@ import '../widgets/data_widget_left_right_text.dart';
 import '../widgets/email_widget.dart';
 import '../widgets/phone_number.dart';
 import '../widgets/send_mail.dart';
+import '../widgets/settings_invisible_offline.dart';
 import 'bg_pin_dialog.dart';
 import 'bladeguard_on_site_page.dart';
-//import 'widgets/show_message_dialog.dart';
 
 class BladeGuardPage extends ConsumerStatefulWidget {
   const BladeGuardPage({super.key});
@@ -101,6 +100,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
           SliverToBoxAdapter(
             child: Column(
               children: [
+                const SettingsInvisibleOfflineWidget(),
                 const BladeGuardOnsite(),
                 if (networkConnected.connectivityStatus ==
                     ConnectivityStatus.online)

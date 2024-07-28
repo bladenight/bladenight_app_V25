@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../app_settings/app_constants.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import 'location_provider.dart';
 
@@ -42,5 +44,35 @@ class IsTracking extends _$IsTracking {
     HiveSettingsDB.setUserIsParticipant(userIsParticipant);
     state = await LocationProvider.instance.startTracking(userIsParticipant);
     return state;
+  }
+}
+
+@riverpod
+class AutoStopTracking extends _$AutoStopTracking {
+  @override
+  bool build() {
+    Hive.box(hiveBoxSettingDbName)
+        .watch(key: HiveSettingsDB.autoStopTrackingEnabledKey)
+        .listen((event) => state = event.value);
+    return HiveSettingsDB.autoStopTrackingEnabled;
+  }
+
+  void setValue(bool val) {
+    HiveSettingsDB.setAutoStopTrackingEnabled(val);
+  }
+}
+
+@riverpod
+class AutoStartTracking extends _$AutoStartTracking {
+  @override
+  bool build() {
+    Hive.box(hiveBoxSettingDbName)
+        .watch(key: HiveSettingsDB.autoStartTrackingEnabledKey)
+        .listen((event) => state = event.value);
+    return HiveSettingsDB.autoStartTrackingEnabled;
+  }
+
+  void setValue(bool val) {
+    HiveSettingsDB.setAutoStartTrackingEnabled(val);
   }
 }

@@ -21,7 +21,6 @@ class ShowOwnTrack extends _$ShowOwnTrack {
   }
 }
 
-
 @riverpod
 class ShowOwnColoredTrack extends _$ShowOwnColoredTrack {
   @override

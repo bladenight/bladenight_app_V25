@@ -504,7 +504,13 @@
   "mapFollow": "Suivi sur la carte",
   "menu": "Menu",
   "lead": "Procession Start / Fin",
-  "showOwnColoredTrack": "Colorize my track",
-  "mySpeed": "My speed on track"
+  "showOwnColoredTrack": "Coloriser ma trace",
+  "mySpeed": "Ma vitesse sur piste",
+  "automatedStopSettingText": "Arrêter automatiquement le partage de position",
+  "automatedStopSettingTitle": "Arrêter automatiquement le partage de position en fonction de l'événement",
+  "autoStartTracking": "Le partage de position a démarré automatiquement. Pour désactiver le comportement, accédez aux paramètres et désactivez le partage de position Auto-Start/Stop",
+  "autoStartTrackingTitle": "Le partage de position a démarré automatiquement...",
+  "autoStartTrackingInfo": "Démarrer automatiquement le partage de position",
+  "autoStartTrackingInfoTitle": "Lors du démarrage de BladeNight, il est possible de démarrer automatiquement le partage de position si l'application est ouverte. Dès que l'application est fermée ou que l'activité en arrière-plan n'est pas activée, le partage de position n'est pas activé. Si la fonction de partage de position démarre automatiquement lorsque l'application est ouverte ?"
 }
 

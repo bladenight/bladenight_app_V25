@@ -36,7 +36,6 @@ class UserSpeedPoint with UserSpeedPointMappable {
   List<LatLng> get latLngList => <LatLng>[latLng, previousLatLng];
 
   String toXML() {
-    final f = DateFormat('yyyy-MM-ddTHH:mm:ss');
     return '\t\t<trkpt lat="$latitude" lon="$longitude">\n'
         '\t\t\t<speed>${realSpeedKmh.toStringAsFixed(1)}</speed>\n'
         '\t\t</trkpt>\n';

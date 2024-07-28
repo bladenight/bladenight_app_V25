@@ -3,11 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
-import '../../../helpers/speed_to_color.dart';
 import '../../../helpers/timeconverter_helper.dart';
 import '../../../models/route.dart';
 import '../../../providers/active_event_provider.dart';

@@ -116,7 +116,7 @@ class RealtimeData extends _$RealtimeData {
   Future<RealtimeUpdate?> refresh({bool force = false}) async {
     var timeDiff = DateTime.now().difference(lastUpdate);
     BnLog.trace(
-        text: '${timeDiff.inSeconds} Lastupdt: $lastUpdate',
+        text: 'LastRealtimeUpdate ${timeDiff.inSeconds}s ago at: $lastUpdate',
         methodName: 'refresh',
         className: toString());
     if (!force && timeDiff < const Duration(seconds: 13)) {
@@ -124,14 +124,14 @@ class RealtimeData extends _$RealtimeData {
     }
     if (!_isOnline && timeDiff < const Duration(seconds: 50)) {
       BnLog.trace(
-          text: '${timeDiff.inSeconds} not online < 50 sec. : $lastUpdate',
+          text: '${timeDiff.inSeconds}s not online < 50 sec. : $lastUpdate',
           methodName: 'refresh',
           className: toString());
       return state;
     } else if (!_isOnline) {
       BnLog.trace(
           text:
-              '${timeDiff.inSeconds} not online more than 50 sec. : $lastUpdate',
+              '${timeDiff.inSeconds}s not online more than 50 sec. : $lastUpdate',
           methodName: 'refresh',
           className: toString());
       return null;

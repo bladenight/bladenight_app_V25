@@ -9,7 +9,6 @@ import 'logger.dart';
 
 class PreferencesHelper {
   static const String _friendPref = 'friendlist';
-  static const String _trackAutoStopPref = 'trackAutoStopPref';
   static const String _imagesAndLinksPref = 'imagesAndLinksPref';
 
   ///id for new friend increments automatic after get for deviceid
@@ -54,16 +53,6 @@ class PreferencesHelper {
     return finalFriendId;
   }
 
-  static Future<bool> getAutoStopFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    final bool? autoStop = prefs.getBool(_trackAutoStopPref);
-    return autoStop ?? true;
-  }
-
-  static void saveAutoStopToPrefs(bool autoStop) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setBool(_trackAutoStopPref, autoStop);
-  }
 
   static Future<ImageAndLinkList> getImagesAndLinksPref() async {
     if (!kIsWeb) BnLog.trace(text: 'Prefs get images and links');

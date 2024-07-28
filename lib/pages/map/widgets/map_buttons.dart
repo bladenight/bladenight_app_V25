@@ -85,7 +85,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           bottom: 40,
           child: Builder(builder: (context) {
             var isTracking = ref.watch(isTrackingProvider);
-            var autoStop = ref.watch(isAutoStopProvider);
+            var autoStop = ref.watch(autoStopTrackingProvider);
             var userParticipating = ref.watch(isUserParticipatingProvider);
             //for future implementations - if (isActive == EventStatus.confirmed) {
             return GestureDetector(

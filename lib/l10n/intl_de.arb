@@ -506,5 +506,11 @@
   "mapFollow": "Auf Karte verfolgen",
   "menu": "Auswahl",
   "showOwnColoredTrack": "Coloriere Route",
-  "mySpeed": "Meine Geschwindigkeit auf Route"
+  "mySpeed": "Meine Geschwindigkeit auf Route",
+  "automatedStopSettingText": "Tracking Auto-Stopp ",
+  "automatedStopSettingTitle": "Stoppe des Bladenight-Trackings automatisch.",
+  "autoStartTracking": "Tracking autom. gestartet während BladeNight - Autostart aktiv. Um dies zu deaktivieren, bitte Auto-Start/Stop-Tracking in Einstellung ausschalten",
+  "autoStartTrackingTitle": "Tracking automatisch gestartet...",
+  "autoStartTrackingInfo": "Starte Standortfreigabe automatisch",
+  "autoStartTrackingInfoTitle": "Es besteht die Möglichkeit beim Start der BladeNight, die Standortfreigabe automatisch zu starten, wenn die App geöffnet ist. Sobald die App geschlossen wurde oder die Hintergrundaktivität nicht freigegeben ist, wird auch keine Standortfreigabe aktiviert. Soll die Funktion Standortfreigabe automatisch starten, wenn die App im geöffnet ist aktiviert werden? "
 }

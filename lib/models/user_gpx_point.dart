@@ -44,12 +44,14 @@ class UserTrackPoints with UserTrackPointsMappable {
 
   //String toJson() => jsonEncode(utps);
   String toXML() {
-    var str = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'
-        '<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="BladenightAPP"'
-        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+    var str = r'<?xml version="1.0" encoding="utf-8" standalone="yes"?>'
+        '<gpx version="1.1" '
+        'creator="BladenightApp https://www.bladenight.app/" '
+        'xmlns="http://www.topografix.com/GPX/1/1" '
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
         'xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">'
-        '<trk>\n'
-        '\t<name>Bladenight Aufzeichnung vom ${DateTime.now().toIso8601String()}</name>\n'
+        '<name>Bladenight Aufzeichnung vom ${DateTime.now().toIso8601String()}</name>\n'
+        '\t<trk>\n'
         '\t\t<trkseg>\n';
     for (var tp in utps) {
       str = '$str${tp.toXML()}';
