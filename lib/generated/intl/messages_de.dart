@@ -185,7 +185,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "automatedStopSettingText":
             MessageLookupByLibrary.simpleMessage("Tracking Auto-Stopp "),
         "automatedStopSettingTitle": MessageLookupByLibrary.simpleMessage(
-            "Stoppe des Bladenight-Trackings automatisch."),
+            "Stoppe das Bladenight-Trackings automatisch. (Eventende oder Absage)"),
         "becomeBladeguard":
             MessageLookupByLibrary.simpleMessage("Werde Bladeguard"),
         "behindMe": MessageLookupByLibrary.simpleMessage("hinter mir"),

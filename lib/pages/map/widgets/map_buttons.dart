@@ -74,7 +74,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   @override
   Widget build(BuildContext context) {
     CameraFollow followLocationState = ref.watch(cameraFollowLocationProvider);
-    var height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Stack(fit: StackFit.passthrough, children: [
         //#######################################################################
@@ -534,7 +533,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             right: kIsWeb ? 10 : 10,
             height: 30,
             child: Builder(builder: (context) {
-              var color = CupertinoTheme.of(context).primaryColor;
               return GestureDetector(
                   onTap: () {
                     setState(() {

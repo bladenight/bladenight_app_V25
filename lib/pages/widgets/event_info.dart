@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_context/riverpod_context.dart';
@@ -36,7 +35,6 @@ class EventInfo extends ConsumerStatefulWidget {
 class _EventInfoState extends ConsumerState<EventInfo>
     with WidgetsBindingObserver {
   Timer? _updateTimer;
-  Orientation? _currentOrientation;
   late var _width = double.infinity;
 
   //late var _height = double.infinity;
@@ -60,18 +58,6 @@ class _EventInfoState extends ConsumerState<EventInfo>
     WidgetsBinding.instance.removeObserver(this);
     _updateTimer?.cancel();
     super.dispose();
-  }
-
-  @override
-  void didChangeMetrics() {
-    _currentOrientation = MediaQuery.of(context).orientation;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        _currentOrientation = MediaQuery.of(context).orientation;
-        _width = MediaQuery.of(context).size.width;
-        //_height = MediaQuery.of(context).size.height;
-      });
-    });
   }
 
   @override

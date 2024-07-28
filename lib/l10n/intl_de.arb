@@ -508,7 +508,7 @@
   "showOwnColoredTrack": "Coloriere Route",
   "mySpeed": "Meine Geschwindigkeit auf Route",
   "automatedStopSettingText": "Tracking Auto-Stopp ",
-  "automatedStopSettingTitle": "Stoppe des Bladenight-Trackings automatisch.",
+  "automatedStopSettingTitle": "Stoppe das Bladenight-Trackings automatisch. (Eventende oder Absage)",
   "autoStartTracking": "Tracking autom. gestartet während BladeNight - Autostart aktiv. Um dies zu deaktivieren, bitte Auto-Start/Stop-Tracking in Einstellung ausschalten",
   "autoStartTrackingTitle": "Tracking automatisch gestartet...",
   "autoStartTrackingInfo": "Starte Standortfreigabe automatisch",

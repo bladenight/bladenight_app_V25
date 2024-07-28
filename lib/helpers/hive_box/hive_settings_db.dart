@@ -558,7 +558,6 @@ class HiveSettingsDB {
 
   ///get Tracking is Active means locations updating is active
   static bool get trackingFirstStart {
-    if (kDebugMode) return true;
     return _hiveBox.get(trackingFirstStartKey, defaultValue: true);
   }
 
