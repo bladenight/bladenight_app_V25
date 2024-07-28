@@ -1,21 +1,23 @@
-/*import 'package:background_fetch/background_fetch.dart';
-import '../logger.dart';
+import 'package:background_fetch/background_fetch.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:hive_flutter/adapters.dart';
-import 'package:latlong2/latlong.dart' as ll;
+import 'package:latlong2/latlong.dart';
 
+import 'app_settings/app_constants.dart';
 import 'helpers/deviceid_helper.dart';
+import 'helpers/double_helper.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
-import 'main.mapper.g.dart';
+import 'helpers/logger.dart';
+import 'helpers/notification/notification_helper.dart';
 import 'models/location.dart';
 import 'models/realtime_update.dart';
-import 'providers/wamp_providers.dart';
 
 /// Receive events from BackgroundGeolocation in Headless state.
 @pragma('vm:entry-point')
 void backgroundGeolocationHeadlessTask(bg.HeadlessEvent headlessEvent) async {
-  if (!kIsWeb) FLog.info(text: '📬 --> $headlessEvent');
+  BnLog.info(text: '📬 --> $headlessEvent');
   print('📬 --> $headlessEvent');
 
   switch (headlessEvent.name) {
@@ -66,7 +68,12 @@ void backgroundGeolocationHeadlessTask(bg.HeadlessEvent headlessEvent) async {
       break;
     case bg.Event.GEOFENCE:
       bg.GeofenceEvent geofenceEvent = headlessEvent.event;
+      NotificationHelper().showString(id: DateTime
+          .now()
+          .hashCode, text: 'Geofence erkannt');
       print(geofenceEvent);
+      BnLog.info(text: 'geofenceEvent');
+
       break;
     case bg.Event.GEOFENCESCHANGE:
       bg.GeofencesChangeEvent event = headlessEvent.event;
@@ -129,32 +136,37 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
   BackgroundFetch.finish(taskId);
 }
 
-Future<bool> _sendLocationWhenTracking(location) async {
+Future<bool> _sendLocationWhenTracking(bg.Location location) async {
   try {
     await Hive.initFlutter();
-    await Hive.openBox('settings');
+    await Hive.openBox(hiveBoxSettingDbName);
     var isTracking = HiveSettingsDB.trackingActive;
     if (!isTracking) return true;
-    await WampRpcHandler.instance
-        .callRpc<RealtimeUpdate>(
-          WampRpcHandler.getrealtimeupdate,
-          Mapper.toMap(
-            LocationInfo(
-                coords: ll.LatLng(
-                    location.coords.latitude, location.coords.longitude),
-                deviceId: await DeviceId.getId,
-                isParticipating: HiveSettingsDB.userIsParticipant,
-                specialFunction: HiveSettingsDB.wantSeeFullOfProcession
-                    ? HiveSettingsDB.specialCodeValue
-                    : null,
-                realSpeed: location.coords.speed),
-          ),
-        )
-        .timeout(const Duration(seconds: 15));
+
+    await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
+      LocationInfo(
+          //location creation timestamp
+          locationTimeStamp:
+              DateTime.now().millisecondsSinceEpoch - location.age,
+          //6 digits => 1 m location accuracy
+          coords: LatLng(location.coords.latitude.toShortenedDouble(6),
+              location.coords.longitude.toShortenedDouble(6)),
+          deviceId: DeviceId.appId,
+          isParticipating: HiveSettingsDB.userIsParticipant,
+          specialFunction: HiveSettingsDB.specialCodeValue != 0
+              ? HiveSettingsDB.specialCodeValue
+              : null,
+          userSpeed: location.coords.speed < 0
+              ? 0.0
+              : location.coords.speed.toShortenedDouble(1),
+          realSpeed: location.coords.speed < 0
+              ? 0.0
+              : (location.coords.speed * 3.6).toShortenedDouble(1),
+          accuracy: location.coords.accuracy),
+    ));
     HiveSettingsDB.setOdometerValue(location.odometer);
   } catch (e) {
-    print('Error sendLocation $e');
+    BnLog.error(text: 'Error sendLocation $e', className: 'headless_task');
   }
   return true;
 }
-*/
