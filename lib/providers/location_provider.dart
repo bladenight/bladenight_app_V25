@@ -437,7 +437,7 @@ class LocationProvider with ChangeNotifier {
     SendToWatch.setUserSpeed('${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
 
     //Create poly lines for user tracking
-    int maxSize = 7;
+    int maxSize = 500;
     if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
       if (_userGpxPoints.length > maxSize) {
         var smallTrackPointList = <LatLng>[];
@@ -493,19 +493,20 @@ class LocationProvider with ChangeNotifier {
           counter = counter + divider.toInt();
         }
         //avoid jumping of tracking if list is large
+        //changed to add only last single point to list
 
-        var last6userGPXPoints =
-        _userGpxPoints.reversed.take(6).toList(growable: false);
-        for (int i = 5; i >= 0; i--) {
+        var last2userGPXPoints =
+        _userGpxPoints.reversed.take(2).toList(growable: false);
+        for (int i = 1; i >= 0; i--) {
           var lastSmTrackPointListEntry = smallTrackPointList.lastSpeedPoint;
-          if (last6userGPXPoints[i].latLng ==
+          if (last2userGPXPoints[i].latLng ==
               lastSmTrackPointListEntry!.latLng) {
             continue;
           }
           smallTrackPointList.add(
-              last6userGPXPoints[i].latitude,
-              last6userGPXPoints[i].longitude,
-              last6userGPXPoints[i].realSpeedKmh,
+              last2userGPXPoints[i].latitude,
+              last2userGPXPoints[i].longitude,
+              last2userGPXPoints[i].realSpeedKmh,
               lastSmTrackPointListEntry.latLng);
         }
         _userSpeedPoints = smallTrackPointList;
