@@ -34,7 +34,11 @@ enum WampConnectionState {
 class WampV2 {
   static final WampV2 instance = WampV2._();
 
-  final _internetConnChecker = InternetConnection();
+  final internetConnChecker = InternetConnection.createInstance(
+    customCheckOptions: [
+      InternetCheckOption(uri: WampV2.getServerUri()),
+    ],
+  );
   var _busyTimeStamp = DateTime.now();
   var _lock = Lock();
   WebSocketChannel? channel; //initialize a websocket channel
@@ -53,6 +57,7 @@ class WampV2 {
   final Map<int, BnWampMessage> calls = {};
 
   Queue<BnWampMessage> queue = Queue();
+  Timer? _liveCycleTimer = null;
   var wampCallStreamController = StreamController<BnWampMessage>.broadcast();
 
   var eventStreamController = StreamController<dynamic>.broadcast();
@@ -82,7 +87,7 @@ class WampV2 {
     BnLog.info(text: 'Wamp Init', methodName: '_init', className: toString());
     if (!kIsWeb) {
       _icCheckerSubscription =
-          _internetConnChecker.onStatusChange.listen((InternetStatus result) {
+          internetConnChecker.onStatusChange.listen((InternetStatus result) {
         if (result == InternetStatus.connected) {
           _isConnectedToInternet = true;
           BnLog.debug(
@@ -99,6 +104,7 @@ class WampV2 {
         }
       });
     }
+    _connLoop(); //
     runner();
   }
 
@@ -131,13 +137,12 @@ class WampV2 {
         : WampConnectionState.failed;
   }
 
-  void refresh() async {
-    if (!kIsWeb) {
-      BnLog.info(
-          text: 'Wamp refresh after offline',
-          methodName: 'refresh',
-          className: toString());
-    }
+  Future<WampConnectionState> refresh() async {
+    BnLog.info(
+        text: 'Wamp refresh after offline',
+        methodName: 'refresh',
+        className: toString());
+    return _initWamp();
   }
 
   ///called from App and put to queue
@@ -205,6 +210,19 @@ class WampV2 {
         HiveSettingsDB.setAppOutDated(!shkRes.status);
       }
     }
+  }
+
+  void _connLoop() async {
+    _liveCycleTimer =
+        Timer.periodic(const Duration(milliseconds: 500), (timer) async {
+      while (_isWebsocketRunning == false) {
+        if (_isConnectedToInternet == false) {
+          await Future.delayed(const Duration(milliseconds: 250));
+          continue;
+        }
+        var _ = await _initWamp();
+      }
+    });
   }
 
   void runner() async {
@@ -293,6 +311,9 @@ class WampV2 {
               WampMessageTypeHelper.getMessageType(wampMessage[0]);
 
           if (wampMessageType == WampMessageType.welcome) {
+            _isWebsocketRunning = true;
+            _wampConnectedStreamController.sink.add(true);
+            _lastConnectionStatus = true;
             welcomeCompleter.complete();
             // [WELCOME, Session|id, Details|dict]
             return;
@@ -427,9 +448,6 @@ class WampV2 {
           }
         },
       );
-      _isWebsocketRunning = true;
-      _wampConnectedStreamController.sink.add(true);
-      _lastConnectionStatus = true;
       await welcomeCompleter.future;
       _connectionErrorLogged = false;
       return true;
@@ -510,5 +528,22 @@ class WampV2 {
         } catch (_) {}
       }
     }
+  }
+
+  static Uri getServerUri() {
+    String link = '';
+    if (HiveSettingsDB.useCustomServer) {
+      link = HiveSettingsDB.customServerAddress;
+    } else if ((kDebugMode && localTesting) && !kIsWeb) {
+      link = Platform.isAndroid
+          ? defaultTestWampAdressAndroid
+          : defaultTestWampAdressOther; //defaultTestWampAddressOther;
+    } else if (kIsWeb) {
+      link = defaultWampClientAux;
+    } else {
+      link = defaultWampAddress;
+    }
+    Uri linkUri = Uri.parse(link);
+    return linkUri;
   }
 }

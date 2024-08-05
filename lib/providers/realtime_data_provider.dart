@@ -9,6 +9,8 @@ import '../helpers/wamp/subscribe_message.dart';
 import '../models/realtime_update.dart';
 import '../wamp/wamp_v2.dart';
 import 'is_tracking_provider.dart';
+import 'location_provider.dart';
+import 'network_connection_provider.dart';
 
 part 'realtime_data_provider.g.dart';
 
@@ -39,18 +41,27 @@ class RealtimeData extends _$RealtimeData {
         _realTimeDataSubscriptionId = 0;
       }
     });
-    _onlineListener =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
-      switch (status) {
-        case InternetStatus.connected:
-          _isOnline = true;
-          break;
-        case InternetStatus.disconnected:
-          _isOnline = false;
-          _realTimeDataSubscriptionId = 0;
-          break;
-      }
-    });
+    var networkProviderStatus =
+        ref.watch(networkAwareProvider).connectivityStatus;
+    switch (networkProviderStatus) {
+      case ConnectivityStatus.online:
+        _isOnline = true;
+        break;
+      case ConnectivityStatus.error:
+        _isOnline = false;
+        _realTimeDataSubscriptionId = 0;
+        break;
+      case ConnectivityStatus.serverReachable:
+        _isOnline = true;
+        break;
+      case ConnectivityStatus.serverNotReachable:
+      case ConnectivityStatus.disconnected:
+        _isOnline = false;
+        _realTimeDataSubscriptionId = 0;
+        break;
+      case ConnectivityStatus.unknown:
+        break;
+    }
 
     _isTracking = ref.watch(isTrackingProvider);
     _realTimeDataStreamListener =
@@ -143,6 +154,8 @@ class RealtimeData extends _$RealtimeData {
       if (_maxFails == 0) {
         //trigger only once a time
         BnLog.warning(text: 'RealtimeDataprovider exceed maximum ');
+        await Future.delayed(Duration(seconds: 15));
+        _maxFails = 3;
       }
       if (_maxFails <= 0) {
         return null;

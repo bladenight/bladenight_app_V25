@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:universal_io/io.dart';
 
+import '../app_settings/server_connections.dart';
+import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
 import '../wamp/wamp_v2.dart';
 
@@ -33,6 +35,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
       StreamController<ConnectivityStatus>();
   StreamController<bool> serverConnectionStatusController =
       StreamController<bool>();
+  InternetConnection? _internetConnection;
 
   static bool _wasOffline = false;
 
@@ -50,8 +53,9 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   }
 
   _init() async {
+    _internetConnection = WampV2.instance.internetConnChecker;
     _icCheckerSubscription =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
+        _internetConnection!.onStatusChange.listen((InternetStatus status) {
       switch (status) {
         case InternetStatus.connected:
           // The internet is now connected
@@ -86,6 +90,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   void dispose() {
     _icCheckerSubscription?.cancel();
     _isServerConnectedSubscription?.cancel();
+    _internetConnection = null;
     super.dispose();
   }
 
@@ -98,7 +103,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
 
     bool isOnline = false;
     try {
-      isOnline = await InternetConnection()
+      isOnline = await _internetConnection!
           .hasInternetAccess; //; await InternetAddress.lookup('skatemunich.de');
     } on SocketException catch (e) {
       if (!kIsWeb) {
@@ -112,7 +117,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     }
     if (isOnline == true) {
       if (_wasOffline == true) {
-        WampV2.instance.refresh();
+        await WampV2.instance.refresh();
         _wasOffline = false;
       }
       state = NetworkStateModel(

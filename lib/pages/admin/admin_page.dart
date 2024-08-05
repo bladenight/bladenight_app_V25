@@ -232,12 +232,10 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                                 mode: status)
                             .toMap());
                   } catch (e) {
-                    if (!kIsWeb) {
                       BnLog.error(
                           text: 'Error ProcessionMode',
                           className: toString(),
                           methodName: 'Adminpage ProcessionMode');
-                    }
                   }
 
                   setState(() {

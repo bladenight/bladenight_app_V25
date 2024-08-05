@@ -71,7 +71,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Teile deinen Standort um den Bladenight-Skaterzug  und die Länge genauer zu ermitteln und finde Freunde. Empfehlung &quot;Beim Verwenden&quot; erlauben</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Um Akku zu sparen wird die Bewegung des Telefones genutzt und Location nur bei Bewegung aktiviert </string>
+	<string>Um Akku zu sparen wird die Bewegung des Telefones genutzt und der Standort nur bei Bewegung aktiviert </string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Das Mikrofon wird won dieser App nicht benutzt - die Anfrage kann verneint werden.</string>
 	<key>UIBackgroundModes</key>
@@ -106,13 +106,7 @@
 	</dict>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_mp-connection._tcp</string>
-	</array>
 	<key>UIRequiresPersistentWiFi</key>
 	<true/>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Um Freunde zu direkt zu koppeln wird Bluetooth benötigt</string>
 </dict>
 </plist>

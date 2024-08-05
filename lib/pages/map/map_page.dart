@@ -16,6 +16,7 @@ import '../../helpers/logger.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
+import '../../providers/active_event_provider.dart';
 import '../../providers/active_event_route_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/map/use_open_street_map_provider.dart';
@@ -135,7 +136,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               onPointerDown: (e, l) => _onPointerDown(e, l),
               onPointerUp: (e, l) => _onPointerUp(e, l),
               //onPositionChanged: (p, g) => _onPositionChanged(p, g),
-              /*cameraConstraint: osmEnabled ||
+              cameraConstraint: osmEnabled ||
                       ref.watch(activeEventProvider).hasSpecialStartPoint
                   ? CameraConstraint.contain(
                       bounds: MapSettings.mapOnlineBoundaries)
@@ -144,7 +145,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all,
                 enableMultiFingerGestureRace: true,
-              ),*/
+              ),
               onTap: (_, __) => _popupController.hideAllPopups(),
             ),
             children: [

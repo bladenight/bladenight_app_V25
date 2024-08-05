@@ -84,7 +84,7 @@ class LocationProvider with ChangeNotifier {
 
   bool get isMoving => _isMoving;
 
-  bool _networkConnected = true;
+  bool _networkConnected = WampV2.instance.webSocketIsConnected;
 
   bool get networkConnected => _networkConnected;
 
@@ -198,7 +198,7 @@ class LocationProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    LocationStore.saveUserTrackPointList(_userGpxPoints);
+    LocationStore.saveUserTrackPointList(_userGpxPoints, DateTime.now());
     _userTrackPointsStreamController.close();
     _trainHeadStreamController.close();
     _userPositionStreamController.close();
@@ -417,7 +417,8 @@ class LocationProvider with ChangeNotifier {
     if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
       _userLatLngList
           .add(LatLng(location.coords.latitude, location.coords.longitude));
-    } else if (MapSettings.showOwnTrack && MapSettings.showOwnColoredTrack) {
+    }
+    if (MapSettings.showOwnTrack) {
       var userTrackingPoint = UserGpxPoint(
           location.coords.latitude,
           location.coords.longitude,
@@ -441,7 +442,7 @@ class LocationProvider with ChangeNotifier {
     SendToWatch.setUserSpeed('${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
 
     //Create poly lines for user tracking
-    int maxSize = 500;
+    int maxSize = 250;
     if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
       if (_userGpxPoints.length > maxSize) {
         var smallTrackPointList = <LatLng>[];
@@ -453,7 +454,7 @@ class LocationProvider with ChangeNotifier {
           counter = counter + divider.toInt();
         }
         //avoid jumping of tracking if list is large
-        var last5 = _userGpxPoints.reversed.take(maxSize ~/ 10);
+        var last5 = _userGpxPoints.reversed.take(2).toList(growable: false);
         for (var last in last5) {
           smallTrackPointList.add(LatLng(last.latitude, last.longitude));
         }
@@ -557,7 +558,7 @@ class LocationProvider with ChangeNotifier {
 
   _onConnectionChange(bg.ConnectivityChangeEvent event) {
     BnLog.debug(text: 'On ConnectivityChange  $event');
-    _networkConnected = event.connected;
+    //_networkConnected = event.connected;
   }
 
   void _getHeartBeatLocation() async {
@@ -633,7 +634,6 @@ class LocationProvider with ChangeNotifier {
     _isTracking = false;
     _lastKnownPoint = null;
     setUpdateTimer(false);
-    WakelockPlus.disable();
     if (HiveSettingsDB.useAlternativeLocationProvider) {
       _realUserSpeedKmh = null;
       _userLatLng = null;
@@ -647,7 +647,7 @@ class LocationProvider with ChangeNotifier {
       }
       SendToWatch.setIsLocationTracking(false);
       HiveSettingsDB.setTrackingActive(false);
-      LocationStore.saveUserTrackPointList(_userGpxPoints);
+      LocationStore.saveUserTrackPointList(_userGpxPoints, DateTime.now());
     } else {
       bg.BackgroundGeolocation.stop().then((bg.State state) async {
         BnLog.info(
@@ -666,8 +666,9 @@ class LocationProvider with ChangeNotifier {
         }
         SendToWatch.setIsLocationTracking(false);
         HiveSettingsDB.setTrackingActive(false);
-        LocationStore.saveUserTrackPointList(_userGpxPoints);
+        LocationStore.saveUserTrackPointList(_userGpxPoints, DateTime.now());
         await startStopGeoFencing();
+        await WakelockPlus.disable();
       }).catchError((error) {
         BnLog.error(text: 'Stopping location error: $error');
       });
@@ -909,7 +910,7 @@ class LocationProvider with ChangeNotifier {
           if (!_isTracking) {
             return;
           }
-          LocationStore.saveUserTrackPointList(_userGpxPoints);
+          LocationStore.saveUserTrackPointList(_userGpxPoints, DateTime.now());
         },
       );
     } else {
@@ -1133,6 +1134,7 @@ class LocationProvider with ChangeNotifier {
     }
     _lastLocationRealtimeRequest = dtNow;
 
+    /* removed because no request -> no connection
     if (!_networkConnected) {
       BnLog.trace(
         className: toString(),
@@ -1140,7 +1142,7 @@ class LocationProvider with ChangeNotifier {
         text: 'no network ignore send location',
       );
       return;
-    }
+    }*/
     //only result of this message contains friend position -
     //requested [RealTimeUpdates] with
     update = await RealtimeUpdate.wampUpdate(MapperContainer.globals.toMap(
@@ -1244,7 +1246,8 @@ class LocationProvider with ChangeNotifier {
       } else {
         _realUserSpeedKmh = null;
       }
-      if (locData == null && _networkConnected) {
+      if (locData == null) {
+        // &&_networkConnected) {
         //update procession when no location data were sent
         var update = await RealtimeUpdate.wampUpdate();
         BnLog.trace(
@@ -1333,6 +1336,10 @@ class LocationProvider with ChangeNotifier {
         //check event is running for a minimum interval to avoid stop of auto tracking
         if (_userReachedFinishDateTime == null) {
           _userReachedFinishDateTime = DateTime.now();
+          var isTracking = await stopTracking();
+          if (isTracking) {
+            return;
+          }
           if (HiveSettingsDB.autoStopTrackingEnabled) {
             NotificationHelper().showString(
                 id: DateTime.now().hashCode,
@@ -1346,7 +1353,6 @@ class LocationProvider with ChangeNotifier {
                 className: 'locationProvider',
                 methodName: 'checkUserFinishedOrEndEvent',
                 text: 'User reached finish - auto stop');
-            stopTracking();
           } else {
             NotificationHelper().showString(
                 id: DateTime.now().hashCode,
@@ -1374,7 +1380,8 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  void _checkStopTrackingForce(Event activeEventData, Duration eventRuntime) {
+  void _checkStopTrackingForce(
+      Event activeEventData, Duration eventRuntime) async {
     if (DateTime.now().difference(_lastForceStop) <
         const Duration(minutes: 60)) {
       return;
@@ -1385,8 +1392,8 @@ class LocationProvider with ChangeNotifier {
         HiveSettingsDB.autoStopTrackingEnabled) {
       _lastForceStop = DateTime.now();
       _userReachedFinishDateTime == null;
-      stopTracking();
-
+      var isTracking = await stopTracking();
+      if (isTracking) return;
       //Alert for overtime or finish event
       if (activeEventData.status == EventStatus.finished) {
         if (_isInBackground) {
@@ -1412,7 +1419,9 @@ class LocationProvider with ChangeNotifier {
     if (maxDuration == 0) return;
     if (eventRuntime.inMinutes >= maxDuration && _isTracking) {
       _lastForceStop = DateTime.now();
-      stopTracking();
+      _userReachedFinishDateTime == null;
+      var isTracking = await stopTracking();
+      if (isTracking) return;
       if (_isInBackground) {
         NotificationHelper().showString(
             id: DateTime.now().hashCode,
@@ -1473,7 +1482,7 @@ class LocationProvider with ChangeNotifier {
       }
       _userGpxPoints.clear();
       _userSpeedPoints.clear();
-      LocationStore.clearTrackPointStore();
+      LocationStore.clearTrackPointStoreForDate(DateTime.now());
       return odoResetResult == null ? false : true;
     } catch (e) {
       if (!kIsWeb) {
@@ -1482,6 +1491,11 @@ class LocationProvider with ChangeNotifier {
       }
       return false;
     }
+  }
+
+  Future<void> resetTrackPointsStore() async {
+    await resetTrackPointsStore();
+    LocationStore.clearTrackPointStore();
   }
 
   void refreshRealtimeData() {
@@ -1543,6 +1557,23 @@ class LocationProvider with ChangeNotifier {
             Navigator.of(context).pop();
           });
     }
+  }
+
+  Future clearAllTrackPoints(BuildContext context) async {
+    QuickAlert.show(
+        context: navigatorKey.currentContext!,
+        type: QuickAlertType.warning,
+        showCancelBtn: true,
+        title: Localize.current.resetTrackPointsStoreTitle,
+        text: '${Localize.current.resetTrackPointsStore}',
+        confirmBtnText: Localize.current.yes,
+        cancelBtnText: Localize.current.cancel,
+        onConfirmBtnTap: () {
+          resetTrackPointsStore();
+          notifyListeners();
+          if (!context.mounted) return;
+          Navigator.of(context).pop();
+        });
   }
 
   void _onGeoFenceEvent(bg.GeofenceEvent event) async {

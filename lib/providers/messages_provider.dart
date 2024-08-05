@@ -137,6 +137,7 @@ final filteredMessages = Provider<List<ExternalAppMessage>>((ref) {
   final searchStringProvider = ref.watch(messageNameProvider);
 
   if (searchStringProvider.isEmpty) {
+    messages.sort((a,b)=> a.timeStamp.compareTo(b.timeStamp));
     return messages;
   }
 
@@ -144,7 +145,8 @@ final filteredMessages = Provider<List<ExternalAppMessage>>((ref) {
       f.body.toLowerCase().contains(searchStringProvider.toLowerCase()) ||
       f.title.toLowerCase().contains(searchStringProvider.toLowerCase()));
 
-  return filteredMessagesList.toList();
+  var fMsgList =  filteredMessagesList.toList()..sort((a,b)=> a.timeStamp.compareTo(b.timeStamp));
+  return fMsgList;
 });
 
 final messageNameProvider = StateProvider<String>((value) => '');
