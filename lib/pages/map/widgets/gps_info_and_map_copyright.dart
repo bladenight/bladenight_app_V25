@@ -6,6 +6,7 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
     as bg;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../generated/l10n.dart';
@@ -17,7 +18,7 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/compass_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
-import '../../widgets/scroll_quick_alert.dart';
+import '../../../providers/settings/me_color_provider.dart';
 import 'open_street_map_copyright.dart';
 
 ///Shows a row at bottom with OSM copyright and GPS speed widget
@@ -136,20 +137,21 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
                                           : Icon(CupertinoIcons.gauge,
                                               color: context
                                                       .watch(isMovingProvider)
-                                                  ? CupertinoTheme.of(context)
-                                                      .primaryContrastingColor
+                                                  ? ref.watch(meColorProvider)
                                                   : CupertinoTheme.of(context)
                                                       .primaryColor),
                                       ref.watch(isUserParticipatingProvider)
                                           ? ImageIcon(
-                                              const AssetImage(
-                                                  'assets/images/skater_icon_256.png'),
+                                              context.watch(isMovingProvider)
+                                                  ? const AssetImage(
+                                                      'assets/images/skater_icon_256.png')
+                                                  : const AssetImage(
+                                                      'assets/images/skater_icon_256_circle.png'),
                                               color: context
                                                       .watch(isMovingProvider)
-                                                  ? CupertinoTheme.of(context)
-                                                      .primaryContrastingColor
-                                                  : CupertinoTheme.of(context)
-                                                      .primaryColor,
+                                                  ? ref.watch(meColorProvider)
+                                                  :  CupertinoTheme.of(context)
+                                                  .primaryColor,
                                             )
                                           : const Icon(Icons.gps_fixed_sharp),
                                     ]),
@@ -168,7 +170,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
                                             .resetOdoMeterAndRoutePoints(
                                                 context);
                                       } else {
-                                        await ScrollQuickAlert.show(
+                                        await QuickAlert.show(
                                             context: context,
                                             showCancelBtn: true,
                                             type: QuickAlertType.info,
@@ -201,7 +203,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
                                       false) {
                                 return FloatingActionButton.extended(
                                   onPressed: () async {
-                                    await ScrollQuickAlert.show(
+                                    await QuickAlert.show(
                                       context: context,
                                       showCancelBtn: true,
                                       type: QuickAlertType.warning,

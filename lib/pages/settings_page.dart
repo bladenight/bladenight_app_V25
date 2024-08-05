@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/background_location_helper.dart';
@@ -30,7 +30,6 @@ import '../providers/settings/me_color_provider.dart';
 import '../wamp/wamp_v2.dart';
 import 'bladeguard/bladeguard_page.dart';
 import 'widgets/one_signal_id_widget.dart';
-import 'widgets/scroll_quick_alert.dart';
 import 'widgets/settings_invisible_offline.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -199,36 +198,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ),
                       ]),
                   CupertinoFormSection(
-                      header: Text(Localize.of(context).setDarkModeTitle),
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: DataLeftRightContent(
-                            descriptionLeft: Localize.of(context).setDarkMode,
-                            descriptionRight: '',
-                            rightWidget: CupertinoSwitch(
-                              onChanged: (val) async {
-                                if (val) {
-                                  setState(() {
-                                    HiveSettingsDB.setAdaptiveThemeMode(
-                                        AdaptiveThemeMode.dark);
-                                  });
-                                  CupertinoAdaptiveTheme.of(context).setDark();
-                                } else {
-                                  setState(() {
-                                    HiveSettingsDB.setAdaptiveThemeMode(
-                                        AdaptiveThemeMode.light);
-                                  });
-                                  CupertinoAdaptiveTheme.of(context).setLight();
-                                }
-                              },
-                              value: HiveSettingsDB.adaptiveThemeMode ==
-                                  AdaptiveThemeMode.dark,
-                            ),
-                          ),
-                        ),
-                      ]),
-                  CupertinoFormSection(
                       header: Text(Localize.of(context).setIconSizeTitle),
                       children: <Widget>[
                         Text(
@@ -259,6 +228,55 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                     color: ref.watch(meColorProvider)),
                               ),
                             ]),
+                      ]),
+                  CupertinoFormSection(
+                      header: Text(Localize.of(context).setDarkModeTitle),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).setDarkMode,
+                            descriptionRight: '',
+                            rightWidget: CupertinoSwitch(
+                              onChanged: (val) async {
+                                if (val) {
+                                  setState(() {
+                                    HiveSettingsDB.setAdaptiveThemeMode(
+                                        AdaptiveThemeMode.dark);
+                                  });
+                                  CupertinoAdaptiveTheme.of(context).setDark();
+                                } else {
+                                  setState(() {
+                                    HiveSettingsDB.setAdaptiveThemeMode(
+                                        AdaptiveThemeMode.light);
+                                  });
+                                  CupertinoAdaptiveTheme.of(context).setLight();
+                                }
+                              },
+                              value: HiveSettingsDB.adaptiveThemeMode ==
+                                  AdaptiveThemeMode.dark,
+                            ),
+                          ),
+                        ),
+                      ]),
+                  CupertinoFormSection(
+                      header: Text(Localize.of(context).allowWakeLockHeader),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).allowWakeLock,
+                            descriptionRight: '',
+                            rightWidget: CupertinoSwitch(
+                              onChanged: (val) {
+                                HiveSettingsDB.setWakeLockEnabled(val);
+                                WakelockPlus.toggle(enable: val);
+                                setState(() {});
+                              },
+                              value: HiveSettingsDB.wakeLockEnabled,
+                            ),
+                          ),
+                        ),
                       ]),
                   CupertinoFormSection(
                       header:
@@ -369,6 +387,29 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             ),
                           ),
                         ]),
+                  CupertinoFormSection(
+                      header: Text(
+                          Localize.of(context).fitnessPermissionSettingsText),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: DataLeftRightContent(
+                            descriptionLeft: Localize.of(context)
+                                .fitnessPermissionSwitchSettingsText,
+                            descriptionRight: '',
+                            rightWidget: CupertinoSwitch(
+                              onChanged: (val) {
+                                HiveSettingsDB.setIsMotionDetectionDisabled(
+                                    val);
+                                bg.BackgroundGeolocation.setConfig(bg.Config(
+                                    disableMotionActivityUpdates: val));
+                                setState(() {});
+                              },
+                              value: HiveSettingsDB.isMotionDetectionDisabled,
+                            ),
+                          ),
+                        ),
+                      ]),
                   if (!kIsWeb)
                     CupertinoFormSection(
                       header:
@@ -564,7 +605,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         child: Text(
                                             Localize.of(context).setClearLogs),
                                         onPressed: () async {
-                                          await ScrollQuickAlert.show(
+                                          await QuickAlert.show(
                                               context: context,
                                               showCancelBtn: true,
                                               type: QuickAlertType.warning,
@@ -625,60 +666,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 ),
                               ),
 
-                              CupertinoFormSection(
-                                  header: Text(
-                                      Localize.of(context).allowWakeLockHeader),
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, right: 20),
-                                      child: DataLeftRightContent(
-                                        descriptionLeft:
-                                            Localize.of(context).allowWakeLock,
-                                        descriptionRight: '',
-                                        rightWidget: CupertinoSwitch(
-                                          onChanged: (val) {
-                                            HiveSettingsDB.setWakeLockEnabled(
-                                                val);
-                                            Wakelock.toggle(enable: val);
-                                            setState(() {});
-                                          },
-                                          value: HiveSettingsDB.wakeLockEnabled,
-                                        ),
-                                      ),
-                                    ),
-                                  ]),
                               const SizedBox(
                                 height: 15,
                               ),
-                              CupertinoFormSection(
-                                  header: Text(Localize.of(context)
-                                      .fitnessPermissionSettingsText),
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, right: 20),
-                                      child: DataLeftRightContent(
-                                        descriptionLeft: Localize.of(context)
-                                            .fitnessPermissionSwitchSettingsText,
-                                        descriptionRight: '',
-                                        rightWidget: CupertinoSwitch(
-                                          onChanged: (val) {
-                                            HiveSettingsDB
-                                                .setIsMotionDetectionDisabled(
-                                                    val);
-                                            bg.BackgroundGeolocation.setConfig(
-                                                bg.Config(
-                                                    disableMotionActivityUpdates:
-                                                        val));
-                                            setState(() {});
-                                          },
-                                          value: HiveSettingsDB
-                                              .isMotionDetectionDisabled,
-                                        ),
-                                      ),
-                                    ),
-                                  ]),
+
                               //if (Platform.isAndroid)
                               CupertinoFormSection(
                                   header: Text(Localize.of(context)

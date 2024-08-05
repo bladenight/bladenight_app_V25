@@ -1,6 +1,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:universal_io/io.dart';
 
 import '../models/app_version.dart';
 
@@ -68,5 +69,10 @@ class DeviceHelper {
   var version = packageInfo.version;
   var buildNumber = packageInfo.buildNumber;
   return AppVersion(appName, packageName, version, buildNumber);
+  }
+
+  static Future<String> getOSInfo() async {
+    var pf = Platform.operatingSystem;
+    return pf;
   }
 }

@@ -126,6 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Daten, die wir automatisch erhalten\n\nDie OSMF betreibt eine Reihe von Diensten für die OpenStreetMap-Gemeinschaft, z. B. die Website openstreetmap.org, die Online-Karte im \"Standard\"-Stil, die OSM-API und die Nominatim-Suchfunktion.\n\nWenn Sie eine OSMF-Website besuchen, über einen Browser oder über Anwendungen, die die bereitgestellten APIs nutzen, auf einen der Dienste zugreifen, werden Aufzeichnungen über diese Nutzung erstellt, wir sammeln Informationen über Ihren Browser oder Ihre Anwendung und Ihre Interaktion mit unserer Website, einschließlich (a) IP-Adresse, (b) Browser- und Gerätetyp, (c) Betriebssystem, (d) verweisende Webseite, (e) Datum und Uhrzeit der Seitenbesuche und (f) die auf unseren Websites aufgerufenen Seiten.\n\nDarüber hinaus können wir Software zur Verfolgung der Benutzerinteraktion einsetzen, die zusätzliche Aufzeichnungen über die Benutzeraktivität erstellt, z. B. Piwik.\n\nDienste, die Geo-DNS oder ähnliche Mechanismen verwenden, um die Last auf geografisch verteilte Server zu verteilen, erzeugen möglicherweise eine Aufzeichnung Ihres Standorts in großem Umfang (z. B. ermittelt das OSMF-Kachel-Cache-Netzwerk das Land, in dem Sie sich wahrscheinlich befinden, und leitet Ihre Anfragen an einen entsprechenden Server weiter).\n\nDiese Aufzeichnungen werden auf folgende Weise verwendet oder können verwendet werden:\n\nzur Unterstützung des Betriebs der Dienste aus technischer, sicherheitstechnischer und planerischer Sicht.\nals anonymisierte, zusammengefasste Daten für Forschungs- und andere Zwecke. Solche Daten können über https://planet.openstreetmap.org oder andere Kanäle öffentlich angeboten und von Dritten genutzt werden.\num den OpenStreetMap-Datensatz zu verbessern. Zum Beispiel durch die Analyse von Nominatim-Abfragen auf fehlende Adressen und Postleitzahlen und die Bereitstellung solcher Daten für die OSM-Community.\nDie auf den Systemen gesammelten Daten sind für die Systemadministratoren und die entsprechenden OSMF-Arbeitsgruppen, z. B. die Datenarbeitsgruppe, zugänglich. Es werden keine persönlichen Informationen oder Informationen, die mit einer Person in Verbindung gebracht werden können, an Dritte weitergegeben, es sei denn, dies ist gesetzlich vorgeschrieben.\n\nDie von Piwik gespeicherten IP-Adressen werden auf zwei Bytes gekürzt und die detaillierten Nutzungsdaten werden 180 Tage lang aufbewahrt.\n\nDa diese Speicherung nur vorübergehend erfolgt, ist es uns im Allgemeinen nicht möglich, Zugang zu IP-Adressen oder den damit verbundenen Protokollen zu gewähren.\n\nDie oben genannten Daten werden auf der Grundlage eines berechtigten Interesses verarbeitet (siehe Artikel 6 Absatz 1 Buchstabe f der DSGVO)."),
         "actualInformations":
             MessageLookupByLibrary.simpleMessage("Aktuelle Informationen"),
+        "addEvent": MessageLookupByLibrary.simpleMessage("Event hinzufügen"),
         "addNearBy": MessageLookupByLibrary.simpleMessage(
             "Freund:in neben Dir hinzufügen"),
         "addfriendwithcode": MessageLookupByLibrary.simpleMessage(
@@ -147,10 +148,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Hintergrund update aktiv"),
         "allowHeadlessHeader": MessageLookupByLibrary.simpleMessage(
             "Testimplementierung, da MIUI Xiaomi Handys durch agressives Speichermanagemant die Apps killen und diese somit nicht mehr funktioniert. Wenn die App in den Hintergrund wechselt oder gekillt wird, wird trotzdem weiter der Standort übermittelt (BETA) "),
-        "allowWakeLock": MessageLookupByLibrary.simpleMessage(
-            "App im Vordergrund aktiv lassen?"),
+        "allowWakeLock":
+            MessageLookupByLibrary.simpleMessage("Display aktiv lassen?"),
         "allowWakeLockHeader": MessageLookupByLibrary.simpleMessage(
-            "App aktiv lassen, heißt, das die App im wake mode ist und das Tracking aktiv ist. Wird bei kleiner 20% Akku deaktiviert."),
+            "Das Display eingeschaltet lassen wenn das Tracking aktiv ist. Die Funktion wird bei kleiner 30% Akku deaktiviert."),
         "alternativeLocationProvider":
             MessageLookupByLibrary.simpleMessage("Nutze Alternative"),
         "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
@@ -260,6 +261,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dateTimeIntl": m3,
         "dateTimeSecIntl": m4,
         "delete": MessageLookupByLibrary.simpleMessage("Löschen"),
+        "deleteEvent": MessageLookupByLibrary.simpleMessage("Event löschen"),
         "deleteMessage":
             MessageLookupByLibrary.simpleMessage("Nachricht löschen"),
         "deletefriend":
@@ -283,6 +285,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "distanceToTail":
             MessageLookupByLibrary.simpleMessage("Entfernung zum Zugende"),
         "done": MessageLookupByLibrary.simpleMessage("Fertig"),
+        "editEvent": MessageLookupByLibrary.simpleMessage("Event ändern"),
         "editfriend": MessageLookupByLibrary.simpleMessage("Freund:in ändern"),
         "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
             "Um die BladeNight-App auch im Hintergrund (Standort mit Freunden teilen und Zuggenauigkeit zu erhöhen) ohne das der Bildschirm an ist, sollte die Standortfunktion \'Immer zulassen\' aktiviert werden.\nWeiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
@@ -721,7 +724,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Dauer zum Zugkopf (ca.)"),
         "timeToMe": MessageLookupByLibrary.simpleMessage("Dauer von mir (ca.)"),
         "timeToTail":
-            MessageLookupByLibrary.simpleMessage("Dauer zum Zugende (ca)."),
+            MessageLookupByLibrary.simpleMessage("Dauer zum Zugende (ca.)"),
         "today": MessageLookupByLibrary.simpleMessage("Heute"),
         "todayNo": MessageLookupByLibrary.simpleMessage("Heute nein"),
         "tomorrow": MessageLookupByLibrary.simpleMessage("Morgen"),
@@ -751,6 +754,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Auf Karte angezeigt."),
         "waiting": MessageLookupByLibrary.simpleMessage("Wartend..."),
         "waittime": MessageLookupByLibrary.simpleMessage("Wartezeit"),
+        "wakelockDisabled": MessageLookupByLibrary.simpleMessage(
+            "Display schaltet ab - Akku laden"),
+        "wakelockEnabled":
+            MessageLookupByLibrary.simpleMessage("Display bleibt an"),
         "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
             "wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de"),
         "weekdayIntl": m17,

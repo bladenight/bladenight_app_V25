@@ -69,6 +69,21 @@ class AdminCalls {
     return true;
   }
 
+  static Future<bool> editEvent(Map<String, dynamic> message) async {
+    Completer completer = Completer();
+    BnWampMessage bnWampMessage = BnWampMessage(
+        WampMessageType.call, completer, WampEndpoint.editEvent, message);
+
+    var wampResult = await WampV2.instance
+        .addToWamp(bnWampMessage)
+        .timeout(wampTimeout)
+        .catchError((error, stackTrace) => WampError(error.toString()));
+    if (wampResult is WampError) {
+      return false;
+    }
+    return true;
+  }
+
   static Future<String> verifyAdminPassword(
       Map<String, dynamic> message) async {
     Completer completer = Completer();

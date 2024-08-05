@@ -43,6 +43,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   ///State of event == EventStatus new feature 06_23
   @MappableField(key: 'sts')
   final EventStatus? eventState;
+
   ///Event == Event is active new feature 01_24 - default true for older Server
   @MappableField(key: 'isa')
   final bool eventIsActive;
@@ -161,6 +162,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
         }
       }
       fList.addAll(updateFriends.where((f) => f.isOnline && f.isActive));
+      fList.sort((a, b) => b.specialValue.compareTo(a.specialValue));
       return fList;
     }
     return updateFriends.where((f) => f.isOnline && f.isActive);

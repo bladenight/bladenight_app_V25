@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../generated/l10n.dart';
 import '../main.dart';
-import '../pages/widgets/scroll_quick_alert.dart';
 import 'hive_box/hive_settings_db.dart';
 import 'logger.dart';
 
@@ -29,7 +29,7 @@ class Launch {
         if (!kIsWeb &&
             mode == LaunchMode.externalApplication &&
             navigatorKey.currentContext != null) {
-          res = await ScrollQuickAlert.show(
+          res = await QuickAlert.show(
               context: navigatorKey.currentContext!,
               title: Localize.current.leaveAppWarningTitle,
               text: '${Localize.current.leaveAppWarning}\n$inUrl',
@@ -62,7 +62,7 @@ class Launch {
         if (!kIsWeb &&
             mode == LaunchMode.externalApplication &&
             navigatorKey.currentContext != null) {
-          res = await ScrollQuickAlert.show(
+          res = await QuickAlert.show(
               context: navigatorKey.currentContext!,
               title: Localize.current.leaveAppWarningTitle,
               text: '${Localize.current.leaveAppWarning}\n${uri.toString()}',

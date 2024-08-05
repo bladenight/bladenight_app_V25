@@ -10,7 +10,6 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../generated/l10n.dart';
 import '../main.dart';
-import '../pages/widgets/scroll_quick_alert.dart';
 import 'device_info_helper.dart';
 import 'hive_box/hive_settings_db.dart';
 import 'logger.dart';
@@ -96,7 +95,7 @@ class LocationPermissionDialog {
     final locationPermission = await loc2.getLocationPermissionStatus();
     if (locationPermission.locationPermissionId ==
         loc2.LocationPermission.denied.index) {
-      var acceptLocation = await ScrollQuickAlert.show(
+      var acceptLocation = await QuickAlert.show(
           context: navigatorKey.currentContext!,
           showCancelBtn: true,
           type: QuickAlertType.confirm,

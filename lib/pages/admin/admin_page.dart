@@ -267,12 +267,10 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                       password: widget.password,
                     ).toMap());
                   } catch (e) {
-                    if (!kIsWeb) {
                       BnLog.error(
                           text: 'Error Restart Server',
                           className: toString(),
                           methodName: 'Adminpage Restart server');
-                    }
                   }
 
                   _activityVisible = false;

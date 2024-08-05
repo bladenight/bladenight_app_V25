@@ -32,9 +32,10 @@ class SendMailWidget extends StatelessWidget {
 _sendMail() async {
   try {
     var aV = await DeviceHelper.getAppVersionsData();
+    var os = await DeviceHelper.getOSInfo();
     final Email email = Email(
       subject:
-          'BladeNight! München Anfrage (App V${aV.version} build${aV.buildNumber})',
+          'BladeNight! München Anfrage (App V${aV.version} build${aV.buildNumber} - $os)',
       body: 'Ich habe ein Problem und bitte um Unterstützung:\n',
       recipients: ['it@huth.app'],
       cc: ['service@skatemunich.de'],

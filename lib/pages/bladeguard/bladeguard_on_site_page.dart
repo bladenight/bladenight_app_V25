@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_constants.dart';
@@ -12,7 +13,6 @@ import '../../providers/network_connection_provider.dart';
 import '../../providers/realtime_data_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
-import '../widgets/scroll_quick_alert.dart';
 
 class BladeGuardOnsite extends ConsumerWidget {
   const BladeGuardOnsite({super.key});
@@ -152,7 +152,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                             child: CupertinoButton(
                               padding: const EdgeInsets.all(10.0),
                               onPressed: () async {
-                                await ScrollQuickAlert.show(
+                                await QuickAlert.show(
                                     context: context,
                                     showCancelBtn: true,
                                     type: QuickAlertType.confirm,

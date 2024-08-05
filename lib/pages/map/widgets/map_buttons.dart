@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
@@ -31,7 +32,6 @@ import '../../../providers/route_providers.dart';
 import '../../messages/messages_page.dart';
 import '../../widgets/align_map_icon.dart';
 import '../../widgets/positioned_visibility_opacity.dart';
-import '../../widgets/scroll_quick_alert.dart';
 import '../widgets/qr_create_page.dart';
 
 class MapButtonsLayer extends ConsumerStatefulWidget {
@@ -90,7 +90,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             return GestureDetector(
               onLongPress: () async {
                 LocationProvider.instance.toggleAutoStop();
-                await ScrollQuickAlert.show(
+                await QuickAlert.show(
                   context: context,
                   type: QuickAlertType.warning,
                   title: Localize.of(context).autoStopTracking,
@@ -108,7 +108,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                       return;
                     }
                     //&& !autoStop
-                    await ScrollQuickAlert.show(
+                    await QuickAlert.show(
                         context: context,
                         showCancelBtn: true,
                         type: QuickAlertType.warning,
@@ -872,7 +872,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       ref.read(isTrackingProvider.notifier).toggleTracking(false);
       return;
     }
-    await ScrollQuickAlert.show(
+    await QuickAlert.show(
         context: context,
         showCancelBtn: true,
         type: QuickAlertType.warning,

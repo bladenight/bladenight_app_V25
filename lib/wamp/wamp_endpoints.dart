@@ -20,6 +20,7 @@ class WampEndpoint {
   static const setminimumlinearposition = 'setMinimumLinearPosition';
   static const setProcessionMode = 'setProcessionMode';
   static const killserver = 'killServer';
+  static const editEvent = 'editEvent';
   static const shakeHand = 'shakeHand';
 
 //alias

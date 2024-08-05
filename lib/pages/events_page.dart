@@ -7,14 +7,19 @@ import 'package:riverpod_context/riverpod_context.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
+import '../app_settings/globals.dart';
 import '../generated/l10n.dart';
+import '../helpers/deviceid_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger.dart';
 import '../models/event.dart';
+import '../models/messages/edit_event_on_server.dart';
 import '../pages/widgets/data_loading_indicator.dart';
 import '../pages/widgets/no_data_warning.dart';
 import '../pages/widgets/route_dialog.dart';
 import '../providers/event_providers.dart';
 import '../providers/network_connection_provider.dart';
+import '../wamp/admin_calls.dart';
 import 'widgets/no_connection_warning.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
@@ -251,58 +256,57 @@ class _EventsPageState extends ConsumerState<EventsPage>
             onRefresh: () async {
               return context.refresh(allEventsProvider);
             },
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                removeBottom: true,
-                child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: itemsCount * 2 - 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index % 2 == 0) {
-                        var event = pageEvents[(index / 2).round()];
-                        var eventStartState = EventStartState.eventOver;
-                        var eventOver = event.startDateUtc
-                            .add(event.duration)
-                            .difference(DateTime.now().toUtc())
-                            .isNegative;
-                        var eventActual = !eventOver &&
-                            event.startDateUtc
-                                    .difference(DateTime.now().toUtc())
-                                    .inDays <
-                                7;
-                        var eventFuture = !eventOver &&
-                            event.startDateUtc
-                                    .difference(DateTime.now().toUtc())
-                                    .inDays >
-                                7;
-                        if (eventActual) {
-                          eventStartState = EventStartState.eventActual;
-                        }
-                        if (eventFuture) {
-                          eventStartState = EventStartState.eventFuture;
-                        }
-                        if (eventActual && !_noActualEventFound) {
-                          _noActualEventFound = true;
-                          return Container(
-                              key: _dataKey,
-                              child:
-                                  _listTile(context, event, eventStartState));
-                        }
-                        return _listTile(context, event, eventStartState);
-                      } else {
-                        return Divider(
-                          color: CupertinoTheme.of(context).primaryColor,
-                          height: 1,
-                          indent: 16,
-                          endIndent: 16,
-                        );
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              removeBottom: true,
+              child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: itemsCount * 2 - 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index % 2 == 0) {
+                      var event = pageEvents[(index / 2).round()];
+                      var eventStartState = EventStartState.eventOver;
+                      var eventOver = event.startDateUtc
+                          .add(event.duration)
+                          .difference(DateTime.now().toUtc())
+                          .isNegative;
+                      var eventActual = !eventOver &&
+                          event.startDateUtc
+                                  .difference(DateTime.now().toUtc())
+                                  .inDays <
+                              7;
+                      var eventFuture = !eventOver &&
+                          event.startDateUtc
+                                  .difference(DateTime.now().toUtc())
+                                  .inDays >
+                              7;
+                      if (eventActual) {
+                        eventStartState = EventStartState.eventActual;
                       }
-                    }),
-              ),
+                      if (eventFuture) {
+                        eventStartState = EventStartState.eventFuture;
+                      }
+                      if (eventActual && !_noActualEventFound) {
+                        _noActualEventFound = true;
+                        return Container(
+                            key: _dataKey,
+                            child: _editEventWidget(
+                                context, event, eventStartState));
+                      }
+                      return _editEventWidget(context, event, eventStartState);
+                    } else {
+                      return Divider(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        height: 1,
+                        indent: 16,
+                        endIndent: 16,
+                      );
+                    }
+                  }),
             ),
           ),
-
+        ),
       );
     });
     return lst;
@@ -421,6 +425,52 @@ class _EventsPageState extends ConsumerState<EventsPage>
 
 enum EventStartState { eventOver, eventActual, eventFuture }
 
+Widget _editEventWidget(
+    BuildContext context, Event event, EventStartState startState) {
+  if (Globals.adminPass != null) {
+    return Dismissible(
+      onDismissed: (direction) async {
+        try {
+          await AdminCalls.editEvent(EditEventOnServerMessage.authenticate(
+            event: event,
+            deviceId: DeviceId.appId,
+            password: Globals.adminPass ?? 'wrong',
+          ).toMap());
+        } catch (e) {
+          BnLog.error(
+              text: 'Error Restart Server',
+              className: 'eventsPage',
+              methodName: 'Adminpage Restart server');
+        }
+      },
+      key: ObjectKey(event.hashCode),
+      confirmDismiss: (DismissDirection direction) async {
+        if (direction == DismissDirection.endToStart) {
+          return false;
+        } else {
+          RouteDialog.show(context, event);
+          return false; //always return true when list not changed
+        }
+      },
+      background: Container(
+          color: Colors.greenAccent,
+          child: CupertinoListTile(
+              title: Text(Localize.of(context).editEvent),
+              leading:
+                  const Icon(Icons.edit, color: Colors.white, size: 36.0))),
+      secondaryBackground: Container(
+          color: Colors.red,
+          child: CupertinoListTile(
+              title: Text(Localize.of(context).delete),
+              trailing:
+                  const Icon(Icons.add, color: Colors.redAccent, size: 36.0))),
+      child: _listTile(context, event, startState),
+    );
+  } else {
+    return _listTile(context, event, startState);
+  }
+}
+
 Widget _listTile(
     BuildContext context, Event event, EventStartState startState) {
   //mark old actual an new events
@@ -434,7 +484,7 @@ Widget _listTile(
   if (startState == EventStartState.eventActual) {
     color = CupertinoTheme.of(context).primaryColor;
   }
-  if (startState == EventStartState.eventFuture) {}
+  if (startState == EventStartState.eventFuture) {} //no color change}
   return GestureDetector(
     behavior: HitTestBehavior.opaque,
     onTap: () {

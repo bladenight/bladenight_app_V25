@@ -116,40 +116,6 @@ class MapEventInformation extends ConsumerWidget {
                                 width: 20,
                               ),
                             ),
-                            if (ref.watch(isTrackingProvider))
-                              DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).timeToHead,
-                                descriptionRight:
-                                    '⇥ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToHead(), maxvalue: 120 * 60 * 1000)}',
-                                rightWidget: Container(
-                                  alignment: Alignment.centerRight,
-                                  width: 20,
-                                  child: const Image(
-                                    image: AssetImage(
-                                      'assets/images/skatechildmunich.png',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            if (ref.watch(isTrackingProvider))
-                              DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).timeToTail,
-                                descriptionRight:
-                                    '⇥ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail(), maxvalue: 120 * 60 * 1000)}',
-                                rightWidget: Container(
-                                  alignment: Alignment.centerRight,
-                                  width: 20,
-                                  child: const Image(
-                                    image: AssetImage(
-                                      'assets/images/skatechildmunichred.png',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
                             DataLeftRightContent(
                                 descriptionLeft:
                                     Localize.of(context).trainlength,
@@ -209,69 +175,110 @@ class MapEventInformation extends ConsumerWidget {
                           ]),
                     ),
                   ),
-                  if (ref.watch(showOwnColoredTrackProvider)) ...[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                      child: Text(Localize.of(context).me,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                      child: Text(
-                        Localize.of(context).mySpeed,
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                      child: SpeedInfoColors(),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    )
-                  ],
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                    child: Text(Localize.of(context).me,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
                   if (ref.watch(isTrackingProvider))
                     GestureDetector(
                       child: Container(
                         color: CupertinoDynamicColor.resolve(
                             CupertinoColors.systemGroupedBackground, context),
                         child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              DataLeftRightContent(
-                                descriptionLeft:
-                                    '${Localize.of(context).own} ${Localize.of(context).distanceDriven}',
-                                descriptionRight:
-                                    '${((rtu.user.position) / rtu.runningLength * 100).toStringAsFixed(1)}% | ↦${((rtu.user.position) / 1000).toStringAsFixed(1)} km',
-                                rightWidget: Container(),
-                              ),
-                              DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).distanceToFinish,
-                                descriptionRight:
-                                    '⇥ ${((rtu.runningLength - rtu.user.position) / 1000).toStringAsFixed(1)} km',
-                                rightWidget: GestureDetector(
-                                  onTap: () {
-                                    /* mapController.move(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            DataLeftRightContent(
+                              descriptionLeft:
+                                  '${Localize.of(context).own} ${Localize.of(context).distanceDriven}',
+                              descriptionRight:
+                                  '${((rtu.user.position) / rtu.runningLength * 100).toStringAsFixed(1)}% | ↦${((rtu.user.position) / 1000).toStringAsFixed(1)} km',
+                              rightWidget: Container(),
+                            ),
+                            DataLeftRightContent(
+                              descriptionLeft:
+                                  Localize.of(context).distanceToFinish,
+                              descriptionRight:
+                                  '⇥ ${((rtu.runningLength - rtu.user.position) / 1000).toStringAsFixed(1)} km',
+                              rightWidget: GestureDetector(
+                                onTap: () {
+                                  /* mapController.move(
                                         LatLng(context.watch(userLatLongProvider).
                                             location.userLatLng?.latitude ??
                                                 defaultLatitude,
                                             location.userLatLng?.longitude ??
                                                 defaultLongitude),
                                         15);*/
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Icon(Icons.gps_fixed_sharp,
-                                      color: CupertinoTheme.of(context)
-                                          .primaryColor,
-                                      size: 20),
+                                  Navigator.of(context).pop();
+                                },
+                                child: Icon(Icons.gps_fixed_sharp,
+                                    color:
+                                        CupertinoTheme.of(context).primaryColor,
+                                    size: 20),
+                              ),
+                            ),
+                            DataLeftRightContent(
+                                descriptionLeft: Localize.of(context).speed,
+                                descriptionRight:
+                                    '${(rtu.user.realSpeed != null ? rtu.user.realSpeed!.toStringAsFixed(1) : rtu.user.speed)} km/h',
+                                rightWidget: Container()),
+                            if (!rtu.user.isOnRoute)
+                              DataLeftRightContent(
+                                descriptionLeft:
+                                    Localize.of(context).notOnRoute,
+                                descriptionRight: '',
+                                rightWidget: Container(),
+                              ),
+                            if (rtu.user.isOnRoute) ...[
+                              DataLeftRightContent(
+                                descriptionLeft:
+                                    Localize.of(context).timeToHead,
+                                descriptionRight:
+                                    '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToHead().abs(), maxvalue: 120 * 60 * 1000)}',
+                                rightWidget: Container(
+                                  alignment: Alignment.centerRight,
+                                  width: 20,
+                                  child: const Image(
+                                    image: AssetImage(
+                                      'assets/images/skatechildmunich.png',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               DataLeftRightContent(
-                                  descriptionLeft: Localize.of(context).speed,
-                                  descriptionRight:
-                                      '${(rtu.user.realSpeed != null ? rtu.user.realSpeed!.toStringAsFixed(1) : rtu.user.speed)} km/h',
-                                  rightWidget: Container())
-                            ]),
+                                descriptionLeft:
+                                    Localize.of(context).timeToTail,
+                                descriptionRight:
+                                    '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail().abs(), maxvalue: 120 * 60 * 1000)}',
+                                rightWidget: Container(
+                                  alignment: Alignment.centerRight,
+                                  width: 20,
+                                  child: const Image(
+                                    image: AssetImage(
+                                      'assets/images/skatechildmunichred.png',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              DataLeftRightContent(
+                                descriptionLeft:
+                                    Localize.of(context).distanceToHead,
+                                descriptionRight:
+                                    '${((rtu.head.position - rtu.user.position) / 1000).abs().toStringAsFixed(2)} km',
+                                rightWidget: Container(),
+                              ),
+                              DataLeftRightContent(
+                                descriptionLeft:
+                                    Localize.of(context).distanceToTail,
+                                descriptionRight:
+                                    '${((rtu.user.position - rtu.tail.position) / 1000).abs().toStringAsFixed(2)} km',
+                                rightWidget: Container(),
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     ),
                   if (friends.isNotEmpty)
@@ -364,80 +371,83 @@ class MapEventInformation extends ConsumerWidget {
                             ]),
                       ),
                     ),
-                  if (!kIsWeb)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                    child: Text(Localize.of(context).symbols,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  if (ref.watch(showOwnColoredTrackProvider)) ...[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                      child: Text(Localize.of(context).symbols,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        Localize.of(context).mySpeed,
+                      ),
                     ),
-                  if (!kIsWeb)
-                    GestureDetector(
-                      child: Container(
-                        color: CupertinoDynamicColor.resolve(
-                            CupertinoColors.systemGroupedBackground, context),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            DataLeftRightContent(
-                              descriptionLeft:
-                                  Localize.of(context).mapFollowLocation,
-                              descriptionRight: '',
-                              rightWidget: const ImageIcon(
-                                AssetImage('assets/images/skater_icon_256.png'),
-                                color: Colors.blue,
-                              ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                      child: SpeedInfoColors(),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    )
+                  ],
+                  GestureDetector(
+                    child: Container(
+                      color: CupertinoDynamicColor.resolve(
+                          CupertinoColors.systemGroupedBackground, context),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).mapFollowLocation,
+                            descriptionRight: '',
+                            rightWidget: const ImageIcon(
+                              AssetImage('assets/images/skater_icon_256.png'),
+                              color: Colors.blue,
                             ),
-                            DataLeftRightContent(
-                              descriptionLeft:
-                                  Localize.of(context).mapToStartNoFollowing,
-                              descriptionRight: '',
-                              rightWidget: const Icon(
-                                CupertinoIcons.location_circle,
-                                color: Colors.blue,
-                              ),
+                          ),
+                          DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).startParticipationTracking,
+                            descriptionRight: '',
+                            rightWidget: const Icon(
+                              CupertinoIcons.play_arrow_solid,
+                              color: Colors.green,
                             ),
-                            DataLeftRightContent(
-                              descriptionLeft: Localize.of(context)
-                                  .startParticipationTracking,
-                              descriptionRight: '',
-                              rightWidget: const Icon(
-                                CupertinoIcons.play_arrow_solid,
-                                color: Colors.green,
-                              ),
+                          ),
+                          DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).stopParticipationTracking,
+                            descriptionRight: '',
+                            rightWidget: const Icon(
+                              CupertinoIcons.stop_circle_fill,
+                              color: Colors.red,
                             ),
-                            DataLeftRightContent(
-                              descriptionLeft: Localize.of(context)
-                                  .stopParticipationTracking,
-                              descriptionRight: '',
-                              rightWidget: const Icon(
-                                CupertinoIcons.stop_circle_fill,
-                                color: Colors.red,
-                              ),
+                          ),
+                          DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).autoStopTracking,
+                            descriptionRight: '',
+                            rightWidget: const Icon(Icons.pause,
+                                color: CupertinoColors.systemYellow),
+                          ),
+                          DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).showWeblinkToRoute,
+                            descriptionRight: '',
+                            rightWidget: const Icon(
+                              CupertinoIcons.qrcode,
+                              color: Colors.blue,
                             ),
-                            DataLeftRightContent(
-                              descriptionLeft:
-                                  Localize.of(context).autoStopTracking,
-                              descriptionRight: '',
-                              rightWidget: const Icon(Icons.pause,
-                                  color: CupertinoColors.systemYellow),
-                            ),
-                            DataLeftRightContent(
-                              descriptionLeft:
-                                  Localize.of(context).showWeblinkToRoute,
-                              descriptionRight: '',
-                              rightWidget: const Icon(
-                                CupertinoIcons.qrcode,
-                                color: Colors.blue,
-                              ),
-                            ),
-                            DataLeftRightContent(
-                              descriptionLeft: Localize.of(context).scrollMapTo,
-                              descriptionRight: '',
-                              rightWidget: Icon(Icons.gps_fixed_sharp,
-                                  color:
-                                      CupertinoTheme.of(context).primaryColor),
-                            ),
-                            /* DataLeftRightContent(
+                          ),
+                          DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).scrollMapTo,
+                            descriptionRight: '',
+                            rightWidget: Icon(Icons.gps_fixed_sharp,
+                                color: CupertinoTheme.of(context).primaryColor),
+                          ),
+                          /* DataLeftRightContent(
                         descriptionLeft: Localize.of(context)
                             .startLocationWithoutParticipating,
                         descriptionRight: '',
@@ -451,10 +461,10 @@ class MapEventInformation extends ConsumerWidget {
                         rightWidget: ImageIcon(
                             const AssetImage('assets/images/eyestop.png'),
                             color: CupertinoTheme.of(context).primaryColor))*/
-                          ],
-                        ),
+                        ],
                       ),
                     ),
+                  ),
                 ],
               ),
             ),

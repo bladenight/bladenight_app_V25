@@ -132,8 +132,8 @@
   "alignPositionOnUpdateOnly": "Kartenausrichtung bei Positionsänderungen",
   "allowHeadless": "Hintergrund update aktiv",
   "allowHeadlessHeader": "Testimplementierung, da MIUI Xiaomi Handys durch agressives Speichermanagemant die Apps killen und diese somit nicht mehr funktioniert. Wenn die App in den Hintergrund wechselt oder gekillt wird, wird trotzdem weiter der Standort übermittelt (BETA) ",
-  "allowWakeLock": "App im Vordergrund aktiv lassen?",
-  "allowWakeLockHeader": "App aktiv lassen, heißt, das die App im wake mode ist und das Tracking aktiv ist. Wird bei kleiner 20% Akku deaktiviert.",
+  "allowWakeLock": "Display aktiv lassen?",
+  "allowWakeLockHeader": "Das Display eingeschaltet lassen wenn das Tracking aktiv ist. Die Funktion wird bei kleiner 30% Akku deaktiviert.",
   "alternativeLocationProvider": "Nutze Alternative",
   "alternativeLocationProviderTitle": "Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang",
   "alwaysPermanentlyDenied": "Standortfreigabe permanent verweigert oder im System gesperrt!",
@@ -455,7 +455,7 @@
   "timeToFriend": "Dauer zum Freund (ca.)",
   "timeToHead": "Dauer zum Zugkopf (ca.)",
   "timeToMe": "Dauer von mir (ca.)",
-  "timeToTail": "Dauer zum Zugende (ca).",
+  "timeToTail": "Dauer zum Zugende (ca.)",
   "today": "Heute",
   "todayNo": "Heute nein",
   "tomorrow": "Morgen",
@@ -512,5 +512,10 @@
   "autoStartTracking": "Tracking autom. gestartet während BladeNight - Autostart aktiv. Um dies zu deaktivieren, bitte Auto-Start/Stop-Tracking in Einstellung ausschalten",
   "autoStartTrackingTitle": "Tracking automatisch gestartet...",
   "autoStartTrackingInfo": "Starte Standortfreigabe automatisch",
-  "autoStartTrackingInfoTitle": "Es besteht die Möglichkeit beim Start der BladeNight, die Standortfreigabe automatisch zu starten, wenn die App geöffnet ist. Sobald die App geschlossen wurde oder die Hintergrundaktivität nicht freigegeben ist, wird auch keine Standortfreigabe aktiviert. Soll die Funktion Standortfreigabe automatisch starten, wenn die App im geöffnet ist aktiviert werden? "
+  "autoStartTrackingInfoTitle": "Es besteht die Möglichkeit beim Start der BladeNight, die Standortfreigabe automatisch zu starten, wenn die App geöffnet ist. Sobald die App geschlossen wurde oder die Hintergrundaktivität nicht freigegeben ist, wird auch keine Standortfreigabe aktiviert. Soll die Funktion Standortfreigabe automatisch starten, wenn die App im geöffnet ist aktiviert werden? ",
+  "addEvent": "Event hinzufügen",
+  "editEvent": "Event ändern",
+  "deleteEvent": "Event löschen",
+  "wakelockEnabled": "Display bleibt an",
+  "wakelockDisabled": "Display schaltet ab - Akku laden"
 }

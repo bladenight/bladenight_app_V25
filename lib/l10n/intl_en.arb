@@ -133,7 +133,7 @@
   "allowHeadless": "Background update activ",
   "allowHeadlessHeader": "Test implementation, since MIUI Xiaomi cell phones kill the apps through aggressive memory management and they no longer work. If the app is in the background or killed, the location is still transmitted (BETA).",
   "allowWakeLock": "Leave app waked up?",
-  "allowWakeLockHeader": "Display keeps on while the app is open and location sharing is active. Disables at 20% battery level. Leave switched on.",
+  "allowWakeLockHeader": "Display keeps on while the app is open and location sharing is active. Disables at 30% battery level. (Higher battery consumption)",
   "alternativeLocationProvider": "Use alternative driver",
   "alternativeLocationProviderTitle": "Use alternative location driver in case of problems with GPS data",
   "alwaysPermanentlyDenied": "Location permission always denied in System.!",
@@ -453,9 +453,9 @@
   "timeStamp": "Timestamp",
   "timeToFinish": "to finish (est.)",
   "timeToFriend": "Time to friend",
-  "timeToHead": "Time to head",
-  "timeToMe": "Time to me",
-  "timeToTail": "Time to tail",
+  "timeToHead": "Time to head (est.)",
+  "timeToMe": "Time to me (est.)",
+  "timeToTail": "Time to tail (est.)",
   "today": "Today",
   "todayNo": "No today",
   "tomorrow": "Tomorrow",
@@ -512,5 +512,10 @@
   "autoStartTracking": "Location sharing started automatically. To disable behaviour go to settings and switch Auto-Start/Stop location sharing off",
   "autoStartTrackingTitle": "Location sharing started automatically ...",
   "autoStartTrackingInfo": "Start location sharing automatically",
-  "autoStartTrackingInfoTitle": "When starting BladeNight, it is possible to start location sharing automatically if the app is open. As soon as the app is closed or the background activity is not enabled, location sharing is not activated. Should the location sharing function start automatically when the app is open?"
+  "autoStartTrackingInfoTitle": "When starting BladeNight, it is possible to start location sharing automatically if the app is open. As soon as the app is closed or the background activity is not enabled, location sharing is not activated. Should the location sharing function start automatically when the app is open?",
+  "addEvent": "Add Event",
+  "editEvent": "Edit Event",
+  "deleteEvent": "Delete Event",
+  "wakelockEnabled": "Display remains an",
+  "wakelockDisabled": "Display switches off"
 }

@@ -470,10 +470,10 @@ class Localize {
     );
   }
 
-  /// `Display keeps on while the app is open and location sharing is active. Disables at 20% battery level. Leave switched on.`
+  /// `Display keeps on while the app is open and location sharing is active. Disables at 30% battery level. (Higher battery consumption)`
   String get allowWakeLockHeader {
     return Intl.message(
-      'Display keeps on while the app is open and location sharing is active. Disables at 20% battery level. Leave switched on.',
+      'Display keeps on while the app is open and location sharing is active. Disables at 30% battery level. (Higher battery consumption)',
       name: 'allowWakeLockHeader',
       desc: '',
       args: [],
@@ -3700,30 +3700,30 @@ class Localize {
     );
   }
 
-  /// `Time to head`
+  /// `Time to head (est.)`
   String get timeToHead {
     return Intl.message(
-      'Time to head',
+      'Time to head (est.)',
       name: 'timeToHead',
       desc: '',
       args: [],
     );
   }
 
-  /// `Time to me`
+  /// `Time to me (est.)`
   String get timeToMe {
     return Intl.message(
-      'Time to me',
+      'Time to me (est.)',
       name: 'timeToMe',
       desc: '',
       args: [],
     );
   }
 
-  /// `Time to tail`
+  /// `Time to tail (est.)`
   String get timeToTail {
     return Intl.message(
-      'Time to tail',
+      'Time to tail (est.)',
       name: 'timeToTail',
       desc: '',
       args: [],
@@ -4298,6 +4298,56 @@ class Localize {
     return Intl.message(
       'When starting BladeNight, it is possible to start location sharing automatically if the app is open. As soon as the app is closed or the background activity is not enabled, location sharing is not activated. Should the location sharing function start automatically when the app is open?',
       name: 'autoStartTrackingInfoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Event`
+  String get addEvent {
+    return Intl.message(
+      'Add Event',
+      name: 'addEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Event`
+  String get editEvent {
+    return Intl.message(
+      'Edit Event',
+      name: 'editEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Event`
+  String get deleteEvent {
+    return Intl.message(
+      'Delete Event',
+      name: 'deleteEvent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display remains an`
+  String get wakelockEnabled {
+    return Intl.message(
+      'Display remains an',
+      name: 'wakelockEnabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display switches off`
+  String get wakelockDisabled {
+    return Intl.message(
+      'Display switches off',
+      name: 'wakelockDisabled',
       desc: '',
       args: [],
     );

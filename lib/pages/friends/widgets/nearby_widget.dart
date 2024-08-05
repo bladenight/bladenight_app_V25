@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 import '../../../app_settings/server_connections.dart';
@@ -15,7 +16,6 @@ import '../../../helpers/uuid_helper.dart';
 import '../../../models/color_mapper.dart';
 import '../../../models/friend.dart';
 import '../../../providers/friends_provider.dart';
-import '../../widgets/scroll_quick_alert.dart';
 import 'friends_action_sheet.dart';
 
 enum DeviceType { advertiser, browser }
@@ -72,7 +72,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
             getRandomColor());
         if (friend == null) {
           if (!mounted) return;
-          await ScrollQuickAlert.show(
+          await QuickAlert.show(
               context: context,
               showCancelBtn: true,
               showConfirmBtn: false,

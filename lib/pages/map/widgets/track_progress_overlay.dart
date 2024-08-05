@@ -83,13 +83,16 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
               width: 1.0,
             ),
           ),
-          child: Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: Text(Localize.of(context).updating),
+          child: Stack(children: [
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Text(Localize.of(context).updating),
+              ),
             ),
-          ),
+            const LinearProgressIndicator(),
+          ]),
         ),
       );
     } else if (actualOrNextEvent.status == EventStatus.noevent) {

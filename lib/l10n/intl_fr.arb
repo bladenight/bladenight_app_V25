@@ -133,7 +133,7 @@
   "allowHeadless": "Mise à jour de l'arrière-plan active",
   "allowHeadlessHeader": "Test d'implémentation, puisque les téléphones portables MIUI Xiaomi tuent les applications par une gestion agressive de la mémoire et qu'elles ne fonctionnent plus. Si l'application est en arrière-plan ou tuée, la localisation est toujours transmise (BETA).",
   "allowWakeLock": "Laisser l'application éveillée?",
-  "allowWakeLockHeader": "L'application reste activée tant qu'elle est ouverte et que le suivi est actif. Se désactive lorsque le niveau de la batterie atteint 20 %. Laisser allumé",
+  "allowWakeLockHeader": "L'application reste activée tant qu'elle est ouverte et que le suivi est actif. Se désactive lorsque le niveau de la batterie atteint 30 %. Laisser allumé",
   "alternativeLocationProvider": "Use alternative driver",
   "alternativeLocationProviderTitle": "Utiliser un autre fournisseur de localisation en cas de problèmes avec les données GPS",
   "alwaysPermanentlyDenied": "Permission de localisation toujours refusée dans le système !",
@@ -511,6 +511,12 @@
   "autoStartTracking": "Le partage de position a démarré automatiquement. Pour désactiver le comportement, accédez aux paramètres et désactivez le partage de position Auto-Start/Stop",
   "autoStartTrackingTitle": "Le partage de position a démarré automatiquement...",
   "autoStartTrackingInfo": "Démarrer automatiquement le partage de position",
-  "autoStartTrackingInfoTitle": "Lors du démarrage de BladeNight, il est possible de démarrer automatiquement le partage de position si l'application est ouverte. Dès que l'application est fermée ou que l'activité en arrière-plan n'est pas activée, le partage de position n'est pas activé. Si la fonction de partage de position démarre automatiquement lorsque l'application est ouverte ?"
+  "autoStartTrackingInfoTitle": "Lors du démarrage de BladeNight, il est possible de démarrer automatiquement le partage de position si l'application est ouverte. Dès que l'application est fermée ou que l'activité en arrière-plan n'est pas activée, le partage de position n'est pas activé. Si la fonction de partage de position démarre automatiquement lorsque l'application est ouverte ?",
+  "addEvent" : "Ajouter un événement",
+  "editEvent" : "Editer un événement",
+  "deleteEvent" : "Supprimer l'événement",
+  "wakelockEnabled" : "L'écran reste allumé",
+  "wakelockDisabled" : "L'écran s'éteint"
+
 }
 

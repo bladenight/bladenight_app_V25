@@ -126,6 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Data we receive automatically\n\nThe OSMF operates a number of services for the OpenStreetMap community, examples are the openstreetmap.org website, the \"Standard\" style online map, the OSM API and the nominatim search facility.\n\nWhen you visit an OSMF website, access any of the services via a browser or via applications that utilize the provided APIs, records of that use are produced, we collect information about your browser or application and your interaction with our website, including (a) IP address, (b) browser and device type, (c) operating system, (d) referring web page, (e) the date and time of page visits, and (f) the pages accessed on our websites.\n\nFurther we may operate user interaction tracking software that will generate additional records of user activity, for example Piwik.\n\nServices that use Geo-DNS or similar mechanisms to distribute load to geographically distributed servers will potentially generate a record of your location at a large scale (for example the OSMF tile cache network determines the country you are likely to be located in and directs your requests to an appropriate server).\n\nThese records are used or can be used in the following ways:\n\nin support of the operation of the services from a technical, security and planning point of view.\nas anonymised, summarised data for research and other purposes. Such data may be offered publicly via https://planet.openstreetmap.org or other channels and used by 3rd parties.\nto improve the OpenStreetMap dataset. For example by analysing nominatim queries for missing addresses and postcodes and providing such data to the OSM community.\nThe data collected on the systems will be accessible by the system administrators and the appropriate OSMF working groups, for example the Data Working Group. No personal information or information that is linked to an individual will be released to third parties, except as required by law.\n\nIP addresses stored by Piwik are shortened to two bytes and detailed usage information is retained for 180 days.\n\nGiven the temporary nature of this storage, it is generally not feasible for us to provide access to IP addresses or the logs associated with them.\n\nThe above mentioned data is processed on a legitimate interest basis (see GDPR article 6.1f )."),
         "actualInformations":
             MessageLookupByLibrary.simpleMessage("Actual information"),
+        "addEvent": MessageLookupByLibrary.simpleMessage("Add Event"),
         "addNearBy": MessageLookupByLibrary.simpleMessage("Add friend nearby"),
         "addfriendwithcode":
             MessageLookupByLibrary.simpleMessage("Add friend with Code"),
@@ -148,7 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "allowWakeLock":
             MessageLookupByLibrary.simpleMessage("Leave app waked up?"),
         "allowWakeLockHeader": MessageLookupByLibrary.simpleMessage(
-            "Display keeps on while the app is open and location sharing is active. Disables at 20% battery level. Leave switched on."),
+            "Display keeps on while the app is open and location sharing is active. Disables at 30% battery level. (Higher battery consumption)"),
         "alternativeLocationProvider":
             MessageLookupByLibrary.simpleMessage("Use alternative driver"),
         "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
@@ -259,6 +260,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dateTimeIntl": m3,
         "dateTimeSecIntl": m4,
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "deleteEvent": MessageLookupByLibrary.simpleMessage("Delete Event"),
         "deleteMessage": MessageLookupByLibrary.simpleMessage("Delete Message"),
         "deletefriend": MessageLookupByLibrary.simpleMessage("Remove friend"),
         "deny": MessageLookupByLibrary.simpleMessage("Deny"),
@@ -279,6 +281,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "distanceToTail":
             MessageLookupByLibrary.simpleMessage("Distance to tail"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
+        "editEvent": MessageLookupByLibrary.simpleMessage("Edit Event"),
         "editfriend": MessageLookupByLibrary.simpleMessage("Edit friend"),
         "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
             "To use BladeNight-App also in the background (Share location with friends and increase procession accuracy) without screen on, should location settings changed to \'Allow all time\'."),
@@ -704,9 +707,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "timeToFinish":
             MessageLookupByLibrary.simpleMessage("to finish (est.)"),
         "timeToFriend": MessageLookupByLibrary.simpleMessage("Time to friend"),
-        "timeToHead": MessageLookupByLibrary.simpleMessage("Time to head"),
-        "timeToMe": MessageLookupByLibrary.simpleMessage("Time to me"),
-        "timeToTail": MessageLookupByLibrary.simpleMessage("Time to tail"),
+        "timeToHead":
+            MessageLookupByLibrary.simpleMessage("Time to head (est.)"),
+        "timeToMe": MessageLookupByLibrary.simpleMessage("Time to me (est.)"),
+        "timeToTail":
+            MessageLookupByLibrary.simpleMessage("Time to tail (est.)"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
         "todayNo": MessageLookupByLibrary.simpleMessage("No today"),
         "tomorrow": MessageLookupByLibrary.simpleMessage("Tomorrow"),
@@ -736,6 +741,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "visibleOnMap": MessageLookupByLibrary.simpleMessage("Shown on map."),
         "waiting": MessageLookupByLibrary.simpleMessage("Waiting..."),
         "waittime": MessageLookupByLibrary.simpleMessage("Waiting"),
+        "wakelockDisabled":
+            MessageLookupByLibrary.simpleMessage("Display switches off"),
+        "wakelockEnabled":
+            MessageLookupByLibrary.simpleMessage("Display remains an"),
         "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
             "is canceled! Please check this on https://bladenight-muenchen.de"),
         "weekdayIntl": m17,

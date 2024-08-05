@@ -128,6 +128,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Données que nous recevons automatiquement L\'OSMF gère un certain nombre de services pour la communauté OpenStreetMap, par exemple le site web openstreetmap.org, la carte en ligne de style \'Standard\', l\'API OSM et l\'outil de recherche nominatim.\nLorsque vous visitez un site web OSMF, accédez à l\'un des services via un navigateur ou via des applications qui utilisent les API fournies, des enregistrements de cette utilisation sont produits, nous collectons des informations sur votre navigateur ou application et votre interaction avec notre site web, y compris (a) l\'adresse IP, (b) le type de navigateur et d\'appareil, (c) le système d\'exploitation, (d) la page web de référence, (e) la date et l\'heure des visites de pages, et (f) les pages consultées sur nos sites web.\nLes services qui utilisent le Geo-DNS ou des mécanismes similaires pour répartir la charge sur des serveurs géographiquement distribués généreront potentiellement un enregistrement de votre localisation à grande échelle (par exemple, le réseau de cache de tuiles OSMF détermine le pays dans lequel vous êtes susceptible d\'être situé et dirige vos requêtes vers un serveur approprié). \nCes données sont utilisées ou peuvent être utilisées de la manière suivante : pour soutenir le fonctionnement des services d\'un point de vue technique, de sécurité et de planification, en tant que données anonymes et résumées à des fins de recherche et autres. Ces données peuvent être proposées publiquement via https://planet.openstreetmap.org ou d\'autres canaux et utilisées par des tiers.\npour améliorer le jeu de données OpenStreetMap. Par exemple, en analysant les requêtes nominatives pour les adresses et les codes postaux manquants et en fournissant ces données à la communauté OSM. Les données collectées sur les systèmes seront accessibles par les administrateurs du système et les groupes de travail OSMF appropriés, par exemple le groupe de travail sur les données. Aucune information personnelle ou liée à un individu ne sera divulguée à des tiers, sauf si la loi l\'exige.\nLes adresses IP stockées par Piwik sont raccourcies à deux octets et les informations d\'utilisation détaillées sont conservées pendant 180 jours.\nCompte tenu de la nature temporaire de ce stockage, il n\'est généralement pas possible pour nous de fournir un accès aux adresses IP ou aux journaux qui y sont associés.\nLes données mentionnées ci-dessus sont traitées sur la base de l\'intérêt légitime (voir GDPR article 6.1f )."),
         "actualInformations":
             MessageLookupByLibrary.simpleMessage("Informations actuelles"),
+        "addEvent":
+            MessageLookupByLibrary.simpleMessage("Ajouter un événement"),
         "addNearBy":
             MessageLookupByLibrary.simpleMessage("Ajouter un ami à proximité"),
         "addfriendwithcode":
@@ -152,7 +154,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "allowWakeLock": MessageLookupByLibrary.simpleMessage(
             "Laisser l\'application éveillée?"),
         "allowWakeLockHeader": MessageLookupByLibrary.simpleMessage(
-            "L\'application reste activée tant qu\'elle est ouverte et que le suivi est actif. Se désactive lorsque le niveau de la batterie atteint 20 %. Laisser allumé"),
+            "L\'application reste activée tant qu\'elle est ouverte et que le suivi est actif. Se désactive lorsque le niveau de la batterie atteint 30 %. Laisser allumé"),
         "alternativeLocationProvider":
             MessageLookupByLibrary.simpleMessage("Use alternative driver"),
         "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
@@ -265,6 +267,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "dateTimeIntl": m3,
         "dateTimeSecIntl": m4,
         "delete": MessageLookupByLibrary.simpleMessage("Supprimer"),
+        "deleteEvent":
+            MessageLookupByLibrary.simpleMessage("Supprimer l\'événement"),
         "deleteMessage":
             MessageLookupByLibrary.simpleMessage("Supprimer le message"),
         "deletefriend":
@@ -288,6 +292,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "distanceToTail":
             MessageLookupByLibrary.simpleMessage("Distance jusqu\'à la queue"),
         "done": MessageLookupByLibrary.simpleMessage("Terminé"),
+        "editEvent":
+            MessageLookupByLibrary.simpleMessage("Editer un événement"),
         "editfriend": MessageLookupByLibrary.simpleMessage("Modifier l\'ami"),
         "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
             "Pour utiliser BladeNight-App également en arrière-plan (partager la position avec des amis et augmenter la précision des processions) sans que l\'écran soit allumé, les paramètres de localisation doivent être réglés sur Autoriser tout le temps"),
@@ -770,6 +776,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Montré sur la carte"),
         "waiting": MessageLookupByLibrary.simpleMessage("En attente..."),
         "waittime": MessageLookupByLibrary.simpleMessage("Temps d\'attente"),
+        "wakelockDisabled":
+            MessageLookupByLibrary.simpleMessage("L\'écran s\'éteint"),
+        "wakelockEnabled":
+            MessageLookupByLibrary.simpleMessage("L\'écran reste allumé"),
         "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
             "Est annulé ! Veuillez le vérifier sur https://bladenight-muenchen.de"),
         "weekdayIntl": m17,

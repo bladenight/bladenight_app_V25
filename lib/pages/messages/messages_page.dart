@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,7 +15,6 @@ import '../../models/external_app_message.dart';
 import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/messages_provider.dart';
-import '../widgets/scroll_quick_alert.dart';
 
 class MessagesPage extends ConsumerStatefulWidget {
   const MessagesPage({super.key});
@@ -72,7 +72,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                     minSize: 0,
                     child: const Icon(CupertinoIcons.trash),
                     onPressed: () async {
-                      await ScrollQuickAlert.show(
+                      await QuickAlert.show(
                           context: context,
                           showCancelBtn: true,
                           type: QuickAlertType.warning,
@@ -153,7 +153,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                       child: _messageRow(context, message),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.endToStart) {
-                          await ScrollQuickAlert.show(
+                          await QuickAlert.show(
                               context: context,
                               showCancelBtn: true,
                               type: QuickAlertType.warning,

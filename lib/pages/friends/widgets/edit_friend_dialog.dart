@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_io/io.dart';
 
@@ -20,7 +21,6 @@ import '../../../providers/friends_provider.dart';
 import '../../../wamp/wamp_error.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_connection_warning.dart';
-import '../../widgets/scroll_quick_alert.dart';
 import 'friends_action_sheet.dart';
 
 class EditFriendResult {
@@ -311,7 +311,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
         var friend =
             await ref.read(friendsLogicProvider).addNewFriend(name, color!);
         if (friend == null && mounted) {
-          await ScrollQuickAlert.show(
+          await QuickAlert.show(
               context: context,
               showCancelBtn: true,
               showConfirmBtn: false,
@@ -323,7 +323,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
         }
         if (friend == null) return;
         if (!mounted) return;
-        await ScrollQuickAlert.show(
+        await QuickAlert.show(
             context: context,
             showCancelBtn: true,
             type: QuickAlertType.warning,

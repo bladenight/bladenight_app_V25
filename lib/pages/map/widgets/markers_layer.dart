@@ -97,7 +97,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                 ),
               ),
           ],
-          //beginn finish marker
+          //begin finish marker
           ...[
             BnMapMarker(
               buildContext: context,

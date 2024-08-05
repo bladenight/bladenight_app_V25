@@ -17,7 +17,6 @@ import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/friends_provider.dart';
 import '../../providers/network_connection_provider.dart';
-import '../widgets/scroll_quick_alert.dart';
 import 'widgets/edit_friend_dialog.dart';
 import 'widgets/friends_action_sheet.dart';
 import 'widgets/nearby_widget.dart';
@@ -208,7 +207,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                       child: _friendRow(context, friend),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.endToStart) {
-                          await ScrollQuickAlert.show(
+                          await QuickAlert.show(
                               context: context,
                               showCancelBtn: true,
                               type: QuickAlertType.warning,
