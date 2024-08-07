@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 const String hiveBoxSettingDbName = 'settings';
+const String hiveBoxLocationDbName = 'locationTrkDb';
 const String hiveBoxServerConfigDBName = 'appServerConfigDb';
 
 ///factor to resize icons with MediaQuery (MediaQuery.of(context).size.width * mediaSizePercentage)

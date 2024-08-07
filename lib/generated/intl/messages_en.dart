@@ -587,6 +587,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Reset ODO meter to 0 and clear driven route?"),
         "resetOdoMeterTitle": MessageLookupByLibrary.simpleMessage(
             "ODO meter reset and driven route"),
+        "resetTrackPointsStore":
+            MessageLookupByLibrary.simpleMessage("Clear all"),
+        "resetTrackPointsStoreTitle": MessageLookupByLibrary.simpleMessage(
+            "Clear location-store for all tracked events."),
         "restartRequired": MessageLookupByLibrary.simpleMessage(
             "Restart required! Please close app and reopen !!!"),
         "route": MessageLookupByLibrary.simpleMessage("Route"),

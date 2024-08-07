@@ -91,7 +91,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                 child: Text(Localize.of(context).updating),
               ),
             ),
-            const LinearProgressIndicator(),
+            const CircularProgressIndicator(),
           ]),
         ),
       );

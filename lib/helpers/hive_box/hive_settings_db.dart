@@ -11,6 +11,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
+import 'package:universal_io/io.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/app_constants.dart';
@@ -21,6 +22,7 @@ import '../../models/route.dart';
 import '../../models/user_gpx_point.dart';
 import '../logger.dart';
 import '../notification/onesignal_handler.dart';
+import '../timeconverter_helper.dart';
 import '../uuid_helper.dart';
 import '../validator.dart';
 
@@ -46,6 +48,10 @@ class HiveSettingsDB {
 
   static get _hiveBox {
     return Hive.box(hiveBoxSettingDbName);
+  }
+
+  static get _locationHiveBox {
+    return Hive.box(hiveBoxLocationDbName);
   }
 
   static get settingsHiveBox {

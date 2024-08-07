@@ -4352,6 +4352,26 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Clear location-store for all tracked events.`
+  String get resetTrackPointsStoreTitle {
+    return Intl.message(
+      'Clear location-store for all tracked events.',
+      name: 'resetTrackPointsStoreTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear all`
+  String get resetTrackPointsStore {
+    return Intl.message(
+      'Clear all',
+      name: 'resetTrackPointsStore',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

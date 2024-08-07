@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:intl/intl.dart';
 
 import '../generated/l10n.dart';
@@ -114,5 +116,35 @@ class DateFormatter {
   ///Format DateTime to time in format dd. MMM yy, HH:mm:ss
   String getFullDateTimeString(DateTime dateTime) {
     return DateFormat('dd. MMM yy, HH:mm:ss').format(dateTime);
+  }
+
+  /// Create Date from Timestamp (time is set to 0:0:0)
+  static DateTime toDateOnly(DateTime dateTime) {
+    var date = toDateOnly(
+        dateTime); //  DateTime(dateTime.year, dateTime.month, dateTime.day);
+    return date;
+  }
+
+  static DateTime fromString(String inputDate) {
+    try {
+      DateFormat format = DateFormat('yyyy-MM-dd');
+      DateTime dateTime = format.parse(inputDate);
+      return dateTime;
+    } catch (e) {
+      var today = DateTime.now();
+      return DateTime(today.year, today.month, today.day);
+    }
+  }
+}
+
+/// Create Date from Timestamp (time is set to 0:0:0)
+extension DateExtension on DateTime {
+  DateTime toDateOnly() {
+    return DateTime(year, month, day);
+  }
+
+  String toDateOnlyString() {
+    var date = DateTime(year, month, day);
+    return DateFormat('yyyy-MM-dd').format(date);
   }
 }

@@ -610,6 +610,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Remettre le compteur ODO à 0 et effacer l\'itinéraire conduit?"),
         "resetOdoMeterTitle": MessageLookupByLibrary.simpleMessage(
             "Remise à zéro du compteur ODO et route conduite"),
+        "resetTrackPointsStore":
+            MessageLookupByLibrary.simpleMessage("Clear all"),
+        "resetTrackPointsStoreTitle": MessageLookupByLibrary.simpleMessage(
+            "Clear location-store for all tracked events."),
         "restartRequired": MessageLookupByLibrary.simpleMessage(
             "Redémarrage requis ! Veuillez fermer l\'application et la rouvrir !!!"),
         "route": MessageLookupByLibrary.simpleMessage("Parcours"),

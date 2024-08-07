@@ -213,9 +213,8 @@ Future<void> exportLogs() async {
 }
 
 String exportUserTracking(List<UserGpxPoint> userTrackPoints) {
-  if (kIsWeb) return '';
-  var trkPts =
-      UserTrackPoints(userTrackPoints).toXML(); // jsonEncode(userTrackPoints);
+  var trkPts = UserTrackPoints(userTrackPoints)
+      .toXML(); // jsonEncode(userTrackPoints);
   return trkPts;
 }
 

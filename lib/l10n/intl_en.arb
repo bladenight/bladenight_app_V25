@@ -517,5 +517,7 @@
   "editEvent": "Edit Event",
   "deleteEvent": "Delete Event",
   "wakelockEnabled": "Display remains an",
-  "wakelockDisabled": "Display switches off"
+  "wakelockDisabled": "Display switches off",
+  "resetTrackPointsStoreTitle": "Clear location-store for all tracked events.",
+  "resetTrackPointsStore": "Clear all"
 }

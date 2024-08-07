@@ -315,7 +315,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportUserTracking":
             MessageLookupByLibrary.simpleMessage("Usertracking exportieren"),
         "exportUserTrackingHeader": MessageLookupByLibrary.simpleMessage(
-            "Das aktuell sichtbare gefahrene Routenlinie als GPX exportieren"),
+            "Das Tracking des gewählten Datums als GPX exportieren"),
         "exportWarning": MessageLookupByLibrary.simpleMessage(
             "Achtung! Dies sichert alle Freunde und die Kennung vom Gerät. Dies kann sensible Daten enthalten, wie zum Beispiel Namen."),
         "exportWarningTitle":
@@ -597,6 +597,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Km-Zähler auf 0 setzen und eigene gefahrene Routenpunkte auf Karte (angezeigte gefahrene Route kann vorher in Einstellungen exportiert werden bzw. werden auch beim schließen der App gelöscht) ?"),
         "resetOdoMeterTitle": MessageLookupByLibrary.simpleMessage(
             "Reset km-Zähler und eigene Routenpunkte"),
+        "resetTrackPointsStore":
+            MessageLookupByLibrary.simpleMessage("Lösche alle GPSDaten"),
+        "resetTrackPointsStoreTitle": MessageLookupByLibrary.simpleMessage(
+            "Lösche alle aufgezeichneten und gespeicherten Tracks"),
         "restartRequired": MessageLookupByLibrary.simpleMessage(
             "Neustart erforderlich! Bitte App schließen und neu öffnen !!!"),
         "route": MessageLookupByLibrary.simpleMessage("Strecke"),

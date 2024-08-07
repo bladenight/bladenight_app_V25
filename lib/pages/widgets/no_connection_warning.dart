@@ -48,7 +48,9 @@ class ConnectionWarning extends ConsumerWidget {
         //const ServerNotReachableWarning(),
       );
     } else {
-      return Container();
+      return const SizedBox(
+        height: 20,
+      );
     }
   }
 }

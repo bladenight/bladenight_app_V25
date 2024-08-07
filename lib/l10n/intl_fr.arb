@@ -516,7 +516,9 @@
   "editEvent" : "Editer un événement",
   "deleteEvent" : "Supprimer l'événement",
   "wakelockEnabled" : "L'écran reste allumé",
-  "wakelockDisabled" : "L'écran s'éteint"
+  "wakelockDisabled" : "L'écran s'éteint",
+  "resetTrackPointsStoreTitle": "Clear location-store for all tracked events.",
+  "resetTrackPointsStore": "Clear all"
 
 }
 

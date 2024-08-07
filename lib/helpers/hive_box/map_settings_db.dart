@@ -200,8 +200,8 @@ extension MapSettings on HiveSettingsDB {
   /// Get value
   /// if own driven track should bei shown on map
   static bool get showOwnColoredTrack {
-    return HiveSettingsDB._hiveBox
-        .get(showOwnColoredTrackKey, defaultValue: true);
+    return HiveSettingsDB._hiveBox.get(showOwnColoredTrackKey,
+        defaultValue: Platform.isAndroid ? false : true);
   }
 
   ///set showOwnColoredTrack

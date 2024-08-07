@@ -76,6 +76,7 @@ void main() async {
       Hive.registerAdapter(ColorAdapter());
       Hive.registerAdapter(ImageAndLinkAdapter());
       await Hive.openBox(hiveBoxSettingDbName);
+      await Hive.openBox(hiveBoxLocationDbName);
       await Hive.openBox(hiveBoxServerConfigDBName);
       Globals.logToCrashlytics = HiveSettingsDB.chrashlyticsEnabled;
       await DeviceId.initAppId();

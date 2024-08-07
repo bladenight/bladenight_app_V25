@@ -223,7 +223,7 @@
   "export": "Exportieren",
   "exportLogData": "Sende Logdaten für Support oder Featureanfrage",
   "exportUserTracking": "Usertracking exportieren",
-  "exportUserTrackingHeader": "Das aktuell sichtbare gefahrene Routenlinie als GPX exportieren",
+  "exportUserTrackingHeader": "Das Tracking des gewählten Datums als GPX exportieren",
   "exportWarning": "Achtung! Dies sichert alle Freunde und die Kennung vom Gerät. Dies kann sensible Daten enthalten, wie zum Beispiel Namen.",
   "exportWarningTitle": "Export Freunde und Id.",
   "failed": "Fehlgeschlagen!",
@@ -517,5 +517,7 @@
   "editEvent": "Event ändern",
   "deleteEvent": "Event löschen",
   "wakelockEnabled": "Display bleibt an",
-  "wakelockDisabled": "Display schaltet ab - Akku laden"
+  "wakelockDisabled": "Display schaltet ab - Akku laden",
+  "resetTrackPointsStoreTitle": "Lösche alle aufgezeichneten und gespeicherten Tracks",
+  "resetTrackPointsStore": "Lösche alle GPSDaten"
 }

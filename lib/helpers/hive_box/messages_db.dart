@@ -40,6 +40,16 @@ class MessagesDb {
     }
   }
 
+  static Future<int> get messagesCount async {
+    try {
+      int count = 0;
+      _messagesDbBox ??= await Hive.openBox(dbName);
+      return _messagesDbBox!.keys.length;
+    } catch (e) {
+      return 0;
+    }
+  }
+
   static Future<void> saveMessages(ExternalAppMessages messages) async {
     try {
       _messagesDbBox ??= await Hive.openBox(dbName);
@@ -144,6 +154,11 @@ class MessagesDb {
 
   static Future<void> deleteMessage(ExternalAppMessage message) async {
     _messagesDbBox ??= await Hive.openBox(dbName);
+    if (messagesCount == 1) {
+      //important to delete timestamp and reload messages new
+      await clearMessagesStore();
+      return;
+    }
     return _messagesDbBox!.delete(message.uid);
   }
 }

@@ -39,7 +39,6 @@ class UserGpxPoint with UserGpxPointMappable {
 @MappableClass()
 class UserTrackPoints with UserTrackPointsMappable {
   UserTrackPoints(this.utps);
-
   final List<UserGpxPoint> utps;
 
   //String toJson() => jsonEncode(utps);

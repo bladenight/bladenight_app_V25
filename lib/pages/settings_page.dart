@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'widgets/tracking_export_widget.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -44,10 +45,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //
+      trackDates = LocationStore.getTrackDates();
     });
   }
 
+  var trackDates = <String>[];
   var inputText = '';
   var _iconSize = HiveSettingsDB.iconSizeValue;
   bool _openInvisibleSettings = false;
@@ -410,31 +412,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           ),
                         ),
                       ]),
-                  if (!kIsWeb)
-                    CupertinoFormSection(
-                      header:
-                          Text(Localize.of(context).exportUserTrackingHeader),
-                      children: <Widget>[
-                        CupertinoButton(
-                            child: _exportTrackingInProgress
-                                ? const CircularProgressIndicator()
-                                : Text(Localize.of(context).exportUserTracking),
-                            onPressed: () async {
-                              if (_exportTrackingInProgress) return;
-                              setState(() {
-                                _exportTrackingInProgress = true;
-                              });
-                              await compute(
-                                exportUserTracking,
-                                LocationProvider.instance.userGpxPoints,
-                              ).then(
-                                  (value) => shareExportedTrackingData(value));
-                              _exportTrackingInProgress = false;
 
-                              setState(() {});
-                            }),
-                      ],
-                    ),
+                  const TrackingExportWidget(),
+
                   if (!kIsWeb)
                     CupertinoFormSection(
                         header: Text(Localize.of(context).resetOdoMeter),
