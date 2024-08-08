@@ -127,7 +127,7 @@ class MapEventInformation extends ConsumerWidget {
                               descriptionRight:
                                   '📏 ${(rtu.head.position / 1000).toStringAsFixed(1)} km',
                               rightWidget: (rtu.head.latitude != null &&
-                                      rtu.head.latitude != 0.00)
+                                      rtu.head.longitude != 0.00)
                                   ? GestureDetector(
                                       onTap: () {
                                         mapController.move(
@@ -158,7 +158,7 @@ class MapEventInformation extends ConsumerWidget {
                               descriptionRight:
                                   '📏 ${(rtu.tail.position / 1000).toStringAsFixed(1)} km',
                               rightWidget: (rtu.tail.latitude != null &&
-                                      rtu.tail.latitude != 0.00)
+                                      rtu.tail.longitude != 0.00)
                                   ? GestureDetector(
                                       onTap: () {
                                         mapController.move(
