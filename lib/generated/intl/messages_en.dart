@@ -655,8 +655,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Show procession participants (limited to 100 in procession) on map. Works only when your location is shared."),
         "showOwnColoredTrack":
             MessageLookupByLibrary.simpleMessage("Colorize my track"),
-        "showOwnTrack":
-            MessageLookupByLibrary.simpleMessage("Show own track in map"),
+        "showOwnTrack": MessageLookupByLibrary.simpleMessage(
+            "Your own journey can be recorded and displayed. The coloured route also shows the speed, but depending on the device, this can lead to jerking when zooming etc."),
         "showProcession": MessageLookupByLibrary.simpleMessage(
             "Showing actual procession of Münchener BladeNight"),
         "showWeblinkToRoute":

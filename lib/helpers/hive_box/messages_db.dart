@@ -153,7 +153,7 @@ class MessagesDb {
 
   static Future<void> deleteMessage(ExternalAppMessage message) async {
     _messagesDbBox ??= await Hive.openBox(dbName);
-    if (messagesCount == 1) {
+    if (_messagesDbBox?.keys.length == 1) {
       //important to delete timestamp and reload messages new
       await clearMessagesStore();
       return;

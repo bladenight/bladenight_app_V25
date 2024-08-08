@@ -419,7 +419,7 @@
   "settings": "Settings",
   "showFullProcession": "Show procession participants",
   "showFullProcessionTitle": "Show procession participants (limited to 100 in procession) on map. Works only when your location is shared.",
-  "showOwnTrack": "Show own track in map",
+  "showOwnTrack": "Your own journey can be recorded and displayed. The coloured route also shows the speed, but depending on the device, this can lead to jerking when zooming etc.",
   "showProcession": "Showing actual procession of Münchener BladeNight",
   "showWeblinkToRoute": "Show weblink to route",
   "showonly": "Show only",

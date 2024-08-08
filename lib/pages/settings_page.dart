@@ -22,7 +22,6 @@ import '../helpers/notification/toast_notification.dart';
 import '../pages/widgets/app_id_widget.dart';
 import '../pages/widgets/data_widget_left_right.dart';
 import '../providers/is_tracking_provider.dart';
-import '../providers/location_provider.dart';
 import '../providers/map/map_settings_provider.dart';
 import '../providers/network_connection_provider.dart';
 import '../providers/settings/dark_color_provider.dart';

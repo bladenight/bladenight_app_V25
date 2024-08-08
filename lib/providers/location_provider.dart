@@ -288,7 +288,7 @@ class LocationProvider with ChangeNotifier {
           reset: true,
           debug: false,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-          allowIdenticalLocations: true,
+          allowIdenticalLocations: false,
           distanceFilter: 2,
           heartbeatInterval: 60,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
@@ -298,7 +298,8 @@ class LocationProvider with ChangeNotifier {
           preventSuspend: true,
           stopOnTerminate: false,
           startOnBoot: false,
-          logLevel: bgLogLevel,
+          logLevel: bg.Config.LOG_LEVEL_OFF,
+          // bgLogLevel,
           //bg.Config.LOG_LEVEL_VERBOSE,//
           //locationUpdateInterval: 1000, not used - distance filter must be 0
           stopTimeout: 3,
@@ -324,7 +325,8 @@ class LocationProvider with ChangeNotifier {
           reset: true,
           debug: false,
           //ALL
-          logLevel: bgLogLevel,
+          logLevel: bg.Config.LOG_LEVEL_OFF,
+          // bgLogLevel,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
           distanceFilter: 2,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
@@ -333,7 +335,7 @@ class LocationProvider with ChangeNotifier {
           persistMode: bg.Config.PERSIST_MODE_NONE,
           // Activity Recognition
           activityRecognitionInterval: 3000,
-          allowIdenticalLocations: true,
+          allowIdenticalLocations: false,
           showsBackgroundLocationIndicator: true,
           preventSuspend: true,
           //locationUpdateInterval: 1000, not used - distance filter must be 0
@@ -895,6 +897,11 @@ class LocationProvider with ChangeNotifier {
     return _isTracking;
   }
 
+  Future<bool> saveLocationToDB() async {
+    return await LocationStore.saveUserTrackPointList(
+        _userGpxPoints, DateTime.now());
+  }
+
   ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
   void startSaveLocationsUpdateTimer(bool enabled) {
     BnLog.trace(text: 'init startSaveLocationsUpdateTimer to $enabled');
@@ -902,15 +909,14 @@ class LocationProvider with ChangeNotifier {
     if (enabled) {
       _saveLocationsTimer = Timer.periodic(
         const Duration(minutes: 5),
-        (timer) {
+        (timer) async {
           if (!_isTracking) {
             return;
           }
-          LocationStore.saveUserTrackPointList(_userGpxPoints, DateTime.now());
+          await saveLocationToDB();
         },
       );
     } else {
-      _saveLocationsTimer?.cancel();
       _saveLocationsTimer = null;
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -25,12 +27,11 @@ class TrackingExportWidget extends ConsumerStatefulWidget {
 class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
   String dateString = '';
   var trackedDates = <String>[];
-  var _selectedItem=0;
+  var _selectedItem = 0;
 
   void _onSelectedItemChanged(int value) {
-      setState(() => dateString = trackedDates[value]);
-      _selectedItem=value;
-
+    setState(() => dateString = trackedDates[value]);
+    _selectedItem = value;
   }
 
   @override
@@ -65,20 +66,9 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                     : const Icon(Icons.map_rounded),
                 onPressed: () async {
                   if (exportTrackingInProgress) return;
-                  setState(() {
-                    exportTrackingInProgress = true;
-                  });
-                  /*await compute(LocationStore.getUserTrackPointsListByDate,
-                          DateFormatter.fromString(dateString))
-                      .then((value) =>
-                          UserTrackDialog.show(context, value, dateString));*/
                   var tp = LocationStore.getUserTrackPointsListByDate(
                       DateFormatter.fromString(dateString));
                   UserTrackDialog.show(context, tp, dateString);
-
-                  setState(() {
-                    exportTrackingInProgress = false;
-                  });
                 }),
           ]),
           CupertinoButton(
@@ -90,6 +80,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                 setState(() {
                   exportTrackingInProgress = true;
                 });
+                await LocationProvider.instance.saveLocationToDB();
                 await compute(
                         exportUserTrackingToXml,
                         LocationStore.getUserGpxPointsListByDate(
@@ -138,18 +129,16 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
         cancelBtnText: Localize.current.cancel,
         onConfirmBtnTap: () {
           LocationStore.clearTrackPointStore();
-          dateString='';
+          dateString = '';
           _updateDates();
-          setState(() {
-
-          });
+          setState(() {});
           if (!context.mounted) return;
           Navigator.of(context).pop();
         });
   }
+
   void _updateDates() {
     trackedDates = LocationStore.getTrackDates();
     if (dateString.isEmpty) dateString = trackedDates.last;
   }
-
 }

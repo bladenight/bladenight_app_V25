@@ -669,8 +669,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Zeige Teilnehmer (auf 100 aus dem Zug limitiert) in der Karte. Funktioniert nur bei eigener Standortfreigabe."),
         "showOwnColoredTrack":
             MessageLookupByLibrary.simpleMessage("Coloriere Route"),
-        "showOwnTrack":
-            MessageLookupByLibrary.simpleMessage("Eigene Fahrlinie zeigen"),
+        "showOwnTrack": MessageLookupByLibrary.simpleMessage(
+            "Eigene Fahrlinie zeigen. Es kann die eigene Fahrt aufgezeichnet werden und dargestellt werden. Die Colorierte Route zeigt auch die Geschwindigkeit, kann aber je nach Gerät beim zoomen etc zu ruckeln führen."),
         "showProcession": MessageLookupByLibrary.simpleMessage(
             "Darstellung aktueller Verlauf der Münchener BladeNight"),
         "showWeblinkToRoute":

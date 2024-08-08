@@ -4,12 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/notification/toast_notification.dart';
-import '../../models/images_and_links.dart';
 import '../../models/user_gpx_point.dart';
 import '../map/widgets/map_buttons_light.dart';
 import '../map/widgets/map_tile_layer.dart';
@@ -26,7 +26,7 @@ class UserTrackDialog extends ConsumerWidget {
   final String date;
   final UserGPXPoints userGPXPoints;
 
-  static show(BuildContext context, UserGPXPoints userGPXPoints, String date) {
+  static void show(BuildContext context, UserGPXPoints userGPXPoints, String date) {
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) =>
@@ -38,6 +38,12 @@ class UserTrackDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var initLatLng = defaultLatLng;
+
+    if (userGPXPoints.latLngList.isNotEmpty){
+      var lastCoordinate = userGPXPoints.latLngList.last;
+      initLatLng = LatLng(lastCoordinate.latitude, lastCoordinate.longitude);
+    }
     return ScaffoldMessenger(
       child: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
@@ -54,7 +60,7 @@ class UserTrackDialog extends ConsumerWidget {
               maxZoom: MapSettings.openStreetMapEnabled
                   ? MapSettings.maxZoom
                   : MapSettings.maxZoomDefault,
-              initialCenter: defaultLatLng,
+              initialCenter: initLatLng,
               cameraConstraint: MapSettings.openStreetMapEnabled
                   ? CameraConstraint.contain(
                       bounds: MapSettings.mapOnlineBoundaries)

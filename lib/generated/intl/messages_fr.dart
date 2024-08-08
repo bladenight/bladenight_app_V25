@@ -688,7 +688,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "showOwnColoredTrack":
             MessageLookupByLibrary.simpleMessage("Coloriser ma trace"),
         "showOwnTrack": MessageLookupByLibrary.simpleMessage(
-            "Afficher sa propre piste sur la carte"),
+            "Afficher sa propre ligne de parcours. Il est possible d\'enregistrer et d\'afficher son propre parcours. L\'itinéraire coloré montre également la vitesse, mais selon l\'appareil, il peut y avoir des saccades lors du zoom, etc"),
         "showProcession": MessageLookupByLibrary.simpleMessage(
             "Showing actual procession of Münchener BladeNight"),
         "showWeblinkToRoute": MessageLookupByLibrary.simpleMessage(

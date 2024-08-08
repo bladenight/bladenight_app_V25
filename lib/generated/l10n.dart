@@ -3357,10 +3357,10 @@ class Localize {
     );
   }
 
-  /// `Show own track in map`
+  /// `Your own journey can be recorded and displayed. The coloured route also shows the speed, but depending on the device, this can lead to jerking when zooming etc.`
   String get showOwnTrack {
     return Intl.message(
-      'Show own track in map',
+      'Your own journey can be recorded and displayed. The coloured route also shows the speed, but depending on the device, this can lead to jerking when zooming etc.',
       name: 'showOwnTrack',
       desc: '',
       args: [],

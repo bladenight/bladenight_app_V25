@@ -419,7 +419,7 @@
   "settings": "Einstellungen",
   "showFullProcession": "Zeige Teilnehmer",
   "showFullProcessionTitle": "Zeige Teilnehmer (auf 100 aus dem Zug limitiert) in der Karte. Funktioniert nur bei eigener Standortfreigabe.",
-  "showOwnTrack": "Eigene Fahrlinie zeigen",
+  "showOwnTrack": "Eigene Fahrlinie zeigen. Es kann die eigene Fahrt aufgezeichnet werden und dargestellt werden. Die Colorierte Route zeigt auch die Geschwindigkeit, kann aber je nach Gerät beim zoomen etc zu ruckeln führen.",
   "showProcession": "Darstellung aktueller Verlauf der Münchener BladeNight",
   "showWeblinkToRoute": "Zeige QRCode zum Weblink",
   "showonly": "Nur Anzeige",

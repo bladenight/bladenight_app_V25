@@ -419,7 +419,6 @@
   "settings": "Paramètres",
   "showFullProcession": "Afficher les participants à la procession",
   "showFullProcessionTitle": "Afficher les participants au cortège (limité à 100 dans le cortège) sur la carte. Ne fonctionne qu'en cas d'autopistage",
-  "showOwnTrack": "Afficher sa propre piste sur la carte",
   "showProcession": "Showing actual procession of Münchener BladeNight",
   "showWeblinkToRoute": "Afficher le lien web vers l'itinéraire",
   "showonly": "Show only",
@@ -519,7 +518,7 @@
   "wakelockDisabled" : "L'écran s'éteint",
   "resetTrackPointsStoreTitle": "Clear location-store for all tracked events.",
   "resetTrackPointsStore": "Clear all",
-  "selectDate": "Select Date"
-
+  "selectDate": "Select Date",
+  "showOwnTrack" : "Afficher sa propre ligne de parcours. Il est possible d'enregistrer et d'afficher son propre parcours. L'itinéraire coloré montre également la vitesse, mais selon l'appareil, il peut y avoir des saccades lors du zoom, etc"
 }
 

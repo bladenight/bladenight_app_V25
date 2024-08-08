@@ -131,7 +131,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
         }),
       ),
       Positioned(
-        top: kIsWeb ? 10 : kBottomNavigationBarHeight + 60,
+        top: kIsWeb ? 10 : 10,
         right: kIsWeb ? 10 : 10,
         height: 30,
         child: Builder(builder: (context) {

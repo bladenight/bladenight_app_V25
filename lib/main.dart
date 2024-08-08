@@ -27,6 +27,7 @@ import 'headleass_task.dart';
 import 'helpers/deviceid_helper.dart';
 import 'helpers/export_import_data_helper.dart';
 import 'helpers/hive_box/adapter/color_adapter.dart';
+import 'helpers/hive_box/app_server_config_db.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
 import 'helpers/logger.dart';
 import 'helpers/notification/notification_helper.dart';
@@ -88,14 +89,14 @@ void main() async {
       runApp(const ProviderScope(
           child: InheritedConsumer(child: BladeNightApp())));
 
-      if (Platform.isAndroid) {
-        /// Register BackgroundGeolocation headless-task.
-       /* bg.BackgroundGeolocation.registerHeadlessTask(
+      //if (Platform.isAndroid) {
+      /// Register BackgroundGeolocation headless-task.
+      /* bg.BackgroundGeolocation.registerHeadlessTask(
             backgroundGeolocationHeadlessTask);*/
 
-        /// Register BackgroundFetch headless-task.
-        BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-      }
+      /// Register BackgroundFetch headless-task.
+      BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
+      //}
     },
     (dynamic error, StackTrace stackTrace) {
       print('Application error 102: $error\n$stackTrace');
@@ -135,6 +136,23 @@ Future<bool> initNotifications() async {
 void initSettings() async {
   globalSharedPrefs = await SharedPreferences.getInstance();
   PreferencesHelper.getImagesAndLinksPref();
+  if (HiveSettingsDB.firstStart2421 && globalSharedPrefs != null) {
+    var restApiLink= ServerConfigDb.restApiLinkBg;
+    globalSharedPrefs?.setString(ServerConfigDb.restApiLinkKey, restApiLink);
+    var onSite = HiveSettingsDB.onsiteGeoFencingActive;
+    globalSharedPrefs?.setBool(HiveSettingsDB.setOnsiteGeoFencingKey,onSite);
+    var mail = HiveSettingsDB.bladeguardEmail;
+    globalSharedPrefs?.setString(HiveSettingsDB.bladeguardEmailKey, mail);
+    var val = HiveSettingsDB.bladeguardBirthday;
+    var bdStr =
+        '${val.year}-${val.month.toString().padLeft(2, '0')}-${val.day.toString().padLeft(2, '0')}';
+    globalSharedPrefs?.setString(HiveSettingsDB.bladeguardBirthdayKey, bdStr);
+    var oneSignalId = HiveSettingsDB.oneSignalId;
+    globalSharedPrefs?.setString(HiveSettingsDB.oneSignalId, oneSignalId);
+    // uncomment for testing headlessSetBladeguardOnSite(true);
+    //
+    HiveSettingsDB.setFirstStart2421(false);
+  }
 }
 
 class BladeNightApp extends StatelessWidget {

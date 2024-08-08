@@ -5,13 +5,15 @@ import 'package:crypto/crypto.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:universal_io/io.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/app_constants.dart';
@@ -272,6 +274,18 @@ class HiveSettingsDB {
     _hiveBox.put(_firstStartKey, val);
   }
 
+  static const String _firstStart2421Key = 'first_Start_2421';
+
+  ///get firstStart
+  static bool get firstStart2421 {
+    return _hiveBox.get(_firstStart2421Key, defaultValue: true);
+  }
+
+  ///set if  setFirstStart
+  static void setFirstStart2421(bool val) {
+    _hiveBox.put(_firstStart2421Key, val);
+  }
+
   static const String _hasShownIntroKey = 'hasShownIntroPref';
 
   ///get hasShownIntro
@@ -333,16 +347,18 @@ class HiveSettingsDB {
     await _hiveBox.put(_appIdKey, val);
   }
 
-  static const String _oneSignalIdKey = 'oneSignalIdPref';
+  static const String oneSignalIdKey = 'oneSignalIdPref';
 
   ///get oneSignalId
   static String get oneSignalId {
-    return _hiveBox.get(_oneSignalIdKey, defaultValue: '');
+    return _hiveBox.get(oneSignalIdKey, defaultValue: '');
   }
 
   ///set if  setOneSignalId were shown
-  static void setOneSignalId(String val) {
-    _hiveBox.put(_oneSignalIdKey, val);
+  static Future<void> setOneSignalId(String val) async {
+    _hiveBox.put(oneSignalIdKey, val);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(oneSignalId, val);
   }
 
   static const String isBladeGuardKey = 'isBladeGuardPref';
@@ -400,9 +416,11 @@ class HiveSettingsDB {
   }
 
   ///set BladeguardEmail for Bladeguard
-  static void setBladeguardEmail(String val) {
+  static Future<void> setBladeguardEmail(String val) async {
     checkBladeguardEmailValid(val);
     _hiveBox.put(bladeguardEmailKey, val.toLowerCase().trim());
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(bladeguardEmailKey, val);
   }
 
   static const String isBladeguardEmailValidKey = 'bladeguardEmailValidPref';
@@ -428,8 +446,11 @@ class HiveSettingsDB {
   }
 
   ///set BladeguardPhone for Bladeguard
-  static void setBladeguardBirthday(DateTime val) {
+  static void setBladeguardBirthday(DateTime val) async {
+    final prefs = await SharedPreferences.getInstance();
     _hiveBox.put(bladeguardBirthdayKey, val);
+    prefs.setString(
+        bladeguardBirthdayKey, '${val.year}-${val.month}-${val.day}');
   }
 
   static const String bladeguardPhoneKey = 'bladeguardPhonePref';
@@ -480,21 +501,26 @@ class HiveSettingsDB {
     _hiveBox.put(_bgIsAdminKey, val);
   }
 
-  static const String _setOnsiteGeoFencingKey = 'setOnsiteGeoFencingPref';
+  static const String setOnsiteGeoFencingKey = 'setOnsiteGeoFencingPref';
 
   ///Bladeguard is registered for GeoFencing
   static bool get onsiteGeoFencingActive {
-    return _hiveBox.get(_setOnsiteGeoFencingKey, defaultValue: false);
+    return _hiveBox.get(setOnsiteGeoFencingKey, defaultValue: false);
   }
 
   ///Set if Bladeguard is registered for OneSignalPush
-  static void setSetOnsiteGeoFencingActive(bool val) {
-    _hiveBox.put(_setOnsiteGeoFencingKey, val);
+  static Future<void> setSetOnsiteGeoFencingActive(bool val) async{
+    _hiveBox.put(setOnsiteGeoFencingKey, val);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(setOnsiteGeoFencingKey, val);
   }
 
   ///Set if Bladeguard is registered for OneSignalPush
-  static Future<void> setSetOnsiteGeoFencingActiveAsync(bool val) {
-    return _hiveBox.put(_setOnsiteGeoFencingKey, val);
+  static Future<void> setSetOnsiteGeoFencingActiveAsync(bool val) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.reload();
+    prefs.setBool(setOnsiteGeoFencingKey, val);
+    return _hiveBox.put(setOnsiteGeoFencingKey, val);
   }
 
   static const String _oneSignalRegisterBladeGuardPushKey =
