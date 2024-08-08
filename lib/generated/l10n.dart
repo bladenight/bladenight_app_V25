@@ -1576,20 +1576,20 @@ class Localize {
     );
   }
 
-  /// `Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. (Default inactive)`
+  /// `Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.`
   String get fitnessPermissionSettingsText {
     return Intl.message(
-      'Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. (Default inactive)',
+      'Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.',
       name: 'fitnessPermissionSettingsText',
       desc: '',
       args: [],
     );
   }
 
-  /// `Fitness Activity disabled`
+  /// `Motion sensor enabled`
   String get fitnessPermissionSwitchSettingsText {
     return Intl.message(
-      'Fitness Activity disabled',
+      'Motion sensor enabled',
       name: 'fitnessPermissionSwitchSettingsText',
       desc: '',
       args: [],
@@ -4368,6 +4368,16 @@ class Localize {
     return Intl.message(
       'Clear all',
       name: 'resetTrackPointsStore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select event date`
+  String get selectDate {
+    return Intl.message(
+      'Select event date',
+      name: 'selectDate',
       desc: '',
       args: [],
     );

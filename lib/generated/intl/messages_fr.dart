@@ -357,10 +357,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "fitnessPermissionInfoTextTitle":
             MessageLookupByLibrary.simpleMessage("Activité physique"),
         "fitnessPermissionSettingsText": MessageLookupByLibrary.simpleMessage(
-            "L\'accès à la détection de l\'activité de mouvement (activité physique) est souhaitable. Cela augmente l\'efficacité de la batterie en désactivant intelligemment le suivi de l\'emplacement lorsque votre appareil est détecté comme étant stationnaire. Veuillez donc activer cette fonction. (Inactive par défaut)"),
+            "L\'accès à la détection de l\'activité de mouvement (activité physique) est souhaitable. Cela augmente l\'efficacité de la batterie en désactivant intelligemment le suivi de l\'emplacement lorsque votre appareil est détecté comme étant stationnaire. Veuillez donc activer cette fonction."),
         "fitnessPermissionSwitchSettingsText":
             MessageLookupByLibrary.simpleMessage(
-                "Activité de remise en forme désactivée"),
+                "Activité de remise en forme activée"),
         "forgotPassword":
             MessageLookupByLibrary.simpleMessage("Mot de passe oublié"),
         "forward": MessageLookupByLibrary.simpleMessage("Forward"),
@@ -628,6 +628,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Recherche d\'appareils à proximité"),
         "seemsoffline": MessageLookupByLibrary.simpleMessage(
             "Attente de la connexion internet ..."),
+        "selectDate": MessageLookupByLibrary.simpleMessage("Select Date"),
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Demande envoyée - le changement prend environ 30 secondes."),
         "sendMail": MessageLookupByLibrary.simpleMessage("Envoyer un email"),

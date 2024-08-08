@@ -212,17 +212,25 @@ Future<void> exportLogs() async {
   }
 }
 
-String exportUserTracking(List<UserGpxPoint> userTrackPoints) {
-  var trkPts = UserTrackPoints(userTrackPoints)
-      .toXML(); // jsonEncode(userTrackPoints);
+String exportUserTrackingToXml(List<UserGpxPoint> userTrackPoints) {
+  var trkPts =
+      UserGPXPoints(userTrackPoints).toXML(); // jsonEncode(userTrackPoints);
   return trkPts;
 }
 
-Future<void> shareExportedTrackingData(String trkPts) async {
+UserGPXPoints exportUserTrackPoints(List<UserGpxPoint> userTrackPoints) {
+  var trkPts =
+      UserGPXPoints(userTrackPoints); // jsonEncode(userTrackPoints);
+  return trkPts;
+}
+
+
+
+Future<void> shareExportedTrackingData(String trkPts, String date) async {
   try {
     var tempDir = await getTemporaryDirectory();
     final file = File(
-        '${tempDir.path}/BladeNight${DateTime.now().millisecondsSinceEpoch}.gpx');
+        '${tempDir.path}/BladeNight_${date}_${DateTime.now().millisecondsSinceEpoch}.gpx');
     var tempFile = await file.writeAsString(trkPts, flush: true);
     showToast(message: Localize.current.ok);
     Share.shareXFiles([XFile(tempFile.path)],

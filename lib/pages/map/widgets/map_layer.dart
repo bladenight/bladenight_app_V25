@@ -108,7 +108,7 @@ class _MapLayerState extends State<MapLayer> {
         ),
         SpecialPointsLayer(_popupController),
         EventInfoOverlay(event: widget.event, routePoints: widget.routePoints),
-        const MapButtonsLayerLight(),
+        const SafeArea(child: MapButtonsLayerLight()),
       ],
     );
   }

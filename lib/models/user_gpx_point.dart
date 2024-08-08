@@ -1,3 +1,4 @@
+import 'package:bladenight_app_flutter/models/user_speed_point.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -37,9 +38,42 @@ class UserGpxPoint with UserGpxPointMappable {
 }
 
 @MappableClass()
-class UserTrackPoints with UserTrackPointsMappable {
-  UserTrackPoints(this.utps);
-  final List<UserGpxPoint> utps;
+class UserGPXPoints with UserGPXPointsMappable {
+  UserGPXPoints(this.userGPXPointList);
+
+  final List<UserGpxPoint> userGPXPointList;
+
+  List<LatLng> get latLngList {
+    var latLngList = <LatLng>[];
+    for (var tp in userGPXPointList) {
+      latLngList.add(tp.latLng);
+    }
+    return latLngList;
+  }
+
+  UserSpeedPoints get userSpeedPoints {
+    var userSpeedPoints = UserSpeedPoints([]);
+    LatLng? lastLatLng;
+    for (var tp in userGPXPointList) {
+      if (lastLatLng == null) {
+        //first point
+        UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+          tp.latitude,
+          tp.longitude,
+          tp.realSpeedKmh,
+          LatLng(tp.latitude, tp.longitude),
+        );
+        lastLatLng = LatLng(tp.latitude, tp.longitude);
+        userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+      } else {
+        UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+            tp.latitude, tp.longitude, tp.realSpeedKmh, lastLatLng);
+        userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+        lastLatLng = LatLng(tp.latitude, tp.longitude);
+      }
+    }
+    return userSpeedPoints;
+  }
 
   //String toJson() => jsonEncode(utps);
   String toXML() {
@@ -52,7 +86,7 @@ class UserTrackPoints with UserTrackPointsMappable {
         '<name>Bladenight Aufzeichnung vom ${DateTime.now().toIso8601String()}</name>\n'
         '\t<trk>\n'
         '\t\t<trkseg>\n';
-    for (var tp in utps) {
+    for (var tp in userGPXPointList) {
       str = '$str${tp.toXML()}';
     }
     str = '$str\t\t</trkseg>\n'

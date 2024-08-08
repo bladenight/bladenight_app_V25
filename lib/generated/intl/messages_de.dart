@@ -348,9 +348,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "fitnessPermissionInfoTextTitle": MessageLookupByLibrary.simpleMessage(
             "Bewegungssensor / Körperliche Aktivität"),
         "fitnessPermissionSettingsText": MessageLookupByLibrary.simpleMessage(
-            "Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.(Standard inaktiv)"),
+            "Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
         "fitnessPermissionSwitchSettingsText":
-            MessageLookupByLibrary.simpleMessage("Bewegungssensor deaktiviert"),
+            MessageLookupByLibrary.simpleMessage("Bewegungssensor aktiv"),
         "forgotPassword":
             MessageLookupByLibrary.simpleMessage("Passwort vergessen"),
         "forward": MessageLookupByLibrary.simpleMessage("Weiter"),
@@ -594,7 +594,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "resetLongPress": MessageLookupByLibrary.simpleMessage(
             "Tachometer lange drücken zum Reset des km Zählers (ODO-Meter)"),
         "resetOdoMeter": MessageLookupByLibrary.simpleMessage(
-            "Km-Zähler auf 0 setzen und eigene gefahrene Routenpunkte auf Karte (angezeigte gefahrene Route kann vorher in Einstellungen exportiert werden bzw. werden auch beim schließen der App gelöscht) ?"),
+            "Km-Zähler auf 0 setzen und eigene gefahrene Routenpunkte auf Karte löschen?"),
         "resetOdoMeterTitle": MessageLookupByLibrary.simpleMessage(
             "Reset km-Zähler und eigene Routenpunkte"),
         "resetTrackPointsStore":
@@ -613,6 +613,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Suche Geräte in der Nähe ..."),
         "seemsoffline": MessageLookupByLibrary.simpleMessage(
             "Warte auf Internetverbindung ..."),
+        "selectDate": MessageLookupByLibrary.simpleMessage("Eventdatum wählen"),
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Anfrage gesendet - Dauert ca. 30s."),
         "sendMail": MessageLookupByLibrary.simpleMessage(
@@ -737,7 +738,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "trackers": MessageLookupByLibrary.simpleMessage("Tracker"),
         "tracking": MessageLookupByLibrary.simpleMessage("Daten vorhanden"),
         "trackingPoints":
-            MessageLookupByLibrary.simpleMessage("Aufgezeichnet Routenpunkte"),
+            MessageLookupByLibrary.simpleMessage("Aufgezeichnete Routenpunkte"),
         "trackingRestarted":
             MessageLookupByLibrary.simpleMessage("Tracking wieder gestartet"),
         "train": MessageLookupByLibrary.simpleMessage("Skater-Zug"),

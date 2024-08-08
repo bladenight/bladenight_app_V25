@@ -151,7 +151,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoButton.filled(
               child: Text(Localize.of(context).setRoute),
               onPressed: () async {
-                var route = await showRouteDialog(
+                var route = await showUserTrackDialog(
                   context,
                   current: context.read(currentRouteProvider).value?.name,
                 );
@@ -342,7 +342,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
     );
   }
 
-  Future<String?> showRouteDialog(BuildContext context, {String? current}) {
+  Future<String?> showUserTrackDialog(BuildContext context, {String? current}) {
     String? route;
     return showCupertinoDialog(
       context: context,

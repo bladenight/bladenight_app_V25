@@ -241,8 +241,8 @@
   "fireBaseCrashlyticsHeader": "Pour améliorer l'application, les événements de crash seront envoyés à Crashlytics. Cela peut être supprimé ici.",
   "fitnessPermissionInfoText": "L'accès à la détection de l'activité de mouvement (activité physique) est souhaitable. Cela augmente l'efficacité de la batterie en désactivant intelligemment le suivi de la localisation lorsque votre appareil est détecté comme étant stationnaire. Veuillez donc activer cette fonction. Elle sera demandée dans les étapes suivantes.",
   "fitnessPermissionInfoTextTitle": "Activité physique",
-  "fitnessPermissionSettingsText": "L'accès à la détection de l'activité de mouvement (activité physique) est souhaitable. Cela augmente l'efficacité de la batterie en désactivant intelligemment le suivi de l'emplacement lorsque votre appareil est détecté comme étant stationnaire. Veuillez donc activer cette fonction. (Inactive par défaut)",
-  "fitnessPermissionSwitchSettingsText": "Activité de remise en forme désactivée",
+  "fitnessPermissionSettingsText": "L'accès à la détection de l'activité de mouvement (activité physique) est souhaitable. Cela augmente l'efficacité de la batterie en désactivant intelligemment le suivi de l'emplacement lorsque votre appareil est détecté comme étant stationnaire. Veuillez donc activer cette fonction.",
+  "fitnessPermissionSwitchSettingsText": "Activité de remise en forme activée",
   "forgotPassword": "Mot de passe oublié",
   "forward": "Forward",
   "friend": "Ami",
@@ -518,7 +518,8 @@
   "wakelockEnabled" : "L'écran reste allumé",
   "wakelockDisabled" : "L'écran s'éteint",
   "resetTrackPointsStoreTitle": "Clear location-store for all tracked events.",
-  "resetTrackPointsStore": "Clear all"
+  "resetTrackPointsStore": "Clear all",
+  "selectDate": "Select Date"
 
 }
 

@@ -442,7 +442,7 @@ class LocationProvider with ChangeNotifier {
     SendToWatch.setUserSpeed('${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
 
     //Create poly lines for user tracking
-    int maxSize = 250;
+    int maxSize = 300;
     if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
       if (_userGpxPoints.length > maxSize) {
         var smallTrackPointList = <LatLng>[];
@@ -454,10 +454,11 @@ class LocationProvider with ChangeNotifier {
           counter = counter + divider.toInt();
         }
         //avoid jumping of tracking if list is large
-        var last5 = _userGpxPoints.reversed.take(2).toList(growable: false);
-        for (var last in last5) {
-          smallTrackPointList.add(LatLng(last.latitude, last.longitude));
-        }
+        var lastUserpoint = _userGpxPoints.last;
+
+        smallTrackPointList
+            .add(LatLng(lastUserpoint.latitude, lastUserpoint.longitude));
+
         _userLatLngList = smallTrackPointList;
       } else {
         _userLatLngList
@@ -500,18 +501,13 @@ class LocationProvider with ChangeNotifier {
         //avoid jumping of tracking if list is large
         //changed to add only last single point to list
 
-        var last2userGPXPoints =
-            _userGpxPoints.reversed.take(2).toList(growable: false);
-        for (int i = 1; i >= 0; i--) {
-          var lastSmTrackPointListEntry = smallTrackPointList.lastSpeedPoint;
-          if (last2userGPXPoints[i].latLng ==
-              lastSmTrackPointListEntry!.latLng) {
-            continue;
-          }
+        var lastUserGPXPoint = _userGpxPoints.last;
+        var lastSmTrackPointListEntry = smallTrackPointList.lastSpeedPoint;
+        if (lastUserGPXPoint.latLng != lastSmTrackPointListEntry!.latLng) {
           smallTrackPointList.add(
-              last2userGPXPoints[i].latitude,
-              last2userGPXPoints[i].longitude,
-              last2userGPXPoints[i].realSpeedKmh,
+              lastUserGPXPoint.latitude,
+              lastUserGPXPoint.longitude,
+              lastUserGPXPoint.realSpeedKmh,
               lastSmTrackPointListEntry.latLng);
         }
         _userSpeedPoints = smallTrackPointList;
@@ -786,7 +782,7 @@ class LocationProvider with ChangeNotifier {
     _userReachedFinishDateTime == null;
     if (_userGpxPoints.length <= 1 &&
         MapSettings.showOwnTrack &&
-        LocationStore.storedDataAreFromToday) {
+        LocationStore.dataTodayAvailable) {
       //reload data
       _userGpxPoints.addAll(LocationStore.userTrackPointsList);
       _userSpeedPoints.clear();
@@ -810,7 +806,7 @@ class LocationProvider with ChangeNotifier {
     }
 
     if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
-      WakelockPlus.enable();
+      await WakelockPlus.enable();
     }
 
     if (kIsWeb || HiveSettingsDB.useAlternativeLocationProvider) {
@@ -1454,13 +1450,51 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
+  ///Set ODO meter to  0.0 km
+  Future<bool> _resetODOMeter() async {
+    try {
+      if (HiveSettingsDB.useAlternativeLocationProvider) {
+        _userGpxPoints.clear();
+        _userSpeedPoints.clear();
+        //LocationStore.clearTrackPointStoreForDate(DateTime.now());
+        return true;
+      }
+      //Triggers start location service
+      var odoResetResult =
+          await bg.BackgroundGeolocation.setOdometer(0.0).then((value) {
+        _odometer = value.odometer;
+      }).catchError((error) {
+        if (!kIsWeb) {
+          BnLog.error(text: '[resetOdometer] ERROR: $error');
+        }
+        return null;
+      });
+
+      if (!_isTracking) {
+        //#issue 1102
+        var bgGeoLocState = await bg.BackgroundGeolocation.stop();
+        _isTracking = bgGeoLocState.enabled;
+        notifyListeners();
+      }
+      _userGpxPoints.clear();
+      _userSpeedPoints.clear();
+      return odoResetResult == null ? false : true;
+    } catch (e) {
+      if (!kIsWeb) {
+        BnLog.error(
+            text: 'Error on resetTrackPoints ${e.toString()}', exception: e);
+      }
+      return false;
+    }
+  }
+
   ///Clear all tracked points
   Future<bool> resetTrackPoints() async {
     try {
       if (HiveSettingsDB.useAlternativeLocationProvider) {
         _userGpxPoints.clear();
         _userSpeedPoints.clear();
-        LocationStore.clearTrackPointStore();
+        //LocationStore.clearTrackPointStoreForDate(DateTime.now());
         return true;
       }
       //Triggers start location service
@@ -1494,7 +1528,6 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<void> resetTrackPointsStore() async {
-    await resetTrackPointsStore();
     LocationStore.clearTrackPointStore();
   }
 
@@ -1559,21 +1592,31 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  Future clearAllTrackPoints(BuildContext context) async {
-    QuickAlert.show(
-        context: navigatorKey.currentContext!,
-        type: QuickAlertType.warning,
-        showCancelBtn: true,
-        title: Localize.current.resetTrackPointsStoreTitle,
-        text: '${Localize.current.resetTrackPointsStore}',
-        confirmBtnText: Localize.current.yes,
-        cancelBtnText: Localize.current.cancel,
-        onConfirmBtnTap: () {
-          resetTrackPointsStore();
-          notifyListeners();
-          if (!context.mounted) return;
-          Navigator.of(context).pop();
-        });
+  Future resetOdoMeter(BuildContext context) async {
+    var alwaysPermissionGranted =
+        (gpsLocationPermissionsStatus == LocationPermissionStatus.always);
+    var whenInusePermissionGranted =
+        (gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse);
+    if ((alwaysPermissionGranted || whenInusePermissionGranted) &&
+        !HiveSettingsDB.useAlternativeLocationProvider) {
+      QuickAlert.show(
+          context: navigatorKey.currentContext!,
+          type: QuickAlertType.warning,
+          showCancelBtn: true,
+          title: Localize.current.resetOdoMeterTitle,
+          text:
+              '${Localize.current.userSpeed}  ${realUserSpeedKmh == null ? '- km/h' : realUserSpeedKmh?.formatSpeedKmH()}\n'
+              '${Localize.current.distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${odometer.toStringAsFixed(1)} km'} \n '
+              '${Localize.current.resetOdoMeter}',
+          confirmBtnText: Localize.current.yes,
+          cancelBtnText: Localize.current.cancel,
+          onConfirmBtnTap: () {
+            resetTrackPoints();
+            notifyListeners();
+            if (!context.mounted) return;
+            Navigator.of(context).pop();
+          });
+    }
   }
 
   void _onGeoFenceEvent(bg.GeofenceEvent event) async {

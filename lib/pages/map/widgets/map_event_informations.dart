@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -148,6 +147,12 @@ class MapEventInformation extends ConsumerWidget {
                                   : Container(),
                             ),
                             DataLeftRightContent(
+                                descriptionLeft:
+                                    '${Localize.of(context).speed} ${Localize.of(context).head}',
+                                descriptionRight:
+                                    '${(rtu.head.realSpeed ?? rtu.head.speed * 3.6).toStringAsFixed(1)} km/h',
+                                rightWidget: Container()),
+                            DataLeftRightContent(
                               descriptionLeft:
                                   '${Localize.of(context).distanceDriven} ${Localize.of(context).tail}',
                               descriptionRight:
@@ -172,115 +177,117 @@ class MapEventInformation extends ConsumerWidget {
                                     )
                                   : Container(),
                             ),
+                            DataLeftRightContent(
+                                descriptionLeft:
+                                    '${Localize.of(context).speed} ${Localize.of(context).tail}',
+                                descriptionRight:
+                                    '${(rtu.tail.realSpeed ?? rtu.tail.speed * 3.6).toStringAsFixed(1)} km/h',
+                                rightWidget: Container()),
                           ]),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                    child: Text(Localize.of(context).me,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  if (ref.watch(isTrackingProvider))
-                    GestureDetector(
-                      child: Container(
-                        color: CupertinoDynamicColor.resolve(
-                            CupertinoColors.systemGroupedBackground, context),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            DataLeftRightContent(
-                              descriptionLeft:
-                                  '${Localize.of(context).own} ${Localize.of(context).distanceDriven}',
-                              descriptionRight:
-                                  '${((rtu.user.position) / rtu.runningLength * 100).toStringAsFixed(1)}% | ↦${((rtu.user.position) / 1000).toStringAsFixed(1)} km',
-                              rightWidget: Container(),
-                            ),
-                            DataLeftRightContent(
-                              descriptionLeft:
-                                  Localize.of(context).distanceToFinish,
-                              descriptionRight:
-                                  '⇥ ${((rtu.runningLength - rtu.user.position) / 1000).toStringAsFixed(1)} km',
-                              rightWidget: GestureDetector(
-                                onTap: () {
-                                  /* mapController.move(
+                  if (ref.watch(isTrackingProvider)) ...[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                      child: Text(Localize.of(context).me,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Container(
+                      color: CupertinoDynamicColor.resolve(
+                          CupertinoColors.systemGroupedBackground, context),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          DataLeftRightContent(
+                            descriptionLeft:
+                                '${Localize.of(context).own} ${Localize.of(context).distanceDriven}',
+                            descriptionRight:
+                                '${((rtu.user.position) / rtu.runningLength * 100).toStringAsFixed(1)}% | ↦${((rtu.user.position) / 1000).toStringAsFixed(1)} km',
+                            rightWidget: Container(),
+                          ),
+                          DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).distanceToFinish,
+                            descriptionRight:
+                                '⇥ ${((rtu.runningLength - rtu.user.position) / 1000).toStringAsFixed(1)} km',
+                            rightWidget: GestureDetector(
+                              onTap: () {
+                                /* mapController.move(
                                         LatLng(context.watch(userLatLongProvider).
                                             location.userLatLng?.latitude ??
                                                 defaultLatitude,
                                             location.userLatLng?.longitude ??
                                                 defaultLongitude),
                                         15);*/
-                                  Navigator.of(context).pop();
-                                },
-                                child: Icon(Icons.gps_fixed_sharp,
-                                    color:
-                                        CupertinoTheme.of(context).primaryColor,
-                                    size: 20),
+                                Navigator.of(context).pop();
+                              },
+                              child: Icon(Icons.gps_fixed_sharp,
+                                  color:
+                                      CupertinoTheme.of(context).primaryColor,
+                                  size: 20),
+                            ),
+                          ),
+                          DataLeftRightContent(
+                              descriptionLeft: Localize.of(context).speed,
+                              descriptionRight:
+                                  '${(rtu.user.realSpeed != null ? rtu.user.realSpeed!.toStringAsFixed(1) : rtu.user.speed * 3.6)} km/h',
+                              rightWidget: Container()),
+                          if (!rtu.user.isOnRoute)
+                            DataLeftRightContent(
+                              descriptionLeft: Localize.of(context).notOnRoute,
+                              descriptionRight: '',
+                              rightWidget: Container(),
+                            ),
+                          if (rtu.user.isOnRoute) ...[
+                            DataLeftRightContent(
+                              descriptionLeft: Localize.of(context).timeToHead,
+                              descriptionRight:
+                                  '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToHead().abs(), maxvalue: 120 * 60 * 1000)}',
+                              rightWidget: Container(
+                                alignment: Alignment.centerRight,
+                                width: 20,
+                                child: const Image(
+                                  image: AssetImage(
+                                    'assets/images/skatechildmunich.png',
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                             DataLeftRightContent(
-                                descriptionLeft: Localize.of(context).speed,
-                                descriptionRight:
-                                    '${(rtu.user.realSpeed != null ? rtu.user.realSpeed!.toStringAsFixed(1) : rtu.user.speed)} km/h',
-                                rightWidget: Container()),
-                            if (!rtu.user.isOnRoute)
-                              DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).notOnRoute,
-                                descriptionRight: '',
-                                rightWidget: Container(),
-                              ),
-                            if (rtu.user.isOnRoute) ...[
-                              DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).timeToHead,
-                                descriptionRight:
-                                    '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToHead().abs(), maxvalue: 120 * 60 * 1000)}',
-                                rightWidget: Container(
-                                  alignment: Alignment.centerRight,
-                                  width: 20,
-                                  child: const Image(
-                                    image: AssetImage(
-                                      'assets/images/skatechildmunich.png',
-                                    ),
-                                    fit: BoxFit.cover,
+                              descriptionLeft: Localize.of(context).timeToTail,
+                              descriptionRight:
+                                  '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail().abs(), maxvalue: 120 * 60 * 1000)}',
+                              rightWidget: Container(
+                                alignment: Alignment.centerRight,
+                                width: 20,
+                                child: const Image(
+                                  image: AssetImage(
+                                    'assets/images/skatechildmunichred.png',
                                   ),
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).timeToTail,
-                                descriptionRight:
-                                    '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail().abs(), maxvalue: 120 * 60 * 1000)}',
-                                rightWidget: Container(
-                                  alignment: Alignment.centerRight,
-                                  width: 20,
-                                  child: const Image(
-                                    image: AssetImage(
-                                      'assets/images/skatechildmunichred.png',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).distanceToHead,
-                                descriptionRight:
-                                    '${((rtu.head.position - rtu.user.position) / 1000).abs().toStringAsFixed(2)} km',
-                                rightWidget: Container(),
-                              ),
-                              DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).distanceToTail,
-                                descriptionRight:
-                                    '${((rtu.user.position - rtu.tail.position) / 1000).abs().toStringAsFixed(2)} km',
-                                rightWidget: Container(),
-                              ),
-                            ],
+                            ),
+                            DataLeftRightContent(
+                              descriptionLeft:
+                                  Localize.of(context).distanceToHead,
+                              descriptionRight:
+                                  '${((rtu.head.position - rtu.user.position) / 1000).abs().toStringAsFixed(2)} km',
+                              rightWidget: Container(),
+                            ),
+                            DataLeftRightContent(
+                              descriptionLeft:
+                                  Localize.of(context).distanceToTail,
+                              descriptionRight:
+                                  '${((rtu.user.position - rtu.tail.position) / 1000).abs().toStringAsFixed(2)} km',
+                              rightWidget: Container(),
+                            ),
                           ],
-                        ),
+                        ],
                       ),
                     ),
+                  ],
                   if (friends.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),

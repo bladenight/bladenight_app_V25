@@ -9,7 +9,6 @@ import '../helpers/wamp/subscribe_message.dart';
 import '../models/realtime_update.dart';
 import '../wamp/wamp_v2.dart';
 import 'is_tracking_provider.dart';
-import 'location_provider.dart';
 import 'network_connection_provider.dart';
 
 part 'realtime_data_provider.g.dart';

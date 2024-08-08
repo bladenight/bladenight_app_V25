@@ -7,30 +7,44 @@ extension LocationStore on HiveSettingsDB {
   static List<UserGpxPoint> get userTrackPointsList {
     try {
       var dateString = DateTime.now().toDateOnlyString();
-      var tp = HiveSettingsDB._locationHiveBox.get(_userTrackPointsKey + dateString);
+      var tp =
+          HiveSettingsDB._locationHiveBox.get(_userTrackPointsKey + dateString);
       if (MapSettings.showOwnTrack == false || tp == null) {
         return [];
       }
-      var utpPts = MapperContainer.globals.fromJson<UserTrackPoints>(tp);
-      return utpPts.utps.toList();
+      var utpPts = MapperContainer.globals.fromJson<UserGPXPoints>(tp);
+      return utpPts.userGPXPointList.toList();
     } catch (e) {
       return [];
     }
   }
 
   ///get stored track points
-  static List<UserGpxPoint> getUserTrackPointsListByDate(DateTime dateTime) {
+  static List<UserGpxPoint> getUserGpxPointsListByDate(DateTime dateTime) {
     try {
       var tp = HiveSettingsDB._locationHiveBox
           .get(_userTrackPointsKey + dateTime.toDateOnlyString());
-      if (MapSettings.showOwnTrack == false || tp == null) {
+      if (tp == null) {
         return [];
       }
-      var keylist =  HiveSettingsDB._locationHiveBox.keys;
-      var utpPts = MapperContainer.globals.fromJson<UserTrackPoints>(tp);
-      return utpPts.utps.toList();
+      var utpPts = MapperContainer.globals.fromJson<UserGPXPoints>(tp);
+      return utpPts.userGPXPointList.toList();
     } catch (e) {
       return [];
+    }
+  }
+
+  static UserGPXPoints getUserTrackPointsListByDate(DateTime dateTime) {
+    try {
+      var tp = HiveSettingsDB._locationHiveBox
+          .get(_userTrackPointsKey + dateTime.toDateOnlyString());
+      if (tp == null) {
+        return UserGPXPoints([]);
+      }
+      var utpPts = MapperContainer.globals.fromJson<UserGPXPoints>(tp);
+      return utpPts;
+    } catch (e) {
+      return UserGPXPoints([]);
     }
   }
 
@@ -44,7 +58,7 @@ extension LocationStore on HiveSettingsDB {
       BnLog.debug(
           text:
               'Saving user track points list with an amount of ${val.length}');
-      var utp = UserTrackPoints(val);
+      var utp = UserGPXPoints(val);
       HiveSettingsDB._locationHiveBox
           .put(_userTrackPointsKey + dateTime.toDateOnlyString(), utp.toJson());
       setUserTrackPointsLastUpdate(DateTime.now());
@@ -81,10 +95,11 @@ extension LocationStore on HiveSettingsDB {
     HiveSettingsDB._locationHiveBox.put(_userTrackPointsLastUpdate, val);
   }
 
-  ///helper to identify if data are stored yesterday
-  static bool get storedDataAreFromToday {
+  ///helper to identify if data are stored today
+  static bool get dataTodayAvailable {
     var dateString = DateTime.now().toDateOnlyString();
-    if (HiveSettingsDB._locationHiveBox.containsKey(_userTrackPointsKey + dateString)) {
+    if (HiveSettingsDB._locationHiveBox
+        .containsKey(_userTrackPointsKey + dateString)) {
       return true;
     }
     return false;
@@ -93,21 +108,21 @@ extension LocationStore on HiveSettingsDB {
   static List<String> getTrackDates() {
     var dateList = <String>[];
     try {
-
       var keys = HiveSettingsDB._locationHiveBox.keys;
       for (var key in keys) {
-        dateList.add(key.replace(_userTrackPointsKey));
+        if (key.compareTo(_userTrackPointsLastUpdate) == 0) {
+          continue;
+        }
+        dateList.add(key.replaceAll(_userTrackPointsKey, ''));
       }
-      if (dateList.isEmpty){
+      if (dateList.isEmpty) {
         dateList.add(DateTime.now().toDateOnlyString());
       }
       return dateList;
     } catch (e) {
-      if (dateList.isEmpty){
+      if (dateList.isEmpty) {
         dateList.add(DateTime.now().toDateOnlyString());
       }
-      dateList.add(DateTime.now().subtract(Duration(days: 1)).toDateOnlyString());
-      dateList.add(DateTime.now().subtract(Duration(days: 2)).toDateOnlyString());
       return dateList;
     }
   }

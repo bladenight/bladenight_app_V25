@@ -342,9 +342,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "fitnessPermissionInfoTextTitle":
             MessageLookupByLibrary.simpleMessage("Fitness Activity"),
         "fitnessPermissionSettingsText": MessageLookupByLibrary.simpleMessage(
-            "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. (Default inactive)"),
+            "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function."),
         "fitnessPermissionSwitchSettingsText":
-            MessageLookupByLibrary.simpleMessage("Fitness Activity disabled"),
+            MessageLookupByLibrary.simpleMessage("Motion sensor enabled"),
         "forgotPassword":
             MessageLookupByLibrary.simpleMessage("Forgot password"),
         "forward": MessageLookupByLibrary.simpleMessage("Forward"),
@@ -603,6 +603,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Searching nearby devices"),
         "seemsoffline": MessageLookupByLibrary.simpleMessage(
             " Waiting for internet connection ..."),
+        "selectDate": MessageLookupByLibrary.simpleMessage("Select event date"),
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Request sent - change need about 30 secs."),
         "sendMail": MessageLookupByLibrary.simpleMessage("Send an email"),

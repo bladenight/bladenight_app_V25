@@ -42,7 +42,6 @@ class MessagesDb {
 
   static Future<int> get messagesCount async {
     try {
-      int count = 0;
       _messagesDbBox ??= await Hive.openBox(dbName);
       return _messagesDbBox!.keys.length;
     } catch (e) {

@@ -67,7 +67,7 @@ void initializeMappers() {
   p25.SpecialPointMapper.ensureInitialized();
   p25.SpecialPointsMapper.ensureInitialized();
   p26.UserGpxPointMapper.ensureInitialized();
-  p26.UserTrackPointsMapper.ensureInitialized();
+  p26.UserGPXPointsMapper.ensureInitialized();
   p27.UserSpeedPointMapper.ensureInitialized();
   p27.UserSpeedPointsMapper.ensureInitialized();
   p28.WatchEventMapper.ensureInitialized();

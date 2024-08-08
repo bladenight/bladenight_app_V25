@@ -241,8 +241,8 @@
   "fireBaseCrashlyticsHeader": "To improve the app, crash events will be send to Crashlytics. This can be suppressed here.",
   "fitnessPermissionInfoText": "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. This will be requested in the next steps.",
   "fitnessPermissionInfoTextTitle": "Fitness Activity",
-  "fitnessPermissionSettingsText": "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function. (Default inactive)",
-  "fitnessPermissionSwitchSettingsText": "Fitness Activity disabled",
+  "fitnessPermissionSettingsText": "Access to motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.",
+  "fitnessPermissionSwitchSettingsText": "Motion sensor enabled",
   "forgotPassword": "Forgot password",
   "forward": "Forward",
   "friend": "Friend",
@@ -519,5 +519,6 @@
   "wakelockEnabled": "Display remains an",
   "wakelockDisabled": "Display switches off",
   "resetTrackPointsStoreTitle": "Clear location-store for all tracked events.",
-  "resetTrackPointsStore": "Clear all"
+  "resetTrackPointsStore": "Clear all",
+  "selectDate": "Select event date"
 }

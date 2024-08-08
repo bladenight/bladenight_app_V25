@@ -202,8 +202,6 @@ class _EventsPageState extends ConsumerState<EventsPage>
     if (events.events.isEmpty) {
       return resEvents;
     }
-    var actualDate = DateTime.now();
-
     for (var event in events.events) {
       if (event.startDate
               .isAfter(DateTime.now().subtract(const Duration(days: 15)))
