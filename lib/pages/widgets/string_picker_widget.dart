@@ -19,21 +19,6 @@ class StringPicker extends StatefulWidget {
 }
 
 class _StringPickerState extends State<StringPicker> {
-  late final FixedExtentScrollController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = FixedExtentScrollController(initialItem: widget.selectedItem);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

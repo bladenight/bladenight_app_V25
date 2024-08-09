@@ -108,6 +108,7 @@ extension LocationStore on HiveSettingsDB {
     return false;
   }
 
+  ///Returns a datelist (not empty) hich dates has availible trackingdata
   static List<String> getTrackDates() {
     var dateList = <String>[];
     try {

@@ -54,7 +54,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                       builder: (_) => StringPicker(
                         title: Localize.of(context).selectDate,
                         items: LocationStore.getTrackDates(),
-                        selectedItem: _selectedItem,
+                        selectedItem: trackedDates.indexOf(dateString),
                         onSelectedItemChanged: _onSelectedItemChanged,
                       ),
                     );
@@ -139,6 +139,9 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
 
   void _updateDates() {
     trackedDates = LocationStore.getTrackDates();
-    if (dateString.isEmpty) dateString = trackedDates.last;
+    if (dateString.isEmpty || dateString.length==1){
+      dateString = trackedDates.last;
+    _selectedItem=trackedDates.indexOf(dateString);
+    }
   }
 }

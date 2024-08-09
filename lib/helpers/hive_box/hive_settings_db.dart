@@ -395,8 +395,10 @@ class HiveSettingsDB {
   }
 
   ///set Bladeguard onsite timestamp for Bladeguard
-  static void setBladeguardLastSetOnsite(DateTime val) {
+  static Future<void> setBladeguardLastSetOnsite(DateTime val) async {
     _hiveBox.put(bladeguardLastSetOnsiteKey, val);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(bladeguardEmailKey, val.toDateOnlyString());
   }
 
   static const String bladeguardEmailKey = 'bladeguardEmailPref';
@@ -509,7 +511,7 @@ class HiveSettingsDB {
   }
 
   ///Set if Bladeguard is registered for OneSignalPush
-  static Future<void> setSetOnsiteGeoFencingActive(bool val) async{
+  static Future<void> setSetOnsiteGeoFencingActive(bool val) async {
     _hiveBox.put(setOnsiteGeoFencingKey, val);
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool(setOnsiteGeoFencingKey, val);
@@ -820,11 +822,13 @@ class HiveSettingsDB {
   }
 
   ///set actualEventStringString
-  static void setActualEvent(Event event) {
+  static Future<void> setActualEvent(Event event) async {
     event.lastupdate = DateTime.now();
     String eventJson = MapperContainer.globals.toJson(event);
     _hiveBox.put(_actualEventStringKey, eventJson);
     setActualEventLastUpdate(DateTime.now());
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('eventConfirmed', event.status == EventStatus.confirmed);
   }
 
   static const String _imagesAndLinksDataKey = 'imagesAndLinksJsonPref';

@@ -44,11 +44,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      trackDates = LocationStore.getTrackDates();
+
     });
   }
 
-  var trackDates = <String>[];
   var inputText = '';
   var _iconSize = HiveSettingsDB.iconSizeValue;
   bool _openInvisibleSettings = false;

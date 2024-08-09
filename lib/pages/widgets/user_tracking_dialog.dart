@@ -108,7 +108,7 @@ class UserTrackDialog extends ConsumerWidget {
                   // context.watch(polyLinesProvider),// widget.polyLines,
                 ]),
               ),
-              const SafeArea(child: OpenStreetMapCopyright()),
+               const Positioned( left:5, bottom: 5,child: SafeArea(child:  OpenStreetMapCopyright())),
               const SafeArea(child: MapButtonsLayerLight()),
             ],
           );
