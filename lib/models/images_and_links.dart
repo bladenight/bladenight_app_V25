@@ -16,7 +16,7 @@ export 'package:latlong2/latlong.dart';
 part 'images_and_links.mapper.dart';
 
 @MappableClass()
-class ImageAndLinkList with ImageAndLinkListMappable{
+class ImageAndLinkList with ImageAndLinkListMappable {
   @MappableField(key: 'ial')
   final List<ImageAndLink>? imagesAndLinks;
 
@@ -35,20 +35,22 @@ class ImageAndLinkList with ImageAndLinkListMappable{
     var wampResult = await WampV2.instance
         .addToWamp<ImageAndLinkList>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => ImageAndLinkList.rpcError(error));
+        .catchError((error, stackTrace) =>
+            ImageAndLinkList.rpcError(WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
-      var ialList = MapperContainer.globals.fromMap<ImageAndLinkList>(wampResult);
+      var ialList =
+          MapperContainer.globals.fromMap<ImageAndLinkList>(wampResult);
       HiveSettingsDB.setImagesAndLinksJson(ialList.toJson());
       return ialList;
     }
     if (wampResult is ImageAndLinkList) {
       if (HiveSettingsDB.imagesAndLinksJson.isNotEmpty) {
-        return MapperContainer.globals.fromJson<ImageAndLinkList>(
-            HiveSettingsDB.imagesAndLinksJson);
+        return MapperContainer.globals
+            .fromJson<ImageAndLinkList>(HiveSettingsDB.imagesAndLinksJson);
       }
       return wampResult;
     }
-    return ImageAndLinkList.rpcError(Exception(WampError('unknown')));
+    return ImageAndLinkList.rpcError(WampException('unknown'));
   }
 
   @override

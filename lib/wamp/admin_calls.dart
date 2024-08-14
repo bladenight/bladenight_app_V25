@@ -11,14 +11,14 @@ import 'wamp_v2.dart';
 class AdminCalls {
   static Future<bool> setActiveStatus(Map<String, dynamic> message) async {
     Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
-        WampEndpoint.setactivestatus, message);
+    BnWampMessage bnWampMessage = BnWampMessage(
+        WampMessageType.call, completer, WampEndpoint.setactivestatus, message);
 
     var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampError(error.toString()));
-    if (wampResult is WampError) {
+        .catchError((error, stackTrace) => WampException(error.toString()));
+    if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
     return true;
@@ -26,14 +26,14 @@ class AdminCalls {
 
   static Future<bool> setActiveRoute(Map<String, dynamic> message) async {
     Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
-        WampEndpoint.setactiveroute, message);
+    BnWampMessage bnWampMessage = BnWampMessage(
+        WampMessageType.call, completer, WampEndpoint.setactiveroute, message);
 
     var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampError(error.toString()));
-    if (wampResult is WampError) {
+        .catchError((error, stackTrace) => WampException(error.toString()));
+    if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
     return true;
@@ -47,8 +47,8 @@ class AdminCalls {
     var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampError(error.toString()));
-    if (wampResult is WampError) {
+        .catchError((error, stackTrace) => WampException(error.toString()));
+    if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
     return true;
@@ -62,8 +62,8 @@ class AdminCalls {
     var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampError(error.toString()));
-    if (wampResult is WampError) {
+        .catchError((error, stackTrace) => WampException(error.toString()));
+    if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
     return true;
@@ -77,8 +77,8 @@ class AdminCalls {
     var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampError(error.toString()));
-    if (wampResult is WampError) {
+        .catchError((error, stackTrace) => WampException(error.toString()));
+    if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
     return true;
@@ -97,7 +97,7 @@ class AdminCalls {
     var wampResult = await WampV2.instance
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampError(error.toString()));
+        .catchError((error, stackTrace) => WampException(error.toString()));
     if (wampResult is String) {
       return wampResult;
     }

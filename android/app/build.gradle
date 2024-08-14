@@ -17,12 +17,12 @@ if (localPropertiesFile.exists()) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '2423'
+    flutterVersionCode = '2425'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.24.23'
+    flutterVersionName = '1.24.25'
 }
 
 def keystoreProperties = new Properties()
@@ -65,7 +65,7 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             minifyEnabled true
             shrinkResources false
             defaultConfig.minSdkVersion 21
@@ -78,8 +78,10 @@ android {
             }
         }
 
-        debug {
+        getByName("debug") {
             defaultConfig.minSdkVersion 24
+            shrinkResources false
+            minifyEnabled false
             signingConfig signingConfigs.debug
         }
 

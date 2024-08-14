@@ -10,7 +10,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -92,11 +93,11 @@ void main() async {
 
       if (Platform.isAndroid) {
         /// Register BackgroundGeolocation headless-task
-      /* bg.BackgroundGeolocation.registerHeadlessTask(
+        /* bg.BackgroundGeolocation.registerHeadlessTask(
           backgroundGeolocationHeadlessTask);*/
 
-      /// Register BackgroundFetch headless-task.
-     // BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
+        /// Register BackgroundFetch headless-task.
+        // BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
       }
     },
     (dynamic error, StackTrace stackTrace) {
@@ -135,28 +136,28 @@ Future<bool> initNotifications() async {
 }
 
 void initSettings() async {
-  try{
-  globalSharedPrefs = await SharedPreferences.getInstance();
-  PreferencesHelper.getImagesAndLinksPref();
-  if (HiveSettingsDB.firstStart2421 && globalSharedPrefs != null && !kIsWeb) {
-    var restApiLink = ServerConfigDb.restApiLinkBg;
-    globalSharedPrefs?.setString(ServerConfigDb.restApiLinkKey, restApiLink);
-    var onSite = HiveSettingsDB.onsiteGeoFencingActive;
-    globalSharedPrefs?.setBool(HiveSettingsDB.setOnsiteGeoFencingKey, onSite);
-    var mail = HiveSettingsDB.bladeguardEmail;
-    globalSharedPrefs?.setString(HiveSettingsDB.bladeguardEmailKey, mail);
-    var val = HiveSettingsDB.bladeguardBirthday;
-    var bdStr =
-        '${val.year}-${val.month.toString().padLeft(2, '0')}-${val.day.toString().padLeft(2, '0')}';
-    globalSharedPrefs?.setString(HiveSettingsDB.bladeguardBirthdayKey, bdStr);
-    var oneSignalId = HiveSettingsDB.oneSignalId;
-    globalSharedPrefs?.setString(HiveSettingsDB.oneSignalId, oneSignalId);
-    var eventConfirmed = globalSharedPrefs?.setBool('eventConfirmed',false);
-    // uncomment for testing headlessSetBladeguardOnSite(true);
-    //
-    HiveSettingsDB.setFirstStart2421(false);
-  }}
-      catch(_){}
+  try {
+    globalSharedPrefs = await SharedPreferences.getInstance();
+    PreferencesHelper.getImagesAndLinksPref();
+    if (HiveSettingsDB.firstStart2421 && globalSharedPrefs != null && !kIsWeb) {
+      var restApiLink = ServerConfigDb.restApiLinkBg;
+      globalSharedPrefs?.setString(ServerConfigDb.restApiLinkKey, restApiLink);
+      var onSite = HiveSettingsDB.onsiteGeoFencingActive;
+      globalSharedPrefs?.setBool(HiveSettingsDB.setOnsiteGeoFencingKey, onSite);
+      var mail = HiveSettingsDB.bladeguardEmail;
+      globalSharedPrefs?.setString(HiveSettingsDB.bladeguardEmailKey, mail);
+      var val = HiveSettingsDB.bladeguardBirthday;
+      var bdStr =
+          '${val.year}-${val.month.toString().padLeft(2, '0')}-${val.day.toString().padLeft(2, '0')}';
+      globalSharedPrefs?.setString(HiveSettingsDB.bladeguardBirthdayKey, bdStr);
+      var oneSignalId = HiveSettingsDB.oneSignalId;
+      globalSharedPrefs?.setString(HiveSettingsDB.oneSignalId, oneSignalId);
+      globalSharedPrefs?.setBool('eventConfirmed', false);
+      // uncomment for testing headlessSetBladeguardOnSite(true);
+      //
+      HiveSettingsDB.setFirstStart2421(false);
+    }
+  } catch (_) {}
 }
 
 class BladeNightApp extends StatelessWidget {

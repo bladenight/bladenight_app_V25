@@ -219,12 +219,9 @@ String exportUserTrackingToXml(List<UserGpxPoint> userTrackPoints) {
 }
 
 UserGPXPoints exportUserTrackPoints(List<UserGpxPoint> userTrackPoints) {
-  var trkPts =
-      UserGPXPoints(userTrackPoints); // jsonEncode(userTrackPoints);
+  var trkPts = UserGPXPoints(userTrackPoints); // jsonEncode(userTrackPoints);
   return trkPts;
 }
-
-
 
 Future<void> shareExportedTrackingData(String trkPts, String date) async {
   try {
@@ -303,10 +300,11 @@ Future<bool> addFriendWithCodeFromUrl(
             isActive: true),
         friendDialogAction: FriendsAction.addWithCode);
   }
-  if (result != null) {
+  if (result is Friend) {
+    Friend fr = result as Friend;
     ProviderContainer()
         .read(friendsLogicProvider)
-        .addFriendWithCode(result.name, result.color, code);
+        .addFriendWithCode(fr.name, fr.color, code);
   }
   return true;
 }

@@ -57,9 +57,11 @@ class EditFriendDialog extends ConsumerStatefulWidget {
   }
 }
 
-class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
+class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
+    with WidgetsBindingObserver {
   late final TextEditingController nameController;
   late final TextEditingController codeController;
+  late FocusNode nameFocusNode;
   String? errorText;
   String name = '';
   bool nameOk = false;
@@ -86,6 +88,10 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
     isActive = widget.friend?.isActive ?? true;
     nameController = TextEditingController(text: name);
     codeController = TextEditingController(text: code);
+    nameFocusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      nameFocusNode.requestFocus();
+    });
   }
 
   @override
@@ -94,6 +100,15 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
     color ??= widget.friend?.color ??
         ColorConstants.friendPickerColors[
             Random().nextInt(ColorConstants.friendPickerColors.length)];
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    nameFocusNode.dispose();
+    nameController.dispose();
+    codeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -130,7 +145,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
                         onPressed: () async {
                           _saveData();
                         },
-                        child: const Icon(Icons.save_alt),
+                        child: const Icon(Icons.send_rounded),
                       ),
                     ])
                   : Container(),
@@ -150,6 +165,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
                         children: <Widget>[
                           CupertinoTextFormFieldRow(
                             controller: nameController,
+                            focusNode: nameFocusNode,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             validator: (String? value) {
@@ -223,17 +239,28 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
                                   code = value;
                                 });
                               },
+                              onFieldSubmitted: (val) {
+                                if (!isLoading &&
+                                        (nameOk &&
+                                            widget.action !=
+                                                FriendsAction.addWithCode) ||
+                                    (nameOk &&
+                                        widget.action ==
+                                            FriendsAction.addWithCode &&
+                                        isCodeValid)) {
+                                  _saveData();
+                                }
+                              },
                             ),
                           ]),
                     ],
                     if (errorText != null)
-                      FittedBox(
-                        child: Text(
-                          errorText!,
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            color: CupertinoColors.destructiveRed,
-                          ),
+                      Text(
+                        maxLines: 3,
+                        errorText!,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          color: CupertinoColors.destructiveRed,
                         ),
                       ),
                     const SizedBox(height: 5),
@@ -259,22 +286,28 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: CupertinoButton(
-                          color: Colors.greenAccent,
-                          onPressed: !isLoading &&
-                                      (nameOk &&
-                                          widget.action !=
-                                              FriendsAction.addWithCode) ||
-                                  (nameOk &&
-                                      widget.action ==
-                                          FriendsAction.addWithCode &&
-                                      isCodeValid)
-                              ? () {
-                                  _saveData();
-                                }
-                              : null,
-                          child: isLoading
-                              ? const CircularProgressIndicator()
-                              : Text(Localize.of(context).save)),
+                        color: Colors.greenAccent,
+                        onPressed: !isLoading &&
+                                    (nameOk &&
+                                        widget.action !=
+                                            FriendsAction.addWithCode) ||
+                                (nameOk &&
+                                    widget.action ==
+                                        FriendsAction.addWithCode &&
+                                    isCodeValid)
+                            ? () {
+                                _saveData();
+                              }
+                            : null,
+                        child: isLoading
+                            ? const CircularProgressIndicator()
+                            : Center(
+                                child: Row(children: [
+                                  Text(Localize.of(context).save),
+                                  const Icon(Icons.send_rounded)
+                                ]),
+                              ),
+                      ),
                     ),
                     const SizedBox(
                       height: 15,
@@ -311,14 +344,11 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
         var friend =
             await ref.read(friendsLogicProvider).addNewFriend(name, color!);
         if (friend == null && mounted) {
-          await QuickAlert.show(
-              context: context,
-              showCancelBtn: true,
-              showConfirmBtn: false,
-              type: QuickAlertType.error,
-              title: Localize.current.addnewfriend,
-              text: Localize.current.failed,
-              cancelBtnText: Localize.current.cancel);
+          setState(() {
+            errorText =
+                '${Localize.of(context).addnewfriend} ${Localize.of(context).failed}';
+            isLoading = false;
+          });
           return;
         }
         if (friend == null) return;
@@ -328,7 +358,8 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
             showCancelBtn: true,
             type: QuickAlertType.warning,
             barrierDismissible: true,
-            title: Localize.current.invitebyname(friend.name),
+            title:
+                '${Localize.current.invitebyname(friend.name)}  Code:${friend.requestId}',
             text: Localize.current.tellcode(friend.name, friend.requestId),
             confirmBtnText: Localize.current.sendlink,
             cancelBtnText: Localize.current.copy,
@@ -349,9 +380,17 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
         Navigator.of(context).pop(); //go back
       } else if (widget.action == FriendsAction.addWithCode) //validate code
       {
-        var _ = await ref
+        var result = await ref
             .read(friendsLogicProvider)
             .addFriendWithCode(name, color!, code!);
+        if (result is String && mounted) {
+          setState(() {
+            errorText =
+                '${Localize.of(context).addfriendwithcode} ${Localize.of(context).failed} $result';
+            isLoading = false;
+          });
+          return;
+        }
         if (!mounted) {
           return;
         } else {
@@ -363,7 +402,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog> {
         errorText = Localize.of(context).networkerror;
         isLoading = false;
       });
-    } on WampError {
+    } on WampException {
       setState(() {
         errorText = Localize.of(context).invalidcode;
         isLoading = false;

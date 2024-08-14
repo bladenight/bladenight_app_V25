@@ -162,7 +162,7 @@ class WampV2 {
             const Duration(seconds: 10) &&
         message.completer.isCompleted == false) {
       message.completer.completeError(
-          TimeoutException('WampV2_runner not started within 10 secs'));
+          WampException('WampV2_runner not started within 10 secs'));
       calls.remove(message.requestId);
     }
     channel?.sink.add(message.getMessageAsJson);
@@ -214,7 +214,7 @@ class WampV2 {
 
   void _connLoop() async {
     _liveCycleTimer =
-        Timer.periodic(const Duration(milliseconds: 500), (timer) async {
+        Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
       while (_isWebsocketRunning == false) {
         if (_isConnectedToInternet == false) {
           await Future.delayed(const Duration(milliseconds: 250));
@@ -253,8 +253,8 @@ class WampV2 {
             var timeDiff = DateTime.now().difference(nextMessage.dateTime);
             if (timeDiff > const Duration(seconds: 10)) {
               if (!message.completer.isCompleted) {
-                message.completer.completeError(TimeoutException(
-                    'WampV2_runner not started within 10 secs'));
+                message.completer.completeError(
+                    WampException('WampV2_runner not started within 10 secs'));
               }
               calls.remove(message.requestId);
               busy = true;
@@ -331,25 +331,24 @@ class WampV2 {
             return;
           } else if (wampMessageType == WampMessageType.result) {
             // [RESULT, CALL.Request|id, Details|dict, YIELD.Arguments|list, YIELD.ArgumentsKw|dict]
-            if (!kIsWeb) BnLog.debug(text: 'channel result $wampMessage');
-            //print('channel runner $wampMessage');
-
+            //BnLog.debug(text: 'channel result $wampMessage');
             var messageResult = wampMessage[2];
             resultStreamController.add(messageResult.runtimeType);
             try {
               var rt = RealtimeUpdateMapper.fromMap(messageResult);
               _realTimeUpdateStreamController.sink.add(rt);
             } catch (_) {}
-
-            calls[requestId]?.completer.complete(messageResult);
+            var cpl = calls[requestId]?.completer;
+            cpl?.complete(messageResult);
             calls.remove(requestId);
 
             return;
           } else if (wampMessageType == WampMessageType.error) {
             //   [ERROR, CALL, CALL.Request|id, Details|dict, Error|uri]
-            calls[wampMessage[2]]
-                ?.completer
-                .completeError(WampError(wampMessage[3]));
+            var strId = wampMessage[2].toString();
+            requestId = int.parse(strId);
+            var cpl = calls[requestId]?.completer;
+            cpl?.completeError(WampException(wampMessage[3]));
             calls.remove(wampMessage[2]);
           } else if (wampMessageType == WampMessageType.subscribe) {
             // [SUBSCRIBE, Request|id, Options|dict, Topic|uri]

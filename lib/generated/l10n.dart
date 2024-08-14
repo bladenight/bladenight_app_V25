@@ -670,11 +670,11 @@ class Localize {
     );
   }
 
-  /// `You're not on site today?`
-  String get bgTodayNotOnSite {
+  /// `You're registered as BladeGuard today!`
+  String get bgTodayIsRegistered {
     return Intl.message(
-      'You\'re not on site today?',
-      name: 'bgTodayNotOnSite',
+      'You\'re registered as BladeGuard today!',
+      name: 'bgTodayIsRegistered',
       desc: '',
       args: [],
     );
@@ -690,30 +690,30 @@ class Localize {
     );
   }
 
-  /// `Are you on site today as a bladeguard?`
-  String get bgTodayOnSite {
+  /// `Register as a bladeguard today!`
+  String get bgTodayTapToRegister {
     return Intl.message(
-      'Are you on site today as a bladeguard?',
-      name: 'bgTodayOnSite',
+      'Register as a bladeguard today!',
+      name: 'bgTodayTapToRegister',
       desc: '',
       args: [],
     );
   }
 
   /// `Please log in as Bladeguard today!`
-  String get bgTodayRegister {
+  String get bgTodayNotRegistered {
     return Intl.message(
       'Please log in as Bladeguard today!',
-      name: 'bgTodayRegister',
+      name: 'bgTodayNotRegistered',
       desc: '',
       args: [],
     );
   }
 
-  /// `Update Phone.`
+  /// `Update data`
   String get bgUpdatePhone {
     return Intl.message(
-      'Update Phone.',
+      'Update data',
       name: 'bgUpdatePhone',
       desc: '',
       args: [],
@@ -4378,6 +4378,46 @@ class Localize {
     return Intl.message(
       'Select event date',
       name: 'selectDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not a valid pending relationship id`
+  String get noValidPendingRelationShip {
+    return Intl.message(
+      'Not a valid pending relationship id',
+      name: 'noValidPendingRelationShip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Relationship with self is not allowed`
+  String get noSelfRelationAllowed {
+    return Intl.message(
+      'Relationship with self is not allowed',
+      name: 'noSelfRelationAllowed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Devices are already connected`
+  String get devicesAlreadyConnected {
+    return Intl.message(
+      'Devices are already connected',
+      name: 'devicesAlreadyConnected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show track points`
+  String get showOwnTrackSwitchTitle {
+    return Intl.message(
+      'Show track points',
+      name: 'showOwnTrackSwitchTitle',
       desc: '',
       args: [],
     );

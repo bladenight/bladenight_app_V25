@@ -153,11 +153,11 @@
   "bgNotificationText": "Das Hintergrundstandortupdate ist aktiv. Danke fürs mitmachen.",
   "bgNotificationTitle": "BladeNight Hintergrundstandortupdate",
   "bgTeam": "Bladeguard Team",
-  "bgTodayNotOnSite": "Du bist heute als Bladeguard eingetragen.",
+  "bgTodayIsRegistered": "Du bist heute als Bladeguard eingetragen.",
   "bgTodayNotParticipation": "Ich kann doch nicht als Bladeguard teilnehmen und möchte mich abmelden.",
-  "bgTodayOnSite": "Hier tippen und heute als Bladeguard eintragen?",
-  "bgTodayRegister": "Du heute noch nicht als Bladeguard angemeldet!",
-  "bgUpdatePhone": "Update Tel.",
+  "bgTodayTapToRegister": "Hier tippen und heute als Bladeguard eintragen!",
+  "bgTodayNotRegistered": "Du heute noch nicht als Bladeguard angemeldet!",
+  "bgUpdatePhone": "Aktualisieren",
   "birthday": "Geburtstag",
   "bladeGuard": "Bladeguard",
   "bladeGuardSettings": "Bladeguard Einstellungen",
@@ -520,5 +520,9 @@
   "wakelockDisabled": "Display schaltet ab - Akku laden",
   "resetTrackPointsStoreTitle": "Lösche alle aufgezeichneten und gespeicherten Tracks",
   "resetTrackPointsStore": "Lösche alle GPSDaten",
-  "selectDate": "Eventdatum wählen"
+  "selectDate": "Eventdatum wählen",
+  "noValidPendingRelationShip": "Keine gültige Beziehungsverknüpfung",
+  "noSelfRelationAllowed": "Beziehung mit sich selbst ist nicht erlaubt",
+  "devicesAlreadyConnected": "Geräte sind bereits verbunden",
+  "showOwnTrackSwitchTitle": "Fahrlinie zeigen"
 }

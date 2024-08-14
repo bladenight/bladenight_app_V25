@@ -6,14 +6,14 @@ import '../../app_settings/app_constants.dart';
 import '../../helpers/wamp/message_types.dart';
 import '../../wamp/bn_wamp_message.dart';
 import '../../wamp/wamp_endpoints.dart';
+import '../../wamp/wamp_error.dart';
 import '../../wamp/wamp_v2.dart';
 import 'friend.dart';
 
 part 'friends.mapper.dart';
 
 @MappableClass()
-class FriendsMessage with FriendsMessageMappable
-{
+class FriendsMessage with FriendsMessageMappable {
   @MappableField(key: 'fri')
   final Map<String, FriendMessage> friends;
 
@@ -28,8 +28,8 @@ class FriendsMessage with FriendsMessageMappable
     var wampResult = await WampV2.instance
         .addToWamp<FriendsMessage>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) =>
-        FriendsMessage(<String, FriendMessage>{}, error));
+        .catchError((error, stackTrace) => FriendsMessage(
+            <String, FriendMessage>{}, WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
       var value = MapperContainer.globals.fromMap<FriendsMessage>(wampResult);
       return value;

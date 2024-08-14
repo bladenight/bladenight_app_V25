@@ -99,7 +99,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                         child:
                             Column(mainAxisSize: MainAxisSize.max, children: [
                           Text(
-                            Localize.of(context).bgTodayRegister,
+                            Localize.of(context).bgTodayNotRegistered,
                             style: const TextStyle(color: Colors.black),
                             textAlign: TextAlign.center,
                           ),
@@ -114,7 +114,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                               },
                               color: Colors.green,
                               child: Text(
-                                Localize.of(context).bgTodayOnSite,
+                                Localize.of(context).bgTodayTapToRegister,
                                 style: const TextStyle(
                                   color: Colors.black,
                                 ),
@@ -143,7 +143,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                         child:
                             Column(mainAxisSize: MainAxisSize.max, children: [
                           Text(
-                            Localize.of(context).bgTodayNotOnSite,
+                            Localize.of(context).bgTodayIsRegistered,
                             style: const TextStyle(color: Colors.black),
                             textAlign: TextAlign.center,
                           ),
@@ -170,7 +170,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                                       Navigator.of(context).pop();
                                     });
                               },
-                              color: Colors.orange,
+                              color: Colors.orange.withOpacity(0.8),
                               child: Text(
                                 Localize.of(context).bgTodayNotParticipation,
                                 style: const TextStyle(

@@ -155,6 +155,9 @@ class RealtimeUpdate with RealtimeUpdateMappable {
           if (fr.specialValue == 2) {
             fr.name = Localize.current.tail;
           }
+          if (fr.specialValue == 98) {
+            fr.name = Localize.current.bladeGuard;
+          }
           if (fr.specialValue == 99) {
             fr.name = Localize.current.participant;
           }
@@ -168,6 +171,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     return updateFriends.where((f) => f.isOnline && f.isActive);
   }
 
+  ///Update Friend position etc
   Iterable<Friend> updateMapPointFriends(FriendsMessage rtFriends) {
     //update in Provider
     var userdata = ProviderContainer().read(locationProvider).userLatLng;
@@ -191,7 +195,8 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     var wampResult = await WampV2.instance
         .addToWamp<RealtimeUpdate>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => RealtimeUpdate.rpcError(error));
+        .catchError((error, stackTrace) =>
+            RealtimeUpdate.rpcError(WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
       var update = MapperContainer.globals.fromMap<RealtimeUpdate>(wampResult);
       return update;
@@ -199,6 +204,6 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     if (wampResult is RealtimeUpdate) {
       return wampResult;
     }
-    return RealtimeUpdate.rpcError(Exception(WampError('unknown')));
+    return RealtimeUpdate.rpcError(WampException('unknown'));
   }
 }

@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import '../../../app_settings/globals.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/deviceid_helper.dart';
+import '../../../helpers/logger.dart';
+import '../../../helpers/wamp/exceptions/bad_result_exception.dart';
 import '../../../models/messages/admin.dart';
 import '../../../wamp/admin_calls.dart';
-import '../../../wamp/wamp_error.dart';
 import '../admin_page.dart';
 
 const kInvalidPassword = 'http://app.bladenight/invalidPassword';
@@ -37,11 +38,11 @@ class AdminPasswordDialog extends StatefulWidget {
                 password: password, deviceId: DeviceId.appId)));
 
         if (res != 'OK') {
-          throw WampError(kInvalidPassword);
+          throw BadResultException(kInvalidPassword);
         }
-      } on WampError catch (e) {
-        if (e.message == kInvalidPassword) {
-          print('INVALID PASSWORD');
+      } on BadResultException catch (e) {
+        if (e.reason == kInvalidPassword) {
+          BnLog.warning(text: 'Admin has sent an invalid password');
           Globals.adminPass = null;
           return;
         } else {

@@ -12,7 +12,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
@@ -700,6 +699,13 @@ class HiveSettingsDB {
   }
 
   static int get specialCodeValue {
+    var isBg = HiveSettingsDB.isBladeGuard;
+    if (isBg &&
+        !isHeadOfProcession &&
+        !isTailOfProcession &&
+        !wantSeeFullOfProcession) {
+      return 98;
+    }
     if (isHeadOfProcession && isTailOfProcession) {
       return (wantSeeFullOfProcession ? 4 : 0);
     } else {

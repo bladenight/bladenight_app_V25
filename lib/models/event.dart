@@ -210,7 +210,8 @@ class Event with EventMappable implements Comparable {
     var wampResult = await WampV2.instance
         .addToWamp<Event>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => Event.rpcError(error));
+        .catchError((error, stackTrace) =>
+            Event.rpcError(WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
       var event = MapperContainer.globals.fromMap<Event>(wampResult);
       event.lastupdate = DateTime.now();
@@ -229,7 +230,7 @@ class Event with EventMappable implements Comparable {
       }
       return wampResult;
     }
-    return Event.rpcError(Exception(WampError('unknown')));
+    return Event.rpcError(WampException('unknown'));
   }
 }
 
@@ -253,20 +254,21 @@ class Events with EventsMappable {
     var wampResult = await WampV2.instance
         .addToWamp<Events>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => Events.rpcError(error));
+        .catchError((error, stackTrace) =>
+            Events.rpcError(WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
       var rp = MapperContainer.globals.fromMap<Events>(wampResult);
       HiveSettingsDB.setEventsJson(rp.toJson());
       return rp;
     }
-    if (wampResult is Events) {
+    if (wampResult is Events && wampResult.rpcException != null) {
       if (HiveSettingsDB.eventsJson.isNotEmpty) {
         var events = HiveSettingsDB.eventsJson;
         return MapperContainer.globals.fromJson<Events>(events);
       }
       return wampResult;
     }
-    return Events.rpcError(Exception(WampError('unknown')));
+    return Events.rpcError(WampException('unknown'));
   }
 
   Map<String, Events> groupByYear() {

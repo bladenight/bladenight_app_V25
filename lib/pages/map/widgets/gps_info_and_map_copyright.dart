@@ -150,8 +150,8 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
                                               color: context
                                                       .watch(isMovingProvider)
                                                   ? ref.watch(meColorProvider)
-                                                  :  CupertinoTheme.of(context)
-                                                  .primaryColor,
+                                                  : CupertinoTheme.of(context)
+                                                      .primaryColor,
                                             )
                                           : const Icon(Icons.gps_fixed_sharp),
                                     ]),
@@ -169,6 +169,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
                                         await LocationProvider.instance
                                             .resetOdoMeterAndRoutePoints(
                                                 context);
+                                        setState(() {});
                                       } else {
                                         await QuickAlert.show(
                                             context: context,

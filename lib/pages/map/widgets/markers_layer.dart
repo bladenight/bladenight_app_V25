@@ -154,17 +154,17 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
               buildContext: context,
               headerText: Localize.of(context).tail,
               speedText:
-              '${((ref.read(realtimeDataProvider)?.tail.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.tail.realSpeed)!.toStringAsFixed(1))} km/h',
+                  '${((ref.read(realtimeDataProvider)?.tail.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.tail.realSpeed)!.toStringAsFixed(1))} km/h',
               drivenDistanceText:
-              '${((ref.read(realtimeDataProvider)?.tail.position) ?? '-')} m',
+                  '${((ref.read(realtimeDataProvider)?.tail.position) ?? '-')} m',
               timeToHeadText:
-              '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
+                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
               distanceToHeadText:
-              '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
+                  '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
               timeUserToTailText:
-              '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToTail() ?? 0))}',
+                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToTail() ?? 0))}',
               distanceUserToTailText:
-              '${((ref.read(realtimeDataProvider)?.distanceOfUserToTail()) ?? '-')} m',
+                  '${((ref.read(realtimeDataProvider)?.distanceOfUserToTail()) ?? '-')} m',
               color: Colors.orange,
               point: processionRoutePoints.last,
               width: sizeValue,
@@ -188,17 +188,17 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
               buildContext: context,
               headerText: Localize.of(context).head,
               speedText:
-              '${((ref.read(realtimeDataProvider)?.head.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.head.realSpeed)!.toStringAsFixed(1))} km/h',
+                  '${((ref.read(realtimeDataProvider)?.head.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.head.realSpeed)!.toStringAsFixed(1))} km/h',
               drivenDistanceText:
-              '${((ref.read(realtimeDataProvider)?.head.position) ?? '-')} m',
+                  '${((ref.read(realtimeDataProvider)?.head.position) ?? '-')} m',
               distanceTailText:
-              '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
+                  '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
               timeToTailText:
-              '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
+                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
               timeUserToHeadText:
-              '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToHead() ?? 0))}',
+                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToHead() ?? 0))}',
               distanceUserToHeadText:
-              '${((ref.read(realtimeDataProvider)?.distanceOfUserToHead()) ?? '-')} m',
+                  '${((ref.read(realtimeDataProvider)?.distanceOfUserToHead()) ?? '-')} m',
               color: Colors.lightBlue,
               point: processionRoutePoints.first,
               width: sizeValue,
@@ -225,8 +225,8 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                 friend: friend,
                 point: LatLng(friend.latitude ?? defaultLatitude,
                     friend.longitude ?? defaultLongitude),
-                width: friend.specialValue == 99 ? sizeValue - 8 : sizeValue,
-                height: friend.specialValue == 99 ? sizeValue - 8 : sizeValue,
+                width: friend.specialValue >= 98 ? sizeValue - 8 : sizeValue,
+                height: friend.specialValue >= 98 ? sizeValue - 8 : sizeValue,
                 child: Builder(
                   builder: (context) {
                     if (HiveSettingsDB.wantSeeFullOfProcession &&
@@ -264,16 +264,30 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                       );
                     }
                     if (HiveSettingsDB.wantSeeFullOfProcession &&
+                        friend.specialValue == 98) {
+                      //Bladeguard
+                      return Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                            color: Colors.yellow, shape: BoxShape.circle),
+                        child: CircleAvatar(
+                          radius: sizeValue - 6,
+                          backgroundColor:
+                              SpeedToColor.getColorFromSpeed(friend.realSpeed),
+                          child: Container(),
+                        ),
+                      );
+                    }
+                    if (HiveSettingsDB.wantSeeFullOfProcession &&
                         friend.specialValue == 99) {
                       return Container(
                         padding: const EdgeInsets.all(2),
                         decoration: const BoxDecoration(
-                            color: Colors.white, shape: BoxShape.circle),
+                            color: Colors.white, shape: BoxShape.rectangle),
                         child: CircleAvatar(
-                          radius: sizeValue - 6,
+                          radius: sizeValue - 5,
                           backgroundColor:
-                              SpeedToColor.getColorFromSpeed(friend.realSpeed)
-                                  .withOpacity(0.4),
+                              SpeedToColor.getColorFromSpeed(friend.realSpeed),
                           child: Container(),
                         ),
                       );
@@ -288,7 +302,6 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
               ),
 
           //end friends marker
-
         ],
         popupController: widget.popupController,
         markerTapBehavior: MarkerTapBehavior.togglePopupAndHideRest(),

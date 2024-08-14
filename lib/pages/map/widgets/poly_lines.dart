@@ -105,8 +105,8 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
                   Brightness.light
               ? ref.watch(themePrimaryLightColorProvider)
               : ref.watch(themePrimaryDarkColorProvider),
-          strokeWidth: ref.watch(iconSizeProvider) - 3,
-          borderStrokeWidth: 3.0,
+          strokeWidth: ref.watch(iconSizeProvider) - 10,
+          borderStrokeWidth: 2.0,
           pattern: const StrokePattern.dotted(),
         ),
     ]);

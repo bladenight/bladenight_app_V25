@@ -194,6 +194,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           const EmailTextField(),
                           const BirthdayDatePicker(),
                         ],
+                        if (bladeguardSettingsVisible)
+                          Text(HiveSettingsDB.bladeguardEmail),
                         const PhoneTextField(),
                         if (networkConnected.connectivityStatus ==
                                 ConnectivityStatus.online &&
@@ -533,6 +535,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                     if (mounted) {
                       showToast(message: Localize.of(context).ok);
                     }
+                    ref.invalidate(bgIsOnSiteProvider);
                     setState(() {});
                     return;
                   }
@@ -541,6 +544,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       .read(bladeguardSettingsVisibleProvider.notifier)
                       .setValue(false);
                   showToast(message: Localize.current.failed);
+                  ref.invalidate(bgIsOnSiteProvider);
                   setState(() {});
                   return;
                 }
@@ -558,6 +562,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
               ref
                   .read(bladeguardSettingsVisibleProvider.notifier)
                   .setValue(true);
+              ref.invalidate(bgIsOnSiteProvider);
               await _activatePush();
             }
           }

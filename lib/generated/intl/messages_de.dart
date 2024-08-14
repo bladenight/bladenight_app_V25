@@ -195,15 +195,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "bgNotificationTitle": MessageLookupByLibrary.simpleMessage(
             "BladeNight Hintergrundstandortupdate"),
         "bgTeam": MessageLookupByLibrary.simpleMessage("Bladeguard Team"),
-        "bgTodayNotOnSite": MessageLookupByLibrary.simpleMessage(
+        "bgTodayIsRegistered": MessageLookupByLibrary.simpleMessage(
             "Du bist heute als Bladeguard eingetragen."),
         "bgTodayNotParticipation": MessageLookupByLibrary.simpleMessage(
             "Ich kann doch nicht als Bladeguard teilnehmen und möchte mich abmelden."),
-        "bgTodayOnSite": MessageLookupByLibrary.simpleMessage(
-            "Hier tippen und heute als Bladeguard eintragen?"),
-        "bgTodayRegister": MessageLookupByLibrary.simpleMessage(
+        "bgTodayNotRegistered": MessageLookupByLibrary.simpleMessage(
             "Du heute noch nicht als Bladeguard angemeldet!"),
-        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Update Tel."),
+        "bgTodayTapToRegister": MessageLookupByLibrary.simpleMessage(
+            "Hier tippen und heute als Bladeguard eintragen!"),
+        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Aktualisieren"),
         "birthday": MessageLookupByLibrary.simpleMessage("Geburtstag"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
         "bladeGuardSettings":
@@ -267,6 +267,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deletefriend":
             MessageLookupByLibrary.simpleMessage("Freund:in löschen"),
         "deny": MessageLookupByLibrary.simpleMessage("Ablehnen"),
+        "devicesAlreadyConnected": MessageLookupByLibrary.simpleMessage(
+            "Geräte sind bereits verbunden"),
         "disconnect": MessageLookupByLibrary.simpleMessage("Verb. trennen"),
         "disconnected": MessageLookupByLibrary.simpleMessage("Nicht verbunden"),
         "distance": MessageLookupByLibrary.simpleMessage("Entfernung"),
@@ -505,6 +507,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Keine Standortfreigabe, Bitte Einstellungen des Gerätes prüfen"),
         "noNearbyService":
             MessageLookupByLibrary.simpleMessage("Nah-Gerätesuche nicht aktiv"),
+        "noSelfRelationAllowed": MessageLookupByLibrary.simpleMessage(
+            "Beziehung mit sich selbst ist nicht erlaubt"),
+        "noValidPendingRelationShip": MessageLookupByLibrary.simpleMessage(
+            "Keine gültige Beziehungsverknüpfung"),
         "nodatareceived":
             MessageLookupByLibrary.simpleMessage("Keine Daten empfangen!"),
         "nogps": MessageLookupByLibrary.simpleMessage("Kein GPS"),
@@ -671,6 +677,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Coloriere Route"),
         "showOwnTrack": MessageLookupByLibrary.simpleMessage(
             "Eigene Fahrlinie zeigen. Es kann die eigene Fahrt aufgezeichnet werden und dargestellt werden. Die Colorierte Route zeigt auch die Geschwindigkeit, kann aber je nach Gerät beim zoomen etc zu ruckeln führen."),
+        "showOwnTrackSwitchTitle":
+            MessageLookupByLibrary.simpleMessage("Fahrlinie zeigen"),
         "showProcession": MessageLookupByLibrary.simpleMessage(
             "Darstellung aktueller Verlauf der Münchener BladeNight"),
         "showWeblinkToRoute":

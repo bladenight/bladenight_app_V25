@@ -115,7 +115,7 @@ class FriendsLogic with ChangeNotifier {
           ..realSpeed = friend.realSpeed ?? 0.0
           ..hasServerEntry = true;
       }*/
-    } on WampError catch (e) {
+    } on WampException catch (e) {
       if (!kIsWeb) {
         BnLog.error(
             className: 'friendsProvider',
@@ -209,7 +209,7 @@ class FriendsLogic with ChangeNotifier {
     return friend;
   }
 
-  Future<Friend?> addFriendWithCode(
+  Future<dynamic> addFriendWithCode(
       String name, Color color, String code) async {
     var id = await PreferencesHelper.getNewFriendId();
     var friend = Friend(
@@ -222,12 +222,19 @@ class FriendsLogic with ChangeNotifier {
     );
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
-      QuickAlert.show(
-          context: navigatorKey.currentContext!,
-          type: QuickAlertType.error,
-          title: Localize.current.addfriendwithcode,
-          text: Localize.current.failed);
-      return null;
+      var ex = getFriendRelationshipResult?.rpcException;
+      if (ex is WampException && ex.message != null) {
+        if (ex.message!.startsWith('Not a valid pending relationship id')) {
+          return Localize.current.noValidPendingRelationShip;
+        }
+        if (ex.message!.startsWith('Relationship with self is not allowed')) {
+          return Localize.current.noSelfRelationAllowed;
+        }
+        if (ex.message!.startsWith('Devices are already connected')) {
+          return Localize.current.devicesAlreadyConnected;
+        }
+      }
+      return Localize.current.unknownerror;
     }
     friend.friendId = getFriendRelationshipResult.friendId;
     friend.isActive = true;

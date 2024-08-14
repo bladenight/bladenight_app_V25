@@ -1,10 +1,17 @@
-class WampError implements Exception {
-  final String message;
+import 'dart:async';
 
-  WampError(this.message);
+class WampException extends TimeoutException implements Exception {
+  /// Description of the cause .
+  @override
+  final String? message;
+
+  WampException(this.message) : super('');
 
   @override
   String toString() {
-    return 'WampError{message: $message}';
+    String result = '';
+    if (duration != null) result = 'TimeoutException after $duration';
+    if (message != null) result = message!;
+    return result;
   }
 }

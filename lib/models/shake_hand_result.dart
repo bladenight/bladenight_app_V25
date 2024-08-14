@@ -10,10 +10,11 @@ import '../helpers/wamp/message_types.dart';
 import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_error.dart';
 import '../wamp/wamp_v2.dart';
+
 part 'shake_hand_result.mapper.dart';
 
 @MappableClass()
-class ShakeHandResult with ShakeHandResultMappable{
+class ShakeHandResult with ShakeHandResultMappable {
   @MappableField(key: 'sta')
   final bool status;
   @MappableField(key: 'mbu')
@@ -55,8 +56,6 @@ class ShakeHandResult with ShakeHandResultMappable{
       return wampResult;
     }
     return ShakeHandResult(
-        status: true,
-        minBuild: 1,
-        rpcException: Exception(WampError('unknown')));
+        status: true, minBuild: 1, rpcException: WampException('unknown'));
   }
 }

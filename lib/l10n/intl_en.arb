@@ -153,11 +153,11 @@
   "bgNotificationText": "Background location update is active. Thank you for participating.",
   "bgNotificationTitle": "BladeNight background location sharing",
   "bgTeam": "Bladeguard team",
-  "bgTodayNotOnSite": "You're not on site today?",
+  "bgTodayIsRegistered": "You're registered as BladeGuard today!",
   "bgTodayNotParticipation": "Unfortunately I cannot participate as a Bladeguard today",
-  "bgTodayOnSite": "Are you on site today as a bladeguard?",
-  "bgTodayRegister": "Please log in as Bladeguard today!",
-  "bgUpdatePhone": "Update Phone.",
+  "bgTodayTapToRegister": "Register as a bladeguard today!",
+  "bgTodayNotRegistered": "Please log in as Bladeguard today!",
+  "bgUpdatePhone": "Update data",
   "birthday": "Birthday",
   "bladeGuard": "Bladeguard",
   "bladeGuardSettings": "Bladeguard settings",
@@ -520,5 +520,9 @@
   "wakelockDisabled": "Display switches off",
   "resetTrackPointsStoreTitle": "Clear location-store for all tracked events.",
   "resetTrackPointsStore": "Clear all",
-  "selectDate": "Select event date"
+  "selectDate": "Select event date",
+  "noValidPendingRelationShip": "Not a valid pending relationship id",
+  "noSelfRelationAllowed": "Relationship with self is not allowed",
+  "devicesAlreadyConnected": "Devices are already connected",
+  "showOwnTrackSwitchTitle": "Show track points"
 }

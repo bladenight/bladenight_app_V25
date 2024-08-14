@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:wakelock/wakelock.dart';
 import 'widgets/tracking_export_widget.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/background_location_helper.dart';
@@ -43,9 +43,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   var inputText = '';
@@ -310,7 +308,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: DataLeftRightContent(
-                            descriptionLeft: Localize.of(context).showOwnTrack,
+                            descriptionLeft:
+                                Localize.of(context).showOwnTrackSwitchTitle,
                             descriptionRight: '',
                             rightWidget: CupertinoSwitch(
                               onChanged: (val) {
@@ -367,10 +366,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             ),
                           ),
                         ]),
-
-
-
-
                   const SettingsInvisibleOfflineWidget(),
                   GestureDetector(
                     onDoubleTap: () {
@@ -479,41 +474,47 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                             .openBatteriesSettings(context)),
                               ]),
                         CupertinoFormSection(
-                            header: Text(
-                                Localize.of(context).fitnessPermissionSettingsText),
+                            header: Text(Localize.of(context)
+                                .fitnessPermissionSettingsText),
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.only(left: 20, right: 20),
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
                                 child: DataLeftRightContent(
                                   descriptionLeft: Localize.of(context)
                                       .fitnessPermissionSwitchSettingsText,
                                   descriptionRight: '',
                                   rightWidget: CupertinoSwitch(
                                     onChanged: (val) {
-                                      HiveSettingsDB.setIsMotionDetectionDisabled(
-                                          !val);
-                                      bg.BackgroundGeolocation.setConfig(bg.Config(
-                                          disableMotionActivityUpdates: !val));
+                                      HiveSettingsDB
+                                          .setIsMotionDetectionDisabled(!val);
+                                      bg.BackgroundGeolocation.setConfig(
+                                          bg.Config(
+                                              disableMotionActivityUpdates:
+                                                  !val));
                                       setState(() {});
                                     },
-                                    value: !HiveSettingsDB.isMotionDetectionDisabled,
+                                    value: !HiveSettingsDB
+                                        .isMotionDetectionDisabled,
                                   ),
                                 ),
                               ),
                             ]),
-
                         CupertinoFormSection(
-                            header: Text(Localize.of(context).allowWakeLockHeader),
+                            header:
+                                Text(Localize.of(context).allowWakeLockHeader),
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.only(left: 20, right: 20),
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
                                 child: DataLeftRightContent(
-                                  descriptionLeft: Localize.of(context).allowWakeLock,
+                                  descriptionLeft:
+                                      Localize.of(context).allowWakeLock,
                                   descriptionRight: '',
                                   rightWidget: CupertinoSwitch(
                                     onChanged: (val) {
                                       HiveSettingsDB.setWakeLockEnabled(val);
-                                      WakelockPlus.toggle(enable: val);
+                                      Wakelock.toggle(enable: val);
                                       setState(() {});
                                     },
                                     value: HiveSettingsDB.wakeLockEnabled,

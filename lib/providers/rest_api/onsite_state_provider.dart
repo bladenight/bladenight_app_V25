@@ -309,7 +309,7 @@ class BgIsOnSite extends _$BgIsOnSite {
       if (res == true) {
         NotificationHelper().showString(
             id: Random().nextInt(2 ^ 8),
-            text: Localize.current.bgTodayNotOnSite,
+            text: Localize.current.bgTodayIsRegistered,
             title: 'Bladeguard am Startpunkt');
         HiveSettingsDB.setBladeguardLastSetOnsite(DateTime.now());
       }

@@ -435,6 +435,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               onPressed: () async {
                 await LocationProvider.instance
                     .resetOdoMeterAndRoutePoints(context);
+                setState(() {});
               },
               visibility: ref.watch(mapMenuVisibleProvider),
               child: const Icon(

@@ -61,7 +61,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
-  _runRefreshtimer() {
+  _runRefreshTimer() {
     final _ = Timer(
       const Duration(seconds: 3),
       () {
@@ -118,7 +118,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                 fullscreenDialog: false,
                               ),
                             );
-                            _runRefreshtimer();
+                            _runRefreshTimer();
                             return;
                           }
                           if (action == FriendsAction.acceptNearby &&
@@ -133,7 +133,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                 fullscreenDialog: false,
                               ),
                             );
-                            _runRefreshtimer();
+                            _runRefreshTimer();
                             return;
                           }
                           if (!context.mounted) return;

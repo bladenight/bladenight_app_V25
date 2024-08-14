@@ -7,14 +7,13 @@ import '../../wamp/wamp_v2.dart';
 
 Future<int> subscribeMessage(String topic) async {
   Completer completer = Completer();
-  var bnWampMessage =
-      SubscribeWampMessage(completer, 'RealtimeData');
+  var bnWampMessage = SubscribeWampMessage(completer, 'RealtimeData');
 
   var wampResult = await WampV2.instance
       .addToWamp(bnWampMessage)
       .timeout(wampTimeout)
-      .catchError((error, stackTrace) => WampError(error.toString()));
-  if (wampResult is WampError) {
+      .catchError((error, stackTrace) => WampException(error.toString()));
+  if (wampResult is WampException) {
     return 0;
   }
   if (wampResult is TimeoutException) {
@@ -31,8 +30,8 @@ Future<bool> unSubscribeMessage(int subscriptionId) async {
   var wampResult = await WampV2.instance
       .addToWamp(bnWampMessage)
       .timeout(wampTimeout)
-      .catchError((error, stackTrace) => WampError(error.toString()));
-  if (wampResult is WampError) {
+      .catchError((error, stackTrace) => WampException(error.toString()));
+  if (wampResult is WampException) {
     return false;
   }
   if (wampResult is TimeoutException) {

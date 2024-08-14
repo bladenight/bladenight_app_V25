@@ -194,15 +194,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "bgNotificationTitle": MessageLookupByLibrary.simpleMessage(
             "BladeNight background location sharing"),
         "bgTeam": MessageLookupByLibrary.simpleMessage("Bladeguard team"),
-        "bgTodayNotOnSite":
-            MessageLookupByLibrary.simpleMessage("You\'re not on site today?"),
+        "bgTodayIsRegistered": MessageLookupByLibrary.simpleMessage(
+            "You\'re registered as BladeGuard today!"),
         "bgTodayNotParticipation": MessageLookupByLibrary.simpleMessage(
             "Unfortunately I cannot participate as a Bladeguard today"),
-        "bgTodayOnSite": MessageLookupByLibrary.simpleMessage(
-            "Are you on site today as a bladeguard?"),
-        "bgTodayRegister": MessageLookupByLibrary.simpleMessage(
+        "bgTodayNotRegistered": MessageLookupByLibrary.simpleMessage(
             "Please log in as Bladeguard today!"),
-        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Update Phone."),
+        "bgTodayTapToRegister": MessageLookupByLibrary.simpleMessage(
+            "Register as a bladeguard today!"),
+        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Update data"),
         "birthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
         "bladeGuardSettings":
@@ -264,6 +264,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteMessage": MessageLookupByLibrary.simpleMessage("Delete Message"),
         "deletefriend": MessageLookupByLibrary.simpleMessage("Remove friend"),
         "deny": MessageLookupByLibrary.simpleMessage("Deny"),
+        "devicesAlreadyConnected": MessageLookupByLibrary.simpleMessage(
+            "Devices are already connected"),
         "disconnect": MessageLookupByLibrary.simpleMessage("Disconnect"),
         "disconnected": MessageLookupByLibrary.simpleMessage("Not connected"),
         "distance": MessageLookupByLibrary.simpleMessage("distance"),
@@ -493,6 +495,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "No location permission, please check device settings"),
         "noNearbyService": MessageLookupByLibrary.simpleMessage(
             "Nearby service not activated"),
+        "noSelfRelationAllowed": MessageLookupByLibrary.simpleMessage(
+            "Relationship with self is not allowed"),
+        "noValidPendingRelationShip": MessageLookupByLibrary.simpleMessage(
+            "Not a valid pending relationship id"),
         "nodatareceived":
             MessageLookupByLibrary.simpleMessage("No Data received !"),
         "nogps": MessageLookupByLibrary.simpleMessage("No GPS"),
@@ -657,6 +663,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Colorize my track"),
         "showOwnTrack": MessageLookupByLibrary.simpleMessage(
             "Your own journey can be recorded and displayed. The coloured route also shows the speed, but depending on the device, this can lead to jerking when zooming etc."),
+        "showOwnTrackSwitchTitle":
+            MessageLookupByLibrary.simpleMessage("Show track points"),
         "showProcession": MessageLookupByLibrary.simpleMessage(
             "Showing actual procession of Münchener BladeNight"),
         "showWeblinkToRoute":

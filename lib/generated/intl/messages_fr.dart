@@ -200,16 +200,15 @@ class MessageLookup extends MessageLookupByLibrary {
             "Suivi de l\'arrière-plan de BladeNight"),
         "bgTeam":
             MessageLookupByLibrary.simpleMessage("L\'équipe des Bladeguard"),
-        "bgTodayNotOnSite": MessageLookupByLibrary.simpleMessage(
+        "bgTodayIsRegistered": MessageLookupByLibrary.simpleMessage(
             "Vous n\'êtes pas sur place aujourd\'hui ?"),
         "bgTodayNotParticipation": MessageLookupByLibrary.simpleMessage(
             "Malheureusement, je ne peux pas participer en tant que Bladeguard aujourd\'hui"),
-        "bgTodayOnSite": MessageLookupByLibrary.simpleMessage(
-            "Etes-vous sur place aujourd\'hui en tant que protège-lame ?"),
-        "bgTodayRegister": MessageLookupByLibrary.simpleMessage(
+        "bgTodayNotRegistered": MessageLookupByLibrary.simpleMessage(
             "Veuillez vous connecter en tant que Bladeguard aujourd\'hui!"),
-        "bgUpdatePhone":
-            MessageLookupByLibrary.simpleMessage("Mettre à jour le téléphone."),
+        "bgTodayTapToRegister": MessageLookupByLibrary.simpleMessage(
+            "Etes-vous sur place aujourd\'hui en tant que protège-lame!"),
+        "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Mettre à jour"),
         "birthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
         "bladeGuardSettings":
@@ -221,13 +220,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "bladeguardInfo": m0,
         "bladenight": MessageLookupByLibrary.simpleMessage("BladeNight"),
         "bladenightUpdate":
-            MessageLookupByLibrary.simpleMessage("BladeNight Update"),
+            MessageLookupByLibrary.simpleMessage("BladeNight mise à jour"),
         "bladenightViewerTracking":
             MessageLookupByLibrary.simpleMessage("Mode visualisation avec GPS"),
         "bladenighttracking": MessageLookupByLibrary.simpleMessage(
             "Mode visualisation, poussée du participant ▶ s\'il vous plaît"),
         "cancel": MessageLookupByLibrary.simpleMessage("Annuler"),
-        "canceled": MessageLookupByLibrary.simpleMessage("Annulé 😞"),
+        "canceled": MessageLookupByLibrary.simpleMessage("😞 Annulé 😞"),
         "change": MessageLookupByLibrary.simpleMessage("Le modifier."),
         "changetoalways": MessageLookupByLibrary.simpleMessage(
             "Changer pour \'Autoriser tout le temps\'"),
@@ -274,6 +273,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deletefriend":
             MessageLookupByLibrary.simpleMessage("Supprimer un ami"),
         "deny": MessageLookupByLibrary.simpleMessage("Refuser"),
+        "devicesAlreadyConnected": MessageLookupByLibrary.simpleMessage(
+            "Les appareils sont déjà connectés"),
         "disconnect": MessageLookupByLibrary.simpleMessage("Se déconnecter"),
         "disconnected": MessageLookupByLibrary.simpleMessage("non connecté"),
         "distance": MessageLookupByLibrary.simpleMessage("distance"),
@@ -517,6 +518,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "No location permission, please check device settings"),
         "noNearbyService": MessageLookupByLibrary.simpleMessage(
             "Service à proximité non activé"),
+        "noSelfRelationAllowed": MessageLookupByLibrary.simpleMessage(
+            "La relation avec soi-même n\'est pas autorisée"),
+        "noValidPendingRelationShip": MessageLookupByLibrary.simpleMessage(
+            "Pas d\'identifiant de relation en attente valide"),
         "nodatareceived":
             MessageLookupByLibrary.simpleMessage("No Data received !"),
         "nogps": MessageLookupByLibrary.simpleMessage("Pas de GPS"),
@@ -689,6 +694,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Coloriser ma trace"),
         "showOwnTrack": MessageLookupByLibrary.simpleMessage(
             "Afficher sa propre ligne de parcours. Il est possible d\'enregistrer et d\'afficher son propre parcours. L\'itinéraire coloré montre également la vitesse, mais selon l\'appareil, il peut y avoir des saccades lors du zoom, etc"),
+        "showOwnTrackSwitchTitle": MessageLookupByLibrary.simpleMessage(
+            "Afficher les points de piste"),
         "showProcession": MessageLookupByLibrary.simpleMessage(
             "Showing actual procession of Münchener BladeNight"),
         "showWeblinkToRoute": MessageLookupByLibrary.simpleMessage(

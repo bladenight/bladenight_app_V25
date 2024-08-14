@@ -150,7 +150,7 @@ class MapEventInformation extends ConsumerWidget {
                                 descriptionLeft:
                                     '${Localize.of(context).speed} ${Localize.of(context).head}',
                                 descriptionRight:
-                                    '${(rtu.head.realSpeed ?? rtu.head.speed * 3.6).toStringAsFixed(1)} km/h',
+                                    'r: ${(rtu.head.realSpeed ?? rtu.head.speed).toStringAsFixed(1)} km/h / c: ${(rtu.head.speed).toStringAsFixed(1)} km/h',
                                 rightWidget: Container()),
                             DataLeftRightContent(
                               descriptionLeft:
@@ -181,7 +181,7 @@ class MapEventInformation extends ConsumerWidget {
                                 descriptionLeft:
                                     '${Localize.of(context).speed} ${Localize.of(context).tail}',
                                 descriptionRight:
-                                    '${(rtu.tail.realSpeed ?? rtu.tail.speed * 3.6).toStringAsFixed(1)} km/h',
+                                    'r: ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)} km/h / c: ${(rtu.tail.speed).toStringAsFixed(1)} km/h',
                                 rightWidget: Container()),
                           ]),
                     ),
@@ -230,7 +230,7 @@ class MapEventInformation extends ConsumerWidget {
                           DataLeftRightContent(
                               descriptionLeft: Localize.of(context).speed,
                               descriptionRight:
-                                  '${(rtu.user.realSpeed != null ? rtu.user.realSpeed!.toStringAsFixed(1) : rtu.user.speed * 3.6)} km/h',
+                                  '${(rtu.user.realSpeed != null ? rtu.user.realSpeed!.toStringAsFixed(1) : rtu.user.speed)} km/h',
                               rightWidget: Container()),
                           if (!rtu.user.isOnRoute)
                             DataLeftRightContent(

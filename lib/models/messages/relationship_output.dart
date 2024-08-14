@@ -13,7 +13,7 @@ import '../../wamp/wamp_v2.dart';
 part 'relationship_output.mapper.dart';
 
 @MappableClass()
-class RelationshipOutputMessage with RelationshipOutputMessageMappable{
+class RelationshipOutputMessage with RelationshipOutputMessageMappable {
   @MappableField(key: 'fid')
   late final int friendId;
   @MappableField(key: 'rid')
@@ -21,56 +21,57 @@ class RelationshipOutputMessage with RelationshipOutputMessageMappable{
 
   Exception? rpcException;
 
-  RelationshipOutputMessage({
-    required this.friendId,
-    required this.requestId,
-    this.rpcException
-  });
+  RelationshipOutputMessage(
+      {required this.friendId, required this.requestId, this.rpcException});
 
   static RelationshipOutputMessage rpcError(Exception exception) {
     return RelationshipOutputMessage(
-        friendId: 0,
-        requestId: 0,
-        rpcException: exception);
+        friendId: 0, requestId: 0, rpcException: exception);
   }
 
   static Future<RelationshipOutputMessage?> getRelationShip(
       RelationshipInputMessage inputMessage) async {
     Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(
-        WampMessageType.call, completer, WampEndpoint.createrelationship,
-        inputMessage.toMap());
+    BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
+        WampEndpoint.createrelationship, inputMessage.toMap());
     var wampResult = await WampV2.instance
         .addToWamp<RelationshipOutputMessage>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => RelationshipOutputMessage.rpcError(error));
+        .catchError((error, stackTrace) => RelationshipOutputMessage.rpcError(
+            WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
-      var update = MapperContainer.globals.fromMap<RelationshipOutputMessage>(wampResult);
+      var update = MapperContainer.globals
+          .fromMap<RelationshipOutputMessage>(wampResult);
       return update;
     }
     if (wampResult is RelationshipOutputMessage) {
       return wampResult;
     }
-    return RelationshipOutputMessage.rpcError(Exception(WampError('unknown')));
+    if (wampResult is WampException) {
+      return RelationshipOutputMessage.rpcError(wampResult);
+    }
+    return RelationshipOutputMessage.rpcError(WampException('unknown'));
   }
 
+  ///Get RelationshipOutputMessage (include RelationshipOutputMessage.rpcError)
   static Future<RelationshipOutputMessage?> createRelationShip(
       RelationshipInputMessage inputMessage) async {
     Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(
-        WampMessageType.call, completer, WampEndpoint.createrelationship,
-        inputMessage.toMap());
+    BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
+        WampEndpoint.createrelationship, inputMessage.toMap());
     var wampResult = await WampV2.instance
         .addToWamp<RelationshipOutputMessage>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => RelationshipOutputMessage.rpcError(error));
+        .catchError((error, stackTrace) => RelationshipOutputMessage.rpcError(
+            WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
-      var update = MapperContainer.globals.fromMap<RelationshipOutputMessage>(wampResult);
+      var update = MapperContainer.globals
+          .fromMap<RelationshipOutputMessage>(wampResult);
       return update;
     }
     if (wampResult is RelationshipOutputMessage) {
       return wampResult;
     }
-    return RelationshipOutputMessage.rpcError(Exception(WampError('unknown')));
+    return RelationshipOutputMessage.rpcError(WampException('unknown'));
   }
 }

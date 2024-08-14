@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
@@ -666,7 +666,7 @@ class LocationProvider with ChangeNotifier {
         HiveSettingsDB.setTrackingActive(false);
         LocationStore.saveUserTrackPointList(_userGpxPoints, DateTime.now());
         await startStopGeoFencing();
-        await WakelockPlus.disable();
+        await Wakelock.disable();
       }).catchError((error) {
         BnLog.error(text: 'Stopping location error: $error');
       });
@@ -808,7 +808,7 @@ class LocationProvider with ChangeNotifier {
     }
 
     if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
-      await WakelockPlus.enable();
+      await Wakelock.enable();
     }
 
     if (kIsWeb || HiveSettingsDB.useAlternativeLocationProvider) {
@@ -1113,14 +1113,14 @@ class LocationProvider with ChangeNotifier {
         _wakelockDisabled == false &&
         !isCharging &&
         batteryLevel < 0.3) {
-      await WakelockPlus.disable();
+      await Wakelock.disable();
       _wakelockDisabled = true;
       //showToast(message: Localize.current.wakelockDisabled);
     }
     if (HiveSettingsDB.wakeLockEnabled &&
         _wakelockDisabled == true &&
         (batteryLevel > 0.3 || isCharging)) {
-      await WakelockPlus.enable();
+      await Wakelock.enable();
       _wakelockDisabled = false;
       //showToast(message: Localize.current.wakelockEnabled);
     }
@@ -1194,7 +1194,7 @@ class LocationProvider with ChangeNotifier {
     }
     if (_realtimeUpdate != null && _realtimeUpdate?.friends != null) {
       var friendList =
-          _realtimeUpdate?.mapPointFriends(_realtimeUpdate!.friends);
+          _realtimeUpdate?.updateMapPointFriends(_realtimeUpdate!.friends);
       if (friendList != null) {
         var friends = friendList.where((x) => x.specialValue == 0).toList();
         var friendListAsJson = MapperContainer.globals.toJson(friends);
@@ -1262,12 +1262,10 @@ class LocationProvider with ChangeNotifier {
           }*/
 
         if (update.rpcException != null) {
-          if (!kIsWeb) {
-            BnLog.error(
-                className: 'locationProvider',
-                methodName: 'refresh',
-                text: update.rpcException.toString());
-          }
+          BnLog.error(
+              className: 'locationProvider',
+              methodName: 'refresh',
+              text: update.rpcException.toString());
           _realUserSpeedKmh = null;
           SendToWatch.setUserSpeed('- km/h');
           _updateWatchData();
@@ -1500,13 +1498,20 @@ class LocationProvider with ChangeNotifier {
       if (HiveSettingsDB.useAlternativeLocationProvider) {
         _userGpxPoints.clear();
         _userSpeedPoints.clear();
-        //LocationStore.clearTrackPointStoreForDate(DateTime.now());
+        _userLatLngList.clear();
+        notifyListeners();
+        LocationStore.clearTrackPointStoreForDate(DateTime.now());
         return true;
       }
       //Triggers start location service
       var odoResetResult =
           await bg.BackgroundGeolocation.setOdometer(0.0).then((value) {
         _odometer = value.odometer;
+        _userGpxPoints.clear();
+        _userSpeedPoints.clear();
+        _userLatLngList.clear();
+        notifyListeners();
+        //LocationStore.clearTrackPointStoreForDate(DateTime.now());
       }).catchError((error) {
         if (!kIsWeb) {
           BnLog.error(text: '[resetOdometer] ERROR: $error');
@@ -1520,9 +1525,7 @@ class LocationProvider with ChangeNotifier {
         _isTracking = bgGeoLocState.enabled;
         notifyListeners();
       }
-      _userGpxPoints.clear();
-      _userSpeedPoints.clear();
-      LocationStore.clearTrackPointStoreForDate(DateTime.now());
+
       return odoResetResult == null ? false : true;
     } catch (e) {
       if (!kIsWeb) {
