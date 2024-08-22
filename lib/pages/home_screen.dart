@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,7 +34,8 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with WidgetsBindingObserver {
   //added deep links bna.bladenight.app
 
   StreamSubscription? _uniLinkStreamSubscription;
@@ -42,12 +44,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _appLinks = AppLinks();
 
   @override
+  Future<AppExitResponse> didRequestAppExit() async {
+    print('App exit requested');
+    BnLog.info(text: 'App exit requested');
+    return AppExitResponse.cancel;
+  }
+
+  Future<void> _quit() async {
+    const AppExitType exitType =
+        AppExitType.required; // or AppExitType.cancelable;
+
+    await ServicesBinding.instance.exitApplication(exitType);
+  }
+
+  @override
   void initState() {
     BnLog.info(
         className: 'home_screen',
         methodName: 'initState ',
         text: 'App started');
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (kIsWeb) {
       tabController = CupertinoTabController(initialIndex: 1)
         ..addListener(() {
@@ -132,6 +149,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void dispose() {
     _uniLinkStreamSubscription?.cancel();
     _oneSignalOSNotificationOpenedResultSubSubscription?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+
     tabController.dispose();
     super.dispose();
   }

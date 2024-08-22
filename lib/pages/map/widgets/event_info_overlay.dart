@@ -46,7 +46,7 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                         child: FittedBox(
                           child: Text(
                             '${Localize.of(context).route}: ${widget.event.routeName}  '
-                            '${Localize.of(context).length}: ${widget.routePoints != null ? ((widget.routePoints!.getRoutePointsSummaryDistance) / 1000).toStringAsFixed(1) : '-'} km  ',
+                            '${Localize.of(context).length}: ${widget.routePoints != null ? ((widget.routePoints!.getRouteTotalDistance) / 1000).toStringAsFixed(1) : '-'} km  ',
                             overflow: TextOverflow.fade,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                             maxLines: 1,

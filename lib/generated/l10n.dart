@@ -3107,10 +3107,10 @@ class Localize {
     );
   }
 
-  /// `Waiting for server connection ....`
+  /// `Connecting to server ...`
   String get serverNotReachable {
     return Intl.message(
-      'Waiting for server connection ....',
+      'Connecting to server ...',
       name: 'serverNotReachable',
       desc: '',
       args: [],
@@ -3157,10 +3157,10 @@ class Localize {
     );
   }
 
-  /// `Export Log data (Support) it@huth.app`
+  /// `Export Log data to support`
   String get setExportLogSupport {
     return Intl.message(
-      'Export Log data (Support) it@huth.app',
+      'Export Log data to support',
       name: 'setExportLogSupport',
       desc: '',
       args: [],
@@ -4418,6 +4418,96 @@ class Localize {
     return Intl.message(
       'Show track points',
       name: 'showOwnTrackSwitchTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start location recording without sending data to server.`
+  String get startTrackingOnlyTitle {
+    return Intl.message(
+      'Start location recording without sending data to server.',
+      name: 'startTrackingOnlyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start route recording`
+  String get startTrackingOnly {
+    return Intl.message(
+      'Start route recording',
+      name: 'startTrackingOnly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location record only active`
+  String get onlyTracking {
+    return Intl.message(
+      'Location record only active',
+      name: 'onlyTracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Here you can generate a code to create a relationship with your friend`
+  String get addFriendWithCodeHeader {
+    return Intl.message(
+      'Here you can generate a code to create a relationship with your friend',
+      name: 'addFriendWithCodeHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If your friend has generated a code, you can finish the relationship with him`
+  String get addNewFriendHeader {
+    return Intl.message(
+      'If your friend has generated a code, you can finish the relationship with him',
+      name: 'addNewFriendHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You are participating on the Bladenight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?`
+  String get startParticipationHeader {
+    return Intl.message(
+      'You are participating on the Bladenight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?',
+      name: 'startParticipationHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start participation`
+  String get startParticipationShort {
+    return Intl.message(
+      'Start participation',
+      name: 'startParticipationShort',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select tracking type`
+  String get selectTrackingType {
+    return Intl.message(
+      'Select tracking type',
+      name: 'selectTrackingType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Registered as:`
+  String get registeredAs {
+    return Intl.message(
+      'Registered as:',
+      name: 'registeredAs',
       desc: '',
       args: [],
     );

@@ -11,6 +11,7 @@ import '../providers/active_event_provider.dart';
 import '../providers/is_tracking_provider.dart';
 import '../providers/location_provider.dart';
 import '../providers/realtime_data_provider.dart';
+import 'enums/tracking_type.dart';
 import 'logger.dart';
 
 const MethodChannel channel = MethodChannel('bladenightchannel');
@@ -114,14 +115,12 @@ Future<void> initFlutterChannel() async {
         try {
           ProviderContainer()
               .read(isTrackingProvider.notifier)
-              .toggleTracking(true);
+              .toggleTracking(TrackingType.userParticipating);
         } catch (e) {
-          if (!kIsWeb) {
-            BnLog.error(
-                className: 'watchCommunication_helper',
-                methodName: 'sendNavToggleToFlutter',
-                text: '$e');
-          }
+          BnLog.error(
+              className: 'watchCommunication_helper',
+              methodName: 'sendNavToggleToFlutter',
+              text: '$e');
         }
         break;
       case 'getEventDataFromFlutter':
@@ -130,7 +129,9 @@ Future<void> initFlutterChannel() async {
           ProviderContainer()
               .read(activeEventProvider.notifier)
               .refresh(forceUpdate: true);
-          ProviderContainer().read(locationProvider).refresh(forceUpdate: true);
+          ProviderContainer()
+              .read(locationProvider)
+              .refreshLocationData(forceUpdate: true);
         } catch (e) {
           if (!kIsWeb) {
             BnLog.error(
@@ -157,7 +158,7 @@ Future<void> initFlutterChannel() async {
       case 'getFriendsDataFromFlutter':
         print('getFriendsDataFromFlutter received');
         try {
-          LocationProvider.instance.refresh(forceUpdate: true);
+          LocationProvider.instance.refreshLocationData(forceUpdate: true);
         } catch (e) {
           if (!kIsWeb) {
             BnLog.error(
@@ -172,8 +173,7 @@ Future<void> initFlutterChannel() async {
         try {
           var rtData = ProviderContainer().read(realtimeDataProvider);
           if (rtData != null) {
-            SendToWatch.updateRealtimeData(
-                rtData.toJson());
+            SendToWatch.updateRealtimeData(rtData.toJson());
           }
         } catch (e) {
           if (!kIsWeb) {

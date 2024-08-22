@@ -5,10 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
-import '../../app_settings/globals.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
@@ -121,9 +120,13 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: DataLeftRightContent(
-                          descriptionLeft: Localize.of(context).iAmBladeGuard,
+                          descriptionLeft: bladeguardSettingsVisible
+                              ? Localize.of(context).registeredAs
+                              : Localize.of(context).iAmBladeGuard,
                           descriptionRight: '',
                           rightWidget: CupertinoSwitch(
+                            activeColor:
+                                CupertinoTheme.of(context).primaryColor,
                             onChanged: (val) {
                               ref
                                   .read(userIsBladeguardProvider.notifier)
@@ -195,7 +198,15 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           const BirthdayDatePicker(),
                         ],
                         if (bladeguardSettingsVisible)
-                          Text(HiveSettingsDB.bladeguardEmail),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 5, top: 1, bottom: 1),
+                              child: Text(
+                                  'E-Mail: ${HiveSettingsDB.bladeguardEmail}'),
+                            ),
+                          ),
                         const PhoneTextField(),
                         if (networkConnected.connectivityStatus ==
                                 ConnectivityStatus.online &&
@@ -220,10 +231,6 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   }),
                             ),
                           ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: const SendMailWidget(),
-                        ),
                       ],
                       if (!kIsWeb)
                         Column(
@@ -236,17 +243,28 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     const EdgeInsets.only(left: 15, right: 15),
                                 child: DataLeftWidgetRightTextContent(
                                   descriptionRight: HiveSettingsDB.bgTeam,
-                                  leftWidget: CupertinoButton(
-                                      child: Text(
-                                          Localize.of(context).bgUpdatePhone),
-                                      onPressed: () async {
-                                        await checkOrUpdateBladeGuardData();
-                                        setState(() {});
-                                      }),
+                                  leftWidget: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 5, bottom: 5),
+                                    child: CupertinoButton.filled(
+                                        child: FittedBox(
+                                          fit: BoxFit.fitWidth,
+                                          child: Text(Localize.of(context)
+                                              .bgUpdatePhone),
+                                        ),
+                                        onPressed: () async {
+                                          await checkOrUpdateBladeGuardData();
+                                          setState(() {});
+                                        }),
+                                  ),
                                 ),
                               )
                           ],
                         ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: const SendMailWidget(),
+                      ),
                       if (!kIsWeb &&
                           HiveSettingsDB.isBladeGuard &&
                           HiveSettingsDB.bgSettingVisible) ...[
@@ -260,6 +278,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 descriptionLeft:
                                     Localize.of(context).geoFencing,
                                 rightWidget: CupertinoSwitch(
+                                  activeColor:
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) async {
                                     await HiveSettingsDB
                                         .setSetOnsiteGeoFencingActiveAsync(val);
@@ -285,6 +305,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 descriptionLeft: Localize.of(context)
                                     .pushMessageParticipateAsBladeGuard,
                                 rightWidget: CupertinoSwitch(
+                                  activeColor:
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) async {
                                     setState(() {
                                       HiveSettingsDB
@@ -315,6 +337,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     .pushMessageSkateMunichInfos,
                                 descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
+                                  activeColor:
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) async {
                                     setState(() {
                                       HiveSettingsDB.setRcvSkatemunichInfos(
@@ -333,7 +357,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       ],
                       if (!kIsWeb &&
                           (HiveSettingsDB.bgLeaderSettingVisible ||
-                              Globals.adminPass != null ||
+                              HiveSettingsDB.serverPassword != null ||
                               HiveSettingsDB.bgIsAdmin))
                         CupertinoFormSection(
                           header: Text(Localize.of(context).markMeAsHead),
@@ -345,6 +369,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 descriptionLeft: Localize.of(context).head,
                                 descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
+                                  activeColor:
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) {
                                     setState(() {
                                       HiveSettingsDB.setIsSpecialHead(val);
@@ -361,7 +387,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                       if (!kIsWeb &&
                           (HiveSettingsDB.bgLeaderSettingVisible ||
-                              Globals.adminPass != null ||
+                              HiveSettingsDB.serverPassword != null ||
                               HiveSettingsDB.bgIsAdmin))
                         CupertinoFormSection(
                           header: Text(Localize.of(context).markMeAsTail),
@@ -373,6 +399,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 descriptionLeft: Localize.of(context).tail,
                                 descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
+                                  activeColor:
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) {
                                     setState(() {
                                       HiveSettingsDB.setIsSpecialTail(val);
@@ -390,7 +418,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                     ],
                   ),
                 if (!kIsWeb &&
-                    (Globals.adminPass != null ||
+                    (HiveSettingsDB.serverPassword != null ||
                         HiveSettingsDB.hasSpecialRights ||
                         HiveSettingsDB.bgIsAdmin))
                   CupertinoFormSection(
@@ -424,6 +452,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: CupertinoButton(
+                            color: CupertinoTheme.of(context).primaryColor,
                             child: const Text('Öffne Serveradmin'),
                             onPressed: () async {
                               await AdminPasswordDialog.show(context);

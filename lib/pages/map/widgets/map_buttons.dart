@@ -15,6 +15,7 @@ import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
+import '../../../helpers/enums/tracking_type.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/notification/toast_notification.dart';
 import '../../../models/follow_location_state.dart';
@@ -31,6 +32,7 @@ import '../../../providers/messages_provider.dart';
 import '../../../providers/route_providers.dart';
 import '../../messages/messages_page.dart';
 import '../../widgets/align_map_icon.dart';
+import '../../widgets/bottom_sheets/tracking_type_widget.dart';
 import '../../widgets/positioned_visibility_opacity.dart';
 import '../widgets/qr_create_page.dart';
 
@@ -74,6 +76,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   @override
   Widget build(BuildContext context) {
     CameraFollow followLocationState = ref.watch(cameraFollowLocationProvider);
+    var trackingType = ref.watch(trackingTypeProvider);
     return SafeArea(
       child: Stack(fit: StackFit.passthrough, children: [
         //#######################################################################
@@ -85,7 +88,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           child: Builder(builder: (context) {
             var isTracking = ref.watch(isTrackingProvider);
             var autoStop = ref.watch(autoStopTrackingProvider);
-            var userParticipating = ref.watch(isUserParticipatingProvider);
             //for future implementations - if (isActive == EventStatus.confirmed) {
             return GestureDetector(
               onLongPress: () async {
@@ -100,29 +102,29 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               },
               child: FloatingActionButton(
                 onPressed: () async {
-                  if (isTracking && !userParticipating) {
-                    _toggleViewerLocationService();
-                  } else if (isTracking) {
-                    if (kIsWeb) {
-                      _toggleViewerLocationService();
-                      return;
-                    }
-                    //&& !autoStop
-                    await QuickAlert.show(
-                        context: context,
-                        showCancelBtn: true,
-                        type: QuickAlertType.warning,
-                        title: Localize.of(context).stopLocationTracking,
-                        text: Localize.of(context).friendswillmissyou,
-                        confirmBtnText: Localize.of(context).yes,
-                        cancelBtnText: Localize.of(context).no,
-                        onConfirmBtnTap: () {
-                          _toggleLocationService();
-                          if (!mounted) return;
-                          Navigator.of(context).pop();
-                        }); //no neutral button on android
-                  } else {
-                    _toggleLocationService();
+                  switch (trackingType) {
+                    case TrackingType.noTracking:
+                      _toggleLocationService(TrackingType.userParticipating);
+                      break;
+                    case TrackingType.userParticipating:
+                      await QuickAlert.show(
+                          context: context,
+                          showCancelBtn: true,
+                          type: QuickAlertType.warning,
+                          title: Localize.of(context).stopLocationTracking,
+                          text: Localize.of(context).friendswillmissyou,
+                          confirmBtnText: Localize.of(context).yes,
+                          cancelBtnText: Localize.of(context).no,
+                          onConfirmBtnTap: () {
+                            _stopLocationService();
+                            if (!mounted) return;
+                            Navigator.of(context).pop();
+                          });
+                      break;
+                    case TrackingType.userNotParticipating:
+                    case TrackingType.onlyTracking:
+                      _stopLocationService();
+                      break;
                   }
                 },
                 backgroundColor: isTracking && autoStop
@@ -132,19 +134,25 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                         : CupertinoColors.activeGreen,
                 heroTag: 'startStopTrackingBtnTag',
                 child: Builder(builder: (context) {
-                  return userParticipating
-                      ? Icon(
-                          isTracking && autoStop
-                              ? Icons.pause
-                              : isTracking
-                                  ? CupertinoIcons.stop_circle
-                                  : CupertinoIcons.play_fill,
-                        )
-                      : isTracking
-                          ? const ImageIcon(
-                              AssetImage('assets/images/eyestop.png'))
-                          : const Icon(CupertinoIcons.play_fill,
-                              color: CupertinoColors.white);
+                  var trackingType = ref.watch(trackingTypeProvider);
+                  switch (trackingType) {
+                    case TrackingType.noTracking:
+                      return const Icon(CupertinoIcons.play_fill,
+                          color: CupertinoColors.white);
+                    case TrackingType.userParticipating:
+                      return Icon(
+                        isTracking && autoStop
+                            ? Icons.pause
+                            : isTracking
+                                ? CupertinoIcons.stop_circle
+                                : CupertinoIcons.play_fill,
+                      );
+                    case TrackingType.userNotParticipating:
+                      return const ImageIcon(
+                          AssetImage('assets/images/eyestop.png'));
+                    case TrackingType.onlyTracking:
+                      return const Icon(CupertinoIcons.stop_fill);
+                  }
                 }),
               ),
             );
@@ -380,11 +388,27 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   return FloatingActionButton(
                     heroTag: 'viewerBtnTag',
                     //backgroundColor: Colors.blue,
-                    onPressed: () {
-                      _toggleViewerLocationService();
+                    onPressed: () async {
+                      var res = await showCupertinoModalBottomSheet(
+                          backgroundColor: CupertinoDynamicColor.resolve(
+                              CupertinoColors.systemBackground, context),
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              constraints: BoxConstraints(
+                                maxHeight: kIsWeb
+                                    ? MediaQuery.of(context).size.height * 0.5
+                                    : MediaQuery.of(context).size.height * 0.7,
+                              ),
+                              child: const TrackingTypeWidget(),
+                            );
+                          });
+                      if (res != null) {
+                        _toggleLocationService(res);
+                      }
                     },
                     child: const Icon(
-                      CupertinoIcons.eye_solid,
+                      CupertinoIcons.play,
                       //color: CupertinoColors.white
                     ),
                     /*CupertinoAdaptiveTheme.of(context).brightness ==
@@ -473,6 +497,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               final controller = MapController.of(context);
               final camera = MapCamera.of(context);
               controller.move(controller.camera.center, camera.zoom + 0.5);
+              //print('>Zoom ${controller.camera.zoom}');
               ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
             },
             child: Icon(
@@ -614,8 +639,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            Localize.of(context)
-                                .startLocationWithoutParticipating,
+                            Localize.of(context).selectTrackingType,
                             style: TextStyle(
                               color:
                                   CupertinoTheme.of(context).barBackgroundColor,
@@ -788,7 +812,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      Localize.of(context).startParticipation,
+                      Localize.of(context).startParticipationShort,
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -863,16 +887,18 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   }
 
   ///Toggles between location tracking and view without user pos
-  void _toggleLocationService() async {
-    ref.read(isTrackingProvider.notifier).toggleTracking(true);
+  Future<bool> _toggleLocationService(TrackingType trackingType) async {
+    return ref.read(isTrackingProvider.notifier).toggleTracking(trackingType);
+  }
+
+  Future<bool> _stopLocationService() async {
+    MapController ctr = MapController.of(context);
+    ctr.move(defaultLatLng, initialZoom);
+    return ref.read(isTrackingProvider.notifier).stopTracking();
   }
 
   ///Toggles between user position and view with user pos
   void _toggleViewerLocationService() async {
-    if (ref.read(isTrackingProvider)) {
-      ref.read(isTrackingProvider.notifier).toggleTracking(false);
-      return;
-    }
     await QuickAlert.show(
         context: context,
         showCancelBtn: true,
@@ -882,7 +908,32 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         confirmBtnText: Localize.of(context).yes,
         cancelBtnText: Localize.of(context).no,
         onConfirmBtnTap: () {
-          ref.read(isTrackingProvider.notifier).toggleTracking(false);
+          ref
+              .read(isTrackingProvider.notifier)
+              .toggleTracking(TrackingType.userNotParticipating);
+          if (!mounted) return;
+          Navigator.of(context).pop();
+        });
+  }
+
+  void _toggleTrackOnlyLocationService() async {
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.warning,
+        title: Localize.of(context).startTrackingOnlyTitle,
+        text: Localize.of(context).startTrackingOnly,
+        confirmBtnText: Localize.of(context).yes,
+        cancelBtnText: Localize.of(context).no,
+        onConfirmBtnTap: () async {
+          MapSettings.setShowOwnTrack(true);
+          MapSettings.setWasOpenStreetMapEnabledFlag(
+              MapSettings.openStreetMapEnabled);
+          MapSettings.setOpenStreetMapEnabled(true);
+          ref
+              .read(isTrackingProvider.notifier)
+              .toggleTracking(TrackingType.onlyTracking);
+
           if (!mounted) return;
           Navigator.of(context).pop();
         });
@@ -921,7 +972,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       },
       fireImmediately: true,
     );
-    ref.read(locationProvider).refresh(forceUpdate: true);
+    ref.read(locationProvider).refreshLocationData(forceUpdate: true);
   }
 
   void startFollowingMeLocation() {
@@ -944,7 +995,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       },
       fireImmediately: true,
     );
-    ref.read(locationProvider).refresh(forceUpdate: true);
+    ref.read(locationProvider).refreshLocationData(forceUpdate: true);
   }
 
   void stopFollowingLocation() async {

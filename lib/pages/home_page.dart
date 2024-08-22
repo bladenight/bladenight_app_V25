@@ -57,7 +57,7 @@ class _HomePageState extends ConsumerState<HomePage>
     var messageProvider = context.watch(messagesLogicProvider);
     return PopScope(
       canPop: false,
-      onPopInvoked: (bool didPop) {
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
         if (didPop) return;
         var tabIndex = widget.tabController.index;
         if (tabIndex == 0) {
@@ -90,7 +90,7 @@ class _HomePageState extends ConsumerState<HomePage>
                       );
                     },
                     child: messageProvider.messages.isNotEmpty &&
-                        messageProvider.readMessages > 0
+                            messageProvider.readMessages > 0
                         ? Badge(
                             label:
                                 Text(messageProvider.readMessages.toString()),
@@ -148,7 +148,7 @@ class _HomePageState extends ConsumerState<HomePage>
             CupertinoSliverRefreshControl(
               onRefresh: () async {
                 ref.read(messagesLogicProvider).updateServerMessages();
-                var _= ref.refresh(currentRouteProvider);
+                var _ = ref.refresh(currentRouteProvider);
                 ref
                     .read(activeEventProvider.notifier)
                     .refresh(forceUpdate: true);

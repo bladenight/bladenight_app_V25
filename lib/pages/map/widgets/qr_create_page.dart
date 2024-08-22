@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../helpers/url_launch_helper.dart';
+import '../../widgets/grip_bar.dart';
 
 class QRCreatePage extends StatefulWidget {
   const QRCreatePage(
@@ -45,29 +46,25 @@ class QRCreatePageState extends State<QRCreatePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5.0),
-                  child: Container(
-                    color: CupertinoTheme.of(context).primaryColor,
-                    width: MediaQuery.of(context).size.width / 3,
-                    height: 7,
+              const GripBar(),
+              const SizedBox(height: 5),
+              GestureDetector(
+                onTap: () async {
+                  Launch.launchUrlFromString(widget.qrCodeText);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: BarcodeWidget(
+                    barcode: Barcode.qrCode(),
+                    color: Colors.white,
+                    backgroundColor: Colors.black,
+                    data: widget.qrCodeText,
+                    width: 200,
+                    height: 200,
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: BarcodeWidget(
-                  barcode: Barcode.qrCode(),
-                  color: Colors.white,
-                  backgroundColor: Colors.black,
-                  data: widget.qrCodeText,
-                  width: 200,
-                  height: 200,
-                ),
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: FittedBox(

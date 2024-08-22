@@ -69,7 +69,7 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
                   height: 2,
                   thickness: 2,
                   indent: 20,
-                  endIndent: 10,
+                  endIndent: 0,
                 ),
                 _cardDescription(context),
                 const SizedBox(
@@ -100,52 +100,41 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
                 descriptionLeft: Localize.of(context).distanceDriven,
                 descriptionRight: widget.marker.drivenDistanceText ?? '',
                 rightWidget: Container()),
-          DataLeftRightContent(
-              descriptionLeft: 'Lat:',
-              descriptionRight: widget.marker.point.latitude.toStringAsFixed(6),
-              rightWidget: Container()),
-          DataLeftRightContent(
-              descriptionLeft: 'Lon:',
-              descriptionRight:
-                  widget.marker.point.longitude.toStringAsFixed(6),
-              rightWidget: Container()),
-          if (widget.marker.timeUserToHeadText != null)
+          if (widget.marker.timeUserToHeadText != null) ...[
             Divider(
               height: 2,
               color: CupertinoTheme.of(context).primaryColor,
               endIndent: 0,
             ),
-          if (widget.marker.timeUserToHeadText != null)
             DataLeftRightContent(
                 descriptionLeft: Localize.of(context).head,
                 descriptionRight: '',
                 rightWidget: Container()),
-          if (widget.marker.timeUserToHeadText != null)
             DataLeftRightContent(
                 descriptionLeft: Localize.of(context).timeToMe,
                 descriptionRight: widget.marker.timeUserToHeadText ?? '',
                 rightWidget: Container()),
+          ],
           if (widget.marker.distanceUserToHeadText != null)
             DataLeftRightContent(
                 descriptionLeft: Localize.of(context).distance,
                 descriptionRight: widget.marker.distanceUserToHeadText ?? '',
                 rightWidget: Container()),
-          if (widget.marker.timeUserToTailText != null)
+          if (widget.marker.timeUserToTailText != null) ...[
             Divider(
               height: 2,
               color: CupertinoTheme.of(context).primaryColor,
               endIndent: 0,
             ),
-          if (widget.marker.timeUserToTailText != null)
             DataLeftRightContent(
                 descriptionLeft: Localize.of(context).tail,
                 descriptionRight: '',
                 rightWidget: Container()),
-          if (widget.marker.timeUserToTailText != null)
             DataLeftRightContent(
                 descriptionLeft: Localize.of(context).timeToMe,
                 descriptionRight: widget.marker.timeUserToTailText ?? '',
                 rightWidget: Container()),
+          ],
           if (widget.marker.distanceUserToTailText != null)
             DataLeftRightContent(
                 descriptionLeft: Localize.of(context).distance,
@@ -184,6 +173,20 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
                 descriptionLeft: Localize.of(context).distanceToHead,
                 descriptionRight: widget.marker.distanceToHeadText ?? '',
                 rightWidget: Container()),
+          Divider(
+            height: 2,
+            color: CupertinoTheme.of(context).primaryColor,
+            endIndent: 0,
+          ),
+          DataLeftRightContent(
+              descriptionLeft: 'Lat:',
+              descriptionRight: widget.marker.point.latitude.toStringAsFixed(6),
+              rightWidget: Container()),
+          DataLeftRightContent(
+              descriptionLeft: 'Lon:',
+              descriptionRight:
+                  widget.marker.point.longitude.toStringAsFixed(6),
+              rightWidget: Container()),
         ],
       ),
     );

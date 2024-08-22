@@ -6,6 +6,7 @@ import '../app_settings/app_constants.dart';
 import '../helpers/wamp/message_types.dart';
 import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_endpoints.dart';
+import '../wamp/wamp_error.dart';
 import '../wamp/wamp_v2.dart';
 
 export 'package:latlong2/latlong.dart';
@@ -13,7 +14,7 @@ export 'package:latlong2/latlong.dart';
 part 'route_names.mapper.dart';
 
 @MappableClass()
-class RouteNames with RouteNamesMappable{
+class RouteNames with RouteNamesMappable {
   @MappableField(key: 'rna')
   final List<String>? routeNames;
 
@@ -28,7 +29,8 @@ class RouteNames with RouteNamesMappable{
     var wampResult = await WampV2.instance
         .addToWamp<RouteNames>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => RouteNames( routeNames: [],exception: error));
+        .catchError((error, stackTrace) => RouteNames(
+            routeNames: [], exception: WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
       var rp = MapperContainer.globals.fromMap<RouteNames>(wampResult);
       return rp;
@@ -36,7 +38,7 @@ class RouteNames with RouteNamesMappable{
     if (wampResult is RouteNames) {
       return wampResult;
     }
-    return RouteNames(routeNames:[]);
+    return RouteNames(routeNames: [], exception: WampException('unknown'));
   }
 
   @override

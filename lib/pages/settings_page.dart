@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
+as bg;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
@@ -63,43 +63,65 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           ),
           slivers: [
             CupertinoSliverNavigationBar(
-              largeTitle: Text(Localize.of(context).settings),
-              backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
+              largeTitle: Text(Localize
+                  .of(context)
+                  .settings),
+              backgroundColor: CupertinoTheme
+                  .of(context)
+                  .barBackgroundColor,
             ),
             SliverToBoxAdapter(
               child: Column(
                 children: [
                   CupertinoFormSection(
                       header:
-                          Text(Localize.of(context).bladeGuardSettingsTitle),
+                      Text(Localize
+                          .of(context)
+                          .bladeGuardSettingsTitle),
                       children: <Widget>[
-                        CupertinoButton(
-                          child: Text(Localize.of(context).bladeGuardSettings),
-                          onPressed: () => {
-                            Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                builder: (context) => const BladeGuardPage(),
-                              ),
-                            )
-                          },
+                        SizedBox(
+                          width: MediaQuery
+                              .sizeOf(context)
+                              .width * 0.9,
+                          child: CupertinoButton(
+                            color: CupertinoTheme
+                                .of(context)
+                                .primaryColor,
+                            child:
+                            Text(Localize
+                                .of(context)
+                                .bladeGuardSettings),
+                            onPressed: () =>
+                            {
+                              Navigator.of(context).push(
+                                CupertinoPageRoute(
+                                  builder: (context) => const BladeGuardPage(),
+                                ),
+                              )
+                            },
+                          ),
                         ),
                       ]),
                   const TrackingExportWidget(),
                   CupertinoFormSection(
-                      header: Text(Localize.of(context).setMeColor),
+                      header: Text(Localize
+                          .of(context)
+                          .setMeColor),
                       children: <Widget>[
                         CupertinoListTile(
                           title: GestureDetector(
                             onTap: () async {
                               final Color colorBeforeDialog =
-                                  ref.read(meColorProvider);
+                              ref.read(meColorProvider);
                               var res = await showColorPickerDialog(
                                   context, colorBeforeDialog);
                               ref
                                   .read(themePrimaryDarkColorProvider.notifier)
                                   .setColor(res);
                             },
-                            child: Text(Localize.of(context).setcolor),
+                            child: Text(Localize
+                                .of(context)
+                                .setcolor),
                           ),
                           trailing: ColorIndicator(
                             width: 20,
@@ -109,7 +131,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             onSelectFocus: false,
                             onSelect: () async {
                               final Color colorBeforeDialog =
-                                  ref.read(meColorProvider);
+                              ref.read(meColorProvider);
                               var res = await showColorPickerDialog(
                                   context, colorBeforeDialog);
                               ref.read(meColorProvider.notifier).setColor(res);
@@ -118,20 +140,24 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ),
                       ]),
                   CupertinoFormSection(
-                      header: Text(Localize.of(context).setPrimaryColor),
+                      header: Text(Localize
+                          .of(context)
+                          .setPrimaryColor),
                       children: <Widget>[
                         CupertinoListTile(
                           title: GestureDetector(
                             onTap: () async {
                               final Color colorBeforeDialog =
-                                  ref.read(themePrimaryLightColorProvider);
+                              ref.read(themePrimaryLightColorProvider);
                               var res = await showColorPickerDialog(
                                   context, colorBeforeDialog);
                               ref
                                   .read(themePrimaryLightColorProvider.notifier)
                                   .setColor(res);
                             },
-                            child: Text(Localize.of(context).setcolor),
+                            child: Text(Localize
+                                .of(context)
+                                .setcolor),
                           ),
                           trailing: ColorIndicator(
                             width: 20,
@@ -141,7 +167,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             onSelectFocus: false,
                             onSelect: () async {
                               final Color colorBeforeDialog =
-                                  ref.read(themePrimaryLightColorProvider);
+                              ref.read(themePrimaryLightColorProvider);
                               var res = await showColorPickerDialog(
                                   context, colorBeforeDialog);
                               ref
@@ -155,17 +181,21 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   dark: CupertinoThemeData(
                                     brightness: Brightness.dark,
                                     primaryColor:
-                                        ref.read(themePrimaryDarkColorProvider),
+                                    ref.read(themePrimaryDarkColorProvider),
                                   ));
                             },
                           ),
                         ),
                       ]),
                   CupertinoFormSection(
-                      header: Text(Localize.of(context).setPrimaryDarkColor),
+                      header: Text(Localize
+                          .of(context)
+                          .setPrimaryDarkColor),
                       children: [
                         CupertinoListTile(
-                          title: Text(Localize.of(context).setcolor),
+                          title: Text(Localize
+                              .of(context)
+                              .setcolor),
                           trailing: ColorIndicator(
                             width: 20,
                             height: 20,
@@ -174,7 +204,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             onSelectFocus: false,
                             onSelect: () async {
                               final Color colorBeforeDialog =
-                                  ref.read(meColorProvider);
+                              ref.read(meColorProvider);
                               var res = await showColorPickerDialog(
                                   context, colorBeforeDialog);
                               ref
@@ -195,10 +225,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ),
                       ]),
                   CupertinoFormSection(
-                      header: Text(Localize.of(context).setIconSizeTitle),
+                      header: Text(Localize
+                          .of(context)
+                          .setIconSizeTitle),
                       children: <Widget>[
                         Text(
-                            '${Localize.of(context).setIconSize} ${_iconSize.toStringAsFixed(0)} px'),
+                            '${Localize
+                                .of(context)
+                                .setIconSize} ${_iconSize.toStringAsFixed(
+                                0)} px'),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -227,14 +262,22 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             ]),
                       ]),
                   CupertinoFormSection(
-                      header: Text(Localize.of(context).setDarkModeTitle),
+                      header: Text(Localize
+                          .of(context)
+                          .setDarkModeTitle),
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: DataLeftRightContent(
-                            descriptionLeft: Localize.of(context).setDarkMode,
+                            descriptionLeft: Localize
+                                .of(context)
+                                .setDarkMode,
                             descriptionRight: '',
                             rightWidget: CupertinoSwitch(
+                              activeColor:
+                              CupertinoTheme
+                                  .of(context)
+                                  .primaryColor,
                               onChanged: (val) async {
                                 if (val) {
                                   setState(() {
@@ -258,15 +301,23 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       ]),
                   CupertinoFormSection(
                       header:
-                          Text(Localize.of(context).automatedStopSettingTitle),
+                      Text(Localize
+                          .of(context)
+                          .automatedStopSettingTitle),
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: DataLeftRightContent(
                             descriptionLeft:
-                                Localize.of(context).automatedStopSettingText,
+                            Localize
+                                .of(context)
+                                .automatedStopSettingText,
                             descriptionRight: '',
                             rightWidget: CupertinoSwitch(
+                              activeColor:
+                              CupertinoTheme
+                                  .of(context)
+                                  .primaryColor,
                               onChanged: (val) {
                                 setState(() {
                                   ref
@@ -281,15 +332,23 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       ]),
                   CupertinoFormSection(
                       header:
-                          Text(Localize.of(context).autoStartTrackingInfoTitle),
+                      Text(Localize
+                          .of(context)
+                          .autoStartTrackingInfoTitle),
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: DataLeftRightContent(
                             descriptionLeft:
-                                Localize.of(context).autoStartTrackingInfo,
+                            Localize
+                                .of(context)
+                                .autoStartTrackingInfo,
                             descriptionRight: '',
                             rightWidget: CupertinoSwitch(
+                              activeColor:
+                              CupertinoTheme
+                                  .of(context)
+                                  .primaryColor,
                               onChanged: (val) {
                                 setState(() {
                                   ref
@@ -303,15 +362,23 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ),
                       ]),
                   CupertinoFormSection(
-                      header: Text(Localize.of(context).showOwnTrack),
+                      header: Text(Localize
+                          .of(context)
+                          .showOwnTrack),
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: DataLeftRightContent(
                             descriptionLeft:
-                                Localize.of(context).showOwnTrackSwitchTitle,
+                            Localize
+                                .of(context)
+                                .showOwnTrackSwitchTitle,
                             descriptionRight: '',
                             rightWidget: CupertinoSwitch(
+                              activeColor:
+                              CupertinoTheme
+                                  .of(context)
+                                  .primaryColor,
                               onChanged: (val) {
                                 setState(() {
                                   ref
@@ -328,14 +395,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             child: DataLeftRightContent(
                               descriptionLeft:
-                                  Localize.of(context).showOwnColoredTrack,
+                              Localize
+                                  .of(context)
+                                  .showOwnColoredTrack,
                               descriptionRight: '',
                               rightWidget: CupertinoSwitch(
+                                activeColor:
+                                CupertinoTheme
+                                    .of(context)
+                                    .primaryColor,
                                 onChanged: (val) {
                                   setState(() {
                                     ref
                                         .read(showOwnColoredTrackProvider
-                                            .notifier)
+                                        .notifier)
                                         .setValue(val);
                                   });
                                 },
@@ -346,14 +419,22 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       ]),
                   if (!kIsWeb)
                     CupertinoFormSection(
-                        header: Text(Localize.of(context).showCompassTitle),
+                        header: Text(Localize
+                            .of(context)
+                            .showCompassTitle),
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             child: DataLeftRightContent(
-                              descriptionLeft: Localize.of(context).showCompass,
+                              descriptionLeft: Localize
+                                  .of(context)
+                                  .showCompass,
                               descriptionRight: '',
                               rightWidget: CupertinoSwitch(
+                                activeColor:
+                                CupertinoTheme
+                                    .of(context)
+                                    .primaryColor,
                                 onChanged: (val) {
                                   setState(() {
                                     ref
@@ -384,44 +465,50 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       children: [
                         const AppIdWidget(),
                         if (networkConnected.connectivityStatus ==
-                                ConnectivityStatus.online &&
+                            ConnectivityStatus.online &&
                             !kIsWeb)
                           CupertinoFormSection(
-                            header: Text(Localize.of(context)
+                            header: Text(Localize
+                                .of(context)
                                 .enableOnesignalPushMessageTitle),
                             children: <Widget>[
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
+                                const EdgeInsets.only(left: 20, right: 20),
                                 child: DataLeftRightContent(
-                                  descriptionLeft: Localize.of(context)
+                                  descriptionLeft: Localize
+                                      .of(context)
                                       .enableOnesignalPushMessage,
                                   descriptionRight: '',
                                   rightWidget: _showPushProgressIndicator
                                       ? const CircularProgressIndicator()
                                       : CupertinoSwitch(
-                                          onChanged: (val) async {
-                                            await HiveSettingsDB
-                                                .setPushNotificationsEnabled(
-                                                    val);
-                                            setState(() {
-                                              _showPushProgressIndicator = true;
-                                            });
-                                            await OnesignalHandler
-                                                    .setOneSignalChannels()
-                                                .timeout(
-                                                    const Duration(seconds: 20))
-                                                .catchError((error) {
-                                              BnLog.error(
-                                                  text:
-                                                      'error deactivating Push');
-                                            });
-                                            _showPushProgressIndicator = false;
-                                            setState(() {});
-                                          },
-                                          value: HiveSettingsDB
-                                              .pushNotificationsEnabled,
-                                        ),
+                                    activeColor:
+                                    CupertinoTheme
+                                        .of(context)
+                                        .primaryColor,
+                                    onChanged: (val) async {
+                                      await HiveSettingsDB
+                                          .setPushNotificationsEnabled(
+                                          val);
+                                      setState(() {
+                                        _showPushProgressIndicator = true;
+                                      });
+                                      await OnesignalHandler
+                                          .setOneSignalChannels()
+                                          .timeout(
+                                          const Duration(seconds: 20))
+                                          .catchError((error) {
+                                        BnLog.error(
+                                            text:
+                                            'error deactivating Push');
+                                      });
+                                      _showPushProgressIndicator = false;
+                                      setState(() {});
+                                    },
+                                    value: HiveSettingsDB
+                                        .pushNotificationsEnabled,
+                                  ),
                                 ),
                               ),
                             ],
@@ -431,16 +518,24 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         if (!kIsWeb)
                           CupertinoFormSection(
                             header: Text(
-                                Localize.of(context).fireBaseCrashlyticsHeader),
+                                Localize
+                                    .of(context)
+                                    .fireBaseCrashlyticsHeader),
                             children: <Widget>[
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
+                                const EdgeInsets.only(left: 20, right: 20),
                                 child: DataLeftRightContent(
                                   descriptionLeft:
-                                      Localize.of(context).fireBaseCrashlytics,
+                                  Localize
+                                      .of(context)
+                                      .fireBaseCrashlytics,
                                   descriptionRight: '',
                                   rightWidget: CupertinoSwitch(
+                                    activeColor:
+                                    CupertinoTheme
+                                        .of(context)
+                                        .primaryColor,
                                     onChanged: (val) async {
                                       HiveSettingsDB.setChrashlyticsEnabled(
                                           val);
@@ -452,46 +547,31 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               ),
                             ],
                           ),
-                        if (!kIsWeb)
-                          CupertinoFormSection(
-                              header: Text(Localize.of(context).setSystem),
-                              children: <Widget>[
-                                CupertinoButton(
-                                    child: Text(Localize.of(context)
-                                        .openOperatingSystemSettings),
-                                    onPressed: () => openAppSettings()),
-                              ]),
-                        if (Platform.isAndroid)
-                          CupertinoFormSection(
-                              header: Text(Localize.of(context)
-                                  .ignoreBatteriesOptimisation),
-                              children: <Widget>[
-                                CupertinoButton(
-                                    child: Text(Localize.of(context)
-                                        .ignoreBatteriesOptimisationTitle),
-                                    onPressed: () async =>
-                                        await BackgroundGeolocationHelper
-                                            .openBatteriesSettings(context)),
-                              ]),
                         CupertinoFormSection(
-                            header: Text(Localize.of(context)
+                            header: Text(Localize
+                                .of(context)
                                 .fitnessPermissionSettingsText),
                             children: <Widget>[
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
+                                const EdgeInsets.only(left: 20, right: 20),
                                 child: DataLeftRightContent(
-                                  descriptionLeft: Localize.of(context)
+                                  descriptionLeft: Localize
+                                      .of(context)
                                       .fitnessPermissionSwitchSettingsText,
                                   descriptionRight: '',
                                   rightWidget: CupertinoSwitch(
+                                    activeColor:
+                                    CupertinoTheme
+                                        .of(context)
+                                        .primaryColor,
                                     onChanged: (val) {
                                       HiveSettingsDB
                                           .setIsMotionDetectionDisabled(!val);
                                       bg.BackgroundGeolocation.setConfig(
                                           bg.Config(
                                               disableMotionActivityUpdates:
-                                                  !val));
+                                              !val));
                                       setState(() {});
                                     },
                                     value: !HiveSettingsDB
@@ -502,16 +582,24 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             ]),
                         CupertinoFormSection(
                             header:
-                                Text(Localize.of(context).allowWakeLockHeader),
+                            Text(Localize
+                                .of(context)
+                                .allowWakeLockHeader),
                             children: <Widget>[
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
+                                const EdgeInsets.only(left: 20, right: 20),
                                 child: DataLeftRightContent(
                                   descriptionLeft:
-                                      Localize.of(context).allowWakeLock,
+                                  Localize
+                                      .of(context)
+                                      .allowWakeLock,
                                   descriptionRight: '',
                                   rightWidget: CupertinoSwitch(
+                                    activeColor:
+                                    CupertinoTheme
+                                        .of(context)
+                                        .primaryColor,
                                     onChanged: (val) {
                                       HiveSettingsDB.setWakeLockEnabled(val);
                                       Wakelock.toggle(enable: val);
@@ -522,25 +610,78 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 ),
                               ),
                             ]),
-                        const SizedBox(height: 5),
+                        if (Platform.isAndroid)
+                          CupertinoFormSection(
+                              header: Text(Localize
+                                  .of(context)
+                                  .ignoreBatteriesOptimisation),
+                              children: <Widget>[
+                                SizedBox(
+                                  width: MediaQuery
+                                      .sizeOf(context)
+                                      .width * 0.9,
+                                  child: CupertinoButton(
+                                      color: CupertinoTheme
+                                          .of(context)
+                                          .primaryColor,
+                                      child: Text(Localize
+                                          .of(context)
+                                          .ignoreBatteriesOptimisationTitle),
+                                      onPressed: () async =>
+                                      await BackgroundGeolocationHelper
+                                          .openBatteriesSettings(context)),
+                                ),
+                              ]),
+                        if (!kIsWeb)
+                          CupertinoFormSection(
+                              header: Text(Localize
+                                  .of(context)
+                                  .setSystem),
+                              children: <Widget>[
+                                SizedBox(
+                                  width: MediaQuery
+                                      .sizeOf(context)
+                                      .width * 0.9,
+                                  child: CupertinoButton(
+                                      color: CupertinoTheme
+                                          .of(context)
+                                          .primaryColor,
+                                      child: Text(Localize
+                                          .of(context)
+                                          .openOperatingSystemSettings),
+                                      onPressed: () => openAppSettings()),
+                                ),
+                              ]),
                         CupertinoFormSection(
-                          header: Text(Localize.of(context).exportLogData),
+                          header: Text(Localize
+                              .of(context)
+                              .exportLogData),
                           children: <Widget>[
                             _exportLogInProgress
                                 ? const CircularProgressIndicator()
-                                : CupertinoButton(
-                                    child: Text(Localize.of(context)
-                                        .setExportLogSupport),
-                                    onPressed: () async {
-                                      if (_exportLogInProgress) return;
-                                      setState(() {
-                                        _exportLogInProgress = true;
-                                      });
-                                      await exportLogs();
-                                      setState(() {
-                                        _exportLogInProgress = false;
-                                      });
-                                    }),
+                                : SizedBox(
+                              width:
+                              MediaQuery
+                                  .sizeOf(context)
+                                  .width * 0.9,
+                              child: CupertinoButton(
+                                  color: CupertinoTheme
+                                      .of(context)
+                                      .primaryColor,
+                                  child: Text(Localize
+                                      .of(context)
+                                      .setExportLogSupport),
+                                  onPressed: () async {
+                                    if (_exportLogInProgress) return;
+                                    setState(() {
+                                      _exportLogInProgress = true;
+                                    });
+                                    await exportLogs();
+                                    setState(() {
+                                      _exportLogInProgress = false;
+                                    });
+                                  }),
+                            ),
                           ],
                         ),
                         const SizedBox(
@@ -551,11 +692,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           child: Column(
                             children: [
                               CupertinoFormSection(
-                                  header: Text(Localize.of(context).setLogData),
+                                  header: Text(Localize
+                                      .of(context)
+                                      .setLogData),
                                   children: <Widget>[
                                     CupertinoButton(
                                         child: Text(
-                                            'Loglevel ${BnLog.getActiveLogLevel().name}'),
+                                            'Loglevel ${BnLog
+                                                .getActiveLogLevel()
+                                                .name}'),
                                         onPressed: () async {
                                           await BnLog.showLogLevelDialog(
                                               context);
@@ -563,7 +708,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         }),
                                     CupertinoButton(
                                         child: Text(
-                                            Localize.of(context).setClearLogs),
+                                            Localize
+                                                .of(context)
+                                                .setClearLogs),
                                         onPressed: () async {
                                           await QuickAlert.show(
                                               context: context,
@@ -574,9 +721,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                               text: Localize
                                                   .current.clearLogsQuestion,
                                               confirmBtnText:
-                                                  Localize.current.yes,
+                                              Localize.current.yes,
                                               cancelBtnText:
-                                                  Localize.current.cancel,
+                                              Localize.current.cancel,
                                               onConfirmBtnTap: () async {
                                                 await BnLog.clearLogs();
                                                 await bg.Logger.destroyLog();
@@ -589,12 +736,14 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         }),
                                   ]),
                               if (!HiveSettingsDB
-                                  .useAlternativeLocationProvider)
+                                  .useAlternativeLocationProvider &&
+                                  HiveSettingsDB.flogLogLevel.value < 3000)
                                 CupertinoFormSection(
                                     header: const Text('Geolocation Log'),
                                     children: <Widget>[
                                       CupertinoButton(
-                                          child: Text(Localize.of(context)
+                                          child: Text(Localize
+                                              .of(context)
                                               .setExportLogSupport),
                                           onPressed: () =>
                                               exportBgLocationLogs()),
@@ -615,11 +764,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
-                                      Localize.of(context).specialfunction,
+                                      Localize
+                                          .of(context)
+                                          .specialfunction,
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                         backgroundColor:
-                                            CupertinoColors.activeOrange,
+                                        CupertinoColors.activeOrange,
                                       ),
                                     ),
                                   ),
@@ -632,21 +783,23 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
                               //if (Platform.isAndroid)
                               CupertinoFormSection(
-                                  header: Text(Localize.of(context)
+                                  header: Text(Localize
+                                      .of(context)
                                       .alternativeLocationProviderTitle),
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           left: 20, right: 20),
                                       child: DataLeftRightContent(
-                                        descriptionLeft: Localize.of(context)
+                                        descriptionLeft: Localize
+                                            .of(context)
                                             .alternativeLocationProvider,
                                         descriptionRight: '',
                                         rightWidget: CupertinoSwitch(
                                           onChanged: (val) {
                                             HiveSettingsDB
                                                 .setUseAlternativeLocationProvider(
-                                                    val);
+                                                val);
                                             setState(() {});
                                           },
                                           value: HiveSettingsDB
@@ -657,13 +810,16 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   ]),
                               CupertinoFormSection(
                                   header:
-                                      Text(Localize.of(context).openStreetMap),
+                                  Text(Localize
+                                      .of(context)
+                                      .openStreetMap),
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           left: 20, right: 20),
                                       child: DataLeftRightContent(
-                                        descriptionLeft: Localize.of(context)
+                                        descriptionLeft: Localize
+                                            .of(context)
                                             .openStreetMapText,
                                         descriptionRight: '',
                                         rightWidget: CupertinoSwitch(
@@ -673,7 +829,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                             setState(() {});
                                           },
                                           value:
-                                              MapSettings.openStreetMapEnabled,
+                                          MapSettings.openStreetMapEnabled,
                                         ),
                                       ),
                                     ),
@@ -689,7 +845,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       placeholder: 'server address',
                                       showCursor: true,
                                       initialValue:
-                                          HiveSettingsDB.customServerAddress,
+                                      HiveSettingsDB.customServerAddress,
                                       autocorrect: false,
                                       onChanged: (value) {
                                         HiveSettingsDB.setCustomServerAddress(
@@ -719,10 +875,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   ]),
                               CupertinoFormSection(
                                   header: Text(
-                                      Localize.of(context).setexportDataHeader),
+                                      Localize
+                                          .of(context)
+                                          .setexportDataHeader),
                                   children: <Widget>[
                                     CupertinoButton(
-                                        child: Text(Localize.of(context)
+                                        child: Text(Localize
+                                            .of(context)
                                             .setexportIdAndFriends),
                                         onPressed: () => exportData(context)),
                                   ]),
@@ -731,7 +890,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 children: <Widget>[
                                   CupertinoTextFormFieldRow(
                                     controller: _textController,
-                                    placeholder: Localize.of(context)
+                                    placeholder: Localize
+                                        .of(context)
                                         .setInsertImportDataset,
                                     autocorrect: false,
                                     prefix: inputText.length > 10
@@ -755,7 +915,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                     // The green box must be a child of the AnimatedOpacity widget.
                                     child: CupertinoButton(
                                       child: Text(
-                                          Localize.of(context).setStartImport),
+                                          Localize
+                                              .of(context)
+                                              .setStartImport),
                                       onPressed: () {
                                         inputText.length > 10
                                             ? importData(context, inputText)

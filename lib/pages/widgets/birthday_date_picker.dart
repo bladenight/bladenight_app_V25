@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
@@ -55,16 +56,22 @@ class _BirthdayTextFieldState extends ConsumerState<BirthdayDatePicker> {
             Text(Localize.of(context).birthday),
             CupertinoButton(
               // Display a CupertinoDatePicker in date picker mode.
-              onPressed: () async{
-                var picked = await showDatePicker(
-                context: context,
-                  locale: const Locale('de', 'DE'),
+              onPressed: () async {
+                var picked = await DatePicker.showSimpleDatePicker(
+                  context,
+                  titleText: Localize.of(context).birthday,
+                  pickerMode: DateTimePickerMode.date,
+                  looping: true,
+                  dateFormat: 'dd.MM.yyyy',
+                  confirmText: Localize.of(context).ok,
+                  cancelText: Localize.of(context).cancel,
+                  locale: DateTimePickerLocale.de,
                   initialDate: HiveSettingsDB.bladeguardBirthday,
                   firstDate: DateTime(1900),
-                  lastDate: DateTime.now().subtract(const Duration(days:365*16)),
-
-                  );
-                if (picked != null){
+                  lastDate:
+                      DateTime.now().subtract(const Duration(days: 365 * 16)),
+                );
+                if (picked != null) {
                   HiveSettingsDB.setBladeguardBirthday(picked);
                   setState(() => date = picked);
                 }

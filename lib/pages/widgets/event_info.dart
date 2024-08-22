@@ -44,7 +44,10 @@ class _EventInfoState extends ConsumerState<EventInfo>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _width = MediaQuery.of(context).size.width;
+      _width = MediaQuery
+          .of(context)
+          .size
+          .width;
       //_height = MediaQuery.of(context).size.height;
       initEventUpdates();
       initLocation();
@@ -65,7 +68,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
     BnLog.debug(text: 'event_info - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       initEventUpdates(forceUpdate: true);
-      context.read(locationProvider).refresh(forceUpdate: true);
+      context.read(locationProvider).refreshLocationData(forceUpdate: true);
     }
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
@@ -86,7 +89,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
     _updateTimer?.cancel();
     _updateTimer = Timer.periodic(
       const Duration(minutes: 10),
-      (timer) {
+          (timer) {
         if (!mounted) return;
         context.read(activeEventProvider.notifier).refresh();
       },
@@ -95,13 +98,11 @@ class _EventInfoState extends ConsumerState<EventInfo>
 
   void initLocation() async {
     await Future.delayed(const Duration(seconds: 5));
-    LocationProvider.instance.refresh(forceUpdate: true);
+    LocationProvider.instance.refreshLocationData(forceUpdate: true);
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context,) {
     var nextEventProvider = context.watch(activeEventProvider);
     return SizedBox(
       height: double.infinity,
@@ -117,24 +118,37 @@ class _EventInfoState extends ConsumerState<EventInfo>
             const BladeGuardAdvertise(),
             if (nextEventProvider.status == EventStatus.noevent)
               HiddenAdminButton(
-                child: Text(Localize.of(context).noEventPlanned,
+                child: Text(Localize
+                    .of(context)
+                    .noEventPlanned,
                     textAlign: TextAlign.center,
-                    style: CupertinoTheme.of(context).textTheme.textStyle),
+                    style: CupertinoTheme
+                        .of(context)
+                        .textTheme
+                        .textStyle),
               ),
             if (nextEventProvider.status != EventStatus.noevent)
               HiddenAdminButton(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(Localize.of(context).nextEvent,
+                    Text(Localize
+                        .of(context)
+                        .nextEvent,
                         textAlign: TextAlign.center,
-                        style: CupertinoTheme.of(context).textTheme.textStyle),
+                        style: CupertinoTheme
+                            .of(context)
+                            .textTheme
+                            .textStyle),
                     const SizedBox(height: 5),
                     FittedBox(
                       child: Text(
-                          '${Localize.of(context).route} ${nextEventProvider.routeName}',
+                          '${Localize
+                              .of(context)
+                              .route} ${nextEventProvider.routeName}',
                           textAlign: TextAlign.center,
-                          style: CupertinoTheme.of(context)
+                          style: CupertinoTheme
+                              .of(context)
                               .textTheme
                               .navLargeTitleTextStyle),
                     ),
@@ -145,8 +159,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
                         child: Text(
                             DateFormatter(Localize.of(context))
                                 .getLocalDayDateTimeRepresentation(
-                                    nextEventProvider.getUtcIso8601DateTime),
-                            style: CupertinoTheme.of(context)
+                                nextEventProvider.getUtcIso8601DateTime),
+                            style: CupertinoTheme
+                                .of(context)
                                 .textTheme
                                 .navLargeTitleTextStyle),
                       ),
@@ -157,12 +172,12 @@ class _EventInfoState extends ConsumerState<EventInfo>
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color:
-                              nextEventProvider.status == EventStatus.cancelled
-                                  ? Colors.redAccent
-                                  : nextEventProvider.status ==
-                                          EventStatus.confirmed
-                                      ? Colors.green
-                                      : Colors.transparent,
+                          nextEventProvider.status == EventStatus.cancelled
+                              ? Colors.redAccent
+                              : nextEventProvider.status ==
+                              EventStatus.confirmed
+                              ? Colors.green
+                              : Colors.transparent,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(10.0),
                           ),
@@ -170,7 +185,8 @@ class _EventInfoState extends ConsumerState<EventInfo>
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(nextEventProvider.statusText,
-                              style: CupertinoTheme.of(context)
+                              style: CupertinoTheme
+                                  .of(context)
                                   .textTheme
                                   .pickerTextStyle),
                         ),
@@ -185,10 +201,14 @@ class _EventInfoState extends ConsumerState<EventInfo>
                 child: GestureDetector(
                   onTap: () async {
                     var link =
-                        context.read(mainSponsorImageAndLinkProvider).link;
+                        context
+                            .read(mainSponsorImageAndLinkProvider)
+                            .link;
                     if (link != null && link != '') {
                       var uri = Uri.parse(
-                          context.read(mainSponsorImageAndLinkProvider).link!);
+                          context
+                              .read(mainSponsorImageAndLinkProvider)
+                              .link!);
                       Launch.launchUrlFromUri(uri);
                     }
                   },
@@ -196,22 +216,24 @@ class _EventInfoState extends ConsumerState<EventInfo>
                     var ms = context.watch(mainSponsorImageAndLinkProvider);
                     var nw = context.watch(networkAwareProvider);
                     return (ms.image != null &&
-                            nw.connectivityStatus == ConnectivityStatus.online)
+                        nw.connectivityStatus == ConnectivityStatus.online)
                         ? CachedNetworkImage(
-                            width: _width * .6,
-                            imageUrl: ms.image!,
-                            placeholder: (context, url) => Image.asset(
-                                mainSponsorPlaceholder,
-                                fit: BoxFit.fitWidth),
-                            errorWidget: (context, url, error) => Image.asset(
-                                mainSponsorPlaceholder,
-                                fit: BoxFit.fitWidth),
-                            errorListener: (e) {
-                              BnLog.warning(text: 'Could not load ${ms.image}');
-                            },
-                          )
+                      width: _width * .6,
+                      imageUrl: ms.image!,
+                      placeholder: (context, url) =>
+                          Image.asset(
+                              mainSponsorPlaceholder,
+                              fit: BoxFit.fitWidth),
+                      errorWidget: (context, url, error) =>
+                          Image.asset(
+                              mainSponsorPlaceholder,
+                              fit: BoxFit.fitWidth),
+                      errorListener: (e) {
+                        BnLog.warning(text: 'Could not load ${ms.image}');
+                      },
+                    )
                         : Image.asset(mainSponsorPlaceholder,
-                            fit: BoxFit.fitWidth);
+                        fit: BoxFit.fitWidth);
                   }),
                 ),
               ),
@@ -220,7 +242,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
                 child: GestureDetector(
                   onTap: () async {
                     var link =
-                        context.read(secondSponsorImageAndLinkProvider).link;
+                        context
+                            .read(secondSponsorImageAndLinkProvider)
+                            .link;
                     if (link != null && link != '') {
                       var uri = Uri.parse(context
                           .read(secondSponsorImageAndLinkProvider)
@@ -232,23 +256,25 @@ class _EventInfoState extends ConsumerState<EventInfo>
                     var img = context.watch(secondSponsorImageAndLinkProvider);
                     var nw = context.watch(networkAwareProvider);
                     return (img.image != null &&
-                            nw.connectivityStatus == ConnectivityStatus.online)
+                        nw.connectivityStatus == ConnectivityStatus.online)
                         ? CachedNetworkImage(
-                            width: _width * .6,
-                            imageUrl: img.image!,
-                            placeholder: (context, url) => Image.asset(
-                                secondLogoPlaceholder,
-                                fit: BoxFit.fitWidth),
-                            errorWidget: (context, url, error) => Image.asset(
-                                secondLogoPlaceholder,
-                                fit: BoxFit.fitWidth),
-                            errorListener: (e) {
-                              BnLog.warning(
-                                  text: 'Could not load ${img.image}');
-                            },
-                          )
+                      width: _width * .6,
+                      imageUrl: img.image!,
+                      placeholder: (context, url) =>
+                          Image.asset(
+                              secondLogoPlaceholder,
+                              fit: BoxFit.fitWidth),
+                      errorWidget: (context, url, error) =>
+                          Image.asset(
+                              secondLogoPlaceholder,
+                              fit: BoxFit.fitWidth),
+                      errorListener: (e) {
+                        BnLog.warning(
+                            text: 'Could not load ${img.image}');
+                      },
+                    )
                         : Image.asset(secondLogoPlaceholder,
-                            fit: BoxFit.fitWidth);
+                        fit: BoxFit.fitWidth);
                   }),
                 ),
               ),
@@ -265,24 +291,28 @@ class _EventInfoState extends ConsumerState<EventInfo>
                       var spp = context.watch(startpointImageAndLinkProvider);
                       return spp.text != null
                           ? FittedBox(
-                              child: Text(
-                                spp.text!,
-                                maxLines: 10,
-                                softWrap: true,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color:
-                                      CupertinoTheme.of(context).primaryColor,
-                                ),
-                              ),
-                            )
+                        child: Text(
+                          spp.text!,
+                          maxLines: 10,
+                          softWrap: true,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color:
+                            CupertinoTheme
+                                .of(context)
+                                .primaryColor,
+                          ),
+                        ),
+                      )
                           : Container();
                     }),
                   const SizedBox(
                     height: 5,
                   ),
                   Text(
-                    Localize.of(context).lastupdate,
+                    Localize
+                        .of(context)
+                        .lastupdate,
                     style: const TextStyle(
                       color: CupertinoDynamicColor.withBrightness(
                         color: CupertinoColors.systemGrey,
@@ -294,9 +324,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
                     nextEventProvider.lastupdate == null
                         ? '-'
                         : Localize.current.dateTimeIntl(
-                            nextEventProvider.lastupdate as DateTime,
-                            nextEventProvider.lastupdate as DateTime,
-                          ),
+                      nextEventProvider.lastupdate as DateTime,
+                      nextEventProvider.lastupdate as DateTime,
+                    ),
                     style: const TextStyle(
                       color: CupertinoDynamicColor.withBrightness(
                         color: CupertinoColors.systemGrey,

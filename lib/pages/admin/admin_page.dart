@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/deviceid_helper.dart';
@@ -37,7 +36,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
 
   @override
   Widget build(BuildContext context) {
-    var nextEventProvider = context.watch(activeEventProvider);
+    var nextEventProvider = ref.watch(activeEventProvider);
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor:
@@ -114,9 +113,9 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoButton.filled(
               child: Text(Localize.of(context).setState),
               onPressed: () async {
-                var status = await showStatusDialog(
+                var status = await showEventStatusDialog(
                   context,
-                  current: context.read(activeEventProvider).status,
+                  current: ref.read(activeEventProvider).status,
                 );
 
                 if (status != null) {
@@ -135,8 +134,8 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   }
                   setState(() => _activityVisible = false);
                   Future.delayed(const Duration(seconds: 1), () {
-                    context.read(activeEventProvider.notifier).refresh();
-                    context.read(currentRouteProvider);
+                    ref.read(activeEventProvider.notifier).refresh();
+                    ref.read(currentRouteProvider);
                   });
                 }
               },
@@ -151,9 +150,9 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoButton.filled(
               child: Text(Localize.of(context).setRoute),
               onPressed: () async {
-                var route = await showUserTrackDialog(
+                var route = await showRouteSelectorDialog(
                   context,
-                  current: context.read(currentRouteProvider).value?.name,
+                  current: ref.read(currentRouteProvider).value?.name,
                 );
 
                 if (route != null) {
@@ -232,10 +231,10 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                                 mode: status)
                             .toMap());
                   } catch (e) {
-                      BnLog.error(
-                          text: 'Error ProcessionMode',
-                          className: toString(),
-                          methodName: 'Adminpage ProcessionMode');
+                    BnLog.error(
+                        text: 'Error ProcessionMode',
+                        className: toString(),
+                        methodName: 'Adminpage ProcessionMode');
                   }
 
                   setState(() {
@@ -261,14 +260,15 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                 if (status != null && status == 1) {
                   try {
                     await AdminCalls.killServer(KillServerMessage.authenticate(
+                      killValue: true,
                       deviceId: DeviceId.appId,
                       password: widget.password,
                     ).toMap());
                   } catch (e) {
-                      BnLog.error(
-                          text: 'Error Restart Server',
-                          className: toString(),
-                          methodName: 'Adminpage Restart server');
+                    BnLog.error(
+                        text: 'Error Restart Server',
+                        className: toString(),
+                        methodName: 'Adminpage Restart server');
                   }
 
                   _activityVisible = false;
@@ -288,7 +288,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
     );
   }
 
-  Future<EventStatus?> showStatusDialog(BuildContext context,
+  Future<EventStatus?> showEventStatusDialog(BuildContext context,
       {EventStatus? current}) {
     EventStatus? status;
     return showCupertinoDialog(
@@ -317,6 +317,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                           EventStatus.noevent: Localize.of(context).noEvent,
                           EventStatus.running: Localize.of(context).running,
                           EventStatus.finished: Localize.of(context).finished,
+                          EventStatus.deleted: Localize.of(context).delete,
                           'other': Localize.of(context).unknown
                         })}'),
                   ),
@@ -342,7 +343,8 @@ class _AdminPageState extends ConsumerState<AdminPage> {
     );
   }
 
-  Future<String?> showUserTrackDialog(BuildContext context, {String? current}) {
+  Future<String?> showRouteSelectorDialog(BuildContext context,
+      {String? current}) {
     String? route;
     return showCupertinoDialog(
       context: context,
@@ -354,14 +356,14 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             height: 100,
             child: Builder(builder: (context) {
               //ref not working here in Alert
-              var routeNames = context.watch(getAllRouteNamesProvider);
+              var routeNames = ref.watch(getAllRouteNamesProvider);
               return routeNames.maybeWhen(
                   skipLoadingOnRefresh: false,
                   skipLoadingOnReload: false,
                   data: (routeNames) {
                     if (routeNames.exception != null) {
                       return NoDataWarning(
-                        onReload: () => context.read(getAllRouteNamesProvider),
+                        onReload: () => ref.read(getAllRouteNamesProvider),
                       );
                     }
                     route = routeNames.routeNames?.first;
@@ -387,7 +389,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   },
                   orElse: () {
                     return NoDataWarning(
-                      onReload: () => context.refresh(getAllRouteNamesProvider),
+                      onReload: () => ref.refresh(getAllRouteNamesProvider),
                     );
                   });
             }),

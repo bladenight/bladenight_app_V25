@@ -296,7 +296,7 @@ class BnLog {
                           bg.Config.LOG_LEVEL_DEBUG);
                     } else if (logLevel == Level.info) {
                       bg.BackgroundGeolocation.setConfig(
-                          bg.Config(logLevel: bg.Config.LOG_LEVEL_INFO));
+                          bg.Config(logLevel: bg.Config.LOG_LEVEL_OFF));
                       HiveSettingsDB.setBackgroundLocationLogLevel(
                           bg.Config.LOG_LEVEL_INFO);
                     } else if (logLevel == Level.warning) {

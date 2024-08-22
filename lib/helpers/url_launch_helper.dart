@@ -30,6 +30,8 @@ class Launch {
             mode == LaunchMode.externalApplication &&
             navigatorKey.currentContext != null) {
           res = await QuickAlert.show(
+              showCancelBtn: true,
+              cancelBtnText: Localize.current.cancel,
               context: navigatorKey.currentContext!,
               title: Localize.current.leaveAppWarningTitle,
               text: '${Localize.current.leaveAppWarning}\n$inUrl',
@@ -63,6 +65,8 @@ class Launch {
             mode == LaunchMode.externalApplication &&
             navigatorKey.currentContext != null) {
           res = await QuickAlert.show(
+              showCancelBtn: true,
+              cancelBtnText: Localize.current.cancel,
               context: navigatorKey.currentContext!,
               title: Localize.current.leaveAppWarningTitle,
               text: '${Localize.current.leaveAppWarning}\n${uri.toString()}',

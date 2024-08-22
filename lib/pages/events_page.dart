@@ -7,7 +7,6 @@ import 'package:riverpod_context/riverpod_context.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
-import '../app_settings/globals.dart';
 import '../generated/l10n.dart';
 import '../helpers/deviceid_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
@@ -19,7 +18,9 @@ import '../pages/widgets/no_data_warning.dart';
 import '../pages/widgets/route_dialog.dart';
 import '../providers/event_providers.dart';
 import '../providers/network_connection_provider.dart';
+import '../providers/settings/server_pwd_provider.dart';
 import '../wamp/admin_calls.dart';
+import 'events/event_editor.dart';
 import 'widgets/no_connection_warning.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
@@ -79,6 +80,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
   @override
   void dispose() {
     _scrollController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -102,11 +104,32 @@ class _EventsPageState extends ConsumerState<EventsPage>
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (ref.watch(serverPwdSetProviderProvider))
+                      CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        minSize: 0,
+                        onPressed: () async {
+                          var res = await EventEditor.show(
+                              context,
+                              Event.init.copyWith(
+                                  duration: const Duration(minutes: 180),
+                                  status: EventStatus.pending,
+                                  routeName: 'Muenchen',
+                                  routeLength: 2));
+                          if (res != null) {
+                            ref.invalidate(allEventsProvider);
+                          }
+                        },
+                        child: const Icon(CupertinoIcons.add_circled),
+                      ),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     CupertinoButton(
                       padding: EdgeInsets.zero,
                       minSize: 0,
                       onPressed: () async {
-                        context.refresh(allEventsProvider);
+                        ref.invalidate(allEventsProvider);
                       },
                       child: const Icon(CupertinoIcons.refresh),
                     ),
@@ -290,9 +313,10 @@ class _EventsPageState extends ConsumerState<EventsPage>
                         return Container(
                             key: _dataKey,
                             child: _editEventWidget(
-                                context, event, eventStartState));
+                                context, ref, event, eventStartState));
                       }
-                      return _editEventWidget(context, event, eventStartState);
+                      return _editEventWidget(
+                          context, ref, event, eventStartState);
                     } else {
                       return Divider(
                         color: CupertinoTheme.of(context).primaryColor,
@@ -423,16 +447,16 @@ class _EventsPageState extends ConsumerState<EventsPage>
 
 enum EventStartState { eventOver, eventActual, eventFuture }
 
-Widget _editEventWidget(
-    BuildContext context, Event event, EventStartState startState) {
-  if (Globals.adminPass != null) {
+Widget _editEventWidget(BuildContext context, WidgetRef ref, Event event,
+    EventStartState startState) {
+  if (HiveSettingsDB.serverPassword != null) {
     return Dismissible(
       onDismissed: (direction) async {
         try {
           await AdminCalls.editEvent(EditEventOnServerMessage.authenticate(
             event: event,
             deviceId: DeviceId.appId,
-            password: Globals.adminPass ?? 'wrong',
+            password: HiveSettingsDB.serverPassword ?? 'wrong',
           ).toMap());
         } catch (e) {
           BnLog.error(
@@ -444,24 +468,23 @@ Widget _editEventWidget(
       key: ObjectKey(event.hashCode),
       confirmDismiss: (DismissDirection direction) async {
         if (direction == DismissDirection.endToStart) {
+          //RouteDialog.show(context, event);
           return false;
         } else {
-          RouteDialog.show(context, event);
+          var res = await EventEditor.show(context, event);
+          if (res != null) {
+            ref.invalidate(allEventsProvider);
+          }
+          //RouteDialog.show(context, event);
           return false; //always return true when list not changed
         }
       },
       background: Container(
-          color: Colors.greenAccent,
+          color: Colors.yellow,
           child: CupertinoListTile(
               title: Text(Localize.of(context).editEvent),
               leading:
-                  const Icon(Icons.edit, color: Colors.white, size: 36.0))),
-      secondaryBackground: Container(
-          color: Colors.red,
-          child: CupertinoListTile(
-              title: Text(Localize.of(context).delete),
-              trailing:
-                  const Icon(Icons.add, color: Colors.redAccent, size: 36.0))),
+                  const Icon(Icons.edit, color: Colors.black, size: 36.0))),
       child: _listTile(context, event, startState),
     );
   } else {
@@ -524,25 +547,21 @@ Widget _listTile(
                         color: color,
                       ),
                     ),*/
-                    Flexible(
-                      child: Text(
-                        '${event.routeName} ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: color,
-                        ),
-                      ),
-                    ),
-                    if (event.formatDistance != '')
-                      Flexible(
-                        child: Text(
-                          '- ${event.formatDistance}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: color,
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '${event.routeName} ${event.formatDistance != '' ? '- ${event.formatDistance}' : ''}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: color,
+                            ),
                           ),
                         ),
                       ),
+                    ),
                   ],
                 ),
               ],
@@ -552,10 +571,6 @@ Widget _listTile(
             if (event.participants > 0)
               Row(
                 children: [
-                  const Icon(
-                    Icons.emoji_events_rounded,
-                    color: Colors.greenAccent,
-                  ),
                   const Icon(CupertinoIcons.person_2_fill),
                   const SizedBox(
                     width: 5,
@@ -564,34 +579,59 @@ Widget _listTile(
                     event.participants.toString(),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
+                  const Image(
+                    height: 25,
+                    width: 30,
+                    image: AssetImage(
+                      'assets/images/finishMarker.png',
+                    ),
+                    fit: BoxFit.cover,
+                  ),
                 ],
               ),
             if (event.status == EventStatus.pending)
-              const Icon(
-                CupertinoIcons.time,
-                color: Colors.grey,
-              ),
+              Text(Localize.of(context).pending),
             if (event.status == EventStatus.cancelled)
-              const Icon(
-                Icons.cancel_rounded,
-                color: Colors.redAccent,
-              ),
+              Text(Localize.of(context).canceled),
             if (event.status == EventStatus.confirmed &&
                 event.participants <= 0)
-              const Icon(
-                Icons.emoji_events_rounded,
-                color: Colors.greenAccent,
+              Row(
+                children: [
+                  Text(Localize.of(context).confirmed),
+                  const Image(
+                    height: 25,
+                    width: 30,
+                    image: AssetImage(
+                      'assets/images/start_marker.png',
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ],
               ),
             if (event.status == EventStatus.running)
-              const Icon(
-                Icons.run_circle_outlined,
-                color: Colors.blueAccent,
+              Row(
+                children: [
+                  Text(Localize.of(context).running),
+                  ImageIcon(
+                    Image.asset('assets/images/skater_icon_256.png').image,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                ],
               ),
-            if (event.status == EventStatus.finished)
-              const Icon(
-                Icons.home_outlined,
-                color: Colors.orange,
-              ),
+            if (event.status == EventStatus.finished && event.participants <= 0)
+              Row(
+                children: [
+                  Text(Localize.of(context).finished),
+                  const Image(
+                    height: 25,
+                    width: 30,
+                    image: AssetImage(
+                      'assets/images/finishMarker.png',
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ],
+              )
           ]),
           const SizedBox(
             width: 10,

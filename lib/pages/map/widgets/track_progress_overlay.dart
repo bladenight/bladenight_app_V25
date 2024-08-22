@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../generated/l10n.dart';
+import '../../../helpers/enums/tracking_type.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
 import '../../../helpers/timeconverter_helper.dart';
@@ -45,7 +46,9 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       BnLog.trace(text: 'Track_progress_overlay - initState');
-      ref.read(locationProvider).refresh(forceUpdate: true); //update in map
+      ref
+          .read(locationProvider)
+          .refreshLocationData(forceUpdate: true); //update in map
       ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
       ref.read(refreshTimerProvider.notifier).start();
     });
@@ -65,6 +68,43 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   @override
   Widget build(BuildContext context) {
     var rtu = ref.watch(realtimeDataProvider);
+    var trackingType = ref.watch(trackingTypeProvider);
+    if (trackingType == TrackingType.onlyTracking) {
+      return Stack(children: [
+        Positioned(
+          top: MediaQuery.of(context).padding.top + 10,
+          left: 15,
+          right: 15,
+          child: ClipPath(
+            clipper: InfoClipper2(),
+            child: Stack(children: [
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Builder(builder: (context) {
+                  return Container(
+                    color: CupertinoDynamicColor.resolve(
+                        CupertinoColors.systemBackground.withOpacity(0.2),
+                        context),
+                    padding: const EdgeInsets.all(15),
+                    child: Center(
+                      child: Column(children: [
+                        Text(
+                          Localize.of(context).onlyTracking,
+                          style: CupertinoTheme.of(context)
+                              .textTheme
+                              .navTitleTextStyle,
+                        ),
+                      ]),
+                    ),
+                  );
+                }),
+              ),
+            ]),
+          ),
+        ),
+      ]);
+    }
+
     var actualOrNextEvent = ref.watch(activeEventProvider);
     var eventIsActive = actualOrNextEvent.status == EventStatus.running ||
         (rtu != null && rtu.eventIsActive);
@@ -102,7 +142,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
           left: 15,
           right: 15,
           child: ClipPath(
-            clipper: InfoClipper(),
+            clipper: InfoClipper2(),
             child: Stack(children: [
               BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -681,6 +721,58 @@ class InfoClipper extends CustomClipper<Path> {
 
       //path.quadraticBezierTo(20, height - 20, 30, height);
       // path.lineTo(width, height - r - 30);
+      ..lineTo(width, r * rfactor)
+      ..quadraticBezierTo(
+        //corner right top
+        width - r * rfactor,
+        r * rfactor,
+        width - r * 2 * rfactor,
+        0,
+      )
+      ..lineTo(r * 2 * rfactor, 0)
+      ..quadraticBezierTo(
+        //corner left top
+        r * rfactor,
+        r * rfactor,
+        0,
+        r * 2 * rfactor,
+      )
+      ..close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    if (kDebugMode) {
+      return true;
+    }
+    return false;
+  }
+}
+
+class InfoClipper2 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    double r = 6;
+    double rfactor = 0.55;
+    double width = size.width;
+    double height = size.height;
+    Path path = Path()
+      ..moveTo(0, r * 0.55)
+      ..lineTo(0, height - r)
+      ..quadraticBezierTo(
+        //corner left bottom
+        r * rfactor,
+        height,
+        r * 2 * rfactor,
+        height,
+      )
+      ..quadraticBezierTo(
+        width - r * rfactor,
+        height - r * rfactor,
+        width,
+        height - r,
+      )
       ..lineTo(width, r * rfactor)
       ..quadraticBezierTo(
         //corner right top

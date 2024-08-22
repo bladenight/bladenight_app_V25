@@ -69,21 +69,24 @@ class MapTileLayerWidget extends ConsumerStatefulWidget {
 class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
   @override
   Widget build(BuildContext context) {
-    var osmEnabled = ref.watch(useOpenStreetMapProvider) ||
-    widget.hasSpecialStartPoint;
+    var osmEnabled =
+        ref.watch(useOpenStreetMapProvider) || widget.hasSpecialStartPoint;
     return TileLayer(
+      userAgentPackageName: 'app.huth.bladenightappflutter',
+      retinaMode: RetinaMode.isHighDensity(context) ? true : false,
       minNativeZoom: osmEnabled
           ? MapSettings.minNativeZoom
           : MapSettings.minNativeZoomDefault,
       maxNativeZoom: osmEnabled
-          ? MapSettings.maxNativeZoom
+          ? 15 //MapSettings.maxNativeZoom
           : MapSettings.maxNativeZoomDefault,
       minZoom: osmEnabled ? MapSettings.minZoom : MapSettings.minZoomDefault,
-      maxZoom: osmEnabled ? MapSettings.maxZoom : MapSettings.maxZoomDefault,
-      urlTemplate: osmEnabled ||
-              ref.watch(activeEventProvider).hasSpecialStartPoint
-          ? MapSettings.openStreetMapLinkString //use own ts
-          : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
+      maxZoom: 20,
+      // osmEnabled ? MapSettings.maxZoom : MapSettings.maxZoomDefault,
+      urlTemplate:
+          osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
+              ? MapSettings.openStreetMapLinkString //use own ts
+              : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
       tileProvider: osmEnabled ||
               ref.watch(activeEventProvider).hasSpecialStartPoint

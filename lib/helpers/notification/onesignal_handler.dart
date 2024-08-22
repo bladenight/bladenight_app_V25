@@ -67,7 +67,8 @@ class OnesignalHandler {
       // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
       if (HiveSettingsDB.pushNotificationsEnabled) {
         var perm = await OneSignal.Notifications.requestPermission(true);
-        if (perm==false){ //avoid permanent re-request on android
+        if (perm == false) {
+          //avoid permanent re-request on android
           HiveSettingsDB.setPushNotificationsEnabled(false);
         }
       }
@@ -252,6 +253,8 @@ class OnesignalHandler {
       var button1 = buttons.first;
       message.button1Text = button1.text;
       await QuickAlert.show(
+          showCancelBtn: true,
+          cancelBtnText: Localize.current.cancel,
           context: navigatorKey.currentContext!,
           title: title ?? Localize.current.notification,
           text: body ?? '',

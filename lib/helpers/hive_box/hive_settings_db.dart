@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/app_constants.dart';
-import '../../app_settings/globals.dart';
 import '../../models/event.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
@@ -77,7 +76,7 @@ class HiveSettingsDB {
 
   ///get loglevel bg Geolocation
   static int get getBackgroundLocationLogLevel {
-    return _hiveBox.get(_bgLoglevelKey, defaultValue: bg.Config.LOG_LEVEL_INFO);
+    return _hiveBox.get(_bgLoglevelKey, defaultValue: bg.Config.LOG_LEVEL_OFF);
   }
 
   static void setBackgroundLocationLogLevel(int val) {
@@ -204,7 +203,7 @@ class HiveSettingsDB {
       setHasSpecialRightsPrefs(false);
       setBgIsAdmin(false);
       setBladeguardPin(null);
-      Globals.adminPass = null;
+      setServerPassword(null);
 
       await OnesignalHandler.unRegisterPushAsBladeGuard();
       //including remove special rights
@@ -358,6 +357,22 @@ class HiveSettingsDB {
     _hiveBox.put(oneSignalIdKey, val);
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(oneSignalId, val);
+  }
+
+  static const String serverPasswordKey = 'serverPasswordPref';
+
+  ///get serverPassword
+  static String? get serverPassword {
+    return _hiveBox.get(serverPasswordKey, defaultValue: null);
+  }
+
+  ///set if  setServerPassword were shown
+  static Future<void> setServerPassword(String? val) async {
+    if (val == null) {
+      _hiveBox.delete(serverPasswordKey);
+      return;
+    }
+    await _hiveBox.put(serverPasswordKey, val);
   }
 
   static const String isBladeGuardKey = 'isBladeGuardPref';

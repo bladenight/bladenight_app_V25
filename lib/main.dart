@@ -81,6 +81,7 @@ void main() async {
       await Hive.openBox(hiveBoxSettingDbName);
       await Hive.openBox(hiveBoxLocationDbName);
       await Hive.openBox(hiveBoxServerConfigDBName);
+      HiveSettingsDB.setServerPassword(null);
       Globals.logToCrashlytics = HiveSettingsDB.chrashlyticsEnabled;
       await DeviceId.initAppId();
       await initLogger();
@@ -167,7 +168,7 @@ class BladeNightApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (bool didPop) async {
+      onPopInvokedWithResult: (bool didPop, dynamic obj) async {
         await showDialog<bool>(
           context: context,
           builder: (context) {

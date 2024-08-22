@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 
+import '../../../app_settings/app_configuration_helper.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../models/bn_map_friend_marker.dart';
 import '../../../models/bn_map_marker.dart';
@@ -52,7 +53,7 @@ class _MapLayerState extends State<MapLayer> {
       mapController: widget.controller,
       options: MapOptions(
         keepAlive: true,
-        initialZoom: 13.0,
+        initialZoom: initialZoom,
         minZoom: MapSettings.openStreetMapEnabled
             ? MapSettings.minZoom
             : MapSettings.minZoomDefault,

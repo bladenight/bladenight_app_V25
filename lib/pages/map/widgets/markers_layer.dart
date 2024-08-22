@@ -225,16 +225,16 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                 friend: friend,
                 point: LatLng(friend.latitude ?? defaultLatitude,
                     friend.longitude ?? defaultLongitude),
-                width: friend.specialValue >= 98 ? sizeValue - 8 : sizeValue,
-                height: friend.specialValue >= 98 ? sizeValue - 8 : sizeValue,
+                width: friend.specialValue >= 98 ? sizeValue - 10 : sizeValue,
+                // cursorSize
+                height: friend.specialValue >= 98 ? sizeValue - 10 : sizeValue,
+                // cursorSize
                 child: Builder(
                   builder: (context) {
                     if (HiveSettingsDB.wantSeeFullOfProcession &&
                         friend.specialValue == 1) {
                       return Container(
                         padding: const EdgeInsets.all(5),
-                        width: sizeValue,
-                        height: sizeValue,
                         decoration: BoxDecoration(
                             color: SpeedToColor.getColorFromSpeed(
                                 friend.realSpeed),
@@ -249,8 +249,6 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                     if (HiveSettingsDB.wantSeeFullOfProcession &&
                         friend.specialValue == 2) {
                       return Container(
-                        width: sizeValue,
-                        height: sizeValue,
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                             color: SpeedToColor.getColorFromSpeed(
@@ -264,14 +262,32 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                       );
                     }
                     if (HiveSettingsDB.wantSeeFullOfProcession &&
+                        friend.specialValue == 4) {
+                      //Bladeguard
+                      return Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                            color: Colors.red, shape: BoxShape.rectangle),
+                        child: CircleAvatar(
+                          radius: sizeValue,
+                          child: Icon(
+                            Icons.remove_red_eye_outlined,
+                            color: SpeedToColor.getColorFromSpeed(
+                                friend.realSpeed),
+                          ),
+                        ),
+                      );
+                    }
+                    if (HiveSettingsDB.wantSeeFullOfProcession &&
                         friend.specialValue == 98) {
                       //Bladeguard
                       return Container(
                         padding: const EdgeInsets.all(2),
                         decoration: const BoxDecoration(
-                            color: Colors.yellow, shape: BoxShape.circle),
+                            color: Colors.tealAccent,
+                            shape: BoxShape.rectangle),
                         child: CircleAvatar(
-                          radius: sizeValue - 6,
+                          radius: sizeValue - 4,
                           backgroundColor:
                               SpeedToColor.getColorFromSpeed(friend.realSpeed),
                           child: Container(),
@@ -283,7 +299,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                       return Container(
                         padding: const EdgeInsets.all(2),
                         decoration: const BoxDecoration(
-                            color: Colors.white, shape: BoxShape.rectangle),
+                            color: Colors.grey, shape: BoxShape.circle),
                         child: CircleAvatar(
                           radius: sizeValue - 5,
                           backgroundColor:

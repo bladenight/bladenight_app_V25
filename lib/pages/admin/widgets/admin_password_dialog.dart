@@ -1,9 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../../app_settings/globals.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/deviceid_helper.dart';
+import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
 import '../../../helpers/wamp/exceptions/bad_result_exception.dart';
 import '../../../models/messages/admin.dart';
@@ -20,14 +20,14 @@ class AdminPasswordDialog extends StatefulWidget {
 
   static Future<void> show(BuildContext context) async {
     String? password;
-    if (Globals.adminPass == null) {
+    if (HiveSettingsDB.serverPassword == null) {
       password = await showCupertinoDialog(
         context: context,
         barrierDismissible: true,
         builder: (context) => const AdminPasswordDialog(),
       );
     } else {
-      password = Globals.adminPass;
+      password = HiveSettingsDB.serverPassword;
     }
 
     if (password != null) {
@@ -43,13 +43,13 @@ class AdminPasswordDialog extends StatefulWidget {
       } on BadResultException catch (e) {
         if (e.reason == kInvalidPassword) {
           BnLog.warning(text: 'Admin has sent an invalid password');
-          Globals.adminPass = null;
+          HiveSettingsDB.setServerPassword(null);
           return;
         } else {
           rethrow;
         }
       }
-      Globals.adminPass = password;
+      HiveSettingsDB.setServerPassword(password);
       if (!context.mounted) return;
       await Navigator.of(context).push(CupertinoPageRoute(
         builder: (context) => AdminPage(password: password!),

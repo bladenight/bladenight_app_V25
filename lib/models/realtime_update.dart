@@ -151,14 +151,17 @@ class RealtimeUpdate with RealtimeUpdateMappable {
         if (fr.longitude != 0 && fr.latitude != 0) {
           if (fr.specialValue == 1) {
             fr.name = Localize.current.head;
-          }
-          if (fr.specialValue == 2) {
+          } else if (fr.specialValue == 2) {
             fr.name = Localize.current.tail;
-          }
-          if (fr.specialValue == 98) {
+          } else if (fr.specialValue == 4) {
+            fr.name = Localize.current.admin;
+          } else if (fr.specialValue == 5) {
+            fr.name = '${Localize.current.head}Admin';
+          } else if (fr.specialValue == 6) {
+            fr.name = '${Localize.current.tail}Admin';
+          } else if (fr.specialValue == 98) {
             fr.name = Localize.current.bladeGuard;
-          }
-          if (fr.specialValue == 99) {
+          } else if (fr.specialValue == 99) {
             fr.name = Localize.current.participant;
           }
           fList.add(fr);
@@ -182,7 +185,9 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     return updatedFriends.where((f) => f.isOnline && f.isActive);
   }
 
-  static Future<RealtimeUpdate> wampUpdate([dynamic message]) async {
+  ///Update realtime data
+  ///[message] if message empty get actual realtime data
+  static Future<RealtimeUpdate> realtimeDataUpdate([dynamic message]) async {
     BnLog.debug(
       className: 'Future<RealtimeUpdate>  wampUpdate',
       methodName: 'sendLocation',

@@ -291,15 +291,16 @@ Future<bool> addFriendWithCodeFromUrl(
       textColor: Colors.black);
 
   EditFriendResult? result;
-  if (context.mounted) {
-    result = await EditFriendDialog.show(context,
-        friend: Friend(
-            name: name,
-            friendId: await PreferencesHelper.getNewFriendId(),
-            requestId: intCode,
-            isActive: true),
-        friendDialogAction: FriendsAction.addWithCode);
-  }
+
+  if (!context.mounted) return false;
+  result = await EditFriendDialog.show(context,
+      friend: Friend(
+          name: name,
+          friendId: await PreferencesHelper.getNewFriendId(),
+          requestId: intCode,
+          isActive: true),
+      friendDialogAction: FriendsAction.addWithCode);
+
   if (result is Friend) {
     Friend fr = result as Friend;
     ProviderContainer()

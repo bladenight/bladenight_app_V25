@@ -44,16 +44,17 @@ extension LocationStore on HiveSettingsDB {
       var utpPts = MapperContainer.globals.fromJson<UserGPXPoints>(tp);
       return utpPts;
     } catch (e) {
-      BnLog.error(text: e.toString(),methodName:'getUserTrackPointsListByDate' );
+      BnLog.error(
+          text: e.toString(), methodName: 'getUserTrackPointsListByDate');
       return UserGPXPoints([]);
     }
   }
 
   ///set store track points
-  static Future<bool> saveUserTrackPointList  (
+  static Future<bool> saveUserTrackPointList(
       List<UserGpxPoint> val, DateTime dateTime) async {
     try {
-      if (MapSettings.showOwnTrack == false) {
+      if (MapSettings.showOwnTrack == false || val.isEmpty) {
         return Future.value(false);
       }
       var utp = UserGPXPoints(val);
@@ -61,8 +62,7 @@ extension LocationStore on HiveSettingsDB {
           .put(_userTrackPointsKey + dateTime.toDateOnlyString(), utp.toJson());
       setUserTrackPointsLastUpdate(DateTime.now());
       BnLog.info(
-          text:
-          'Saved user track points list with an amount of ${val.length}');
+          text: 'Saved user track points list with an amount of ${val.length}');
     } catch (e) {
       BnLog.error(
           text: 'Error saveUserTrackPointList ${e.toString()}',

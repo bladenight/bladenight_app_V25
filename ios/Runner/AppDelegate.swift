@@ -6,7 +6,7 @@ import BackgroundTasks
 import WatchConnectivity
 //import workmanager
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
     var session: WCSession?
     var appTerminatedFlag: Bool = false

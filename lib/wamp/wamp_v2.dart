@@ -57,7 +57,7 @@ class WampV2 {
   final Map<int, BnWampMessage> calls = {};
 
   Queue<BnWampMessage> queue = Queue();
-  Timer? _liveCycleTimer = null;
+  static Timer? _liveCycleTimer;
   var wampCallStreamController = StreamController<BnWampMessage>.broadcast();
 
   var eventStreamController = StreamController<dynamic>.broadcast();
@@ -104,8 +104,9 @@ class WampV2 {
         }
       });
     }
+    _initWamp();
     _connLoop(); //
-    runner();
+    _runner();
   }
 
   Future<WampConnectionState> _initWamp() async {
@@ -213,29 +214,30 @@ class WampV2 {
   }
 
   void _connLoop() async {
+    _liveCycleTimer?.cancel();
     _liveCycleTimer =
-        Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
+        Timer.periodic(const Duration(milliseconds: 500), (timer) async {
       while (_isWebsocketRunning == false) {
         if (_isConnectedToInternet == false) {
           await Future.delayed(const Duration(milliseconds: 250));
           continue;
         }
+        BnLog.debug(text: 'initWamp by _connLoop');
         var _ = await _initWamp();
       }
     });
   }
 
-  void runner() async {
+  void _runner() async {
     wampCallStreamController.stream.listen((message) async {
       runZonedGuarded(() async {
         queue.add(message);
 
         while (_isWebsocketRunning == false) {
-          await Future.delayed(const Duration(milliseconds: 250));
-          if (_isConnectedToInternet == false) {
-            continue;
+          if (_liveCycleTimer != null && !_liveCycleTimer!.isActive) {
+            _connLoop();
           }
-          var _ = await _initWamp();
+          await Future.delayed(const Duration(milliseconds: 250));
         }
         if (DateTime.now().difference(_busyTimeStamp) >
             const Duration(milliseconds: 1000)) {
@@ -314,7 +316,7 @@ class WampV2 {
             _isWebsocketRunning = true;
             _wampConnectedStreamController.sink.add(true);
             _lastConnectionStatus = true;
-            welcomeCompleter.complete();
+            welcomeCompleter.complete(true);
             // [WELCOME, Session|id, Details|dict]
             return;
           }
@@ -418,9 +420,17 @@ class WampV2 {
           }
         },
         onDone: () {
+          BnLog.trace(
+              text: 'WampStream onDone',
+              methodName: 'startStream',
+              className: toString());
           _resetWampState();
         },
         onError: (err) async {
+          BnLog.trace(
+              text: 'WampStream onError ${err.toString()}',
+              methodName: 'startStream',
+              className: toString());
           if (_isWebsocketRunning == false && _lastConnectionStatus == true) {
             _wampConnectedStreamController.sink.add(false);
             _lastConnectionStatus == false;
@@ -447,17 +457,18 @@ class WampV2 {
           }
         },
       );
-      await welcomeCompleter.future;
+      var res = await welcomeCompleter.future;
       _connectionErrorLogged = false;
-      return true;
+      return res;
     }, (error, stack) {
       if (!_connectionErrorLogged) {
         BnLog.error(text: 'Wamp error close Wamp', exception: error);
         _connectionErrorLogged = true;
       }
-      _resetWampState();
+      //_resetWampState();
     })?.catchError((error) {
-      if (!kIsWeb) BnLog.error(text: 'error wamp ->$error');
+      BnLog.error(text: 'Error wamp ->$error');
+      _resetWampState();
       return false;
     });
     return true;
@@ -480,7 +491,8 @@ class WampV2 {
   }
 
   void _resetWampState() {
-    BnLog.warning(text: '_resetWampState');
+    StackTrace stackTrace = StackTrace.current;
+    BnLog.error(text: '_resetWampState', stacktrace: stackTrace);
     _lastConnectionStatus = false;
     _wampConnectedStreamController.sink.add(false);
     _isWebsocketRunning = false;

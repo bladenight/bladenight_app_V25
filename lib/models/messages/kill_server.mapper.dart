@@ -21,6 +21,9 @@ class KillServerMessageMapper extends ClassMapperBase<KillServerMessage> {
   @override
   final String id = 'KillServerMessage';
 
+  static bool _$killValue(KillServerMessage v) => v.killValue;
+  static const Field<KillServerMessage, bool> _f$killValue =
+      Field('killValue', _$killValue, key: 'cmd');
   static int _$timestamp(KillServerMessage v) => v.timestamp;
   static const Field<KillServerMessage, int> _f$timestamp =
       Field('timestamp', _$timestamp, key: 'tim');
@@ -36,6 +39,7 @@ class KillServerMessageMapper extends ClassMapperBase<KillServerMessage> {
 
   @override
   final MappableFields<KillServerMessage> fields = const {
+    #killValue: _f$killValue,
     #timestamp: _f$timestamp,
     #checksum: _f$checksum,
     #noise: _f$noise,
@@ -44,6 +48,7 @@ class KillServerMessageMapper extends ClassMapperBase<KillServerMessage> {
 
   static KillServerMessage _instantiate(DecodingData data) {
     return KillServerMessage(
+        killValue: data.dec(_f$killValue),
         timestamp: data.dec(_f$timestamp),
         checksum: data.dec(_f$checksum),
         noise: data.dec(_f$noise),
@@ -106,7 +111,12 @@ extension KillServerMessageValueCopy<$R, $Out>
 abstract class KillServerMessageCopyWith<$R, $In extends KillServerMessage,
     $Out> implements AdminMessageCopyWith<$R, $In, $Out> {
   @override
-  $R call({int? timestamp, String? checksum, int? noise, String? deviceId});
+  $R call(
+      {bool? killValue,
+      int? timestamp,
+      String? checksum,
+      int? noise,
+      String? deviceId});
   KillServerMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -120,8 +130,14 @@ class _KillServerMessageCopyWithImpl<$R, $Out>
   late final ClassMapperBase<KillServerMessage> $mapper =
       KillServerMessageMapper.ensureInitialized();
   @override
-  $R call({int? timestamp, String? checksum, int? noise, String? deviceId}) =>
+  $R call(
+          {bool? killValue,
+          int? timestamp,
+          String? checksum,
+          int? noise,
+          String? deviceId}) =>
       $apply(FieldCopyWithData({
+        if (killValue != null) #killValue: killValue,
         if (timestamp != null) #timestamp: timestamp,
         if (checksum != null) #checksum: checksum,
         if (noise != null) #noise: noise,
@@ -129,6 +145,7 @@ class _KillServerMessageCopyWithImpl<$R, $Out>
       }));
   @override
   KillServerMessage $make(CopyWithData data) => KillServerMessage(
+      killValue: data.get(#killValue, or: $value.killValue),
       timestamp: data.get(#timestamp, or: $value.timestamp),
       checksum: data.get(#checksum, or: $value.checksum),
       noise: data.get(#noise, or: $value.noise),

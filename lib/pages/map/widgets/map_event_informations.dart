@@ -12,7 +12,9 @@ import '../../../providers/friends_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/realtime_data_provider.dart';
+import '../../../providers/special_procession_function_provider.dart';
 import '../../widgets/data_widget_left_right.dart';
+import '../../widgets/grip_bar.dart';
 import '../../widgets/no_data_warning.dart';
 import 'speed_info_colors.dart';
 import 'update_progress.dart';
@@ -36,17 +38,7 @@ class MapEventInformation extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
           children: [
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: Container(
-                  color: CupertinoTheme.of(context).primaryColor,
-                  width: MediaQuery.of(context).size.width / 3,
-                  height: 7,
-                ),
-              ),
-            ),
-            const SizedBox(height: 5),
+            const GripBar(),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(8),
@@ -149,8 +141,10 @@ class MapEventInformation extends ConsumerWidget {
                             DataLeftRightContent(
                                 descriptionLeft:
                                     '${Localize.of(context).speed} ${Localize.of(context).head}',
-                                descriptionRight:
-                                    'r: ${(rtu.head.realSpeed ?? rtu.head.speed).toStringAsFixed(1)} km/h / c: ${(rtu.head.speed).toStringAsFixed(1)} km/h',
+                                descriptionRight: ref
+                                        .watch(wantSeeFullProcessionProvider)
+                                    ? '📟 ${(rtu.head.realSpeed ?? rtu.head.speed).toStringAsFixed(1)}/ 🖥️ ${(rtu.head.speed).toStringAsFixed(1)} km/h'
+                                    : '📟 ${(rtu.head.realSpeed ?? rtu.head.speed).toStringAsFixed(1)} km/h',
                                 rightWidget: Container()),
                             DataLeftRightContent(
                               descriptionLeft:
@@ -180,8 +174,10 @@ class MapEventInformation extends ConsumerWidget {
                             DataLeftRightContent(
                                 descriptionLeft:
                                     '${Localize.of(context).speed} ${Localize.of(context).tail}',
-                                descriptionRight:
-                                    'r: ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)} km/h / c: ${(rtu.tail.speed).toStringAsFixed(1)} km/h',
+                                descriptionRight: ref
+                                        .watch(wantSeeFullProcessionProvider)
+                                    ? '📟 ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)}/ 🖥️ ${(rtu.tail.speed).toStringAsFixed(1)} km/h'
+                                    : '📟 ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)} km/h',
                                 rightWidget: Container()),
                           ]),
                     ),

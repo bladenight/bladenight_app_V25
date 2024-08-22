@@ -22,6 +22,7 @@ class BackgroundGeolocationHelper {
               .then((value) => true)
               .catchError((error) {
             BnLog.error(text: '[resetOdometer] ERROR: $error');
+            if (!context.mounted) return false;
             Navigator.pop(context);
             return false;
           });
@@ -34,6 +35,7 @@ class BackgroundGeolocationHelper {
 
     bg.DeviceSettings.showIgnoreBatteryOptimizations()
         .then((bg.DeviceSettingsRequest request) async {
+      if (!context.mounted) return;
       await QuickAlert.show(
           context: context,
           showCancelBtn: true,

@@ -37,6 +37,8 @@ class EventStatusMapper extends EnumMapper<EventStatus> {
         return EventStatus.running;
       case 'FIN':
         return EventStatus.finished;
+      case 'DEL':
+        return EventStatus.deleted;
       case 'UKN':
         return EventStatus.unknown;
       default:
@@ -59,6 +61,8 @@ class EventStatusMapper extends EnumMapper<EventStatus> {
         return 'RUN';
       case EventStatus.finished:
         return 'FIN';
+      case EventStatus.deleted:
+        return 'DEL';
       case EventStatus.unknown:
         return 'UKN';
     }
@@ -79,7 +83,7 @@ class EventMapper extends ClassMapperBase<Event> {
   static EventMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = EventMapper._());
-      MapperContainer.globals.useAll([DurationMapper()]);
+      MapperContainer.globals.useAll([DurationMapper(), DateTimeMapper()]);
       EventStatusMapper.ensureInitialized();
     }
     return _instance!;

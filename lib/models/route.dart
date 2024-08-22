@@ -104,7 +104,7 @@ class RoutePoints with RoutePointsMappable {
 }
 
 extension RoutePointExtension on RoutePoints {
-  double get getRoutePointsSummaryDistance {
+  double get getRouteTotalDistance {
     if (points.isEmpty) {
       return 0.0;
     }

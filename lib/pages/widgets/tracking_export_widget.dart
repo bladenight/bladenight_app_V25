@@ -27,11 +27,9 @@ class TrackingExportWidget extends ConsumerStatefulWidget {
 class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
   String dateString = '';
   var trackedDates = <String>[];
-  var _selectedItem = 0;
 
   void _onSelectedItemChanged(int value) {
     setState(() => dateString = trackedDates[value]);
-    _selectedItem = value;
   }
 
   @override
@@ -41,81 +39,100 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
     }
     _updateDates();
     bool exportTrackingInProgress = false;
-    return CupertinoFormSection(
-        header: Text(Localize.of(context).exportUserTrackingHeader),
-        children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(
+    return Column(children: [
+      CupertinoFormSection(
+          header: Text(Localize.of(context).exportUserTrackingHeader),
+          children: <Widget>[
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width * .9,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                        child: exportTrackingInProgress
+                            ? const CircularProgressIndicator()
+                            : const Icon(Icons.edit),
+                        onPressed: () async {
+                          openDatPicker(context);
+                        }),
+                    Expanded(
+                      child: GestureDetector(
+                          child: Text(dateString),
+                          onTap: () {
+                            openDatPicker(context);
+                          }),
+                    ),
+                    CupertinoButton(
+                        child: exportTrackingInProgress
+                            ? const CircularProgressIndicator()
+                            : const Icon(Icons.map_rounded),
+                        onPressed: () async {
+                          if (exportTrackingInProgress) return;
+                          var tp = LocationStore.getUserTrackPointsListByDate(
+                              DateFormatter.fromString(dateString));
+                          UserTrackDialog.show(context, tp, dateString);
+                        }),
+                  ]),
+            ),
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width * 0.9,
               child: CupertinoButton(
-                  child: Text(dateString),
-                  onPressed: () {
-                    showCupertinoModalPopup(
-                      context: context,
-                      builder: (_) => StringPicker(
-                        title: Localize.of(context).selectDate,
-                        items: LocationStore.getTrackDates(),
-                        selectedItem: trackedDates.indexOf(dateString),
-                        onSelectedItemChanged: _onSelectedItemChanged,
-                      ),
-                    );
+                  color: CupertinoTheme.of(context).primaryColor,
+                  child: exportTrackingInProgress
+                      ? const CircularProgressIndicator()
+                      : Text(Localize.of(context).exportUserTracking),
+                  onPressed: () async {
+                    if (exportTrackingInProgress) return;
+                    setState(() {
+                      exportTrackingInProgress = true;
+                    });
+                    await LocationProvider.instance.saveLocationToDB();
+                    await compute(
+                            exportUserTrackingToXml,
+                            LocationStore.getUserGpxPointsListByDate(
+                                DateFormatter.fromString(dateString)))
+                        .then((value) =>
+                            shareExportedTrackingData(value, dateString));
+                    setState(() {
+                      exportTrackingInProgress = false;
+                    });
                   }),
             ),
-            CupertinoButton(
-                child: exportTrackingInProgress
-                    ? const CircularProgressIndicator()
-                    : const Icon(Icons.map_rounded),
-                onPressed: () async {
-                  if (exportTrackingInProgress) return;
-                  var tp = LocationStore.getUserTrackPointsListByDate(
-                      DateFormatter.fromString(dateString));
-                  UserTrackDialog.show(context, tp, dateString);
-                }),
+            if (!HiveSettingsDB.useAlternativeLocationProvider) ...[
+              CupertinoFormSection(
+                  header: Text(Localize.of(context).resetOdoMeter),
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.9,
+                      child: CupertinoButton(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        child: Text(Localize.of(context).resetOdoMeterTitle),
+                        onPressed: () async {
+                          await LocationProvider.instance
+                              .resetOdoMeter(context);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ]),
+              CupertinoFormSection(
+                  header: Text(Localize.of(context).resetTrackPointsStoreTitle),
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.9,
+                      child: CupertinoButton(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        child: Text(Localize.of(context).resetTrackPointsStore),
+                        onPressed: () async {
+                          await clearAllTrackPoints();
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ]),
+            ],
           ]),
-          CupertinoButton(
-              child: exportTrackingInProgress
-                  ? const CircularProgressIndicator()
-                  : Text(Localize.of(context).exportUserTracking),
-              onPressed: () async {
-                if (exportTrackingInProgress) return;
-                setState(() {
-                  exportTrackingInProgress = true;
-                });
-                await LocationProvider.instance.saveLocationToDB();
-                await compute(
-                        exportUserTrackingToXml,
-                        LocationStore.getUserGpxPointsListByDate(
-                            DateFormatter.fromString(dateString)))
-                    .then((value) =>
-                        shareExportedTrackingData(value, dateString));
-                setState(() {
-                  exportTrackingInProgress = false;
-                });
-              }),
-          if (!HiveSettingsDB.useAlternativeLocationProvider) ...[
-            CupertinoFormSection(
-                header: Text(Localize.of(context).resetOdoMeter),
-                children: <Widget>[
-                  CupertinoButton(
-                    child: Text(Localize.of(context).resetOdoMeterTitle),
-                    onPressed: () async {
-                      await LocationProvider.instance.resetOdoMeter(context);
-                      setState(() {});
-                    },
-                  ),
-                ]),
-            CupertinoFormSection(
-                header: Text(Localize.of(context).resetTrackPointsStoreTitle),
-                children: <Widget>[
-                  CupertinoButton(
-                    child: Text(Localize.of(context).resetTrackPointsStore),
-                    onPressed: () async {
-                      await clearAllTrackPoints();
-                      setState(() {});
-                    },
-                  ),
-                ]),
-          ],
-        ]);
+    ]);
   }
 
   Future clearAllTrackPoints() async {
@@ -139,9 +156,20 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
 
   void _updateDates() {
     trackedDates = LocationStore.getTrackDates();
-    if (dateString.isEmpty || dateString.length==1){
+    if (dateString.isEmpty || dateString.length == 1) {
       dateString = trackedDates.last;
-    _selectedItem=trackedDates.indexOf(dateString);
     }
+  }
+
+  void openDatPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => StringPicker(
+        title: Localize.of(context).selectDate,
+        items: LocationStore.getTrackDates(),
+        selectedItem: trackedDates.indexOf(dateString),
+        onSelectedItemChanged: _onSelectedItemChanged,
+      ),
+    );
   }
 }

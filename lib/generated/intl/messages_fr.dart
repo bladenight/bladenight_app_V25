@@ -130,8 +130,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Informations actuelles"),
         "addEvent":
             MessageLookupByLibrary.simpleMessage("Ajouter un événement"),
+        "addFriendWithCodeHeader": MessageLookupByLibrary.simpleMessage(
+            "Ici vous pouvez générer un code pour créer une relation avec votre ami"),
         "addNearBy":
             MessageLookupByLibrary.simpleMessage("Ajouter un ami à proximité"),
+        "addNewFriendHeader": MessageLookupByLibrary.simpleMessage(
+            "Si votre ami a généré un code, vous pouvez mettre fin à la relation avec lui"),
         "addfriendwithcode":
             MessageLookupByLibrary.simpleMessage("Ajouter un ami avec un code"),
         "addnewfriend":
@@ -554,6 +558,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "oneSignalIdTitle": MessageLookupByLibrary.simpleMessage(
             "Il s\'agit de l\'identifiant attribué pour la réception des messages push. Communiquez-nous cet identifiant si vous avez des problèmes pour recevoir des messages push."),
         "online": MessageLookupByLibrary.simpleMessage("en ligne"),
+        "onlyTracking": MessageLookupByLibrary.simpleMessage(
+            "Enregistrement de localisation uniquement actif!"),
         "onlyWhenInUseEnabled": MessageLookupByLibrary.simpleMessage(
             "Localisation uniquement \"Autoriser uniquement lors de l\'utilisation de l\'application\"."),
         "onlyWhileInUse": MessageLookupByLibrary.simpleMessage(
@@ -596,6 +602,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Reçu Bladeguard Infos"),
         "received": MessageLookupByLibrary.simpleMessage("reçu"),
         "register": MessageLookupByLibrary.simpleMessage("S\'inscrire"),
+        "registeredAs":
+            MessageLookupByLibrary.simpleMessage("Enregistré en tant que:"),
         "reload": MessageLookupByLibrary.simpleMessage("Recharger"),
         "reltime": MessageLookupByLibrary.simpleMessage("rel. timediff."),
         "remove": MessageLookupByLibrary.simpleMessage("Retirer"),
@@ -634,6 +642,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "seemsoffline": MessageLookupByLibrary.simpleMessage(
             "Attente de la connexion internet ..."),
         "selectDate": MessageLookupByLibrary.simpleMessage("Select Date"),
+        "selectTrackingType": MessageLookupByLibrary.simpleMessage(
+            "Sélectionner le type de suivi"),
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Demande envoyée - le changement prend environ 30 secondes."),
         "sendMail": MessageLookupByLibrary.simpleMessage("Envoyer un email"),
@@ -641,8 +651,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sendlinkdescription": m13,
         "sendlinksubject": MessageLookupByLibrary.simpleMessage(
             "Envoyer un lien à BladeNight-App. Vous pouvez vous voir"),
-        "serverNotReachable": MessageLookupByLibrary.simpleMessage(
-            "Waiting for server connection ...."),
+        "serverNotReachable":
+            MessageLookupByLibrary.simpleMessage("Connecting to server ..."),
         "sessionConnectionError": MessageLookupByLibrary.simpleMessage(
             "Erreur de négociation de la connexion à la session"),
         "setClearLogs": MessageLookupByLibrary.simpleMessage(
@@ -718,6 +728,10 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Veuillez lire attentivement.\nCeci démarre l\'affichage de la position sur la carte sans participer au procession et transfère votre position au serveur pour calculer les temps. Vos amis dans le procession seront affichés. La durée du trajet entre le début et la fin du procession à partir de votre position sera calculée. En outre, votre vitesse et vos données de suivi seront enregistrées et vous pourrez les sauvegarder. N\'utilisez pas cette fonction si vous participez à la BladeNight. Le mode doit être arrêté manuellement.\nVous voulez démarrer ceci ?"),
         "startParticipation":
             MessageLookupByLibrary.simpleMessage("Démarrer la participation"),
+        "startParticipationHeader": MessageLookupByLibrary.simpleMessage(
+            "Tu participes aujourd\'hui à la Bladenight et tu souhaites soutenir la représentation du train et partager ton emplacement avec tes amis. Démarrer le partage de site ?"),
+        "startParticipationShort":
+            MessageLookupByLibrary.simpleMessage("Début de la participation"),
         "startParticipationTracking":
             MessageLookupByLibrary.simpleMessage("Démarrer la participation"),
         "startPoint": MessageLookupByLibrary.simpleMessage(
@@ -725,6 +739,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "startPointTitle": MessageLookupByLibrary.simpleMessage(
             "Où se situe le point de départ?"),
         "startTime": MessageLookupByLibrary.simpleMessage("Heure de début"),
+        "startTrackingOnly": MessageLookupByLibrary.simpleMessage(
+            "Démarrer le journal de trajet"),
+        "startTrackingOnlyTitle": MessageLookupByLibrary.simpleMessage(
+            "Démarre le journal de trajet sans envoyer de données au serveur"),
         "status": MessageLookupByLibrary.simpleMessage("Statut"),
         "status_active": MessageLookupByLibrary.simpleMessage("actif"),
         "status_inactive": MessageLookupByLibrary.simpleMessage("inactif"),

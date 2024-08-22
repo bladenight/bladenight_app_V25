@@ -4,7 +4,6 @@ class Globals {
   static bool logToCrashlytics = true;
   static bool eventConfirmed = false;
   static bool serverConnected = true;
-  static String? adminPass;
   static const String webViewHeader = '<!DOCTYPE html> '
       '<html lang="de">'
       '<head> <meta charset="UTF-8"> '
@@ -17,4 +16,5 @@ class Globals {
       //'</style><style>@media screen and (prefers-color-scheme: dark) {:root {--title-color: #ff8080; --subhead-color: #80ff80; --link-color: #93d5ff;}}</style>'
       '</head>'
       '<body>';
-  static const String webViewFooter = '-</body></html>';}
+  static const String webViewFooter = '-</body></html>';
+}

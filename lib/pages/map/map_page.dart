@@ -86,7 +86,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   void resumeUpdates({bool force = false}) async {
     if (force || _firstRefresh) {
-      ref.read(locationProvider).refresh(forceUpdate: force);
+      ref.read(locationProvider).refreshLocationData(forceUpdate: force);
       _firstRefresh = false;
     }
   }
@@ -111,7 +111,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       },
       fireImmediately: true,
     );
-    ref.read(locationProvider).refresh(forceUpdate: true);
+    ref.read(locationProvider).refreshLocationData(forceUpdate: true);
   }
 
   @override
@@ -162,11 +162,13 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                           final LayerHitResult? hitResult = hitNotifier.value;
                           if (hitResult == null) return;
                           // If running frequently (such as on a hover handler), and heavy work or state changes are performed here, store each result so it can be compared to the newest result, then avoid work if they are equal
-                          for (final hitValue  in hitResult.hitValues) {
+                          for (final hitValue in hitResult.hitValues) {
                             if (kDebugMode) {
                               print(hitValue);
                             }
-                            showToast(message:  '${Localize.current.speed} $hitValue km/h');
+                            showToast(
+                                message:
+                                    '${Localize.current.speed} $hitValue km/h');
 
                             break;
                           }

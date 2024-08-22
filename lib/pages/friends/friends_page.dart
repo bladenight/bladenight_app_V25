@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:riverpod_context/riverpod_context.dart';
 
@@ -17,6 +19,8 @@ import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/friends_provider.dart';
 import '../../providers/network_connection_provider.dart';
+import '../widgets/bottom_sheets/base_bottom_sheet_widget.dart';
+import '../widgets/expandable_floating_action_button.dart';
 import 'widgets/edit_friend_dialog.dart';
 import 'widgets/friends_action_sheet.dart';
 import 'widgets/nearby_widget.dart';
@@ -73,8 +77,38 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var networkAvailable = ref.watch(networkAwareProvider);
-    return CupertinoPageScaffold(
-      child: CustomScrollView(
+    return Scaffold(
+      floatingActionButton: ExpandableFloatingActionButton(
+          distance: 90,
+          startAngleInDegrees: 00,
+          buttonIcon: const Icon(CupertinoIcons.add_circled),
+          children: [
+            FloatingActionButton(
+                heroTag: 'addFABTag',
+                onPressed: () async {
+                  var _ = await EditFriendDialog.show(
+                    context,
+                    friendDialogAction: FriendsAction.addNew,
+                  );
+                },
+                child: const Icon(Icons.add)),
+            FloatingActionButton(
+                heroTag: 'addWithCodeFABTag',
+                onPressed: () async {
+                  var _ = await EditFriendDialog.show(
+                    context,
+                    friendDialogAction: FriendsAction.addWithCode,
+                  );
+                },
+                child: const Icon(Icons.pin)),
+            FloatingActionButton(
+                heroTag: 'refreshFABTag',
+                child: const Icon(Icons.refresh),
+                onPressed: () async {
+                  ref.read(friendsLogicProvider).refreshFriends();
+                }),
+          ]),
+      body: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
         ),
@@ -104,7 +138,76 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           if (!context.mounted) {
                             return;
                           }
-                          var action = await FriendsActionModal.show(context);
+                          var action = await showCupertinoModalBottomSheet(
+                              backgroundColor: CupertinoDynamicColor.resolve(
+                                  CupertinoColors.systemBackground, context),
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  constraints: BoxConstraints(
+                                    maxHeight: kIsWeb
+                                        ? MediaQuery.of(context).size.height *
+                                            0.4
+                                        : MediaQuery.of(context).size.height *
+                                            0.4,
+                                  ),
+                                  child: BaseBottomSheetWidget(children: [
+                                    CupertinoFormSection(
+                                        header: Text(Localize.of(context)
+                                            .addFriendWithCodeHeader),
+                                        children: [
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: CupertinoButton(
+                                              color: CupertinoTheme.of(context)
+                                                  .primaryColor,
+                                              child: Row(children: [
+                                                const Icon(Icons.add_outlined),
+                                                Expanded(
+                                                  child: Text(
+                                                      Localize.of(context)
+                                                          .addnewfriend),
+                                                ),
+                                              ]),
+                                              onPressed: () {
+                                                Navigator.pop(context,
+                                                    FriendsAction.addNew);
+                                              },
+                                            ),
+                                          ),
+                                          CupertinoFormSection(
+                                              header: Text(Localize.of(context)
+                                                  .addNewFriendHeader),
+                                              children: [
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: CupertinoButton(
+                                                    color: CupertinoTheme.of(
+                                                            context)
+                                                        .primaryColor,
+                                                    child: Row(children: [
+                                                      const Icon(Icons.pin),
+                                                      Expanded(
+                                                        child: Text(Localize.of(
+                                                                context)
+                                                            .addfriendwithcode),
+                                                      ),
+                                                    ]),
+                                                    onPressed: () {
+                                                      Navigator.pop(
+                                                          context,
+                                                          FriendsAction
+                                                              .addWithCode);
+                                                    },
+                                                  ),
+                                                ),
+                                              ]),
+                                        ]),
+                                  ]),
+                                );
+                              });
+
+                          //FriendsActionModal.show(context);
                           if (action == null || !mounted) return;
                           if (action == FriendsAction.addNearby &&
                               context.mounted) {

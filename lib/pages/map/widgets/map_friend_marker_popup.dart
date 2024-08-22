@@ -111,45 +111,44 @@ class _MapFriendMarkerPopupState extends State<MapFriendMarkerPopup> {
               descriptionRight:
                   '${widget.marker.friend.specialValue > 0 ? widget.marker.friend.absolutePosition : widget.marker.friend.relativeDistance} m',
               rightWidget: Container()),
-          DataLeftRightContent(
-              descriptionLeft: 'Lat:',
-              descriptionRight: widget.marker.point.latitude.toStringAsFixed(6),
-              rightWidget: Container()),
-          DataLeftRightContent(
-              descriptionLeft: 'Lon:',
-              descriptionRight:
-                  widget.marker.point.longitude.toStringAsFixed(6),
-              rightWidget: Container()),
           Divider(
             height: 2,
             color: CupertinoTheme.of(context).primaryColor,
-            endIndent: 20,
+            endIndent: 00,
           ),
-          if (widget.marker.friend.specialValue == 0)
+          if (widget.marker.friend.specialValue == 0) ...[
             DataLeftRightContent(
                 descriptionLeft: Localize.of(context).timeToFinish,
                 descriptionRight:
                     '${widget.marker.friend.relativeTime != null ? TimeConverter.millisecondsToDateTimeString(value: widget.marker.friend.relativeTime ?? 0) : '-'}',
                 rightWidget: Container()),
-          if (widget.marker.friend.specialValue == 0)
-            Divider(
-              height: 2,
-              color: CupertinoTheme.of(context).primaryColor,
-              endIndent: 20,
-            ),
-          if (widget.marker.friend.specialValue == 0)
             DataLeftRightContent(
                 descriptionLeft:
                     '${widget.marker.friend.name} ${Localize.of(context).ist}',
                 descriptionRight:
                     '${widget.marker.friend.timeToUser != null ? TimeConverter.millisecondsToDateTimeString(value: widget.marker.friend.timeToUser ?? 0) : '-'} ${(widget.marker.friend.timeToUser ?? 0).isNegative ? Localize.of(context).behindMe : Localize.of(context).aheadOfMe}',
                 rightWidget: Container()),
-          if (widget.marker.friend.specialValue == 0)
             DataLeftRightContent(
                 descriptionLeft: '',
                 descriptionRight:
-                    '${widget.marker.friend.distanceToUser}m ${(widget.marker.friend.distanceToUser ?? 0).isNegative ? Localize.of(context).behindMe : Localize.of(context).aheadOfMe}',
+                    '${widget.marker.friend.distanceToUser} m ${(widget.marker.friend.distanceToUser ?? 0).isNegative ? Localize.of(context).behindMe : Localize.of(context).aheadOfMe}',
                 rightWidget: Container()),
+            Divider(
+              height: 2,
+              color: CupertinoTheme.of(context).primaryColor,
+              endIndent: 0,
+            ),
+            DataLeftRightContent(
+                descriptionLeft: 'Lat:',
+                descriptionRight:
+                    widget.marker.point.latitude.toStringAsFixed(6),
+                rightWidget: Container()),
+            DataLeftRightContent(
+                descriptionLeft: 'Lon:',
+                descriptionRight:
+                    widget.marker.point.longitude.toStringAsFixed(6),
+                rightWidget: Container()),
+          ],
         ],
       ),
     );

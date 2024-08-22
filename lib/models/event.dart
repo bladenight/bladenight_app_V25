@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger.dart';
+import '../helpers/timeconverter_helper.dart';
 import '../helpers/wamp/message_types.dart';
 import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_endpoints.dart';
@@ -35,11 +37,15 @@ enum EventStatus {
   finished,
 
   ///Event actual finished
+  @MappableValue('DEL')
+  deleted,
+
+  ///Event actual finished
   @MappableValue('UKN')
   unknown,
 }
 
-@MappableClass(includeCustomMappers: [DurationMapper()])
+@MappableClass(includeCustomMappers: [DurationMapper(), DateTimeMapper()])
 class Event with EventMappable implements Comparable {
   @MappableField(key: 'sta')
   final DateTime startDate;
@@ -191,6 +197,7 @@ class Event with EventMappable implements Comparable {
           EventStatus.noevent: Localize.current.noEvent,
           EventStatus.running: Localize.current.running,
           EventStatus.finished: Localize.current.finished,
+          EventStatus.deleted: Localize.current.delete,
           'other': Localize.current.unknown
         })}';
   }
@@ -273,6 +280,7 @@ class Events with EventsMappable {
 
   Map<String, Events> groupByYear() {
     var resultMap = <String, Events>{};
+    events.sort((e1, e2) => e1.startDateUtc.compareTo(e2.startDateUtc));
     for (var event in events) {
       if (!resultMap.keys.contains(event.startDate.year.toString())) {
         resultMap[event.startDate.year.toString()] = Events([event]);
@@ -298,5 +306,31 @@ class DurationMapper extends SimpleMapper<Duration> {
   @override
   encode(Duration self) {
     return self.inMinutes;
+  }
+}
+
+class DateTimeMapper extends SimpleMapper<DateTime> {
+  const DateTimeMapper();
+
+  @override
+  DateTime decode(value) {
+    try {
+      var val = DateTime.parse(value.toString());
+      return val;
+    } catch (e) {
+      BnLog.error(text: 'Could not parse $value');
+      rethrow;
+    }
+  }
+
+  @override
+  encode(DateTime self) {
+    //2023-05-08T21:00:00.000+02:00
+    try {
+      var val = self.toEventMessageDateTime();
+      return val;
+    } catch (e) {
+      return self.toUtc().toIso8601String();
+    }
   }
 }

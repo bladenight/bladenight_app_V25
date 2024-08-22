@@ -49,7 +49,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       context.read(activeEventProvider.notifier).refresh(forceUpdate: true);
-      context.read(locationProvider).refresh(forceUpdate: true);
+      context.read(locationProvider).refreshLocationData(forceUpdate: true);
     }
   }
 

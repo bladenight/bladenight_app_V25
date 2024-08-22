@@ -127,7 +127,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "actualInformations":
             MessageLookupByLibrary.simpleMessage("Actual information"),
         "addEvent": MessageLookupByLibrary.simpleMessage("Add Event"),
+        "addFriendWithCodeHeader": MessageLookupByLibrary.simpleMessage(
+            "Here you can generate a code to create a relationship with your friend"),
         "addNearBy": MessageLookupByLibrary.simpleMessage("Add friend nearby"),
+        "addNewFriendHeader": MessageLookupByLibrary.simpleMessage(
+            "If your friend has generated a code, you can finish the relationship with him"),
         "addfriendwithcode":
             MessageLookupByLibrary.simpleMessage("Add friend with Code"),
         "addnewfriend":
@@ -532,6 +536,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "oneSignalIdTitle": MessageLookupByLibrary.simpleMessage(
             "This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages."),
         "online": MessageLookupByLibrary.simpleMessage("Online"),
+        "onlyTracking":
+            MessageLookupByLibrary.simpleMessage("Location record only active"),
         "onlyWhenInUseEnabled": MessageLookupByLibrary.simpleMessage(
             "Location only \'Allow only while using the app\' set."),
         "onlyWhileInUse": MessageLookupByLibrary.simpleMessage(
@@ -574,6 +580,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Receive Bladeguard Infos"),
         "received": MessageLookupByLibrary.simpleMessage("received"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
+        "registeredAs": MessageLookupByLibrary.simpleMessage("Registered as:"),
         "reload": MessageLookupByLibrary.simpleMessage("Reload"),
         "reltime": MessageLookupByLibrary.simpleMessage("rel. timediff."),
         "remove": MessageLookupByLibrary.simpleMessage("Remove"),
@@ -610,6 +617,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "seemsoffline": MessageLookupByLibrary.simpleMessage(
             " Waiting for internet connection ..."),
         "selectDate": MessageLookupByLibrary.simpleMessage("Select event date"),
+        "selectTrackingType":
+            MessageLookupByLibrary.simpleMessage("Select tracking type"),
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Request sent - change need about 30 secs."),
         "sendMail": MessageLookupByLibrary.simpleMessage("Send an email"),
@@ -617,8 +626,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sendlinkdescription": m13,
         "sendlinksubject": MessageLookupByLibrary.simpleMessage(
             "Send link to BladeNight-App. You can see each other."),
-        "serverNotReachable": MessageLookupByLibrary.simpleMessage(
-            "Waiting for server connection ...."),
+        "serverNotReachable":
+            MessageLookupByLibrary.simpleMessage("Connecting to server ..."),
         "sessionConnectionError": MessageLookupByLibrary.simpleMessage(
             "Error negotiate session connection"),
         "setClearLogs": MessageLookupByLibrary.simpleMessage("Clear log data"),
@@ -626,8 +635,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Activate Dark Mode"),
         "setDarkModeTitle": MessageLookupByLibrary.simpleMessage(
             "Switch between light- and dark-mode independent of OS-setting."),
-        "setExportLogSupport": MessageLookupByLibrary.simpleMessage(
-            "Export Log data (Support) it@huth.app"),
+        "setExportLogSupport":
+            MessageLookupByLibrary.simpleMessage("Export Log data to support"),
         "setIconSize": MessageLookupByLibrary.simpleMessage("Icon size: "),
         "setIconSizeTitle": MessageLookupByLibrary.simpleMessage(
             "Set size of me, friend and procession icons on the map"),
@@ -687,6 +696,10 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and location data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?"),
         "startParticipation":
             MessageLookupByLibrary.simpleMessage("Start participation"),
+        "startParticipationHeader": MessageLookupByLibrary.simpleMessage(
+            "You are participating on the Bladenight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?"),
+        "startParticipationShort":
+            MessageLookupByLibrary.simpleMessage("Start participation"),
         "startParticipationTracking":
             MessageLookupByLibrary.simpleMessage("Start participation"),
         "startPoint": MessageLookupByLibrary.simpleMessage(
@@ -694,6 +707,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "startPointTitle":
             MessageLookupByLibrary.simpleMessage("Where is the start?"),
         "startTime": MessageLookupByLibrary.simpleMessage("Start time"),
+        "startTrackingOnly":
+            MessageLookupByLibrary.simpleMessage("Start route recording"),
+        "startTrackingOnlyTitle": MessageLookupByLibrary.simpleMessage(
+            "Start location recording without sending data to server."),
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "status_active": MessageLookupByLibrary.simpleMessage("active"),
         "status_inactive": MessageLookupByLibrary.simpleMessage("inactive"),

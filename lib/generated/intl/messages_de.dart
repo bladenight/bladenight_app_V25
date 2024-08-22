@@ -38,7 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Alternativ kann dein Freund den Barcode mit der Kamera scannen oder dich mit dem Code ${code} verbinden";
 
   static String m7(bladeguardPrivacyLink) =>
-      "Wir benötigen Unterstützung von Ehrenamtlichen. Als Bladeguard unterstützt du die Bladenight aktiv. Es gelten die <a href=\"${bladeguardPrivacyLink}\">Münchener BladeNight Datenschutzbestimmungen</a></p>";
+      "Wir benötigen Unterstützung von Ehrenamtlichen. Als Bladeguard unterstützt du die BladeNight aktiv. Es gelten die <a href=\"${bladeguardPrivacyLink}\">Münchener BladeNight Datenschutzbestimmungen</a></p>";
 
   static String m8(name) => "${name} einladen";
 
@@ -127,8 +127,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "actualInformations":
             MessageLookupByLibrary.simpleMessage("Aktuelle Informationen"),
         "addEvent": MessageLookupByLibrary.simpleMessage("Event hinzufügen"),
+        "addFriendWithCodeHeader": MessageLookupByLibrary.simpleMessage(
+            "Erzeuge eine Code um eine Freundverknüpfung herzustellen"),
         "addNearBy": MessageLookupByLibrary.simpleMessage(
             "Freund:in neben Dir hinzufügen"),
+        "addNewFriendHeader": MessageLookupByLibrary.simpleMessage(
+            "Wenn dein Freund einen Code erzeugt hat, kannst du dich mit Ihm koppeln."),
         "addfriendwithcode": MessageLookupByLibrary.simpleMessage(
             "Freund:in mit Code hinzufügen"),
         "addnewfriend":
@@ -151,7 +155,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "allowWakeLock":
             MessageLookupByLibrary.simpleMessage("Display aktiv lassen?"),
         "allowWakeLockHeader": MessageLookupByLibrary.simpleMessage(
-            "Das Display eingeschaltet lassen wenn das Tracking aktiv ist. Die Funktion wird bei kleiner 30% Akku deaktiviert."),
+            "Das Display an lassen wenn das Tracking aktiv ist. Die Funktion wird bei kleiner 30% Akku deaktiviert. Abschalten des Displays ist weiterhin möglich."),
         "alternativeLocationProvider":
             MessageLookupByLibrary.simpleMessage("Nutze Alternative"),
         "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
@@ -176,7 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "autoStartTrackingInfo": MessageLookupByLibrary.simpleMessage(
             "Starte Standortfreigabe automatisch"),
         "autoStartTrackingInfoTitle": MessageLookupByLibrary.simpleMessage(
-            "Es besteht die Möglichkeit beim Start der BladeNight, die Standortfreigabe automatisch zu starten, wenn die App geöffnet ist. Sobald die App geschlossen wurde oder die Hintergrundaktivität nicht freigegeben ist, wird auch keine Standortfreigabe aktiviert. Soll die Funktion Standortfreigabe automatisch starten, wenn die App im geöffnet ist aktiviert werden? "),
+            "Es besteht die Möglichkeit beim Start der BladeNight, die Standortfreigabe automatisch zu starten, wenn die App geöffnet ist. Sobald die App geschlossen wurde oder die Hintergrundaktivität nicht freigegeben ist, wird auch keine Standortfreigabe aktiviert. Soll die BladeNight!-Teilnahme automatisch starten, wenn die App geöffnet ist? "),
         "autoStartTrackingTitle": MessageLookupByLibrary.simpleMessage(
             "Tracking automatisch gestartet..."),
         "autoStopTracking":
@@ -290,7 +294,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "editEvent": MessageLookupByLibrary.simpleMessage("Event ändern"),
         "editfriend": MessageLookupByLibrary.simpleMessage("Freund:in ändern"),
         "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
-            "Um die BladeNight-App auch im Hintergrund (Standort mit Freunden teilen und Zuggenauigkeit zu erhöhen) ohne das der Bildschirm an ist, sollte die Standortfunktion \'Immer zulassen\' aktiviert werden.\nWeiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
+            "Um die BladeNight-App auch im Hintergrund (Standort mit Freunden teilen und Zuggenauigkeit zu erhöhen) ohne das der Bildschirm an ist, sollte die Standortfunktion \'Immer zulassen\' aktiviert werden.\nWeiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn dein Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
         "enableOnesignalPushMessage":
             MessageLookupByLibrary.simpleMessage("Push Mitteilung aktiv"),
         "enableOnesignalPushMessageTitle": MessageLookupByLibrary.simpleMessage(
@@ -303,7 +307,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "enterPassword":
             MessageLookupByLibrary.simpleMessage("Passwort eingeben"),
         "enterPhoneNumber": MessageLookupByLibrary.simpleMessage(
-            "Deine Mobiltelefonnummer.(Nur für die Bladenight und falls die Polizei bei der Ordnerprüfung dich sehen möchte."),
+            "Deine Mobiltelefonnummer (Nur für die Bladenight und falls die Polizei bei der Ordnerprüfung dich sehen möchte.)"),
         "entercode": MessageLookupByLibrary.simpleMessage("Code: "),
         "enterfriendname":
             MessageLookupByLibrary.simpleMessage("Name eingeben"),
@@ -346,11 +350,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "fireBaseCrashlyticsHeader": MessageLookupByLibrary.simpleMessage(
             "Um die App zu verbessern, werden Absturzprotokolle an Crashlytics gesendet. Dies kann hier unterdrückt werden."),
         "fitnessPermissionInfoText": MessageLookupByLibrary.simpleMessage(
-            "Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren. Die Abfrage erfolgt in den nächsten Schritten."),
+            "Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn dein Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren. Die Abfrage erfolgt in den nächsten Schritten."),
         "fitnessPermissionInfoTextTitle": MessageLookupByLibrary.simpleMessage(
             "Bewegungssensor / Körperliche Aktivität"),
         "fitnessPermissionSettingsText": MessageLookupByLibrary.simpleMessage(
-            "Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
+            "Der Zugriff auf die Bewegungsaktivitätserkennung ist wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn dein Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
         "fitnessPermissionSwitchSettingsText":
             MessageLookupByLibrary.simpleMessage("Bewegungssensor aktiv"),
         "forgotPassword":
@@ -365,7 +369,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "from": MessageLookupByLibrary.simpleMessage("vom"),
         "geoFencing": MessageLookupByLibrary.simpleMessage("Geofencing aktiv"),
         "geoFencingTitle": MessageLookupByLibrary.simpleMessage(
-            "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet. Location service muss auf immer stehen (beta)"),
+            "Bladeguard vor Ort - per Geofencing erlauben. Wenn du im Umkreis des Startpunktes bist, wirst du automatisch als BladeGuard digital angemeldet. Standortfreigabe muss auf immer stehen (beta)"),
         "getwebdata":
             MessageLookupByLibrary.simpleMessage("Lade Serverdaten ..."),
         "head": MessageLookupByLibrary.simpleMessage("Zugkopf"),
@@ -542,8 +546,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "onRoute": MessageLookupByLibrary.simpleMessage("auf der Strecke"),
         "oneSignalId": MessageLookupByLibrary.simpleMessage("OneSignal-Id: "),
         "oneSignalIdTitle": MessageLookupByLibrary.simpleMessage(
-            "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Du Probleme beim Empfang von Push-Nachrichten haben."),
+            "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Du Probleme beim Empfang von Push-Nachrichten hast."),
         "online": MessageLookupByLibrary.simpleMessage("Online"),
+        "onlyTracking": MessageLookupByLibrary.simpleMessage(
+            "Nur Routenaufzeichnung aktiv"),
         "onlyWhenInUseEnabled": MessageLookupByLibrary.simpleMessage(
             "Standortfreigabe nur \'Zugriff nur während der Nutzung der App zulassen\'"),
         "onlyWhileInUse": MessageLookupByLibrary.simpleMessage(
@@ -565,7 +571,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "proceed": MessageLookupByLibrary.simpleMessage("Weiter"),
         "prominentdisclosuretrackingprealertandroidFromAndroid_V11":
             MessageLookupByLibrary.simpleMessage(
-                "Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNight-Zuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben.Hier sollte  \'Bei der Nutzung der App zulassen\' gewählt werden. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung \"Immer zulassen\" die zu einem späteren Zeitpunkt (2.Schritt über Systemeinstellungen) erfolgt. Dies ermöglicht das Tracking auch wenn du eine andere App im Vordergrund geöffnet hast. Mit \"Während der Benutzung\" musst du die BladeNight immer im Vordergrund offen halten um uns zu unterstützen und deinen Standort zu teilen.Weiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn Ihr Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
+                "Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNight-Zuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben.Hier sollte  \'Bei der Nutzung der App zulassen\' gewählt werden. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung \"Immer zulassen\" die zu einem späteren Zeitpunkt (2.Schritt über Systemeinstellungen) erfolgt. Dies ermöglicht das Tracking auch wenn du eine andere App im Vordergrund geöffnet hast. Mit \"Während der Benutzung\" musst du die BladeNight immer im Vordergrund offen halten um uns zu unterstützen und deinen Standort zu teilen.Weiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn dein Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren."),
         "prominentdisclosuretrackingprealertandroidToAndroid_V10x":
             MessageLookupByLibrary.simpleMessage(
                 "Die BladeNight App benötigt deine Standortdaten zur Darstellung des BladeNight-Zuges und um deine Position mit deinen Freunden zu teilen. Dies während der App-Nutzung. Bitte die Standortfreigabe im nächsten Schritt freigeben. Falls du das ablehnst, kann nur der BladeNightzug ohne Standortfreigabe beobachtet werden. Bevorzugt ist die Einstellung \"Bei der Nutzung der App zulassen\"."),
@@ -584,6 +590,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Empfange Bladeguard Infos"),
         "received": MessageLookupByLibrary.simpleMessage("empfangen"),
         "register": MessageLookupByLibrary.simpleMessage("Anmelden"),
+        "registeredAs": MessageLookupByLibrary.simpleMessage("Angemeldet als:"),
         "reload": MessageLookupByLibrary.simpleMessage("Neu laden"),
         "reltime": MessageLookupByLibrary.simpleMessage("rel. Zeitdiff."),
         "remove": MessageLookupByLibrary.simpleMessage("Entfernen"),
@@ -604,7 +611,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "resetOdoMeterTitle": MessageLookupByLibrary.simpleMessage(
             "Reset km-Zähler und eigene Routenpunkte"),
         "resetTrackPointsStore":
-            MessageLookupByLibrary.simpleMessage("Lösche alle GPSDaten"),
+            MessageLookupByLibrary.simpleMessage("Lösche alle Routendaten"),
         "resetTrackPointsStoreTitle": MessageLookupByLibrary.simpleMessage(
             "Lösche alle aufgezeichneten und gespeicherten Tracks"),
         "restartRequired": MessageLookupByLibrary.simpleMessage(
@@ -620,6 +627,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "seemsoffline": MessageLookupByLibrary.simpleMessage(
             "Warte auf Internetverbindung ..."),
         "selectDate": MessageLookupByLibrary.simpleMessage("Eventdatum wählen"),
+        "selectTrackingType":
+            MessageLookupByLibrary.simpleMessage("Trackingtypauswahl"),
         "sendData30sec": MessageLookupByLibrary.simpleMessage(
             "Anfrage gesendet - Dauert ca. 30s."),
         "sendMail": MessageLookupByLibrary.simpleMessage(
@@ -628,8 +637,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sendlinkdescription": m13,
         "sendlinksubject": MessageLookupByLibrary.simpleMessage(
             "Sende link an BladeNight-App. Ihr könnt euch gegenseitig sehen."),
-        "serverNotReachable": MessageLookupByLibrary.simpleMessage(
-            "Warte auf Serververbindung ... !"),
+        "serverNotReachable":
+            MessageLookupByLibrary.simpleMessage("Verbinde mit Server .."),
         "sessionConnectionError":
             MessageLookupByLibrary.simpleMessage("Fehler beim Verbinden"),
         "setClearLogs":
@@ -637,9 +646,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "setDarkMode":
             MessageLookupByLibrary.simpleMessage("Dunkelmodus aktivieren"),
         "setDarkModeTitle": MessageLookupByLibrary.simpleMessage(
-            "App zwischen Hell- und Dunkelmodus unabhängig der Systemeinstellungen ändern."),
-        "setExportLogSupport": MessageLookupByLibrary.simpleMessage(
-            "Export Logdaten (Support) it@huth.app"),
+            "App-Layout Hell- und Dunkelmodus ändern."),
+        "setExportLogSupport":
+            MessageLookupByLibrary.simpleMessage("Export Logdaten an Support"),
         "setIconSize": MessageLookupByLibrary.simpleMessage("Icongröße: "),
         "setIconSizeTitle": MessageLookupByLibrary.simpleMessage(
             "Eigene Icongröße sowie die von Freunden, Zuganfang und -ende auf der Karte anpassen"),
@@ -676,7 +685,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "showOwnColoredTrack":
             MessageLookupByLibrary.simpleMessage("Coloriere Route"),
         "showOwnTrack": MessageLookupByLibrary.simpleMessage(
-            "Eigene Fahrlinie zeigen. Es kann die eigene Fahrt aufgezeichnet werden und dargestellt werden. Die Colorierte Route zeigt auch die Geschwindigkeit, kann aber je nach Gerät beim zoomen etc zu ruckeln führen."),
+            "Eigene Fahrlinie zeigen. Es kann die eigene Fahrt aufgezeichnet werden und dargestellt werden. Die Colorierte Route zeigt auch die Geschwindigkeit, kann aber je nach Gerät beim zoomen etc. zu ruckeln führen."),
         "showOwnTrackSwitchTitle":
             MessageLookupByLibrary.simpleMessage("Fahrlinie zeigen"),
         "showProcession": MessageLookupByLibrary.simpleMessage(
@@ -697,8 +706,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Tracking ohne Teilnahme"),
         "startLocationWithoutParticipatingInfo":
             MessageLookupByLibrary.simpleMessage(
-                "Bitte Aufmerksam lesen.\nDies startet die Standortdarstellung auf der Karte ohne Teilnahme an der BladeNight und überträgt zur Berechnung der Zeiten deinen Standort auf den Server. Deine Freunde im Zug werden Dir angezeigt. Die Zeit zum Zuganfang /-ende von deinem Standort werden berechnet. Weiterhin, werden deine Geschwindigkeit und Trackingdaten aufgezeichnet die du speichern kannst. Bitte diese Funktion nicht verwenden, wenn du an der BladeNight teilnimmst. Der Modus muss manuell beendet werden. \nSoll dies gestartet werden?"),
-        "startParticipation":
+                "Tracking ohne Teilnahme\nDies startet die Standortdarstellung auf der Karte ohne Teilnahme an der BladeNight und überträgt zur Berechnung der Zeiten deinen Standort auf den Server. Deine Freunde im Zug werden Dir angezeigt. Die Zeit zum Zuganfang /-ende von deinem Standort werden berechnet. Weiterhin, werden deine Geschwindigkeit und Trackingdaten aufgezeichnet die du speichern kannst. Bitte diese Funktion nicht verwenden, wenn du an der BladeNight teilnimmst. Der Modus muss manuell beendet werden. \nSoll dies gestartet werden?"),
+        "startParticipation": MessageLookupByLibrary.simpleMessage(
+            "Teilnahme starten\nDu bist aktiver Skater im Zug und möchtest die Darstellung des Bladenightzuges unterstützen. Danke wenn du Teilnahme an Bladenight starten drückst."),
+        "startParticipationHeader": MessageLookupByLibrary.simpleMessage(
+            "Du fährst heute bei der Bladenight mit und möchtest die Darstellung des Zuges unterstützen und deinen Standort mit Freunden teilen. Standortfreigabe starten?"),
+        "startParticipationShort":
             MessageLookupByLibrary.simpleMessage("Teilnahme starten"),
         "startParticipationTracking": MessageLookupByLibrary.simpleMessage(
             "Teilnahme an BladeNight starten"),
@@ -706,6 +719,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Startpunkt\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe München"),
         "startPointTitle": MessageLookupByLibrary.simpleMessage("Startpunkt"),
         "startTime": MessageLookupByLibrary.simpleMessage("Startzeit"),
+        "startTrackingOnly":
+            MessageLookupByLibrary.simpleMessage("Starte Routenaufzeichnung"),
+        "startTrackingOnlyTitle": MessageLookupByLibrary.simpleMessage(
+            "Starte die Routenaufzeichnung ohne die Standortdaten an den Server zu übermitteln."),
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "status_active": MessageLookupByLibrary.simpleMessage("Aktiv"),
         "status_inactive": MessageLookupByLibrary.simpleMessage("Inaktiv"),

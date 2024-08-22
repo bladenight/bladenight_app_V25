@@ -1,4 +1,4 @@
-import 'package:bladenight_app_flutter/models/user_speed_point.dart';
+import 'user_speed_point.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

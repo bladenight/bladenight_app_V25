@@ -16,6 +16,7 @@ const double defaultAppLongitude = 11.543837661522703;
 double defaultLatitude = 48.13250913196827;
 double defaultLongitude = 11.543837661522703;
 final LatLng defaultLatLng = LatLng(defaultLatitude, defaultLongitude);
+const double initialZoom = 12.5;
 
 //TODO Add startpoint to route
 String defaultStartPoint =
@@ -26,7 +27,8 @@ const String mainSponsorPlaceholder = kIsWeb
     ? 'assets/images/giesinger_bladenight_logo.png'
     : 'assets/images/bladenight_logo.png';
 const String secondLogoPlaceholder = 'assets/images/skatemunich.png';
-const String specialPointImagePlaceHolder = 'assets/images/skatemunich_child_orange_circle.png';
+const String specialPointImagePlaceHolder =
+    'assets/images/skatemunich_child_orange_circle.png';
 
 //globals
 String bladeguardRegisterLink =

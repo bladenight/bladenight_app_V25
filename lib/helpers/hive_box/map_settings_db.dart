@@ -21,7 +21,7 @@ extension MapSettings on HiveSettingsDB {
     return 15;
   }
 
-  static const String _minZoomKey = 'minZoomPref';
+  static const String _minZoomKey = 'minZoomPref_1Key';
 
   ///get minZoom level for online map
   static double get minZoom {
@@ -33,11 +33,12 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.put(_minZoomKey, val);
   }
 
-  static const String _maxZoomKey = 'maxZoomPref';
+  static const String _maxZoomKey = 'maximumZoomPrefKey4';
 
   ///get maxZoom level for map
   static double get maxZoom {
-    return HiveSettingsDB._hiveBox.get(_maxZoomKey, defaultValue: 18.0);
+    return HiveSettingsDB._hiveBox
+        .get(_maxZoomKey, defaultValue: 19.0); //osm max 19
   }
 
   ///set maxZoom level for map
@@ -45,7 +46,7 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.put(_maxZoomKey, val);
   }
 
-  static const String _minNativeZoomKey = 'minNativeZoomPref';
+  static const String _minNativeZoomKey = 'minimumNativeZoomPref';
 
   ///get minNativeZoom level for map
   static int get minNativeZoom {
@@ -57,11 +58,11 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.put(_minNativeZoomKey, val);
   }
 
-  static const String _maxNativeZoomKey = 'maxNativeZoomPref';
+  static const String _maxNativeZoomKey = 'maximumNativeZoomPref5';
 
-  ///get maxNativeZoom level for map
+  ///get maxNativeZoom level for map - native zoom must smaller or equal max possible maxZoom
   static int get maxNativeZoom {
-    return HiveSettingsDB._hiveBox.get(_maxNativeZoomKey, defaultValue: 15);
+    return HiveSettingsDB._hiveBox.get(_maxNativeZoomKey, defaultValue: 18);
   }
 
   ///set maxNativeZoom level for map
@@ -191,8 +192,8 @@ extension MapSettings on HiveSettingsDB {
   }
 
   ///set showOwnTrack
-  static void setShowOwnTrack(bool val) {
-    HiveSettingsDB._hiveBox.put(showOwnTrackKey, val);
+  static Future<void> setShowOwnTrack(bool val) async {
+    return HiveSettingsDB._hiveBox.put(showOwnTrackKey, val);
   }
 
   static const String showOwnColoredTrackKey = 'showOwnColoredTrackPref';
@@ -200,13 +201,13 @@ extension MapSettings on HiveSettingsDB {
   /// Get value
   /// if own driven track should bei shown on map
   static bool get showOwnColoredTrack {
-    return HiveSettingsDB._hiveBox.get(showOwnColoredTrackKey,
-        defaultValue: false);
+    return HiveSettingsDB._hiveBox
+        .get(showOwnColoredTrackKey, defaultValue: false);
   }
 
   ///set showOwnColoredTrack
-  static void setShowOwnColoredTrack(bool val) {
-    HiveSettingsDB._hiveBox.put(showOwnColoredTrackKey, val);
+  static Future<void> setShowOwnColoredTrack(bool val) {
+    return HiveSettingsDB._hiveBox.put(showOwnColoredTrackKey, val);
   }
 
   static const String cameraFollowKey = 'cameraFollowPref';
@@ -249,5 +250,19 @@ extension MapSettings on HiveSettingsDB {
   ///show openStreetMap setOpenStreetMapEnable
   static void setOpenStreetMapEnabled(bool val) {
     HiveSettingsDB._hiveBox.put(openStreetMapEnabledKey, val);
+  }
+
+  static const String wasOpenStreetMapEnabledFlagKey =
+      'wasOpenStreetMapEnabledFlagPref';
+
+  ///get flag for tracking to deactivate OSM after stop
+  static bool get wasOpenStreetMapEnabledFlag {
+    return HiveSettingsDB._hiveBox
+        .get(wasOpenStreetMapEnabledFlagKey, defaultValue: false);
+  }
+
+  ///set flag for tracking to deactivate OSM after stop
+  static void setWasOpenStreetMapEnabledFlag(bool val) {
+    HiveSettingsDB._hiveBox.put(wasOpenStreetMapEnabledFlagKey, val);
   }
 }

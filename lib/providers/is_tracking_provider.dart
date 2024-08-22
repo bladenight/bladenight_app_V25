@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../app_settings/app_constants.dart';
+import '../helpers/enums/tracking_type.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import 'location_provider.dart';
 
@@ -15,21 +15,17 @@ class IsTracking extends _$IsTracking {
   bool build() {
     var isTracking = ref.watch(locationProvider.select((tp) => tp.isTracking));
     state = isTracking;
-    return LocationProvider.instance.isTracking;
+    return isTracking;
   }
 
   ///toggles tracking when user is in procession
   ///set [userIsParticipant] to true if participant
   ///set [userIsParticipant] to false if only in viewer-mode
-  Future<bool> toggleTracking(bool userIsParticipant) async {
-    if (kIsWeb) {
-     // return false;
-    }
-    HiveSettingsDB.setUserIsParticipant(userIsParticipant);
+  Future<bool> toggleTracking(TrackingType trackingType) async {
     if (LocationProvider.instance.isTracking) {
-      await LocationProvider.instance.stopTracking();
+      stopTracking();
     } else {
-      await LocationProvider.instance.startTracking(userIsParticipant);
+      startTracking(trackingType);
     }
     return state;
   }
@@ -37,13 +33,24 @@ class IsTracking extends _$IsTracking {
   ///toggles tracking when user is in procession
   ///set [userIsParticipant] to true if participant
   ///set [userIsParticipant] to false if only in viewer-mode
-  Future<bool> startTracking(bool userIsParticipant) async {
-    if (kIsWeb) {
-      return false;
+  Future<bool> startTracking(TrackingType trackingType) async {
+    if (trackingType == TrackingType.onlyTracking) {
+      MapSettings.setShowOwnTrack(true);
+      MapSettings.setWasOpenStreetMapEnabledFlag(
+          MapSettings.openStreetMapEnabled);
+      MapSettings.setOpenStreetMapEnabled(true);
     }
-    HiveSettingsDB.setUserIsParticipant(userIsParticipant);
-    state = await LocationProvider.instance.startTracking(userIsParticipant);
-    return state;
+    HiveSettingsDB.setUserIsParticipant(
+        trackingType == TrackingType.userParticipating);
+    return await LocationProvider.instance.startTracking(trackingType);
+  }
+
+  Future<bool> stopTracking() async {
+    if (LocationProvider.instance.trackingType == TrackingType.onlyTracking) {
+      MapSettings.setOpenStreetMapEnabled(
+          MapSettings.wasOpenStreetMapEnabledFlag);
+    }
+    return await LocationProvider.instance.stopTracking();
   }
 }
 

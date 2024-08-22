@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import '../generated/l10n.dart';
 import 'logger.dart';
 
-///Helperclass to convert times from server
+///Helper class to convert times from server
 class TimeConverter {
   ///Format minutes like 30 to time 00:30:00
   ///if [maxvalue] greater [value] '-' will returned
@@ -146,5 +146,35 @@ extension DateExtension on DateTime {
   String toDateOnlyString() {
     var date = DateTime(year, month, day);
     return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+  String toDeDateOnlyString() {
+    var date = DateTime(year, month, day);
+    return DateFormat('EE dd.MM.yyyy').format(date);
+  }
+
+  DateTime toTimeOnly() {
+    return DateTime(year, month, day, hour, minute, second);
+  }
+
+  String toTimeOnlyString() {
+    var date = DateTime(year, month, day, hour, minute, second);
+    return DateFormat('HH:mm').format(date);
+  }
+
+  String toIso8601StringWithTimezone() {
+    final timeZoneOffset = this.timeZoneOffset;
+    final sign = timeZoneOffset.isNegative ? '-' : '+';
+    final hours = timeZoneOffset.inHours.abs().toString().padLeft(2, '0');
+    final minutes =
+        timeZoneOffset.inMinutes.abs().remainder(60).toString().padLeft(2, '0');
+    final offsetString = '$sign$hours:$minutes';
+    final formattedDate = toIso8601String().split('.').first;
+
+    return '$formattedDate$offsetString';
+  }
+
+  String toEventMessageDateTime() {
+    return DateFormat('yyyy-MM-ddTHH:mm').format(this);
   }
 }

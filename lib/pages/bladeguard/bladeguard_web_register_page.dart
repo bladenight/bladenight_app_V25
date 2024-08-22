@@ -5,7 +5,8 @@ class BladeGuardWebRegisterPage extends StatefulWidget {
   const BladeGuardWebRegisterPage({super.key});
 
   @override
-  State<BladeGuardWebRegisterPage> createState() => _BladeGuardWebRegisterPage();
+  State<BladeGuardWebRegisterPage> createState() =>
+      _BladeGuardWebRegisterPage();
 }
 
 class _BladeGuardWebRegisterPage extends State<BladeGuardWebRegisterPage>
@@ -31,6 +32,7 @@ class _BladeGuardWebRegisterPage extends State<BladeGuardWebRegisterPage>
     )
     ..loadRequest(
         Uri.parse('https://bladenight-muenchen.de/blade-guards/#anmeldung'));
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
