@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -58,6 +57,9 @@ class _BirthdayTextFieldState extends ConsumerState<BirthdayDatePicker> {
               // Display a CupertinoDatePicker in date picker mode.
               onPressed: () async {
                 var picked = await DatePicker.showSimpleDatePicker(
+                  backgroundColor:
+                      CupertinoTheme.of(context).barBackgroundColor,
+                  textColor: CupertinoTheme.of(context).primaryColor,
                   context,
                   titleText: Localize.of(context).birthday,
                   pickerMode: DateTimePickerMode.date,
