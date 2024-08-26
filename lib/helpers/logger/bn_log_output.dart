@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
 class BnLogOutput extends LogOutput {
-  final LazyBox<String> _logBox;
+  final Box<String> _logBox;
   final DateTime _startTime;
 
   BnLogOutput(this._logBox, this._startTime);
@@ -24,15 +24,16 @@ class BnLogOutput extends LogOutput {
     _logBox.close();
   }
 
-  _logToHiveBox(
-    Level level,
-    String message,
-    String? time,
-    String? error,
-    String? stacktrace,
-  ) {
+  _logToHiveBox(Level level,
+      String message,
+      String? time,
+      String? error,
+      String? stacktrace,) {
     List<String> buffer = [];
-    String key = DateTime.now().millisecondsSinceEpoch.toString();
+    String key = DateTime
+        .now()
+        .millisecondsSinceEpoch
+        .toString();
     if (time != null) {
       buffer.add('$time ${level.toString()}');
     } else {

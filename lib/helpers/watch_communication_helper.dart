@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
@@ -10,7 +9,6 @@ import '../models/watch_event.dart';
 import '../providers/active_event_provider.dart';
 import '../providers/is_tracking_provider.dart';
 import '../providers/location_provider.dart';
-import '../providers/realtime_data_provider.dart';
 import 'enums/tracking_type.dart';
 import 'logger.dart';
 
@@ -133,12 +131,10 @@ Future<void> initFlutterChannel() async {
               .read(locationProvider)
               .refreshLocationData(forceUpdate: true);
         } catch (e) {
-          if (!kIsWeb) {
-            BnLog.error(
-                className: 'watchCommunication_helper',
-                methodName: 'getEventDataFromFlutter',
-                text: '$e');
-          }
+          BnLog.error(
+              className: 'watchCommunication_helper',
+              methodName: 'getEventDataFromFlutter',
+              text: '$e');
         }
         break;
       case 'getLocationIsTracking':
@@ -147,12 +143,10 @@ Future<void> initFlutterChannel() async {
           SendToWatch.setIsLocationTracking(
               ProviderContainer().read(isTrackingProvider));
         } catch (e) {
-          if (!kIsWeb) {
-            BnLog.error(
-                className: 'watchCommunication_helper',
-                methodName: 'getLocationIsTracking',
-                text: '$e');
-          }
+          BnLog.error(
+              className: 'watchCommunication_helper',
+              methodName: 'getLocationIsTracking',
+              text: '$e');
         }
         break;
       case 'getFriendsDataFromFlutter':
@@ -160,12 +154,10 @@ Future<void> initFlutterChannel() async {
         try {
           LocationProvider.instance.refreshLocationData(forceUpdate: true);
         } catch (e) {
-          if (!kIsWeb) {
-            BnLog.error(
-                className: 'watchCommunication_helper',
-                methodName: 'getFriendsDataFromFlutter',
-                text: '$e');
-          }
+          BnLog.error(
+              className: 'watchCommunication_helper',
+              methodName: 'getFriendsDataFromFlutter',
+              text: '$e');
         }
         break;
       case 'getRealtimeDataFromFlutter':
@@ -174,14 +166,13 @@ Future<void> initFlutterChannel() async {
           var rtData = ProviderContainer().read(realtimeDataProvider);
           if (rtData != null) {
             SendToWatch.updateRealtimeData(rtData.toJson());
+            rtData = null;
           }
         } catch (e) {
-          if (!kIsWeb) {
-            BnLog.error(
-                className: 'watchCommunication_helper',
-                methodName: 'getFriendsDataFromFlutter',
-                text: '$e');
-          }
+          BnLog.error(
+              className: 'watchCommunication_helper',
+              methodName: 'getFriendsDataFromFlutter',
+              text: '$e');
         }
         break;
       default:

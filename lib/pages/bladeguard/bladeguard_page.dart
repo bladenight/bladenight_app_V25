@@ -19,6 +19,7 @@ import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
+import '../../providers/settings/server_pwd_provider.dart';
 import '../admin/widgets/admin_password_dialog.dart';
 import '../widgets/birthday_date_picker.dart';
 import '../widgets/data_widget_left_right.dart';
@@ -445,7 +446,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                 const SizedBox(
                   height: 10,
                 ),
-                if (!kIsWeb && HiveSettingsDB.bgIsAdmin)
+                if (!kIsWeb && HiveSettingsDB.bgIsAdmin) ...[
                   CupertinoFormSection(
                     header: const Text('Server-Admin'),
                     children: <Widget>[
@@ -460,6 +461,25 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  if (ref.watch(serverPwdSetProviderProvider))
+                    CupertinoFormSection(
+                      header: const Text('Server-Admin-Logout'),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: CupertinoButton(
+                              color: CupertinoTheme.of(context).primaryColor,
+                              child: const Text('Logout'),
+                              onPressed: () async {
+                                HiveSettingsDB.setServerPassword(null);
+                              }),
+                        ),
+                      ],
+                    ),
+                ],
                 const SizedBox(
                   height: 50,
                 ),

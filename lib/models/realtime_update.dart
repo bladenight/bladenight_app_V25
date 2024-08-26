@@ -156,9 +156,9 @@ class RealtimeUpdate with RealtimeUpdateMappable {
           } else if (fr.specialValue == 4) {
             fr.name = Localize.current.admin;
           } else if (fr.specialValue == 5) {
-            fr.name = '${Localize.current.head}Admin';
+            fr.name = '${Localize.current.head} Admin';
           } else if (fr.specialValue == 6) {
-            fr.name = '${Localize.current.tail}Admin';
+            fr.name = '${Localize.current.tail} Admin';
           } else if (fr.specialValue == 98) {
             fr.name = Localize.current.bladeGuard;
           } else if (fr.specialValue == 99) {

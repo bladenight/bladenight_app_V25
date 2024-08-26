@@ -14,9 +14,9 @@ import '../../../models/bn_map_marker.dart';
 import '../../../models/route.dart';
 import '../../../models/special_point.dart';
 import '../../../providers/active_event_route_provider.dart';
+import '../../../providers/location_provider.dart';
 import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
-import '../../../providers/realtime_data_provider.dart';
 import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
 
@@ -154,17 +154,16 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
               buildContext: context,
               headerText: Localize.of(context).tail,
               speedText:
-                  '${((ref.read(realtimeDataProvider)?.tail.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.tail.realSpeed)!.toStringAsFixed(1))} km/h',
-              drivenDistanceText:
-                  '${((ref.read(realtimeDataProvider)?.tail.position) ?? '-')} m',
+                  '${((realtimeData?.tail.realSpeed) == null ? '-' : (realtimeData?.tail.realSpeed)!.toStringAsFixed(1))} km/h',
+              drivenDistanceText: '${((realtimeData?.tail.position) ?? '-')} m',
               timeToHeadText:
-                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
+                  '${(TimeConverter.millisecondsToDateTimeString(value: realtimeData?.timeTrainComplete() ?? 0))}',
               distanceToHeadText:
-                  '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
+                  '${((realtimeData?.distanceOfTrainComplete()) ?? '-')} m',
               timeUserToTailText:
-                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToTail() ?? 0))}',
+                  '${(TimeConverter.millisecondsToDateTimeString(value: realtimeData?.timeUserToTail() ?? 0))}',
               distanceUserToTailText:
-                  '${((ref.read(realtimeDataProvider)?.distanceOfUserToTail()) ?? '-')} m',
+                  '${((realtimeData?.distanceOfUserToTail()) ?? '-')} m',
               color: Colors.orange,
               point: processionRoutePoints.last,
               width: sizeValue,
@@ -188,17 +187,16 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
               buildContext: context,
               headerText: Localize.of(context).head,
               speedText:
-                  '${((ref.read(realtimeDataProvider)?.head.realSpeed) == null ? '-' : (ref.read(realtimeDataProvider)?.head.realSpeed)!.toStringAsFixed(1))} km/h',
-              drivenDistanceText:
-                  '${((ref.read(realtimeDataProvider)?.head.position) ?? '-')} m',
+                  '${((realtimeData?.head.realSpeed) == null ? '-' : (realtimeData?.head.realSpeed)!.toStringAsFixed(1))} km/h',
+              drivenDistanceText: '${((realtimeData?.head.position) ?? '-')} m',
               distanceTailText:
-                  '${((ref.read(realtimeDataProvider)?.distanceOfTrainComplete()) ?? '-')} m',
+                  '${((realtimeData?.distanceOfTrainComplete()) ?? '-')} m',
               timeToTailText:
-                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeTrainComplete() ?? 0))}',
+                  '${(TimeConverter.millisecondsToDateTimeString(value: realtimeData?.timeTrainComplete() ?? 0))}',
               timeUserToHeadText:
-                  '${(TimeConverter.millisecondsToDateTimeString(value: ref.read(realtimeDataProvider)?.timeUserToHead() ?? 0))}',
+                  '${(TimeConverter.millisecondsToDateTimeString(value: realtimeData?.timeUserToHead() ?? 0))}',
               distanceUserToHeadText:
-                  '${((ref.read(realtimeDataProvider)?.distanceOfUserToHead()) ?? '-')} m',
+                  '${((realtimeData?.distanceOfUserToHead()) ?? '-')} m',
               color: Colors.lightBlue,
               point: processionRoutePoints.first,
               width: sizeValue,
@@ -265,15 +263,20 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                         friend.specialValue == 4) {
                       //Bladeguard
                       return Container(
+                        width: sizeValue - 6,
+                        height: sizeValue - 6,
                         padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                            color: Colors.red, shape: BoxShape.rectangle),
-                        child: CircleAvatar(
-                          radius: sizeValue,
-                          child: Icon(
-                            Icons.remove_red_eye_outlined,
+                        decoration: BoxDecoration(
                             color: SpeedToColor.getColorFromSpeed(
                                 friend.realSpeed),
+                            shape: BoxShape.circle),
+                        child: CircleAvatar(
+                          radius: sizeValue - 9,
+                          child: Center(
+                            child: Icon(
+                                size: sizeValue - 10,
+                                Icons.remove_red_eye_outlined,
+                                color: Colors.redAccent),
                           ),
                         ),
                       );

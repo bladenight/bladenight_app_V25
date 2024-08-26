@@ -121,7 +121,7 @@ class BnLogPrinter extends LogPrinter {
   /// Whether [LogEvent.time] is printed.
   final bool printTime;
 
-  final LazyBox logBox;
+  final Box logBox;
 
   /// Controls the ascii 'boxing' of different [Level]s.
   ///

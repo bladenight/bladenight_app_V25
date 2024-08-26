@@ -234,6 +234,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                       showToast(
                           message: Localize.of(context).mapFollowLocation);
                     }
+                    startFollowingMeLocation();
                     break;
                   case CameraFollow.followMeStopped:
                     stopFollowingLocation();

@@ -158,13 +158,13 @@ Future<File> _createLogFile(String fileName) async {
   return await file.create();
 }
 
-Future<void> exportLogs() async {
+Future<bool> exportLogs() async {
   try {
     var fileContent = await BnLog.collectLogs();
     if (kIsWeb) {
       print(fileContent);
       showToast(message: 'Siehe Console');
-      return;
+      return true;
     }
     var fileName = '${DateTime.now().year}_'
         '${DateTime.now().month}_'
@@ -210,6 +210,7 @@ Future<void> exportLogs() async {
   } catch (e) {
     showToast(message: 'Log export fail $e');
   }
+  return true;
 }
 
 String exportUserTrackingToXml(List<UserGpxPoint> userTrackPoints) {

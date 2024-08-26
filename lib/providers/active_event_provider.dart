@@ -10,7 +10,6 @@ part 'active_event_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class ActiveEvent extends _$ActiveEvent {
-
   @override
   Event build() {
     state = HiveSettingsDB.getActualEvent;

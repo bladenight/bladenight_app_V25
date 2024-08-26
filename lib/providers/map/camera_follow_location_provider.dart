@@ -6,13 +6,13 @@ import '../../models/follow_location_state.dart';
 
 part 'camera_follow_location_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 class CameraFollowLocation extends _$CameraFollowLocation {
   @override
   CameraFollow build() {
-    Hive.box('settings').watch(key: MapSettings.cameraFollowKey).listen(
-        (event) => state = CameraFollow.values
-            .firstWhere((element) {
+    Hive.box('settings')
+        .watch(key: MapSettings.cameraFollowKey)
+        .listen((event) => state = CameraFollow.values.firstWhere((element) {
               return event.value == element.index;
             }));
     return MapSettings.cameraFollow;

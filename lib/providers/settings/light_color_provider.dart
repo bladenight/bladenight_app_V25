@@ -8,7 +8,7 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 
 part 'light_color_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 class ThemePrimaryLightColor extends _$ThemePrimaryLightColor {
   @override
   Color build() {

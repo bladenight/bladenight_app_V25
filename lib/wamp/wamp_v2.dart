@@ -216,12 +216,13 @@ class WampV2 {
   void _connLoop() async {
     _liveCycleTimer?.cancel();
     _liveCycleTimer =
-        Timer.periodic(const Duration(milliseconds: 500), (timer) async {
+        Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
       while (_isWebsocketRunning == false) {
         if (_isConnectedToInternet == false) {
           await Future.delayed(const Duration(milliseconds: 250));
           continue;
         }
+        print('_connLoop');
         BnLog.debug(text: 'initWamp by _connLoop');
         var _ = await _initWamp();
       }
@@ -234,9 +235,9 @@ class WampV2 {
         queue.add(message);
 
         while (_isWebsocketRunning == false) {
-          if (_liveCycleTimer != null && !_liveCycleTimer!.isActive) {
-            _connLoop();
-          }
+          // if (_liveCycleTimer != null && !_liveCycleTimer!.isActive) {
+          var _ = await _initWamp(); //_connLoop();
+          // }
           await Future.delayed(const Duration(milliseconds: 250));
         }
         if (DateTime.now().difference(_busyTimeStamp) >
@@ -337,13 +338,14 @@ class WampV2 {
             var messageResult = wampMessage[2];
             resultStreamController.add(messageResult.runtimeType);
             try {
-              var rt = RealtimeUpdateMapper.fromMap(messageResult);
-              _realTimeUpdateStreamController.sink.add(rt);
+              _realTimeUpdateStreamController.sink
+                  .add(RealtimeUpdateMapper.fromMap(messageResult));
             } catch (_) {}
             var cpl = calls[requestId]?.completer;
             cpl?.complete(messageResult);
+            cpl = null;
             calls.remove(requestId);
-
+            messageResult = null;
             return;
           } else if (wampMessageType == WampMessageType.error) {
             //   [ERROR, CALL, CALL.Request|id, Details|dict, Error|uri]
@@ -352,6 +354,8 @@ class WampV2 {
             var cpl = calls[requestId]?.completer;
             cpl?.completeError(WampException(wampMessage[3]));
             calls.remove(wampMessage[2]);
+            strId = '';
+            cpl = null;
           } else if (wampMessageType == WampMessageType.subscribe) {
             // [SUBSCRIBE, Request|id, Options|dict, Topic|uri]
             BnLog.debug(text: 'subscribe $wampMessage');
@@ -399,9 +403,8 @@ class WampV2 {
               var messageResult = wampMessage[2];
               var id = int.parse(wampMessage[1]);
               _subscriptions.add(id);
-              var result = RealtimeUpdateMapper.fromMap(messageResult);
-              _realTimeUpdateStreamController.sink.add(result);
-              BnLog.trace(text: result.toString());
+              _realTimeUpdateStreamController.sink
+                  .add(RealtimeUpdateMapper.fromMap(messageResult));
               return;
             } catch (e) {
               BnLog.error(text: e.toString(), className: toString());

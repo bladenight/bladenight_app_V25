@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:wakelock/wakelock.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';
@@ -19,6 +18,7 @@ import 'package:vector_math/vector_math.dart' show radians;
 
 import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/app_constants.dart';
+import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/device_info_helper.dart';
 import '../helpers/deviceid_helper.dart';
@@ -30,6 +30,7 @@ import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
 import '../helpers/logger.dart';
 import '../helpers/notification/notification_helper.dart';
+import '../helpers/wamp/subscribe_message.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
 import '../models/event.dart';
@@ -39,10 +40,10 @@ import '../models/realtime_update.dart';
 import '../models/route.dart';
 import '../models/user_speed_point.dart';
 import '../models/user_gpx_point.dart';
+import '../wamp/wamp_error.dart';
 import '../wamp/wamp_v2.dart';
 import 'active_event_provider.dart';
 import 'images_and_links/geofence_image_and_link_provider.dart';
-import 'realtime_data_provider.dart';
 import 'rest_api/onsite_state_provider.dart';
 
 ///[LocationProvider] gets actual procession of Bladenight
@@ -55,19 +56,24 @@ class LocationProvider with ChangeNotifier {
     init();
   }
 
+  int _maxFails = 3;
+
   bg.State? _state;
   StreamSubscription? _locationSubscription;
   bool locationRequested = false;
   bool _isInBackground = false;
   bool _wakelockDisabled = false;
 
-  static DateTime _lastUpdate = DateTime(2022, 1, 1, 0, 0, 0);
+  static DateTime _lastRealtimedataUpdate = DateTime(2022, 1, 1, 0, 0, 0);
   static DateTime _lastForceStop = DateTime(2022, 1, 1, 0, 0, 0);
-  static DateTime _lastLocationRealtimeRequest = DateTime(2022, 1, 1, 0, 0, 0);
+  static DateTime _lastSendLocationToServerRequest =
+      DateTime(2022, 1, 1, 0, 0, 0);
   static DateTime _lastRefreshRequest = DateTime(2022, 1, 1, 0, 0, 0);
 
   DateTime? _userReachedFinishDateTime, _startedTrackingTime;
-  Timer? _updateTimer, _saveLocationsTimer, _startTrackingCheckTimer;
+  Timer? _updateRealtimedataTimer,
+      _saveLocationsTimer,
+      _startTrackingCheckTimer;
 
   bool _autoTrackingStarted = false;
   String _lastRouteName = '';
@@ -75,7 +81,7 @@ class LocationProvider with ChangeNotifier {
 
   EventStatus? get eventState => _eventState;
 
-  DateTime get lastUpdate => _lastUpdate;
+  DateTime get lastRealtimedataUpdate => _lastRealtimedataUpdate;
 
   bool _eventIsActive = false;
 
@@ -85,9 +91,9 @@ class LocationProvider with ChangeNotifier {
 
   bool get isMoving => _isMoving;
 
-  bool _networkConnected = WampV2.instance.webSocketIsConnected;
+  final bool _webSocketConnected = WampV2.instance.webSocketIsConnected;
 
-  bool get networkConnected => _networkConnected;
+  bool get webSocketConnected => _webSocketConnected;
 
   ///Location service is active
   bool get isTracking => _trackingType != TrackingType.noTracking;
@@ -214,18 +220,12 @@ class LocationProvider with ChangeNotifier {
     _userLocationMarkerHeadingStreamController.close();
     _startTrackingCheckTimer?.cancel();
     _saveLocationsTimer?.cancel();
-    _updateTimer?.cancel();
+    _updateRealtimedataTimer?.cancel();
     super.dispose();
   }
 
   void init() async {
-    _wampConnectedSubscription =
-        WampV2.instance.wampConnectedStreamController.stream.listen((event) {
-      _networkConnected = event;
-      if (event) {
-        refreshLocationData(forceUpdate: true);
-      }
-    });
+    startRealtimeUpdateSubscriptionIfNotTracking();
     if (kIsWeb) {
       HiveSettingsDB.useAlternativeLocationProvider;
       notifyListeners();
@@ -273,6 +273,13 @@ class LocationProvider with ChangeNotifier {
 
   void setToBackground(bool value) {
     _isInBackground = value;
+    if (value) {
+      stopRealtimedataSubscription();
+    } else {
+      if (_trackingType == TrackingType.noTracking) {
+        _reStartRealtimeUpdateTimer();
+      }
+    }
   }
 
   ///Initializes BackgroundLocationPlugin
@@ -410,7 +417,16 @@ class LocationProvider with ChangeNotifier {
     if (_lastKnownPoint != null) {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp).toUtc();
       var diff = DateTime.now().toUtc().difference(ts);
-      if (diff < const Duration(milliseconds: 2500)) {
+      if (diff < const Duration(milliseconds: 4000)) {
+        notifyListeners();
+        return;
+      }
+      var headingDiff =
+          (_lastKnownPoint!.coords.heading - location.coords.heading).abs();
+      var speedDiff =
+          (_lastKnownPoint!.coords.speed - location.coords.speed).abs();
+      if (headingDiff < 2 && speedDiff < 2) {
+        notifyListeners();
         return;
       }
     }
@@ -422,10 +438,10 @@ class LocationProvider with ChangeNotifier {
     _realUserSpeedKmh = _realUserSpeedKmh!.toShortenedDouble(3);
     _odometer = location.odometer / 1000;
 
-    if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
-      _userLatLngList
-          .add(LatLng(location.coords.latitude, location.coords.longitude));
-    }
+    // if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
+    _userLatLngList
+        .add(LatLng(location.coords.latitude, location.coords.longitude));
+    // }
     if (MapSettings.showOwnTrack) {
       var userTrackingPoint = UserGpxPoint(
           location.coords.latitude,
@@ -462,12 +478,14 @@ class LocationProvider with ChangeNotifier {
           counter = counter + divider.toInt();
         }
         //avoid jumping of tracking if list is large
-        var lastUserpoint = _userGpxPoints.last;
-
-        smallTrackPointList
-            .add(LatLng(lastUserpoint.latitude, lastUserpoint.longitude));
-
+        //var lastUserGpxPoints = _userGpxPoints.last;
+        var last5 = _userGpxPoints.reversed.take(5).toList();
+        for (var i = last5.length - 1; i < 0; i--) {
+          smallTrackPointList
+              .add(LatLng(last5[i].latitude, last5[i].longitude));
+        }
         _userLatLngList = smallTrackPointList;
+        last5.clear();
       } else {
         _userLatLngList
             .add(LatLng(location.coords.latitude, location.coords.longitude));
@@ -508,17 +526,13 @@ class LocationProvider with ChangeNotifier {
         }
         //avoid jumping of tracking if list is large
         //changed to add only last single point to list
-
-        var lastUserGPXPoint = _userGpxPoints.last;
-        var lastSmTrackPointListEntry = smallTrackPointList.lastSpeedPoint;
-        if (lastUserGPXPoint.latLng != lastSmTrackPointListEntry!.latLng) {
-          smallTrackPointList.add(
-              lastUserGPXPoint.latitude,
-              lastUserGPXPoint.longitude,
-              lastUserGPXPoint.realSpeedKmh,
-              lastSmTrackPointListEntry.latLng);
+        var last5 = _userGpxPoints.reversed.take(6).toList();
+        for (var i = last5.length - 2; i < 0; i--) {
+          smallTrackPointList.add(last5[i].latitude, last5[i].longitude,
+              last5[i].realSpeedKmh, last5[i + 1].latLng);
         }
         _userSpeedPoints = smallTrackPointList;
+        last5.clear();
       } else {
         UserSpeedPoint userSpeedPoint = UserSpeedPoint(
           location.coords.latitude,
@@ -529,6 +543,7 @@ class LocationProvider with ChangeNotifier {
         _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
       }
     }
+
     if (!_isInBackground) {
       notifyListeners();
     }
@@ -633,14 +648,16 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<bool> stopTracking() async {
-    setUpdateTimer(false);
+    setRealtimedataUpdateTimerIfTracking(false);
     if (HiveSettingsDB.useAlternativeLocationProvider) {
       _trackingStopped();
+      await startRealtimeUpdateSubscriptionIfNotTracking();
     } else {
       bg.BackgroundGeolocation.stop().then((bg.State state) async {
         _trackingStopped();
         await startStopGeoFencing();
         await Wakelock.disable();
+        await startRealtimeUpdateSubscriptionIfNotTracking();
       }).catchError((error) {
         BnLog.error(text: 'Stopping location error: $error');
       });
@@ -847,7 +864,8 @@ class LocationProvider with ChangeNotifier {
       }
       _listenLocationWithAlternativePackage();
       _trackingType = trackingType;
-      setUpdateTimer(true);
+      stopRealtimedataSubscription();
+      setRealtimedataUpdateTimerIfTracking(true);
       _startedTrackingTime = DateTime.now();
       ProviderContainer()
           .read(activeEventProvider.notifier)
@@ -858,17 +876,15 @@ class LocationProvider with ChangeNotifier {
       HiveSettingsDB.setTrackingActive(isTracking);
     } else {
       await bg.BackgroundGeolocation.start().then((bg.State bgGeoLocState) {
-        if (!kIsWeb) {
-          BnLog.info(
-              text: 'location tracking started',
-              className: 'location_provider',
-              methodName: '_startTracking');
-        }
-
+        BnLog.info(
+            text: 'location tracking started',
+            className: 'location_provider',
+            methodName: '_startTracking');
         _startedTrackingTime = DateTime.now();
         _trackingType =
             bgGeoLocState.enabled ? trackingType : TrackingType.noTracking;
-        setUpdateTimer(true);
+        stopRealtimedataSubscription();
+        setRealtimedataUpdateTimerIfTracking(true);
         ProviderContainer()
             .read(activeEventProvider.notifier)
             .refresh(forceUpdate: true);
@@ -880,9 +896,12 @@ class LocationProvider with ChangeNotifier {
         BnLog.error(text: 'LocStarting ERROR: $error');
         HiveSettingsDB.setTrackingActive(false);
         trackingType = TrackingType.noTracking;
-        setUpdateTimer(false);
+        setRealtimedataUpdateTimerIfTracking(false);
+        startRealtimeUpdateSubscriptionIfNotTracking();
         SendToWatch.setIsLocationTracking(false);
         notifyListeners();
+        //re-update on error
+
         return null;
       });
       await bg.BackgroundGeolocation.setConfig(bg.Config(
@@ -924,30 +943,29 @@ class LocationProvider with ChangeNotifier {
   ///Get Location updates if tracking is enabled
   ///[enabled] = true
   ///[enabled] = false stop timer
-  void setUpdateTimer(bool enabled) {
+  void setRealtimedataUpdateTimerIfTracking(bool enabled) {
     BnLog.trace(text: 'init setLocationTimer to $enabled');
-    _updateTimer?.cancel();
+    _updateRealtimedataTimer?.cancel();
     _saveLocationsTimer?.cancel();
     if (enabled) {
       startSaveLocationsUpdateTimer(true);
-      _updateTimer = Timer.periodic(
+      _updateRealtimedataTimer = Timer.periodic(
         //realtimeUpdateProvider reads data on send-location -
         //so it must not updated all 10 secs
         const Duration(seconds: defaultLocationUpdateInterval),
         (timer) {
-          int lastUpdate = DateTime.now().difference(_lastUpdate).inSeconds;
-          if (kDebugMode) {
-            print(
-                '${DateTime.now().toIso8601String()} update location timer internal last update ${lastUpdate}s ago');
-          }
+          int lastUpdate =
+              DateTime.now().difference(_lastRealtimedataUpdate).inSeconds;
           if (lastUpdate >= defaultLocationUpdateInterval) {
-            BnLog.trace(text: 'setUpdateTimer Refresh');
+            BnLog.trace(
+                text: 'setUpdateTimer Refresh ${trackingType.name}',
+                methodName: 'setRealtimedataUpdateTimerIfTracking');
             refreshLocationData();
           }
         },
       );
     } else {
-      _updateTimer = null;
+      _updateRealtimedataTimer = null;
       _saveLocationsTimer = null;
     }
   }
@@ -1054,7 +1072,7 @@ class LocationProvider with ChangeNotifier {
   ///get location and send to server
   ///will send new location to server if sendLoc != false
   Future<bg.Location?> _subToUpdates({var sendLoc = true}) async {
-    var timeDiff = DateTime.now().difference(_lastUpdate);
+    var timeDiff = DateTime.now().difference(_lastRealtimedataUpdate);
     if (timeDiff < const Duration(seconds: defaultSendNewLocationDelay)) {
       return _lastKnownPoint;
     }
@@ -1132,11 +1150,11 @@ class LocationProvider with ChangeNotifier {
     if (!isTracking || _trackingType == TrackingType.onlyTracking) return;
     RealtimeUpdate? update;
     var dtNow = DateTime.now();
-    var timeDiff = dtNow.difference(_lastLocationRealtimeRequest);
+    var timeDiff = dtNow.difference(_lastSendLocationToServerRequest);
     if (timeDiff < const Duration(seconds: defaultSendNewLocationDelay)) {
       return;
     }
-    _lastLocationRealtimeRequest = dtNow;
+    _lastSendLocationToServerRequest = dtNow;
 
     //only result of this message contains friend position -
     //requested [RealTimeUpdates] with
@@ -1167,13 +1185,7 @@ class LocationProvider with ChangeNotifier {
     }
     HiveSettingsDB.setOdometerValue(odometer);
 
-    _lastUpdate = DateTime.now();
-    _realtimeUpdate = update;
-
-    BnLog.trace(
-        className: 'locationProvider',
-        methodName: 'sendLocation',
-        text: 'sent loc update with result $update');
+    _setRealtimeUpdate(update, notify: false);
 
     if (realtimeUpdate != null &&
         (_lastRouteName != _realtimeUpdate?.routeName ||
@@ -1204,15 +1216,13 @@ class LocationProvider with ChangeNotifier {
 
       _trainHeadStreamController.add(LatLng(lat, lon));
     }
-    if (!kIsWeb) _updateWatchData();
+    _updateWatchData();
     checkUserFinishedOrEndEvent();
     if (!_isInBackground) {
       BnLog.debug(text: 'location notify');
       notifyListeners();
     }
   }
-
-  int _maxFails = 3;
 
   ///Refresh [RealTimeData] when location has no data for 4500ms with tracking
   ///15 s without tracking
@@ -1272,10 +1282,9 @@ class LocationProvider with ChangeNotifier {
           }
           return;
         }
-        _realtimeUpdate = update;
+        _setRealtimeUpdate(update, notify: false);
       }
 
-      _lastUpdate = dtNow;
       _maxFails = 3;
       if (_realtimeUpdate != null &&
           _realtimeUpdate?.head != null &&
@@ -1497,7 +1506,7 @@ class LocationProvider with ChangeNotifier {
 
   void refreshRealtimeData() {
     int lastUpdate = DateTime.now()
-        .difference(LocationProvider.instance.lastUpdate)
+        .difference(LocationProvider.instance.lastRealtimedataUpdate)
         .inMilliseconds;
     if (isTracking || lastUpdate < defaultRealtimeUpdateInterval) {
       return;
@@ -1516,7 +1525,7 @@ class LocationProvider with ChangeNotifier {
       _updateWatchData();
     }
     int lastUpdate = DateTime.now()
-        .difference(LocationProvider.instance.lastUpdate)
+        .difference(LocationProvider.instance.lastRealtimedataUpdate)
         .inMilliseconds;
     if (isTracking || lastUpdate < defaultRealtimeUpdateInterval) {
       return;
@@ -1611,6 +1620,170 @@ class LocationProvider with ChangeNotifier {
       _geoFenceEventStreamController.sink.add(event);
     }
   }
+
+  //################# Subscription
+  int _maxSubscribeFails = 3;
+  Timer? _subscriptionTimer;
+  StreamSubscription<RealtimeUpdate?>? _realTimeDataStreamListener;
+  StreamSubscription<bool>? _wampConnectedListener;
+  int _realTimeDataSubscriptionId = 0;
+
+  Future<void> startRealtimeUpdateSubscriptionIfNotTracking() async {
+    BnLog.info(
+        text: 'started startRealtimeUpdateSubscription',
+        className: 'location_provider');
+    _wampConnectedListener = WampV2
+        .instance.wampConnectedStreamController.stream
+        .listen((connected) async {
+      if (connected) {
+        await (Future.delayed(const Duration(seconds: 10)));
+        _maxSubscribeFails = 3;
+        _subscribeIfNeeded(_trackingType);
+      } else {
+        _realTimeDataSubscriptionId = 0;
+      }
+    });
+
+    _realTimeDataStreamListener =
+        WampV2.instance.realTimeUpdateStreamController.stream.listen((event) {
+      if (event == null || event.rpcException != null) {
+        return;
+      }
+      _setRealtimeUpdate(event, notify: true);
+    });
+
+    _reStartRealtimeUpdateTimer();
+    _subscribeIfNeeded(_trackingType);
+  }
+
+  void _setRealtimeUpdate(RealtimeUpdate? rtu, {required bool notify}) {
+    BnLog.debug(text: 'rtEvent $rtu');
+    _realtimeUpdate = rtu;
+    _lastRealtimedataUpdate = DateTime.now();
+    _eventIsActive = _realtimeUpdate!.eventIsActive;
+    if (notify) notifyListeners();
+  }
+
+  void stopRealtimedataSubscription() {
+    print('${DateTime.now().toIso8601String()} _stopRealtimedataSubscription');
+    BnLog.debug(text: 'rtProvider dispose');
+    _subscriptionTimer?.cancel();
+    _wampConnectedListener?.cancel();
+    _realTimeDataStreamListener?.cancel();
+
+    _subscriptionTimer = null;
+    _wampConnectedListener = null;
+    _realTimeDataStreamListener = null;
+    _realTimeDataSubscriptionId = 0;
+    print('${DateTime.now().toIso8601String()} _stopRealtimedataSubscription');
+  }
+
+  void _reStartRealtimeUpdateTimer() async {
+    BnLog.debug(text: '_reStartRealtimeUpdateTimer');
+    _subscriptionTimer?.cancel();
+    _subscriptionTimer = null;
+    _subscriptionTimer = Timer.periodic(
+        const Duration(
+          seconds: 15,
+        ), (timer) async {
+      await noTrackingRealtimedataRefresh();
+    });
+    await noTrackingRealtimedataRefresh();
+  }
+
+  void _subscribeIfNeeded(TrackingType trackingType) async {
+    if (trackingType == TrackingType.noTracking) {
+      if (_maxSubscribeFails <= 0) {
+        return;
+      }
+      var res = await _subscribe();
+      if (res == false) {
+        _maxSubscribeFails--;
+      }
+      _reStartRealtimeUpdateTimer();
+    } else {
+      _maxSubscribeFails = 3;
+      _unsubscribe();
+      stopRealtimedataSubscription(); //realtimeDataUpdate in LocationProvider handled
+    }
+  }
+
+  Future<void> noTrackingRealtimedataRefresh() async {
+    var timeDiff = DateTime.now().difference(lastRealtimedataUpdate);
+    BnLog.trace(
+        text:
+            'LastRealtimeUpdate ${timeDiff.inSeconds} s ago at: $lastRealtimedataUpdate',
+        methodName: 'refresh',
+        className: toString());
+    if (timeDiff <
+        const Duration(milliseconds: defaultRealtimeUpdateInterval)) {
+      return;
+    }
+    if (!_webSocketConnected && timeDiff < const Duration(seconds: 50)) {
+      BnLog.trace(
+          text:
+              '${timeDiff.inSeconds}s not online < 50 sec. : $lastRealtimedataUpdate',
+          methodName: 'refresh',
+          className: toString());
+      _realtimeUpdate = _realtimeUpdate?.copyWith(
+          rpcException: WampException('Not online more than 50 s.'));
+      notifyListeners();
+    } else if (!_webSocketConnected) {
+      BnLog.trace(
+          text:
+              '${timeDiff.inSeconds}s not online noTrackingRealtimedataRefresh: $lastRealtimedataUpdate',
+          methodName: 'noTrackingRealtimedataRefresh',
+          className: toString());
+      return;
+    }
+
+    var update = await RealtimeUpdate.realtimeDataUpdate();
+    if (update.rpcException != null) {
+      _maxFails--;
+      if (_maxFails == 0) {
+        //trigger only once a time
+        BnLog.warning(
+            text: 'RealtimeData update exceed maximum blocking 10 seconds');
+        _realtimeUpdate = null;
+        notifyListeners();
+        await Future.delayed(const Duration(seconds: 10));
+        _maxFails = 3;
+      }
+      if (_maxFails <= 0) {
+        return;
+      }
+    }
+    _maxFails = 3;
+    _setRealtimeUpdate(update, notify: true);
+
+    BnLog.trace(
+        text: 'noTrackingRealtimedataRefresh success: $lastRealtimedataUpdate',
+        methodName: 'noTrackingRealtimedataRefresh',
+        className: toString());
+
+    _subscribeIfNeeded(_trackingType);
+  }
+
+  void _unsubscribe() async {
+    for (var subscriptionId in WampV2.instance.subscriptions) {
+      await unSubscribeMessage(subscriptionId);
+    }
+    _realTimeDataSubscriptionId = 0;
+  }
+
+  Future<bool> _subscribe() async {
+    for (var subscriptionId in WampV2.instance.subscriptions) {
+      if (subscriptionId == realtimeSubscriptionId) return true;
+    }
+    _realTimeDataSubscriptionId = await subscribeMessage('RealtimeData');
+    //3589978069
+    if (_realTimeDataSubscriptionId == 0) {
+      return false;
+      //workaround if subscription fails
+      //LocationProvider.instance.refresh();
+    }
+    return true;
+  }
 }
 
 //Providers
@@ -1619,7 +1792,11 @@ final locationProvider =
     ChangeNotifierProvider((ref) => LocationProvider.instance);
 
 final locationLastUpdateProvider = Provider((ref) {
-  return ref.watch(locationProvider.select((l) => l.lastUpdate));
+  return ref.watch(locationProvider.select((l) => l.lastRealtimedataUpdate));
+});
+
+final realtimeDataProvider = Provider((ref) {
+  return ref.watch(locationProvider.select((l) => l.realtimeUpdate));
 });
 
 ///true when moving
@@ -1658,12 +1835,11 @@ final isUserParticipatingProvider = Provider((ref) {
 
 ///Watch active [Event]
 final isActiveEventProvider = Provider((ref) {
-  return ref.watch(
-      realtimeDataProvider.select((l) => l == null ? false : l.eventIsActive));
+  return ref.watch(locationProvider.select((l) => l.eventIsActive));
 });
 
 final bgNetworkConnectedProvider = Provider((ref) {
-  return ref.watch(locationProvider.select((nw) => nw.networkConnected));
+  return ref.watch(locationProvider.select((nw) => nw.webSocketConnected));
 });
 
 final locationUpdateProvider = StreamProvider<LatLng?>((ref) {

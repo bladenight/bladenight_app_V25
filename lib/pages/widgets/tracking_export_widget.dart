@@ -68,9 +68,22 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                             : const Icon(Icons.map_rounded),
                         onPressed: () async {
                           if (exportTrackingInProgress) return;
-                          var tp = LocationStore.getUserTrackPointsListByDate(
-                              DateFormatter.fromString(dateString));
+                          setState(() {
+                            exportTrackingInProgress = true;
+                          });
+                          var tp = await Future.microtask(() =>
+                              LocationStore.getUserTrackPointsListByDate(
+                                  DateFormatter.fromString(dateString)));
+                          if (!context.mounted) {
+                            setState(() {
+                              exportTrackingInProgress = false;
+                            });
+                            return;
+                          }
                           UserTrackDialog.show(context, tp, dateString);
+                          setState(() {
+                            exportTrackingInProgress = false;
+                          });
                         }),
                   ]),
             ),

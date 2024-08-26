@@ -86,12 +86,14 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   void resumeUpdates({bool force = false}) async {
     if (force || _firstRefresh) {
-      ref.read(locationProvider).refreshLocationData(forceUpdate: force);
+      LocationProvider.instance.refreshLocationData(forceUpdate: force);
       _firstRefresh = false;
     }
+    LocationProvider.instance.startRealtimeUpdateSubscriptionIfNotTracking();
   }
 
   void pauseUpdates() async {
+    LocationProvider.instance.stopRealtimedataSubscription;
     BnLog.trace(
         className: toString(),
         methodName: 'pauseUpdates',

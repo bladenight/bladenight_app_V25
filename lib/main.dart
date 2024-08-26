@@ -81,7 +81,6 @@ void main() async {
       await Hive.openBox(hiveBoxSettingDbName);
       await Hive.openBox(hiveBoxLocationDbName);
       await Hive.openBox(hiveBoxServerConfigDBName);
-      HiveSettingsDB.setServerPassword(null);
       Globals.logToCrashlytics = HiveSettingsDB.chrashlyticsEnabled;
       await DeviceId.initAppId();
       await initLogger();

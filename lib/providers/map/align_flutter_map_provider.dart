@@ -6,9 +6,8 @@ import '../../models/follow_location_state.dart';
 
 part 'align_flutter_map_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class AlignFlutterMap extends _$AlignFlutterMap {
-
   @override
   AlignFlutterMapState build() {
     //this makes provider global
@@ -19,21 +18,21 @@ class AlignFlutterMap extends _$AlignFlutterMap {
   }
 
   AlignFlutterMapState setNext() {
-    switch (state ) {
+    switch (state) {
       case AlignFlutterMapState.alignNever:
-        state  = AlignFlutterMapState.alignPositionOnUpdateOnly;
+        state = AlignFlutterMapState.alignPositionOnUpdateOnly;
         break;
-        case AlignFlutterMapState.alignPositionOnUpdateOnly:
-        state  = AlignFlutterMapState.alignDirectionAndPositionOnUpdate;
+      case AlignFlutterMapState.alignPositionOnUpdateOnly:
+        state = AlignFlutterMapState.alignDirectionAndPositionOnUpdate;
         break;
       case AlignFlutterMapState.alignDirectionOnUpdateOnly:
-        state  = AlignFlutterMapState.alignDirectionAndPositionOnUpdate;
+        state = AlignFlutterMapState.alignDirectionAndPositionOnUpdate;
         break;
       case AlignFlutterMapState.alignDirectionAndPositionOnUpdate:
-        state  = AlignFlutterMapState.alignNever;
+        state = AlignFlutterMapState.alignNever;
         break;
       default:
-        state  = AlignFlutterMapState.alignNever;
+        state = AlignFlutterMapState.alignNever;
         break;
     }
     MapSettings.setAlignFlutterMap(state);

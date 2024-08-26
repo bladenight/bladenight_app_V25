@@ -47,6 +47,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Future<AppExitResponse> didRequestAppExit() async {
     print('App exit requested');
     BnLog.info(text: 'App exit requested');
+    BnLog.flush();
     return AppExitResponse.cancel;
   }
 

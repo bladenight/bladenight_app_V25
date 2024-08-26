@@ -17,7 +17,6 @@ import '../../../providers/active_event_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
-import '../../../providers/realtime_data_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 import '../../../providers/settings/me_color_provider.dart';
 import 'map_event_informations.dart';

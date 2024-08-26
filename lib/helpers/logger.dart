@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:logger/logger.dart';
 
 import '../generated/l10n.dart';
@@ -18,7 +18,7 @@ class BnLog {
   static Logger _logger = Logger();
   static bool _isInitialized = false;
   static final List<LogOutput> _logOutputs = [];
-  static late LazyBox<String> _logBox;
+  static late Box<String> _logBox;
   static final DateTime _startTime = DateTime.now();
 
   BnLog._() {
@@ -27,14 +27,20 @@ class BnLog {
     }
   }
 
+  static flush() {
+    _logBox.flush();
+    _logBox.close();
+  }
+
   static init({Level? logLevel, LogFilter? filter}) async {
-    _logBox = await Hive.openLazyBox('logBox');
+    await Hive.initFlutter();
+    _logBox = await Hive.openBox('logBox');
     _logBox.put(DateTime.now().millisecondsSinceEpoch.toString(),
-        '${DateTime.now().toIso8601String()} start logging ${logLevel ?? HiveSettingsDB.flogLogLevel}');
+        '${DateTime.now().toIso8601String()} Started logging ${logLevel ?? HiveSettingsDB.flogLogLevel}');
     //add logger
     _logOutputs.clear();
     _logOutputs.add(BnLogOutput(_logBox, _startTime));
-    if (kDebugMode) {
+    if (kDebugMode || kProfileMode) {
       _logOutputs.add(ConsoleLogOutput());
     }
 
@@ -181,10 +187,12 @@ class BnLog {
   }
 
   static Future<String> collectLogs() async {
+    //_logBox = Hive.box('logBox');
+    _logBox = await Hive.openBox('logBox');
     await _logBox.flush();
     List<String> valList = [];
     for (var val in _logBox.keys) {
-      var str = await _logBox.get(val as String);
+      var str = _logBox.get(val as String);
       if (str != null) {
         valList.add(str);
       }
@@ -200,13 +208,15 @@ class BnLog {
   ///Clean up log file and delete data's older than a week
   void cleanupLog() async {
     try {
-      await BnLog.cleanUpLogsByFilter(const Duration(minutes: 8));
+      await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
     } catch (e) {
       BnLog.warning(text: 'Error clearing logs');
     }
   }
 
   static Future<bool> clearLogs() async {
+    await Hive.initFlutter();
+    _logBox = await Hive.openBox('logBox');
     for (var key in _logBox.keys) {
       await _logBox.delete(key);
     }
@@ -217,6 +227,8 @@ class BnLog {
   ///
   /// endTimeInMillis
   static Future<bool> cleanUpLogsByFilter(Duration deleteOlderThan) async {
+    await Hive.initFlutter();
+    _logBox = await Hive.openBox('logBox');
     int counter = 0;
     var leftDate =
         DateTime.now().subtract(deleteOlderThan).millisecondsSinceEpoch;
@@ -241,6 +253,8 @@ class BnLog {
     //_logger.close();
     HiveSettingsDB.setFlogLevel(logLevel);
     BnLog.info(text: 'Loglevel changed to ${logLevel.name}');
+    await Hive.initFlutter();
+    _logBox = await Hive.openBox('logBox');
     await _logBox.flush();
     await _logBox.close();
     init();

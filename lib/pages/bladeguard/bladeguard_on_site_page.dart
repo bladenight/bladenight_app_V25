@@ -9,8 +9,8 @@ import '../../app_settings/app_constants.dart';
 import '../../generated/l10n.dart';
 import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';
+import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
-import '../../providers/realtime_data_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
 
@@ -31,9 +31,7 @@ class BladeGuardOnsite extends ConsumerWidget {
         .inMinutes;
     var canRegisterOnSite = false;
 
-    var eventActive =
-        ref.watch(realtimeDataProvider.select((rt) => rt?.eventIsActive)) ??
-            false;
+    var eventActive = ref.watch(isActiveEventProvider);
 
     var minPreTime = defaultMinPreOnsiteLogin;
     if (diff < minPreTime && diff > 0 && !eventActive) {

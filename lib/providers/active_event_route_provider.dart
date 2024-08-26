@@ -8,11 +8,11 @@ import '../models/route.dart';
 import '../models/special_point.dart';
 import 'active_event_provider.dart';
 import 'images_and_links/special_points_image_and_link_provider.dart';
-import 'realtime_data_provider.dart';
+import 'location_provider.dart';
 
 part 'active_event_route_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 class ActiveEventRoute extends _$ActiveEventRoute {
   RoutePoints rp = RoutePoints('', <LatLng>[]);
 
@@ -131,8 +131,7 @@ class ProcessionRoutePoints extends _$ProcessionRoutePoints {
               relativePositionOnSegment * (b.longitude - a.longitude);
           var endLatLong = LatLng(lat, lon);
           running.add(endLatLong);
-        }
-        else{
+        } else {
           running.add(a);
         }
         length += segmentLength;
