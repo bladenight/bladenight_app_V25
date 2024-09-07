@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
@@ -196,7 +197,7 @@ class BnLogPrinter extends LogPrinter {
     required this.logBox,
     required this.startTime,
     this.stackTraceBeginIndex = 0,
-    this.methodCount = 2,
+    this.methodCount = kDebugMode ? 5 : 2,
     this.errorMethodCount = 8,
     this.lineLength = 120,
     this.colors = true,

@@ -99,7 +99,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                     setState(() {
                       exportTrackingInProgress = true;
                     });
-                    await LocationProvider.instance.saveLocationToDB();
+                    await LocationProvider().saveLocationToDB();
                     await compute(
                             exportUserTrackingToXml,
                             LocationStore.getUserGpxPointsListByDate(
@@ -121,8 +121,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                         color: CupertinoTheme.of(context).primaryColor,
                         child: Text(Localize.of(context).resetOdoMeterTitle),
                         onPressed: () async {
-                          await LocationProvider.instance
-                              .resetOdoMeter(context);
+                          await LocationProvider().resetOdoMeter(context);
                           setState(() {});
                         },
                       ),

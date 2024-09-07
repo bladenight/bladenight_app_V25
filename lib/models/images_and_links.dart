@@ -32,14 +32,14 @@ class ImageAndLinkList with ImageAndLinkListMappable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getImagesAndLinks);
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp<ImageAndLinkList>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) =>
-            ImageAndLinkList.rpcError(WampException(error.toString())));
+        ImageAndLinkList.rpcError(WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
       var ialList =
-          MapperContainer.globals.fromMap<ImageAndLinkList>(wampResult);
+      MapperContainer.globals.fromMap<ImageAndLinkList>(wampResult);
       HiveSettingsDB.setImagesAndLinksJson(ialList.toJson());
       return ialList;
     }

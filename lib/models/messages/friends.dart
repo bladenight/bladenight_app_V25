@@ -25,7 +25,7 @@ class FriendsMessage with FriendsMessageMappable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getfriends, deviceId);
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp<FriendsMessage>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => FriendsMessage(

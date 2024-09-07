@@ -15,7 +15,6 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_io/io.dart';
 
@@ -41,6 +40,8 @@ import 'pages/home_screen.dart';
 import 'pages/widgets/intro_slider.dart';
 import 'pages/widgets/route_name_dialog.dart';
 import 'package:background_fetch/background_fetch.dart';
+
+import 'providers/riverpod_observer/logging_observer.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 const String openRouteMapRoute = '/eventRoute';
@@ -88,8 +89,14 @@ void main() async {
         await initNotifications();
       }
       initSettings();
-      runApp(const ProviderScope(
-          child: InheritedConsumer(child: BladeNightApp())));
+      runApp(
+        const ProviderScope(
+          observers: [
+            //if (kDebugMode) LoggingObserver(),
+          ],
+          child: BladeNightApp(),
+        ),
+      );
 
       if (Platform.isAndroid) {
         /// Register BackgroundGeolocation headless-task
@@ -101,7 +108,7 @@ void main() async {
       }
     },
     (dynamic error, StackTrace stackTrace) {
-      print('Application error 102: $error\n$stackTrace');
+      print('Application error 111: $error\n$stackTrace');
       if (!kDebugMode && !kIsWeb) {
         //FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }
@@ -119,7 +126,7 @@ Future<bool> initLogger() async {
     await BnLog.init();
     BnLog.info(text: 'logger initialized');
   } catch (e) {
-    print(e);
+    print('Logger init failed --> $e');
     return false;
   }
   return true;
@@ -129,7 +136,7 @@ Future<bool> initNotifications() async {
   try {
     await NotificationHelper().initialiseNotifications();
   } catch (e) {
-    print(e);
+    print('initNotifications failed + $e');
     return false;
   }
   return true;

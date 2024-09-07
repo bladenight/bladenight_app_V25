@@ -14,7 +14,7 @@ class AdminCalls {
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.setactivestatus, message);
 
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampException(error.toString()));
@@ -29,7 +29,7 @@ class AdminCalls {
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.setactiveroute, message);
 
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampException(error.toString()));
@@ -44,7 +44,7 @@ class AdminCalls {
     BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
         WampEndpoint.setProcessionMode, message);
 
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampException(error.toString()));
@@ -59,7 +59,7 @@ class AdminCalls {
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.killserver, message);
 
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampException(error.toString()));
@@ -74,7 +74,7 @@ class AdminCalls {
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.editEvent, message);
 
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampException(error.toString()));
@@ -94,7 +94,7 @@ class AdminCalls {
       message,
     );
 
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampException(error.toString()));

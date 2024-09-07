@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
@@ -7,12 +8,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/logger.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
@@ -40,12 +39,11 @@ class MapPage extends ConsumerStatefulWidget {
 class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   late MapController _mapController;
   late CameraFollow followLocationState = CameraFollow.followOff;
-  bool _firstRefresh = true;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
   final PopupController _popupController = PopupController();
 
-  ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
+  StreamSubscription<LatLng>? locationSubscription;
 
   bool _hasGesture = false;
 
@@ -59,61 +57,24 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    pauseUpdates();
     WidgetsBinding.instance.removeObserver(this);
     _popupController.dispose();
     _mapController.dispose();
-    locationSubscription?.close();
+    locationSubscription?.cancel();
     locationSubscription = null;
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    BnLog.debug(text: 'map_page - didChangeAppLifecycleState $state');
-    if (state == AppLifecycleState.resumed) {
-      resumeUpdates(force: true);
-      LocationProvider.instance.setToBackground(false);
-    } else if (state == AppLifecycleState.paused) {
-      BnLog.trace(
-          className: 'resumeUpdates',
-          methodName: 'timer',
-          text: 'LocProvider instance pause updates calling');
-      LocationProvider.instance.setToBackground(true);
-      pauseUpdates();
-    }
-  }
-
-  void resumeUpdates({bool force = false}) async {
-    if (force || _firstRefresh) {
-      LocationProvider.instance.refreshLocationData(forceUpdate: force);
-      _firstRefresh = false;
-    }
-    LocationProvider.instance.startRealtimeUpdateSubscriptionIfNotTracking();
-  }
-
-  void pauseUpdates() async {
-    LocationProvider.instance.stopRealtimedataSubscription;
-    BnLog.trace(
-        className: toString(),
-        methodName: 'pauseUpdates',
-        text: 'update paused');
-  }
-
   void startFollowingTrainHead() {
-    locationSubscription?.close();
+    locationSubscription?.cancel();
     locationSubscription = null;
     _mapController.move(defaultLatLng, _mapController.camera.zoom);
-    locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
-      locationTrainHeadUpdateProvider,
-      (_, value) {
-        if (value.value != null) {
-          _mapController.move(value.value!, _mapController.camera.zoom);
-        }
+    locationSubscription = LocationProvider().trainHeadUpdateStream.listen(
+      (value) {
+        _mapController.move(value, _mapController.camera.zoom);
       },
-      fireImmediately: true,
     );
-    ref.read(locationProvider).refreshLocationData(forceUpdate: true);
+    ref.read(locationProvider).refreshRealtimeData(forceUpdate: true);
   }
 
   @override
@@ -130,6 +91,9 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
             options: MapOptions(
               keepAlive: true,
               initialZoom: 13.0,
+              onMapEvent: (event) {
+                //print('${DateTime.now().toIso8601String()} mapevent $event ');
+              },
               minZoom:
                   osmEnabled ? MapSettings.minZoom : MapSettings.minZoomDefault,
               maxZoom:
@@ -165,9 +129,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                           if (hitResult == null) return;
                           // If running frequently (such as on a hover handler), and heavy work or state changes are performed here, store each result so it can be compared to the newest result, then avoid work if they are equal
                           for (final hitValue in hitResult.hitValues) {
-                            if (kDebugMode) {
-                              print(hitValue);
-                            }
                             showToast(
                                 message:
                                     '${Localize.current.speed} $hitValue km/h');

@@ -38,4 +38,10 @@ class AlignFlutterMap extends _$AlignFlutterMap {
     MapSettings.setAlignFlutterMap(state);
     return state;
   }
+
+  AlignFlutterMapState setState(AlignFlutterMapState newState) {
+    state = newState;
+    MapSettings.setAlignFlutterMap(state);
+    return state;
+  }
 }

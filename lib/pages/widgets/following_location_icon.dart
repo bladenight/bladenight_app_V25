@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_context/riverpod_context.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/follow_location_state.dart';
 import '../../providers/location_provider.dart';
 
-class FollowingLocationIcon extends StatelessWidget {
+class FollowingLocationIcon extends ConsumerWidget {
   const FollowingLocationIcon({required this.followLocationStatus, super.key});
+
   final CameraFollow followLocationStatus;
+
   @override
-  Widget build(BuildContext context) {
-    var userIsParticipating = context.watch(isUserParticipatingProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    var userIsParticipating = ref.watch(isUserParticipatingProvider);
     switch (followLocationStatus) {
       case CameraFollow.followOff:
         return const Icon(CupertinoIcons.location_circle);

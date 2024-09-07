@@ -3,25 +3,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
-import '../generated/l10n.dart';
-import '../helpers/deviceid_helper.dart';
-import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/logger.dart';
-import '../models/event.dart';
-import '../models/messages/edit_event_on_server.dart';
-import '../pages/widgets/data_loading_indicator.dart';
-import '../pages/widgets/no_data_warning.dart';
-import '../pages/widgets/route_dialog.dart';
-import '../providers/event_providers.dart';
-import '../providers/network_connection_provider.dart';
-import '../providers/settings/server_pwd_provider.dart';
-import '../wamp/admin_calls.dart';
-import 'events/event_editor.dart';
-import 'widgets/no_connection_warning.dart';
+import '../../generated/l10n.dart';
+import '../../helpers/deviceid_helper.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
+import '../../helpers/logger.dart';
+import '../../models/event.dart';
+import '../../models/messages/edit_event_on_server.dart';
+import '../widgets/data_loading_indicator.dart';
+import '../widgets/no_data_warning.dart';
+import '../widgets/route_dialog.dart';
+import '../../providers/event_providers.dart';
+import '../../providers/network_connection_provider.dart';
+import '../../providers/settings/server_pwd_provider.dart';
+import '../../wamp/admin_calls.dart';
+import 'widgets/event_editor.dart';
+import '../widgets/no_connection_warning.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
   const EventsPage({super.key});
@@ -131,7 +130,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
                       onPressed: () async {
                         ref.invalidate(allEventsProvider);
                       },
-                      child: const Icon(CupertinoIcons.refresh),
+                      child: const Icon(Icons.update),
                     ),
                     const SizedBox(
                       width: 10,
@@ -154,7 +153,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
         ),
       ],
       body: Builder(builder: (context) {
-        var asyncEvents = context.watch(allEventsProvider);
+        var asyncEvents = ref.watch(allEventsProvider);
         return asyncEvents.maybeWhen(
             skipLoadingOnRefresh: false,
             skipLoadingOnReload: false,
@@ -162,7 +161,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
               if (events.rpcException != null) {
                 _noActualEventFound = false;
                 return NoDataWarning(onReload: () {
-                  context.refresh(allEventsProvider);
+                  ref.invalidate(allEventsProvider);
                 });
               }
               var pages = _buildPages(context, events);
@@ -213,7 +212,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
             },
             orElse: () {
               return NoDataWarning(
-                onReload: () => context.refresh(allEventsProvider),
+                onReload: () => ref.refresh(allEventsProvider),
               );
             });
       }),
@@ -275,7 +274,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
           margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
           child: RefreshIndicator(
             onRefresh: () async {
-              return context.refresh(allEventsProvider);
+              return ref.refresh(allEventsProvider);
             },
             child: MediaQuery.removePadding(
               context: context,
@@ -468,7 +467,7 @@ Widget _editEventWidget(BuildContext context, WidgetRef ref, Event event,
       key: ObjectKey(event.hashCode),
       confirmDismiss: (DismissDirection direction) async {
         if (direction == DismissDirection.endToStart) {
-          //RouteDialog.show(context, event);
+          RouteDialog.show(context, event);
           return false;
         } else {
           var res = await EventEditor.show(context, event);
@@ -482,9 +481,22 @@ Widget _editEventWidget(BuildContext context, WidgetRef ref, Event event,
       background: Container(
           color: Colors.yellow,
           child: CupertinoListTile(
-              title: Text(Localize.of(context).editEvent),
+              title: Text(
+                Localize.of(context).editEvent,
+                style: const TextStyle(color: Colors.black),
+              ),
               leading:
                   const Icon(Icons.edit, color: Colors.black, size: 36.0))),
+      secondaryBackground: Container(
+        color: Colors.greenAccent,
+        child: CupertinoListTile(
+          title: Text(
+            Localize.of(context).route,
+            style: const TextStyle(color: Colors.black),
+          ),
+          trailing: const Icon(Icons.map, color: Colors.white, size: 36.0),
+        ),
+      ),
       child: _listTile(context, event, startState),
     );
   } else {

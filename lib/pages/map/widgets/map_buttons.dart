@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
@@ -11,7 +12,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
@@ -45,7 +45,7 @@ class MapButtonsLayer extends ConsumerStatefulWidget {
 
 class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
+  StreamSubscription<LatLng?>? locationSubscription;
   AnimationController? animationController;
   Animation<double>? animation;
   Orientation? _currentOrientation;
@@ -91,7 +91,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             //for future implementations - if (isActive == EventStatus.confirmed) {
             return GestureDetector(
               onLongPress: () async {
-                LocationProvider.instance.toggleAutoStop();
+                LocationProvider().toggleAutoStop();
                 await QuickAlert.show(
                   context: context,
                   type: QuickAlertType.warning,
@@ -224,17 +224,11 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                         message: Localize.of(context).mapToStartNoFollowing);
                     break;
                   case CameraFollow.followMe:
-                    if (ref.read(alignFlutterMapProvider) ==
-                        AlignFlutterMapState.alignNever) {
-                      showToast(
-                          message:
-                              '${Localize.of(context).mapFollowLocation} \n'
-                              '${Localize.of(context).alignNever}');
-                    } else {
-                      showToast(
-                          message: Localize.of(context).mapFollowLocation);
-                    }
-                    startFollowingMeLocation();
+                    ref.read(alignFlutterMapProvider.notifier).setState(
+                        AlignFlutterMapState.alignDirectionAndPositionOnUpdate);
+                    showToast(
+                        message: '${Localize.of(context).mapFollowLocation} \n'
+                            '${Localize.of(context).alignDirectionAndPositionOnUpdate}');
                     break;
                   case CameraFollow.followMeStopped:
                     stopFollowingLocation();
@@ -428,7 +422,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               left: kIsWeb ? 10 : 10,
               height: 30,
               child: Builder(builder: (context) {
-                var messageProvider = context.watch(messagesLogicProvider);
+                var messageProvider = ref.watch(messagesLogicProvider);
                 return FloatingActionButton(
                     heroTag: 'messageBtnTag',
                     onPressed: () async {
@@ -458,8 +452,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               heroTag: 'resetBtnTag',
               //backgroundColor: Colors.blue,
               onPressed: () async {
-                await LocationProvider.instance
-                    .resetOdoMeterAndRoutePoints(context);
+                await LocationProvider().resetOdoMeterAndRoutePoints(context);
                 setState(() {});
               },
               visibility: ref.watch(mapMenuVisibleProvider),
@@ -898,48 +891,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
     return ref.read(isTrackingProvider.notifier).stopTracking();
   }
 
-  ///Toggles between user position and view with user pos
-  void _toggleViewerLocationService() async {
-    await QuickAlert.show(
-        context: context,
-        showCancelBtn: true,
-        type: QuickAlertType.warning,
-        title: Localize.of(context).startLocationWithoutParticipating,
-        text: Localize.of(context).startLocationWithoutParticipatingInfo,
-        confirmBtnText: Localize.of(context).yes,
-        cancelBtnText: Localize.of(context).no,
-        onConfirmBtnTap: () {
-          ref
-              .read(isTrackingProvider.notifier)
-              .toggleTracking(TrackingType.userNotParticipating);
-          if (!mounted) return;
-          Navigator.of(context).pop();
-        });
-  }
-
-  void _toggleTrackOnlyLocationService() async {
-    await QuickAlert.show(
-        context: context,
-        showCancelBtn: true,
-        type: QuickAlertType.warning,
-        title: Localize.of(context).startTrackingOnlyTitle,
-        text: Localize.of(context).startTrackingOnly,
-        confirmBtnText: Localize.of(context).yes,
-        cancelBtnText: Localize.of(context).no,
-        onConfirmBtnTap: () async {
-          MapSettings.setShowOwnTrack(true);
-          MapSettings.setWasOpenStreetMapEnabledFlag(
-              MapSettings.openStreetMapEnabled);
-          MapSettings.setOpenStreetMapEnabled(true);
-          ref
-              .read(isTrackingProvider.notifier)
-              .toggleTracking(TrackingType.onlyTracking);
-
-          if (!mounted) return;
-          Navigator.of(context).pop();
-        });
-  }
-
   void _showLiveMapLink(String? link) {
     showCupertinoModalBottomSheet(
         backgroundColor: CupertinoDynamicColor.resolve(
@@ -961,19 +912,15 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   }
 
   void startFollowingTrainHead(MapController controller) {
-    locationSubscription?.close();
+    locationSubscription?.cancel();
     locationSubscription = null;
     controller.move(defaultLatLng, controller.camera.zoom);
-    locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
-      locationTrainHeadUpdateProvider,
-      (_, value) {
-        if (value.value != null) {
-          controller.move(value.value!, controller.camera.zoom);
-        }
+    locationSubscription = LocationProvider().trainHeadUpdateStream.listen(
+      (value) {
+        controller.move(value, controller.camera.zoom);
       },
-      fireImmediately: true,
     );
-    ref.read(locationProvider).refreshLocationData(forceUpdate: true);
+    ref.read(locationProvider).refreshRealtimeData(forceUpdate: true);
   }
 
   void startFollowingMeLocation() {
@@ -982,25 +929,20 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
     if (controller == null || camera == null) {
       return;
     }
-    locationSubscription?.close();
+    locationSubscription?.cancel();
     locationSubscription = null;
-
-    controller.move(LocationProvider.instance.userLatLng ?? defaultLatLng,
-        controller.camera.zoom);
-    locationSubscription = context.subscribe<AsyncValue<LatLng?>>(
-      locationUpdateProvider,
-      (_, value) {
-        if (value.value != null) {
-          controller.move(value.value!, controller.camera.zoom);
-        }
+    controller.move(
+        LocationProvider().userLatLng ?? defaultLatLng, controller.camera.zoom);
+    locationSubscription = LocationProvider().userLatLngStream.listen(
+      (value) {
+        controller.move(value, controller.camera.zoom);
       },
-      fireImmediately: true,
     );
-    ref.read(locationProvider).refreshLocationData(forceUpdate: true);
+    ref.read(locationProvider).refreshRealtimeData(forceUpdate: true);
   }
 
   void stopFollowingLocation() async {
-    locationSubscription?.close();
+    locationSubscription?.cancel();
     locationSubscription = null;
     setState(() {});
   }

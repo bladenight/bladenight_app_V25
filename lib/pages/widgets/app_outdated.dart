@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,7 +13,7 @@ class AppOutdatedWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var pr = context.watch(appOutdatedProvider);
+    var pr = ref.watch(appOutdatedProvider);
     if (!pr) {
       return Container();
     } else {

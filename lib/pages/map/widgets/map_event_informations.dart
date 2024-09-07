@@ -209,7 +209,7 @@ class MapEventInformation extends ConsumerWidget {
                             rightWidget: GestureDetector(
                               onTap: () {
                                 /* mapController.move(
-                                        LatLng(context.watch(userLatLongProvider).
+                                        LatLng(ref.watch(userLatLongProvider).
                                             location.userLatLng?.latitude ??
                                                 defaultLatitude,
                                             location.userLatLng?.longitude ??
@@ -450,20 +450,6 @@ class MapEventInformation extends ConsumerWidget {
                             rightWidget: Icon(Icons.gps_fixed_sharp,
                                 color: CupertinoTheme.of(context).primaryColor),
                           ),
-                          /* DataLeftRightContent(
-                        descriptionLeft: Localize.of(context)
-                            .startLocationWithoutParticipating,
-                        descriptionRight: '',
-                        rightWidget: ImageIcon(
-                            const AssetImage('assets/images/eyeplay.png'),
-                            color: CupertinoTheme.of(context).primaryColor)),
-                    DataLeftRightContent(
-                        descriptionLeft: Localize.of(context)
-                            .stopLocationWithoutParticipating,
-                        descriptionRight: '',
-                        rightWidget: ImageIcon(
-                            const AssetImage('assets/images/eyestop.png'),
-                            color: CupertinoTheme.of(context).primaryColor))*/
                         ],
                       ),
                     ),

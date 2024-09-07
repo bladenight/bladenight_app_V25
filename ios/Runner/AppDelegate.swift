@@ -189,7 +189,7 @@ import WatchConnectivity
                     }
                     
                     let watchData: [String: Any] = ["method": method, "data": data]
-                    print("flutterToWatch reachable: \(watchSession.isReachable) \(data)")
+                    //print("flutterToWatch reachable: \(watchSession.isReachable) \(data)")
                     if (watchSession.isReachable){
                         
                         // Pass the receiving message to Apple Watch

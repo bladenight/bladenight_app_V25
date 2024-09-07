@@ -4,10 +4,10 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 import 'package:universal_io/io.dart';
 import '../../../app_settings/server_connections.dart';
 import '../../../generated/l10n.dart';
@@ -31,7 +31,7 @@ const String messageKey = 'value';
 const String senderDeviceIdKey = 'senderDeviceId';
 const String deviceIdKey = 'deviceId';
 
-class LinkFriendDevicePage extends StatefulWidget {
+class LinkFriendDevicePage extends ConsumerStatefulWidget {
   const LinkFriendDevicePage({
     super.key,
     required this.deviceType,
@@ -42,10 +42,11 @@ class LinkFriendDevicePage extends StatefulWidget {
   final FriendsAction friendsAction;
 
   @override
-  State<LinkFriendDevicePage> createState() => _LinkFriendDevicePageState();
+  ConsumerState<LinkFriendDevicePage> createState() =>
+      _LinkFriendDevicePageState();
 }
 
-class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
+class _LinkFriendDevicePageState extends ConsumerState<LinkFriendDevicePage> {
   final scrollController = ScrollController();
 
   late String deviceName = UUID.createUuid();
@@ -67,7 +68,7 @@ class _LinkFriendDevicePageState extends State<LinkFriendDevicePage> {
           dt,
         );
         if (!mounted) return;
-        var friend = await context.read(friendsLogicProvider).addNewFriend(
+        var friend = await ref.read(friendsLogicProvider).addNewFriend(
             '${Localize.of(context).friend} ${Localize.of(context).from} $dateString',
             getRandomColor());
         if (friend == null) {

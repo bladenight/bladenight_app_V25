@@ -528,10 +528,14 @@
   "startTrackingOnlyTitle": "Starte die Routenaufzeichnung ohne die Standortdaten an den Server zu übermitteln.",
   "startTrackingOnly": "Starte Routenaufzeichnung",
   "onlyTracking": "Nur Routenaufzeichnung aktiv",
-  "addFriendWithCodeHeader": "Erzeuge eine Code um eine Freundverknüpfung herzustellen",
-  "addNewFriendHeader": "Wenn dein Freund einen Code erzeugt hat, kannst du dich mit Ihm koppeln.",
+  "addFriendWithCodeHeader": "Erzeuge eine Code um eine Freund:in-Verknüpfung herzustellen",
+  "addNewFriendHeader": "Wenn dein(e) Freund:in einen Code erzeugt hat, kannst du dich mit ihm/ihr koppeln.",
   "startParticipationHeader": "Du fährst heute bei der Bladenight mit und möchtest die Darstellung des Zuges unterstützen und deinen Standort mit Freunden teilen. Standortfreigabe starten?",
   "startParticipationShort": "Teilnahme starten",
   "selectTrackingType": "Trackingtypauswahl",
-  "registeredAs": "Angemeldet als:"
+  "registeredAs": "Angemeldet als:",
+  "editFriendHeader": "Ändere von {name} den Namen und Farbe",
+  "deleteFriendHeader": "Lösche die Verknüpfung mit {name}. Keine Wiederherstllung möglich.",
+  "refresh": "Aktualisieren",
+  "refreshHeader": "Daten aktualisieren"
 }

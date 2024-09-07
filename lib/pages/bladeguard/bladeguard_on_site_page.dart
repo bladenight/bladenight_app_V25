@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_constants.dart';
 import '../../generated/l10n.dart';
@@ -25,7 +24,7 @@ class BladeGuardOnsite extends ConsumerWidget {
       return Container();
     }
 
-    var nextEventProvider = context.watch(activeEventProvider);
+    var nextEventProvider = ref.watch(activeEventProvider);
     var diff = nextEventProvider.startDateUtc
         .difference(DateTime.now().toUtc())
         .inMinutes;
@@ -38,7 +37,7 @@ class BladeGuardOnsite extends ConsumerWidget {
       canRegisterOnSite = true;
     }
     final isOnSiteAsync = ref.watch(bgIsOnSiteProvider);
-    var networkConnected = context.watch(
+    var networkConnected = ref.watch(
         networkAwareProvider.select((value) => value.connectivityStatus));
     return isOnSiteAsync.when(error: (e, st) {
       return Column(mainAxisSize: MainAxisSize.max, children: [

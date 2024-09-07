@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../generated/l10n.dart';
 import '../pages/widgets/event_info.dart';
@@ -13,7 +12,7 @@ import '../providers/rest_api/onsite_state_provider.dart';
 import '../providers/route_providers.dart';
 import 'about_page.dart';
 import 'messages/messages_page.dart';
-import 'settings_page.dart';
+import 'settings/settings_page.dart';
 import 'widgets/event_info_web.dart';
 import 'widgets/intro_slider.dart';
 
@@ -54,7 +53,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    var messageProvider = context.watch(messagesLogicProvider);
+    var messageProvider = ref.watch(messagesLogicProvider);
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, dynamic result) {
@@ -152,7 +151,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 ref
                     .read(activeEventProvider.notifier)
                     .refresh(forceUpdate: true);
-                var __ = ref.refresh(bgIsOnSiteProvider);
+                ref.invalidate(bgIsOnSiteProvider);
               },
             ),
             const SliverFillRemaining(

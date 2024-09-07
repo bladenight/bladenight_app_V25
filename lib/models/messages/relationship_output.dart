@@ -34,7 +34,7 @@ class RelationshipOutputMessage with RelationshipOutputMessageMappable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
         WampEndpoint.createrelationship, inputMessage.toMap());
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp<RelationshipOutputMessage>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => RelationshipOutputMessage.rpcError(
@@ -59,7 +59,7 @@ class RelationshipOutputMessage with RelationshipOutputMessageMappable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
         WampEndpoint.createrelationship, inputMessage.toMap());
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp<RelationshipOutputMessage>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => RelationshipOutputMessage.rpcError(

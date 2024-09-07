@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
@@ -223,9 +224,13 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                 friend: friend,
                 point: LatLng(friend.latitude ?? defaultLatitude,
                     friend.longitude ?? defaultLongitude),
-                width: friend.specialValue >= 98 ? sizeValue - 10 : sizeValue,
+                width: friend.specialValue >= 98 || friend.specialValue == 4
+                    ? sizeValue - 6
+                    : sizeValue,
                 // cursorSize
-                height: friend.specialValue >= 98 ? sizeValue - 10 : sizeValue,
+                height: friend.specialValue >= 98 || friend.specialValue == 4
+                    ? sizeValue - 6
+                    : sizeValue,
                 // cursorSize
                 child: Builder(
                   builder: (context) {
@@ -239,7 +244,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                             shape: BoxShape.circle),
                         child: CircleAvatar(
                           radius: sizeValue - 6,
-                          backgroundImage: const AssetImage(
+                          child: Image.asset(
                               'assets/images/skatechildmunichgreen.png'),
                         ),
                       );
@@ -254,7 +259,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                             shape: BoxShape.circle),
                         child: CircleAvatar(
                           radius: sizeValue - 6,
-                          backgroundImage: const AssetImage(
+                          child: Image.asset(
                               'assets/images/skatechildmunichred.png'),
                         ),
                       );
@@ -271,7 +276,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                                 friend.realSpeed),
                             shape: BoxShape.circle),
                         child: CircleAvatar(
-                          radius: sizeValue - 9,
+                          radius: sizeValue,
                           child: Center(
                             child: Icon(
                                 size: sizeValue - 10,
@@ -286,14 +291,18 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                       //Bladeguard
                       return Container(
                         padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                            color: Colors.tealAccent,
-                            shape: BoxShape.rectangle),
+                        decoration: BoxDecoration(
+                            color: SpeedToColor.getColorFromSpeed(
+                                friend.realSpeed),
+                            shape: BoxShape.circle),
                         child: CircleAvatar(
-                          radius: sizeValue - 4,
-                          backgroundColor:
-                              SpeedToColor.getColorFromSpeed(friend.realSpeed),
-                          child: Container(),
+                          backgroundColor: Colors.white,
+                          child: Center(
+                            child: Icon(
+                                size: sizeValue - 10,
+                                Icons.accessibility_sharp,
+                                color: Colors.blueAccent),
+                          ),
                         ),
                       );
                     }

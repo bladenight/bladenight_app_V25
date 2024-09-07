@@ -7,7 +7,6 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../helpers/background_location_helper.dart';
@@ -18,8 +17,8 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/compass_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
-import '../../../providers/settings/me_color_provider.dart';
 import 'open_street_map_copyright.dart';
+import 'tracking_icon_widget.dart';
 
 ///Shows a row at bottom with OSM copyright and GPS speed widget
 class GPSInfoAndMapCopyright extends ConsumerStatefulWidget {
@@ -43,7 +42,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
     if (!widget.showOdoMeter) {
       return;
     }
-    _locationStream = LocationProvider.instance.userBgLocationStream;
+    _locationStream = LocationProvider().userBgLocationStream;
     _locationStream.listen((location) {
       setState(() {
         if (location == null) {
@@ -135,68 +134,30 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
                                               );
                                             })
                                           : Icon(CupertinoIcons.gauge,
-                                              color: context
-                                                      .watch(isMovingProvider)
-                                                  ? ref.watch(meColorProvider)
-                                                  : CupertinoTheme.of(context)
-                                                      .primaryColor),
-                                      ref.watch(isUserParticipatingProvider)
-                                          ? ImageIcon(
-                                              context.watch(isMovingProvider)
-                                                  ? const AssetImage(
-                                                      'assets/images/skater_icon_256.png')
-                                                  : const AssetImage(
-                                                      'assets/images/skater_icon_256_circle.png'),
-                                              color: context
-                                                      .watch(isMovingProvider)
-                                                  ? ref.watch(meColorProvider)
-                                                  : CupertinoTheme.of(context)
-                                                      .primaryColor,
-                                            )
-                                          : const Icon(Icons.gps_fixed_sharp),
+                                              color: CupertinoTheme.of(context)
+                                                  .primaryColor),
+                                      const TrackingIconWidget(
+                                        innerIconSize: 12,
+                                        radius: 12,
+                                      ),
                                     ]),
                                     label: FittedBox(
                                       fit: BoxFit.fill,
                                       child: Text(
-                                        '${currentUserSpeed == -1 || !context.watch(isTrackingProvider) ? '- km/h' : currentUserSpeed.formatSpeedKmH()}  ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${currentUserOdoDriven.toStringAsFixed(1)} km'} ${alwaysPermissionGranted ? "" : "!"}',
+                                        '${currentUserSpeed == -1 || !ref.watch(isTrackingProvider) ? '- km/h' : currentUserSpeed.formatSpeedKmH()}  ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${currentUserOdoDriven.toStringAsFixed(1)} km'} ${alwaysPermissionGranted ? "" : "!"}',
                                         style: CupertinoTheme.of(context)
                                             .textTheme
                                             .navTitleTextStyle,
                                       ),
                                     ),
                                     onPressed: () async {
-                                      if (alwaysPermissionGranted) {
-                                        await LocationProvider.instance
-                                            .resetOdoMeterAndRoutePoints(
-                                                context);
-                                        setState(() {});
-                                      } else {
-                                        await QuickAlert.show(
-                                            context: context,
-                                            showCancelBtn: true,
-                                            type: QuickAlertType.info,
-                                            title: Localize.of(context)
-                                                .openOperatingSystemSettings,
-                                            text:
-                                                '${alwaysPermissionGranted ? "" : "\n${Localize.of(context).onlyWhileInUse}"} \n'
-                                                '${Localize.of(context).userSpeed} ${ref.read(realUserSpeedProvider) == null ? '- km/h' : currentUserSpeed.formatSpeedKmH()} \n'
-                                                '${Localize.of(context).distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${currentUserOdoDriven.toStringAsFixed(1)} km'}\n'
-                                                '${Localize.of(context).resetLongPress}',
-                                            confirmBtnText: Localize.of(context)
-                                                .openOperatingSystemSettings,
-                                            cancelBtnText:
-                                                Localize.of(context).cancel,
-                                            onConfirmBtnTap: () async {
-                                              await LocationPermissionDialog
-                                                  .openSystemSettings();
-                                              if (!context.mounted) return;
-                                              Navigator.of(context).pop();
-                                            });
-                                      }
+                                      await LocationProvider()
+                                          .resetOdoMeterAndRoutePoints(context);
+                                      setState(() {});
                                     },
                                   ),
                                 );
-                              } else if (context.watch(
+                              } else if (ref.watch(
                                           gpsLocationPermissionsStatusProvider) ==
                                       LocationPermissionStatus.denied &&
                                   HiveSettingsDB

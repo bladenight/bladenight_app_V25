@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -62,8 +63,9 @@ class SpecialFunctionInfo extends ConsumerWidget {
             ),
           ]),
         ),
-      if (ref.watch(showOwnColoredTrackProvider) ||
-          (isTracking && wantSeeFullProcession)) ...[
+      if (!kIsWeb &&
+          (ref.watch(showOwnColoredTrackProvider) ||
+              (isTracking && wantSeeFullProcession))) ...[
         const SpeedInfoColors(),
       ],
     ]);

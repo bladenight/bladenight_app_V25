@@ -2,22 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../generated/l10n.dart';
-import '../../helpers/deviceid_helper.dart';
-import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/notification/toast_notification.dart';
-import '../../helpers/timeconverter_helper.dart';
-import '../../models/event.dart';
-import '../../models/messages/edit_event_on_server.dart';
-import '../../models/route.dart';
-import '../../providers/route_providers.dart';
-import '../../wamp/admin_calls.dart';
-import '../admin/widgets/event_status_selector.dart';
-import '../admin/widgets/route_name_selector.dart';
-import '../widgets/input_double_alert_dialog.dart';
-import '../widgets/input_text_alert_dialog.dart';
-import '../widgets/no_connection_warning.dart';
-import '../widgets/input_int_alert_dialog.dart';
+import '../../../generated/l10n.dart';
+import '../../../helpers/deviceid_helper.dart';
+import '../../../helpers/hive_box/hive_settings_db.dart';
+import '../../../helpers/notification/toast_notification.dart';
+import '../../../helpers/timeconverter_helper.dart';
+import '../../../models/event.dart';
+import '../../../models/messages/edit_event_on_server.dart';
+import '../../../models/route.dart';
+import '../../../providers/route_providers.dart';
+import '../../../wamp/admin_calls.dart';
+import '../../admin/widgets/event_status_selector.dart';
+import '../../admin/widgets/route_name_selector.dart';
+import '../../widgets/input_double_alert_dialog.dart';
+import '../../widgets/input_text_alert_dialog.dart';
+import '../../widgets/no_connection_warning.dart';
+import '../../widgets/input_int_alert_dialog.dart';
 
 class EventEditor extends ConsumerStatefulWidget {
   const EventEditor({required this.event, super.key});
@@ -70,25 +70,7 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                 padding: EdgeInsets.zero,
                 minSize: 0,
                 onPressed: () async {
-                  setState(() {
-                    isSaving = true;
-                  });
-                  var res = await AdminCalls.editEvent(
-                    EditEventOnServerMessage.authenticate(
-                      event: _event,
-                      deviceId: DeviceId.appId,
-                      password: HiveSettingsDB.serverPassword ?? '',
-                    ).toMap(),
-                  );
-                  setState(() {
-                    isSaving = false;
-                  });
-                  if (!context.mounted) return;
-                  if (res && Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop(_event);
-                  } else {
-                    (showToast(message: 'Fehler beim Speichern!'));
-                  }
+                  await _saveEvent();
                 },
                 child: const Icon(Icons.send_rounded),
               ),
@@ -345,9 +327,49 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                         height: 3,
                         color: CupertinoTheme.of(context).primaryColor,
                       ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: CupertinoButton(
+                          color: Colors.greenAccent,
+                          onPressed: () async {
+                            await _saveEvent();
+                          },
+                          child: Center(
+                            child: Row(children: [
+                              Text(Localize.of(context).save),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              const Icon(Icons.send_rounded)
+                            ]),
+                          ),
+                        ),
+                      ),
                     ]),
                   ),
           ]),
     );
+  }
+
+  _saveEvent() async {
+    setState(() {
+      isSaving = true;
+    });
+    var res = await AdminCalls.editEvent(
+      EditEventOnServerMessage.authenticate(
+        event: _event,
+        deviceId: DeviceId.appId,
+        password: HiveSettingsDB.serverPassword ?? '',
+      ).toMap(),
+    );
+    setState(() {
+      isSaving = false;
+    });
+    if (!context.mounted) return;
+    if (res && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop(_event);
+    } else {
+      (showToast(message: 'Fehler beim Speichern!'));
+    }
   }
 }

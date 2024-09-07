@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../generated/l10n.dart';
@@ -63,9 +62,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
               },
               child: const Icon(CupertinoIcons.back),
             ),
-            largeTitle: Text(Localize
-                .of(context)
-                .messages),
+            largeTitle: Text(Localize.of(context).messages),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -83,7 +80,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                           confirmBtnText: Localize.current.yes,
                           cancelBtnText: Localize.current.cancel,
                           onConfirmBtnTap: () async {
-                            await context
+                            await ref
                                 .read(messagesLogicProvider)
                                 .clearMessages();
                             if (!context.mounted) return;
@@ -104,7 +101,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         .read(messagesLogicProvider.notifier)
                         .reloadMessages();
                   },
-                  child: const Icon(CupertinoIcons.refresh),
+                  child: const Icon(Icons.update),
                 ),
               ],
             ),
@@ -125,19 +122,13 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                   child: CupertinoSearchTextField(
                     controller: _searchTextController,
                     onChanged: (value) {
-                      ref
-                          .read(messageNameProvider.notifier)
-                          .state = value;
+                      ref.read(messageNameProvider.notifier).state = value;
                     },
                     onSubmitted: (value) {
-                      ref
-                          .read(messageNameProvider.notifier)
-                          .state = value;
+                      ref.read(messageNameProvider.notifier).state = value;
                     },
                     onSuffixTap: () {
-                      ref
-                          .read(messageNameProvider.notifier)
-                          .state = '';
+                      ref.read(messageNameProvider.notifier).state = '';
                       _searchTextController.text = '';
                     },
                   ),
@@ -153,7 +144,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
             var messages = ref.watch(filteredMessages);
             return SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   if (index % 2 == 0) {
                     var message = messages[(index / 2).round()];
                     return Dismissible(
@@ -165,17 +156,13 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                               context: context,
                               showCancelBtn: true,
                               type: QuickAlertType.warning,
-                              title: Localize
-                                  .of(context)
-                                  .deleteMessage,
+                              title: Localize.of(context).deleteMessage,
                               text:
-                              '${Localize
-                                  .of(context)
-                                  .delete}: ${message.body}',
+                                  '${Localize.of(context).delete}: ${message.body}',
                               confirmBtnText: Localize.current.delete,
                               cancelBtnText: Localize.current.cancel,
                               onConfirmBtnTap: () {
-                                context
+                                ref
                                     .read(messagesLogicProvider)
                                     .deleteMessage(message);
                                 if (!mounted) return;
@@ -184,7 +171,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         }
                         if (direction == DismissDirection.startToEnd) {
                           if (!context.mounted) return false;
-                          await context
+                          await ref
                               .read(messagesLogicProvider)
                               .setReadMessage(message, !message.read);
                         }
@@ -209,32 +196,24 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                               : Colors.yellowAccent,
                           child: CupertinoListTile(
                             title: Text(message.read
-                                ? Localize
-                                .of(context)
-                                .unreadMessage
-                                : Localize
-                                .of(context)
-                                .readMessage),
+                                ? Localize.of(context).unreadMessage
+                                : Localize.of(context).readMessage),
                             leading: message.read
                                 ? const Icon(Icons.mark_email_unread,
-                                color: Colors.white, size: 36.0)
+                                    color: Colors.white, size: 36.0)
                                 : const Icon(Icons.mark_email_read,
-                                color: Colors.white, size: 36.0),
+                                    color: Colors.white, size: 36.0),
                           )),
                       secondaryBackground: Container(
                           color: Colors.redAccent,
                           child: CupertinoListTile(
-                              title: Text(Localize
-                                  .of(context)
-                                  .deleteMessage),
+                              title: Text(Localize.of(context).deleteMessage),
                               trailing: const Icon(Icons.delete,
                                   color: Colors.white, size: 36.0))),
                     );
                   } else {
                     return Divider(
-                      color: CupertinoTheme
-                          .of(context)
-                          .primaryColor,
+                      color: CupertinoTheme.of(context).primaryColor,
                       height: 1,
                     );
                   }
@@ -255,15 +234,15 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
         children: [
           GestureDetector(
             onTap: () async {
-              await context
+              await ref
                   .read(messagesLogicProvider)
                   .setReadMessage(message, !message.read);
             },
             child: message.read
                 ? const Icon(
-              Icons.mark_email_read,
-              color: Colors.green,
-            )
+                    Icons.mark_email_read,
+                    color: Colors.green,
+                  )
                 : const Icon(Icons.mark_email_unread, color: Colors.redAccent),
           ),
           const SizedBox(
@@ -276,17 +255,12 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                 const SizedBox(width: 5),
                 DataWidgetLeftRightSmallTextContent(
                     descriptionRight:
-                    '${Localize
-                        .of(context)
-                        .on} ${Localize.of(context).dateTimeSecIntl(
-                        DateTime.fromMillisecondsSinceEpoch(message.timeStamp),
-                        DateTime.fromMillisecondsSinceEpoch(
-                            message.timeStamp))}',
+                        '${Localize.of(context).on} ${Localize.of(context).dateTimeSecIntl(DateTime.fromMillisecondsSinceEpoch(message.timeStamp), DateTime.fromMillisecondsSinceEpoch(message.timeStamp))}',
                     descriptionLeft: '',
                     rightWidget: Container()),
                 GestureDetector(
                   onTap: () async {
-                    await context
+                    await ref
                         .read(messagesLogicProvider)
                         .setReadMessage(message, true);
                   },
@@ -295,21 +269,17 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                           fontSize: 16.0, fontWeight: FontWeight.bold)),
                 ),
                 Divider(
-                  color: CupertinoTheme
-                      .of(context)
-                      .primaryColor,
+                  color: CupertinoTheme.of(context).primaryColor,
                   height: 1,
                 ),
                 HtmlWidget(
                   textStyle: TextStyle(
                       fontSize: MediaQuery.textScalerOf(context).scale(14),
-                      color: CupertinoTheme
-                          .of(context)
-                          .primaryColor),
+                      color: CupertinoTheme.of(context).primaryColor),
                   onTapUrl: (url) async {
                     var uri = Uri.parse(url);
-                    Launch.launchUrlFromUri(
-                        uri, mode: LaunchMode.platformDefault);
+                    Launch.launchUrlFromUri(uri,
+                        mode: LaunchMode.platformDefault);
                     return true;
                   },
                   message.body,
@@ -323,14 +293,12 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         padding: const EdgeInsets.all(2),
                         minSize: 0,
                         onPressed: () async {
-                          await context
+                          await ref
                               .read(messagesLogicProvider)
                               .setReadMessage(message, true);
                           if (message.button1Link != null &&
                               message.button1Link != '') {
-                            Launch.launchUrlFromString(
-                                message.button1Link!
-                            );
+                            Launch.launchUrlFromString(message.button1Link!);
                           }
                         },
                         child: Text(message.button1Text!),
@@ -346,7 +314,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         padding: const EdgeInsets.all(2),
                         minSize: 0,
                         onPressed: () async {
-                          await context
+                          await ref
                               .read(messagesLogicProvider)
                               .setReadMessage(message, true);
                           if (message.button2Link != null &&
@@ -367,7 +335,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                         padding: const EdgeInsets.all(2),
                         minSize: 0,
                         onPressed: () async {
-                          await context
+                          await ref
                               .read(messagesLogicProvider)
                               .setReadMessage(message, true);
                           if (message.button3Link != null &&
@@ -388,7 +356,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
             CupertinoButton(
               child: const Icon(CupertinoIcons.globe),
               onPressed: () async {
-                await context
+                await ref
                     .read(messagesLogicProvider)
                     .setReadMessage(message, true);
                 if (message.url != null) {
@@ -419,9 +387,7 @@ class MessagesActionModal extends StatelessWidget {
     return CupertinoActionSheet(
       actions: const [],
       cancelButton: CupertinoActionSheetAction(
-        child: Text(Localize
-            .of(context)
-            .cancel),
+        child: Text(Localize.of(context).cancel),
         onPressed: () {
           Navigator.of(context).pop();
         },

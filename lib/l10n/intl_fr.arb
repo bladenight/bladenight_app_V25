@@ -481,7 +481,7 @@
   "yes": "Oui",
   "yesterday": "était hier",
   "collectionStop": "Arrêt de collecte du cortège",
-  "sendMail": "Envoyer un email",
+  "sendMail": "Envoyer un email (E-Mail support)",
   "updating": "Mise à jour des données",
   "leaveAppWarningTitle": "Le navigateur externe est-il activé ?",
   "leaveAppWarning": "Vous êtes prêt à utiliser votre navigateur Internet. Bien que cette application soit disponible, lorsque vous êtes prêt à le faire. L'application est disponible dans l'arrière-plan plus loin. \n",
@@ -532,6 +532,10 @@
   "startParticipationHeader": "Tu participes aujourd'hui à la Bladenight et tu souhaites soutenir la représentation du train et partager ton emplacement avec tes amis. Démarrer le partage de site ?",
   "startParticipationShort": "Début de la participation",
   "selectTrackingType": "Sélectionner le type de suivi",
-  "registeredAs": "Enregistré en tant que:"
+  "registeredAs": "Enregistré en tant que:",
+  "editFriendHeader": "Modifier le nom et la couleur de {name}",
+  "deleteFriendHeader": "Supprimer le lien avec {name}. Pas de restauration possible",
+  "refresh": "Actualiser",
+  "refreshHeader": "Actualiser les données"
 }
 

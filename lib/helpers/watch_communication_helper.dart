@@ -129,7 +129,7 @@ Future<void> initFlutterChannel() async {
               .refresh(forceUpdate: true);
           ProviderContainer()
               .read(locationProvider)
-              .refreshLocationData(forceUpdate: true);
+              .refreshRealtimeData(forceUpdate: true);
         } catch (e) {
           BnLog.error(
               className: 'watchCommunication_helper',
@@ -152,7 +152,7 @@ Future<void> initFlutterChannel() async {
       case 'getFriendsDataFromFlutter':
         print('getFriendsDataFromFlutter received');
         try {
-          LocationProvider.instance.refreshLocationData(forceUpdate: true);
+          LocationProvider().refreshRealtimeData(forceUpdate: true);
         } catch (e) {
           BnLog.error(
               className: 'watchCommunication_helper',

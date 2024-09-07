@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 @immutable
 class TimerModel {
   const TimerModel(this.timeLeft, this.percentLeft);
@@ -15,7 +14,7 @@ class TimerModel {
 class TimerNotifier extends StateNotifier<TimerModel> {
   TimerNotifier() : super(_initialState);
 
-  static  const int _initialDuration = 1400;
+  static const int _initialDuration = 1000;
   static final _initialState =
       TimerModel(_durationInMilliSeconds(_initialDuration), 1.0);
 
@@ -38,13 +37,11 @@ class TimerNotifier extends StateNotifier<TimerModel> {
     //_unsubscribe();
   }
 
-
-
   void _startTimer() async {
     _tickerSubscription?.cancel();
     _tickerSubscription =
         _ticker.tick(ticks: _initialDuration).listen((duration) {
-      state = TimerModel(duration, duration / 1400);
+      state = TimerModel(duration, duration / _initialDuration);
     });
 
     _tickerSubscription?.onDone(() {
@@ -79,18 +76,19 @@ class Ticker {
   }
 }
 
-final refreshTimerProvider = StateNotifierProvider<TimerNotifier, TimerModel>(
+final refreshTimerProvider =
+    StateNotifierProvider.autoDispose<TimerNotifier, TimerModel>(
   (ref) => TimerNotifier(),
 );
 
-final _timeLeftProvider = Provider<int>((ref) {
+final _timeLeftProvider = Provider.autoDispose<int>((ref) {
   return ref.watch(refreshTimerProvider).timeLeft;
 });
 
-final timeLeftProvider = Provider<int>((ref) {
+final timeLeftProvider = Provider.autoDispose<int>((ref) {
   return ref.watch(_timeLeftProvider);
 });
 
-final percentLeftProvider = Provider<double>((ref) {
+final percentLeftProvider = Provider.autoDispose<double>((ref) {
   return ref.watch(refreshTimerProvider).percentLeft;
 });

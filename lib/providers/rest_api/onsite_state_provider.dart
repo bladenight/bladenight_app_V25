@@ -314,15 +314,15 @@ class BgIsOnSite extends _$BgIsOnSite {
         HiveSettingsDB.setBladeguardLastSetOnsite(DateTime.now());
       }
     } else {
-      if (LocationProvider.instance.gpsLocationPermissionsStatus !=
+      if (LocationProvider().gpsLocationPermissionsStatus !=
               LocationPermissionStatus.always &&
-          LocationProvider.instance.gpsLocationPermissionsStatus !=
+          LocationProvider().gpsLocationPermissionsStatus !=
               LocationPermissionStatus.whenInUse) {
         state = AsyncValue.error(
             Localize.current.noLocationPermitted, StackTrace.current);
       }
 
-      var location = await LocationProvider.instance.getLocation();
+      var location = await LocationProvider().getLocation();
       if (location == null) {
         state = AsyncValue.error(
             Localize.current.noLocationAvailable, StackTrace.current);

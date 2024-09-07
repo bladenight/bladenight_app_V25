@@ -17,7 +17,7 @@ class HeadingMarkerSize extends _$HeadingMarkerSize {
     } else {
       state = value * 0.9;
     }
-    print('$value $state');
+    //print('heading_marker_size_provider size $value $state');
     return state;
   }
 }

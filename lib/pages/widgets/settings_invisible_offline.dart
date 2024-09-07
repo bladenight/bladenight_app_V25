@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:riverpod_context/riverpod_context.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
 import '../../providers/network_connection_provider.dart';
 
-class SettingsInvisibleOfflineWidget extends StatelessWidget {
+class SettingsInvisibleOfflineWidget extends ConsumerWidget {
   const SettingsInvisibleOfflineWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var pr = context.watch(networkAwareProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    var pr = ref.watch(networkAwareProvider);
     if (pr.connectivityStatus == ConnectivityStatus.online) {
       return Container();
     } else {

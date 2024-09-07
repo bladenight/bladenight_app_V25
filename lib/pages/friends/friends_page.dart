@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/device_info_helper.dart';
@@ -81,7 +80,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
       floatingActionButton: ExpandableFloatingActionButton(
           distance: 90,
           startAngleInDegrees: 00,
-          buttonIcon: const Icon(CupertinoIcons.add_circled),
+          buttonIcon: const Icon(Icons.menu_open_rounded),
           children: [
             FloatingActionButton(
                 heroTag: 'addFABTag',
@@ -103,7 +102,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                 child: const Icon(Icons.pin)),
             FloatingActionButton(
                 heroTag: 'refreshFABTag',
-                child: const Icon(Icons.refresh),
+                child: const Icon(Icons.update),
                 onPressed: () async {
                   ref.read(friendsLogicProvider).refreshFriends();
                 }),
@@ -143,68 +142,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                   CupertinoColors.systemBackground, context),
                               context: context,
                               builder: (context) {
-                                return Container(
-                                  constraints: BoxConstraints(
-                                    maxHeight: kIsWeb
-                                        ? MediaQuery.of(context).size.height *
-                                            0.4
-                                        : MediaQuery.of(context).size.height *
-                                            0.4,
-                                  ),
-                                  child: BaseBottomSheetWidget(children: [
-                                    CupertinoFormSection(
-                                        header: Text(Localize.of(context)
-                                            .addFriendWithCodeHeader),
-                                        children: [
-                                          SizedBox(
-                                            width: double.infinity,
-                                            child: CupertinoButton(
-                                              color: CupertinoTheme.of(context)
-                                                  .primaryColor,
-                                              child: Row(children: [
-                                                const Icon(Icons.add_outlined),
-                                                Expanded(
-                                                  child: Text(
-                                                      Localize.of(context)
-                                                          .addnewfriend),
-                                                ),
-                                              ]),
-                                              onPressed: () {
-                                                Navigator.pop(context,
-                                                    FriendsAction.addNew);
-                                              },
-                                            ),
-                                          ),
-                                          CupertinoFormSection(
-                                              header: Text(Localize.of(context)
-                                                  .addNewFriendHeader),
-                                              children: [
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: CupertinoButton(
-                                                    color: CupertinoTheme.of(
-                                                            context)
-                                                        .primaryColor,
-                                                    child: Row(children: [
-                                                      const Icon(Icons.pin),
-                                                      Expanded(
-                                                        child: Text(Localize.of(
-                                                                context)
-                                                            .addfriendwithcode),
-                                                      ),
-                                                    ]),
-                                                    onPressed: () {
-                                                      Navigator.pop(
-                                                          context,
-                                                          FriendsAction
-                                                              .addWithCode);
-                                                    },
-                                                  ),
-                                                ),
-                                              ]),
-                                        ]),
-                                  ]),
-                                );
+                                return const FriendsActionModal();
                               });
 
                           //FriendsActionModal.show(context);
@@ -257,7 +195,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                         onPressed: () async {
                           ref.read(friendsLogicProvider).refreshFriends();
                         },
-                        child: const Icon(CupertinoIcons.refresh),
+                        child: const Icon(Icons.update),
                       ),
                     ],
                   )
@@ -321,7 +259,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                               confirmBtnColor: Colors.redAccent,
                               cancelBtnText: Localize.current.cancel,
                               onConfirmBtnTap: () {
-                                context
+                                ref
                                     .read(friendsLogicProvider)
                                     .deleteRelationShip(friend.friendId);
                                 Navigator.pop(context);
@@ -347,11 +285,13 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                               leading: const Icon(Icons.edit,
                                   color: Colors.white, size: 36.0))),
                       secondaryBackground: Container(
-                          color: Colors.redAccent,
-                          child: CupertinoListTile(
-                              title: Text(Localize.of(context).deletefriend),
-                              trailing: const Icon(Icons.delete,
-                                  color: Colors.white, size: 36.0))),
+                        color: Colors.redAccent,
+                        child: CupertinoListTile(
+                          title: Text(Localize.of(context).deletefriend),
+                          trailing: const Icon(Icons.delete,
+                              color: Colors.white, size: 36.0),
+                        ),
+                      ),
                     );
                   } else {
                     return Divider(
@@ -497,28 +437,69 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
           ),
           const SizedBox(width: 5),
           CupertinoButton(
-            child: const Icon(CupertinoIcons.pencil_ellipsis_rectangle),
+            child: const Icon(Icons.edit),
             onPressed: () async {
-              var action = await showCupertinoModalPopup(
+              var action = await showCupertinoModalBottomSheet(
+                  backgroundColor: CupertinoDynamicColor.resolve(
+                      CupertinoColors.systemBackground, context),
                   context: context,
                   builder: (context) {
-                    return CupertinoActionSheet(
-                      actions: [
-                        CupertinoActionSheetAction(
-                          isDefaultAction: true,
-                          onPressed: () {
-                            Navigator.pop(context, FriendsAction.edit);
-                          },
-                          child: Text(Localize.of(context).editfriend),
-                        ),
-                        CupertinoActionSheetAction(
-                          isDestructiveAction: true,
-                          onPressed: () {
-                            Navigator.pop(context, FriendsAction.delete);
-                          },
-                          child: Text(Localize.of(context).deletefriend),
-                        )
-                      ],
+                    return Container(
+                      constraints: BoxConstraints(
+                        maxHeight: kIsWeb
+                            ? MediaQuery.of(context).size.height * 0.4
+                            : MediaQuery.of(context).size.height * 0.4,
+                      ),
+                      child: BaseBottomSheetWidget(children: [
+                        CupertinoFormSection(
+                            header: Text(Localize.of(context)
+                                .editFriendHeader(friend.name)),
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: CupertinoButton(
+                                  color:
+                                      CupertinoTheme.of(context).primaryColor,
+                                  child: Row(children: [
+                                    const Icon(Icons.edit),
+                                    Expanded(
+                                      child:
+                                          Text(Localize.of(context).editfriend),
+                                    ),
+                                  ]),
+                                  onPressed: () {
+                                    Navigator.pop(context, FriendsAction.edit);
+                                  },
+                                ),
+                              ),
+                              CupertinoFormSection(
+                                  header: Text(Localize.of(context)
+                                      .deleteFriendHeader(friend.name)),
+                                  children: [
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: CupertinoButton(
+                                        color: CupertinoTheme.of(context)
+                                            .primaryColor,
+                                        child: Row(children: [
+                                          const Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
+                                          Expanded(
+                                            child: Text(Localize.of(context)
+                                                .deletefriend),
+                                          ),
+                                        ]),
+                                        onPressed: () {
+                                          Navigator.pop(
+                                              context, FriendsAction.delete);
+                                        },
+                                      ),
+                                    ),
+                                  ]),
+                            ]),
+                      ]),
                     );
                   });
               if (action == FriendsAction.edit) {
@@ -533,8 +514,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                       isActive: result.active));
                 }
               } else if (action == FriendsAction.delete) {
-                if (!context.mounted) return;
-                context
+                ref
                     .read(friendsLogicProvider)
                     .deleteRelationShip(friend.friendId);
               }

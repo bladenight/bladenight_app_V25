@@ -51,7 +51,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   }
 
   _init() async {
-    _internetConnection = WampV2.instance.internetConnChecker;
+    _internetConnection = WampV2().internetConnChecker;
     _icCheckerSubscription =
         _internetConnection!.onStatusChange.listen((InternetStatus status) {
       switch (status) {
@@ -67,7 +67,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     });
 
     _isServerConnectedSubscription =
-        WampV2.instance.wampConnectedStreamController.stream.listen((event) {
+        WampV2().wampConnectedStreamController.stream.listen((event) {
       if (event) {
         _checkStatus(ConnectivityStatus.serverReachable);
       } else {
@@ -104,23 +104,21 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
       isOnline = await _internetConnection!
           .hasInternetAccess; //; await InternetAddress.lookup('skatemunich.de');
     } on SocketException catch (e) {
-      if (!kIsWeb) {
-        BnLog.error(
-            text:
-                'Error on NetworkConnection ${e.message},${e.address},${e.osError}',
-            methodName: '_checkStatus',
-            className: toString());
-      }
+      BnLog.error(
+          text:
+              'Error on NetworkConnection ${e.message},${e.address},${e.osError}',
+          methodName: '_checkStatus',
+          className: toString());
       isOnline = false;
     }
     if (isOnline == true) {
       if (_wasOffline == true) {
-        await WampV2.instance.refresh();
+        WampV2().refresh();
         _wasOffline = false;
       }
       state = NetworkStateModel(
           connectivityStatus: ConnectivityStatus.online,
-          serverAvailable: WampV2.instance.webSocketIsConnected);
+          serverAvailable: WampV2().webSocketIsConnected);
     } else {
       state = const NetworkStateModel(
           connectivityStatus: ConnectivityStatus.disconnected,

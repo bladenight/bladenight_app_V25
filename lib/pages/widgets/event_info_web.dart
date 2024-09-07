@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
@@ -35,7 +34,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
-      context.read(activeEventProvider.notifier).refresh(forceUpdate: true);
+      ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
     });
   }
 
@@ -48,20 +47,20 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context.read(activeEventProvider.notifier).refresh(forceUpdate: true);
-      context.read(locationProvider).refreshLocationData(forceUpdate: true);
+      ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
+      ref.read(locationProvider).refreshRealtimeData(forceUpdate: true);
     }
   }
 
   void initEventUpdates() async {
     // first start
-    context.read(activeEventProvider.notifier).refresh();
+    ref.read(activeEventProvider.notifier).refresh();
     updateTimer?.cancel();
     updateTimer = Timer.periodic(
       const Duration(minutes: 5),
       (timer) {
         if (!mounted) return;
-        context.read(activeEventProvider.notifier).refresh();
+        ref.read(activeEventProvider.notifier).refresh();
       },
     );
   }
@@ -70,7 +69,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
   Widget build(
     BuildContext context,
   ) {
-    var nextEventProvider = context.watch(activeEventProvider);
+    var nextEventProvider = ref.watch(activeEventProvider);
     //var iheight = MediaQuery.of(context).size.height * .2;
     var iwidth = MediaQuery.of(context).size.width * .3;
     return SizedBox(
@@ -159,7 +158,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                       },
                       child: Builder(builder: (context) {
                         var ms = ref.watch(mainSponsorImageAndLinkProvider);
-                        //var nw = context.watch(networkAwareProvider);
+                        //var nw = ref.watch(networkAwareProvider);
                         return (ms.image != null)
                             // && nw.connectivityStatus == ConnectivityStatus.online)
                             ? FadeInImage.assetNetwork(
@@ -189,18 +188,15 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                     width: iwidth,
                     child: GestureDetector(
                       onTap: () {
-                        if (context
-                                .read(secondSponsorImageAndLinkProvider)
-                                .link !=
+                        if (ref.read(secondSponsorImageAndLinkProvider).link !=
                             null) {
-                          Launch.launchUrlFromString(context
+                          Launch.launchUrlFromString(ref
                               .read(secondSponsorImageAndLinkProvider)
                               .link!);
                         }
                       },
                       child: Builder(builder: (context) {
-                        var ssp =
-                            context.watch(secondSponsorImageAndLinkProvider);
+                        var ssp = ref.watch(secondSponsorImageAndLinkProvider);
                         return ssp.image != null
                             ? FadeInImage.assetNetwork(
                                 placeholder: secondLogoPlaceholder,

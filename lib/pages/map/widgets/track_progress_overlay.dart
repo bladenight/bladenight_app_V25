@@ -47,7 +47,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
       BnLog.trace(text: 'Track_progress_overlay - initState');
       ref
           .read(locationProvider)
-          .refreshLocationData(forceUpdate: true); //update in map
+          .refreshRealtimeData(forceUpdate: true); //update in map
       ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
       ref.read(refreshTimerProvider.notifier).start();
     });
@@ -107,6 +107,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     var actualOrNextEvent = ref.watch(activeEventProvider);
     var eventIsActive = actualOrNextEvent.status == EventStatus.running ||
         (rtu != null && rtu.eventIsActive);
+
     if (rtu == null ||
         rtu.rpcException != null ||
         actualOrNextEvent.rpcException != null) {
@@ -130,7 +131,9 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                 child: Text(Localize.of(context).updating),
               ),
             ),
-            const CircularProgressIndicator(),
+            CircularProgressIndicator(
+              color: CupertinoTheme.of(context).primaryColor,
+            ),
           ]),
         ),
       );

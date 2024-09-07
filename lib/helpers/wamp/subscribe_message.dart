@@ -9,7 +9,7 @@ Future<int> subscribeMessage(String topic) async {
   Completer completer = Completer();
   var bnWampMessage = SubscribeWampMessage(completer, 'RealtimeData');
 
-  var wampResult = await WampV2.instance
+  var wampResult = await WampV2()
       .addToWamp(bnWampMessage)
       .timeout(wampTimeout)
       .catchError((error, stackTrace) => WampException(error.toString()));
@@ -27,7 +27,7 @@ Future<bool> unSubscribeMessage(int subscriptionId) async {
   Completer completer = Completer();
   var bnWampMessage = UnsubscribeWampMessage(completer, subscriptionId);
 
-  var wampResult = await WampV2.instance
+  var wampResult = await WampV2()
       .addToWamp(bnWampMessage)
       .timeout(wampTimeout)
       .catchError((error, stackTrace) => WampException(error.toString()));

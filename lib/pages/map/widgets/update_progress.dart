@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../providers/location_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 
 class UpdateProgress extends ConsumerWidget {
@@ -17,12 +18,16 @@ class UpdateProgress extends ConsumerWidget {
             size: 18.0,
             CupertinoIcons.info_circle_fill,
             color: CupertinoTheme.of(context).primaryColor),
+
+        //CupertinoTheme.of(context).primaryColor),
         CircularProgressIndicator(
           backgroundColor:
               CupertinoTheme.of(context).primaryColor.withAlpha(100),
-          color: CupertinoTheme.of(context).primaryColor,
+          color: ref.watch(colorTimerProvider),
+          //CupertinoTheme.of(context).primaryColor,
           value: ref.watch(percentLeftProvider),
-          strokeWidth: 3,
+          strokeWidth: 2,
+          strokeCap: StrokeCap.butt,
         ),
       ]),
     );

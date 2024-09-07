@@ -4,10 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
+import '../../helpers/enums/tracking_type.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/timeconverter_helper.dart';
 import '../../helpers/url_launch_helper.dart';
@@ -44,10 +44,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _width = MediaQuery
-          .of(context)
-          .size
-          .width;
+      _width = MediaQuery.of(context).size.width;
       //_height = MediaQuery.of(context).size.height;
       initEventUpdates();
       initLocation();
@@ -68,7 +65,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
     BnLog.debug(text: 'event_info - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       initEventUpdates(forceUpdate: true);
-      context.read(locationProvider).refreshLocationData(forceUpdate: true);
+      ref.read(locationProvider).refreshRealtimeData(forceUpdate: true);
     }
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
@@ -78,32 +75,33 @@ class _EventInfoState extends ConsumerState<EventInfo>
 
   void initEventUpdates({forceUpdate = false}) async {
     // first start
-    context.refresh(updateImagesAndLinksProvider);
+    ref.invalidate(updateImagesAndLinksProvider);
     await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      context
-          .read(activeEventProvider.notifier)
-          .refresh(forceUpdate: forceUpdate);
-    }
-
+    await ref
+        .read(activeEventProvider.notifier)
+        .refresh(forceUpdate: forceUpdate);
     _updateTimer?.cancel();
     _updateTimer = Timer.periodic(
       const Duration(minutes: 10),
-          (timer) {
-        if (!mounted) return;
-        context.read(activeEventProvider.notifier).refresh();
+      (timer) {
+        if (LocationProvider().trackingType == TrackingType.onlyTracking) {
+          return;
+        }
+        ref.read(activeEventProvider.notifier).refresh();
       },
     );
   }
 
   void initLocation() async {
     await Future.delayed(const Duration(seconds: 5));
-    LocationProvider.instance.refreshLocationData(forceUpdate: true);
+    LocationProvider().refreshRealtimeData(forceUpdate: true);
   }
 
   @override
-  Widget build(BuildContext context,) {
-    var nextEventProvider = context.watch(activeEventProvider);
+  Widget build(
+    BuildContext context,
+  ) {
+    var nextEventProvider = ref.watch(activeEventProvider);
     return SizedBox(
       height: double.infinity,
       child: SingleChildScrollView(
@@ -118,37 +116,24 @@ class _EventInfoState extends ConsumerState<EventInfo>
             const BladeGuardAdvertise(),
             if (nextEventProvider.status == EventStatus.noevent)
               HiddenAdminButton(
-                child: Text(Localize
-                    .of(context)
-                    .noEventPlanned,
+                child: Text(Localize.of(context).noEventPlanned,
                     textAlign: TextAlign.center,
-                    style: CupertinoTheme
-                        .of(context)
-                        .textTheme
-                        .textStyle),
+                    style: CupertinoTheme.of(context).textTheme.textStyle),
               ),
             if (nextEventProvider.status != EventStatus.noevent)
               HiddenAdminButton(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(Localize
-                        .of(context)
-                        .nextEvent,
+                    Text(Localize.of(context).nextEvent,
                         textAlign: TextAlign.center,
-                        style: CupertinoTheme
-                            .of(context)
-                            .textTheme
-                            .textStyle),
+                        style: CupertinoTheme.of(context).textTheme.textStyle),
                     const SizedBox(height: 5),
                     FittedBox(
                       child: Text(
-                          '${Localize
-                              .of(context)
-                              .route} ${nextEventProvider.routeName}',
+                          '${Localize.of(context).route} ${nextEventProvider.routeName}',
                           textAlign: TextAlign.center,
-                          style: CupertinoTheme
-                              .of(context)
+                          style: CupertinoTheme.of(context)
                               .textTheme
                               .navLargeTitleTextStyle),
                     ),
@@ -159,9 +144,8 @@ class _EventInfoState extends ConsumerState<EventInfo>
                         child: Text(
                             DateFormatter(Localize.of(context))
                                 .getLocalDayDateTimeRepresentation(
-                                nextEventProvider.getUtcIso8601DateTime),
-                            style: CupertinoTheme
-                                .of(context)
+                                    nextEventProvider.getUtcIso8601DateTime),
+                            style: CupertinoTheme.of(context)
                                 .textTheme
                                 .navLargeTitleTextStyle),
                       ),
@@ -172,12 +156,12 @@ class _EventInfoState extends ConsumerState<EventInfo>
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color:
-                          nextEventProvider.status == EventStatus.cancelled
-                              ? Colors.redAccent
-                              : nextEventProvider.status ==
-                              EventStatus.confirmed
-                              ? Colors.green
-                              : Colors.transparent,
+                              nextEventProvider.status == EventStatus.cancelled
+                                  ? Colors.redAccent
+                                  : nextEventProvider.status ==
+                                          EventStatus.confirmed
+                                      ? Colors.green
+                                      : Colors.transparent,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(10.0),
                           ),
@@ -185,8 +169,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(nextEventProvider.statusText,
-                              style: CupertinoTheme
-                                  .of(context)
+                              style: CupertinoTheme.of(context)
                                   .textTheme
                                   .pickerTextStyle),
                         ),
@@ -200,40 +183,33 @@ class _EventInfoState extends ConsumerState<EventInfo>
                 padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 0.0),
                 child: GestureDetector(
                   onTap: () async {
-                    var link =
-                        context
-                            .read(mainSponsorImageAndLinkProvider)
-                            .link;
+                    var link = ref.read(mainSponsorImageAndLinkProvider).link;
                     if (link != null && link != '') {
                       var uri = Uri.parse(
-                          context
-                              .read(mainSponsorImageAndLinkProvider)
-                              .link!);
+                          ref.read(mainSponsorImageAndLinkProvider).link!);
                       Launch.launchUrlFromUri(uri);
                     }
                   },
                   child: Builder(builder: (context) {
-                    var ms = context.watch(mainSponsorImageAndLinkProvider);
-                    var nw = context.watch(networkAwareProvider);
+                    var ms = ref.watch(mainSponsorImageAndLinkProvider);
+                    var nw = ref.watch(networkAwareProvider);
                     return (ms.image != null &&
-                        nw.connectivityStatus == ConnectivityStatus.online)
+                            nw.connectivityStatus == ConnectivityStatus.online)
                         ? CachedNetworkImage(
-                      width: _width * .6,
-                      imageUrl: ms.image!,
-                      placeholder: (context, url) =>
-                          Image.asset(
-                              mainSponsorPlaceholder,
-                              fit: BoxFit.fitWidth),
-                      errorWidget: (context, url, error) =>
-                          Image.asset(
-                              mainSponsorPlaceholder,
-                              fit: BoxFit.fitWidth),
-                      errorListener: (e) {
-                        BnLog.warning(text: 'Could not load ${ms.image}');
-                      },
-                    )
+                            width: _width * .6,
+                            imageUrl: ms.image!,
+                            placeholder: (context, url) => Image.asset(
+                                mainSponsorPlaceholder,
+                                fit: BoxFit.fitWidth),
+                            errorWidget: (context, url, error) => Image.asset(
+                                mainSponsorPlaceholder,
+                                fit: BoxFit.fitWidth),
+                            errorListener: (e) {
+                              BnLog.warning(text: 'Could not load ${ms.image}');
+                            },
+                          )
                         : Image.asset(mainSponsorPlaceholder,
-                        fit: BoxFit.fitWidth);
+                            fit: BoxFit.fitWidth);
                   }),
                 ),
               ),
@@ -241,40 +217,34 @@ class _EventInfoState extends ConsumerState<EventInfo>
                 padding: const EdgeInsets.fromLTRB(50.0, 0.0, 50, 1.0),
                 child: GestureDetector(
                   onTap: () async {
-                    var link =
-                        context
-                            .read(secondSponsorImageAndLinkProvider)
-                            .link;
+                    var link = ref.read(secondSponsorImageAndLinkProvider).link;
                     if (link != null && link != '') {
-                      var uri = Uri.parse(context
-                          .read(secondSponsorImageAndLinkProvider)
-                          .link!);
+                      var uri = Uri.parse(
+                          ref.read(secondSponsorImageAndLinkProvider).link!);
                       Launch.launchUrlFromUri(uri);
                     }
                   },
                   child: Builder(builder: (context) {
-                    var img = context.watch(secondSponsorImageAndLinkProvider);
-                    var nw = context.watch(networkAwareProvider);
+                    var img = ref.watch(secondSponsorImageAndLinkProvider);
+                    var nw = ref.watch(networkAwareProvider);
                     return (img.image != null &&
-                        nw.connectivityStatus == ConnectivityStatus.online)
+                            nw.connectivityStatus == ConnectivityStatus.online)
                         ? CachedNetworkImage(
-                      width: _width * .6,
-                      imageUrl: img.image!,
-                      placeholder: (context, url) =>
-                          Image.asset(
-                              secondLogoPlaceholder,
-                              fit: BoxFit.fitWidth),
-                      errorWidget: (context, url, error) =>
-                          Image.asset(
-                              secondLogoPlaceholder,
-                              fit: BoxFit.fitWidth),
-                      errorListener: (e) {
-                        BnLog.warning(
-                            text: 'Could not load ${img.image}');
-                      },
-                    )
+                            width: _width * .6,
+                            imageUrl: img.image!,
+                            placeholder: (context, url) => Image.asset(
+                                secondLogoPlaceholder,
+                                fit: BoxFit.fitWidth),
+                            errorWidget: (context, url, error) => Image.asset(
+                                secondLogoPlaceholder,
+                                fit: BoxFit.fitWidth),
+                            errorListener: (e) {
+                              BnLog.warning(
+                                  text: 'Could not load ${img.image}');
+                            },
+                          )
                         : Image.asset(secondLogoPlaceholder,
-                        fit: BoxFit.fitWidth);
+                            fit: BoxFit.fitWidth);
                   }),
                 ),
               ),
@@ -288,31 +258,27 @@ class _EventInfoState extends ConsumerState<EventInfo>
                   //Don't show starting point when no event
                   if (nextEventProvider.status != EventStatus.noevent)
                     Builder(builder: (context) {
-                      var spp = context.watch(startpointImageAndLinkProvider);
+                      var spp = ref.watch(startpointImageAndLinkProvider);
                       return spp.text != null
                           ? FittedBox(
-                        child: Text(
-                          spp.text!,
-                          maxLines: 10,
-                          softWrap: true,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color:
-                            CupertinoTheme
-                                .of(context)
-                                .primaryColor,
-                          ),
-                        ),
-                      )
+                              child: Text(
+                                spp.text!,
+                                maxLines: 10,
+                                softWrap: true,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color:
+                                      CupertinoTheme.of(context).primaryColor,
+                                ),
+                              ),
+                            )
                           : Container();
                     }),
                   const SizedBox(
                     height: 5,
                   ),
                   Text(
-                    Localize
-                        .of(context)
-                        .lastupdate,
+                    Localize.of(context).lastupdate,
                     style: const TextStyle(
                       color: CupertinoDynamicColor.withBrightness(
                         color: CupertinoColors.systemGrey,
@@ -324,9 +290,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
                     nextEventProvider.lastupdate == null
                         ? '-'
                         : Localize.current.dateTimeIntl(
-                      nextEventProvider.lastupdate as DateTime,
-                      nextEventProvider.lastupdate as DateTime,
-                    ),
+                            nextEventProvider.lastupdate as DateTime,
+                            nextEventProvider.lastupdate as DateTime,
+                          ),
                     style: const TextStyle(
                       color: CupertinoDynamicColor.withBrightness(
                         color: CupertinoColors.systemGrey,
@@ -346,7 +312,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
     );
 
     /* return NoDataWarning(
-        onReload: () => context.read(activeEventProvider).refresh(),
+        onReload: () => ref.read(activeEventProvider).refresh(),
       );*/
   }
 }

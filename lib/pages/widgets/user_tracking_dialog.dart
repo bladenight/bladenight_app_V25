@@ -26,7 +26,8 @@ class UserTrackDialog extends ConsumerWidget {
   final String date;
   final UserGPXPoints userGPXPoints;
 
-  static void show(BuildContext context, UserGPXPoints userGPXPoints, String date) {
+  static void show(
+      BuildContext context, UserGPXPoints userGPXPoints, String date) {
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) =>
@@ -40,7 +41,7 @@ class UserTrackDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var initLatLng = defaultLatLng;
 
-    if (userGPXPoints.latLngList.isNotEmpty){
+    if (userGPXPoints.latLngList.isNotEmpty) {
       var lastCoordinate = userGPXPoints.latLngList.last;
       initLatLng = LatLng(lastCoordinate.latitude, lastCoordinate.longitude);
     }
@@ -105,10 +106,13 @@ class UserTrackDialog extends ConsumerWidget {
                                 Brightness.light
                             ? CupertinoColors.black
                             : part.color),
-                  // context.watch(polyLinesProvider),// widget.polyLines,
+                  // ref.watch(polyLinesProvider),// widget.polyLines,
                 ]),
               ),
-               const Positioned( left:5, bottom: 5,child: SafeArea(child:  OpenStreetMapCopyright())),
+              const Positioned(
+                  left: 5,
+                  bottom: 5,
+                  child: SafeArea(child: OpenStreetMapCopyright())),
               const SafeArea(child: MapButtonsLayerLight()),
             ],
           );

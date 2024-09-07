@@ -483,7 +483,7 @@
   "yes": "Yes",
   "yesterday": "was yesterday",
   "collectionStop": "Procession collection stop",
-  "sendMail": "Send an email",
+  "sendMail": "Send email to support",
   "updating": "Updating data",
   "leaveAppWarningTitle": "Open an external browser?",
   "leaveAppWarning": "You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: ",
@@ -533,5 +533,9 @@
   "startParticipationHeader": "You are participating on the Bladenight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?",
   "startParticipationShort": "Start participation",
   "selectTrackingType": "Select tracking type",
-  "registeredAs": "Registered as:"
+  "registeredAs": "Registered as:",
+  "editFriendHeader": "Edit {name} colors and name",
+  "deleteFriendHeader": "Delete linking with {name} forever",
+  "refresh": "Update",
+  "refreshHeader": "Update data"
 }

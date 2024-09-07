@@ -1,6 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:wakelock/wakelock.dart';
-import 'widgets/tracking_export_widget.dart';
+import '../widgets/tracking_export_widget.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -12,25 +12,25 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
 
-import '../generated/l10n.dart';
-import '../helpers/background_location_helper.dart';
-import '../helpers/export_import_data_helper.dart';
-import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/logger.dart';
-import '../helpers/notification/onesignal_handler.dart';
-import '../helpers/notification/toast_notification.dart';
-import '../pages/widgets/app_id_widget.dart';
-import '../pages/widgets/data_widget_left_right.dart';
-import '../providers/is_tracking_provider.dart';
-import '../providers/map/map_settings_provider.dart';
-import '../providers/network_connection_provider.dart';
-import '../providers/settings/dark_color_provider.dart';
-import '../providers/settings/light_color_provider.dart';
-import '../providers/settings/me_color_provider.dart';
-import '../wamp/wamp_v2.dart';
-import 'bladeguard/bladeguard_page.dart';
-import 'widgets/one_signal_id_widget.dart';
-import 'widgets/settings_invisible_offline.dart';
+import '../../generated/l10n.dart';
+import '../../helpers/background_location_helper.dart';
+import '../../helpers/export_import_data_helper.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
+import '../../helpers/logger.dart';
+import '../../helpers/notification/onesignal_handler.dart';
+import '../../helpers/notification/toast_notification.dart';
+import '../widgets/app_id_widget.dart';
+import '../widgets/data_widget_left_right.dart';
+import '../../providers/is_tracking_provider.dart';
+import '../../providers/map/map_settings_provider.dart';
+import '../../providers/network_connection_provider.dart';
+import '../../providers/settings/dark_color_provider.dart';
+import '../../providers/settings/light_color_provider.dart';
+import '../../providers/settings/me_color_provider.dart';
+import '../../wamp/wamp_v2.dart';
+import '../bladeguard/bladeguard_page.dart';
+import '../widgets/one_signal_id_widget.dart';
+import '../widgets/settings_invisible_offline.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -749,7 +749,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         descriptionRight: '',
                                         rightWidget: CupertinoSwitch(
                                           onChanged: (val) {
-                                            WampV2.instance.closeAndReconnect();
+                                            WampV2().closeAndReconnect();
                                             HiveSettingsDB.setUseCustomServer(
                                                 val);
                                             setState(() {});

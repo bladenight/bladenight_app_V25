@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_context/riverpod_context.dart';
 
 import '../../../helpers/logger.dart';
 import '../../../models/images_and_links.dart';
@@ -49,30 +48,30 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
         Polyline(
           //current and active route points
           points: activeEventRoutePoints,
-          strokeWidth: context.watch(isTrackingProvider) ? 5 : 3,
+          strokeWidth: ref.watch(isTrackingProvider) ? 5 : 3,
           borderColor: CupertinoAdaptiveTheme.of(context).theme.brightness ==
                   Brightness.light
               ? Colors.blue
               : Colors.yellow,
-          color: context.watch(isTrackingProvider)
+          color: ref.watch(isTrackingProvider)
               ? CupertinoAdaptiveTheme.of(context).theme.brightness ==
                       Brightness.light
                   ? CupertinoColors.white
                   : CupertinoColors.darkBackgroundGray
               : Colors.transparent,
           useStrokeWidthInMeter: false,
-          borderStrokeWidth: context.watch(isTrackingProvider) ? 4 : 5,
+          borderStrokeWidth: ref.watch(isTrackingProvider) ? 4 : 5,
           //ref.watch(isTrackingProvider),
         ),
       //user‘s track points
       if (locationUpdate.userSpeedPoints.userSpeedPoints.isNotEmpty &&
-          context.watch(showOwnTrackProvider) &&
+          ref.watch(showOwnTrackProvider) &&
           ref.watch(showOwnColoredTrackProvider))
         for (var part in locationUpdate.userSpeedPoints.userSpeedPoints)
           Polyline(
               points: part.latLngList,
               color: part.color,
-              strokeWidth: context.watch(isTrackingProvider) ? 6 : 6,
+              strokeWidth: ref.watch(isTrackingProvider) ? 6 : 6,
               borderStrokeWidth: 1.0,
               useStrokeWidthInMeter: false,
               hitValue: part.realSpeedKmh,
@@ -81,13 +80,13 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
                           Brightness.light
                       ? CupertinoColors.black
                       : part.color),
-      if (context.watch(showOwnTrackProvider) &&
+      if (ref.watch(showOwnTrackProvider) &&
           !ref.watch(showOwnColoredTrackProvider))
         Polyline(
           points: locationUpdate.userLatLngList,
-          strokeWidth: context.watch(isTrackingProvider) ? 4 : 3,
-          borderColor: context.watch(meColorProvider),
-          color: context.watch(isTrackingProvider)
+          strokeWidth: ref.watch(isTrackingProvider) ? 4 : 3,
+          borderColor: ref.watch(meColorProvider),
+          color: ref.watch(isTrackingProvider)
               ? const CupertinoDynamicColor.withBrightness(
                   color: CupertinoColors.white,
                   darkColor: CupertinoColors.systemBlue)

@@ -9,15 +9,15 @@ double mediaSizePercentage = 0.05;
 double mediaSizeTrackProgressIconsPercentage = 0.03;
 
 ///Default update interval to get [RealtimeData] when not tracking in milliseconds
-const int defaultRealtimeUpdateInterval = 14000;
+const int defaultRealtimeUpdateInterval = 15000;
 
-///Default update interval to get [RealtimeData] when tracking in seconds
-const int defaultLocationUpdateInterval = 4;
+///Default update interval to get [RealtimeData] when tracking in milliseconds
+const int defaultLocationUpdateInterval = 5000;
 
 const Duration wampTimeout = Duration(seconds: 10);
 
 ///Defaulttime to send new [RealtimeUpdate] with location when tracking in seconds
-const int defaultSendNewLocationDelay = 5;
+//const int defaultSendNewLocationDelay = 5;
 
 ///Default minimum running interval in minutes before auto stop.
 ///Issue can occur when user goes around finish on startup and tracking is switched on
@@ -66,5 +66,14 @@ class ColorConstants {
     Color(0xFF485864),
     Color(0xFF940202),
     Color(0xFFB900F1),
+  ];
+
+  static const List<Color> colorsGradient = [
+    Color(0xFFED8E00),
+    Color(0xFFECC385),
+    Color(0xFFD3FFD5),
+    Color(0xFFB3EAFE),
+    Color(0xFF82CFFF),
+    Color(0xFF467ED2),
   ];
 }

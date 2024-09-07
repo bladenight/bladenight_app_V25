@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../app_settings/app_constants.dart';
 import '../helpers/enums/tracking_type.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../wamp/wamp_v2.dart';
 import 'location_provider.dart';
 
 part 'is_tracking_provider.g.dart';
@@ -22,10 +23,10 @@ class IsTracking extends _$IsTracking {
   ///set [userIsParticipant] to true if participant
   ///set [userIsParticipant] to false if only in viewer-mode
   Future<bool> toggleTracking(TrackingType trackingType) async {
-    if (LocationProvider.instance.isTracking) {
+    if (LocationProvider().isTracking) {
       stopTracking();
     } else {
-      startTracking(trackingType);
+      _startTracking(trackingType);
     }
     return state;
   }
@@ -33,24 +34,27 @@ class IsTracking extends _$IsTracking {
   ///toggles tracking when user is in procession
   ///set [userIsParticipant] to true if participant
   ///set [userIsParticipant] to false if only in viewer-mode
-  Future<bool> startTracking(TrackingType trackingType) async {
+  Future<bool> _startTracking(TrackingType trackingType) async {
     if (trackingType == TrackingType.onlyTracking) {
+      WampV2().stopWamp();
       MapSettings.setShowOwnTrack(true);
       MapSettings.setWasOpenStreetMapEnabledFlag(
           MapSettings.openStreetMapEnabled);
       MapSettings.setOpenStreetMapEnabled(true);
+    } else {
+      WampV2().startWamp();
     }
     HiveSettingsDB.setUserIsParticipant(
         trackingType == TrackingType.userParticipating);
-    return await LocationProvider.instance.startTracking(trackingType);
+    return LocationProvider().startTracking(trackingType);
   }
 
   Future<bool> stopTracking() async {
-    if (LocationProvider.instance.trackingType == TrackingType.onlyTracking) {
+    if (LocationProvider().trackingType == TrackingType.onlyTracking) {
       MapSettings.setOpenStreetMapEnabled(
           MapSettings.wasOpenStreetMapEnabledFlag);
     }
-    return await LocationProvider.instance.stopTracking();
+    return LocationProvider().stopTracking();
   }
 }
 

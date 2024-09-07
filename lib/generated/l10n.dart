@@ -4003,10 +4003,10 @@ class Localize {
     );
   }
 
-  /// `Send an email`
+  /// `Send email to support`
   String get sendMail {
     return Intl.message(
-      'Send an email',
+      'Send email to support',
       name: 'sendMail',
       desc: '',
       args: [],
@@ -4508,6 +4508,46 @@ class Localize {
     return Intl.message(
       'Registered as:',
       name: 'registeredAs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit {name} colors and name`
+  String editFriendHeader(Object name) {
+    return Intl.message(
+      'Edit $name colors and name',
+      name: 'editFriendHeader',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Delete linking with {name} forever`
+  String deleteFriendHeader(Object name) {
+    return Intl.message(
+      'Delete linking with $name forever',
+      name: 'deleteFriendHeader',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Update`
+  String get refresh {
+    return Intl.message(
+      'Update',
+      name: 'refresh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update data`
+  String get refreshHeader {
+    return Intl.message(
+      'Update data',
+      name: 'refreshHeader',
       desc: '',
       args: [],
     );

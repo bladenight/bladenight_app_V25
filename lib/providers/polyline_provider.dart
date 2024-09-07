@@ -1,18 +1,17 @@
-
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
-final polyLinesProvider = StateNotifierProvider<PolyLinesProviderNotifier, List<Polyline>>((ref) {
+final polyLinesProvider =
+    StateNotifierProvider<PolyLinesProviderNotifier, List<Polyline>>((ref) {
   return PolyLinesProviderNotifier(ref);
 });
 
-class PolyLinesProviderNotifier extends StateNotifier<List<Polyline>>{
-  PolyLinesProviderNotifier(   this.ref):super([]);
+class PolyLinesProviderNotifier extends StateNotifier<List<Polyline>> {
+  PolyLinesProviderNotifier(this.ref) : super([]);
   final Ref ref;
-  void setLines (){
-    state =[
 
+  void setLines() {
+    state = [
       /*Polyline(
 //active route points
       points:  ref.watch(activeEventProvider).activeEventRoutePoints,
@@ -55,12 +54,12 @@ isDotted: false, //ref.watch(isTrackingProvider),
 
 //user track
 if (locationUpdate.userLatLongs.isNotEmpty &&
-context.watch(ShowOwnTrack.provider))
+ref.watch(ShowOwnTrack.provider))
 Polyline(
 points: locationUpdate.userLatLongs,
 strokeWidth: locationUpdate.isTracking ? 4 : 3,
-borderColor: context.watch(MeColor.provider),
-color: context.watch(isTrackingProvider)
+borderColor: ref.watch(MeColor.provider),
+color: ref.watch(isTrackingProvider)
 ? const CupertinoDynamicColor.withBrightness(
 color: CupertinoColors.white,
 darkColor: CupertinoColors.systemBlue)
@@ -73,13 +72,12 @@ runningRoutePoints.isNotEmpty)
 Polyline(
 points: runningRoutePoints,
 color: CupertinoDynamicColor.withBrightness(
-color: context.watch(ThemePrimaryColor.provider),
+color: ref.watch(ThemePrimaryColor.provider),
 darkColor:
-context.watch(ThemePrimaryDarkColor.provider)),
+ref.watch(ThemePrimaryDarkColor.provider)),
 strokeWidth: 3,
 borderStrokeWidth: 5.0,
 isDotted: true),*/
-];
+    ];
+  }
 }
-}
-

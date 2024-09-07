@@ -62,7 +62,7 @@ class RoutePoints with RoutePointsMappable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getActiveRoute);
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp<RoutePoints>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) =>
@@ -82,7 +82,7 @@ class RoutePoints with RoutePointsMappable {
     Completer completer = Completer();
     BnWampMessage bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getroute, name);
-    var wampResult = await WampV2.instance
+    var wampResult = await WampV2()
         .addToWamp<RoutePoints>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) =>

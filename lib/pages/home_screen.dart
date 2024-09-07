@@ -15,12 +15,13 @@ import '../helpers/logger.dart';
 import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../providers/get_images_and_links_provider.dart';
+import '../providers/location_provider.dart';
 import 'bladeguard/bladeguard_page.dart';
-import 'events_page.dart';
+import 'events/events_page.dart';
 import 'friends/friends_page.dart';
 import 'home_page.dart';
 import 'map/map_page.dart';
-import 'settings_page.dart';
+import 'settings/settings_page.dart';
 import 'widgets/intro_slider.dart';
 
 bool _initialURILinkHandled = false;
@@ -38,6 +39,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver {
   //added deep links bna.bladenight.app
 
+  bool _firstRefresh = true;
+
   StreamSubscription? _uniLinkStreamSubscription;
   StreamSubscription? _oneSignalOSNotificationOpenedResultSubSubscription;
   late CupertinoTabController tabController;
@@ -49,6 +52,73 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     BnLog.info(text: 'App exit requested');
     BnLog.flush();
     return AppExitResponse.cancel;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    BnLog.debug(text: 'map_page - didChangeAppLifecycleState $state');
+    switch (state) {
+      case AppLifecycleState.resumed:
+        resumeUpdates(force: true);
+        LocationProvider().setToBackground(false);
+        break;
+      case AppLifecycleState.paused:
+        BnLog.trace(
+            className: toString(),
+            methodName: 'didChangeAppLifecycleState',
+            text: 'App paused - LocProvider instance pause updates calling');
+        pauseUpdates();
+        LocationProvider().setToBackground(true);
+        break;
+      case AppLifecycleState.hidden:
+        BnLog.trace(
+            className: toString(),
+            methodName: 'didChangeAppLifecycleState',
+            text: 'App hidden - ');
+        break;
+      case AppLifecycleState.detached:
+        BnLog.trace(
+            className: toString(),
+            methodName: 'didChangeAppLifecycleState',
+            text: 'App detached - ');
+        break;
+      case AppLifecycleState.inactive:
+        BnLog.trace(
+            className: toString(),
+            methodName: 'didChangeAppLifecycleState',
+            text: 'App inactive - ');
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    pauseUpdates();
+    _uniLinkStreamSubscription?.cancel();
+    _oneSignalOSNotificationOpenedResultSubSubscription?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    tabController.dispose();
+    super.dispose();
+  }
+
+  void resumeUpdates({bool force = false}) async {
+    BnLog.trace(
+        className: toString(),
+        methodName: 'pauseUpdates',
+        text: 'update resumed');
+    if (force || _firstRefresh) {
+      LocationProvider().refreshRealtimeData(forceUpdate: force);
+      _firstRefresh = false;
+    }
+    LocationProvider().startRealtimeUpdateSubscriptionIfNotTracking();
+  }
+
+  void pauseUpdates() async {
+    LocationProvider().stopRealtimedataSubscription;
+    BnLog.trace(
+        className: toString(),
+        methodName: 'pauseUpdates',
+        text: 'update paused');
   }
 
   Future<void> _quit() async {
@@ -91,6 +161,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     _initURIHandler();
     _incomingLinkHandler();
     initFlutterChannel();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       //_openIntroScreenFirstTime();
       _openBladeguardRequestFirstTime();
@@ -144,16 +215,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       );
       HiveSettingsDB.setHasShownBladeGuard(true);
     }
-  }
-
-  @override
-  void dispose() {
-    _uniLinkStreamSubscription?.cancel();
-    _oneSignalOSNotificationOpenedResultSubSubscription?.cancel();
-    WidgetsBinding.instance.removeObserver(this);
-
-    tabController.dispose();
-    super.dispose();
   }
 
   Future<void> _initURIHandler() async {
@@ -221,28 +282,41 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       controller: tabController,
       tabBar: CupertinoTabBar(
         backgroundColor:
-            CupertinoTheme.of(context).barBackgroundColor.withOpacity(1.0),
+        CupertinoTheme
+            .of(context)
+            .barBackgroundColor
+            .withOpacity(1.0),
         items: [
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.home),
-            label: Localize.of(context).home,
+            label: Localize
+                .of(context)
+                .home,
           ),
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.map),
-            label: Localize.of(context).map,
+            label: Localize
+                .of(context)
+                .map,
           ),
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.ticket),
-            label: Localize.of(context).events,
+            label: Localize
+                .of(context)
+                .events,
           ),
           if (!kIsWeb)
             BottomNavigationBarItem(
               icon: const Icon(CupertinoIcons.group),
-              label: Localize.of(context).friends,
+              label: Localize
+                  .of(context)
+                  .friends,
             ),
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.settings_solid),
-            label: Localize.of(context).settings,
+            label: Localize
+                .of(context)
+                .settings,
           ),
         ],
       ),
@@ -264,7 +338,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               return const SettingsPage();
             }
             return Container();
-          /*var ssp = context.watch(BladeguardLinkImageAndLink.provider);
+        /*var ssp = ref.watch(BladeguardLinkImageAndLink.provider);
               return ssp.link == null ? Container() : BladeGuardPage();*/
           default:
             return Container();
