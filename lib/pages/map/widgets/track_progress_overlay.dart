@@ -128,7 +128,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
               alignment: Alignment.center,
               child: Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text(Localize.of(context).updating),
+                child: Text('${Localize.of(context).updating} '
+                    '${rtu?.rpcException != null ? rtu?.rpcException.toString() : ''}'),
               ),
             ),
             CircularProgressIndicator(

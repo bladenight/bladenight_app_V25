@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,7 +21,6 @@ class CustomLocationLayer extends ConsumerStatefulWidget {
 }
 
 class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
-
   @override
   void initState() {
     super.initState();
@@ -38,12 +38,11 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
     var alignMap = ref.watch(alignFlutterMapProvider);
     var iconSize = ref.watch(iconSizeProvider);
     //var headingStream = ref.watch(rawStreamProvider);
-    
+
     //print('Widget has gesture ${widget.hasGesture}');
     return !isTracking
-        ? Container()
+        ? const CircleAvatar()
         : CurrentLocationLayer(
-
             //indicators: const LocationMarkerIndicators(),
 
             alignDirectionAnimationDuration: const Duration(milliseconds: 300),

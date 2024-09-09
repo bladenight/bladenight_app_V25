@@ -107,12 +107,10 @@ class NotificationHelper {
     var timeDiff =
         scheduledDate.toUtc().difference(DateTime.now().toUtc()).inMinutes;
     if (timeDiff < 1) {
-      if (!kIsWeb) {
-        BnLog.warning(
-            className: 'flutterLocalNotificationsPlugin',
-            methodName: 'zonedSchedule',
-            text: 'no notification set:$scheduledDate is not in future');
-      }
+      BnLog.warning(
+          className: 'flutterLocalNotificationsPlugin',
+          methodName: 'zonedSchedule',
+          text: 'no notification set:$scheduledDate is not in future');
       return;
     }
     var tzTime = tz.TZDateTime.now(tz.UTC).add(Duration(minutes: timeDiff));

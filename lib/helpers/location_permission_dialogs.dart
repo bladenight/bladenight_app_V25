@@ -277,11 +277,9 @@ class LocationPermissionDialog {
     var res = await openAppSettings();
     if (res == false) {
       Fluttertoast.showToast(msg: Localize.current.couldNotOpenAppSettings);
-      if (!kIsWeb) {
-        BnLog.warning(
-            text:
-                'App settings could not opened while location permissions are permanently denied');
-      }
+      BnLog.warning(
+          text:
+              'App settings could not opened while location permissions are permanently denied');
       return false;
     }
     return true;

@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter_launcher_icons/custom_exceptions.dart';
 
-class AverageList<T> extends ListBase<T> {
+class AverageList<T extends num> extends ListBase<T> {
   List<T> innerList = [];
   final int maxLength;
 
@@ -52,6 +52,6 @@ class AverageList<T> extends ListBase<T> {
       }
       return (res / innerList.length).round() as T;
     }
-    throw const InvalidConfigException('only double and int');
+    throw const InvalidConfigException('only num double and int');
   }
 }

@@ -560,7 +560,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onlyWhenInUseEnabled": MessageLookupByLibrary.simpleMessage(
             "Standortfreigabe nur \'Zugriff nur während der Nutzung der App zulassen\'"),
         "onlyWhileInUse": MessageLookupByLibrary.simpleMessage(
-            "GPS nur wenn App im Vordergrund freigegeben. Bitte Systemeinstellungen prüfen"),
+            "Standortfreigabe wenn App in Benutzung erteilt."),
         "openOperatingSystemSettings":
             MessageLookupByLibrary.simpleMessage("Öffne Systemeinstellungen"),
         "openStreetMap": MessageLookupByLibrary.simpleMessage(

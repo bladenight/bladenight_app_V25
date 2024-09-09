@@ -53,13 +53,13 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                             ? const CircularProgressIndicator()
                             : const Icon(Icons.edit),
                         onPressed: () async {
-                          openDatPicker(context);
+                          openDatePicker(context);
                         }),
                     Expanded(
                       child: GestureDetector(
                           child: Text(dateString),
                           onTap: () {
-                            openDatPicker(context);
+                            openDatePicker(context);
                           }),
                     ),
                     CupertinoButton(
@@ -173,7 +173,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
     }
   }
 
-  void openDatPicker(BuildContext context) {
+  void openDatePicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (_) => StringPicker(

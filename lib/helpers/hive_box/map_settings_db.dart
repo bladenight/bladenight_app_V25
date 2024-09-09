@@ -109,9 +109,7 @@ extension MapSettings on HiveSettingsDB {
         LatLng(double.parse(boundValues[2]), double.parse(boundValues[3])),
       );
     } catch (e) {
-      if (!kIsWeb) {
-        BnLog.error(text: 'LatLngBounds could not converted', exception: e);
-      }
+      BnLog.error(text: 'LatLngBounds could not converted', exception: e);
     }
     return mapOnlineDefaultBoundaries;
   }

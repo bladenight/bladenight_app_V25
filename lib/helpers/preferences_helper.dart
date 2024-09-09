@@ -53,7 +53,6 @@ class PreferencesHelper {
     return finalFriendId;
   }
 
-
   static Future<ImageAndLinkList> getImagesAndLinksPref() async {
     if (!kIsWeb) BnLog.trace(text: 'Prefs get images and links');
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -68,9 +67,7 @@ class PreferencesHelper {
       }
       return Future.value(links);
     } catch (e) {
-      if (!kIsWeb) {
-        BnLog.error(text: 'Error Prefs get images and links', exception: e);
-      }
+      BnLog.error(text: 'Error Prefs get images and links', exception: e);
     }
     return ImageAndLinkList(<ImageAndLink>[]);
   }
@@ -81,9 +78,7 @@ class PreferencesHelper {
       var prefString = MapperContainer.globals.toJson(ial);
       prefs.setString(_imagesAndLinksPref, prefString);
     } catch (e) {
-      if (!kIsWeb) {
-        BnLog.error(text: 'Error Prefs set images and links', exception: e);
-      }
+      BnLog.error(text: 'Error Prefs set images and links', exception: e);
     }
   }
 }

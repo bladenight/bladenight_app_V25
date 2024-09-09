@@ -203,12 +203,6 @@ class WampV2 {
     }
     if (_hadShakeHands == false) {
       _startShakeHands = true;
-      if (!kIsWeb) {
-        BnLog.debug(
-            text: 'shakeHands',
-            methodName: 'shakeHands',
-            className: toString());
-      }
       var shkRes = await ShakeHandResult.shakeHandsWamp();
       _startShakeHands = false;
 
@@ -304,14 +298,12 @@ class WampV2 {
               continue;
             }
             await _sendToWampFromRunner(nextMessage)
-                .timeout(const Duration(seconds: 5));
-            if (!kIsWeb) {
-              BnLog.debug(
-                  className: toString(),
-                  methodName: 'send message finished ',
-                  text:
-                      'id: ${message.requestId} target ${message.endpoint} - Message:$message');
-            }
+                .timeout(const Duration(seconds: 10));
+            BnLog.debug(
+                className: toString(),
+                methodName: 'send message finished ',
+                text:
+                    'id: ${message.requestId} target ${message.endpoint} - Message:$message');
 
             //queue.removeFirst();
             if (queue.isEmpty) {

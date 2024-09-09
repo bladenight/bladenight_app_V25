@@ -116,19 +116,15 @@ class FriendsLogic with ChangeNotifier {
           ..hasServerEntry = true;
       }*/
     } on WampException catch (e) {
-      if (!kIsWeb) {
-        BnLog.error(
-            className: 'friendsProvider',
-            methodName: 'refreshFriends_WampError',
-            text: e.toString());
-      }
+      BnLog.error(
+          className: 'friendsProvider',
+          methodName: 'refreshFriends_WampError',
+          text: e.toString());
     } on Exception catch (e) {
-      if (!kIsWeb) {
-        BnLog.error(
-            className: 'friendsProvider',
-            methodName: 'refreshFriends_exception',
-            text: e.toString());
-      }
+      BnLog.error(
+          className: 'friendsProvider',
+          methodName: 'refreshFriends_exception',
+          text: e.toString());
     } finally {
       notifyListeners();
     }
@@ -257,11 +253,9 @@ class FriendsLogic with ChangeNotifier {
     );
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
-      if (!kIsWeb) {
-        BnLog.error(
-            text: 'Error deleting friend on Server',
-            exception: getFriendRelationshipResult?.rpcException);
-      }
+      BnLog.error(
+          text: 'Error deleting friend on Server',
+          exception: getFriendRelationshipResult?.rpcException);
       return;
     }
   }

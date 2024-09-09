@@ -63,7 +63,8 @@ class _MapLayerState extends State<MapLayer> {
         initialCenter: widget.startPoint,
         cameraConstraint: MapSettings.openStreetMapEnabled ||
                 widget.event.hasSpecialStartPoint
-            ? CameraConstraint.contain(bounds: MapSettings.mapOnlineBoundaries)
+            ? const CameraConstraint
+                .unconstrained() //CameraConstraint.contain(bounds: MapSettings.mapOnlineBoundaries)
             : CameraConstraint.contain(
                 bounds: MapSettings.mapOfflineBoundaries),
         interactionOptions: const InteractionOptions(

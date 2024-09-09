@@ -349,7 +349,7 @@
   "oneSignalIdTitle": "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Du Probleme beim Empfang von Push-Nachrichten hast.",
   "online": "Online",
   "onlyWhenInUseEnabled": "Standortfreigabe nur 'Zugriff nur während der Nutzung der App zulassen'",
-  "onlyWhileInUse": "GPS nur wenn App im Vordergrund freigegeben. Bitte Systemeinstellungen prüfen",
+  "onlyWhileInUse": "Standortfreigabe wenn App in Benutzung erteilt.",
   "openOperatingSystemSettings": "Öffne Systemeinstellungen",
   "openStreetMap": "Openstreetmap Kartenteile laden / Neustart erforderlich",
   "openStreetMapText": "Nutze Openstreetmap",
