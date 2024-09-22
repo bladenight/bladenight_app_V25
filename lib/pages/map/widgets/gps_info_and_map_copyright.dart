@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -32,9 +33,10 @@ class GPSInfoAndMapCopyright extends ConsumerStatefulWidget {
 }
 
 class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
-  late final Stream<bg.Location?> _locationStream;
-  late double currentUserSpeed = -1;
-  late double currentUserOdoDriven = 0.0;
+  Stream<bg.Location?>? _locationStream;
+  StreamSubscription<bg.Location?>? _locationStreamListener;
+  double currentUserSpeed = -1;
+  double currentUserOdoDriven = 0.0;
 
   @override
   void initState() {
@@ -43,7 +45,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
       return;
     }
     _locationStream = LocationProvider().userBgLocationStream;
-    _locationStream.listen((location) {
+    _locationStreamListener = _locationStream?.listen((location) {
       setState(() {
         if (location == null) {
           return;
@@ -56,6 +58,11 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
 
   @override
   void dispose() {
+    if (_locationStreamListener != null) {
+      _locationStreamListener?.cancel();
+      _locationStreamListener = null;
+    }
+    _locationStream = null;
     super.dispose();
   }
 
