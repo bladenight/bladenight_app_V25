@@ -41,6 +41,11 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var activeEventRoutePoints = RoutePoints('', <LatLng>[]);
     var activeEventRouteP = ref.watch(activeEventRouteProvider);

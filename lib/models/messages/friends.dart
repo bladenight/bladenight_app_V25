@@ -6,7 +6,7 @@ import '../../app_settings/app_constants.dart';
 import '../../helpers/wamp/message_types.dart';
 import '../../wamp/bn_wamp_message.dart';
 import '../../wamp/wamp_endpoints.dart';
-import '../../wamp/wamp_error.dart';
+import '../../wamp/wamp_exception.dart';
 import '../../wamp/wamp_v2.dart';
 import 'friend.dart';
 

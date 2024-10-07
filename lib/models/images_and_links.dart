@@ -7,7 +7,7 @@ import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/wamp/message_types.dart';
 import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_endpoints.dart';
-import '../wamp/wamp_error.dart';
+import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 import 'image_and_link.dart';
 
@@ -36,10 +36,10 @@ class ImageAndLinkList with ImageAndLinkListMappable {
         .addToWamp<ImageAndLinkList>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) =>
-        ImageAndLinkList.rpcError(WampException(error.toString())));
+            ImageAndLinkList.rpcError(WampException(error.toString())));
     if (wampResult is Map<String, dynamic>) {
       var ialList =
-      MapperContainer.globals.fromMap<ImageAndLinkList>(wampResult);
+          MapperContainer.globals.fromMap<ImageAndLinkList>(wampResult);
       HiveSettingsDB.setImagesAndLinksJson(ialList.toJson());
       return ialList;
     }

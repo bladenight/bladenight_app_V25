@@ -2,7 +2,7 @@ import 'dart:async';
 
 import '../../app_settings/app_constants.dart';
 import '../../wamp/bn_wamp_message.dart';
-import '../../wamp/wamp_error.dart';
+import '../../wamp/wamp_exception.dart';
 import '../../wamp/wamp_v2.dart';
 
 Future<int> subscribeMessage(String topic) async {

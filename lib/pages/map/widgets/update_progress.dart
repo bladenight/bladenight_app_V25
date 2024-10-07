@@ -11,8 +11,8 @@ class UpdateProgress extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
-      width: 22,
-      height: 22,
+      width: 20,
+      height: 20,
       child: Stack(alignment: Alignment.center, children: [
         Icon(
             size: 18.0,

@@ -8,7 +8,7 @@ import '../app_settings/app_constants.dart';
 import '../helpers/deviceid_helper.dart';
 import '../helpers/wamp/message_types.dart';
 import '../wamp/bn_wamp_message.dart';
-import '../wamp/wamp_error.dart';
+import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 
 part 'shake_hand_result.mapper.dart';
@@ -30,8 +30,8 @@ class ShakeHandResult with ShakeHandResultMappable {
       {required this.status, required this.minBuild, this.rpcException});
 
   static Future<ShakeHandResult> shakeHandsWamp() async {
-    Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(
+    Completer? completer = Completer();
+    BnWampMessage? bnWampMessage = BnWampMessage(
       WampMessageType.call,
       completer,
       WampEndpoint.shakeHand,
@@ -48,6 +48,8 @@ class ShakeHandResult with ShakeHandResultMappable {
         .timeout(wampTimeout)
         .catchError((error, stackTrace) =>
             ShakeHandResult(status: true, minBuild: 1, rpcException: error));
+    bnWampMessage = null;
+    completer = null;
     if (wampResult is Map<String, dynamic>) {
       var shkRes = MapperContainer.globals.fromMap<ShakeHandResult>(wampResult);
       return shkRes;

@@ -39,6 +39,14 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
   }
 
   @override
+  void dispose() {
+    animationController = null;
+    animation = null;
+    locationSubscription?.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(fit: StackFit.passthrough, children: [
       //#######################################################################

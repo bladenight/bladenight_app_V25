@@ -61,6 +61,14 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   }
 
   @override
+  void dispose() {
+    animationController = null;
+    animation = null;
+    locationSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
   void didChangeMetrics() {
     _currentOrientation = MediaQuery.of(context).orientation;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

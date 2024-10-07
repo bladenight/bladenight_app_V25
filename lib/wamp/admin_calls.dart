@@ -5,19 +5,21 @@ import '../helpers/wamp/message_types.dart';
 import '../pages/admin/widgets/admin_password_dialog.dart';
 import 'bn_wamp_message.dart';
 import 'wamp_endpoints.dart';
-import 'wamp_error.dart';
+import 'wamp_exception.dart';
 import 'wamp_v2.dart';
 
 class AdminCalls {
   static Future<bool> setActiveStatus(Map<String, dynamic> message) async {
-    Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(
+    Completer? completer = Completer();
+    BnWampMessage? bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.setactivestatus, message);
 
     var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampException(error.toString()));
+    bnWampMessage = null;
+    completer = null;
     if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
@@ -25,14 +27,16 @@ class AdminCalls {
   }
 
   static Future<bool> setActiveRoute(Map<String, dynamic> message) async {
-    Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(
+    Completer? completer = Completer();
+    BnWampMessage? bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.setactiveroute, message);
 
     var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampException(error.toString()));
+    bnWampMessage = null;
+    completer = null;
     if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
@@ -40,14 +44,16 @@ class AdminCalls {
   }
 
   static Future<bool> setProcessionMode(Map<String, dynamic> message) async {
-    Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
-        WampEndpoint.setProcessionMode, message);
+    Completer? completer = Completer();
+    BnWampMessage? bnWampMessage = BnWampMessage(WampMessageType.call,
+        completer, WampEndpoint.setProcessionMode, message);
 
     var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) => WampException(error.toString()));
+    bnWampMessage = null;
+    completer = null;
     if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }

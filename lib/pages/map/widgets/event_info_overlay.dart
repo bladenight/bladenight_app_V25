@@ -117,45 +117,29 @@ class EventInfoClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     double r = 6;
-    double rfactor = 0.55;
     double width = size.width;
     double height = size.height;
     Path path = Path()
-      ..moveTo(0, r * 0.55)
-      ..lineTo(0, height - r)
-      ..quadraticBezierTo(
-        //corner left bottom
-        r * rfactor,
-        height,
-        r * 2 * rfactor,
-        height,
-      )
+      ..moveTo(0, r)
+      ..lineTo(0, height - r) //x0, y= 85-50-6 =29 //1
+      ..quadraticBezierTo(0, height, r, height) //2
+      ..lineTo(width / 2 * 0.8, height) //
       ..lineTo(width - r, height)
+      ..quadraticBezierTo(width, height, width, height - r)
+      ..lineTo(width, r)
       ..quadraticBezierTo(
-        width - r * rfactor,
-        height - r * rfactor,
-        width,
-        height - r,
-      )
-
-      //path.quadraticBezierTo(20, height - 20, 30, height);
-      // path.lineTo(width, height - r - 30);
-      ..lineTo(width, r * rfactor)
+          //corner right top
+          width,
+          0,
+          width - r,
+          0)
+      ..lineTo(r, 0)
       ..quadraticBezierTo(
-        //corner right top
-        width - r * rfactor,
-        r * rfactor,
-        width - r * 2 * rfactor,
-        0,
-      )
-      ..lineTo(r * 2 * rfactor, 0)
-      ..quadraticBezierTo(
-        //corner left top
-        r * rfactor,
-        r * rfactor,
-        0,
-        r * 2 * rfactor,
-      )
+          //corner left top
+          0,
+          0,
+          0,
+          r)
       ..close();
     return path;
   }

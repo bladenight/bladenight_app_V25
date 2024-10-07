@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -51,6 +52,11 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
       ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
       ref.read(refreshTimerProvider.notifier).start();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -691,55 +697,37 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
 class InfoClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    double r = 6;
-    double rfactor = 0.55;
+    double r = 12;
     double nozzleHeight = 35;
     double width = size.width;
-    double height = size.height;
+    double height = size.height + 10;
     Path path = Path()
-      ..moveTo(0, r * 0.55)
-      ..lineTo(0, height - nozzleHeight - r)
+      ..moveTo(0, r)
+      ..lineTo(0, height - nozzleHeight - r) //x0, y= 85-50-6 =29 //1
       ..quadraticBezierTo(
-        //corner left bottom
-        r * rfactor,
-        height - nozzleHeight,
-        r * 2 * rfactor,
-        height - nozzleHeight,
-      )
-      ..lineTo(width / 2 - nozzleHeight / 2, height - nozzleHeight)
-
+          0, height - nozzleHeight, r, height - nozzleHeight) //2
+      ..lineTo(width / 2 - nozzleHeight * 0.8, height - nozzleHeight) //
       //nozzle
-      ..arcToPoint(Offset(width / 2, height - 5),
-          radius: Radius.circular(nozzleHeight), clockwise: false)
-      ..arcToPoint(Offset(width / 2 + nozzleHeight / 2, height - nozzleHeight),
-          radius: Radius.circular(nozzleHeight), clockwise: false)
+      ..conicTo(width / 2, height + nozzleHeight * 0.2,
+          width / 2 + nozzleHeight * 0.8, height - nozzleHeight, 2)
       //end nozzle
       ..lineTo(width - r, height - nozzleHeight)
       ..quadraticBezierTo(
-        width - r * rfactor,
-        height - nozzleHeight - r * rfactor,
-        width,
-        height - r - nozzleHeight,
-      )
-
-      //path.quadraticBezierTo(20, height - 20, 30, height);
-      // path.lineTo(width, height - r - 30);
-      ..lineTo(width, r * rfactor)
+          width, height - nozzleHeight, width, height - r - nozzleHeight)
+      ..lineTo(width, r)
       ..quadraticBezierTo(
-        //corner right top
-        width - r * rfactor,
-        r * rfactor,
-        width - r * 2 * rfactor,
-        0,
-      )
-      ..lineTo(r * 2 * rfactor, 0)
+          //corner right top
+          width,
+          0,
+          width - r,
+          0)
+      ..lineTo(r, 0)
       ..quadraticBezierTo(
-        //corner left top
-        r * rfactor,
-        r * rfactor,
-        0,
-        r * 2 * rfactor,
-      )
+          //corner left top
+          0,
+          0,
+          0,
+          r)
       ..close();
     return path;
   }
@@ -756,42 +744,30 @@ class InfoClipper extends CustomClipper<Path> {
 class InfoClipper2 extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    double r = 6;
-    double rfactor = 0.55;
+    double r = 12;
     double width = size.width;
     double height = size.height;
     Path path = Path()
-      ..moveTo(0, r * 0.55)
-      ..lineTo(0, height - r)
+      ..moveTo(0, r)
+      ..lineTo(0, height - r) //x0, y= 85-50-6 =29 //1
+      ..quadraticBezierTo(0, height, r, height) //2
+      ..lineTo(width / 2 * 0.8, height) //
+      ..lineTo(width - r, height)
+      ..quadraticBezierTo(width, height, width, height - r)
+      ..lineTo(width, r)
       ..quadraticBezierTo(
-        //corner left bottom
-        r * rfactor,
-        height,
-        r * 2 * rfactor,
-        height,
-      )
+          //corner right top
+          width,
+          0,
+          width - r,
+          0)
+      ..lineTo(r, 0)
       ..quadraticBezierTo(
-        width - r * rfactor,
-        height - r * rfactor,
-        width,
-        height - r,
-      )
-      ..lineTo(width, r * rfactor)
-      ..quadraticBezierTo(
-        //corner right top
-        width - r * rfactor,
-        r * rfactor,
-        width - r * 2 * rfactor,
-        0,
-      )
-      ..lineTo(r * 2 * rfactor, 0)
-      ..quadraticBezierTo(
-        //corner left top
-        r * rfactor,
-        r * rfactor,
-        0,
-        r * 2 * rfactor,
-      )
+          //corner left top
+          0,
+          0,
+          0,
+          r)
       ..close();
     return path;
   }
@@ -803,4 +779,8 @@ class InfoClipper2 extends CustomClipper<Path> {
     }
     return false;
   }
+}
+
+double degToRadian(int degree) {
+  return (pi / 180) * degree;
 }

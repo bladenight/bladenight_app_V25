@@ -12,6 +12,7 @@ import SwiftUI
 import MapKit
 
 
+@available(watchOSApplicationExtension 10.0, *)
 struct MapView: View {
     @EnvironmentObject var viewModel: CommunicationHandler
     @Binding var tabSelection: Int
@@ -19,16 +20,25 @@ struct MapView: View {
               center: CLLocationCoordinate2D(latitude: defaultLatitude, longitude: defaultLongitude),
               span: MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5)
           )
+    let startPoint = CLLocationCoordinate2D(
+           latitude: 48.13250913196827,
+           longitude: 11.543837661522703
+       )
+    
+    @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
+     
     
     var body: some View {
         var region = MKCoordinateRegion(
            center: CLLocationCoordinate2D(latitude: viewModel.activeEvent.startPointLatitude ?? defaultLatitude, longitude: viewModel.activeEvent.startPointLongitude ?? defaultLongitude),
                        span: MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5)
                    )
-        Map(coordinateRegion: $region).navigationTitle("Bladenight")
+        Map(position: $position){
+            Marker("Start",coordinate: startPoint)
+        }.navigationTitle("BladeNight")
             .onAppear(){
                 
-            }
+            }.mapStyle(.standard(elevation: .realistic))
         
     }
         
@@ -43,7 +53,26 @@ struct MapView: View {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView(tabSelection: .constant(5))
+        if #available(watchOSApplicationExtension 10.0, *) {
+            let startPoint = CLLocationCoordinate2D(
+                   latitude: 48.13250913196827,
+                   longitude: 11.543837661522703
+               )
+           
+            var region = MKCoordinateRegion(
+                center: startPoint,
+                span: MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5)
+                       )
+            Map{
+                Marker("Start",coordinate: startPoint)
+            }.navigationTitle("BladeNight")
+                .onAppear(){
+                    
+                }.mapStyle(.standard(elevation: .realistic))
+         
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
 

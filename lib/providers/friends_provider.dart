@@ -16,7 +16,7 @@ import '../models/friend.dart';
 import '../models/messages/friends.dart';
 import '../models/messages/relationship_input.dart';
 import '../models/messages/relationship_output.dart';
-import '../wamp/wamp_error.dart';
+import '../wamp/wamp_exception.dart';
 
 final friendsProvider =
     Provider((ref) => ref.watch(friendsLogicProvider).friends.values.toList());

@@ -12,7 +12,7 @@ import '../providers/friends_provider.dart';
 import '../providers/location_provider.dart';
 import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_endpoints.dart';
-import '../wamp/wamp_error.dart';
+import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 import 'event.dart';
 import 'friend.dart';
@@ -194,18 +194,19 @@ class RealtimeUpdate with RealtimeUpdateMappable {
       text: 'will send:$message',
     );
 
-    Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(WampMessageType.call, completer,
-        WampEndpoint.getrealtimeupdate, message);
+    Completer? completer = Completer();
+    BnWampMessage? bnWampMessage = BnWampMessage(WampMessageType.call,
+        completer, WampEndpoint.getrealtimeupdate, message);
     var wampResult = await WampV2()
         .addToWamp<RealtimeUpdate>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) =>
-            RealtimeUpdate.rpcError(WampException(error.toString())));
+        .catchError((error, stackTrace) => RealtimeUpdate.rpcError(error));
     if (wampResult is Map<String, dynamic>) {
       var update = MapperContainer.globals.fromMap<RealtimeUpdate>(wampResult);
       return update;
     }
+    bnWampMessage = null;
+    completer = null;
     if (wampResult is RealtimeUpdate) {
       return wampResult;
     }

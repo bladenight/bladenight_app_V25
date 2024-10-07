@@ -12,7 +12,7 @@ import '../helpers/timeconverter_helper.dart';
 import '../helpers/wamp/message_types.dart';
 import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_endpoints.dart';
-import '../wamp/wamp_error.dart';
+import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 
 part 'event.mapper.dart';
@@ -211,14 +211,16 @@ class Event with EventMappable implements Comparable {
           .fromJson<Event>(HiveSettingsDB.actualEventAsJson);
     }
 
-    Completer completer = Completer();
-    BnWampMessage bnWampMessage = BnWampMessage(
+    Completer? completer = Completer();
+    BnWampMessage? bnWampMessage = BnWampMessage(
         WampMessageType.call, completer, WampEndpoint.getActiveEvent);
     var wampResult = await WampV2()
         .addToWamp<Event>(bnWampMessage)
         .timeout(wampTimeout)
         .catchError((error, stackTrace) =>
             Event.rpcError(WampException(error.toString())));
+    bnWampMessage = null;
+    completer = null;
     if (wampResult is Map<String, dynamic>) {
       var event = MapperContainer.globals.fromMap<Event>(wampResult);
       event.lastupdate = DateTime.now();

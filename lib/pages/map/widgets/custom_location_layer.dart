@@ -41,7 +41,7 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
 
     //print('Widget has gesture ${widget.hasGesture}');
     return !isTracking
-        ? const CircleAvatar()
+        ? Container()
         : CurrentLocationLayer(
             //indicators: const LocationMarkerIndicators(),
 

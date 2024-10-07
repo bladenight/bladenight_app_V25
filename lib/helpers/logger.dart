@@ -52,7 +52,7 @@ class BnLog {
       printer: BnLogPrinter(
         logBox: _logBox,
         startTime: _startTime,
-        methodCount: 2,
+        methodCount: 3,
         errorMethodCount: 8,
         lineLength: 120,
         colors: false,

@@ -18,7 +18,7 @@ import '../../../generated/l10n.dart';
 import '../../../helpers/logger.dart';
 import '../../../models/friend.dart';
 import '../../../providers/friends_provider.dart';
-import '../../../wamp/wamp_error.dart';
+import '../../../wamp/wamp_exception.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_connection_warning.dart';
 import 'friends_action_sheet.dart';

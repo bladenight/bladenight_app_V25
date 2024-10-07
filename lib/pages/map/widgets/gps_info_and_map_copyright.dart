@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
+import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -32,37 +33,71 @@ class GPSInfoAndMapCopyright extends ConsumerStatefulWidget {
       _GPSInfoAndMapCopyright();
 }
 
-class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
-  Stream<bg.Location?>? _locationStream;
+class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
+    with WidgetsBindingObserver {
   StreamSubscription<bg.Location?>? _locationStreamListener;
+  StreamSubscription<CompassEvent>? _compassListener;
   double currentUserSpeed = -1;
   double currentUserOdoDriven = 0.0;
+  double _compassHeading = 0;
 
   @override
   void initState() {
     super.initState();
-    if (!widget.showOdoMeter) {
-      return;
-    }
-    _locationStream = LocationProvider().userBgLocationStream;
-    _locationStreamListener = _locationStream?.listen((location) {
+    _initListeners();
+  }
+
+  void _initListeners() {
+    print('stop_gps_info_listeners');
+    _locationStreamListener =
+        LocationProvider().userBgLocationStream.listen((location) {
       setState(() {
-        if (location == null) {
+        currentUserSpeed = location.coords.speed * 3.6;
+        if (!widget.showOdoMeter) {
           return;
         }
-        currentUserSpeed = location.coords.speed * 3.6;
         currentUserOdoDriven = location.odometer / 1000;
       });
     });
+    if (!kIsWeb) {
+      _compassListener = FlutterCompass.events?.listen((event) {
+        if (event.heading != null) {
+          //avoid extreme rebuilds
+          if ((_compassHeading - event.heading!).abs() < 2) return;
+          setState(() {
+            _compassHeading = event.heading!;
+          });
+        }
+      });
+    }
+  }
+
+  void _stopListeners() {
+    print('stop_gps_info_listeners');
+    _locationStreamListener?.cancel();
+    _locationStreamListener = null;
+    _compassListener?.cancel();
+    _compassListener = null;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('GPS-info didChangeAppLifecycleState');
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _initListeners();
+        break;
+      case AppLifecycleState.paused:
+        _stopListeners();
+        break;
+      default:
+        break;
+    }
   }
 
   @override
   void dispose() {
-    if (_locationStreamListener != null) {
-      _locationStreamListener?.cancel();
-      _locationStreamListener = null;
-    }
-    _locationStream = null;
+    _stopListeners();
     super.dispose();
   }
 
@@ -128,8 +163,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright> {
                                     icon: Row(children: [
                                       !kIsWeb && ref.watch(showCompassProvider)
                                           ? Builder(builder: (context) {
-                                              var direction =
-                                                  ref.watch(compassProvider);
+                                              var direction = _compassHeading;
                                               return Transform.rotate(
                                                 angle: (direction *
                                                     (math.pi / 180) *

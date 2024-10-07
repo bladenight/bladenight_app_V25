@@ -55,8 +55,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   @override
+  void didHaveMemoryPressure() {
+    print('home_screen - didHaveMemoryPressure ');
+    BnLog.warning(text: 'home_screen - didHaveMemoryPressure ');
+  }
+
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    BnLog.debug(text: 'map_page - didChangeAppLifecycleState $state');
+    BnLog.debug(text: 'home_screen - didChangeAppLifecycleState $state');
     switch (state) {
       case AppLifecycleState.resumed:
         resumeUpdates(force: true);
@@ -147,7 +153,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           }
         });
     } else {
-      tabController = CupertinoTabController(initialIndex: 0)
+      tabController = CupertinoTabController(initialIndex: 01)
         ..addListener(() {
           if (!kIsWeb) {
             BnLog.debug(
@@ -282,41 +288,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       controller: tabController,
       tabBar: CupertinoTabBar(
         backgroundColor:
-        CupertinoTheme
-            .of(context)
-            .barBackgroundColor
-            .withOpacity(1.0),
+            CupertinoTheme.of(context).barBackgroundColor.withOpacity(1.0),
         items: [
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.home),
-            label: Localize
-                .of(context)
-                .home,
+            label: Localize.of(context).home,
           ),
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.map),
-            label: Localize
-                .of(context)
-                .map,
+            label: Localize.of(context).map,
           ),
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.ticket),
-            label: Localize
-                .of(context)
-                .events,
+            label: Localize.of(context).events,
           ),
           if (!kIsWeb)
             BottomNavigationBarItem(
               icon: const Icon(CupertinoIcons.group),
-              label: Localize
-                  .of(context)
-                  .friends,
+              label: Localize.of(context).friends,
             ),
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.settings_solid),
-            label: Localize
-                .of(context)
-                .settings,
+            label: Localize.of(context).settings,
           ),
         ],
       ),
@@ -338,7 +331,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               return const SettingsPage();
             }
             return Container();
-        /*var ssp = ref.watch(BladeguardLinkImageAndLink.provider);
+          /*var ssp = ref.watch(BladeguardLinkImageAndLink.provider);
               return ssp.link == null ? Container() : BladeGuardPage();*/
           default:
             return Container();
