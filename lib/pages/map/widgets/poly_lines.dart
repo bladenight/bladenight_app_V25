@@ -43,6 +43,7 @@ class _PolyLines extends ConsumerState<PolyLinesLayer> {
       BnLog.debug(
           text: 'ProcessionRoutePointsCount = ${processionRoutePoints.length}');
     }
+    print('${DateTime.now().toIso8601String()} Build Polylines Layer');
     return PolylineLayer(hitNotifier: hitNotifier, polylines: [
       if (activeEventRoutePoints.isNotEmpty)
         Polyline(

@@ -18,8 +18,9 @@ import '../models/realtime_update.dart';
 import '../models/shake_hand_result.dart';
 import 'bn_wamp_message.dart';
 import 'http_overrides.dart';
+import 'multiple_request_exception.dart';
 import 'wamp_endpoints.dart';
-import 'wamp_error.dart';
+import 'wamp_exception.dart';
 
 ///TODO add keepalive with on error reopen
 enum WampConnectionState {
@@ -71,7 +72,7 @@ class WampV2 {
   final Queue<BnWampMessage> queue = Queue();
   static Timer? _liveCycleTimer;
   StreamController<BnWampMessage>? _wampCallStreamController =
-      StreamController<BnWampMessage>.broadcast();
+      StreamController<BnWampMessage>();
   final eventStreamController = StreamController<dynamic>.broadcast();
   final resultStreamController = StreamController<dynamic>.broadcast();
   final _wampConnectedStreamController = StreamController<bool>.broadcast();
@@ -169,7 +170,9 @@ class WampV2 {
   ///called by [LocationProvider] in [LocationProvider.setToBackground] method
   void startWamp() {
     _wampStopped = false;
-    _wampCallStreamController = StreamController<BnWampMessage>.broadcast();
+    _wampCallStreamController?.close();
+    _wampCallStreamController = null;
+    _wampCallStreamController = StreamController<BnWampMessage>();
     _initWamp();
     //_connLoop(); //
     _runner();
@@ -183,18 +186,6 @@ class WampV2 {
     _closeStream();
     _liveCycleTimer?.cancel();
     _liveCycleTimer = null;
-  }
-
-  Future<void> _sendToWampFromRunner(BnWampMessage message) async {
-    //check timed out
-    if ((DateTime.now().difference(message.dateTime)) >
-            const Duration(seconds: 10) &&
-        message.completer.isCompleted == false) {
-      message.completer.completeError(
-          WampException('WampV2_runner not started within 10 secs'));
-      calls.remove(message.requestId);
-    }
-    channel?.sink.add(message.getMessageAsJson);
   }
 
   Future<void> _shakeHands() async {
@@ -236,6 +227,18 @@ class WampV2 {
   }
 
   void _put(BnWampMessage message) {
+    var depreciatedCalls = <int, BnWampMessage>{};
+    for (var call in calls.entries) {
+      if (call.value.endpoint == message.endpoint) {
+        depreciatedCalls[call.value.requestId] = call.value;
+      }
+    }
+    for (var call in depreciatedCalls.entries) {
+      call.value.completer.completeError(MultipleRequestException(
+          'multiple request for ${call.value.endpoint}'));
+      calls.remove(call.key);
+    }
+
     calls[message.requestId] = message;
     if (_wampCallStreamController == null) {
       BnLog.warning(
@@ -297,15 +300,8 @@ class WampV2 {
               busy = true;
               continue;
             }
-            await _sendToWampFromRunner(nextMessage)
-                .timeout(const Duration(seconds: 10));
-            BnLog.debug(
-                className: toString(),
-                methodName: 'send message finished ',
-                text:
-                    'id: ${message.requestId} target ${message.endpoint} - Message:$message');
+            channel?.sink.add(message.getMessageAsJson);
 
-            //queue.removeFirst();
             if (queue.isEmpty) {
               busy = false;
             }
@@ -369,10 +365,9 @@ class WampV2 {
             // [RESULT, CALL.Request|id, Details|dict, YIELD.Arguments|list, YIELD.ArgumentsKw|dict]
             //BnLog.debug(text: 'channel result $wampMessage');
             var messageResult = wampMessage[2];
-            resultStreamController.add(messageResult.runtimeType);
+            //resultStreamController.add(messageResult.runtimeType);
             try {
-              realTimeUpdateStreamController.sink
-                  .add(RealtimeUpdateMapper.fromMap(messageResult));
+              // realTimeUpdateStreamController.sink.add(RealtimeUpdateMapper.fromMap(messageResult));
             } catch (_) {}
             var cpl = calls[requestId]?.completer;
             cpl?.complete(messageResult);
@@ -436,8 +431,7 @@ class WampV2 {
               var messageResult = wampMessage[2];
               var id = int.parse(wampMessage[1]);
               _subscriptions.add(id);
-              realTimeUpdateStreamController.sink
-                  .add(RealtimeUpdateMapper.fromMap(messageResult));
+              //realTimeUpdateStreamController.sink.add(RealtimeUpdateMapper.fromMap(messageResult));
               return;
             } catch (e) {
               BnLog.error(text: e.toString(), className: toString());

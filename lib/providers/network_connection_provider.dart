@@ -75,9 +75,9 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
       }
     });
 
-    Timer.periodic(const Duration(seconds: 30), (timer) {
+    /*Timer.periodic(const Duration(seconds: 30), (timer) {
       refresh();
-    });
+    });*/
   }
 
   refresh() {

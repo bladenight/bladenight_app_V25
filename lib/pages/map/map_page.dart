@@ -78,6 +78,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    print('${DateTime.now().toIso8601String()} Build Flutterman');
     var route = ref.watch(activeEventRouteProvider);
     var osmEnabled = ref.watch(useOpenStreetMapProvider);
     var startPoint = route.hasValue ? route.value!.startLatLng : defaultLatLng;
@@ -116,6 +117,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
             children: [
               const MapTileLayer(),
               Builder(builder: (context) {
+                print(
+                    '${DateTime.now().toIso8601String()} Build Fluttermap children');
                 return Stack(
                   children: [
                     MouseRegion(

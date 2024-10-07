@@ -6,7 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_compass/flutter_map_compass.dart';
+
+//import 'package:flutter_map_compass/flutter_map_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -270,7 +271,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             );
           }),
         ),
-        Positioned(
+        /* Positioned(
           right: 10,
           bottom: 220,
           child: Builder(builder: (context) {
@@ -290,7 +291,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               ),
             );
           }),
-        ),
+        ),*/
 
         //Left located button web
         /* if (kIsWeb)

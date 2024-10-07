@@ -21,9 +21,9 @@ import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../bladeguard/bladeguard_advertise.dart';
 import '../bladeguard/bladeguard_on_site_page.dart';
-import 'app_outdated.dart';
-import 'hidden_admin_button.dart';
-import 'no_connection_warning.dart';
+import '../widgets/app_outdated.dart';
+import '../widgets/hidden_admin_button.dart';
+import '../widgets/no_connection_warning.dart';
 
 class EventInfo extends ConsumerStatefulWidget {
   const EventInfo({super.key});
@@ -178,77 +178,89 @@ class _EventInfoState extends ConsumerState<EventInfo>
                   ],
                 ),
               ),
-            Column(children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(50.0, 5.0, 50, 0.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    var link = ref.read(mainSponsorImageAndLinkProvider).link;
-                    if (link != null && link != '') {
-                      var uri = Uri.parse(
-                          ref.read(mainSponsorImageAndLinkProvider).link!);
-                      Launch.launchUrlFromUri(uri);
-                    }
-                  },
-                  child: Builder(builder: (context) {
-                    var ms = ref.watch(mainSponsorImageAndLinkProvider);
-                    var nw = ref.watch(networkAwareProvider);
-                    return (ms.image != null &&
-                            nw.connectivityStatus == ConnectivityStatus.online)
-                        ? CachedNetworkImage(
-                            width: _width * .6,
-                            imageUrl: ms.image!,
-                            placeholder: (context, url) => Image.asset(
-                                mainSponsorPlaceholder,
-                                fit: BoxFit.fitWidth),
-                            errorWidget: (context, url, error) => Image.asset(
-                                mainSponsorPlaceholder,
-                                fit: BoxFit.fitWidth),
-                            errorListener: (e) {
-                              BnLog.warning(text: 'Could not load ${ms.image}');
-                            },
-                          )
-                        : Image.asset(mainSponsorPlaceholder,
-                            fit: BoxFit.fitWidth);
-                  }),
-                ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                  MediaQuery.sizeOf(context).shortestSide * 0.2,
+                  1,
+                  MediaQuery.sizeOf(context).shortestSide * 0.2,
+                  1),
+              child: IntrinsicWidth(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          var link =
+                              ref.read(mainSponsorImageAndLinkProvider).link;
+                          if (link != null && link != '') {
+                            var uri = Uri.parse(ref
+                                .read(mainSponsorImageAndLinkProvider)
+                                .link!);
+                            Launch.launchUrlFromUri(uri);
+                          }
+                        },
+                        child: Builder(builder: (context) {
+                          var ms = ref.watch(mainSponsorImageAndLinkProvider);
+                          var nw = ref.watch(networkAwareProvider);
+                          return (ms.image != null &&
+                                  nw.connectivityStatus ==
+                                      ConnectivityStatus.online)
+                              ? CachedNetworkImage(
+                                  imageUrl: ms.image!,
+                                  placeholder: (context, url) => Image.asset(
+                                      mainSponsorPlaceholder,
+                                      fit: BoxFit.fitWidth),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(mainSponsorPlaceholder,
+                                          fit: BoxFit.fitWidth),
+                                  errorListener: (e) {
+                                    BnLog.warning(
+                                        text: 'Could not load ${ms.image}');
+                                  },
+                                )
+                              : Image.asset(mainSponsorPlaceholder,
+                                  fit: BoxFit.fitWidth);
+                        }),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          var link =
+                              ref.read(secondSponsorImageAndLinkProvider).link;
+                          if (link != null && link != '') {
+                            var uri = Uri.parse(ref
+                                .read(secondSponsorImageAndLinkProvider)
+                                .link!);
+                            Launch.launchUrlFromUri(uri);
+                          }
+                        },
+                        child: Builder(builder: (context) {
+                          var img =
+                              ref.watch(secondSponsorImageAndLinkProvider);
+                          var nw = ref.watch(networkAwareProvider);
+                          return (img.image != null &&
+                                  nw.connectivityStatus ==
+                                      ConnectivityStatus.online)
+                              ? CachedNetworkImage(
+                                  imageUrl: img.image!,
+                                  placeholder: (context, url) => Image.asset(
+                                      secondLogoPlaceholder,
+                                      fit: BoxFit.fitWidth),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(secondLogoPlaceholder,
+                                          fit: BoxFit.fitWidth),
+                                  errorListener: (e) {
+                                    BnLog.warning(
+                                        text: 'Could not load ${img.image}');
+                                  },
+                                )
+                              : Image.asset(secondLogoPlaceholder,
+                                  fit: BoxFit.fitWidth);
+                        }),
+                      ),
+                    ]),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(50.0, 0.0, 50, 1.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    var link = ref.read(secondSponsorImageAndLinkProvider).link;
-                    if (link != null && link != '') {
-                      var uri = Uri.parse(
-                          ref.read(secondSponsorImageAndLinkProvider).link!);
-                      Launch.launchUrlFromUri(uri);
-                    }
-                  },
-                  child: Builder(builder: (context) {
-                    var img = ref.watch(secondSponsorImageAndLinkProvider);
-                    var nw = ref.watch(networkAwareProvider);
-                    return (img.image != null &&
-                            nw.connectivityStatus == ConnectivityStatus.online)
-                        ? CachedNetworkImage(
-                            width: _width * .6,
-                            imageUrl: img.image!,
-                            placeholder: (context, url) => Image.asset(
-                                secondLogoPlaceholder,
-                                fit: BoxFit.fitWidth),
-                            errorWidget: (context, url, error) => Image.asset(
-                                secondLogoPlaceholder,
-                                fit: BoxFit.fitWidth),
-                            errorListener: (e) {
-                              BnLog.warning(
-                                  text: 'Could not load ${img.image}');
-                            },
-                          )
-                        : Image.asset(secondLogoPlaceholder,
-                            fit: BoxFit.fitWidth);
-                  }),
-                ),
-              ),
-            ]),
+            ),
             GestureDetector(
               onTap: () async {
                 return;

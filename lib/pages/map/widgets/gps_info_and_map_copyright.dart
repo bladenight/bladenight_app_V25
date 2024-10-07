@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
-import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -17,7 +16,6 @@ import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/location_permission_dialogs.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
-import '../../../providers/map/compass_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
 import 'open_street_map_copyright.dart';
 import 'tracking_icon_widget.dart';
@@ -36,7 +34,8 @@ class GPSInfoAndMapCopyright extends ConsumerStatefulWidget {
 class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
     with WidgetsBindingObserver {
   StreamSubscription<bg.Location?>? _locationStreamListener;
-  StreamSubscription<CompassEvent>? _compassListener;
+
+  //StreamSubscription<CompassEvent>? _compassListener;
   double currentUserSpeed = -1;
   double currentUserOdoDriven = 0.0;
   double _compassHeading = 0;
@@ -59,7 +58,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
         currentUserOdoDriven = location.odometer / 1000;
       });
     });
-    if (!kIsWeb) {
+    /*if (!kIsWeb) {
       _compassListener = FlutterCompass.events?.listen((event) {
         if (event.heading != null) {
           //avoid extreme rebuilds
@@ -69,15 +68,15 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
           });
         }
       });
-    }
+    }*/
   }
 
   void _stopListeners() {
     print('stop_gps_info_listeners');
     _locationStreamListener?.cancel();
     _locationStreamListener = null;
-    _compassListener?.cancel();
-    _compassListener = null;
+    //_compassListener?.cancel();
+    //_compassListener = null;
   }
 
   @override
@@ -162,7 +161,8 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
                                             : CupertinoColors.black,
                                     icon: Row(children: [
                                       !kIsWeb && ref.watch(showCompassProvider)
-                                          ? Builder(builder: (context) {
+                                          ? Container()
+                                          /*Builder(builder: (context) {
                                               var direction = _compassHeading;
                                               return Transform.rotate(
                                                 angle: (direction *
@@ -173,7 +173,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
                                                     height: 30,
                                                     'assets/images/compass_3.png'),
                                               );
-                                            })
+                                            })*/
                                           : Icon(CupertinoIcons.gauge,
                                               color: CupertinoTheme.of(context)
                                                   .primaryColor),

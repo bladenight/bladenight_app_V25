@@ -46,6 +46,7 @@
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
+		E23FA98C2CB4084C00F26A01 /* Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */; };
 		E2584CC02A7CE09B00346A03 /* WatchEventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */; };
 		E2584CC22A7D1F3100346A03 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CC12A7D1F3100346A03 /* AboutView.swift */; };
 		E2C23F1C29D4DDF000E06959 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */; };
@@ -201,6 +202,8 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D3A0776A9D0DEE88C5784C53 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		D97977E4A022AD00497110AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E23FA98A2CB407C600F26A01 /* Info-Profile.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Profile.plist"; sourceTree = "<group>"; };
+		E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Profile.xcconfig; sourceTree = "<group>"; };
 		E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEventModel.swift; sourceTree = "<group>"; };
 		E2584CC12A7D1F3100346A03 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -394,6 +397,7 @@
 				CF747FC8B35BEB56F72E6AFC /* Pods */,
 				8368F15BE167CB08ED423476 /* Frameworks */,
 				D97977E4A022AD00497110AC /* GoogleService-Info.plist */,
+				E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -416,6 +420,7 @@
 				468B3A5B28B95B9C006A50F8 /* RunnerRelease.entitlements */,
 				4670E339286AFBA100D24851 /* Info-Debug.plist */,
 				4670E337286AFB9900D24851 /* Info-Release.plist */,
+				E23FA98A2CB407C600F26A01 /* Info-Profile.plist */,
 				46E3B2C72867833000FBC3DB /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
@@ -665,6 +670,7 @@
 			files = (
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				E2C23F2229D4E87C00E06959 /* Images.xcassets in Resources */,
+				E23FA98C2CB4084C00F26A01 /* Profile.xcconfig in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				E2C23F1C29D4DDF000E06959 /* Launch Screen.storyboard in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
@@ -1063,7 +1069,7 @@
 		};
 		249021D4217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = AppIcon;

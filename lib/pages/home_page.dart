@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../generated/l10n.dart';
-import '../pages/widgets/event_info.dart';
+import 'home_info/event_info.dart';
 import '../providers/active_event_provider.dart';
 import '../providers/messages_provider.dart';
 import '../providers/rest_api/onsite_state_provider.dart';
@@ -13,7 +13,7 @@ import '../providers/route_providers.dart';
 import 'about_page.dart';
 import 'messages/messages_page.dart';
 import 'settings/settings_page.dart';
-import 'widgets/event_info_web.dart';
+import 'home_info/event_info_web.dart';
 import 'widgets/intro_slider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
