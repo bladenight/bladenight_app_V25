@@ -13,10 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_io/io.dart';
 
@@ -87,11 +87,16 @@ void main() async {
       Globals.logToCrashlytics = HiveSettingsDB.chrashlyticsEnabled;
       await DeviceId.initAppId();
       await initLogger();
-      if (!kIsWeb) {
-        await initNotifications();
-      }
       initSettings();
-      await SentryFlutter.init((options) {
+      if (Platform.isAndroid) {
+        /// Register BackgroundGeolocation headless-task
+        /* bg.BackgroundGeolocation.registerHeadlessTask(
+          backgroundGeolocationHeadlessTask);*/
+
+        /// Register BackgroundFetch headless-task.
+        // BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
+      }
+      /*await SentryFlutter.init((options) {
         options.dsn =
             'https://260152b2325af41400820edd53e3a54c@o4507936224706560.ingest.de.sentry.io/4507936226541648';
         https: //examplePublicKey@o0.ingest.sentry.io/0';
@@ -111,20 +116,20 @@ void main() async {
                   child: BladeNightApp(),
                 ),
               ));
-
-      if (Platform.isAndroid) {
-        /// Register BackgroundGeolocation headless-task
-        /* bg.BackgroundGeolocation.registerHeadlessTask(
-          backgroundGeolocationHeadlessTask);*/
-
-        /// Register BackgroundFetch headless-task.
-        // BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
-      }
+*/
+      runApp(
+        ProviderScope(
+          observers: [
+            LoggingObserver(),
+          ],
+          child: BladeNightApp(),
+        ),
+      );
     },
     (dynamic error, StackTrace stackTrace) {
-      print('Application error 111: $error\n$stackTrace');
+      print('Application error 130: $error\n$stackTrace');
       if (!kDebugMode && !kIsWeb) {
-        //FirebaseCrashlytics.instance.recordError(error, stackTrace);
+        FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }
 
       BnLog.error(
@@ -141,16 +146,6 @@ Future<bool> initLogger() async {
     BnLog.info(text: 'logger initialized');
   } catch (e) {
     print('Logger init failed --> $e');
-    return false;
-  }
-  return true;
-}
-
-Future<bool> initNotifications() async {
-  try {
-    await NotificationHelper().initialiseNotifications();
-  } catch (e) {
-    print('initNotifications failed + $e');
     return false;
   }
   return true;
@@ -214,72 +209,83 @@ class BladeNightApp extends StatelessWidget {
         );
         return;
       },
-      child: MediaQuery.fromView(
-        view: View.of(context),
-        child: CupertinoAdaptiveTheme(
-          light: CupertinoThemeData(
-              brightness: Brightness.light,
-              primaryColor: HiveSettingsDB.themePrimaryLightColor),
-          dark: CupertinoThemeData(
-            brightness: Brightness.dark,
-            primaryColor: HiveSettingsDB.themePrimaryDarkColor,
+      child: Builder(
+        builder: (builder) => ResponsiveBreakpoints.builder(
+          breakpoints: [
+            const Breakpoint(start: 0, end: 450, name: MOBILE),
+            const Breakpoint(start: 451, end: 800, name: TABLET),
+            const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+            const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
+          ],
+          child: MediaQuery.fromView(
+            view: View.of(context),
+            child: CupertinoAdaptiveTheme(
+              light: CupertinoThemeData(
+                  brightness: Brightness.light,
+                  primaryColor: HiveSettingsDB.themePrimaryLightColor),
+              dark: CupertinoThemeData(
+                brightness: Brightness.dark,
+                primaryColor: HiveSettingsDB.themePrimaryDarkColor,
+              ),
+              initial: HiveSettingsDB.adaptiveThemeMode,
+              builder: (theme) => CupertinoApp(
+                  onGenerateRoute: (uriString) {
+                    BnLog.info(
+                        text: 'onGenerateRoute requested ${uriString.name}');
+                    if (uriString.name == null) return null;
+                    if (uriString.name!.startsWith('/showroute')) {
+                      return CupertinoPageRoute(
+                          builder: (context) => RouteNameDialog(
+                                routeName: uriString.name
+                                    .toString()
+                                    .replaceAll('/showroute?', '')
+                                    .trim(),
+                              ),
+                          fullscreenDialog: true);
+                    }
+                    if (uriString.name!.startsWith(openBladeguardOnSite)) {
+                      return CupertinoPageRoute(
+                          builder: (context) => const BladeGuardPage(),
+                          fullscreenDialog: true);
+                    }
+                    if (uriString.name!.contains('?data=')) {
+                      importData(context, uriString.name!);
+                    } else if (uriString.name!.contains('?addFriend')) {
+                      //tabController.index = 3;
+                      addFriendWithCodeFromUrl(context, uriString.name!)
+                          .then((value) => null);
+                    } else if (uriString.name!.contains('?$specialCode=1')) {
+                      HiveSettingsDB.setHasSpecialRightsPrefs(true);
+                    } else if (uriString.name!.contains('?$specialCode=0')) {
+                      HiveSettingsDB.setHasSpecialRightsPrefs(false);
+                    }
+                    return null;
+                  },
+                  title: 'BladeNight München',
+                  debugShowCheckedModeBanner: false,
+                  theme: theme,
+                  localizationsDelegates: const [
+                    //AppLocalizations.delegate,
+                    Localize.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    DefaultMaterialLocalizations.delegate,
+                    DefaultWidgetsLocalizations.delegate,
+                    DefaultCupertinoLocalizations.delegate
+                  ],
+                  supportedLocales: Localize.delegate.supportedLocales,
+                  // AppLocalizations.supportedLocales,
+                  home: const HomeScreen(),
+                  navigatorKey: navigatorKey,
+                  routes: <String, WidgetBuilder>{
+                    IntroScreen.openIntroRoute: (BuildContext context) =>
+                        const IntroScreen(),
+                    HomeScreen.routeName: (BuildContext context) =>
+                        const HomeScreen(),
+                  }),
+            ),
           ),
-          initial: HiveSettingsDB.adaptiveThemeMode,
-          builder: (theme) => CupertinoApp(
-              onGenerateRoute: (uriString) {
-                BnLog.info(text: 'onGenerateRoute requested ${uriString.name}');
-                if (uriString.name == null) return null;
-                if (uriString.name!.startsWith('/showroute')) {
-                  return CupertinoPageRoute(
-                      builder: (context) => RouteNameDialog(
-                            routeName: uriString.name
-                                .toString()
-                                .replaceAll('/showroute?', '')
-                                .trim(),
-                          ),
-                      fullscreenDialog: true);
-                }
-                if (uriString.name!.startsWith(openBladeguardOnSite)) {
-                  return CupertinoPageRoute(
-                      builder: (context) => const BladeGuardPage(),
-                      fullscreenDialog: true);
-                }
-                if (uriString.name!.contains('?data=')) {
-                  importData(context, uriString.name!);
-                } else if (uriString.name!.contains('?addFriend')) {
-                  //tabController.index = 3;
-                  addFriendWithCodeFromUrl(context, uriString.name!)
-                      .then((value) => null);
-                } else if (uriString.name!.contains('?$specialCode=1')) {
-                  HiveSettingsDB.setHasSpecialRightsPrefs(true);
-                } else if (uriString.name!.contains('?$specialCode=0')) {
-                  HiveSettingsDB.setHasSpecialRightsPrefs(false);
-                }
-                return null;
-              },
-              title: 'BladeNight München',
-              debugShowCheckedModeBanner: false,
-              theme: theme,
-              localizationsDelegates: const [
-                //AppLocalizations.delegate,
-                Localize.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                DefaultMaterialLocalizations.delegate,
-                DefaultWidgetsLocalizations.delegate,
-                DefaultCupertinoLocalizations.delegate
-              ],
-              supportedLocales: Localize.delegate.supportedLocales,
-              // AppLocalizations.supportedLocales,
-              home: const HomeScreen(),
-              navigatorKey: navigatorKey,
-              routes: <String, WidgetBuilder>{
-                IntroScreen.openIntroRoute: (BuildContext context) =>
-                    const IntroScreen(),
-                HomeScreen.routeName: (BuildContext context) =>
-                    const HomeScreen(),
-              }),
         ),
       ),
     );

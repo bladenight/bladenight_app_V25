@@ -12,6 +12,7 @@ import '../generated/l10n.dart';
 import '../helpers/export_import_data_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
+import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../providers/get_images_and_links_provider.dart';
@@ -38,7 +39,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver {
   //added deep links bna.bladenight.app
-
   bool _firstRefresh = true;
 
   StreamSubscription? _uniLinkStreamSubscription;
@@ -52,12 +52,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     BnLog.info(text: 'App exit requested');
     BnLog.flush();
     return AppExitResponse.cancel;
-  }
-
-  @override
-  void didHaveMemoryPressure() {
-    print('home_screen - didHaveMemoryPressure ');
-    BnLog.warning(text: 'home_screen - didHaveMemoryPressure ');
   }
 
   @override
@@ -141,7 +135,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         methodName: 'initState ',
         text: 'App started');
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     if (kIsWeb) {
       tabController = CupertinoTabController(initialIndex: 1)
         ..addListener(() {
@@ -153,7 +146,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           }
         });
     } else {
-      tabController = CupertinoTabController(initialIndex: 01)
+      tabController = CupertinoTabController(initialIndex: 0)
         ..addListener(() {
           if (!kIsWeb) {
             BnLog.debug(
@@ -171,9 +164,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       //_openIntroScreenFirstTime();
       _openBladeguardRequestFirstTime();
-      if (!kIsWeb) await initOneSignal();
+      if (!kIsWeb) {
+        await initOneSignal();
+        await _initNotifications();
+      }
       await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
     });
+  }
+
+  Future<bool> _initNotifications() async {
+    try {
+      await NotificationHelper().initialiseNotifications();
+    } catch (e) {
+      print('initNotifications failed + $e');
+      return false;
+    }
+    return true;
   }
 
   void _initImages() async {

@@ -6,13 +6,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_compass/flutter_map_compass.dart';
 
-//import 'package:flutter_map_compass/flutter_map_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
@@ -271,7 +272,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             );
           }),
         ),
-        /* Positioned(
+        Positioned(
           right: 10,
           bottom: 220,
           child: Builder(builder: (context) {
@@ -291,7 +292,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               ),
             );
           }),
-        ),*/
+        ),
 
         //Left located button web
         /* if (kIsWeb)
@@ -348,7 +349,10 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         //#######################################################################
         //Left side buttons
         //#######################################################################
-        if (MediaQuery.of(context).size.height > 400) ...[
+
+        if (ResponsiveBreakpoints.of(context).orientation ==
+                Orientation.portrait &&
+            ResponsiveBreakpoints.of(context).smallerThan(TABLET)) ...[
           if (!kIsWeb)
             Positioned(
               left: 80,

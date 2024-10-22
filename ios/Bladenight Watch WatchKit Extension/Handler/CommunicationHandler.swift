@@ -34,6 +34,10 @@ class CommunicationHandler: NSObject, ObservableObject {
     @Published var userlocation:Location?
     @Published var routePoints:RoutePoints?
     @Published var message:String = "Start"
+    @Published var startpoint = CLLocationCoordinate2D(
+        latitude: 48.13250913196827,
+        longitude: 11.543837661522703
+    )
 
 
     //Receive Methods from flutter flutterToWatch method aka -> sendmessage

@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar_controller.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +27,8 @@ import '../bladeguard/bladeguard_on_site_page.dart';
 import '../widgets/app_outdated.dart';
 import '../widgets/hidden_admin_button.dart';
 import '../widgets/no_connection_warning.dart';
+import 'logo_animate.dart';
+import 'logo_carousel.dart';
 
 class EventInfo extends ConsumerStatefulWidget {
   const EventInfo({super.key});
@@ -35,17 +40,12 @@ class EventInfo extends ConsumerStatefulWidget {
 class _EventInfoState extends ConsumerState<EventInfo>
     with WidgetsBindingObserver {
   Timer? _updateTimer;
-  late var _width = double.infinity;
-
-  //late var _height = double.infinity;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _width = MediaQuery.of(context).size.width;
-      //_height = MediaQuery.of(context).size.height;
       initEventUpdates();
       initLocation();
       //call on first start
@@ -112,151 +112,139 @@ class _EventInfoState extends ConsumerState<EventInfo>
           children: [
             const ConnectionWarning(),
             const AppOutdatedWidget(),
-            const BladeGuardOnsite(),
             const BladeGuardAdvertise(),
-            if (nextEventProvider.status == EventStatus.noevent)
-              HiddenAdminButton(
-                child: Text(Localize.of(context).noEventPlanned,
-                    textAlign: TextAlign.center,
-                    style: CupertinoTheme.of(context).textTheme.textStyle),
-              ),
-            if (nextEventProvider.status != EventStatus.noevent)
-              HiddenAdminButton(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(Localize.of(context).nextEvent,
-                        textAlign: TextAlign.center,
-                        style: CupertinoTheme.of(context).textTheme.textStyle),
-                    const SizedBox(height: 5),
-                    FittedBox(
-                      child: Text(
-                          '${Localize.of(context).route} ${nextEventProvider.routeName}',
-                          textAlign: TextAlign.center,
-                          style: CupertinoTheme.of(context)
-                              .textTheme
-                              .navLargeTitleTextStyle),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15.0, 5, 15, 5),
-                      child: FittedBox(
-                        child: Text(
-                            DateFormatter(Localize.of(context))
-                                .getLocalDayDateTimeRepresentation(
-                                    nextEventProvider.getUtcIso8601DateTime),
-                            style: CupertinoTheme.of(context)
-                                .textTheme
-                                .navLargeTitleTextStyle),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color:
-                              nextEventProvider.status == EventStatus.cancelled
-                                  ? Colors.redAccent
-                                  : nextEventProvider.status ==
-                                          EventStatus.confirmed
-                                      ? Colors.green
-                                      : Colors.transparent,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                        ),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(nextEventProvider.statusText,
-                              style: CupertinoTheme.of(context)
-                                  .textTheme
-                                  .pickerTextStyle),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const BladeGuardOnsite(),
             Padding(
-              padding: EdgeInsets.fromLTRB(
-                  MediaQuery.sizeOf(context).shortestSide * 0.2,
-                  1,
-                  MediaQuery.sizeOf(context).shortestSide * 0.2,
-                  1),
+              padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
               child: IntrinsicWidth(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      GestureDetector(
-                        onTap: () async {
-                          var link =
-                              ref.read(mainSponsorImageAndLinkProvider).link;
-                          if (link != null && link != '') {
-                            var uri = Uri.parse(ref
-                                .read(mainSponsorImageAndLinkProvider)
-                                .link!);
-                            Launch.launchUrlFromUri(uri);
-                          }
-                        },
-                        child: Builder(builder: (context) {
-                          var ms = ref.watch(mainSponsorImageAndLinkProvider);
-                          var nw = ref.watch(networkAwareProvider);
-                          return (ms.image != null &&
-                                  nw.connectivityStatus ==
-                                      ConnectivityStatus.online)
-                              ? CachedNetworkImage(
-                                  imageUrl: ms.image!,
-                                  placeholder: (context, url) => Image.asset(
-                                      mainSponsorPlaceholder,
-                                      fit: BoxFit.fitWidth),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(mainSponsorPlaceholder,
-                                          fit: BoxFit.fitWidth),
-                                  errorListener: (e) {
-                                    BnLog.warning(
-                                        text: 'Could not load ${ms.image}');
-                                  },
-                                )
-                              : Image.asset(mainSponsorPlaceholder,
-                                  fit: BoxFit.fitWidth);
-                        }),
+                      HiddenAdminButton(
+                        child: nextEventProvider.status == EventStatus.noevent
+                            ? Text(Localize.of(context).noEventPlanned,
+                                textAlign: TextAlign.center,
+                                style: CupertinoTheme.of(context)
+                                    .textTheme
+                                    .textStyle)
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(Localize.of(context).nextEvent,
+                                      textAlign: TextAlign.center,
+                                      style: CupertinoTheme.of(context)
+                                          .textTheme
+                                          .textStyle),
+                                  const SizedBox(height: 5),
+                                  FittedBox(
+                                    child: Text(
+                                        '${Localize.of(context).route} ${nextEventProvider.routeName}',
+                                        textAlign: TextAlign.center,
+                                        style: CupertinoTheme.of(context)
+                                            .textTheme
+                                            .navLargeTitleTextStyle),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        15.0, 5, 15, 5),
+                                    child: FittedBox(
+                                      child: Text(
+                                          DateFormatter(Localize.of(context))
+                                              .getLocalDayDateTimeRepresentation(
+                                                  nextEventProvider
+                                                      .getUtcIso8601DateTime),
+                                          style: CupertinoTheme.of(context)
+                                              .textTheme
+                                              .navLargeTitleTextStyle),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: nextEventProvider.status ==
+                                              EventStatus.cancelled
+                                          ? Colors.redAccent
+                                          : nextEventProvider.status ==
+                                                  EventStatus.confirmed
+                                              ? Colors.green
+                                              : Colors.transparent,
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(nextEventProvider.statusText,
+                                          style: CupertinoTheme.of(context)
+                                              .textTheme
+                                              .pickerTextStyle),
+                                    ),
+                                  ),
+                                ],
+                              ),
                       ),
-                      GestureDetector(
-                        onTap: () async {
-                          var link =
-                              ref.read(secondSponsorImageAndLinkProvider).link;
-                          if (link != null && link != '') {
-                            var uri = Uri.parse(ref
-                                .read(secondSponsorImageAndLinkProvider)
-                                .link!);
-                            Launch.launchUrlFromUri(uri);
-                          }
-                        },
-                        child: Builder(builder: (context) {
-                          var img =
-                              ref.watch(secondSponsorImageAndLinkProvider);
-                          var nw = ref.watch(networkAwareProvider);
-                          return (img.image != null &&
-                                  nw.connectivityStatus ==
-                                      ConnectivityStatus.online)
-                              ? CachedNetworkImage(
-                                  imageUrl: img.image!,
-                                  placeholder: (context, url) => Image.asset(
-                                      secondLogoPlaceholder,
-                                      fit: BoxFit.fitWidth),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(secondLogoPlaceholder,
-                                          fit: BoxFit.fitWidth),
-                                  errorListener: (e) {
-                                    BnLog.warning(
-                                        text: 'Could not load ${img.image}');
-                                  },
-                                )
-                              : Image.asset(secondLogoPlaceholder,
-                                  fit: BoxFit.fitWidth);
-                        }),
+                      ResponsiveRowColumn(
+                        rowCrossAxisAlignment: CrossAxisAlignment.center,
+                        columnCrossAxisAlignment: CrossAxisAlignment.center,
+                        columnMainAxisSize: MainAxisSize.min,
+                        rowPadding: const EdgeInsets.symmetric(
+                            horizontal: 80, vertical: 80),
+                        columnPadding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 50),
+                        columnSpacing: 5,
+                        rowSpacing: 5,
+                        layout: ResponsiveBreakpoints.of(context)
+                                .smallerThan(TABLET)
+                            ? ResponsiveRowColumnType.COLUMN
+                            : ResponsiveRowColumnType.ROW,
+                        children: [
+                          ResponsiveRowColumnItem(
+                            rowFlex: 1,
+                            child: GestureDetector(
+                              onTap: () async {
+                                var link = ref
+                                    .read(mainSponsorImageAndLinkProvider)
+                                    .link;
+                                if (link != null && link != '') {
+                                  var uri = Uri.parse(ref
+                                      .read(mainSponsorImageAndLinkProvider)
+                                      .link!);
+                                  Launch.launchUrlFromUri(uri);
+                                }
+                              },
+                              child: Builder(builder: (context) {
+                                var ms =
+                                    ref.watch(mainSponsorImageAndLinkProvider);
+                                var nw = ref.watch(networkAwareProvider);
+                                return (ms.image != null &&
+                                        nw.connectivityStatus ==
+                                            ConnectivityStatus.online)
+                                    ? CachedNetworkImage(
+                                        imageUrl: ms.image!,
+                                        placeholder: (context, url) =>
+                                            Image.asset(mainSponsorPlaceholder,
+                                                fit: BoxFit.fitWidth),
+                                        errorWidget: (context, url, error) =>
+                                            Image.asset(mainSponsorPlaceholder,
+                                                fit: BoxFit.fitWidth),
+                                        errorListener: (e) {
+                                          BnLog.warning(
+                                              text:
+                                                  'Could not load ${ms.image}');
+                                        },
+                                      )
+                                    : Image.asset(mainSponsorPlaceholder,
+                                        fit: BoxFit.fitWidth);
+                              }),
+                            ),
+                          ),
+                          ResponsiveRowColumnItem(
+                            rowFlex: 1,
+                            child: const LogoAnimate(),
+                          ),
+                        ],
                       ),
                     ]),
               ),

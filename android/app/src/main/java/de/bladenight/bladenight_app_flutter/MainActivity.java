@@ -3,7 +3,7 @@ package de.bladenight.bladenight_app_flutter;
 import android.os.Build;
 import android.os.Bundle;
 import android.window.SplashScreenView;
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 import androidx.core.view.WindowCompat;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;

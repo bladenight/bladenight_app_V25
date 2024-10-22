@@ -49,6 +49,7 @@
 		E23FA98C2CB4084C00F26A01 /* Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */; };
 		E2584CC02A7CE09B00346A03 /* WatchEventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */; };
 		E2584CC22A7D1F3100346A03 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CC12A7D1F3100346A03 /* AboutView.swift */; };
+		E2A725912CBAFCF8004C7868 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A725902CBAFCEB004C7868 /* Home.swift */; };
 		E2C23F1C29D4DDF000E06959 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */; };
 		E2C23F2229D4E87C00E06959 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F2129D4E87C00E06959 /* Images.xcassets */; };
 /* End PBXBuildFile section */
@@ -206,6 +207,7 @@
 		E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Profile.xcconfig; sourceTree = "<group>"; };
 		E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEventModel.swift; sourceTree = "<group>"; };
 		E2584CC12A7D1F3100346A03 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		E2A725902CBAFCEB004C7868 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		E2C23F2129D4E87C00E06959 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E2EEFEA12BC7F022005205C4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 		4668157A28A8FC2700504AF6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E2A725902CBAFCEB004C7868 /* Home.swift */,
 				4668154228A8F45500504AF6 /* NotificationView.swift */,
 				4668153E28A8F45500504AF6 /* ContentView.swift */,
 				46015A3B28B21F1500B1C8D0 /* EventView.swift */,
@@ -815,7 +818,6 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesSwift/Promises.framework",
-				"${BUILT_PRODUCTS_DIR}/Sentry/Sentry.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftLocation/SwiftLocation.framework",
 				"${BUILT_PRODUCTS_DIR}/Toast/Toast.framework",
 				"${BUILT_PRODUCTS_DIR}/app_links/app_links.framework",
@@ -832,10 +834,9 @@
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 				"${BUILT_PRODUCTS_DIR}/package_info_plus/package_info_plus.framework",
 				"${BUILT_PRODUCTS_DIR}/path_provider_foundation/path_provider_foundation.framework",
-				"${BUILT_PRODUCTS_DIR}/sentry_flutter/sentry_flutter.framework",
 				"${BUILT_PRODUCTS_DIR}/share_plus/share_plus.framework",
 				"${BUILT_PRODUCTS_DIR}/shared_preferences_foundation/shared_preferences_foundation.framework",
-				"${BUILT_PRODUCTS_DIR}/sqflite/sqflite.framework",
+				"${BUILT_PRODUCTS_DIR}/sqflite_darwin/sqflite_darwin.framework",
 				"${BUILT_PRODUCTS_DIR}/url_launcher_ios/url_launcher_ios.framework",
 				"${BUILT_PRODUCTS_DIR}/wakelock/wakelock.framework",
 				"${BUILT_PRODUCTS_DIR}/webview_flutter_wkwebview/webview_flutter_wkwebview.framework",
@@ -864,7 +865,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Promises.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sentry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftLocation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/app_links.framework",
@@ -881,10 +881,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/package_info_plus.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/path_provider_foundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sentry_flutter.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/share_plus.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/shared_preferences_foundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqflite.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqflite_darwin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/url_launcher_ios.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/wakelock.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/webview_flutter_wkwebview.framework",
@@ -924,6 +923,7 @@
 				4668157E28A8FF5600504AF6 /* CommunicationHandler.swift in Sources */,
 				46F4DBB328AF952C008E3AB9 /* SessionDelegator.swift in Sources */,
 				4668154528A8F45500504AF6 /* ComplicationController.swift in Sources */,
+				E2A725912CBAFCF8004C7868 /* Home.swift in Sources */,
 				468B3A5A28B8AAD0006A50F8 /* RoutePointsModel.swift in Sources */,
 				4618B21128BFFD7A006D3F6A /* FriendModel.swift in Sources */,
 				4668153D28A8F45500504AF6 /* RunnerApp.swift in Sources */,
@@ -1079,7 +1079,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Debug.plist";
@@ -1091,7 +1091,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1120,14 +1120,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
@@ -1157,7 +1157,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1165,7 +1165,7 @@
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
 				PRODUCT_NAME = "BladeNight!";
@@ -1194,14 +1194,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = Bladenight_Watch_WatchKit_Extension;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.huth.bn;
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp;
 				PRODUCT_NAME = "BladeNight!";
@@ -1226,7 +1226,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1244,7 +1244,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
@@ -1271,11 +1271,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Bladenight Watch WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = BladeNight;
@@ -1289,7 +1290,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1314,7 +1315,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_ASSET_PATHS = "\"Bladenight Watch WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_PREVIEWS = YES;
@@ -1332,7 +1333,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1527,7 +1528,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1540,7 +1541,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
@@ -1567,7 +1568,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1580,7 +1581,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1606,7 +1607,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1619,7 +1620,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1757,7 +1758,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Debug.plist";
@@ -1769,7 +1770,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1797,7 +1798,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2426;
+				CURRENT_PROJECT_VERSION = 2427;
 				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner/Info-Release.plist";
@@ -1809,7 +1810,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.24.26;
+				MARKETING_VERSION = 1.24.27;
 				PRODUCT_BUNDLE_IDENTIFIER = app.huth.bn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

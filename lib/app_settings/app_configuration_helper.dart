@@ -24,9 +24,14 @@ String defaultStartPoint =
 String startPoint = 'Deutsches Verkehrsmuseum\n Schwanthalerhöhe\nMünchen';
 
 const String mainSponsorPlaceholder = kIsWeb
-    ? 'assets/images/giesinger_bladenight_logo.png'
-    : 'assets/images/bladenight_logo.png';
+    ? 'assets/images/empty_sponsor_logo.png'
+    : 'assets/images/empty_sponsor_logo.png';
 const String secondLogoPlaceholder = 'assets/images/skatemunich.png';
+
+const String skmLogoPlaceholder =
+    'assets/images/2024_Skate_Munich_Logo-2845x548_y.png';
+const String bnLogoPlaceholder =
+    'assets/images/2024_Blade_Night_Logo-2845x548_y.png';
 const String specialPointImagePlaceHolder =
     'assets/images/skatemunich_child_orange_circle.png';
 

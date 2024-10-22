@@ -32,7 +32,26 @@ class BladeGuardAdvertise extends ConsumerWidget {
         //const ServerNotReachableWarning(),
       );
     } else {
-      return Container();
+      return Row(
+        children: [
+          Expanded(
+            child: Container(),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                CupertinoPageRoute(
+                  builder: (context) => const BladeGuardPage(),
+                ),
+              );
+            },
+            child: CircleAvatar(
+              radius: 15,
+              backgroundImage: AssetImage('assets/images/bladeguard_smile.jpg'),
+            ),
+          ),
+        ],
+      );
     }
   }
 }

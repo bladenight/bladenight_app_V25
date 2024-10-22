@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wakelock/wakelock.dart';
 import '../widgets/tracking_export_widget.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -62,10 +63,18 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             parent: AlwaysScrollableScrollPhysics(),
           ),
           slivers: [
-            CupertinoSliverNavigationBar(
-              largeTitle: Text(Localize.of(context).settings),
-              backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
-            ),
+            ResponsiveBreakpoints.of(context).orientation ==
+                    Orientation.portrait
+                ? CupertinoSliverNavigationBar(
+                    largeTitle: Text(Localize.of(context).settings),
+                    backgroundColor:
+                        CupertinoTheme.of(context).barBackgroundColor,
+                  )
+                : SliverToBoxAdapter(
+                    child: CupertinoNavigationBar(
+                      middle: Text(Localize.of(context).settings),
+                    ),
+                  ),
             SliverToBoxAdapter(
               child: Column(
                 children: [
