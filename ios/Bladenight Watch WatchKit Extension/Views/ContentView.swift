@@ -24,13 +24,21 @@ struct ContentView: View {
             if(viewModel.phoneReachable){
                 EventDetailView(tabSelection: $tabSelection).environmentObject(viewModel)
                     .tag(2)
-                //MapView(tabSelection: $tabSelection).environmentObject(connectivityModel).tag(3)
+                if #available(watchOSApplicationExtension 10.0, *) {
+                    MapView(tabSelection: $tabSelection).environmentObject(viewModel).tag(4)
+                } else {
+                    // Fallback on earlier versions
+                }
                 if (viewModel.isLocationTracking){
                     FriendsView(tabSelection: $tabSelection).environmentObject(viewModel).tag(3)}
             }
             AboutView(tabSelection: $tabSelection).environmentObject(viewModel).tag(5)
-            //LogView(tabSelection: $tabSelection).environmentObject(viewModel).tag(4)
-            //MapView(tabSelection: $tabSelection).environmentObject(viewModel).tag(6)
+            LogView(tabSelection: $tabSelection).environmentObject(viewModel).tag(4)
+            if #available(watchOSApplicationExtension 10.0, *) {
+                MapView(tabSelection: $tabSelection).environmentObject(viewModel).tag(6)
+            } else {
+                // Fallback on earlier versions
+            }
             
         }.tabViewStyle(.automatic).indexViewStyle(.page(backgroundDisplayMode: .never))
         /*.onReceive(timer) {

@@ -27,8 +27,9 @@ import '../bladeguard/bladeguard_on_site_page.dart';
 import '../widgets/app_outdated.dart';
 import '../widgets/hidden_admin_button.dart';
 import '../widgets/no_connection_warning.dart';
+import '../widgets/rounded_card.dart';
+import '../widgets/title_widget.dart';
 import 'logo_animate.dart';
-import 'logo_carousel.dart';
 
 class EventInfo extends ConsumerStatefulWidget {
   const EventInfo({super.key});
@@ -38,12 +39,15 @@ class EventInfo extends ConsumerStatefulWidget {
 }
 
 class _EventInfoState extends ConsumerState<EventInfo>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   Timer? _updateTimer;
+  late final AnimationController animationController;
 
   @override
   void initState() {
     super.initState();
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 600), vsync: this);
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
@@ -55,8 +59,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _updateTimer?.cancel();
+    animationController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -242,7 +247,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                           ),
                           ResponsiveRowColumnItem(
                             rowFlex: 1,
-                            child: const LogoAnimate(),
+                            child: LogoAnimate(animationController),
                           ),
                         ],
                       ),
@@ -306,6 +311,26 @@ class _EventInfoState extends ConsumerState<EventInfo>
             const SizedBox(
               height: 5,
             ),
+            /*TitleView(
+              titleTxt: 'Mediterranean diet',
+              subTxt: 'Details',
+              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+                CurvedAnimation(
+                  parent: animationController,
+                  curve: const Interval(0, 1.0, curve: Curves.fastOutSlowIn),
+                ),
+              ),
+              animationController: animationController,
+            ),*/
+            /*RoundedCard(
+              animationController: animationController,
+              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+                CurvedAnimation(
+                  parent: animationController,
+                  curve: const Interval(0, 1.0, curve: Curves.fastOutSlowIn),
+                ),
+              ),
+            ),*/
           ],
         ),
       ),

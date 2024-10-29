@@ -41,7 +41,7 @@ struct MapView: View {
         .mapStyle(.standard(elevation: .realistic))
         Rectangle()
             .fill(Color.black.opacity(0.1))
-            .frame(width: 10, height: 10)
+            .frame(width: 10, height: 40)
         
         
     }

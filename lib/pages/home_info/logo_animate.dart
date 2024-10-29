@@ -5,15 +5,18 @@ import 'package:flutter/cupertino.dart';
 import '../../app_settings/app_configuration_helper.dart';
 
 class LogoAnimate extends StatefulWidget {
-  const LogoAnimate({super.key});
+  const LogoAnimate(
+    this.animationController, {
+    super.key,
+  });
+
+  final AnimationController animationController;
 
   @override
   State<LogoAnimate> createState() => _LogoAnimateState();
 }
 
-class _LogoAnimateState extends State<LogoAnimate>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _LogoAnimateState extends State<LogoAnimate> {
   late Timer _switchingTimer;
 
   bool _firstChild = false;
@@ -21,7 +24,6 @@ class _LogoAnimateState extends State<LogoAnimate>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
     _switchingTimer = Timer.periodic(Duration(seconds: 5), (timer) {
       setState(() {
         _firstChild = !_firstChild;
@@ -31,7 +33,7 @@ class _LogoAnimateState extends State<LogoAnimate>
 
   @override
   void dispose() {
-    _controller.dispose();
+    widget.animationController.dispose();
     _switchingTimer.cancel();
     super.dispose();
   }
