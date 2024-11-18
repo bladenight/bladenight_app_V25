@@ -9,7 +9,7 @@ String startpointImageAndLinkKey = 'startpointIalKey';
 ImageAndLink _defaultStartpoint = ImageAndLink(
     'https://bladenight.app/skatemunich.png',
     '',
-    'Schwanthalerhöhe\\nMünchen\\n(Deutsches Verkehrsmuseum)',
+    'Bavariapark\\nMünchen\\n(U5 Schwanthalerhöhe)',
     'startPoint');
 
 @riverpod
@@ -24,8 +24,7 @@ class StartpointImageAndLink extends _$StartpointImageAndLink {
   }
 
   void setValue(ImageAndLink imageAndLink) {
-    HiveSettingsDB.settingsHiveBox
-        .put(startpointImageAndLinkKey, imageAndLink);
+    HiveSettingsDB.settingsHiveBox.put(startpointImageAndLinkKey, imageAndLink);
     //state = imageAndLink;
   }
 }

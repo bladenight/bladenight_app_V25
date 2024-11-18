@@ -42,7 +42,7 @@ class WatchEvent with WatchEventMappable {
 
   WatchEvent(
       {required this.title,
-        required this.startDate,
+      required this.startDate,
       required this.routeName,
       this.duration = 240,
       this.participants = 0,
@@ -63,14 +63,16 @@ class WatchEvent with WatchEventMappable {
     var date = DateFormatter(Localize.current)
         .getLocalDayDateTimeRepresentation(event.getUtcIso8601DateTime);
 
-    WatchEvent watchEvent =
-        WatchEvent(title: Localize.current.nextEvent, startDate: date, routeName: event.routeName)
-          ..lastupdate = event.lastupdate == null
-              ? '-'
-              : Localize.current.dateTimeIntl(
-                  event.lastupdate as DateTime,
-                  event.lastupdate as DateTime,
-                );
+    WatchEvent watchEvent = WatchEvent(
+        title: Localize.current.nextEvent,
+        startDate: date,
+        routeName: event.routeName)
+      ..lastupdate = event.lastUpdate == null
+          ? '-'
+          : Localize.current.dateTimeIntl(
+              event.lastUpdate as DateTime,
+              event.lastUpdate as DateTime,
+            );
 
     return watchEvent.copyWith(
       duration: event.duration.inMinutes,

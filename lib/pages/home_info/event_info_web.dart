@@ -262,11 +262,11 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                       ),
                     ),
                     Text(
-                      nextEventProvider.lastupdate == null
+                      nextEventProvider.lastUpdate == null
                           ? '-'
                           : Localize.current.dateTimeIntl(
-                              nextEventProvider.lastupdate as DateTime,
-                              nextEventProvider.lastupdate as DateTime,
+                              nextEventProvider.lastUpdate as DateTime,
+                              nextEventProvider.lastUpdate as DateTime,
                             ),
                       style: const TextStyle(
                         color: CupertinoDynamicColor.withBrightness(

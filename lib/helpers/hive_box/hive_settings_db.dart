@@ -844,7 +844,7 @@ class HiveSettingsDB {
 
   ///set actualEventStringString
   static Future<void> setActualEvent(Event event) async {
-    event.lastupdate = DateTime.now();
+    event.lastUpdate = DateTime.now();
     String eventJson = MapperContainer.globals.toJson(event);
     _hiveBox.put(_actualEventStringKey, eventJson);
     setActualEventLastUpdate(DateTime.now());

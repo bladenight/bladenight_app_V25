@@ -20,7 +20,7 @@ class ActiveEventProviderOld extends ChangeNotifier {
 
   void init() async {
     _event = HiveSettingsDB.getActualEvent;
-    _providerLastUpdate = _event.lastupdate ?? DateTime(2000, 1, 1, 0, 0, 0);
+    _providerLastUpdate = _event.lastUpdate ?? DateTime(2000, 1, 1, 0, 0, 0);
     notifyListeners();
   }
 

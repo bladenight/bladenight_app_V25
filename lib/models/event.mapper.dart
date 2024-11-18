@@ -111,9 +111,12 @@ class EventMapper extends ClassMapperBase<Event> {
   static EventStatus _$status(Event v) => v.status;
   static const Field<Event, EventStatus> _f$status = Field('status', _$status,
       key: 'sts', opt: true, def: EventStatus.pending);
-  static DateTime? _$lastupdate(Event v) => v.lastupdate;
-  static const Field<Event, DateTime> _f$lastupdate =
-      Field('lastupdate', _$lastupdate, opt: true);
+  static List<LatLng> _$nodes(Event v) => v.nodes;
+  static const Field<Event, List<LatLng>> _f$nodes =
+      Field('nodes', _$nodes, key: 'nod', opt: true, def: const <LatLng>[]);
+  static DateTime? _$lastUpdate(Event v) => v.lastUpdate;
+  static const Field<Event, DateTime> _f$lastUpdate =
+      Field('lastUpdate', _$lastUpdate, key: 'lastupdate', opt: true);
   static Exception? _$rpcException(Event v) => v.rpcException;
   static const Field<Event, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);
@@ -139,7 +142,8 @@ class EventMapper extends ClassMapperBase<Event> {
     #participants: _f$participants,
     #routeLength: _f$routeLength,
     #status: _f$status,
-    #lastupdate: _f$lastupdate,
+    #nodes: _f$nodes,
+    #lastUpdate: _f$lastUpdate,
     #rpcException: _f$rpcException,
     #startPointLatitude: _f$startPointLatitude,
     #startPointLongitude: _f$startPointLongitude,
@@ -155,7 +159,8 @@ class EventMapper extends ClassMapperBase<Event> {
         participants: data.dec(_f$participants),
         routeLength: data.dec(_f$routeLength),
         status: data.dec(_f$status),
-        lastupdate: data.dec(_f$lastupdate),
+        nodes: data.dec(_f$nodes),
+        lastUpdate: data.dec(_f$lastUpdate),
         rpcException: data.dec(_f$rpcException),
         startPointLatitude: data.dec(_f$startPointLatitude),
         startPointLongitude: data.dec(_f$startPointLongitude),
@@ -209,6 +214,7 @@ extension EventValueCopy<$R, $Out> on ObjectCopyWith<$R, Event, $Out> {
 
 abstract class EventCopyWith<$R, $In extends Event, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, LatLng, ObjectCopyWith<$R, LatLng, LatLng>> get nodes;
   $R call(
       {DateTime? startDate,
       String? routeName,
@@ -216,7 +222,8 @@ abstract class EventCopyWith<$R, $In extends Event, $Out>
       int? participants,
       int? routeLength,
       EventStatus? status,
-      DateTime? lastupdate,
+      List<LatLng>? nodes,
+      DateTime? lastUpdate,
       Exception? rpcException,
       double? startPointLatitude,
       double? startPointLongitude,
@@ -232,6 +239,10 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
   @override
   late final ClassMapperBase<Event> $mapper = EventMapper.ensureInitialized();
   @override
+  ListCopyWith<$R, LatLng, ObjectCopyWith<$R, LatLng, LatLng>> get nodes =>
+      ListCopyWith($value.nodes, (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(nodes: v));
+  @override
   $R call(
           {DateTime? startDate,
           String? routeName,
@@ -239,7 +250,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
           int? participants,
           int? routeLength,
           EventStatus? status,
-          Object? lastupdate = $none,
+          List<LatLng>? nodes,
+          Object? lastUpdate = $none,
           Object? rpcException = $none,
           Object? startPointLatitude = $none,
           Object? startPointLongitude = $none,
@@ -252,7 +264,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
         if (participants != null) #participants: participants,
         if (routeLength != null) #routeLength: routeLength,
         if (status != null) #status: status,
-        if (lastupdate != $none) #lastupdate: lastupdate,
+        if (nodes != null) #nodes: nodes,
+        if (lastUpdate != $none) #lastUpdate: lastUpdate,
         if (rpcException != $none) #rpcException: rpcException,
         if (startPointLatitude != $none)
           #startPointLatitude: startPointLatitude,
@@ -269,7 +282,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
       participants: data.get(#participants, or: $value.participants),
       routeLength: data.get(#routeLength, or: $value.routeLength),
       status: data.get(#status, or: $value.status),
-      lastupdate: data.get(#lastupdate, or: $value.lastupdate),
+      nodes: data.get(#nodes, or: $value.nodes),
+      lastUpdate: data.get(#lastUpdate, or: $value.lastUpdate),
       rpcException: data.get(#rpcException, or: $value.rpcException),
       startPointLatitude:
           data.get(#startPointLatitude, or: $value.startPointLatitude),
