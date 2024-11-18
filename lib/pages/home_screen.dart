@@ -28,7 +28,7 @@ import 'widgets/intro_slider.dart';
 bool _initialURILinkHandled = false;
 
 class HomeScreen extends ConsumerStatefulWidget {
-  static const String routeName = '/homeScreen';
+  static const String homeRouteName = '/homeScreen';
 
   const HomeScreen({super.key, int tabIndex = 0});
 
@@ -138,22 +138,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     if (kIsWeb) {
       tabController = CupertinoTabController(initialIndex: 1)
         ..addListener(() {
-          if (!kIsWeb) {
-            BnLog.info(
-                className: 'home_screen',
-                methodName: 'tabControllerListener',
-                text: 'tabController selected index ${tabController.index}');
-          }
+          BnLog.info(
+              className: 'home_screen',
+              methodName: 'tabControllerListener',
+              text: 'tabController selected index ${tabController.index}');
         });
     } else {
       tabController = CupertinoTabController(initialIndex: 0)
         ..addListener(() {
-          if (!kIsWeb) {
-            BnLog.debug(
-                className: 'home_screen',
-                methodName: 'tabControllerListener',
-                text: 'tabController selected index ${tabController.index}');
-          }
+          BnLog.debug(
+              className: 'home_screen',
+              methodName: 'tabControllerListener',
+              text: 'tabController selected index ${tabController.index}');
         });
     }
     _initImages();

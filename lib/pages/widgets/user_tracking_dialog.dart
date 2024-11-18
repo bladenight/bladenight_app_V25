@@ -66,7 +66,7 @@ class UserTrackDialog extends ConsumerWidget {
                   ? CameraConstraint.contain(
                       bounds: MapSettings.mapOnlineBoundaries)
                   : CameraConstraint.contain(
-                      bounds: MapSettings.mapOfflineBoundaries),
+                      bounds: MapSettings.bayernAtlasBoundaries),
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all,
                 enableMultiFingerGestureRace: true,

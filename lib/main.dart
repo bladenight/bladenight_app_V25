@@ -39,6 +39,7 @@ import 'main.init.dart';
 import 'models/image_and_link.dart';
 import 'pages/bladeguard/bladeguard_page.dart';
 import 'pages/home_screen.dart';
+import 'pages/loading_screen.dart';
 import 'pages/widgets/intro_slider.dart';
 import 'pages/widgets/route_name_dialog.dart';
 import 'package:background_fetch/background_fetch.dart';
@@ -279,10 +280,12 @@ class BladeNightApp extends StatelessWidget {
                   home: const HomeScreen(),
                   navigatorKey: navigatorKey,
                   routes: <String, WidgetBuilder>{
-                    IntroScreen.openIntroRoute: (BuildContext context) =>
+                    IntroScreen.introScreenRouteName: (BuildContext context) =>
                         const IntroScreen(),
-                    HomeScreen.routeName: (BuildContext context) =>
+                    HomeScreen.homeRouteName: (BuildContext context) =>
                         const HomeScreen(),
+                    LoadingScreen.routeName: (BuildContext context) =>
+                        LoadingScreen()
                   }),
             ),
           ),

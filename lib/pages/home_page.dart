@@ -71,7 +71,7 @@ class _HomePageState extends ConsumerState<HomePage>
             parent: AlwaysScrollableScrollPhysics(),
           ),
           slivers: [
-            CupertinoSliverNavigationBar(
+            /*CupertinoSliverNavigationBar(
               leading: const Icon(CupertinoIcons.home),
               largeTitle: Text(Localize.of(context).home),
               trailing: Row(
@@ -143,7 +143,7 @@ class _HomePageState extends ConsumerState<HomePage>
                   ),
                 ],
               ),
-            ),
+            ),*/
             CupertinoSliverRefreshControl(
               onRefresh: () async {
                 ref.read(messagesLogicProvider).updateServerMessages();
@@ -157,11 +157,11 @@ class _HomePageState extends ConsumerState<HomePage>
             const SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                    child: Center(
-                      child: kIsWeb ? EventInfoWeb() : EventInfo(),
-                    ),
+                    child: kIsWeb ? EventInfoWeb() : EventInfo(),
                   ),
                 ],
               ),

@@ -5,35 +5,39 @@ import 'package:flutter/cupertino.dart';
 import '../../app_settings/app_configuration_helper.dart';
 
 class LogoAnimate extends StatefulWidget {
-  const LogoAnimate(
-    this.animationController, {
+  const LogoAnimate({
     super.key,
   });
-
-  final AnimationController animationController;
 
   @override
   State<LogoAnimate> createState() => _LogoAnimateState();
 }
 
-class _LogoAnimateState extends State<LogoAnimate> {
+class _LogoAnimateState extends State<LogoAnimate>
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   late Timer _switchingTimer;
 
   bool _firstChild = false;
+  late final AnimationController animationController;
 
   @override
   void initState() {
     super.initState();
-    _switchingTimer = Timer.periodic(Duration(seconds: 5), (timer) {
-      setState(() {
-        _firstChild = !_firstChild;
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 600), vsync: this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _switchingTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+        setState(() {
+          _firstChild = !_firstChild;
+        });
       });
     });
   }
 
   @override
   void dispose() {
-    widget.animationController.dispose();
+    animationController.dispose();
     _switchingTimer.cancel();
     super.dispose();
   }
@@ -48,7 +52,7 @@ class _LogoAnimateState extends State<LogoAnimate> {
       ),
       crossFadeState:
           _firstChild ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-      duration: Duration(seconds: 3),
+      duration: Duration(milliseconds: 500),
     );
   }
 }

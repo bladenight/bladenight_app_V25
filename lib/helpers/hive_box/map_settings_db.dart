@@ -18,7 +18,7 @@ extension MapSettings on HiveSettingsDB {
 
   ///maxZoom for Static map tiles
   static int get maxNativeZoomDefault {
-    return 15;
+    return 18;
   }
 
   static const String _minZoomKey = 'minZoomPref_1Key';
@@ -78,6 +78,15 @@ extension MapSettings on HiveSettingsDB {
     );
   }
 
+  static LatLngBounds get bayernAtlasBoundaries {
+    //<ows:LowerCorner>8.945107890491915 47.248466288051446</ows:LowerCorner>
+    // <ows:UpperCorner>13.90891310401004 50.57987000589413</ows:UpperCorner>
+    return LatLngBounds(
+      const LatLng(47.248466288051446, 8.945107890491915),
+      const LatLng(50.57987000589413, 13.90891310401004),
+    );
+  }
+
   ///Returns map boundaries for static asset offline map tiles
   static LatLngBounds get mapOnlineDefaultBoundaries {
     return LatLngBounds(
@@ -129,6 +138,15 @@ extension MapSettings on HiveSettingsDB {
   static String get openStreetMapLinkString {
     return HiveSettingsDB._hiveBox.get(_openStreetMapLinkKey,
         defaultValue: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png');
+  }
+
+  static const String _bayernAtlasLinkKey = 'byAtlasLightLinkPref';
+
+  ///get openStreetMapLinkAsString
+  static String get bayernAtlasLinkString {
+    return HiveSettingsDB._hiveBox.get(_bayernAtlasLinkKey,
+        defaultValue:
+            'https://wmtsod1.bayernwolke.de/wmts/by_webkarte/smerc/{z}/{x}/{y}');
   }
 
   ///set openStreetMapLinkString

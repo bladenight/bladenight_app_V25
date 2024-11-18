@@ -87,25 +87,33 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
       urlTemplate:
           osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
               ? MapSettings.openStreetMapLinkString //use own ts
-              : 'assets/maptiles/osday/{z}/{x}/{y}.jpg',
+              : MapSettings.bayernAtlasLinkString,
+      //'assets/maptiles/osday/{z}/{x}/{y}.jpg',
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
-      tileProvider: osmEnabled ||
-              ref.watch(activeEventProvider).hasSpecialStartPoint
-          ? CachedTileProvider(
-              maxStale: const Duration(days: 30),
-              store: HiveCacheStore(
-                null,
-                hiveBoxName: 'HiveCacheStore',
-              ),
-            )
-          : BnCachedAssetProvider(
+      tileProvider:
+          osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
+              ? CachedTileProvider(
+                  maxStale: const Duration(days: 30),
+                  store: HiveCacheStore(
+                    null,
+                    hiveBoxName: 'HiveCacheStore',
+                  ),
+                )
+              : CachedTileProvider(
+                  maxStale: const Duration(days: 30),
+                  store: HiveCacheStore(
+                    null,
+                    hiveBoxName: 'HiveCacheStore',
+                  ),
+                ),
+      /*BnCachedAssetProvider(
               context: context,
               errorListener: () {
                 print('errlistbntile');
               },
               callBack: (TileImage tile, Object error, StackTrace? stackTrace) {
                 print('errbntile');
-              }),
+              }),*/
       errorImage: const AssetImage(
         'assets/images/skatemunichmaperror.png',
       ),

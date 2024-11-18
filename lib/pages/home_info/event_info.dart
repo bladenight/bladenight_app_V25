@@ -5,7 +5,6 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar_controller.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
@@ -21,14 +20,18 @@ import '../../providers/images_and_links/main_sponsor_image_and_link_provider.da
 import '../../providers/images_and_links/second_sponsor_image_and_link_provider.dart';
 import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
 import '../../providers/location_provider.dart';
+import '../../providers/map/icon_size_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../bladeguard/bladeguard_advertise.dart';
 import '../bladeguard/bladeguard_on_site_page.dart';
 import '../widgets/app_outdated.dart';
+import '../widgets/event_info/animation_test_widget.dart';
 import '../widgets/hidden_admin_button.dart';
 import '../widgets/no_connection_warning.dart';
-import '../widgets/rounded_card.dart';
+import '../widgets/current_event_overview.dart';
 import '../widgets/title_widget.dart';
+import 'event_data_overview.dart';
+import 'event_map_small.dart';
 import 'logo_animate.dart';
 
 class EventInfo extends ConsumerStatefulWidget {
@@ -41,26 +44,26 @@ class EventInfo extends ConsumerStatefulWidget {
 class _EventInfoState extends ConsumerState<EventInfo>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   Timer? _updateTimer;
-  late final AnimationController animationController;
+  late final AnimationController _animationController;
 
   @override
   void initState() {
-    super.initState();
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 600), vsync: this);
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 2000), vsync: this);
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
       initLocation();
+      _animationController.repeat();
       //call on first start
-      //
     });
+    super.initState();
   }
 
   @override
   void dispose() {
     _updateTimer?.cancel();
-    animationController.dispose();
+    _animationController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -106,90 +109,57 @@ class _EventInfoState extends ConsumerState<EventInfo>
   Widget build(
     BuildContext context,
   ) {
-    var nextEventProvider = ref.watch(activeEventProvider);
-    return SizedBox(
-      height: double.infinity,
+    var nextEvent = ref.watch(activeEventProvider);
+    var borderRadius = 15.0;
+
+    return SafeArea(
+      //height: 300,
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 24, right: 24, top: 16, bottom: 18),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: CupertinoTheme.of(context).barBackgroundColor,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(borderRadius),
+                      bottomLeft: Radius.circular(borderRadius),
+                      bottomRight: Radius.circular(borderRadius),
+                      topRight: Radius.circular(borderRadius)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: nextEvent.statusColor,
+                        offset: const Offset(1.1, 1.1),
+                        blurRadius: 10.0),
+                  ],
+                ),
+                child: EventDataOverview(
+                  nextEvent: nextEvent,
+                  parentAnimationController: _animationController,
+                ),
+              ),
+            ),
+            //const CurrentEventOverview(),
+            /*SizedBox(
+              height: MediaQuery.sizeOf(context).height * 0.33,
+              child: EventMapSmall(nextEvent: nextEvent),
+            ),*/
             const ConnectionWarning(),
             const AppOutdatedWidget(),
             const BladeGuardAdvertise(),
             const BladeGuardOnsite(),
-            Padding(
-              padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
+            /* Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: IntrinsicWidth(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      HiddenAdminButton(
-                        child: nextEventProvider.status == EventStatus.noevent
-                            ? Text(Localize.of(context).noEventPlanned,
-                                textAlign: TextAlign.center,
-                                style: CupertinoTheme.of(context)
-                                    .textTheme
-                                    .textStyle)
-                            : Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(Localize.of(context).nextEvent,
-                                      textAlign: TextAlign.center,
-                                      style: CupertinoTheme.of(context)
-                                          .textTheme
-                                          .textStyle),
-                                  const SizedBox(height: 5),
-                                  FittedBox(
-                                    child: Text(
-                                        '${Localize.of(context).route} ${nextEventProvider.routeName}',
-                                        textAlign: TextAlign.center,
-                                        style: CupertinoTheme.of(context)
-                                            .textTheme
-                                            .navLargeTitleTextStyle),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        15.0, 5, 15, 5),
-                                    child: FittedBox(
-                                      child: Text(
-                                          DateFormatter(Localize.of(context))
-                                              .getLocalDayDateTimeRepresentation(
-                                                  nextEventProvider
-                                                      .getUtcIso8601DateTime),
-                                          style: CupertinoTheme.of(context)
-                                              .textTheme
-                                              .navLargeTitleTextStyle),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: nextEventProvider.status ==
-                                              EventStatus.cancelled
-                                          ? Colors.redAccent
-                                          : nextEventProvider.status ==
-                                                  EventStatus.confirmed
-                                              ? Colors.green
-                                              : Colors.transparent,
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10.0),
-                                      ),
-                                    ),
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(nextEventProvider.statusText,
-                                          style: CupertinoTheme.of(context)
-                                              .textTheme
-                                              .pickerTextStyle),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                      ),
                       ResponsiveRowColumn(
                         rowCrossAxisAlignment: CrossAxisAlignment.center,
                         columnCrossAxisAlignment: CrossAxisAlignment.center,
@@ -247,7 +217,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
                           ),
                           ResponsiveRowColumnItem(
                             rowFlex: 1,
-                            child: LogoAnimate(animationController),
+                            child: LogoAnimate(),
                           ),
                         ],
                       ),
@@ -260,25 +230,6 @@ class _EventInfoState extends ConsumerState<EventInfo>
               },
               child: Column(
                 children: [
-                  //Don't show starting point when no event
-                  if (nextEventProvider.status != EventStatus.noevent)
-                    Builder(builder: (context) {
-                      var spp = ref.watch(startpointImageAndLinkProvider);
-                      return spp.text != null
-                          ? FittedBox(
-                              child: Text(
-                                spp.text!,
-                                maxLines: 10,
-                                softWrap: true,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color:
-                                      CupertinoTheme.of(context).primaryColor,
-                                ),
-                              ),
-                            )
-                          : Container();
-                    }),
                   const SizedBox(
                     height: 5,
                   ),
@@ -292,11 +243,11 @@ class _EventInfoState extends ConsumerState<EventInfo>
                     ),
                   ),
                   Text(
-                    nextEventProvider.lastupdate == null
+                    nextEvent.lastupdate == null
                         ? '-'
                         : Localize.current.dateTimeIntl(
-                            nextEventProvider.lastupdate as DateTime,
-                            nextEventProvider.lastupdate as DateTime,
+                            nextEvent.lastupdate as DateTime,
+                            nextEvent.lastupdate as DateTime,
                           ),
                     style: const TextStyle(
                       color: CupertinoDynamicColor.withBrightness(
@@ -307,37 +258,13 @@ class _EventInfoState extends ConsumerState<EventInfo>
                   ),
                 ],
               ),
-            ),
+            ),*/
             const SizedBox(
               height: 5,
             ),
-            /*TitleView(
-              titleTxt: 'Mediterranean diet',
-              subTxt: 'Details',
-              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                CurvedAnimation(
-                  parent: animationController,
-                  curve: const Interval(0, 1.0, curve: Curves.fastOutSlowIn),
-                ),
-              ),
-              animationController: animationController,
-            ),*/
-            /*RoundedCard(
-              animationController: animationController,
-              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                CurvedAnimation(
-                  parent: animationController,
-                  curve: const Interval(0, 1.0, curve: Curves.fastOutSlowIn),
-                ),
-              ),
-            ),*/
           ],
         ),
       ),
     );
-
-    /* return NoDataWarning(
-        onReload: () => ref.read(activeEventProvider).refresh(),
-      );*/
   }
 }

@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
@@ -59,6 +61,10 @@ class Event with EventMappable implements Comparable {
   final EventStatus status;
   @MappableField(key: 'len')
   final int routeLength;
+
+  ///Route points aka nodes
+  @MappableField(key: 'nod')
+  List<LatLng> nodes = <LatLng>[];
   @MappableField(key: 'sla')
   final double? startPointLatitude;
   @MappableField(key: 'slo')
@@ -71,7 +77,7 @@ class Event with EventMappable implements Comparable {
   final bool isActive;
 
   @MappableField(key: 'lastupdate')
-  late DateTime? lastupdate;
+  late DateTime? lastUpdate;
 
   Exception? rpcException;
 
@@ -91,7 +97,8 @@ class Event with EventMappable implements Comparable {
       this.participants = 0,
       this.routeLength = 0,
       this.status = EventStatus.pending,
-      this.lastupdate,
+      this.nodes = const <LatLng>[],
+      this.lastUpdate,
       this.rpcException,
       this.startPointLatitude,
       this.startPointLongitude,
@@ -137,6 +144,48 @@ class Event with EventMappable implements Comparable {
     return false;
   }
 
+  Color get statusColor {
+    switch (status) {
+      case EventStatus.pending:
+        return Colors.yellowAccent;
+      case EventStatus.confirmed:
+        return Colors.green;
+      case EventStatus.cancelled:
+        return Colors.red;
+      case EventStatus.noevent:
+        return Colors.grey;
+      case EventStatus.running:
+        return Colors.green;
+      case EventStatus.finished:
+        return Colors.blueAccent;
+      case EventStatus.deleted:
+        return Colors.grey;
+      case EventStatus.unknown:
+        return Colors.transparent;
+    }
+  }
+
+  Color get statusTextColor {
+    switch (status) {
+      case EventStatus.pending:
+        return Colors.black;
+      case EventStatus.confirmed:
+        return Colors.black;
+      case EventStatus.cancelled:
+        return Colors.black;
+      case EventStatus.noevent:
+        return Colors.black;
+      case EventStatus.running:
+        return Colors.black;
+      case EventStatus.finished:
+        return Colors.black;
+      case EventStatus.deleted:
+        return Colors.black;
+      case EventStatus.unknown:
+        return Colors.black;
+    }
+  }
+
   ///Returns a base [Event] dated to now with with duration [initDaysDuration] of 3650 days to see its not actual
   static Event get init {
     return Event(
@@ -153,7 +202,7 @@ class Event with EventMappable implements Comparable {
   ///Check if event is over
   ///Event is always in Future added by duration
   bool get isNoEventPlanned {
-    if (status == EventStatus.noevent) {
+    if (status == EventStatus.noevent || status == EventStatus.unknown) {
       return true;
     }
     return false;
@@ -185,6 +234,12 @@ class Event with EventMappable implements Comparable {
     //compare only utc time because sometimes server date wrong interpreted
     if (startDate.toUtc().compareTo(otherEvent.startDate.toUtc()) != 0) {
       return 150;
+    }
+    if (nodes.length.compareTo(otherEvent.nodes.length) != 0) {
+      return 200;
+    }
+    if (nodes.hashCode.compareTo(otherEvent.nodes.hashCode) != 0) {
+      return 250;
     }
     return 0;
   }
@@ -223,7 +278,7 @@ class Event with EventMappable implements Comparable {
     completer = null;
     if (wampResult is Map<String, dynamic>) {
       var event = MapperContainer.globals.fromMap<Event>(wampResult);
-      event.lastupdate = DateTime.now();
+      event.lastUpdate = DateTime.now();
       return event;
     }
     if (wampResult is Event) {

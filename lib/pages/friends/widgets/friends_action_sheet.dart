@@ -98,7 +98,6 @@ class FriendsActionModal extends ConsumerWidget {
                       return;
                     }
                     Navigator.pop(context);
-                    ;
                   },
                 ),
               ),

@@ -17,14 +17,17 @@ import '../../../helpers/location_permission_dialogs.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
+import 'map_tiles_copyright.dart';
 import 'open_street_map_copyright.dart';
 import 'tracking_icon_widget.dart';
 
 ///Shows a row at bottom with OSM copyright and GPS speed widget
 class GPSInfoAndMapCopyright extends ConsumerStatefulWidget {
-  const GPSInfoAndMapCopyright({super.key, this.showOdoMeter = true});
+  const GPSInfoAndMapCopyright(
+      {super.key, this.showOdoMeter = true, this.showSpeed = true});
 
   final bool showOdoMeter;
+  final bool showSpeed;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -102,9 +105,9 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
 
   @override
   Widget build(BuildContext context) {
-    return kIsWeb
+    return kIsWeb || !widget.showSpeed
         ? const Align(
-            alignment: Alignment.bottomRight, child: OpenStreetMapCopyright())
+            alignment: Alignment.bottomRight, child: MapTilesCopyright())
         : Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -116,7 +119,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   const Expanded(
                     flex: 1,
-                    child: OpenStreetMapCopyright(),
+                    child: MapTilesCopyright(),
                   ),
                   const SizedBox(
                     width: 10,

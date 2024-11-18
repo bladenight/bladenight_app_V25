@@ -7,7 +7,7 @@ import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 
 class IntroScreen extends StatefulWidget {
-  static const String openIntroRoute = '/intro';
+  static const String introScreenRouteName = '/intro';
 
   const IntroScreen({super.key});
 
@@ -84,7 +84,7 @@ class IntroScreenState extends State<IntroScreen> {
         title: 'Karte Detail 1',
         styleTitle: titleStyle,
         description:
-        'Im oberen Teil der Karte kann man sehen welche Strecke auf der Route man gefahren ist (↦7.6km).\n'
+            'Im oberen Teil der Karte kann man sehen welche Strecke auf der Route man gefahren ist (↦7.6km).\n'
             'Wieviel Prozent der Gesamtstrecke (48.3%).\n'
             'Wie weit es bis zum Ziel ist ⇥8.2km\n'
             'Auf dem Balken wird der Fortschritt und Position der Freunde und des Zuges angezeigt\n'
@@ -93,8 +93,7 @@ class IntroScreenState extends State<IntroScreen> {
             '📏 Wie lang ist der Zug von Anfang bis Ende (0.0km)\n'
             'Route: Name der aktuellen Route\n'
             'Length: Länge der Strecke\n'
-            'Tracker - Anzahl der unterstüzenden Teilnehmer (2 Tracker)\n'
-        ,
+            'Tracker - Anzahl der unterstüzenden Teilnehmer (2 Tracker)\n',
         styleDescription: descriptionStyle,
         backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor,
         pathImage: 'assets/images/instruction/map2.png',

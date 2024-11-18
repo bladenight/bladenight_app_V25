@@ -49,24 +49,27 @@ class _MapLayerState extends State<MapLayer> {
   @override
   Widget build(BuildContext context) {
     //print('build map_layer');
+    var bounds = widget.event.nodes.getBounds;
     return FlutterMap(
       mapController: widget.controller,
       options: MapOptions(
         keepAlive: true,
-        initialZoom: initialZoom,
+        initialCameraFit:
+            bounds != null ? CameraFit.insideBounds(bounds: bounds) : null,
+        //initialZoom: initialZoom,
         minZoom: MapSettings.openStreetMapEnabled
             ? MapSettings.minZoom
             : MapSettings.minZoomDefault,
         maxZoom: MapSettings.openStreetMapEnabled
             ? MapSettings.maxZoom
             : MapSettings.maxZoomDefault,
-        initialCenter: widget.startPoint,
+        //initialCenter: widget.startPoint,
         cameraConstraint: MapSettings.openStreetMapEnabled ||
                 widget.event.hasSpecialStartPoint
             ? const CameraConstraint
                 .unconstrained() //CameraConstraint.contain(bounds: MapSettings.mapOnlineBoundaries)
             : CameraConstraint.contain(
-                bounds: MapSettings.mapOfflineBoundaries),
+                bounds: MapSettings.bayernAtlasBoundaries),
         interactionOptions: const InteractionOptions(
           flags: InteractiveFlag.all,
           enableMultiFingerGestureRace: true,

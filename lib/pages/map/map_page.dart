@@ -78,7 +78,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print('${DateTime.now().toIso8601String()} Build Flutterman');
+    print('${DateTime.now().toIso8601String()} Build Fluttermap (map_page)');
     var route = ref.watch(activeEventRouteProvider);
     var osmEnabled = ref.watch(useOpenStreetMapProvider);
     var startPoint = route.hasValue ? route.value!.startLatLng : defaultLatLng;
@@ -107,7 +107,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                   ? CameraConstraint.contain(
                       bounds: MapSettings.mapOnlineBoundaries)
                   : CameraConstraint.contain(
-                      bounds: MapSettings.mapOfflineBoundaries),
+                      bounds: MapSettings.bayernAtlasBoundaries),
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all,
                 enableMultiFingerGestureRace: true,

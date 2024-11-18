@@ -59,7 +59,7 @@ class NotificationHelper {
         AndroidInitializationSettings('app_icon');
 
     DarwinInitializationSettings initializationSettingsIOS =
-        const DarwinInitializationSettings(onDidReceiveLocalNotification: null);
+        const DarwinInitializationSettings();
 
     final InitializationSettings initializationSettings =
         InitializationSettings(
@@ -117,13 +117,12 @@ class NotificationHelper {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         id, title, body, tzTime, _getPlatformSpecifics(),
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
-    if (!kIsWeb) {
-      BnLog.info(
-          className: 'flutterLocalNotificationsPlugin',
-          methodName: 'zonedSchedule',
-          text: 'Set notification:$tzTime');
-    }
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exact);
+    BnLog.info(
+        className: 'flutterLocalNotificationsPlugin',
+        methodName: 'zonedSchedule',
+        text: 'Set notification at: $tzTime');
   }
 
   Future<void> cancelNotifications(int notificationId) async {

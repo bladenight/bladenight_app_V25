@@ -205,6 +205,9 @@
 		D97977E4A022AD00497110AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E23FA98A2CB407C600F26A01 /* Info-Profile.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Profile.plist"; sourceTree = "<group>"; };
 		E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Profile.xcconfig; sourceTree = "<group>"; };
+		E256FD652CD182BA0077E218 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		E256FD672CD182BA0077E218 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		E256FD7A2CD182BC0077E218 /* BladeNightWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BladeNightWidgetExtension.entitlements; sourceTree = "<group>"; };
 		E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEventModel.swift; sourceTree = "<group>"; };
 		E2584CC12A7D1F3100346A03 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		E2A725902CBAFCEB004C7868 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
@@ -371,6 +374,8 @@
 				4609AD4228A9814700219A59 /* HealthKit.framework */,
 				79DD6AAB761013B402DB2C93 /* Pods_OneSignalNotificationServiceExtension.framework */,
 				516014805CE635622075C8CF /* Pods_Runner.framework */,
+				E256FD652CD182BA0077E218 /* WidgetKit.framework */,
+				E256FD672CD182BA0077E218 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -389,6 +394,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				E256FD7A2CD182BC0077E218 /* BladeNightWidgetExtension.entitlements */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				4668153028A8F45200504AF6 /* Bladenight Watch */,
@@ -577,7 +583,7 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1340;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {

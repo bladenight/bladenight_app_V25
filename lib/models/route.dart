@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../app_settings/app_configuration_helper.dart';
@@ -123,5 +124,55 @@ extension RoutePointExtension on RoutePoints {
       return defaultLatLng;
     }
     return points.last;
+  }
+
+  LatLngBounds? get routeBounds {
+    if (points.isEmpty) {
+      return null;
+    }
+    return points.getBounds;
+  }
+}
+
+extension LatLngBoundsExtension on List<LatLng> {
+  LatLngBounds? get getBounds {
+    if (isEmpty) {
+      return null;
+    }
+    double? x0, x1, y0, y1;
+    for (LatLng latLng in this) {
+      if (x0 == null) {
+        x0 = x1 = latLng.latitude;
+        y0 = y1 = latLng.longitude;
+      } else {
+        if (x1 == null || latLng.latitude > x1) x1 = latLng.latitude;
+        if (latLng.latitude < x0) x0 = latLng.latitude;
+        if (y1 == null || latLng.longitude > y1) y1 = latLng.longitude;
+        if (y0 == null || latLng.longitude < y0) y0 = latLng.longitude;
+      }
+    }
+    //return MapSettings.bayernAtlasBoundaries;
+    //const LatLng(47.248466288051446, 8.945107890491915),
+    //const LatLng(50.57987000589413, 13.90891310401004),
+    if (x0 == null || y0 == null || x1 == null || y1 == null) {
+      return null;
+    }
+    return LatLngBounds(LatLng(x0 - 0.1, y0 - 0.1), LatLng(x1 + 0.1, y1 + 0.1));
+  }
+
+  LatLng get firstOrDefault {
+    if (isNotEmpty) {
+      return first;
+    } else {
+      return defaultLatLng;
+    }
+  }
+
+  LatLng get lastOrDefault {
+    if (isNotEmpty) {
+      return last;
+    } else {
+      return defaultLatLng;
+    }
   }
 }
