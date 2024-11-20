@@ -25,7 +25,7 @@ import 'widgets/headings_layer.dart';
 import 'widgets/map_buttons.dart';
 import 'widgets/map_tile_layer.dart';
 import 'widgets/markers_layer.dart';
-import 'widgets/poly_lines.dart';
+import 'widgets/bn_map_page_poly_lines_layer.dart';
 import 'widgets/track_progress_overlay.dart';
 
 class MapPage extends ConsumerStatefulWidget {
@@ -138,7 +138,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                             break;
                           }
                         },
-                        child: const PolyLinesLayer(),
+                        child: const BnMapPagePolyLinesLayer(),
                       ),
                     ),
 

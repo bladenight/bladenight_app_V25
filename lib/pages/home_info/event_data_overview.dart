@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/timeconverter_helper.dart';
@@ -51,12 +52,6 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
         CupertinoTheme.of(context).textTheme.textStyle.fontSize ?? 12;
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: <Color>[
-          CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.0),
-          CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.2),
-          CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.4),
-          widget.nextEvent.statusColor,
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
         borderRadius: const BorderRadius.all(Radius.circular(4.0)),
       ),
       child: Column(
@@ -65,7 +60,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
           children: [
             GestureDetector(
               onTap: () {
-                print('tap on eventmappsmall');
+                print('tap on event map small');
               },
               child: EventMapSmall(nextEvent: widget.nextEvent),
             ),
@@ -86,7 +81,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                           dividerColor:
                               widget.nextEvent.status == EventStatus.noevent
                                   ? Color(0xFF333333)
-                                  : Color(0xFFFFFF3B),
+                                  : CupertinoTheme.of(context).primaryColor,
                           text: widget.nextEvent.status == EventStatus.noevent
                               ? Localize.of(context).noEventPlanned
                               : DateFormatter(Localize.of(context))
@@ -102,7 +97,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                             animationController: _animationController,
                             normalFontSize: normalFontSize,
                             dividerWidth: 70,
-                            dividerColor: Color(0xFFFFFF3B),
+                            dividerColor:
+                                CupertinoTheme.of(context).primaryColor,
                             text: widget.nextEvent.routeName,
                             description: Localize.of(context).route,
                           ),
@@ -111,7 +107,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                             animationController: _animationController,
                             normalFontSize: normalFontSize,
                             dividerWidth: 70,
-                            dividerColor: Color(0xFFFFFF3B),
+                            dividerColor:
+                                CupertinoTheme.of(context).primaryColor,
                             text: widget.nextEvent.formatDistance,
                             description: Localize.of(context).length,
                           )
@@ -133,7 +130,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                       animationController: _animationController,
                       normalFontSize: normalFontSize,
                       dividerWidth: 70,
-                      dividerColor: Color(0xFF87A0E5),
+                      dividerColor: CupertinoTheme.of(context).primaryColor,
                       text: widget.nextEvent.routeName,
                       description: Localize.of(context).route,
                     ),
@@ -142,7 +139,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                       animationController: _animationController,
                       normalFontSize: normalFontSize,
                       dividerWidth: 70,
-                      dividerColor: Color(0xFF87A0E5),
+                      dividerColor: CupertinoTheme.of(context).primaryColor,
                       text: widget.nextEvent.formatDistance,
                       description: Localize.of(context).length,
                     )
@@ -198,14 +195,14 @@ Widget eventDetail(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             FittedBox(
-              fit: BoxFit.contain,
+              fit: BoxFit.scaleDown,
               child: Text(
                 description,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily:
                       CupertinoTheme.of(context).textTheme.textStyle.fontFamily,
-                  fontWeight: FontWeight.w200,
+                  fontWeight: FontWeight.w600,
                   //fontSize: normalFontSize * 0.7, //fitted box not working if enabled
                   color:
                       CupertinoTheme.of(context).primaryColor.withOpacity(0.8),
@@ -249,10 +246,9 @@ Widget eventDetail(
                         .textTheme
                         .textStyle
                         .fontFamily,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                     //fontSize: normalFontSize * 1.2,
-                    color:
-                        CupertinoTheme.of(context).primaryColor.withOpacity(1)),
+                    color: CupertinoTheme.of(context).primaryColor),
               ),
             ),
           ],

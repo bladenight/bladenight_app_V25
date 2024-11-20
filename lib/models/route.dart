@@ -157,7 +157,9 @@ extension LatLngBoundsExtension on List<LatLng> {
     if (x0 == null || y0 == null || x1 == null || y1 == null) {
       return null;
     }
-    return LatLngBounds(LatLng(x0 - 0.1, y0 - 0.1), LatLng(x1 + 0.1, y1 + 0.1));
+    var offset = 0.03;
+    return LatLngBounds(
+        LatLng(x0 - offset, y0 - offset), LatLng(x1 + offset, y1 + offset));
   }
 
   LatLng get firstOrDefault {

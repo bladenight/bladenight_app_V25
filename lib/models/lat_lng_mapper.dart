@@ -9,9 +9,14 @@ class LatLngMapper extends SimpleMapper<LatLng> {
   @override
   LatLng decode(value) {
     var map = value as Map<String, dynamic>;
-    var mapLa= map['la']??defaultLatitude;
-    var mapLo= map['lo']??defaultLongitude;
-    return LatLng(mapLa,mapLo);
+    if (map['lat'] == null && map['lon'] == null) {
+      var mapLa = map['la'] ?? defaultLatitude;
+      var mapLo = map['lo'] ?? defaultLongitude;
+      return LatLng(mapLa, mapLo);
+    }
+    var mapLa = map['lat'] ?? defaultLatitude;
+    var mapLo = map['lon'] ?? defaultLongitude;
+    return LatLng(mapLa, mapLo);
   }
 
   @override

@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../models/event.dart';
 import '../../../models/route.dart';
 import '../../map/widgets/gps_info_and_map_copyright.dart';
+import '../../map/widgets/map_buttons_light.dart';
 import '../../map/widgets/map_tile_layer.dart';
 
+///Map layer for events home and mapView
+///
+///
 class MapLayerOverview extends ConsumerStatefulWidget {
   const MapLayerOverview({
     required this.event,
@@ -16,7 +21,7 @@ class MapLayerOverview extends ConsumerStatefulWidget {
     required this.showSpeed,
     this.location,
     this.markers = const [],
-    this.polyLines = const [],
+    this.polylines = const [],
     this.controller,
     this.initialZoom = 13,
     this.minZoom = 5,
@@ -30,7 +35,7 @@ class MapLayerOverview extends ConsumerStatefulWidget {
   final LatLng finishPoint;
   final bool showSpeed;
   final List<Marker> markers;
-  final List<Polyline> polyLines;
+  final List<Polyline> polylines;
   final MapController? controller;
   final double initialZoom;
   final double minZoom;
@@ -41,6 +46,8 @@ class MapLayerOverview extends ConsumerStatefulWidget {
 }
 
 class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
+  final PopupController _popupController = PopupController();
+
   @override
   Widget build(BuildContext context) {
     var bounds = widget.event.nodes.getBounds;
@@ -56,12 +63,12 @@ class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
             minZoom: widget.minZoom,
             maxZoom: widget.maxZoom,
             //initialCenter: widget.startPoint,
-            cameraConstraint: MapSettings.openStreetMapEnabled ||
+            /* cameraConstraint: MapSettings.openStreetMapEnabled ||
                     widget.event.hasSpecialStartPoint
                 ? const CameraConstraint
                     .unconstrained() //CameraConstraint.contain(bounds: MapSettings.mapOnlineBoundaries)
                 : CameraConstraint.contain(
-                    bounds: MapSettings.bayernAtlasBoundaries),
+                    bounds: MapSettings.bayernAtlasBoundaries),*/
             interactionOptions: const InteractionOptions(
               flags: InteractiveFlag.all,
               enableMultiFingerGestureRace: true,
@@ -76,8 +83,14 @@ class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
             ),
             PolylineLayer(
               polylines: widget
-                  .polyLines, // ref.watch(polyLinesProvider),// widget.polyLines,
+                  .polylines, // ref.watch(polyLinesProvider),// widget.polyLines,
             ),
+            MarkerLayer(markers: widget.markers),
+            const SafeArea(
+                child: MapButtonsLayerLight(
+              bottomMargin: 10,
+              showHelp: false,
+            )),
           ]),
     );
   }

@@ -53,7 +53,7 @@ class RouteNameDialog extends ConsumerWidget {
                           startDate: DateTime.now(), routeName: routeName),
                       startPoint: LatLng(defaultLatitude, defaultLongitude),
                       finishPoint: route.finishLatLngOrDefault,
-                        routePoints:route,
+                      routePoints: route.points,
                     ),
                     NoDataWarning(
                       onReload: () => ref.refresh(routeProvider(route.name)),
@@ -66,7 +66,7 @@ class RouteNameDialog extends ConsumerWidget {
                         Event(startDate: DateTime.now(), routeName: routeName),
                     startPoint: route.startLatLngOrDefault,
                     finishPoint: route.finishLatLngOrDefault,
-                    routePoints: route,
+                    routePoints: route.points,
                     polyLines: [
                       Polyline(
                         points: route.points,
@@ -134,7 +134,7 @@ class RouteNameDialog extends ConsumerWidget {
                                   angle: hp.bearing,
                                   child: const Image(
                                     image: AssetImage(
-                                      'assets/images/arrow_up.png',
+                                      'assets/images/arrow_up_pure_margin.png',
                                     ),
                                     fit: BoxFit.cover,
                                   ),

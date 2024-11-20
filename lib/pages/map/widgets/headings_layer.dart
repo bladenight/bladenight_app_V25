@@ -44,7 +44,7 @@ class _HeadingsLayerState extends ConsumerState<HeadingsLayer> {
                   angle: hp.bearing,
                   child: const Image(
                     image: AssetImage(
-                      'assets/images/arrow_up.png',
+                      'assets/images/arrow_up_pure_margin.png',
                     ),
                     fit: BoxFit.cover,
                   ),

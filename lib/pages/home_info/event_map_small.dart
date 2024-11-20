@@ -6,12 +6,9 @@ import '../../generated/l10n.dart';
 import '../../helpers/location_bearing_distance.dart';
 import '../../models/bn_map_marker.dart';
 import '../../models/event.dart';
-import '../../models/route.dart';
+import '../../models/route.dart' hide LatLng;
 import '../../providers/map/icon_size_provider.dart';
-import '../../providers/route_providers.dart';
-import '../widgets/data_loading_indicator.dart';
 import '../widgets/event_info/map_layer_overview.dart';
-import '../widgets/no_data_warning.dart';
 
 class EventMapSmall extends ConsumerStatefulWidget {
   const EventMapSmall(
@@ -55,10 +52,12 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
                       : 11,
               startPoint: widget.nextEvent.nodes.firstOrDefault,
               finishPoint: widget.nextEvent.nodes.lastOrDefault,
-              polyLines: [
+              polylines: [
                 Polyline(
+                  //current and active route points
                   points: widget.nextEvent.nodes,
-                  color: CupertinoTheme.of(context).primaryColor,
+                  color: CupertinoTheme.of(context)
+                      .primaryColor, // CupertinoTheme.of(context).primaryColor,
                   strokeWidth: 4,
                 ),
               ],
@@ -115,14 +114,14 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
                         widget.nextEvent.nodes))
                       Marker(
                         point: hp.latLng,
-                        width: 20,
-                        height: 20,
+                        width: iconSize * 0.5,
+                        height: iconSize * 0.5,
                         child: Builder(
                           builder: (context) => Transform.rotate(
                             angle: hp.bearing,
                             child: const Image(
                               image: AssetImage(
-                                'assets/images/arrow_up.png',
+                                'assets/images/arrow_up_pure_margin.png',
                               ),
                               fit: BoxFit.cover,
                             ),

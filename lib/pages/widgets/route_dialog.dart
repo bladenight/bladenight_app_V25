@@ -39,8 +39,7 @@ class RouteDialog extends ConsumerWidget {
               Text('${Localize.of(context).routeoverview}: ${event.routeName}'),
         ),
         child: Builder(builder: (context) {
-          var sizeValue = MediaQuery.textScalerOf(context)
-              .scale(iconSize);
+          var sizeValue = MediaQuery.textScalerOf(context).scale(iconSize);
           var asyncRoute = ref.watch(routeProvider(event.routeName));
           return asyncRoute.maybeWhen(
               skipLoadingOnRefresh: false,
@@ -50,9 +49,9 @@ class RouteDialog extends ConsumerWidget {
                   return Stack(children: [
                     MapLayer(
                       event: event,
-                      startPoint: LatLng(defaultLatitude, defaultLongitude),
+                      startPoint: route.startLatLngOrDefault,
                       finishPoint: route.finishLatLngOrDefault,
-                      routePoints: route,
+                      routePoints: route.points,
                     ),
                     NoDataWarning(
                       onReload: () => ref.refresh(routeProvider(route.name)),
@@ -64,14 +63,7 @@ class RouteDialog extends ConsumerWidget {
                     event: event,
                     startPoint: route.startLatLngOrDefault,
                     finishPoint: route.finishLatLngOrDefault,
-                    routePoints: route,
-                    polyLines: [
-                      Polyline(
-                        points: route.points,
-                        color: CupertinoTheme.of(context).primaryColor,
-                        strokeWidth: 4,
-                      ),
-                    ],
+                    routePoints: route.points,
                     markers: [
                       //finishMarker
                       ...[
@@ -98,7 +90,7 @@ class RouteDialog extends ConsumerWidget {
                           ),
                       ], //StartMarker
                       ...[
-                        if ( route.points.isNotEmpty)
+                        if (route.points.isNotEmpty)
                           BnMapMarker(
                             buildContext: context,
                             headerText: Localize.of(context).start,
@@ -132,7 +124,7 @@ class RouteDialog extends ConsumerWidget {
                                   angle: hp.bearing,
                                   child: const Image(
                                     image: AssetImage(
-                                      'assets/images/arrow_up.png',
+                                      'assets/images/arrow_up_pure_margin.png',
                                     ),
                                     fit: BoxFit.cover,
                                   ),

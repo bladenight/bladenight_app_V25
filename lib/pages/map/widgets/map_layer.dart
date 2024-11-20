@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
@@ -16,6 +17,7 @@ import 'map_marker_popup.dart';
 import 'map_tile_layer.dart';
 import 'special_points_layer.dart';
 
+//map layer class for routes
 class MapLayer extends StatefulWidget {
   const MapLayer({
     required this.event,
@@ -33,7 +35,9 @@ class MapLayer extends StatefulWidget {
   final Event event;
   final LatLng startPoint;
   final LatLng finishPoint;
-  final RoutePoints routePoints;
+
+  //only to calc dist
+  final List<LatLng> routePoints;
   final List<Marker> markers;
   final List<Polyline> polyLines;
   final MapController? controller;
@@ -49,14 +53,14 @@ class _MapLayerState extends State<MapLayer> {
   @override
   Widget build(BuildContext context) {
     //print('build map_layer');
-    var bounds = widget.event.nodes.getBounds;
+    var bounds = widget.routePoints.getBounds;
     return FlutterMap(
       mapController: widget.controller,
       options: MapOptions(
         keepAlive: true,
         initialCameraFit:
             bounds != null ? CameraFit.insideBounds(bounds: bounds) : null,
-        //initialZoom: initialZoom,
+        initialZoom: initialZoom,
         minZoom: MapSettings.openStreetMapEnabled
             ? MapSettings.minZoom
             : MapSettings.minZoomDefault,
@@ -112,7 +116,7 @@ class _MapLayerState extends State<MapLayer> {
           ),
         ),
         SpecialPointsLayer(_popupController),
-        EventInfoOverlay(event: widget.event, routePoints: widget.routePoints),
+        EventInfoOverlay(event: widget.event),
         const SafeArea(child: MapButtonsLayerLight()),
       ],
     );

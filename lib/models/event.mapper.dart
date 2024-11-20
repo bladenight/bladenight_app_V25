@@ -83,7 +83,8 @@ class EventMapper extends ClassMapperBase<Event> {
   static EventMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = EventMapper._());
-      MapperContainer.globals.useAll([DurationMapper(), DateTimeMapper()]);
+      MapperContainer.globals
+          .useAll([DurationMapper(), DateTimeMapper(), LatLngMapper()]);
       EventStatusMapper.ensureInitialized();
     }
     return _instance!;

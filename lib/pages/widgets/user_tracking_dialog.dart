@@ -14,7 +14,7 @@ import '../../models/user_gpx_point.dart';
 import '../map/widgets/map_buttons_light.dart';
 import '../map/widgets/map_tile_layer.dart';
 import '../map/widgets/open_street_map_copyright.dart';
-import '../map/widgets/poly_lines.dart';
+import '../map/widgets/bn_map_page_poly_lines_layer.dart';
 
 class UserTrackDialog extends ConsumerWidget {
   const UserTrackDialog({

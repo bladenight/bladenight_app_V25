@@ -6,14 +6,11 @@ import 'package:flutter/material.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../models/event.dart';
-import '../../../models/route.dart' hide Path;
 
 class EventInfoOverlay extends StatefulWidget {
-  const EventInfoOverlay(
-      {super.key, required this.event, required this.routePoints});
+  const EventInfoOverlay({super.key, required this.event});
 
   final Event event;
-  final RoutePoints? routePoints;
 
   @override
   State<EventInfoOverlay> createState() => _EventInfoOverlayState();
@@ -46,7 +43,7 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                         child: FittedBox(
                           child: Text(
                             '${Localize.of(context).route}: ${widget.event.routeName}  '
-                            '${Localize.of(context).length}: ${widget.routePoints != null ? ((widget.routePoints!.getRouteTotalDistance) / 1000).toStringAsFixed(1) : '-'} km  ',
+                            '${Localize.of(context).length}: ${(widget.event.routeLength / 1000).toStringAsFixed(1)} km  ',
                             overflow: TextOverflow.fade,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                             maxLines: 1,

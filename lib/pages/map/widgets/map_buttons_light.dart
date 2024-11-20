@@ -15,8 +15,16 @@ import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
 import '../../widgets/positioned_visibility_opacity.dart';
 
+///Overlay for [flutter_map] to show zoom and light/dark button
+///
+/// - [bottomMargin] set margin to the bottom
+/// - [showHelp] avoid or show ? symbol to avoid displaying a wrong overlay
 class MapButtonsLayerLight extends ConsumerStatefulWidget {
-  const MapButtonsLayerLight({super.key});
+  const MapButtonsLayerLight(
+      {super.key, this.bottomMargin = 40, this.showHelp = true});
+
+  final double bottomMargin;
+  final bool showHelp;
 
   @override
   ConsumerState<MapButtonsLayerLight> createState() =>
@@ -54,7 +62,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
       //#######################################################################
       PositionedVisibilityOpacity(
         left: 10,
-        bottom: 190,
+        bottom: widget.bottomMargin + 150,
         height: 40,
         heroTag: 'zoomOutTag',
         onPressed: () {
@@ -75,7 +83,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
       PositionedVisibilityOpacity(
         heroTag: 'zoomInTag',
         left: 10,
-        bottom: 140,
+        bottom: widget.bottomMargin + 100,
         height: 40,
         visibility: ref.watch(mapMenuVisibleProvider),
         onPressed: () {
@@ -91,7 +99,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
       ),
       PositionedVisibilityOpacity(
         left: 10,
-        bottom: 90,
+        bottom: widget.bottomMargin + 50,
         height: 40,
         visibility: ref.watch(mapMenuVisibleProvider),
         onPressed: () {
@@ -112,7 +120,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
       ),
       Positioned(
         left: 10,
-        bottom: 40,
+        bottom: widget.bottomMargin,
         height: 40,
         child: Builder(builder: (context) {
           return FloatingActionButton(
@@ -138,25 +146,26 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
           );
         }),
       ),
-      Positioned(
-        top: kIsWeb ? 10 : 10,
-        right: kIsWeb ? 10 : 10,
-        height: 30,
-        child: Builder(builder: (context) {
-          return GestureDetector(
-              onTap: () {
-                setState(() {
-                  MapSettings.setMapMenuVisible(true);
-                });
-                _showOverlay(context, text: '');
-              },
-              child: const AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: Icon(
-                    Icons.help,
-                  )));
-        }),
-      ),
+      if (widget.showHelp)
+        Positioned(
+          top: kIsWeb ? 10 : 10,
+          right: kIsWeb ? 10 : 10,
+          height: 30,
+          child: Builder(builder: (context) {
+            return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    MapSettings.setMapMenuVisible(true);
+                  });
+                  _showOverlay(context, text: '');
+                },
+                child: const AnimatedSwitcher(
+                    duration: Duration(milliseconds: 500),
+                    child: Icon(
+                      Icons.help,
+                    )));
+          }),
+        ),
     ]);
   }
 

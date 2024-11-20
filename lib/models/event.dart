@@ -16,6 +16,7 @@ import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_endpoints.dart';
 import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
+import 'lat_lng_mapper.dart';
 
 part 'event.mapper.dart';
 
@@ -47,7 +48,8 @@ enum EventStatus {
   unknown,
 }
 
-@MappableClass(includeCustomMappers: [DurationMapper(), DateTimeMapper()])
+@MappableClass(
+    includeCustomMappers: [DurationMapper(), DateTimeMapper(), LatLngMapper()])
 class Event with EventMappable implements Comparable {
   @MappableField(key: 'sta')
   final DateTime startDate;

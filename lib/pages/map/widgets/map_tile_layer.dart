@@ -11,6 +11,9 @@ import '../../../providers/map/use_open_street_map_provider.dart';
 import '../tiles_provider.dart';
 import 'bn_dark_container.dart';
 
+///Layer to load and draw map tiles
+///
+///[hasSpecialStartPoint] to load OpenStreetMap Tiles if [true]
 class MapTileLayer extends StatefulWidget {
   const MapTileLayer({super.key, this.hasSpecialStartPoint = false});
 
@@ -93,7 +96,7 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
       tileProvider:
           osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
               ? CachedTileProvider(
-                  maxStale: const Duration(days: 30),
+                  maxStale: const Duration(days: 60),
                   store: HiveCacheStore(
                     null,
                     hiveBoxName: 'HiveCacheStore',

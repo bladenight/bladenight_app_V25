@@ -179,7 +179,7 @@ extension MapSettings on HiveSettingsDB {
 
   ///get mapMenuVisible
   static bool get mapMenuVisible {
-    return HiveSettingsDB._hiveBox.get(mapMenuVisibleKey, defaultValue: true);
+    return HiveSettingsDB._hiveBox.get(mapMenuVisibleKey, defaultValue: false);
   }
 
   ///set mapMenuVisibleString

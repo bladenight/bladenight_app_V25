@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app_settings/app_configuration_helper.dart';
 import '../../../helpers/logger.dart';
 import '../../../models/images_and_links.dart';
 import '../../../providers/active_event_route_provider.dart';
@@ -17,14 +18,15 @@ import '../../../providers/settings/me_color_provider.dart';
 
 final LayerHitNotifier hitNotifier = ValueNotifier(null);
 
-class PolyLinesLayer extends ConsumerStatefulWidget {
-  const PolyLinesLayer({super.key});
+class BnMapPagePolyLinesLayer extends ConsumerStatefulWidget {
+  const BnMapPagePolyLinesLayer({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PolyLines();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _BnMapPagePolyLinesLayer();
 }
 
-class _PolyLines extends ConsumerState<PolyLinesLayer> {
+class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
   @override
   Widget build(BuildContext context) {
     var locationUpdate = ref.watch(locationProvider);
