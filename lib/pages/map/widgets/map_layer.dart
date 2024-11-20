@@ -85,6 +85,13 @@ class _MapLayerState extends State<MapLayer> {
         const GPSInfoAndMapCopyright(
           showOdoMeter: false,
         ),
+        if (widget.routePoints.isNotEmpty)
+          PolylineLayer(polylines: [
+            Polyline(
+                points: widget.routePoints,
+                color: CupertinoTheme.of(context).primaryColor,
+                strokeWidth: 4)
+          ]),
         PolylineLayer(
           polylines: widget
               .polyLines, // ref.watch(polyLinesProvider),// widget.polyLines,
