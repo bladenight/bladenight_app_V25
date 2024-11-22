@@ -8,7 +8,7 @@ extension MapSettings on HiveSettingsDB {
 
   ///maxZoom for Static map tiles
   static double get maxZoomDefault {
-    return 18.0;
+    return 20.0;
   }
 
   ///minZoom for Static map tiles

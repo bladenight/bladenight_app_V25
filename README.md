@@ -190,6 +190,12 @@ sudo xattr -d com.apple.quarantine iproxy
   ios/% pod deintegrate
   ios/% pod install
   Then start new build
+* ```
+  flutter clean
+  rm -rf ios/Pods
+  rm -rf ios/Podfile.lock
+  rm -rf ~/Library/Developer/Xcode/DerivedData
+  ```
 
 ### Rebuilding Flutter map
 

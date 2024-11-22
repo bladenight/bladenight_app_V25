@@ -80,6 +80,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     print('${DateTime.now().toIso8601String()} Build Fluttermap (map_page)');
     var route = ref.watch(activeEventRouteProvider);
+
+    var bounds = route.hasValue ? route.value!.points.getBounds : null;
     var osmEnabled = ref.watch(useOpenStreetMapProvider);
     var startPoint = route.hasValue ? route.value!.startLatLng : defaultLatLng;
     return ScaffoldMessenger(
@@ -99,6 +101,9 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               maxZoom:
                   osmEnabled ? MapSettings.maxZoom : MapSettings.maxZoomDefault,
               initialCenter: startPoint,
+              initialCameraFit: bounds != null
+                  ? CameraFit.insideBounds(bounds: bounds)
+                  : null,
               onPointerDown: (e, l) => _onPointerDown(e, l),
               onPointerUp: (e, l) => _onPointerUp(e, l),
               //onPositionChanged: (p, g) => _onPositionChanged(p, g),

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/route.dart';
@@ -17,6 +18,10 @@ double defaultLatitude = 48.13250913196827;
 double defaultLongitude = 11.543837661522703;
 final LatLng defaultLatLng = LatLng(defaultLatitude, defaultLongitude);
 const double initialZoom = 12.5;
+
+///Bounds for flutter map if no polyline is available
+final LatLngBounds defaultMapCamBounds =
+    LatLngBounds(LatLng(48.10203, 11.513965), LatLng(48.19138, 11.614412));
 
 //TODO Add startpoint to route
 String defaultStartPoint =

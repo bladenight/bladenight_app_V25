@@ -88,7 +88,7 @@ class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
             MarkerLayer(markers: widget.markers),
             const SafeArea(
                 child: MapButtonsLayerLight(
-              bottomMargin: 10,
+              bottomMargin: 25,
               showHelp: false,
             )),
           ]),

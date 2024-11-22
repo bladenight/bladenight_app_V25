@@ -135,9 +135,10 @@ extension RoutePointExtension on RoutePoints {
 }
 
 extension LatLngBoundsExtension on List<LatLng> {
-  LatLngBounds? get getBounds {
+  ///Get [LatLngBounds] for given [List<LatLng>] or [defaultMapCamBounds]
+  LatLngBounds get getBounds {
     if (isEmpty) {
-      return null;
+      return defaultMapCamBounds;
     }
     double? x0, x1, y0, y1;
     for (LatLng latLng in this) {
@@ -155,7 +156,7 @@ extension LatLngBoundsExtension on List<LatLng> {
     //const LatLng(47.248466288051446, 8.945107890491915),
     //const LatLng(50.57987000589413, 13.90891310401004),
     if (x0 == null || y0 == null || x1 == null || y1 == null) {
-      return null;
+      return defaultMapCamBounds;
     }
     var offset = 0.03;
     return LatLngBounds(

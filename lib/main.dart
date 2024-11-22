@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -118,12 +119,18 @@ void main() async {
                 ),
               ));
 */
+      Object? initErr;
+      try {
+        await FMTCObjectBoxBackend().initialise();
+      } catch (err) {
+        initErr = err;
+      }
       runApp(
         ProviderScope(
           observers: [
             LoggingObserver(),
           ],
-          child: BladeNightApp(),
+          child: BladeNightApp(fmtcInitError: initErr),
         ),
       );
     },
@@ -178,7 +185,9 @@ void initSettings() async {
 }
 
 class BladeNightApp extends StatelessWidget {
-  const BladeNightApp({super.key});
+  const BladeNightApp({super.key, required this.fmtcInitError});
+
+  final Object? fmtcInitError;
 
   @override
   Widget build(BuildContext context) {

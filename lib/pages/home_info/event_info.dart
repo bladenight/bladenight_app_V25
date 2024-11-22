@@ -54,9 +54,9 @@ class _EventInfoState extends ConsumerState<EventInfo>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
       initLocation();
-      _animationController.repeat();
       //call on first start
     });
+    _animationController.repeat();
     super.initState();
   }
 

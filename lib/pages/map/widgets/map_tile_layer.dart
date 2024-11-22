@@ -1,14 +1,13 @@
-import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_cache/flutter_map_cache.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app_settings/app_constants.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/map/use_open_street_map_provider.dart';
-import '../tiles_provider.dart';
 import 'bn_dark_container.dart';
 
 ///Layer to load and draw map tiles
@@ -51,11 +50,6 @@ class _MapTileState extends State<MapTileLayer> {
         text: 'mapTileLayer disposed',
         methodName: 'dispose',
         className: toString());
-    /*   context.dependOnInheritedWidgetOfExactType<
-        InheritedAdaptiveTheme<CupertinoThemeData>>()!; crashes because null value
-    CupertinoAdaptiveTheme.of(context).modeChangeNotifier.removeListener(() {
-      setState(() {});
-    });*/
     super.dispose();
   }
 }
@@ -72,6 +66,7 @@ class MapTileLayerWidget extends ConsumerStatefulWidget {
 class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
   @override
   Widget build(BuildContext context) {
+    FMTCTileProviderSettings(cachedValidDuration: Duration(days: 90));
     var osmEnabled =
         ref.watch(useOpenStreetMapProvider) || widget.hasSpecialStartPoint;
     return TileLayer(
@@ -82,19 +77,28 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
           ? MapSettings.minNativeZoom
           : MapSettings.minNativeZoomDefault,
       maxNativeZoom: osmEnabled
-          ? 15 //MapSettings.maxNativeZoom
+          ? MapSettings.maxNativeZoom
           : MapSettings.maxNativeZoomDefault,
       minZoom: osmEnabled ? MapSettings.minZoom : MapSettings.minZoomDefault,
-      maxZoom: 20,
-      // osmEnabled ? MapSettings.maxZoom : MapSettings.maxZoomDefault,
+      maxZoom: osmEnabled ? MapSettings.maxZoom : MapSettings.maxZoomDefault,
+      tileBuilder: (context, widget, tile) => Stack(
+        fit: StackFit.passthrough,
+        children: [
+          widget,
+          Center(
+            child: Text(
+                '${tile.coordinates.x.floor()} : ${tile.coordinates.y.floor()} : ${tile.coordinates.z.floor()}'),
+          ),
+        ],
+      ),
       urlTemplate:
           osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
               ? MapSettings.openStreetMapLinkString //use own ts
               : MapSettings.bayernAtlasLinkString,
       //'assets/maptiles/osday/{z}/{x}/{y}.jpg',
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
-      tileProvider:
-          osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
+      tileProvider: FMTCStore(fmtcTileStoreName).getTileProvider(),
+      /*osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
               ? CachedTileProvider(
                   maxStale: const Duration(days: 60),
                   store: HiveCacheStore(
@@ -108,7 +112,7 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
                     null,
                     hiveBoxName: 'HiveCacheStore',
                   ),
-                ),
+                ),*/
       /*BnCachedAssetProvider(
               context: context,
               errorListener: () {

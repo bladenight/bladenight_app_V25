@@ -5,8 +5,10 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app_settings/app_constants.dart';
 import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/export_import_data_helper.dart';
@@ -158,6 +160,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     initFlutterChannel();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await FMTCStore(fmtcTileStoreName).manage.create();
       //_openIntroScreenFirstTime();
       _openBladeguardRequestFirstTime();
       if (!kIsWeb) {

@@ -134,7 +134,7 @@ class RouteNameDialog extends ConsumerWidget {
                                   angle: hp.bearing,
                                   child: const Image(
                                     image: AssetImage(
-                                      'assets/images/arrow_up_pure_margin.png',
+                                      'assets/images/arrow_up_mgn_small.png',
                                     ),
                                     fit: BoxFit.cover,
                                   ),
