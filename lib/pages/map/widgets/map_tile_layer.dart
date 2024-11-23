@@ -81,7 +81,7 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
           : MapSettings.maxNativeZoomDefault,
       minZoom: osmEnabled ? MapSettings.minZoom : MapSettings.minZoomDefault,
       maxZoom: osmEnabled ? MapSettings.maxZoom : MapSettings.maxZoomDefault,
-      tileBuilder: (context, widget, tile) => Stack(
+      /*tileBuilder: (context, widget, tile) => Stack(
         fit: StackFit.passthrough,
         children: [
           widget,
@@ -90,7 +90,7 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
                 '${tile.coordinates.x.floor()} : ${tile.coordinates.y.floor()} : ${tile.coordinates.z.floor()}'),
           ),
         ],
-      ),
+      ),*/
       urlTemplate:
           osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
               ? MapSettings.openStreetMapLinkString //use own ts
