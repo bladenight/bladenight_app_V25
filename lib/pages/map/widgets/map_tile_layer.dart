@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,7 +67,9 @@ class MapTileLayerWidget extends ConsumerStatefulWidget {
 class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
   @override
   Widget build(BuildContext context) {
-    FMTCTileProviderSettings(cachedValidDuration: Duration(days: 90));
+    if (!kIsWeb) {
+      FMTCTileProviderSettings(cachedValidDuration: Duration(days: 90));
+    }
     var osmEnabled =
         ref.watch(useOpenStreetMapProvider) || widget.hasSpecialStartPoint;
     return TileLayer(
@@ -97,7 +100,8 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
               : MapSettings.bayernAtlasLinkString,
       //'assets/maptiles/osday/{z}/{x}/{y}.jpg',
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
-      tileProvider: FMTCStore(fmtcTileStoreName).getTileProvider(),
+      tileProvider:
+          kIsWeb ? null : FMTCStore(fmtcTileStoreName).getTileProvider(),
       /*osmEnabled || ref.watch(activeEventProvider).hasSpecialStartPoint
               ? CachedTileProvider(
                   maxStale: const Duration(days: 60),

@@ -485,8 +485,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noChoiceNoAction":
             MessageLookupByLibrary.simpleMessage("No choice, no action"),
         "noEvent": MessageLookupByLibrary.simpleMessage("Nothing planned"),
-        "noEventPlanned":
-            MessageLookupByLibrary.simpleMessage("No Event planned"),
+        "noEventPlanned": MessageLookupByLibrary.simpleMessage(
+            "There are currently no further events planned"),
         "noEventStarted": MessageLookupByLibrary.simpleMessage("No Event"),
         "noEventStartedAutoStop":
             MessageLookupByLibrary.simpleMessage("No Event - Autostop"),
@@ -712,7 +712,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "startParticipationTracking":
             MessageLookupByLibrary.simpleMessage("Start participation"),
         "startPoint": MessageLookupByLibrary.simpleMessage(
-            "Start point\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe Munich"),
+            "Start:\nMünchen - Bavariapark"),
         "startPointTitle":
             MessageLookupByLibrary.simpleMessage("Where is the start?"),
         "startTime": MessageLookupByLibrary.simpleMessage("Start time"),

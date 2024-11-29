@@ -29,6 +29,7 @@ import '../widgets/event_info/animation_test_widget.dart';
 import '../widgets/hidden_admin_button.dart';
 import '../widgets/no_connection_warning.dart';
 import '../widgets/current_event_overview.dart';
+import '../widgets/shadow_box_widget.dart';
 import '../widgets/title_widget.dart';
 import 'event_data_overview.dart';
 import 'event_map_small.dart';
@@ -48,16 +49,16 @@ class _EventInfoState extends ConsumerState<EventInfo>
 
   @override
   void initState() {
-    _animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+    super.initState();
+    _animationController =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
       initLocation();
       //call on first start
     });
-    _animationController.repeat();
-    super.initState();
+    _animationController.repeat(reverse: true);
   }
 
   @override
@@ -110,8 +111,6 @@ class _EventInfoState extends ConsumerState<EventInfo>
     BuildContext context,
   ) {
     var nextEvent = ref.watch(activeEventProvider);
-    var borderRadius = 15.0;
-
     return SafeArea(
       //height: 300,
       child: SingleChildScrollView(
@@ -120,145 +119,17 @@ class _EventInfoState extends ConsumerState<EventInfo>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 16, bottom: 18),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: CupertinoTheme.of(context).barBackgroundColor,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(borderRadius),
-                      bottomLeft: Radius.circular(borderRadius),
-                      bottomRight: Radius.circular(borderRadius),
-                      topRight: Radius.circular(borderRadius)),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: nextEvent.statusColor,
-                        offset: const Offset(1.1, 1.1),
-                        blurRadius: 10.0),
-                  ],
-                ),
-                child: EventDataOverview(
-                  nextEvent: nextEvent,
-                  parentAnimationController: _animationController,
-                ),
+            const ConnectionWarning(),
+            const AppOutdated(),
+            ShadowBoxWidget(
+              boxShadowColor: nextEvent.statusColor,
+              child: EventDataOverview(
+                nextEvent: nextEvent,
+                parentAnimationController: _animationController,
               ),
             ),
-            //const CurrentEventOverview(),
-            /*SizedBox(
-              height: MediaQuery.sizeOf(context).height * 0.33,
-              child: EventMapSmall(nextEvent: nextEvent),
-            ),*/
-            const ConnectionWarning(),
-            const AppOutdatedWidget(),
             const BladeGuardAdvertise(),
             const BladeGuardOnsite(),
-            /* Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: IntrinsicWidth(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ResponsiveRowColumn(
-                        rowCrossAxisAlignment: CrossAxisAlignment.center,
-                        columnCrossAxisAlignment: CrossAxisAlignment.center,
-                        columnMainAxisSize: MainAxisSize.min,
-                        rowPadding: const EdgeInsets.symmetric(
-                            horizontal: 80, vertical: 80),
-                        columnPadding: const EdgeInsets.symmetric(
-                            horizontal: 25, vertical: 50),
-                        columnSpacing: 5,
-                        rowSpacing: 5,
-                        layout: ResponsiveBreakpoints.of(context)
-                                .smallerThan(TABLET)
-                            ? ResponsiveRowColumnType.COLUMN
-                            : ResponsiveRowColumnType.ROW,
-                        children: [
-                          ResponsiveRowColumnItem(
-                            rowFlex: 1,
-                            child: GestureDetector(
-                              onTap: () async {
-                                var link = ref
-                                    .read(mainSponsorImageAndLinkProvider)
-                                    .link;
-                                if (link != null && link != '') {
-                                  var uri = Uri.parse(ref
-                                      .read(mainSponsorImageAndLinkProvider)
-                                      .link!);
-                                  Launch.launchUrlFromUri(uri);
-                                }
-                              },
-                              child: Builder(builder: (context) {
-                                var ms =
-                                    ref.watch(mainSponsorImageAndLinkProvider);
-                                var nw = ref.watch(networkAwareProvider);
-                                return (ms.image != null &&
-                                        nw.connectivityStatus ==
-                                            ConnectivityStatus.online)
-                                    ? CachedNetworkImage(
-                                        imageUrl: ms.image!,
-                                        placeholder: (context, url) =>
-                                            Image.asset(mainSponsorPlaceholder,
-                                                fit: BoxFit.fitWidth),
-                                        errorWidget: (context, url, error) =>
-                                            Image.asset(mainSponsorPlaceholder,
-                                                fit: BoxFit.fitWidth),
-                                        errorListener: (e) {
-                                          BnLog.warning(
-                                              text:
-                                                  'Could not load ${ms.image}');
-                                        },
-                                      )
-                                    : Image.asset(mainSponsorPlaceholder,
-                                        fit: BoxFit.fitWidth);
-                              }),
-                            ),
-                          ),
-                          ResponsiveRowColumnItem(
-                            rowFlex: 1,
-                            child: LogoAnimate(),
-                          ),
-                        ],
-                      ),
-                    ]),
-              ),
-            ),
-            GestureDetector(
-              onTap: () async {
-                return;
-              },
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    Localize.of(context).lastupdate,
-                    style: const TextStyle(
-                      color: CupertinoDynamicColor.withBrightness(
-                        color: CupertinoColors.systemGrey,
-                        darkColor: CupertinoColors.systemGrey,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    nextEvent.lastupdate == null
-                        ? '-'
-                        : Localize.current.dateTimeIntl(
-                            nextEvent.lastupdate as DateTime,
-                            nextEvent.lastupdate as DateTime,
-                          ),
-                    style: const TextStyle(
-                      color: CupertinoDynamicColor.withBrightness(
-                        color: CupertinoColors.systemGrey,
-                        darkColor: CupertinoColors.systemGrey,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),*/
             const SizedBox(
               height: 5,
             ),

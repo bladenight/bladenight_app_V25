@@ -56,6 +56,18 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxHeight > 180.0) {
+          return _buttonsVertical();
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+  Widget _buttonsVertical() {
     return Stack(fit: StackFit.passthrough, children: [
       //#######################################################################
       //Left side buttons

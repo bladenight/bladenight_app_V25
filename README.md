@@ -205,3 +205,7 @@ sudo xattr -d com.apple.quarantine iproxy
 
 - Problematic is actual location 4.0 - watching out for a better solution
 
+### TODO
+
+- fix BG - if off hide all other switches
+- mapbuttons - landscape horizontal instead vertical

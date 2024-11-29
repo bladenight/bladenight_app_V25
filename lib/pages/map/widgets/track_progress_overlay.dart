@@ -109,7 +109,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
         ),
       ]);
     }
-
+    //end only tracking
     var actualOrNextEvent = ref.watch(activeEventProvider);
     var eventIsActive = actualOrNextEvent.status == EventStatus.running ||
         (rtu != null && rtu.eventIsActive);

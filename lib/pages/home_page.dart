@@ -161,8 +161,9 @@ class _HomePageState extends ConsumerState<HomePage>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                    child: kIsWeb ? EventInfoWeb() : EventInfo(),
-                  ),
+                      child:
+                          EventInfo() //kIsWeb ? EventInfoWeb() : EventInfo(),
+                      ),
                 ],
               ),
             )

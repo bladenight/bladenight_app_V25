@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
@@ -17,6 +18,7 @@ import '../wamp/wamp_endpoints.dart';
 import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 import 'lat_lng_mapper.dart';
+import 'start_point.dart';
 
 part 'event.mapper.dart';
 
@@ -257,6 +259,14 @@ class Event with EventMappable implements Comparable {
           EventStatus.deleted: Localize.current.delete,
           'other': Localize.current.unknown
         })}';
+  }
+
+  LocationPoint get getStartPoint {
+    if (startPointLatitude == null || startPointLongitude == null) {
+      return LocationPoint(startPoint ?? defaultStartPoint, defaultLatLng);
+    }
+    return LocationPoint(startPoint ?? defaultStartPoint,
+        LatLng(startPointLatitude!, startPointLongitude!));
   }
 
   static Future<Event> getEventWamp({bool forceUpdate = false}) async {

@@ -9,7 +9,7 @@ String startpointImageAndLinkKey = 'startpointIalKey';
 ImageAndLink _defaultStartpoint = ImageAndLink(
     'https://bladenight.app/skatemunich.png',
     '',
-    'Bavariapark\\nMünchen\\n(U5 Schwanthalerhöhe)',
+    'München - Bavariapark',
     'startPoint');
 
 @riverpod

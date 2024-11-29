@@ -255,7 +255,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "codecontainsonlydigits": MessageLookupByLibrary.simpleMessage(
             "Fehler, Code darf nur Ziffern enthalten!"),
         "collectionStop": MessageLookupByLibrary.simpleMessage("Sammelstopp"),
-        "confirmed": MessageLookupByLibrary.simpleMessage("Wir fahren 😃"),
+        "confirmed": MessageLookupByLibrary.simpleMessage("Wir fahren"),
         "connected": MessageLookupByLibrary.simpleMessage("Verbunden"),
         "connecting": MessageLookupByLibrary.simpleMessage("Koppeln"),
         "copiedtoclipboard": MessageLookupByLibrary.simpleMessage(
@@ -726,7 +726,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "startParticipationTracking": MessageLookupByLibrary.simpleMessage(
             "Teilnahme an BladeNight starten"),
         "startPoint": MessageLookupByLibrary.simpleMessage(
-            "Startpunkt\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe München"),
+            "Start: München - Bavariapark"),
         "startPointTitle": MessageLookupByLibrary.simpleMessage("Startpunkt"),
         "startTime": MessageLookupByLibrary.simpleMessage("Startzeit"),
         "startTrackingOnly":

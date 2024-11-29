@@ -2336,10 +2336,10 @@ class Localize {
     );
   }
 
-  /// `No Event planned`
+  /// `There are currently no further events planned`
   String get noEventPlanned {
     return Intl.message(
-      'No Event planned',
+      'There are currently no further events planned',
       name: 'noEventPlanned',
       desc: '',
       args: [],
@@ -3477,10 +3477,10 @@ class Localize {
     );
   }
 
-  /// `Start point\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe Munich`
+  /// `Start:\nMünchen - Bavariapark`
   String get startPoint {
     return Intl.message(
-      'Start point\nDeutsches Verkehrsmuseum\nSchwanthalerhöhe Munich',
+      'Start:\nMünchen - Bavariapark',
       name: 'startPoint',
       desc: '',
       args: [],

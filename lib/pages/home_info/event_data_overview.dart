@@ -6,6 +6,7 @@ import '../../generated/l10n.dart';
 import '../../helpers/timeconverter_helper.dart';
 import '../../models/event.dart';
 import '../widgets/hidden_admin_button.dart';
+import '../widgets/shimmer_widget.dart';
 import 'event_map_small.dart';
 
 class EventDataOverview extends ConsumerStatefulWidget {
@@ -26,17 +27,27 @@ class EventDataOverview extends ConsumerStatefulWidget {
 class _EventDataOverviewState extends ConsumerState<EventDataOverview>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   late final AnimationController _animationController;
+  late final Animation<Color?> _colorAnimation;
+  late final Animation<double> _valueAnimation;
 
   @override
   void initState() {
-    _animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+    super.initState();
+    _animationController =
+        AnimationController(duration: const Duration(seconds: 10), vsync: this);
+    _colorAnimation = ColorTween(
+      begin: CupertinoColors.systemRed, //(0x00ffffff),
+      end: CupertinoColors.systemGrey, // ,Color(0x00ffff00),
+    ).animate(_animationController);
+    _valueAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_animationController);
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _animationController.repeat();
       //call on first start
     });
-    super.initState();
+    _animationController.repeat(reverse: true);
   }
 
   @override
@@ -55,7 +66,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
         borderRadius: const BorderRadius.all(Radius.circular(4.0)),
       ),
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
@@ -75,13 +86,10 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                       children: <Widget>[
                         eventDetail(
                           context: context,
-                          animationController: _animationController,
+                          animation: _valueAnimation,
                           normalFontSize: normalFontSize,
                           dividerWidth: 110,
-                          dividerColor:
-                              widget.nextEvent.status == EventStatus.noevent
-                                  ? Color(0xFF333333)
-                                  : CupertinoTheme.of(context).primaryColor,
+                          dividerColor: CupertinoTheme.of(context).primaryColor,
                           text: widget.nextEvent.status == EventStatus.noevent
                               ? Localize.of(context).noEventPlanned
                               : DateFormatter(Localize.of(context))
@@ -94,7 +102,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                             widget.nextEvent.status != EventStatus.noevent) ...[
                           eventDetail(
                             context: context,
-                            animationController: _animationController,
+                            animation: _valueAnimation,
                             normalFontSize: normalFontSize,
                             dividerWidth: 70,
                             dividerColor:
@@ -104,7 +112,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                           ),
                           eventDetail(
                             context: context,
-                            animationController: _animationController,
+                            animation: _valueAnimation,
                             normalFontSize: normalFontSize,
                             dividerWidth: 70,
                             dividerColor:
@@ -124,10 +132,11 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                     left: 10, right: 10, top: 8, bottom: 5),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     eventDetail(
                       context: context,
-                      animationController: _animationController,
+                      animation: _valueAnimation,
                       normalFontSize: normalFontSize,
                       dividerWidth: 70,
                       dividerColor: CupertinoTheme.of(context).primaryColor,
@@ -136,7 +145,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                     ),
                     eventDetail(
                       context: context,
-                      animationController: _animationController,
+                      animation: _valueAnimation,
                       normalFontSize: normalFontSize,
                       dividerWidth: 70,
                       dividerColor: CupertinoTheme.of(context).primaryColor,
@@ -144,6 +153,16 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                       description: Localize.of(context).length,
                     )
                   ],
+                ),
+              ),
+            if (widget.nextEvent.status != EventStatus.noevent)
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  widget.nextEvent.getStartPoint.startPoint,
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(color: CupertinoTheme.of(context).primaryColor),
                 ),
               ),
             Container(
@@ -179,81 +198,92 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
 ///Widget to show eventDetail with description
 Widget eventDetail(
     {required BuildContext context,
-    required AnimationController animationController,
+    required Animation<double> animation,
     required double normalFontSize,
     required double dividerWidth,
     required Color dividerColor,
     required String text,
     required String description}) {
-  return Expanded(
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                description,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily:
-                      CupertinoTheme.of(context).textTheme.textStyle.fontFamily,
-                  fontWeight: FontWeight.w600,
-                  //fontSize: normalFontSize * 0.7, //fitted box not working if enabled
-                  color:
-                      CupertinoTheme.of(context).primaryColor.withOpacity(0.8),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Container(
-                height: 4,
-                width: dividerWidth,
-                decoration: BoxDecoration(
-                  color: dividerColor.withOpacity(0.2),
-                  borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: dividerWidth * animationController.value,
+  return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.8,
+                    child: FittedBox(
+                      alignment: Alignment.centerLeft,
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        description,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: normalFontSize *
+                              0.7, //fitted box not working if enabled
+                          color: CupertinoTheme.of(context)
+                              .primaryColor
+                              .withOpacity(0.8),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Container(
                       height: 4,
+                      width: dividerWidth,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: <Color>[
-                          dividerColor.withOpacity(0.4),
-                          dividerColor,
-                        ]),
+                        color: dividerColor.withOpacity(0.2),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(4.0)),
                       ),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: dividerWidth * animation.value,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(colors: <Color>[
+                                dividerColor.withOpacity(0.4),
+                                dividerColor,
+                              ]),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(4.0)),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.8,
+                    child: FittedBox(
+                      alignment: Alignment.centerLeft,
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        text,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            //fontSize: normalFontSize * 0.5,
+                            color: CupertinoTheme.of(context).primaryColor),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            FittedBox(
-              fit: BoxFit.contain,
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: CupertinoTheme.of(context)
-                        .textTheme
-                        .textStyle
-                        .fontFamily,
-                    fontWeight: FontWeight.bold,
-                    //fontSize: normalFontSize * 1.2,
-                    color: CupertinoTheme.of(context).primaryColor),
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
+            ],
+          ),
+        );
+      });
 }

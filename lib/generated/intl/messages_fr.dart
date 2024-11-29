@@ -746,7 +746,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "startParticipationTracking":
             MessageLookupByLibrary.simpleMessage("Démarrer la participation"),
         "startPoint": MessageLookupByLibrary.simpleMessage(
-            "Point de départ: Deutsches VerkehrsmuseumSchwanthalerhöhe Munich"),
+            "Point de départ: München - Bavariapark"),
         "startPointTitle": MessageLookupByLibrary.simpleMessage(
             "Où se situe le point de départ?"),
         "startTime": MessageLookupByLibrary.simpleMessage("Heure de début"),

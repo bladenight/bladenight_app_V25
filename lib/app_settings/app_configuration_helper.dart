@@ -23,10 +23,9 @@ const double initialZoom = 12.5;
 final LatLngBounds defaultMapCamBounds =
     LatLngBounds(LatLng(48.10203, 11.513965), LatLng(48.19138, 11.614412));
 
-//TODO Add startpoint to route
-String defaultStartPoint =
-    'Deutsches Verkehrsmuseum\nSchwanthalerhöhe\nMünchen';
-String startPoint = 'Deutsches Verkehrsmuseum\n Schwanthalerhöhe\nMünchen';
+//TODO Add start point to route
+String defaultStartPoint = 'München - Bavariapark';
+String startPoint = 'München - Bavariapark';
 
 const String mainSponsorPlaceholder = kIsWeb
     ? 'assets/images/empty_sponsor_logo.png'
