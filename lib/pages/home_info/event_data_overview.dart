@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/timeconverter_helper.dart';
 import '../../models/event.dart';
 import '../widgets/hidden_admin_button.dart';
-import '../widgets/shimmer_widget.dart';
 import 'event_map_small.dart';
 
 class EventDataOverview extends ConsumerStatefulWidget {
@@ -156,13 +154,21 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                 ),
               ),
             if (widget.nextEvent.status != EventStatus.noevent)
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  widget.nextEvent.getStartPoint.startPoint,
-                  textAlign: TextAlign.center,
-                  style:
-                      TextStyle(color: CupertinoTheme.of(context).primaryColor),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 10, right: 10, top: 2, bottom: 2),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '${Localize.of(context).start} '
+                      '${widget.nextEvent.getStartPoint.startPoint}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: CupertinoTheme.of(context).primaryColor),
+                    ),
+                  ),
                 ),
               ),
             Container(
@@ -208,79 +214,68 @@ Widget eventDetail(
       animation: animation,
       builder: (context, child) {
         return Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.8,
-                    child: FittedBox(
-                      alignment: Alignment.centerLeft,
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        description,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: normalFontSize *
-                              0.7, //fitted box not working if enabled
-                          color: CupertinoTheme.of(context)
-                              .primaryColor
-                              .withOpacity(0.8),
+              SizedBox(
+                child: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    description,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: normalFontSize * 0.7,
+                      color: CupertinoTheme.of(context)
+                          .primaryColor
+                          .withOpacity(0.8),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Container(
+                  height: 4,
+                  width: dividerWidth,
+                  decoration: BoxDecoration(
+                    color: dividerColor.withOpacity(0.2),
+                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        width: dividerWidth * animation.value,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: <Color>[
+                            dividerColor.withOpacity(0.4),
+                            dividerColor,
+                          ]),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4.0)),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Container(
-                      height: 4,
-                      width: dividerWidth,
-                      decoration: BoxDecoration(
-                        color: dividerColor.withOpacity(0.2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4.0)),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            width: dividerWidth * animation.value,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: <Color>[
-                                dividerColor.withOpacity(0.4),
-                                dividerColor,
-                              ]),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(4.0)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                ),
+              ),
+              SizedBox(
+                child: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    text,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color: CupertinoTheme.of(context).primaryColor),
                   ),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.8,
-                    child: FittedBox(
-                      alignment: Alignment.centerLeft,
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        text,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            //fontSize: normalFontSize * 0.5,
-                            color: CupertinoTheme.of(context).primaryColor),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),

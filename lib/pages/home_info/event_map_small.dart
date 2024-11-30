@@ -25,11 +25,15 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
   @override
   Widget build(BuildContext context) {
     var iconSize = ref.watch(iconSizeProvider);
+    /*return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxHeight < 100.0) {
+          return Container();
+        } else {*/
     return ClipRRect(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(widget.borderRadius),
-        topRight: Radius.circular(
-            MediaQuery.of(context).orientation == Orientation.portrait ? 0 : 0),
+        topRight: Radius.circular(widget.borderRadius),
         bottomLeft: Radius.circular(
             MediaQuery.of(context).orientation == Orientation.portrait
                 ? widget.borderRadius
@@ -56,8 +60,8 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
                 Polyline(
                   //current and active route points
                   points: widget.nextEvent.nodes,
-                  color: CupertinoTheme.of(context)
-                      .primaryColor, // CupertinoTheme.of(context).primaryColor,
+                  color: CupertinoTheme.of(context).primaryColor,
+                  // CupertinoTheme.of(context).primaryColor,
                   strokeWidth: 4,
                 ),
               ],
@@ -135,6 +139,9 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
           ]);
         },
       ),
+      /*);
+        }
+      },*/
     );
   }
 }

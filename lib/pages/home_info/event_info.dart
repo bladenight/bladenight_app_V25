@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar_controller.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -133,6 +134,90 @@ class _EventInfoState extends ConsumerState<EventInfo>
             const SizedBox(
               height: 5,
             ),
+            /*GridView.count(
+                primary: false,
+                padding: const EdgeInsets.all(5),
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+                crossAxisCount: 2,
+                children: <Widget>[
+                  SizedBox(
+                    height: 100,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (ref.read(mainSponsorImageAndLinkProvider).link !=
+                            null) {
+                          Launch.launchUrlFromString(
+                              ref.read(mainSponsorImageAndLinkProvider).link!);
+                        }
+                      },
+                      child: Builder(builder: (context) {
+                        var ms = ref.watch(mainSponsorImageAndLinkProvider);
+                        //var nw = ref.watch(networkAwareProvider);
+                        return (ms.image != null)
+                            // && nw.connectivityStatus == ConnectivityStatus.online)
+                            ? FadeInImage.assetNetwork(
+                                placeholder: mainSponsorPlaceholder,
+                                image: ms.image!,
+                                fadeOutDuration:
+                                    const Duration(milliseconds: 150),
+                                fadeInDuration:
+                                    const Duration(milliseconds: 150),
+                                imageErrorBuilder:
+                                    (context, error, stackTrace) {
+                                  BnLog.error(
+                                      text:
+                                          'mainSponsorPlaceholder ${ms.image}) could not been loaded',
+                                      exception: error);
+                                  return Image.asset(mainSponsorPlaceholder,
+                                      fit: BoxFit.fitWidth);
+                                },
+                              )
+                            : const Image(
+                                image: AssetImage(mainSponsorPlaceholder),
+                              );
+                      }),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (ref.read(secondSponsorImageAndLinkProvider).link !=
+                            null) {
+                          Launch.launchUrlFromString(ref
+                              .read(secondSponsorImageAndLinkProvider)
+                              .link!);
+                        }
+                      },
+                      child: Builder(builder: (context) {
+                        var ssp = ref.watch(secondSponsorImageAndLinkProvider);
+                        return ssp.image != null
+                            ? FadeInImage.assetNetwork(
+                                placeholder: secondLogoPlaceholder,
+                                image: ssp.image!,
+                                fadeOutDuration:
+                                    const Duration(milliseconds: 150),
+                                fadeInDuration:
+                                    const Duration(milliseconds: 150),
+                                imageErrorBuilder:
+                                    (context, error, stackTrace) {
+                                  if (!kIsWeb) {
+                                    BnLog.error(
+                                        text:
+                                            'secondSponsorPlaceholder ${ssp.image} could not been loaded',
+                                        exception: error);
+                                  }
+                                  return Image.asset(secondLogoPlaceholder,
+                                      fit: BoxFit.fitWidth);
+                                },
+                              )
+                            : Image.asset(secondLogoPlaceholder,
+                                fit: BoxFit.fitWidth);
+                      }),
+                    ),
+                  ),
+                ]),*/
           ],
         ),
       ),

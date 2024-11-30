@@ -492,7 +492,7 @@ class WampV2 {
       return res;
     }, (error, stack) {
       if (!_connectionErrorLogged) {
-        BnLog.error(text: 'Wamp error close Wamp', exception: error);
+        BnLog.error(text: 'Wamp error closed connection', exception: error);
         _connectionErrorLogged = true;
       }
       //_resetWampState();
