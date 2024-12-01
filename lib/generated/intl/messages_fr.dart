@@ -642,8 +642,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "route": MessageLookupByLibrary.simpleMessage("Parcours"),
         "routeoverview":
             MessageLookupByLibrary.simpleMessage("Aperçu de l\'itinéraire"),
-        "running":
-            MessageLookupByLibrary.simpleMessage("Nous sommes en route ⏳"),
+        "running": MessageLookupByLibrary.simpleMessage("Nous sommes en route"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "scrollMapTo": MessageLookupByLibrary.simpleMessage(
             "Faire défiler la carte pour ..."),

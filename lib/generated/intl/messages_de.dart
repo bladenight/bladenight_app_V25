@@ -628,7 +628,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Neustart erforderlich! Bitte App schließen und neu öffnen !!!"),
         "route": MessageLookupByLibrary.simpleMessage("Strecke"),
         "routeoverview": MessageLookupByLibrary.simpleMessage("Routenverlauf"),
-        "running": MessageLookupByLibrary.simpleMessage("Wir fahren gerade ⏳"),
+        "running": MessageLookupByLibrary.simpleMessage("Wir fahren gerade"),
         "save": MessageLookupByLibrary.simpleMessage("Speichern"),
         "scrollMapTo":
             MessageLookupByLibrary.simpleMessage("Scrolle Karte zu ..."),

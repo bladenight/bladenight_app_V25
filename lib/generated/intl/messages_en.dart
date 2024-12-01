@@ -616,7 +616,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Restart required! Please close app and reopen !!!"),
         "route": MessageLookupByLibrary.simpleMessage("Route"),
         "routeoverview": MessageLookupByLibrary.simpleMessage("Route overview"),
-        "running": MessageLookupByLibrary.simpleMessage("We are on route ⏳"),
+        "running": MessageLookupByLibrary.simpleMessage("We are on route"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "scrollMapTo":
             MessageLookupByLibrary.simpleMessage("Scroll map to ..."),
