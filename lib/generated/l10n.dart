@@ -2716,10 +2716,10 @@ class Localize {
     );
   }
 
-  /// `Pending ⏰`
+  /// `Pending`
   String get pending {
     return Intl.message(
-      'Pending ⏰',
+      'Pending',
       name: 'pending',
       desc: '',
       args: [],

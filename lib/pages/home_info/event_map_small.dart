@@ -34,14 +34,8 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(widget.borderRadius),
         topRight: Radius.circular(widget.borderRadius),
-        bottomLeft: Radius.circular(
-            MediaQuery.of(context).orientation == Orientation.portrait
-                ? widget.borderRadius
-                : 0),
-        bottomRight: Radius.circular(
-            MediaQuery.of(context).orientation == Orientation.portrait
-                ? widget.borderRadius
-                : 0),
+        bottomLeft: Radius.zero,
+        bottomRight: Radius.zero,
       ),
       child: Builder(
         builder: (context) {

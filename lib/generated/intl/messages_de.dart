@@ -569,7 +569,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nutze Openstreetmap"),
         "own": MessageLookupByLibrary.simpleMessage("Eigene"),
         "participant": MessageLookupByLibrary.simpleMessage("Teilnehmer"),
-        "pending": MessageLookupByLibrary.simpleMessage("Geplant ⏰"),
+        "pending": MessageLookupByLibrary.simpleMessage("Geplant"),
         "phoneNumber": MessageLookupByLibrary.simpleMessage("Tel:"),
         "pickcolor": MessageLookupByLibrary.simpleMessage("Farbe wählen"),
         "position": MessageLookupByLibrary.simpleMessage("Position"),

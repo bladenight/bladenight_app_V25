@@ -5,13 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../generated/l10n.dart';
 import '../../providers/network_connection_provider.dart';
 import 'alert_animated_widget.dart';
-import 'shadow_box_widget.dart';
 
 class ConnectionWarning extends ConsumerStatefulWidget {
-  const ConnectionWarning({super.key, this.reason, this.height = 20});
+  const ConnectionWarning(
+      {super.key, this.reason, this.height = 20, this.animationController});
 
   final Exception? reason;
   final double height;
+  final AnimationController? animationController;
 
   @override
   ConsumerState<ConnectionWarning> createState() => _ConnectionWarning();
@@ -27,6 +28,7 @@ class _ConnectionWarning extends ConsumerState<ConnectionWarning>
     if (networkAware.connectivityStatus == ConnectivityStatus.error ||
         networkAware.connectivityStatus == ConnectivityStatus.disconnected) {
       return AlertAnimated(
+        animationController: widget.animationController,
         child: GestureDetector(
           onTap: () => ref.read(networkAwareProvider.notifier).refresh(),
           child: Row(
@@ -35,6 +37,7 @@ class _ConnectionWarning extends ConsumerState<ConnectionWarning>
                 child: Padding(
                   padding: const EdgeInsets.all(5),
                   child: FittedBox(
+                    fit: BoxFit.scaleDown,
                     child: Text(
                       Localize.of(context).seemsoffline,
                       textAlign: TextAlign.center,
@@ -57,6 +60,7 @@ class _ConnectionWarning extends ConsumerState<ConnectionWarning>
                 child: Padding(
                     padding: const EdgeInsets.all(5),
                     child: FittedBox(
+                      fit: BoxFit.scaleDown,
                       child: Text(
                         Localize.of(context).serverNotReachable,
                         textAlign: TextAlign.center,

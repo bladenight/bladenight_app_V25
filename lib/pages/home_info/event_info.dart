@@ -120,8 +120,8 @@ class _EventInfoState extends ConsumerState<EventInfo>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const ConnectionWarning(),
-            const AppOutdated(),
+            ConnectionWarning(animationController: _animationController),
+            AppOutdated(animationController: _animationController),
             ShadowBoxWidget(
               boxShadowColor: nextEvent.statusColor,
               child: EventDataOverview(

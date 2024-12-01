@@ -190,6 +190,28 @@ class Event with EventMappable implements Comparable {
     }
   }
 
+  ///returns an image independent on status red, yellow, green, off horizontal
+  String get trafficLight {
+    switch (status) {
+      case EventStatus.pending:
+        return 'assets/images/event/traffic_yellow.png';
+      case EventStatus.confirmed:
+        return 'assets/images/event/traffic_green.png';
+      case EventStatus.cancelled:
+        return 'assets/images/event/traffic_red.png';
+      case EventStatus.noevent:
+        return 'assets/images/event/traffic_none.png';
+      case EventStatus.running:
+        return 'assets/images/event/traffic_green.png';
+      case EventStatus.finished:
+        return 'assets/images/event/finishMarker.png';
+      case EventStatus.deleted:
+        return 'assets/images/event/traffic_none.png';
+      case EventStatus.unknown:
+        return 'assets/images/event/traffic_none.png';
+    }
+  }
+
   ///Returns a base [Event] dated to now with with duration [initDaysDuration] of 3650 days to see its not actual
   static Event get init {
     return Event(

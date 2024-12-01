@@ -1,4 +1,6 @@
 //import 'dart:io' if (dart.library.html) 'dart.html' if (dart.library.io) 'dart.io';
+import 'package:bladenight_app_flutter/pages/widgets/alert_animated_widget.dart';
+import 'package:bladenight_app_flutter/pages/widgets/expandable_floating_action_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -65,13 +67,42 @@ class _HomePageState extends ConsumerState<HomePage>
         widget.tabController.index -= 1;
         return;
       },
-      child: CupertinoPageScaffold(
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
-          slivers: [
-            /*CupertinoSliverNavigationBar(
+      child: Scaffold(
+        floatingActionButton: messageProvider.messages.isEmpty
+            ? null
+            : FloatingActionButton(
+                backgroundColor: (messageProvider.messages.isNotEmpty &&
+                        messageProvider.readMessages > 0)
+                    ? Colors.green
+                    : null,
+                foregroundColor: (messageProvider.messages.isNotEmpty &&
+                        messageProvider.readMessages > 0)
+                    ? Colors.black
+                    : null,
+                heroTag: 'msgActionBtn',
+                onPressed: () async {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (context) => const MessagesPage(),
+                      fullscreenDialog: false,
+                    ),
+                  );
+                },
+                child: messageProvider.messages.isNotEmpty &&
+                        messageProvider.readMessages > 0
+                    ? Badge(
+                        label: Text(messageProvider.readMessages.toString()),
+                        child: const Icon(Icons.mark_email_unread),
+                      )
+                    : const Icon(CupertinoIcons.envelope),
+              ),
+        body: CupertinoPageScaffold(
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            slivers: [
+              /*CupertinoSliverNavigationBar(
               leading: const Icon(CupertinoIcons.home),
               largeTitle: Text(Localize.of(context).home),
               trailing: Row(
@@ -144,30 +175,31 @@ class _HomePageState extends ConsumerState<HomePage>
                 ],
               ),
             ),*/
-            CupertinoSliverRefreshControl(
-              onRefresh: () async {
-                ref.read(messagesLogicProvider).updateServerMessages();
-                var _ = ref.refresh(currentRouteProvider);
-                ref
-                    .read(activeEventProvider.notifier)
-                    .refresh(forceUpdate: true);
-                ref.invalidate(bgIsOnSiteProvider);
-              },
-            ),
-            const SliverFillRemaining(
-              hasScrollBody: false,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                      child:
-                          EventInfo() //kIsWeb ? EventInfoWeb() : EventInfo(),
-                      ),
-                ],
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {
+                  ref.read(messagesLogicProvider).updateServerMessages();
+                  var _ = ref.refresh(currentRouteProvider);
+                  ref
+                      .read(activeEventProvider.notifier)
+                      .refresh(forceUpdate: true);
+                  ref.invalidate(bgIsOnSiteProvider);
+                },
               ),
-            )
-          ],
+              SliverFillRemaining(
+                hasScrollBody: true,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    const Expanded(
+                        child:
+                            EventInfo() //kIsWeb ? EventInfoWeb() : EventInfo(),
+                        ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

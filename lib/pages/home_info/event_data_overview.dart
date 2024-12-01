@@ -8,15 +8,18 @@ import '../widgets/hidden_admin_button.dart';
 import 'event_map_small.dart';
 
 class EventDataOverview extends ConsumerStatefulWidget {
-  const EventDataOverview(
-      {super.key,
-      this.borderRadius = 15.0,
-      required this.nextEvent,
-      this.parentAnimationController});
+  const EventDataOverview({
+    super.key,
+    required this.nextEvent,
+    this.parentAnimationController,
+    this.borderRadius = 15.0,
+    this.showMap = true,
+  });
 
   final double borderRadius;
   final Event nextEvent;
   final AnimationController? parentAnimationController;
+  final bool showMap;
 
   @override
   ConsumerState<EventDataOverview> createState() => _EventDataOverviewState();
@@ -67,12 +70,13 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
-              onTap: () {
-                print('tap on event map small');
-              },
-              child: EventMapSmall(nextEvent: widget.nextEvent),
-            ),
+            if (widget.showMap)
+              GestureDetector(
+                onTap: () {
+                  print('tap on event map small');
+                },
+                child: EventMapSmall(nextEvent: widget.nextEvent),
+              ),
             HiddenAdminButton(
               child: SizedBox(
                 child: Padding(
@@ -188,13 +192,62 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                   bottomRight: Radius.circular(widget.borderRadius),
                 ),
               ),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  widget.nextEvent.statusText,
-                  style: TextStyle(color: widget.nextEvent.statusTextColor),
-                ),
-              ),
+              child: Text.rich(
+                  textAlign: TextAlign.center,
+                  TextSpan(
+                    style: TextStyle(color: widget.nextEvent.statusTextColor),
+                    children: [
+                      WidgetSpan(
+                        child: Image.asset(
+                          widget.nextEvent.trafficLight,
+                          height: 15,
+                        ),
+                      ),
+                      WidgetSpan(
+                          child: SizedBox(
+                        width: 5,
+                      )),
+                      TextSpan(
+                        text: widget.nextEvent.statusText,
+                      ),
+                      WidgetSpan(
+                          child: SizedBox(
+                        width: 5,
+                      )),
+                      WidgetSpan(
+                        child: Image.asset(
+                          widget.nextEvent.trafficLight,
+                          height: 15,
+                        ),
+                      ),
+                    ],
+                  )),
+              /*child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      //give contrained size
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            widget.nextEvent.statusText +
+                                '', // 'jjjjhgztftrdrtdrdrzdrzzddrt',
+                            style: TextStyle(
+                                color: widget.nextEvent.statusTextColor),
+                          ),
+                        ),
+                      ),
+                      Image.asset(
+                        widget.nextEvent.trafficLight,
+                        width: 40,
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                    ]),
+              ),*/
             ),
           ]),
     );

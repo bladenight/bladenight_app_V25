@@ -189,6 +189,7 @@ flutter:
     - assets/html/
     - assets/images/
     - assets/images/instruction/
+    - assets/images/event/
     - assets/iosStore/
     - assets/lottie/
     - assets/maptiles/

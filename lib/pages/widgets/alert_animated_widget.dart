@@ -24,10 +24,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'shadow_box_widget.dart';
 
 class AlertAnimated extends ConsumerStatefulWidget {
-  const AlertAnimated({super.key, required this.child, this.borderRadius = 15});
+  const AlertAnimated(
+      {super.key,
+      required this.child,
+      this.animationController,
+      this.borderRadius = 15});
 
   final Widget child;
   final double borderRadius;
+  final AnimationController? animationController;
 
   @override
   ConsumerState<AlertAnimated> createState() => _AlertAnimatedState();
@@ -35,7 +40,7 @@ class AlertAnimated extends ConsumerStatefulWidget {
 
 class _AlertAnimatedState extends ConsumerState<AlertAnimated>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
+  late final AnimationController? _animationController;
   late final Animation<Color?> _colorAnimation;
   late final Animation<double> _shimmerAnimation;
 
@@ -44,25 +49,34 @@ class _AlertAnimatedState extends ConsumerState<AlertAnimated>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
+    if (widget.animationController != null) {
+      _animationController = widget.animationController;
+    } else {
+      _animationController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 2),
+      );
+    }
+
     _colorAnimation = ColorTween(
       begin: CupertinoColors.systemRed, //(0x00ffffff),
       end: CupertinoColors.systemGrey, // ,Color(0x00ffff00),
-    ).animate(_animationController);
+    ).animate(_animationController!);
     _shimmerAnimation =
         Tween<double>(begin: -1.0, end: 2.0).animate(CurvedAnimation(
-      parent: _animationController,
+      parent: _animationController!,
       curve: Curves.linear,
     ));
-    _animationController.repeat(reverse: true);
+    if (widget.animationController == null) {
+      _animationController!.repeat(reverse: true);
+    }
   }
 
   @override
   dispose() {
-    _animationController.dispose();
+    if (widget.animationController == null) {
+      _animationController?.dispose();
+    }
     super.dispose();
   }
 
