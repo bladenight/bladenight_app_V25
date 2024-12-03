@@ -122,7 +122,7 @@ class _AlertAnimatedState extends ConsumerState<AlertAnimated>
                     width: 10,
                   ),
                   Image.asset(
-                    'assets/images/warn_256.png',
+                    'assets/images/alert.png',
                     width: CupertinoTheme.of(context)
                             .textTheme
                             .textStyle
@@ -136,7 +136,7 @@ class _AlertAnimatedState extends ConsumerState<AlertAnimated>
                   ),
                   Expanded(
                     child: Padding(
-                        padding: const EdgeInsets.all(5), child: widget.child),
+                        padding: const EdgeInsets.all(2), child: widget.child),
                   ),
                 ],
               ),

@@ -8,7 +8,7 @@ import 'alert_animated_widget.dart';
 
 class ConnectionWarning extends ConsumerStatefulWidget {
   const ConnectionWarning(
-      {super.key, this.reason, this.height = 20, this.animationController});
+      {super.key, this.reason, this.height = 40, this.animationController});
 
   final Exception? reason;
   final double height;
@@ -22,53 +22,60 @@ class _ConnectionWarning extends ConsumerState<ConnectionWarning>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    assert(widget.height > 0 && widget.height >= 20,
-        'Widget should be have have height greater 20 or 0');
+    assert(
+        widget.height > 0 && widget.height > 20,
+        'Widget height is ${widget.height} - '
+        'should be have have height greater 0 and greater 20');
     var networkAware = ref.watch(networkAwareProvider);
     if (networkAware.connectivityStatus == ConnectivityStatus.error ||
         networkAware.connectivityStatus == ConnectivityStatus.disconnected) {
-      return AlertAnimated(
-        animationController: widget.animationController,
-        child: GestureDetector(
-          onTap: () => ref.read(networkAwareProvider.notifier).refresh(),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      Localize.of(context).seemsoffline,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+      return SizedBox(
+          height: widget.height,
+          child: AlertAnimated(
+            animationController: widget.animationController,
+            child: GestureDetector(
+              onTap: () => ref.read(networkAwareProvider.notifier).refresh(),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          Localize.of(context).seemsoffline,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-      );
+            ),
+          ));
     } else if (networkAware.serverAvailable == false) {
-      return AlertAnimated(
-        child: GestureDetector(
-          onTap: () => ref.read(networkAwareProvider.notifier).refresh(),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        Localize.of(context).serverNotReachable,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    )),
-              ),
-            ],
+      return SizedBox(
+        height: widget.height,
+        child: AlertAnimated(
+          child: GestureDetector(
+            onTap: () => ref.read(networkAwareProvider.notifier).refresh(),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          Localize.of(context).serverNotReachable,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                ),
+              ],
+            ),
           ),
         ),
       );

@@ -204,7 +204,7 @@ class Event with EventMappable implements Comparable {
       case EventStatus.running:
         return 'assets/images/event/traffic_green.png';
       case EventStatus.finished:
-        return 'assets/images/event/finishMarker.png';
+        return 'assets/images/finishMarker.png';
       case EventStatus.deleted:
         return 'assets/images/event/traffic_none.png';
       case EventStatus.unknown:

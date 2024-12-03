@@ -1,22 +1,15 @@
 //import 'dart:io' if (dart.library.html) 'dart.html' if (dart.library.io) 'dart.io';
-import 'package:bladenight_app_flutter/pages/widgets/alert_animated_widget.dart';
-import 'package:bladenight_app_flutter/pages/widgets/expandable_floating_action_button.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show Icons, Colors, Scaffold, Badge, FloatingActionButton;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../generated/l10n.dart';
 import 'home_info/event_info.dart';
 import '../providers/active_event_provider.dart';
 import '../providers/messages_provider.dart';
 import '../providers/rest_api/onsite_state_provider.dart';
 import '../providers/route_providers.dart';
-import 'about_page.dart';
 import 'messages/messages_page.dart';
-import 'settings/settings_page.dart';
-import 'home_info/event_info_web.dart';
-import 'widgets/intro_slider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key, required this.tabController});
