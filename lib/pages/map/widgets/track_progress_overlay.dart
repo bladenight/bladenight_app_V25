@@ -20,6 +20,9 @@ import '../../../providers/location_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
 import '../../../providers/refresh_timer_provider.dart';
 import '../../../providers/settings/me_color_provider.dart';
+import '../../home_info/event_data_overview.dart';
+import '../../widgets/shadow_clipper.dart';
+import '../../widgets/shimmer_widget.dart';
 import 'map_event_informations.dart';
 import 'progresso_advanced_progress_indicator.dart';
 import 'special_function_info.dart';
@@ -114,6 +117,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
     var eventIsActive = actualOrNextEvent.status == EventStatus.running ||
         (rtu != null && rtu.eventIsActive);
 
+    //Error no data
     if (rtu == null ||
         rtu.rpcException != null ||
         actualOrNextEvent.rpcException != null) {
@@ -134,8 +138,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
               alignment: Alignment.center,
               child: Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text('${Localize.of(context).updating} '
-                    '${rtu?.rpcException != null ? rtu?.rpcException.toString() : ''}'),
+                child: Text(Localize.of(context).updating),
               ),
             ),
             CircularProgressIndicator(
@@ -144,7 +147,9 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
           ]),
         ),
       );
-    } else if (actualOrNextEvent.status == EventStatus.noevent) {
+    }
+    //RTU Data available but no event
+    else if (actualOrNextEvent.status == EventStatus.noevent) {
       return Stack(children: [
         Positioned(
           top: MediaQuery.of(context).padding.top + 10,
@@ -156,21 +161,9 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
               BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Builder(builder: (context) {
-                  return Container(
-                    color: CupertinoDynamicColor.resolve(
-                        CupertinoColors.systemBackground.withOpacity(0.2),
-                        context),
-                    padding: const EdgeInsets.all(15),
-                    child: Center(
-                      child: Column(children: [
-                        Text(
-                          Localize.of(context).noEventPlanned,
-                          style: CupertinoTheme.of(context)
-                              .textTheme
-                              .navTitleTextStyle,
-                        ),
-                      ]),
-                    ),
+                  return EventDataOverview(
+                    nextEvent: actualOrNextEvent,
+                    showMap: false,
                   );
                 }),
               ),
@@ -205,16 +198,25 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                       );
                     });
               },
-              child: ClipPath(
+              child: ClipShadow(
+                boxShadows: [
+                  BoxShadow(
+                    //outer shadow
+                    offset: Offset(1.1, 1.1),
+                    blurRadius: 10.0,
+                    blurStyle: BlurStyle.outer,
+                    spreadRadius: 0.0,
+                    color: actualOrNextEvent.statusColor,
+                  ),
+                ],
                 clipper: InfoClipper(),
-                child: Stack(children: [
-                  BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Builder(builder: (context) {
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Stack(children: [
+                    Builder(builder: (context) {
                       return Container(
                         color: CupertinoDynamicColor.resolve(
-                            CupertinoColors.systemBackground.withOpacity(0.1),
-                            context),
+                            CupertinoColors.transparent, context),
                         padding: const EdgeInsets.all(10),
                         child: Column(children: [
                           if (eventIsActive &&
@@ -453,11 +455,12 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                       Localize.of(context)
                                                           .bladenighttracking),
                                                 ) //Text when Event confirmed
-                                              : FittedBox(
+                                              : Container()
+                                          /*FittedBox(
                                                   child: Text(
                                                     '${actualOrNextEvent.status == EventStatus.finished ? Localize.of(context).finished : Localize.of(context).nextEvent} ${actualOrNextEvent.status == EventStatus.finished ? '' : ' ${DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(actualOrNextEvent.getUtcIso8601DateTime)}'}',
                                                   ),
-                                                ) //empty when not confirmed no viewer mode available
+                                                ) */ //empty when not confirmed no viewer mode available
                                           : !ref.watch(isTrackingProvider)
                                               ? Text(Localize.of(context)
                                                   .bladenighttracking)
@@ -475,9 +478,29 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                           ? Text(Localize.of(
                                                                   context)
                                                               .notOnRoute)
-                                                          : Text(
+                                                          : Shimmer(
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                      colors: [
+                                                                    actualOrNextEvent
+                                                                        .statusColor
+                                                                        .withOpacity(
+                                                                            0.8),
+                                                                    actualOrNextEvent
+                                                                        .statusColor,
+                                                                    actualOrNextEvent
+                                                                        .statusColor
+                                                                        .withOpacity(
+                                                                            0.8)
+                                                                  ]),
+                                                              child: Text(
+                                                                Localize.of(
+                                                                        context)
+                                                                    .locationServiceRunning,
+                                                              ),
+                                                            ) /*Text(
                                                               '${Localize.of(context).start} ${DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(actualOrNextEvent.getUtcIso8601DateTime)}',
-                                                            )
+                                                            )*/
                                                       : Container()
                                                   : Text(Localize.of(context)
                                                       .bladenightViewerTracking),
@@ -495,7 +518,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                 '${Localize.of(context).showProcession} ${Localize.of(context).lastupdate} ${DateFormatter(Localize.of(context)).getFullDateTimeString(rtu.timeStamp)}') //Text when Event confirmed
                                             : Container()),
                                   ),
-                                  if (actualOrNextEvent.status !=
+                                  /* if (actualOrNextEvent.status !=
                                           EventStatus.confirmed &&
                                       actualOrNextEvent.status !=
                                           EventStatus.noevent)
@@ -515,7 +538,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                 actualOrNextEvent
                                                     .getUtcIso8601DateTime),
                                       ),
-                                    ),
+                                    ),*/
                                 ],
                                 if (eventIsActive)
                                   Column(children: [
@@ -632,11 +655,17 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     ),
                                   )
                                 ]),
-                          if (!actualOrNextEvent.isActive ||
+                          /*    if (!actualOrNextEvent.isActive ||
                               actualOrNextEvent.status ==
                                   EventStatus.cancelled ||
                               actualOrNextEvent.status == EventStatus.pending)
-                            Row(
+                            EventDataOverview(
+                              nextEvent: actualOrNextEvent,
+                              showMap: false,
+                              showSeparator: false,
+                            ),
+
+                          Row(
                               mainAxisSize: MainAxisSize.min,
                               children: ([
                                 Expanded(
@@ -661,9 +690,15 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                   ),
                                 ),
                               ]),
-                            ),
+                            ),*/
                           if (rtu.rpcException == null) ...[
-                            Center(
+                            EventDataOverview(
+                              nextEvent: actualOrNextEvent,
+                              showMap: false,
+                              showSeparator: false,
+                              eventIsRunning: eventIsActive,
+                            ),
+                            /*Center(
                               child: FittedBox(
                                 child: Text(
                                   '${Localize.of(context).route}: ${rtu.routeName}  '
@@ -673,18 +708,18 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                   maxLines: 1,
                                 ),
                               ),
-                            ),
+                            ),*/
                           ],
                           const SpecialFunctionInfo(),
                           const SizedBox(
-                            height: 5,
+                            height: 2,
                           ),
                           const UpdateProgress(),
                         ]),
                       );
                     }),
-                  ),
-                ]),
+                  ]),
+                ),
               ),
             ),
           ),

@@ -253,7 +253,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Error, code contains only numbers"),
         "collectionStop":
             MessageLookupByLibrary.simpleMessage("Procession collection stop"),
-        "confirmed": MessageLookupByLibrary.simpleMessage("Confirmed 😃"),
+        "confirmed": MessageLookupByLibrary.simpleMessage("Confirmed"),
         "connected": MessageLookupByLibrary.simpleMessage("Connected"),
         "connecting": MessageLookupByLibrary.simpleMessage("Connecting..."),
         "copiedtoclipboard":

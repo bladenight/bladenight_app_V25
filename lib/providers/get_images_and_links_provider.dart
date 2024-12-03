@@ -136,7 +136,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
           } catch (e) {
             if (!kIsWeb) {
               BnLog.error(
-                  text: 'Could not decode setTileServerMapBoundsAndZoom.$e');
+                  text: 'Could not decode setTileServerMapBoundsAndZoom: $e');
             }
           }
         }

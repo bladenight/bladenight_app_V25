@@ -126,7 +126,6 @@ class _EventInfoState extends ConsumerState<EventInfo>
               boxShadowColor: nextEvent.statusColor,
               child: EventDataOverview(
                 nextEvent: nextEvent,
-                parentAnimationController: _animationController,
               ),
             ),
             const BladeGuardAdvertise(),

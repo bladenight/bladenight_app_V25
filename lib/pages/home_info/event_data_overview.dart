@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
@@ -7,19 +8,31 @@ import '../../models/event.dart';
 import '../widgets/hidden_admin_button.dart';
 import 'event_map_small.dart';
 
+///Event overview
+///
+/// Shows a widget with event name start and route information
+/// - [nextEvent] set the [Event] to show
+/// Optional
+/// - [borderRadius] set the [Radius] for outer corners
+/// - [showMap] hide map above the info if not needed
+///    default false set to false to hide map
+/// - [showSeparator] hide animated separator
+/// - [eventIsRunning] hide parts if event is running
 class EventDataOverview extends ConsumerStatefulWidget {
   const EventDataOverview({
     super.key,
     required this.nextEvent,
-    this.parentAnimationController,
     this.borderRadius = 15.0,
     this.showMap = true,
+    this.showSeparator = true,
+    this.eventIsRunning = false,
   });
 
   final double borderRadius;
   final Event nextEvent;
-  final AnimationController? parentAnimationController;
   final bool showMap;
+  final bool showSeparator;
+  final bool eventIsRunning;
 
   @override
   ConsumerState<EventDataOverview> createState() => _EventDataOverviewState();
@@ -81,47 +94,50 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               child: SizedBox(
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 8, bottom: 5),
+                      left: 10, right: 10, top: 2, bottom: 2),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        eventDetail(
-                          context: context,
-                          animation: _valueAnimation,
-                          normalFontSize: normalFontSize,
-                          dividerWidth: 110,
-                          dividerColor: CupertinoTheme.of(context).primaryColor,
-                          text: widget.nextEvent.status == EventStatus.noevent
-                              ? Localize.of(context).noEventPlanned
-                              : DateFormatter(Localize.of(context))
-                                  .getLocalDayDateTimeRepresentation(
-                                      widget.nextEvent.getUtcIso8601DateTime),
-                          description: Localize.of(context).nextEvent,
-                        ),
+                        if (!widget.eventIsRunning)
+                          eventDetail(
+                              context: context,
+                              animation: _valueAnimation,
+                              normalFontSize: normalFontSize,
+                              dividerWidth: 110,
+                              dividerColor:
+                                  CupertinoTheme.of(context).primaryColor,
+                              text: widget.nextEvent.status ==
+                                      EventStatus.noevent
+                                  ? Localize.of(context).noEventPlanned
+                                  : DateFormatter(Localize.of(context))
+                                      .getLocalDayDateTimeRepresentation(widget
+                                          .nextEvent.getUtcIso8601DateTime),
+                              description: Localize.of(context).nextEvent,
+                              showSeparator: widget.showSeparator),
                         if (MediaQuery.orientationOf(context) ==
                                 Orientation.landscape &&
                             widget.nextEvent.status != EventStatus.noevent) ...[
                           eventDetail(
-                            context: context,
-                            animation: _valueAnimation,
-                            normalFontSize: normalFontSize,
-                            dividerWidth: 70,
-                            dividerColor:
-                                CupertinoTheme.of(context).primaryColor,
-                            text: widget.nextEvent.routeName,
-                            description: Localize.of(context).route,
-                          ),
+                              context: context,
+                              animation: _valueAnimation,
+                              normalFontSize: normalFontSize,
+                              dividerWidth: 70,
+                              dividerColor:
+                                  CupertinoTheme.of(context).primaryColor,
+                              text: widget.nextEvent.routeName,
+                              description: Localize.of(context).route,
+                              showSeparator: widget.showSeparator),
                           eventDetail(
-                            context: context,
-                            animation: _valueAnimation,
-                            normalFontSize: normalFontSize,
-                            dividerWidth: 70,
-                            dividerColor:
-                                CupertinoTheme.of(context).primaryColor,
-                            text: widget.nextEvent.formatDistance,
-                            description: Localize.of(context).length,
-                          )
+                              context: context,
+                              animation: _valueAnimation,
+                              normalFontSize: normalFontSize,
+                              dividerWidth: 70,
+                              dividerColor:
+                                  CupertinoTheme.of(context).primaryColor,
+                              text: widget.nextEvent.formatDistance,
+                              description: Localize.of(context).length,
+                              showSeparator: widget.showSeparator)
                         ]
                       ]),
                 ),
@@ -131,33 +147,34 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                 widget.nextEvent.status != EventStatus.noevent)
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 10, right: 10, top: 8, bottom: 5),
+                    left: 10, right: 10, top: 2, bottom: 2),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     eventDetail(
-                      context: context,
-                      animation: _valueAnimation,
-                      normalFontSize: normalFontSize,
-                      dividerWidth: 70,
-                      dividerColor: CupertinoTheme.of(context).primaryColor,
-                      text: widget.nextEvent.routeName,
-                      description: Localize.of(context).route,
-                    ),
+                        context: context,
+                        animation: _valueAnimation,
+                        normalFontSize: normalFontSize,
+                        dividerWidth: 70,
+                        dividerColor: CupertinoTheme.of(context).primaryColor,
+                        text: widget.nextEvent.routeName,
+                        description: Localize.of(context).route,
+                        showSeparator: widget.showSeparator),
                     eventDetail(
-                      context: context,
-                      animation: _valueAnimation,
-                      normalFontSize: normalFontSize,
-                      dividerWidth: 70,
-                      dividerColor: CupertinoTheme.of(context).primaryColor,
-                      text: widget.nextEvent.formatDistance,
-                      description: Localize.of(context).length,
-                    )
+                        context: context,
+                        animation: _valueAnimation,
+                        normalFontSize: normalFontSize,
+                        dividerWidth: 70,
+                        dividerColor: CupertinoTheme.of(context).primaryColor,
+                        text: widget.nextEvent.formatDistance,
+                        description: Localize.of(context).length,
+                        showSeparator: widget.showSeparator)
                   ],
                 ),
               ),
-            if (widget.nextEvent.status != EventStatus.noevent)
+            if (widget.nextEvent.status != EventStatus.noevent &&
+                !widget.eventIsRunning)
               Padding(
                 padding: const EdgeInsets.only(
                     left: 10, right: 10, top: 2, bottom: 2),
@@ -193,35 +210,36 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                 ),
               ),
               child: Text.rich(
-                  textAlign: TextAlign.center,
-                  TextSpan(
-                    style: TextStyle(color: widget.nextEvent.statusTextColor),
-                    children: [
-                      WidgetSpan(
-                        child: Image.asset(
-                          widget.nextEvent.trafficLight,
-                          height: 15,
-                        ),
+                textAlign: TextAlign.center,
+                TextSpan(
+                  style: TextStyle(color: widget.nextEvent.statusTextColor),
+                  children: [
+                    WidgetSpan(
+                      child: Image.asset(
+                        widget.nextEvent.trafficLight,
+                        height: 15,
                       ),
-                      WidgetSpan(
-                          child: SizedBox(
-                        width: 5,
-                      )),
-                      TextSpan(
-                        text: widget.nextEvent.statusText,
+                    ),
+                    WidgetSpan(
+                        child: SizedBox(
+                      width: 5,
+                    )),
+                    TextSpan(
+                      text: widget.nextEvent.statusText,
+                    ),
+                    WidgetSpan(
+                        child: SizedBox(
+                      width: 5,
+                    )),
+                    WidgetSpan(
+                      child: Image.asset(
+                        widget.nextEvent.trafficLight,
+                        height: 15,
                       ),
-                      WidgetSpan(
-                          child: SizedBox(
-                        width: 5,
-                      )),
-                      WidgetSpan(
-                        child: Image.asset(
-                          widget.nextEvent.trafficLight,
-                          height: 15,
-                        ),
-                      ),
-                    ],
-                  )),
+                    ),
+                  ],
+                ),
+              ),
               /*child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -262,7 +280,8 @@ Widget eventDetail(
     required double dividerWidth,
     required Color dividerColor,
     required String text,
-    required String description}) {
+    required String description,
+    showSeparator = true}) {
   return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -289,33 +308,35 @@ Widget eventDetail(
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Container(
-                  height: 4,
-                  width: dividerWidth,
-                  decoration: BoxDecoration(
-                    color: dividerColor.withOpacity(0.2),
-                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                  ),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        width: dividerWidth * animation.value,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: <Color>[
-                            dividerColor.withOpacity(0.4),
-                            dividerColor,
-                          ]),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(4.0)),
+              if (showSeparator)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Container(
+                    height: 2,
+                    width: dividerWidth,
+                    decoration: BoxDecoration(
+                      color: dividerColor.withOpacity(0.2),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(4.0)),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          width: dividerWidth * animation.value,
+                          height: 2,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: <Color>[
+                              dividerColor.withOpacity(0.4),
+                              dividerColor,
+                            ]),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(4.0)),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
               SizedBox(
                 child: FittedBox(
                   alignment: Alignment.centerLeft,

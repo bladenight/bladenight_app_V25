@@ -109,7 +109,6 @@ class _CurrentEventOverview extends ConsumerState<CurrentEventOverview>
                       width: 200,
                       child: EventDataOverview(
                         nextEvent: nextEvent,
-                        parentAnimationController: _animationController,
                       ),
                     ),
                   ),
