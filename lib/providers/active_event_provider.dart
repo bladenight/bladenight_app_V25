@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -5,14 +7,23 @@ import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../models/event.dart';
+import '../wamp/wamp_v2.dart';
 
 part 'active_event_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class ActiveEvent extends _$ActiveEvent {
+  StreamSubscription<Event>? evtStream;
   @override
   Event build() {
     state = HiveSettingsDB.getActualEvent;
+    evtStream = WampV2().eventUpdateStreamController.stream.listen((event) {
+      state = event;
+    });
+
+    ref.onDispose(() {
+      evtStream?.cancel();
+    });
     return state;
   }
 

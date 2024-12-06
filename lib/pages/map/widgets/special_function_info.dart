@@ -63,11 +63,11 @@ class SpecialFunctionInfo extends ConsumerWidget {
             ),
           ]),
         ),
-      if (!kIsWeb &&
+      /*if (!kIsWeb &&
           (ref.watch(showOwnColoredTrackProvider) ||
               (isTracking && wantSeeFullProcession))) ...[
         const SpeedInfoColors(),
-      ],
+      ],*/
     ]);
   }
 }

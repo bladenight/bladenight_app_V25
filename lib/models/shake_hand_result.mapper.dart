@@ -26,6 +26,9 @@ class ShakeHandResultMapper extends ClassMapperBase<ShakeHandResult> {
   static int _$minBuild(ShakeHandResult v) => v.minBuild;
   static const Field<ShakeHandResult, int> _f$minBuild =
       Field('minBuild', _$minBuild, key: 'mbu');
+  static String? _$serverVersion(ShakeHandResult v) => v.serverVersion;
+  static const Field<ShakeHandResult, String> _f$serverVersion =
+      Field('serverVersion', _$serverVersion, key: 'ver', opt: true);
   static Exception? _$rpcException(ShakeHandResult v) => v.rpcException;
   static const Field<ShakeHandResult, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);
@@ -34,6 +37,7 @@ class ShakeHandResultMapper extends ClassMapperBase<ShakeHandResult> {
   final MappableFields<ShakeHandResult> fields = const {
     #status: _f$status,
     #minBuild: _f$minBuild,
+    #serverVersion: _f$serverVersion,
     #rpcException: _f$rpcException,
   };
 
@@ -41,6 +45,7 @@ class ShakeHandResultMapper extends ClassMapperBase<ShakeHandResult> {
     return ShakeHandResult(
         status: data.dec(_f$status),
         minBuild: data.dec(_f$minBuild),
+        serverVersion: data.dec(_f$serverVersion),
         rpcException: data.dec(_f$rpcException));
   }
 
@@ -97,7 +102,11 @@ extension ShakeHandResultValueCopy<$R, $Out>
 
 abstract class ShakeHandResultCopyWith<$R, $In extends ShakeHandResult, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({bool? status, int? minBuild, Exception? rpcException});
+  $R call(
+      {bool? status,
+      int? minBuild,
+      String? serverVersion,
+      Exception? rpcException});
   ShakeHandResultCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -111,16 +120,22 @@ class _ShakeHandResultCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ShakeHandResult> $mapper =
       ShakeHandResultMapper.ensureInitialized();
   @override
-  $R call({bool? status, int? minBuild, Object? rpcException = $none}) =>
+  $R call(
+          {bool? status,
+          int? minBuild,
+          Object? serverVersion = $none,
+          Object? rpcException = $none}) =>
       $apply(FieldCopyWithData({
         if (status != null) #status: status,
         if (minBuild != null) #minBuild: minBuild,
+        if (serverVersion != $none) #serverVersion: serverVersion,
         if (rpcException != $none) #rpcException: rpcException
       }));
   @override
   ShakeHandResult $make(CopyWithData data) => ShakeHandResult(
       status: data.get(#status, or: $value.status),
       minBuild: data.get(#minBuild, or: $value.minBuild),
+      serverVersion: data.get(#serverVersion, or: $value.serverVersion),
       rpcException: data.get(#rpcException, or: $value.rpcException));
 
   @override

@@ -941,10 +941,10 @@ class Localize {
     );
   }
 
-  /// `Confirmed 😃`
+  /// `Confirmed`
   String get confirmed {
     return Intl.message(
-      'Confirmed 😃',
+      'Confirmed',
       name: 'confirmed',
       desc: '',
       args: [],
@@ -3026,10 +3026,10 @@ class Localize {
     );
   }
 
-  /// `We are on route ⏳`
+  /// `We are on route`
   String get running {
     return Intl.message(
-      'We are on route ⏳',
+      'We are on route',
       name: 'running',
       desc: '',
       args: [],

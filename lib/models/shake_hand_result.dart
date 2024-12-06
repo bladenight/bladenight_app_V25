@@ -19,6 +19,8 @@ class ShakeHandResult with ShakeHandResultMappable {
   final bool status;
   @MappableField(key: 'mbu')
   final int minBuild;
+  @MappableField(key: 'ver')
+  final String? serverVersion;
 
   Exception? rpcException;
 
@@ -27,7 +29,10 @@ class ShakeHandResult with ShakeHandResultMappable {
   /// [status] = [false] -> App is outdated
   /// [minBuild] = Minimum required Buildnumber
   ShakeHandResult(
-      {required this.status, required this.minBuild, this.rpcException});
+      {required this.status,
+      required this.minBuild,
+      this.serverVersion,
+      this.rpcException});
 
   static Future<ShakeHandResult> shakeHandsWamp() async {
     Completer? completer = Completer();

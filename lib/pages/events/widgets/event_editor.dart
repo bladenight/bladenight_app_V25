@@ -82,6 +82,7 @@ class _EventEditorState extends ConsumerState<EventEditor> {
             isSaving
                 ? const SliverToBoxAdapter(child: LinearProgressIndicator())
                 : SliverFillRemaining(
+                    fillOverscroll: true,
                     child: Column(children: [
                       Divider(
                         thickness: 2,

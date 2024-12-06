@@ -14,6 +14,7 @@ import '../app_settings/server_connections.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
 import '../helpers/wamp/message_types.dart';
+import '../models/event.dart';
 import '../models/realtime_update.dart';
 import '../models/shake_hand_result.dart';
 import 'bn_wamp_message.dart';
@@ -78,6 +79,7 @@ class WampV2 {
   final _wampConnectedStreamController = StreamController<bool>.broadcast();
   final realTimeUpdateStreamController =
       StreamController<RealtimeUpdate>.broadcast();
+  final eventUpdateStreamController = StreamController<Event>.broadcast();
 
   StreamController<bool> get wampConnectedStreamController =>
       _wampConnectedStreamController;
@@ -428,8 +430,18 @@ class WampV2 {
             //         PUBLISH.Arguments|list, PUBLISH.ArgumentsKw|dict]
             //[36, 5512315355, 4429313566, {}, [], {"color": "orange", "sizes": [23, 42, 7]}]
             try {
-              var messageResult = wampMessage[2];
+              var payload = wampMessage[2];
               var id = int.parse(wampMessage[1]);
+              if (id == 12345678 && wampMessage.length >= 3) {
+                //new event triggered
+                try {
+                  var event = EventMapper.fromMap(payload);
+                  eventUpdateStreamController.sink.add(event);
+                } catch (e) {
+                  BnLog.error(text: 'error event decoding wampV2');
+                }
+                return;
+              }
               _subscriptions.add(id);
               //realTimeUpdateStreamController.sink.add(RealtimeUpdateMapper.fromMap(messageResult));
               return;

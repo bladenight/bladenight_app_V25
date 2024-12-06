@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -132,10 +133,16 @@ class RouteNameDialog extends ConsumerWidget {
                               child: Builder(
                                 builder: (context) => Transform.rotate(
                                   angle: hp.bearing,
-                                  child: const Image(
-                                    image: AssetImage(
-                                      'assets/images/arrow_up_mgn_small.png',
-                                    ),
+                                  child: Image(
+                                    image: CupertinoAdaptiveTheme.of(context)
+                                                .theme
+                                                .brightness ==
+                                            Brightness.dark
+                                        ? AssetImage(
+                                            'assets/images/arrow_up_pure_margin.png',
+                                          )
+                                        : AssetImage(
+                                            'assets/images/arrow_up_pure_margin_dark.png'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
