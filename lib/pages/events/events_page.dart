@@ -99,7 +99,8 @@ class _EventsPageState extends ConsumerState<EventsPage>
         CupertinoSliverNavigationBar(
           leading: const Icon(CupertinoIcons.ticket),
           largeTitle: Text(_header),
-          trailing: (networkAvailable.serverAvailable)
+          trailing: (networkAvailable.connectivityStatus ==
+                  ConnectivityStatus.wampConnected)
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -147,10 +148,6 @@ class _EventsPageState extends ConsumerState<EventsPage>
                 )
               : const Icon(Icons.offline_bolt_outlined),
         ),
-        const SliverToBoxAdapter(
-          child: FractionallySizedBox(
-              widthFactor: 0.9, child: ConnectionWarning()),
-        ),
       ],
       body: Builder(builder: (context) {
         var asyncEvents = ref.watch(allEventsProvider);
@@ -167,6 +164,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
               var pages = _buildPages(context, events);
               return Column(
                 children: <Widget>[
+                  ConnectionWarning(),
                   Expanded(
                     child: PageView.builder(
                       controller: _pageController,

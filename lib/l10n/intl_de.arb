@@ -537,5 +537,6 @@
   "editFriendHeader": "Ändere von {name} den Namen und Farbe",
   "deleteFriendHeader": "Lösche die Verknüpfung mit {name}. Keine Wiederherstllung möglich.",
   "refresh": "Aktualisieren",
-  "refreshHeader": "Daten aktualisieren"
+  "refreshHeader": "Daten aktualisieren",
+  "serverConnected": "Server verbunden"
 }

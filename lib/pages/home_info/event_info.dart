@@ -1,40 +1,19 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
-import 'package:get/get_navigation/src/snackbar/snackbar_controller.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app_settings/app_configuration_helper.dart';
-import '../../generated/l10n.dart';
 import '../../helpers/enums/tracking_type.dart';
 import '../../helpers/logger.dart';
-import '../../helpers/timeconverter_helper.dart';
-import '../../helpers/url_launch_helper.dart';
-import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/get_images_and_links_provider.dart';
-import '../../providers/images_and_links/main_sponsor_image_and_link_provider.dart';
-import '../../providers/images_and_links/second_sponsor_image_and_link_provider.dart';
-import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
 import '../../providers/location_provider.dart';
-import '../../providers/map/icon_size_provider.dart';
-import '../../providers/network_connection_provider.dart';
 import '../bladeguard/bladeguard_advertise.dart';
 import '../bladeguard/bladeguard_on_site_page.dart';
 import '../widgets/app_outdated.dart';
-import '../widgets/event_info/animation_test_widget.dart';
-import '../widgets/hidden_admin_button.dart';
 import '../widgets/no_connection_warning.dart';
-import '../widgets/current_event_overview.dart';
 import '../widgets/shadow_box_widget.dart';
-import '../widgets/title_widget.dart';
 import 'event_data_overview.dart';
-import 'event_map_small.dart';
-import 'logo_animate.dart';
 
 class EventInfo extends ConsumerStatefulWidget {
   const EventInfo({super.key});
@@ -120,7 +99,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ConnectionWarning(animationController: _animationController),
+            ConnectionWarning(shimmerAnimationController: _animationController),
             AppOutdated(animationController: _animationController),
             ShadowBoxWidget(
               boxShadowColor: nextEvent.statusColor,

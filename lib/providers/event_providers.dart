@@ -7,7 +7,7 @@ import 'network_connection_provider.dart';
 ///Get all [Events] from server
 final allEventsProvider = FutureProvider((ref) {
   var res = ref.read(networkAwareProvider).connectivityStatus;
-  if (res != ConnectivityStatus.online) {
+  if (res != ConnectivityStatus.wampNotConnected) {
     if (HiveSettingsDB.eventsJson.isNotEmpty) {
       var events = HiveSettingsDB.eventsJson;
       return Future(() => EventsMapper.fromJson(events));

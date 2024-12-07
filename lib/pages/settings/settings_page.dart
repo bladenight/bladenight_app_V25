@@ -409,8 +409,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     child: Column(
                       children: [
                         const AppIdWidget(),
-                        if (networkConnected.connectivityStatus ==
-                                ConnectivityStatus.online &&
+                        if ((networkConnected.connectivityStatus ==
+                                    ConnectivityStatus.wampConnected ||
+                                networkConnected.connectivityStatus ==
+                                    ConnectivityStatus.wampNotConnected) &&
                             !kIsWeb)
                           CupertinoFormSection(
                             header: Text(Localize.of(context)

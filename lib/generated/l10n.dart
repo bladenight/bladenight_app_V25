@@ -4552,6 +4552,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Server connected`
+  String get serverConnected {
+    return Intl.message(
+      'Server connected',
+      name: 'serverConnected',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

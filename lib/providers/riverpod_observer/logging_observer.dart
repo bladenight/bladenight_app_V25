@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../network_connection_provider.dart';
+
 class LoggingObserver extends ProviderObserver {
   @override
   void didAddProvider(
@@ -28,8 +30,15 @@ class LoggingObserver extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    print(
-        '${DateTime.now().toIso8601String()} Provider $provider updated from $previousValue to $newValue');
+    if (previousValue is NetworkStateModel) {
+      var previous = previousValue as NetworkStateModel;
+      var newVal = newValue as NetworkStateModel;
+      print(
+          '${DateTime.now().toIso8601String()} Provider NetworkStateModel updated from ${previous.connectivityStatus} to ${newValue.connectivityStatus}');
+    } else {
+      print(
+          '${DateTime.now().toIso8601String()} Provider $provider updated from ${previousValue.toString()} to $newValue');
+    }
   }
 
   @override

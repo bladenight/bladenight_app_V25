@@ -80,7 +80,7 @@ class BladeGuardOnsite extends ConsumerWidget {
       return ((nextEventProvider.status == EventStatus.confirmed &&
                   !eventActive) &&
               canRegisterOnSite &&
-              networkConnected == ConnectivityStatus.online)
+              networkConnected == ConnectivityStatus.wampConnected)
           ? Column(
               children: [
                 if (status == false) ...[

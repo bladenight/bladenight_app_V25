@@ -635,6 +635,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sendlinkdescription": m15,
         "sendlinksubject": MessageLookupByLibrary.simpleMessage(
             "Send link to BladeNight-App. You can see each other."),
+        "serverConnected":
+            MessageLookupByLibrary.simpleMessage("Server connected"),
         "serverNotReachable":
             MessageLookupByLibrary.simpleMessage("Connecting to server ..."),
         "sessionConnectionError": MessageLookupByLibrary.simpleMessage(

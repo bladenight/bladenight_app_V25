@@ -75,278 +75,288 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                 child: const Icon(Icons.send_rounded),
               ),
             ),
-            const SliverToBoxAdapter(
-              child: FractionallySizedBox(
-                  widthFactor: 0.9, child: ConnectionWarning()),
-            ),
             isSaving
                 ? const SliverToBoxAdapter(child: LinearProgressIndicator())
                 : SliverFillRemaining(
                     fillOverscroll: true,
-                    child: Column(children: [
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      CupertinoListTile(
-                          title: Text(
-                            Localize.of(context).selectDate,
-                          ),
-                          trailing: Text(_event.startDate.toDeDateOnlyString()),
+                    hasScrollBody: true,
+                    child: SingleChildScrollView(
+                      child: Column(children: [
+                        ConnectionWarning(),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        CupertinoListTile(
+                            title: Text(
+                              Localize.of(context).selectDate,
+                            ),
+                            trailing:
+                                Text(_event.startDate.toDeDateOnlyString()),
+                            onTap: () async {
+                              var datePicked = await showDatePicker(
+                                context: context,
+                                fieldLabelText: 'Eventdatum wählen',
+                                //pickerMode: DateTimePickerMode.datetime,
+                                // initialDate: DateTime(2020),
+                                firstDate: DateTime.now()
+                                    .subtract(const Duration(days: 366 * 100)),
+                                lastDate: DateTime(2050),
+                                //dateFormat: 'dd.MM.yyyy',
+                                locale: const Locale('de', 'DE'),
+                                //looping: true,
+                              );
+                              if (datePicked != null) {
+                                var eventDate = _event.startDate;
+                                _event = _event.copyWith(
+                                    startDate: DateTime(
+                                        datePicked.year,
+                                        datePicked.month,
+                                        datePicked.day,
+                                        eventDate.hour,
+                                        eventDate.minute,
+                                        eventDate.second));
+                                setState(() {});
+                              }
+                            }),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        CupertinoListTile(
+                          title: const Text('Zeit wählen'),
+                          trailing: Text(
+                              '${_event.startDate.toTimeOnlyString()} Uhr'),
                           onTap: () async {
-                            var datePicked = await showDatePicker(
+                            var timePicked = await showTimePicker(
                               context: context,
-                              fieldLabelText: 'Eventdatum wählen',
-                              //pickerMode: DateTimePickerMode.datetime,
-                              // initialDate: DateTime(2020),
-                              firstDate: DateTime.now()
-                                  .subtract(const Duration(days: 366 * 100)),
-                              lastDate: DateTime(2050),
-                              //dateFormat: 'dd.MM.yyyy',
-                              locale: const Locale('de', 'DE'),
-                              //looping: true,
+                              initialTime: TimeOfDay(
+                                  hour: _event.startDate.hour,
+                                  minute: _event.startDate.minute),
                             );
-                            if (datePicked != null) {
+                            if (timePicked != null) {
                               var eventDate = _event.startDate;
                               _event = _event.copyWith(
                                   startDate: DateTime(
-                                      datePicked.year,
-                                      datePicked.month,
-                                      datePicked.day,
-                                      eventDate.hour,
-                                      eventDate.minute,
-                                      eventDate.second));
+                                      eventDate.year,
+                                      eventDate.month,
+                                      eventDate.day,
+                                      timePicked.hour,
+                                      timePicked.minute,
+                                      0));
                               setState(() {});
                             }
-                          }),
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      CupertinoListTile(
-                        title: const Text('Zeit wählen'),
-                        trailing:
-                            Text('${_event.startDate.toTimeOnlyString()} Uhr'),
-                        onTap: () async {
-                          var timePicked = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay(
-                                hour: _event.startDate.hour,
-                                minute: _event.startDate.minute),
-                          );
-                          if (timePicked != null) {
-                            var eventDate = _event.startDate;
-                            _event = _event.copyWith(
-                                startDate: DateTime(
-                                    eventDate.year,
-                                    eventDate.month,
-                                    eventDate.day,
-                                    timePicked.hour,
-                                    timePicked.minute,
-                                    0));
-                            setState(() {});
-                          }
-                        },
-                      ),
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      //routename
-                      CupertinoListTile(
-                        title: Text(Localize.of(context).route),
-                        trailing: Text(_event.routeName),
-                        onTap: () async {
-                          await RouteNameSelector.showRouteNameDialog(
-                              context, _event.routeName, (val) {
-                            setState(() {
-                              _event = _event.copyWith(routeName: val);
-                            });
-                          });
-                          setState(() {
-                            isUpdating = true;
-                          });
-                          var routePoints = await ref
-                              .read(routeProvider(_event.routeName).future);
-                          var routeLength =
-                              (routePoints.getRouteTotalDistance).toInt();
-                          _event = _event.copyWith(routeLength: routeLength);
-                          isUpdating = false;
-                          setState(() {});
-                        },
-                      ),
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      CupertinoListTile(
-                          title: const Text(
-                            'Routenlänge',
-                          ),
-                          trailing: isUpdating
-                              ? const CircularProgressIndicator()
-                              : Text('${_event.routeLength.toString()} m'),
-                          onTap: isUpdating
-                              ? null
-                              : () async {
-                                  var length = await InputNumberDialog.show(
-                                      context, 'Routenlänge in m',
-                                      initialValue: _event.routeLength);
-                                  if (length != null) {
-                                    _event =
-                                        _event.copyWith(routeLength: length);
-                                    setState(() {});
-                                  }
-                                }),
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      //Dauer
-                      CupertinoListTile(
-                          title: const Text(
-                            'Dauer',
-                          ),
-                          trailing: Text(
-                              '${_event.duration.inMinutes.toString()} min'),
-                          onTap: () async {
-                            var durationPicked = await InputNumberDialog.show(
-                                context, 'Dauer in Minuten',
-                                initialValue: _event.duration.inMinutes);
-                            if (durationPicked != null) {
-                              _event = _event.copyWith(
-                                  duration: Duration(minutes: durationPicked));
-                              setState(() {});
-                            }
-                          }),
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      //Teilnehmer
-                      CupertinoListTile(
-                          title: const Text(
-                            'EventStatus',
-                          ),
-                          trailing: Text(_event.statusText),
-                          onTap: () async {
-                            var eventStatus = await showEventStatusDialog(
-                                context,
-                                current: _event.status);
-                            if (eventStatus != null) {
-                              _event = _event.copyWith(status: eventStatus);
-                              setState(() {});
-                            }
-                          }),
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      //Teilnehmer
-                      CupertinoListTile(
-                          title: const Text(
-                            'Teilnehmerzahl',
-                          ),
-                          trailing: Text(_event.participants.toString()),
-                          onTap: () async {
-                            var participantsCount =
-                                await InputNumberDialog.show(
-                                    context, 'Teilnehmeranzahl',
-                                    initialValue: _event.participants);
-                            if (participantsCount != null) {
-                              _event = _event.copyWith(
-                                  participants: participantsCount);
-                              setState(() {});
-                            }
-                          }),
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      CupertinoListTile(
-                          title: const Text(
-                            'Startpunkt',
-                          ),
-                          trailing: Text(_event.startPoint ?? ''),
-                          onTap: () async {
-                            var startPointVal = await InputTextDialog.show(
-                                context, 'Startpunkt',
-                                initialValue: null);
-                            if (startPointVal != null) {
-                              _event = _event.copyWith(
-                                  startPoint: startPointVal.isEmpty
-                                      ? null
-                                      : startPointVal);
-                              setState(() {});
-                            }
-                          }),
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      CupertinoListTile(
-                          title: const Text(
-                            'Sonderstart Latitude',
-                          ),
-                          trailing: Text(_event.startPointLatitude.toString()),
-                          onTap: () async {
-                            var val = await InputDoubleDialog.show(
-                                context, 'Start Latitude',
-                                initialValue: _event.startPointLatitude ?? 0.0);
-                            if (val != null) {
-                              _event = _event.copyWith(startPointLatitude: val);
-                              setState(() {});
-                            }
-                          }),
-                      CupertinoListTile(
-                          title: const Text(
-                            'Sonderstart Longitude',
-                          ),
-                          trailing: Text(_event.startPointLongitude.toString()),
-                          onTap: () async {
-                            var val = await InputDoubleDialog.show(
-                                context, 'Start Latitude',
-                                initialValue:
-                                    _event.startPointLongitude ?? 0.0);
-                            if (val != null) {
-                              _event =
-                                  _event.copyWith(startPointLongitude: val);
-                              setState(() {});
-                            }
-                          }),
-                      Divider(
-                        thickness: 2,
-                        height: 3,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: CupertinoButton(
-                          color: Colors.greenAccent,
-                          onPressed: () async {
-                            await _saveEvent();
                           },
-                          child: Center(
-                            child: Row(children: [
-                              Text(Localize.of(context).save),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              const Icon(Icons.send_rounded)
-                            ]),
+                        ),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        //routename
+                        CupertinoListTile(
+                          title: Text(Localize.of(context).route),
+                          trailing: Text(_event.routeName),
+                          onTap: () async {
+                            await RouteNameSelector.showRouteNameDialog(
+                                context, _event.routeName, (val) {
+                              setState(() {
+                                _event = _event.copyWith(routeName: val);
+                              });
+                            });
+                            setState(() {
+                              isUpdating = true;
+                            });
+                            var routePoints = await ref
+                                .read(routeProvider(_event.routeName).future);
+                            var routeLength =
+                                (routePoints.getRouteTotalDistance).toInt();
+                            _event = _event.copyWith(routeLength: routeLength);
+                            isUpdating = false;
+                            setState(() {});
+                          },
+                        ),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        CupertinoListTile(
+                            title: const Text(
+                              'Routenlänge',
+                            ),
+                            trailing: isUpdating
+                                ? const CircularProgressIndicator()
+                                : Text('${_event.routeLength.toString()} m'),
+                            onTap: isUpdating
+                                ? null
+                                : () async {
+                                    var length = await InputNumberDialog.show(
+                                        context, 'Routenlänge in m',
+                                        initialValue: _event.routeLength);
+                                    if (length != null) {
+                                      _event =
+                                          _event.copyWith(routeLength: length);
+                                      setState(() {});
+                                    }
+                                  }),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        //Dauer
+                        CupertinoListTile(
+                            title: const Text(
+                              'Dauer',
+                            ),
+                            trailing: Text(
+                                '${_event.duration.inMinutes.toString()} min'),
+                            onTap: () async {
+                              var durationPicked = await InputNumberDialog.show(
+                                  context, 'Dauer in Minuten',
+                                  initialValue: _event.duration.inMinutes);
+                              if (durationPicked != null) {
+                                _event = _event.copyWith(
+                                    duration:
+                                        Duration(minutes: durationPicked));
+                                setState(() {});
+                              }
+                            }),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        //Teilnehmer
+                        CupertinoListTile(
+                            title: const Text(
+                              'EventStatus',
+                            ),
+                            trailing: Text(_event.statusText),
+                            onTap: () async {
+                              var eventStatus = await showEventStatusDialog(
+                                  context,
+                                  current: _event.status);
+                              if (eventStatus != null) {
+                                _event = _event.copyWith(status: eventStatus);
+                                setState(() {});
+                              }
+                            }),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        //Teilnehmer
+                        CupertinoListTile(
+                            title: const Text(
+                              'Teilnehmerzahl',
+                            ),
+                            trailing: Text(_event.participants.toString()),
+                            onTap: () async {
+                              var participantsCount =
+                                  await InputNumberDialog.show(
+                                      context, 'Teilnehmeranzahl',
+                                      initialValue: _event.participants);
+                              if (participantsCount != null) {
+                                _event = _event.copyWith(
+                                    participants: participantsCount);
+                                setState(() {});
+                              }
+                            }),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        CupertinoListTile(
+                            title: const Text(
+                              'Startpunkt',
+                            ),
+                            trailing: Text(_event.startPoint ?? ''),
+                            onTap: () async {
+                              var startPointVal = await InputTextDialog.show(
+                                  context, 'Startpunkt',
+                                  initialValue: null);
+                              if (startPointVal != null) {
+                                _event = _event.copyWith(
+                                    startPoint: startPointVal.isEmpty
+                                        ? null
+                                        : startPointVal);
+                                setState(() {});
+                              }
+                            }),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        CupertinoListTile(
+                            title: const Text(
+                              'Sonderstart Latitude',
+                            ),
+                            trailing:
+                                Text(_event.startPointLatitude.toString()),
+                            onTap: () async {
+                              var val = await InputDoubleDialog.show(
+                                  context, 'Start Latitude',
+                                  initialValue:
+                                      _event.startPointLatitude ?? 0.0);
+                              if (val != null) {
+                                _event =
+                                    _event.copyWith(startPointLatitude: val);
+                                setState(() {});
+                              }
+                            }),
+                        CupertinoListTile(
+                            title: const Text(
+                              'Sonderstart Longitude',
+                            ),
+                            trailing:
+                                Text(_event.startPointLongitude.toString()),
+                            onTap: () async {
+                              var val = await InputDoubleDialog.show(
+                                  context, 'Start Latitude',
+                                  initialValue:
+                                      _event.startPointLongitude ?? 0.0);
+                              if (val != null) {
+                                _event =
+                                    _event.copyWith(startPointLongitude: val);
+                                setState(() {});
+                              }
+                            }),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: CupertinoButton(
+                            color: Colors.greenAccent,
+                            onPressed: () async {
+                              await _saveEvent();
+                            },
+                            child: Center(
+                              child: Row(children: [
+                                Text(Localize.of(context).save),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                const Icon(Icons.send_rounded)
+                              ]),
+                            ),
                           ),
                         ),
-                      ),
-                    ]),
+                        Text('Änderungen sofort aktiv'),
+                        SizedBox(
+                          height: 40,
+                        )
+                      ]),
+                    ),
                   ),
           ]),
     );

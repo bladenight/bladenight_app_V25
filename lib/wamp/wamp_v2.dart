@@ -34,6 +34,9 @@ enum WampConnectionState {
   stopped
 }
 
+///State for network_connection_provider
+enum WampConnectedState { disconnected, connected }
+
 class WampV2 {
   static WampV2? _instance;
 
@@ -48,10 +51,10 @@ class WampV2 {
   }
 
   final internetConnChecker = InternetConnection.createInstance(
-    customCheckOptions: [
+      /*customCheckOptions: [
       InternetCheckOption(uri: WampV2.getServerUri()),
-    ],
-  );
+    ],*/
+      );
   var _busyTimeStamp = DateTime.now();
   var _lock = Lock();
   WebSocketChannel? channel; //initialize a websocket channel
@@ -76,12 +79,13 @@ class WampV2 {
       StreamController<BnWampMessage>();
   final eventStreamController = StreamController<dynamic>.broadcast();
   final resultStreamController = StreamController<dynamic>.broadcast();
-  final _wampConnectedStreamController = StreamController<bool>.broadcast();
+  final _wampConnectedStreamController =
+      StreamController<WampConnectedState>.broadcast();
   final realTimeUpdateStreamController =
       StreamController<RealtimeUpdate>.broadcast();
   final eventUpdateStreamController = StreamController<Event>.broadcast();
 
-  StreamController<bool> get wampConnectedStreamController =>
+  StreamController<WampConnectedState> get wampConnectedStreamController =>
       _wampConnectedStreamController;
 
   HashSet<int> get subscriptions => _subscriptions;
@@ -127,7 +131,7 @@ class WampV2 {
       BnLog.trace(text: 'Timeout _startStream');
       _lock = Lock();
     } catch (_) {
-      BnLog.trace(text: '_startStream error $e', exception: e);
+      BnLog.trace(text: 'InitWamp error $e', exception: e);
       _lock = Lock();
     }
     if (startResult == false) {
@@ -345,7 +349,8 @@ class WampV2 {
 
           if (wampMessageType == WampMessageType.welcome) {
             _websocketIsConnected = true;
-            _wampConnectedStreamController.sink.add(true);
+            _wampConnectedStreamController.sink
+                .add(WampConnectedState.connected);
             _lastConnectionStatus = true;
             welcomeCompleter.complete(true);
             // [WELCOME, Session|id, Details|dict]
@@ -474,7 +479,8 @@ class WampV2 {
               methodName: 'startStream',
               className: toString());
           if (_websocketIsConnected == false && _lastConnectionStatus == true) {
-            _wampConnectedStreamController.sink.add(false);
+            _wampConnectedStreamController.sink
+                .add(WampConnectedState.disconnected);
             _lastConnectionStatus == false;
           }
           _websocketIsConnected = false;
@@ -527,7 +533,7 @@ class WampV2 {
 
   void _resetWampState() {
     _lastConnectionStatus = false;
-    _wampConnectedStreamController.sink.add(false);
+    _wampConnectedStreamController.sink.add(WampConnectedState.disconnected);
     _websocketIsConnected = false;
     _hadShakeHands = false;
     _startShakeHands = false;

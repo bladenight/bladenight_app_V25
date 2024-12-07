@@ -10,7 +10,7 @@ class SettingsInvisibleOfflineWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var pr = ref.watch(networkAwareProvider);
-    if (pr.connectivityStatus == ConnectivityStatus.online) {
+    if (pr.connectivityStatus == ConnectivityStatus.wampNotConnected) {
       return Container();
     } else {
       return Container(

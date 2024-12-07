@@ -22,11 +22,11 @@ class NoDataWarning extends ConsumerWidget {
         children: [
           Builder(builder: (context) {
             var networkAware = ref.watch(networkAwareProvider);
-            if (networkAware.connectivityStatus == ConnectivityStatus.error ||
-                networkAware.connectivityStatus == ConnectivityStatus.disconnected) {
+            if (networkAware.connectivityStatus ==
+                ConnectivityStatus.internetOffline) {
               return const NoNetworkWarning();
             } else if (networkAware.connectivityStatus ==
-                ConnectivityStatus.serverNotReachable) {
+                ConnectivityStatus.wampNotConnected) {
               return const ServerNotReachableWarning();
             } else {
               return Container();

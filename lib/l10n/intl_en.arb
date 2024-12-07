@@ -537,5 +537,6 @@
   "editFriendHeader": "Edit {name} colors and name",
   "deleteFriendHeader": "Delete linking with {name} forever",
   "refresh": "Update",
-  "refreshHeader": "Update data"
+  "refreshHeader": "Update data",
+  "serverConnected": "Server connected"
 }

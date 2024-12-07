@@ -60,7 +60,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var isBladeguard = ref.watch(userIsBladeguardProvider);
     var bladeguardSettingsVisible =
-    ref.watch(bladeguardSettingsVisibleProvider);
+        ref.watch(bladeguardSettingsVisibleProvider);
     var networkConnected = ref.watch(networkAwareProvider);
     return CupertinoPageScaffold(
       child: CustomScrollView(
@@ -69,23 +69,21 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
         ),
         slivers: [
           CupertinoSliverNavigationBar(
-            largeTitle: Text(Localize
-                .of(context)
-                .bladeGuard),
+            largeTitle: Text(Localize.of(context).bladeGuard),
             trailing: Align(
               alignment: Alignment.centerRight,
               child: (networkConnected.connectivityStatus ==
-                  ConnectivityStatus.online)
+                      ConnectivityStatus.wampConnected)
                   ? CupertinoButton(
-                padding: EdgeInsets.zero,
-                minSize: 0,
-                onPressed: () async {
-                  var _ = ref.refresh(bgIsOnSiteProvider);
-                },
-                child: isBladeguard
-                    ? const Icon(Icons.update)
-                    : const SizedBox(), //Container hides gesture from back button
-              )
+                      padding: EdgeInsets.zero,
+                      minSize: 0,
+                      onPressed: () async {
+                        var _ = ref.refresh(bgIsOnSiteProvider);
+                      },
+                      child: isBladeguard
+                          ? const Icon(Icons.update)
+                          : const SizedBox(), //Container hides gesture from back button
+                    )
                   : const Icon(Icons.offline_bolt_outlined),
             ),
           ),
@@ -104,21 +102,22 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
               children: [
                 const SettingsInvisibleOfflineWidget(),
                 const BladeGuardOnsite(),
+                //online wamp not necessary
                 if (networkConnected.connectivityStatus ==
-                    ConnectivityStatus.online)
+                        ConnectivityStatus.wampConnected ||
+                    networkConnected.connectivityStatus ==
+                        ConnectivityStatus.wampNotConnected)
                   CupertinoFormSection(
                     header: HtmlWidget(
                         textStyle: TextStyle(
                             fontSize:
-                            MediaQuery.textScalerOf(context).scale(14),
-                            color: CupertinoTheme
-                                .of(context)
-                                .primaryColor),
+                                MediaQuery.textScalerOf(context).scale(14),
+                            color: CupertinoTheme.of(context).primaryColor),
                         onTapUrl: (url) async {
-                          var uri = Uri.parse(url);
-                          Launch.launchUrlFromUri(uri);
-                          return Future(true as FutureOr<bool> Function());
-                        },
+                      var uri = Uri.parse(url);
+                      Launch.launchUrlFromUri(uri);
+                      return Future(true as FutureOr<bool> Function());
+                    },
                         Localize.of(context)
                             .iAmBladeGuardTitle(bladeguardPrivacyLink)),
                     children: <Widget>[
@@ -126,18 +125,12 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: DataLeftRightContent(
                           descriptionLeft: bladeguardSettingsVisible
-                              ? Localize
-                              .of(context)
-                              .registeredAs
-                              : Localize
-                              .of(context)
-                              .iAmBladeGuard,
+                              ? Localize.of(context).registeredAs
+                              : Localize.of(context).iAmBladeGuard,
                           descriptionRight: '',
                           rightWidget: CupertinoSwitch(
                             activeColor:
-                            CupertinoTheme
-                                .of(context)
-                                .primaryColor,
+                                CupertinoTheme.of(context).primaryColor,
                             onChanged: (val) {
                               ref
                                   .read(userIsBladeguardProvider.notifier)
@@ -157,8 +150,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               textStyle: TextStyle(
                                   fontSize: MediaQuery.textScalerOf(context)
                                       .scale(14),
-                                  color: CupertinoTheme
-                                      .of(context)
+                                  color: CupertinoTheme.of(context)
                                       .primaryColor), onTapUrl: (url) async {
                             Launch.launchUrlFromString(url);
                             return Future(true as FutureOr<bool> Function());
@@ -177,37 +169,27 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               height: 10,
                             ),
                             SizedBox(
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               child: CupertinoButton(
                                 onPressed: () async {
                                   var uri = Uri.parse(bladeguardRegisterLink);
                                   Launch.launchUrlFromUri(uri);
                                 },
                                 color: Colors.lightGreen,
-                                child: Text(Localize
-                                    .of(context)
-                                    .register),
+                                child: Text(Localize.of(context).register),
                               ),
                             ),
                             const SizedBox(
                               height: 10,
                             ),
                             SizedBox(
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               child: CupertinoButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                                 color: Colors.redAccent,
-                                child: Text(Localize
-                                    .of(context)
-                                    .later),
+                                child: Text(Localize.of(context).later),
                               ),
                             ),
                           ],
@@ -221,10 +203,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ],
                         if (bladeguardSettingsVisible)
                           SizedBox(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width * 0.9,
+                            width: MediaQuery.of(context).size.width * 0.9,
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 5, top: 1, bottom: 1),
@@ -233,15 +212,14 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             ),
                           ),
                         const PhoneTextField(),
-                        if (networkConnected.connectivityStatus ==
-                            ConnectivityStatus.online &&
+                        if ((networkConnected.connectivityStatus ==
+                                    ConnectivityStatus.wampConnected ||
+                                networkConnected.connectivityStatus ==
+                                    ConnectivityStatus.wampNotConnected) &&
                             !bladeguardSettingsVisible &&
                             ref.watch(isValidBladeGuardEmailProvider))
                           SizedBox(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width * 0.9,
+                            width: MediaQuery.of(context).size.width * 0.9,
                             child: Padding(
                               padding: const EdgeInsets.only(top: 5, bottom: 5),
                               child: CupertinoButton(
@@ -249,11 +227,9 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   child: FittedBox(
                                     fit: BoxFit.fitWidth,
                                     child: Text(
-                                      Localize
-                                          .of(context)
-                                          .checkBgRegistration,
+                                      Localize.of(context).checkBgRegistration,
                                       style:
-                                      const TextStyle(color: Colors.black),
+                                          const TextStyle(color: Colors.black),
                                     ),
                                   ),
                                   onPressed: () async {
@@ -270,7 +246,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 bladeguardSettingsVisible)
                               Padding(
                                 padding:
-                                const EdgeInsets.only(left: 15, right: 15),
+                                    const EdgeInsets.only(left: 15, right: 15),
                                 child: DataLeftWidgetRightTextContent(
                                   descriptionRight: HiveSettingsDB.bgTeam,
                                   leftWidget: Padding(
@@ -279,8 +255,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     child: CupertinoButton.filled(
                                         child: FittedBox(
                                           fit: BoxFit.fitWidth,
-                                          child: Text(Localize
-                                              .of(context)
+                                          child: Text(Localize.of(context)
                                               .bgUpdatePhone),
                                         ),
                                         onPressed: () async {
@@ -293,33 +268,24 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           ],
                         ),
                       SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width * 0.9,
+                        width: MediaQuery.of(context).size.width * 0.9,
                         child: const SendMailWidget(),
                       ),
                       if (!kIsWeb &&
                           HiveSettingsDB.isBladeGuard &&
                           HiveSettingsDB.bgSettingVisible) ...[
                         CupertinoFormSection(
-                          header: Text(Localize
-                              .of(context)
-                              .geoFencingTitle),
+                          header: Text(Localize.of(context).geoFencingTitle),
                           children: <Widget>[
                             Padding(
                               padding:
-                              const EdgeInsets.only(left: 20, right: 20),
+                                  const EdgeInsets.only(left: 20, right: 20),
                               child: DataLeftRightContent(
                                 descriptionLeft:
-                                Localize
-                                    .of(context)
-                                    .geoFencing,
+                                    Localize.of(context).geoFencing,
                                 rightWidget: CupertinoSwitch(
                                   activeColor:
-                                  CupertinoTheme
-                                      .of(context)
-                                      .primaryColor,
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) async {
                                     await HiveSettingsDB
                                         .setSetOnsiteGeoFencingActiveAsync(val);
@@ -335,31 +301,27 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           ],
                         ),
                         CupertinoFormSection(
-                          header: Text(Localize
-                              .of(context)
+                          header: Text(Localize.of(context)
                               .pushMessageParticipateAsBladeGuardTitle),
                           children: <Widget>[
                             Padding(
                               padding:
-                              const EdgeInsets.only(left: 20, right: 20),
+                                  const EdgeInsets.only(left: 20, right: 20),
                               child: DataLeftRightContent(
-                                descriptionLeft: Localize
-                                    .of(context)
+                                descriptionLeft: Localize.of(context)
                                     .pushMessageParticipateAsBladeGuard,
                                 rightWidget: CupertinoSwitch(
                                   activeColor:
-                                  CupertinoTheme
-                                      .of(context)
-                                      .primaryColor,
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) async {
                                     setState(() {
                                       HiveSettingsDB
                                           .setOneSignalRegisterBladeGuardPush(
-                                          val);
+                                              val);
                                     });
                                     await OnesignalHandler
                                         .registerPushAsBladeGuard(
-                                        val, HiveSettingsDB.bgTeam);
+                                            val, HiveSettingsDB.bgTeam);
                                   },
                                   value: HiveSettingsDB
                                       .oneSignalRegisterBladeGuardPush,
@@ -370,23 +332,19 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           ],
                         ),
                         CupertinoFormSection(
-                          header: Text(Localize
-                              .of(context)
+                          header: Text(Localize.of(context)
                               .pushMessageSkateMunichInfosTitle),
                           children: <Widget>[
                             Padding(
                               padding:
-                              const EdgeInsets.only(left: 20, right: 20),
+                                  const EdgeInsets.only(left: 20, right: 20),
                               child: DataLeftRightContent(
-                                descriptionLeft: Localize
-                                    .of(context)
+                                descriptionLeft: Localize.of(context)
                                     .pushMessageSkateMunichInfos,
                                 descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
                                   activeColor:
-                                  CupertinoTheme
-                                      .of(context)
-                                      .primaryColor,
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) async {
                                     setState(() {
                                       HiveSettingsDB.setRcvSkatemunichInfos(
@@ -408,23 +366,17 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               HiveSettingsDB.serverPassword != null ||
                               HiveSettingsDB.bgIsAdmin))
                         CupertinoFormSection(
-                          header: Text(Localize
-                              .of(context)
-                              .markMeAsHead),
+                          header: Text(Localize.of(context).markMeAsHead),
                           children: <Widget>[
                             Padding(
                               padding:
-                              const EdgeInsets.only(left: 20, right: 20),
+                                  const EdgeInsets.only(left: 20, right: 20),
                               child: DataLeftRightContent(
-                                descriptionLeft: Localize
-                                    .of(context)
-                                    .head,
+                                descriptionLeft: Localize.of(context).head,
                                 descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
                                   activeColor:
-                                  CupertinoTheme
-                                      .of(context)
-                                      .primaryColor,
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) {
                                     setState(() {
                                       HiveSettingsDB.setIsSpecialHead(val);
@@ -444,23 +396,17 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               HiveSettingsDB.serverPassword != null ||
                               HiveSettingsDB.bgIsAdmin))
                         CupertinoFormSection(
-                          header: Text(Localize
-                              .of(context)
-                              .markMeAsTail),
+                          header: Text(Localize.of(context).markMeAsTail),
                           children: <Widget>[
                             Padding(
                               padding:
-                              const EdgeInsets.only(left: 20, right: 20),
+                                  const EdgeInsets.only(left: 20, right: 20),
                               child: DataLeftRightContent(
-                                descriptionLeft: Localize
-                                    .of(context)
-                                    .tail,
+                                descriptionLeft: Localize.of(context).tail,
                                 descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
                                   activeColor:
-                                  CupertinoTheme
-                                      .of(context)
-                                      .primaryColor,
+                                      CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) {
                                     setState(() {
                                       HiveSettingsDB.setIsSpecialTail(val);
@@ -482,17 +428,13 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         HiveSettingsDB.hasSpecialRights ||
                         HiveSettingsDB.bgIsAdmin))
                   CupertinoFormSection(
-                    header: Text(Localize
-                        .of(context)
-                        .showFullProcessionTitle),
+                    header: Text(Localize.of(context).showFullProcessionTitle),
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: DataLeftRightContent(
                           descriptionLeft:
-                          Localize
-                              .of(context)
-                              .showFullProcession,
+                              Localize.of(context).showFullProcession,
                           descriptionRight: '',
                           rightWidget: CupertinoSwitch(
                               onChanged: (val) {
@@ -514,14 +456,9 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                     header: const Text('Server-Admin'),
                     children: <Widget>[
                       SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width * 0.9,
+                        width: MediaQuery.of(context).size.width * 0.9,
                         child: CupertinoButton(
-                            color: CupertinoTheme
-                                .of(context)
-                                .primaryColor,
+                            color: CupertinoTheme.of(context).primaryColor,
                             child: const Text('Öffne Serveradmin'),
                             onPressed: () async {
                               await AdminPasswordDialog.show(context);
@@ -537,14 +474,9 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       header: const Text('Server-Admin-Logout'),
                       children: <Widget>[
                         SizedBox(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.7,
+                          width: MediaQuery.of(context).size.width * 0.7,
                           child: CupertinoButton(
-                              color: CupertinoTheme
-                                  .of(context)
-                                  .primaryColor,
+                              color: CupertinoTheme.of(context).primaryColor,
                               child: const Text('Logout'),
                               onPressed: () async {
                                 HiveSettingsDB.setServerPassword(null);
@@ -571,9 +503,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
       barrierDismissible: true,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text(Localize
-              .of(context)
-              .setTeam),
+          title: Text(Localize.of(context).setTeam),
           content: SizedBox(
             height: 100,
             child: Builder(builder: (context) {
@@ -581,7 +511,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
               var teams = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
               return CupertinoPicker(
                   scrollController:
-                  FixedExtentScrollController(initialItem: selected),
+                      FixedExtentScrollController(initialItem: selected),
                   onSelectedItemChanged: (int value) {
                     setState(() {
                       selected = value;
@@ -595,17 +525,13 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
           ),
           actions: [
             CupertinoDialogAction(
-              child: Text(Localize
-                  .of(context)
-                  .cancel),
+              child: Text(Localize.of(context).cancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             CupertinoDialogAction(
-              child: Text(Localize
-                  .of(context)
-                  .save),
+              child: Text(Localize.of(context).save),
               onPressed: () {
                 Navigator.of(context).pop(selected);
               },
@@ -661,9 +587,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         .setValue(true);
                     await _activatePush();
                     if (mounted) {
-                      showToast(message: Localize
-                          .of(context)
-                          .ok);
+                      showToast(message: Localize.of(context).ok);
                     }
                     ref.invalidate(bgIsOnSiteProvider);
                     setState(() {});

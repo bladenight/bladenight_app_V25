@@ -26,6 +26,10 @@ class MapLayerOverview extends ConsumerStatefulWidget {
     this.initialZoom = 13,
     this.minZoom = 5,
     this.maxZoom = 19,
+    this.interactionOptions = const InteractionOptions(
+      flags: InteractiveFlag.all,
+      enableMultiFingerGestureRace: true,
+    ),
     super.key,
   });
 
@@ -40,6 +44,7 @@ class MapLayerOverview extends ConsumerStatefulWidget {
   final double initialZoom;
   final double minZoom;
   final double maxZoom;
+  final InteractionOptions interactionOptions;
 
   @override
   ConsumerState<MapLayerOverview> createState() => _MapLayerOverviewState();
@@ -56,24 +61,19 @@ class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
       child: FlutterMap(
           mapController: widget.controller,
           options: MapOptions(
-            keepAlive: true,
-            initialCameraFit:
-                bounds != null ? CameraFit.insideBounds(bounds: bounds) : null,
-            initialZoom: widget.initialZoom,
-            minZoom: widget.minZoom,
-            maxZoom: widget.maxZoom,
-            //initialCenter: widget.startPoint,
-            /* cameraConstraint: MapSettings.openStreetMapEnabled ||
+              keepAlive: true,
+              initialCameraFit: CameraFit.insideBounds(bounds: bounds),
+              initialZoom: widget.initialZoom,
+              minZoom: widget.minZoom,
+              maxZoom: widget.maxZoom,
+              //initialCenter: widget.startPoint,
+              /* cameraConstraint: MapSettings.openStreetMapEnabled ||
                     widget.event.hasSpecialStartPoint
                 ? const CameraConstraint
                     .unconstrained() //CameraConstraint.contain(bounds: MapSettings.mapOnlineBoundaries)
                 : CameraConstraint.contain(
                     bounds: MapSettings.bayernAtlasBoundaries),*/
-            interactionOptions: const InteractionOptions(
-              flags: InteractiveFlag.all,
-              enableMultiFingerGestureRace: true,
-            ),
-          ),
+              interactionOptions: widget.interactionOptions),
           children: [
             MapTileLayer(
                 hasSpecialStartPoint: widget.event.hasSpecialStartPoint),

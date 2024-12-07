@@ -22,7 +22,7 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
   ImageAndLinkList ial;
   var resultValue = false;
   var res = ref.read(networkAwareProvider).connectivityStatus;
-  if (res != ConnectivityStatus.online) {
+  if (res != ConnectivityStatus.wampConnected) {
     if (HiveSettingsDB.imagesAndLinksJson.isNotEmpty) {
       var ialList = HiveSettingsDB.imagesAndLinksJson;
       ial = ImageAndLinkListMapper.fromJson(ialList);

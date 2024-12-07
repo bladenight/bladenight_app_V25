@@ -43,6 +43,10 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
           var sizeValue = MediaQuery.textScalerOf(context).scale(iconSize);
           return Stack(children: [
             MapLayerOverview(
+              interactionOptions: const InteractionOptions(
+                flags: InteractiveFlag.none,
+                enableMultiFingerGestureRace: false,
+              ),
               event: widget.nextEvent,
               showSpeed: false,
               initialZoom:
