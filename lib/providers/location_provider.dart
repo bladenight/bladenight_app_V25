@@ -1443,7 +1443,7 @@ class LocationProvider with ChangeNotifier {
     try {
       if (kIsWeb) return;
       SendToWatch.setIsLocationTracking(isTracking);
-      if (_realtimeUpdate != null) {
+      if (_realtimeUpdate != null && _realtimeUpdate!.rpcException == null) {
         SendToWatch.updateRealtimeData(_realtimeUpdate?.toJson());
       }
     } catch (e) {
@@ -1588,7 +1588,7 @@ class LocationProvider with ChangeNotifier {
   int _maxSubscribeFails = 3;
   Timer? _subscriptionTimer;
   StreamSubscription<RealtimeUpdate?>? _realTimeDataStreamListener;
-  StreamSubscription<bool>? _wampConnectedListener;
+  StreamSubscription<WampConnectedState>? _wampConnectedListener;
   int _realTimeDataSubscriptionId = 0;
 
   Future<void> startRealtimeUpdateSubscriptionIfNotTracking() async {
@@ -1601,7 +1601,7 @@ class LocationProvider with ChangeNotifier {
         className: 'location_provider');
     _wampConnectedListener =
         WampV2().wampConnectedStreamController.stream.listen((connected) async {
-      if (connected) {
+      if (connected == WampConnectedState.connected) {
         await (Future.delayed(const Duration(seconds: 3)));
         _maxSubscribeFails = 10;
         _subscribeIfNeeded(_trackingType);

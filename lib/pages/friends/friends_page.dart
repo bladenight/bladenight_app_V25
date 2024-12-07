@@ -116,7 +116,8 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
             leading: const Icon(CupertinoIcons.group),
             largeTitle: Text(Localize.of(context).friends),
             //middle: Text(Localize.of(context).friends),
-            trailing: (networkAvailable.serverAvailable)
+            trailing: (networkAvailable.connectivityStatus ==
+                    ConnectivityStatus.wampConnected)
                 ? Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
