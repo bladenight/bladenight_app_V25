@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../helpers/enums/tracking_type.dart';
 import '../../helpers/logger.dart';
+import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/location_provider.dart';
@@ -16,7 +18,9 @@ import '../widgets/shadow_box_widget.dart';
 import 'event_data_overview.dart';
 
 class EventInfo extends ConsumerStatefulWidget {
-  const EventInfo({super.key});
+  const EventInfo({super.key, required this.tabController});
+
+  final CupertinoTabController tabController;
 
   @override
   ConsumerState<EventInfo> createState() => _EventInfoState();
@@ -101,10 +105,17 @@ class _EventInfoState extends ConsumerState<EventInfo>
           children: [
             ConnectionWarning(shimmerAnimationController: _animationController),
             AppOutdated(animationController: _animationController),
-            ShadowBoxWidget(
-              boxShadowColor: nextEvent.statusColor,
-              child: EventDataOverview(
-                nextEvent: nextEvent,
+            GestureDetector(
+              onTap: () => {
+                if (nextEvent.isActive ||
+                    nextEvent.status == EventStatus.confirmed)
+                  {widget.tabController.index = 1}
+              },
+              child: ShadowBoxWidget(
+                boxShadowColor: nextEvent.statusColor,
+                child: EventDataOverview(
+                  nextEvent: nextEvent,
+                ),
               ),
             ),
             const BladeGuardAdvertise(),

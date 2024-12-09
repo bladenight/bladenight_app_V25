@@ -29,9 +29,10 @@ import 'models/route_names.dart' as p22;
 import 'models/shake_hand_result.dart' as p23;
 import 'models/shake_hands.dart' as p24;
 import 'models/special_point.dart' as p25;
-import 'models/user_gpx_point.dart' as p26;
-import 'models/user_speed_point.dart' as p27;
-import 'models/watch_event.dart' as p28;
+import 'models/sponsors.dart' as p26;
+import 'models/user_gpx_point.dart' as p27;
+import 'models/user_speed_point.dart' as p28;
+import 'models/watch_event.dart' as p29;
 
 void initializeMappers() {
   p0.EventMapper.ensureInitialized();
@@ -66,10 +67,12 @@ void initializeMappers() {
   p24.ShakeHandMapper.ensureInitialized();
   p25.SpecialPointMapper.ensureInitialized();
   p25.SpecialPointsMapper.ensureInitialized();
-  p26.UserGpxPointMapper.ensureInitialized();
-  p26.UserGPXPointsMapper.ensureInitialized();
-  p27.UserSpeedPointMapper.ensureInitialized();
-  p27.UserSpeedPointsMapper.ensureInitialized();
-  p28.WatchEventMapper.ensureInitialized();
-  p28.WatchEventsMapper.ensureInitialized();
+  p26.SponsorMapper.ensureInitialized();
+  p26.SponsorsMapper.ensureInitialized();
+  p27.UserGpxPointMapper.ensureInitialized();
+  p27.UserGPXPointsMapper.ensureInitialized();
+  p28.UserSpeedPointMapper.ensureInitialized();
+  p28.UserSpeedPointsMapper.ensureInitialized();
+  p29.WatchEventMapper.ensureInitialized();
+  p29.WatchEventsMapper.ensureInitialized();
 }

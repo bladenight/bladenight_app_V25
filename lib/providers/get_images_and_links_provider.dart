@@ -14,6 +14,7 @@ import 'images_and_links/geofence_image_and_link_provider.dart';
 import 'images_and_links/main_sponsor_image_and_link_provider.dart';
 import 'images_and_links/second_sponsor_image_and_link_provider.dart';
 import 'images_and_links/special_points_image_and_link_provider.dart';
+import 'images_and_links/sponsors_image_and_link_provider.dart';
 import 'images_and_links/startpoint_image_and_link_provider.dart';
 import 'network_connection_provider.dart';
 
@@ -40,6 +41,9 @@ final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
 
   for (ImageAndLink ial in ial.imagesAndLinks!) {
     switch (ial.key) {
+      case 'sponsors':
+        ref.read(sponsorsImageAndLinkProvider.notifier).setValue(ial);
+        break;
       case 'mainSponsorLogo':
         ref.read(mainSponsorImageAndLinkProvider.notifier).setValue(ial);
         break;

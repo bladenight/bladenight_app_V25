@@ -226,7 +226,7 @@ class HiveSettingsDB {
   ///get mainSponsorImagePathValue
   static String get mainSponsorImagePath {
     return _hiveBox.get(_mainSponsorImagePathKey,
-        defaultValue: mainSponsorPlaceholder);
+        defaultValue: emptySponsorPlaceholder);
   }
 
   static void setMainSponsorImagePath(String val) {

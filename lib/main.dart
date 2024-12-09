@@ -128,18 +128,17 @@ void main() async {
       runApp(
         ProviderScope(
           observers: [
-            LoggingObserver(),
+            // LoggingObserver(),
           ],
           child: BladeNightApp(fmtcInitError: initErr),
         ),
       );
     },
     (dynamic error, StackTrace stackTrace) {
-      print('Application error 130: $error\n$stackTrace');
+      print('Application error 138: $error\n$stackTrace');
       if (!kDebugMode && !kIsWeb) {
         FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }
-
       BnLog.error(
           className: 'main',
           methodName: 'runZonedGuarded',

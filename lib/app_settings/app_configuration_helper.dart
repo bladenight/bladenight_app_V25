@@ -27,7 +27,7 @@ final LatLngBounds defaultMapCamBounds =
 String defaultStartPoint = 'München - Bavariapark';
 String startPoint = 'München - Bavariapark';
 
-const String mainSponsorPlaceholder = kIsWeb
+const String emptySponsorPlaceholder = kIsWeb
     ? 'assets/images/empty_sponsor_logo.png'
     : 'assets/images/empty_sponsor_logo.png';
 const String secondLogoPlaceholder = 'assets/images/skatemunich.png';

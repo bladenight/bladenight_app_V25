@@ -25,9 +25,6 @@ class _AppOutdatedState extends ConsumerState<AppOutdated> {
   @override
   Widget build(BuildContext context) {
     var pr = ref.watch(appOutdatedProvider);
-    if (kDebugMode) {
-      pr = true;
-    }
     if (!pr) {
       return Container();
     } else {

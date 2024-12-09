@@ -162,7 +162,7 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                         return (ms.image != null)
                             // && nw.connectivityStatus == ConnectivityStatus.online)
                             ? FadeInImage.assetNetwork(
-                                placeholder: mainSponsorPlaceholder,
+                                placeholder: emptySponsorPlaceholder,
                                 image: ms.image!,
                                 fadeOutDuration:
                                     const Duration(milliseconds: 150),
@@ -174,12 +174,12 @@ class _EventInfoWebState extends ConsumerState<EventInfoWeb>
                                       text:
                                           'mainSponsorPlaceholder ${ms.image}) could not been loaded',
                                       exception: error);
-                                  return Image.asset(mainSponsorPlaceholder,
+                                  return Image.asset(emptySponsorPlaceholder,
                                       fit: BoxFit.fitWidth);
                                 },
                               )
                             : const Image(
-                                image: AssetImage(mainSponsorPlaceholder),
+                                image: AssetImage(emptySponsorPlaceholder),
                               );
                       }),
                     ),
