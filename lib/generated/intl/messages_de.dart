@@ -172,6 +172,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "anonymous": MessageLookupByLibrary.simpleMessage("Anonym"),
         "appId": MessageLookupByLibrary.simpleMessage("App-Id "),
         "appIdTitle": MessageLookupByLibrary.simpleMessage("App-Id "),
+        "appInitialisationError":
+            MessageLookupByLibrary.simpleMessage("Ladefehler der App."),
         "appOutDated": MessageLookupByLibrary.simpleMessage(
             "Appversion veralted!\nBitte im Store aktualisieren."),
         "appTitle": MessageLookupByLibrary.simpleMessage("BladeNight"),

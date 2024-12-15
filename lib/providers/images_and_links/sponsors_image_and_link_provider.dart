@@ -13,11 +13,11 @@ ImageAndLink _defaultSponsors = ImageAndLink(
         '{'
         '"rem": "Skatemunich", '
         '"img": "skatemunich_logo.png",'
-        '"des": "Skatemunich Sportverein", '
-        '"ilk": "https://bladenight.app/images/skatemunich.png",'
+        '"des": "Skatemunich e.V. Sportverein", '
+        '"ilk": "https://bladenight.app/images/logos/skatemunich.png",'
         '"url": "https://skatemunich.de", '
         '"idx": 0'
-        '}]',
+        '}]}',
     'sponsors');
 
 @riverpod

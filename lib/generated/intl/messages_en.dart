@@ -170,6 +170,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "appId": MessageLookupByLibrary.simpleMessage("App-Id"),
         "appIdTitle": MessageLookupByLibrary.simpleMessage(
             "Unique application identification string"),
+        "appInitialisationError":
+            MessageLookupByLibrary.simpleMessage("App initialisation failed"),
         "appOutDated": MessageLookupByLibrary.simpleMessage(
             "App is outdated!\nPlease update in Appstore."),
         "appTitle": MessageLookupByLibrary.simpleMessage("BladeNight"),

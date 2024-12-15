@@ -538,5 +538,6 @@
   "deleteFriendHeader": "Delete linking with {name} forever",
   "refresh": "Update",
   "refreshHeader": "Update data",
-  "serverConnected": "Server connected"
+  "serverConnected": "Server connected",
+  "appInitialisationError": "App initialisation failed"
 }

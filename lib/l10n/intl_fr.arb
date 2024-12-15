@@ -537,6 +537,7 @@
   "deleteFriendHeader": "Supprimer le lien avec {name}. Pas de restauration possible",
   "refresh": "Actualiser",
   "refreshHeader": "Actualiser les données",
-  "serverConnected": "Server connected"
+  "serverConnected": "Server connected",
+  "appInitialisationError": "App initialisation failed"
 }
 

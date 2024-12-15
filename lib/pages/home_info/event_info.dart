@@ -18,9 +18,7 @@ import '../widgets/shadow_box_widget.dart';
 import 'event_data_overview.dart';
 
 class EventInfo extends ConsumerStatefulWidget {
-  const EventInfo({super.key, required this.tabController});
-
-  final CupertinoTabController tabController;
+  const EventInfo({super.key});
 
   @override
   ConsumerState<EventInfo> createState() => _EventInfoState();
@@ -109,7 +107,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
               onTap: () => {
                 if (nextEvent.isActive ||
                     nextEvent.status == EventStatus.confirmed)
-                  {widget.tabController.index = 1}
+                  {}
               },
               child: ShadowBoxWidget(
                 boxShadowColor: nextEvent.statusColor,

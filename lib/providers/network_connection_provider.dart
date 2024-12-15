@@ -83,8 +83,6 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
 
     _isServerConnectedSubscription =
         WampV2().wampConnectedStreamController.stream.listen((status) {
-      print(
-          '${DateTime.now().toIso8601String()} wamp connection status change: {$status}');
       if (status == WampConnectedState.connected &&
           state.connectivityStatus != ConnectivityStatus.wampConnected) {
         _checkStatus(ConnectivityStatus.wampConnected);

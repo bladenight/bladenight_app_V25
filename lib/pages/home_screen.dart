@@ -321,7 +321,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       tabBuilder: (context, index) {
         switch (index) {
           case 0:
-            return HomePage(tabController: tabController);
+            return HomePage();
           case 1:
             return const MapPage();
           case 2:

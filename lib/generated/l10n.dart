@@ -4562,6 +4562,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `App initialisation failed`
+  String get appInitialisationError {
+    return Intl.message(
+      'App initialisation failed',
+      name: 'appInitialisationError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

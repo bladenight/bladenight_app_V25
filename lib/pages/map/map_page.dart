@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
@@ -123,7 +122,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
               const MapTileLayer(),
               Builder(builder: (context) {
                 print(
-                    '${DateTime.now().toIso8601String()} Build Fluttermap children');
+                    '${DateTime.now().toIso8601String()} Build flutter map children');
                 return Stack(
                   children: [
                     MouseRegion(

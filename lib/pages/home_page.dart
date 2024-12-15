@@ -17,9 +17,7 @@ import '../providers/route_providers.dart';
 import 'messages/messages_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
-  const HomePage({super.key, required this.tabController});
-
-  final CupertinoTabController tabController;
+  const HomePage({super.key});
 
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
@@ -54,54 +52,43 @@ class _HomePageState extends ConsumerState<HomePage>
   @override
   Widget build(BuildContext context) {
     var messageProvider = ref.watch(messagesLogicProvider);
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (bool didPop, dynamic result) {
-        if (didPop) return;
-        var tabIndex = widget.tabController.index;
-        if (tabIndex == 0) {
-          widget.tabController.index = 4;
-        }
-        widget.tabController.index -= 1;
-        return;
-      },
-      child: Scaffold(
-        floatingActionButton: messageProvider.messages.isEmpty
-            ? null
-            : FloatingActionButton(
-                backgroundColor: (messageProvider.messages.isNotEmpty &&
-                        messageProvider.readMessages > 0)
-                    ? Colors.green
-                    : null,
-                foregroundColor: (messageProvider.messages.isNotEmpty &&
-                        messageProvider.readMessages > 0)
-                    ? Colors.black
-                    : null,
-                heroTag: 'msgActionBtn',
-                onPressed: () async {
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (context) => const MessagesPage(),
-                      fullscreenDialog: false,
-                    ),
-                  );
-                },
-                child: messageProvider.messages.isNotEmpty &&
-                        messageProvider.readMessages > 0
-                    ? Badge(
-                        label: Text(messageProvider.readMessages.toString()),
-                        child: const Icon(Icons.mark_email_unread),
-                      )
-                    : const Icon(CupertinoIcons.envelope),
-              ),
-        body: CupertinoPageScaffold(
-          child: SafeArea(
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              slivers: [
-                /*CupertinoSliverNavigationBar(
+    return Scaffold(
+      floatingActionButton: messageProvider.messages.isEmpty
+          ? null
+          : FloatingActionButton(
+              backgroundColor: (messageProvider.messages.isNotEmpty &&
+                      messageProvider.readMessages > 0)
+                  ? Colors.green
+                  : null,
+              foregroundColor: (messageProvider.messages.isNotEmpty &&
+                      messageProvider.readMessages > 0)
+                  ? Colors.black
+                  : null,
+              heroTag: 'msgActionBtn',
+              onPressed: () async {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (context) => const MessagesPage(),
+                    fullscreenDialog: false,
+                  ),
+                );
+              },
+              child: messageProvider.messages.isNotEmpty &&
+                      messageProvider.readMessages > 0
+                  ? Badge(
+                      label: Text(messageProvider.readMessages.toString()),
+                      child: const Icon(Icons.mark_email_unread),
+                    )
+                  : const Icon(CupertinoIcons.envelope),
+            ),
+      body: CupertinoPageScaffold(
+        child: SafeArea(
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            slivers: [
+              /*CupertinoSliverNavigationBar(
               leading: const Icon(CupertinoIcons.home),
               largeTitle: Text(Localize.of(context).home),
               trailing: Row(
@@ -174,49 +161,49 @@ class _HomePageState extends ConsumerState<HomePage>
                 ],
               ),
             ),*/
-                CupertinoSliverRefreshControl(
-                  onRefresh: () async {
-                    ref.read(messagesLogicProvider).updateServerMessages();
-                    var _ = ref.refresh(currentRouteProvider);
-                    ref
-                        .read(activeEventProvider.notifier)
-                        .refresh(forceUpdate: true);
-                    ref.invalidate(bgIsOnSiteProvider);
-                  },
-                ),
-                SliverFillRemaining(
-                  hasScrollBody: true,
-                  fillOverscroll: true,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 5, right: 5),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          EventInfo(tabController: widget.tabController),
-                          //kIsWeb ? EventInfoWeb() : EventInfo(),
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {
+                  ref.read(messagesLogicProvider).updateServerMessages();
+                  var _ = ref.refresh(currentRouteProvider);
+                  ref
+                      .read(activeEventProvider.notifier)
+                      .refresh(forceUpdate: true);
+                  ref.invalidate(bgIsOnSiteProvider);
+                },
+              ),
+              SliverFillRemaining(
+                hasScrollBody: true,
+                fillOverscroll: true,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 5, right: 5),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        EventInfo(),
+                        //kIsWeb ? EventInfoWeb() : EventInfo(),
 
-                          Builder(builder: (context) {
-                            var sponsors = ref.watch(sponsorsProvider);
-                            if (sponsors.hasValue) {
-                              return Center(
-                                child: Text(
-                                  'Sponsoren',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              );
-                            }
-                            return Container();
-                          }),
+                        Builder(builder: (context) {
+                          var sponsors = ref.watch(sponsorsProvider);
+                          if (sponsors.hasValue && sponsors.value!.isNotEmpty) {
+                            return Center(
+                              child: Text(
+                                'Sponsoren',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            );
+                          }
+                          return Container();
+                        }),
 
-                          Builder(builder: (context) {
-                            var sponsors = ref.watch(sponsorsProvider);
-                            if (sponsors.hasValue) {
-                              return SizedBox(
-                                height: 60.0,
-                                width: MediaQuery.of(context).size.width,
-                                child: /*CarouselSlider(
+                        Builder(builder: (context) {
+                          var sponsors = ref.watch(sponsorsProvider);
+                          if (sponsors.hasValue && sponsors.value!.isNotEmpty) {
+                            return SizedBox(
+                              height: 60.0,
+                              width: MediaQuery.of(context).size.width,
+                              child: /*CarouselSlider(
                                       options: CarouselOptions(
                                         aspectRatio: 2.0,
                                         scrollDirection: Axis.horizontal,
@@ -250,79 +237,77 @@ class _HomePageState extends ConsumerState<HomePage>
                                           ),
                                       ]),*/
 
-                                    CarouselSlider.builder(
-                                        options: CarouselOptions(
-                                          aspectRatio: 2.0,
-                                          scrollDirection: Axis.horizontal,
-                                          autoPlay: true,
-                                          enlargeCenterPage: true,
-                                          enlargeStrategy:
-                                              CenterPageEnlargeStrategy.zoom,
-                                          enlargeFactor: 0.4,
-                                          viewportFraction: 1,
-                                        ),
-                                        //controller: _sponsorScrollController,
-                                        //physics: ClampingScrollPhysics(),
-                                        itemCount:
-                                            (sponsors.value!.length).round(),
-                                        itemBuilder: (context, index, realIdx) {
-                                          return Card(
-                                            child: Center(
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  if (sponsors
-                                                          .value![index].url !=
-                                                      null) {
-                                                    Launch.launchUrlFromString(
-                                                        sponsors.value![index]
-                                                            .url!);
-                                                  }
-                                                },
-                                                child:
-                                                    Builder(builder: (context) {
-                                                  return FadeInImage
-                                                      .assetNetwork(
-                                                    height: 50,
-                                                    width: 100,
-                                                    fit: BoxFit.contain,
-                                                    placeholder: sponsors
-                                                        .value![index]
-                                                        .description,
-                                                    image: sponsors
-                                                        .value![index].imageUrl,
-                                                    fadeOutDuration:
-                                                        const Duration(
-                                                            milliseconds: 150),
-                                                    fadeInDuration:
-                                                        const Duration(
-                                                            milliseconds: 150),
-                                                    imageErrorBuilder: (context,
-                                                        error, stackTrace) {
-                                                      BnLog.error(
-                                                          text:
-                                                              'sponsor image error ${sponsors.value![index].imageUrl}) could not been loaded',
-                                                          exception: error);
-                                                      return Image.asset(
-                                                          emptySponsorPlaceholder,
-                                                          fit: BoxFit.fill);
-                                                    },
-                                                  );
-                                                }),
-                                              ),
+                                  CarouselSlider.builder(
+                                      options: CarouselOptions(
+                                        aspectRatio: 2.0,
+                                        scrollDirection: Axis.horizontal,
+                                        autoPlay: true,
+                                        enlargeCenterPage: true,
+                                        enlargeStrategy:
+                                            CenterPageEnlargeStrategy.zoom,
+                                        enlargeFactor: 0.4,
+                                        viewportFraction: 1,
+                                      ),
+                                      //controller: _sponsorScrollController,
+                                      //physics: ClampingScrollPhysics(),
+                                      itemCount:
+                                          (sponsors.value!.length).round(),
+                                      itemBuilder: (context, index, realIdx) {
+                                        return Card(
+                                          child: Center(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                if (sponsors
+                                                        .value![index].url !=
+                                                    null) {
+                                                  Launch.launchUrlFromString(
+                                                      sponsors
+                                                          .value![index].url!);
+                                                }
+                                              },
+                                              child:
+                                                  Builder(builder: (context) {
+                                                return FadeInImage.assetNetwork(
+                                                  height: 50,
+                                                  width: 100,
+                                                  fit: BoxFit.contain,
+                                                  placeholder: sponsors
+                                                      .value![index]
+                                                      .description,
+                                                  image: sponsors
+                                                      .value![index].imageUrl,
+                                                  fadeOutDuration:
+                                                      const Duration(
+                                                          milliseconds: 150),
+                                                  fadeInDuration:
+                                                      const Duration(
+                                                          milliseconds: 150),
+                                                  imageErrorBuilder: (context,
+                                                      error, stackTrace) {
+                                                    BnLog.error(
+                                                        text:
+                                                            'sponsor image error ${sponsors.value![index].imageUrl}) could not been loaded',
+                                                        exception: error);
+                                                    return Image.asset(
+                                                        emptySponsorPlaceholder,
+                                                        fit: BoxFit.fill);
+                                                  },
+                                                );
+                                              }),
                                             ),
-                                          );
-                                        }),
-                              );
-                            }
-                            return Container();
-                          }),
-                        ],
-                      ),
+                                          ),
+                                        );
+                                      }),
+                            );
+                          }
+                          return Container();
+                        }),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

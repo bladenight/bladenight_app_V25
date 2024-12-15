@@ -538,5 +538,6 @@
   "deleteFriendHeader": "Lösche die Verknüpfung mit {name}. Keine Wiederherstllung möglich.",
   "refresh": "Aktualisieren",
   "refreshHeader": "Daten aktualisieren",
-  "serverConnected": "Server verbunden"
+  "serverConnected": "Server verbunden",
+  "appInitialisationError": "Ladefehler der App."
 }

@@ -16,6 +16,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,6 +46,7 @@ import 'pages/widgets/intro_slider.dart';
 import 'pages/widgets/route_name_dialog.dart';
 import 'package:background_fetch/background_fetch.dart';
 
+import 'pages/widgets/startup_widgets/app_root_widget.dart';
 import 'providers/riverpod_observer/logging_observer.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -79,63 +81,19 @@ void main() async {
           return true;
         };
       }
-      initializeMappers();
-      await Hive.initFlutter();
-      Hive.registerAdapter(ColorAdapter());
-      Hive.registerAdapter(ImageAndLinkAdapter());
-      await Hive.openBox(hiveBoxSettingDbName);
-      await Hive.openBox(hiveBoxLocationDbName);
-      await Hive.openBox(hiveBoxServerConfigDBName);
-      Globals.logToCrashlytics = HiveSettingsDB.chrashlyticsEnabled;
-      await DeviceId.initAppId();
-      await initLogger();
-      initSettings();
-      if (Platform.isAndroid) {
-        /// Register BackgroundGeolocation headless-task
-        /* bg.BackgroundGeolocation.registerHeadlessTask(
-          backgroundGeolocationHeadlessTask);*/
-
-        /// Register BackgroundFetch headless-task.
-        // BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
-      }
-      /*await SentryFlutter.init((options) {
-        options.dsn =
-            'https://260152b2325af41400820edd53e3a54c@o4507936224706560.ingest.de.sentry.io/4507936226541648';
-        https: //examplePublicKey@o0.ingest.sentry.io/0';
-        // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
-        // We recommend adjusting this value in production.
-        options.tracesSampleRate = 1.0;
-        // The sampling rate for profiling is relative to tracesSampleRate
-        // Setting to 1.0 will profile 100% of sampled transactions:
-        // Note: Profiling alpha is available for iOS and macOS since SDK version 7.12.0
-        options.profilesSampleRate = 1.0;
-      },
-          appRunner: () => runApp(
-                ProviderScope(
-                  observers: [
-                    LoggingObserver(),
-                  ],
-                  child: BladeNightApp(),
-                ),
-              ));
-*/
-      Object? initErr;
-      try {
-        await FMTCObjectBoxBackend().initialise();
-      } catch (err) {
-        initErr = err;
-      }
+      // turn off the # in the URLs on the web
+      usePathUrlStrategy();
       runApp(
         ProviderScope(
           observers: [
             // LoggingObserver(),
           ],
-          child: BladeNightApp(fmtcInitError: initErr),
+          child: AppRootWidget(),
         ),
       );
     },
     (dynamic error, StackTrace stackTrace) {
-      print('Application error 138: $error\n$stackTrace');
+      print('Application error 96: $error\n$stackTrace');
       if (!kDebugMode && !kIsWeb) {
         FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }
@@ -181,124 +139,4 @@ void initSettings() async {
       HiveSettingsDB.setFirstStart2421(false);
     }
   } catch (_) {}
-}
-
-class BladeNightApp extends StatelessWidget {
-  const BladeNightApp({super.key, required this.fmtcInitError});
-
-  final Object? fmtcInitError;
-
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (bool didPop, dynamic obj) async {
-        await showDialog<bool>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(Localize.of(context).closeApp),
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text(Localize.of(context).yes),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: Text(Localize.of(context).no),
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      },
-      child: Builder(
-        builder: (builder) => ResponsiveBreakpoints.builder(
-          breakpoints: [
-            const Breakpoint(start: 0, end: 450, name: MOBILE),
-            const Breakpoint(start: 451, end: 800, name: TABLET),
-            const Breakpoint(start: 801, end: 1920, name: DESKTOP),
-            const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
-          ],
-          child: MediaQuery.fromView(
-            view: View.of(context),
-            child: CupertinoAdaptiveTheme(
-              light: CupertinoThemeData(
-                  brightness: Brightness.light,
-                  primaryColor: HiveSettingsDB.themePrimaryLightColor),
-              dark: CupertinoThemeData(
-                brightness: Brightness.dark,
-                primaryColor: HiveSettingsDB.themePrimaryDarkColor,
-              ),
-              initial: HiveSettingsDB.adaptiveThemeMode,
-              builder: (theme) => CupertinoApp(
-                  onGenerateRoute: (uriString) {
-                    BnLog.info(
-                        text: 'onGenerateRoute requested ${uriString.name}');
-                    if (uriString.name == null) return null;
-                    if (uriString.name!.startsWith('/showroute')) {
-                      return CupertinoPageRoute(
-                          builder: (context) => RouteNameDialog(
-                                routeName: uriString.name
-                                    .toString()
-                                    .replaceAll('/showroute?', '')
-                                    .trim(),
-                              ),
-                          fullscreenDialog: true);
-                    }
-                    if (uriString.name!.startsWith(openBladeguardOnSite)) {
-                      return CupertinoPageRoute(
-                          builder: (context) => const BladeGuardPage(),
-                          fullscreenDialog: true);
-                    }
-                    if (uriString.name!.contains('?data=')) {
-                      importData(context, uriString.name!);
-                    } else if (uriString.name!.contains('?addFriend')) {
-                      //tabController.index = 3;
-                      addFriendWithCodeFromUrl(context, uriString.name!)
-                          .then((value) => null);
-                    } else if (uriString.name!.contains('?$specialCode=1')) {
-                      HiveSettingsDB.setHasSpecialRightsPrefs(true);
-                    } else if (uriString.name!.contains('?$specialCode=0')) {
-                      HiveSettingsDB.setHasSpecialRightsPrefs(false);
-                    }
-                    return null;
-                  },
-                  title: 'BladeNight München',
-                  debugShowCheckedModeBanner: false,
-                  theme: theme,
-                  localizationsDelegates: const [
-                    //AppLocalizations.delegate,
-                    Localize.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    DefaultMaterialLocalizations.delegate,
-                    DefaultWidgetsLocalizations.delegate,
-                    DefaultCupertinoLocalizations.delegate
-                  ],
-                  supportedLocales: Localize.delegate.supportedLocales,
-                  // AppLocalizations.supportedLocales,
-                  home: const HomeScreen(),
-                  navigatorKey: navigatorKey,
-                  routes: <String, WidgetBuilder>{
-                    IntroScreen.introScreenRouteName: (BuildContext context) =>
-                        const IntroScreen(),
-                    HomeScreen.homeRouteName: (BuildContext context) =>
-                        const HomeScreen(),
-                    LoadingScreen.routeName: (BuildContext context) =>
-                        LoadingScreen()
-                  }),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }
