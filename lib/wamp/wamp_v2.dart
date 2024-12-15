@@ -548,6 +548,8 @@ class WampV2 {
       link = Platform.isAndroid
           ? defaultTestWampAdressAndroid
           : defaultTestWampAdressOther; //defaultTestWampAddressOther;
+    } else if ((kDebugMode && localTesting) && !kIsWeb) {
+      link = localTestServerAddress;
     } else if (kIsWeb) {
       link = defaultWampClientAux;
     } else {

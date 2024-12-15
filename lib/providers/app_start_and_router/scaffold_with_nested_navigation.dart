@@ -13,12 +13,9 @@ import '../../helpers/export_import_data_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../main.dart';
+import '../../navigation/base_app_scaffold.dart';
+import '../../navigation/navigation_rail.dart';
 import '../../pages/bladeguard/bladeguard_page.dart';
-import '../../pages/events/events_page.dart';
-import '../../pages/friends/friends_page.dart';
-import '../../pages/home_page.dart';
-import '../../pages/map/map_page.dart';
-import '../../pages/settings/settings_page.dart';
 import '../../pages/widgets/route_name_dialog.dart';
 
 // Stateful navigation based on:
@@ -44,22 +41,21 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //add localize and delegates
-
-    final size = MediaQuery.sizeOf(context);
-    if (size.width < 450) {
-      return ScaffoldWithTabBarNavigation(
-        //ScaffoldWithNavigationBar(
-        body: navigationShell,
-        currentIndex: navigationShell.currentIndex,
-        onDestinationSelected: _goBranch,
-      );
-    } else {
-      return ScaffoldWithTabBarNavigation(
-        body: navigationShell,
-        currentIndex: navigationShell.currentIndex,
-        onDestinationSelected: _goBranch,
-      );
-    }
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth > 450) {
+        return ScaffoldWithNavigationRail(
+          navigationShell: navigationShell,
+          currentIndex: navigationShell.currentIndex,
+          onDestinationSelected: _goBranch,
+        );
+      } else {
+        return ScaffoldWithTabBarNavigation(
+          navigationShell: navigationShell,
+          currentIndex: navigationShell.currentIndex,
+          onDestinationSelected: _goBranch,
+        );
+      }
+    });
   }
 }
 
@@ -185,145 +181,59 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
 class ScaffoldWithTabBarNavigation extends StatelessWidget {
   const ScaffoldWithTabBarNavigation({
     super.key,
-    required this.body,
+    required this.navigationShell,
     required this.currentIndex,
     required this.onDestinationSelected,
   });
 
-  final Widget body;
+  final StatefulNavigationShell navigationShell;
   final int currentIndex;
   final ValueChanged<int> onDestinationSelected;
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (bool didPop, dynamic obj) async {
-        await showDialog<bool>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(Localize.of(context).closeApp),
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text(Localize.of(context).yes),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: Text(Localize.of(context).no),
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      },
-      child: Builder(
-        builder: (builder) => ResponsiveBreakpoints.builder(
-          breakpoints: [
-            const Breakpoint(start: 0, end: 450, name: MOBILE),
-            const Breakpoint(start: 451, end: 800, name: TABLET),
-            const Breakpoint(start: 801, end: 1920, name: DESKTOP),
-            const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
-          ],
-          child: MediaQuery.fromView(
-            view: View.of(context),
-            child: CupertinoAdaptiveTheme(
-                light: CupertinoThemeData(
-                    brightness: Brightness.light,
-                    primaryColor: HiveSettingsDB.themePrimaryLightColor),
-                dark: CupertinoThemeData(
-                  brightness: Brightness.dark,
-                  primaryColor: HiveSettingsDB.themePrimaryDarkColor,
-                ),
-                initial: HiveSettingsDB.adaptiveThemeMode,
-                builder: (theme) => CupertinoApp(
-                      localizationsDelegates: const [
-                        //AppLocalizations.delegate,
-                        Localize.delegate,
-                        GlobalWidgetsLocalizations.delegate,
-                        GlobalCupertinoLocalizations.delegate,
-                        GlobalMaterialLocalizations.delegate,
-                        DefaultMaterialLocalizations.delegate,
-                        DefaultWidgetsLocalizations.delegate,
-                        DefaultCupertinoLocalizations.delegate
-                      ],
-                      supportedLocales: Localize.delegate.supportedLocales,
-                      title: 'BladeNight München',
-                      debugShowCheckedModeBanner: false,
-                      theme: theme,
-                      home: CupertinoTabScaffold(
-                        // controller: tabController,
-                        tabBar: CupertinoTabBar(
-                          onTap: onDestinationSelected,
-                          currentIndex: currentIndex,
-                          backgroundColor: CupertinoTheme.of(context)
-                              .barBackgroundColor
-                              .withOpacity(1.0),
-                          items: [
-                            BottomNavigationBarItem(
-                              icon: const Icon(CupertinoIcons.home),
-                              label: Localize.of(context).home,
-                            ),
-                            BottomNavigationBarItem(
-                              icon: const Icon(CupertinoIcons.map),
-                              label: Localize.of(context).map,
-                            ),
-                            BottomNavigationBarItem(
-                              icon: const Icon(CupertinoIcons.ticket),
-                              label: Localize.of(context).events,
-                            ),
-                            if (!kIsWeb)
+    return BaseAppScaffold(
+      child: CupertinoTabScaffold(
+        key: ValueKey(navigationShell.currentIndex),
+        // controller: tabController,
+        tabBar: CupertinoTabBar(
+          onTap: onDestinationSelected,
+          currentIndex: currentIndex,
+          backgroundColor:
+              CupertinoTheme.of(context).barBackgroundColor.withOpacity(1.0),
+          items: [
+            /*for (var branch in navigationShell.route.branches)
                               BottomNavigationBarItem(
-                                icon: const Icon(CupertinoIcons.group),
-                                label: Localize.of(context).friends,
-                              ),
-                            BottomNavigationBarItem(
-                              icon: const Icon(CupertinoIcons.settings_solid),
-                              label: Localize.of(context).settings,
-                            ),
-                          ],
-                        ),
-                        tabBuilder: (context, index) {
-                          return body;
-                          switch (index) {
-                            case 0:
-                              return HomePage();
-                            case 1:
-                              return const MapPage();
-                            case 2:
-                              return const EventsPage();
-                            case 3:
-                              if (!kIsWeb) {
-                                return const FriendsPage();
-                              }
-                              return const SettingsPage();
-                            case 4:
-                              if (!kIsWeb) {
-                                return const SettingsPage();
-                              }
-                              return Container();
-                            /*var ssp = ref.watch(BladeguardLinkImageAndLink.provider);
-              return ssp.link == null ? Container() : BladeGuardPage();*/
-                            default:
-                              return Container();
-                          }
-                        },
-                      ),
-                    )),
-          ),
+                                icon: const Icon(CupertinoIcons.home),
+                                label: branch.defaultRoute.toString(),
+                              ),*/
+            BottomNavigationBarItem(
+              icon: const Icon(CupertinoIcons.home),
+              label: Localize.of(context).home,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(CupertinoIcons.map),
+              label: Localize.of(context).map,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(CupertinoIcons.ticket),
+              label: Localize.of(context).events,
+            ),
+            if (!kIsWeb)
+              BottomNavigationBarItem(
+                icon: const Icon(CupertinoIcons.group),
+                label: Localize.of(context).friends,
+              ),
+            BottomNavigationBarItem(
+              icon: const Icon(CupertinoIcons.settings_solid),
+              label: Localize.of(context).settings,
+            ),
+          ],
         ),
+        tabBuilder: (context, index) {
+          return navigationShell;
+        },
       ),
     );
-
-    /* ],
-      ),
-    );*/
   }
 }

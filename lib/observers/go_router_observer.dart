@@ -5,7 +5,7 @@ class GoRouterNavigatorObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (kDebugMode) {
-      print('did push route from $previousRoute to $route');
+      print('did push route from $previousRoute to ${route}');
     }
   }
 

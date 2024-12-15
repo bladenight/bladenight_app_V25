@@ -50,7 +50,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
   }
 
   void _initListeners() {
-    print('stop_gps_info_listeners');
+    print('init_gps_info_listeners');
     _locationStreamListener =
         LocationProvider().userBgLocationStream.listen((location) {
       setState(() {

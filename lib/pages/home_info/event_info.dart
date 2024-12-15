@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../helpers/enums/tracking_type.dart';
 import '../../helpers/logger.dart';
@@ -104,11 +105,12 @@ class _EventInfoState extends ConsumerState<EventInfo>
             ConnectionWarning(shimmerAnimationController: _animationController),
             AppOutdated(animationController: _animationController),
             GestureDetector(
-              onTap: () => {
-                if (nextEvent.isActive ||
+              onTap: () => context.go('/map')
+              /*if (nextEvent.isActive ||
                     nextEvent.status == EventStatus.confirmed)
-                  {}
-              },
+                  {}*/
+
+              ,
               child: ShadowBoxWidget(
                 boxShadowColor: nextEvent.statusColor,
                 child: EventDataOverview(

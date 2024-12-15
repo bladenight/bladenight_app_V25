@@ -24,7 +24,7 @@ import 'bladeguard/bladeguard_page.dart';
 import 'events/events_page.dart';
 import 'friends/friends_page.dart';
 import 'home_info/logo_animate.dart';
-import 'home_page.dart';
+import 'home_info/home_page.dart';
 import 'home_screen.dart';
 import 'map/map_page.dart';
 import 'settings/settings_page.dart';

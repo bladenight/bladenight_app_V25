@@ -1,20 +1,22 @@
 //import 'dart:io' if (dart.library.html) 'dart.html' if (dart.library.io) 'dart.io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
     show Icons, Colors, Scaffold, Badge, FloatingActionButton, Card, ListTile;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../app_settings/app_configuration_helper.dart';
-import '../helpers/logger.dart';
-import '../helpers/url_launch_helper.dart';
+import '../../app_settings/app_configuration_helper.dart';
+import '../../app_settings/server_connections.dart';
+import '../../helpers/logger.dart';
+import '../../helpers/url_launch_helper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../providers/sponsors_provider.dart';
-import 'home_info/event_info.dart';
-import '../providers/active_event_provider.dart';
-import '../providers/messages_provider.dart';
-import '../providers/rest_api/onsite_state_provider.dart';
-import '../providers/route_providers.dart';
-import 'messages/messages_page.dart';
+import '../../providers/sponsors_provider.dart';
+import 'event_info.dart';
+import '../../providers/active_event_provider.dart';
+import '../../providers/messages_provider.dart';
+import '../../providers/rest_api/onsite_state_provider.dart';
+import '../../providers/route_providers.dart';
+import '../messages/messages_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -181,6 +183,12 @@ class _HomePageState extends ConsumerState<HomePage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
+                        if (localTesting)
+                          Container(
+                            color: CupertinoColors.systemOrange,
+                            child: Text(
+                                'Warning ${kDebugMode ? 'DEBUG Mode on and' : ''} local testing ist set'),
+                          ),
                         EventInfo(),
                         //kIsWeb ? EventInfoWeb() : EventInfo(),
 
@@ -241,7 +249,10 @@ class _HomePageState extends ConsumerState<HomePage>
                                       options: CarouselOptions(
                                         aspectRatio: 2.0,
                                         scrollDirection: Axis.horizontal,
-                                        autoPlay: true,
+                                        autoPlay:
+                                            (sponsors.value!.length).round() > 1
+                                                ? true
+                                                : false,
                                         enlargeCenterPage: true,
                                         enlargeStrategy:
                                             CenterPageEnlargeStrategy.zoom,
@@ -284,13 +295,17 @@ class _HomePageState extends ConsumerState<HomePage>
                                                           milliseconds: 150),
                                                   imageErrorBuilder: (context,
                                                       error, stackTrace) {
-                                                    BnLog.error(
+                                                    BnLog.warning(
                                                         text:
-                                                            'sponsor image error ${sponsors.value![index].imageUrl}) could not been loaded',
+                                                            'The sponsor image error ${sponsors.value![index].imageUrl}) could not been loaded',
                                                         exception: error);
-                                                    return Image.asset(
+                                                    return Text(
+                                                      sponsors.value![index]
+                                                          .description,
+                                                    );
+                                                    /* Image.asset(
                                                         emptySponsorPlaceholder,
-                                                        fit: BoxFit.fill);
+                                                        fit: BoxFit.fill);*/
                                                   },
                                                 );
                                               }),

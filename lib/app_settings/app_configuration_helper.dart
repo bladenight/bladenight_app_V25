@@ -30,6 +30,7 @@ String startPoint = 'München - Bavariapark';
 const String emptySponsorPlaceholder = kIsWeb
     ? 'assets/images/empty_sponsor_logo.png'
     : 'assets/images/empty_sponsor_logo.png';
+
 const String secondLogoPlaceholder = 'assets/images/skatemunich.png';
 
 const String skmLogoPlaceholder =

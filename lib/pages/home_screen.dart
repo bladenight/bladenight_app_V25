@@ -22,7 +22,7 @@ import '../providers/location_provider.dart';
 import 'bladeguard/bladeguard_page.dart';
 import 'events/events_page.dart';
 import 'friends/friends_page.dart';
-import 'home_page.dart';
+import 'home_info/home_page.dart';
 import 'map/map_page.dart';
 import 'settings/settings_page.dart';
 import 'widgets/intro_slider.dart';
@@ -160,10 +160,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     initFlutterChannel();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await FMTCStore(fmtcTileStoreName).manage.create();
-      //_openIntroScreenFirstTime();
-      _openBladeguardRequestFirstTime();
       if (!kIsWeb) {
+        await FMTCStore(fmtcTileStoreName).manage.create();
+        //_openIntroScreenFirstTime();
+        _openBladeguardRequestFirstTime();
         await initOneSignal();
         await _initNotifications();
       }
