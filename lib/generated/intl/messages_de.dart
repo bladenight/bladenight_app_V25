@@ -496,8 +496,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "noBackgroundlocationTitle": MessageLookupByLibrary.simpleMessage(
             "Hinweis, keine Hintergrundaktualisierung."),
         "noChoiceNoAction": MessageLookupByLibrary.simpleMessage(
-            "Keine Auswahl da keine Aktion"),
-        "noEvent": MessageLookupByLibrary.simpleMessage("Nicht geplant"),
+            "Keine Auswahl, daher keine Aktion"),
+        "noEvent":
+            MessageLookupByLibrary.simpleMessage("Aktuell keine Termine"),
         "noEventPlanned": MessageLookupByLibrary.simpleMessage(
             "Aktuell ist keine Veranstaltung geplant."),
         "noEventStarted": MessageLookupByLibrary.simpleMessage(

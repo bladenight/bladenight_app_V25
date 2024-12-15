@@ -83,6 +83,55 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              alignment: Alignment.topCenter,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  widget.nextEvent.statusColor.withOpacity(0.8),
+                  widget.nextEvent.statusColor,
+                  widget.nextEvent.statusColor.withOpacity(0.8)
+                ]),
+                color: widget.nextEvent.statusColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(widget.borderRadius),
+                  topRight: Radius.circular(widget.borderRadius),
+                  bottomLeft: Radius.circular(0),
+                  bottomRight: Radius.circular(0),
+                ),
+              ),
+              child: Text.rich(
+                textAlign: TextAlign.center,
+                TextSpan(
+                  style: TextStyle(color: widget.nextEvent.statusTextColor),
+                  children: [
+                    WidgetSpan(
+                      child: Image.asset(
+                        widget.nextEvent.trafficLight,
+                        height: 15,
+                      ),
+                    ),
+                    WidgetSpan(
+                        child: SizedBox(
+                      width: 5,
+                    )),
+                    TextSpan(
+                      text: widget.nextEvent.statusText,
+                    ),
+                    WidgetSpan(
+                        child: SizedBox(
+                      width: 5,
+                    )),
+                    WidgetSpan(
+                      child: Image.asset(
+                        widget.nextEvent.trafficLight,
+                        height: 15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             if (widget.showMap)
               GestureDetector(
                 onTap: () {
@@ -192,81 +241,6 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                   ),
                 ),
               ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  widget.nextEvent.statusColor.withOpacity(0.8),
-                  widget.nextEvent.statusColor,
-                  widget.nextEvent.statusColor.withOpacity(0.8)
-                ]),
-                color: widget.nextEvent.statusColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(0),
-                  topRight: Radius.circular(0),
-                  bottomLeft: Radius.circular(widget.borderRadius),
-                  bottomRight: Radius.circular(widget.borderRadius),
-                ),
-              ),
-              child: Text.rich(
-                textAlign: TextAlign.center,
-                TextSpan(
-                  style: TextStyle(color: widget.nextEvent.statusTextColor),
-                  children: [
-                    WidgetSpan(
-                      child: Image.asset(
-                        widget.nextEvent.trafficLight,
-                        height: 15,
-                      ),
-                    ),
-                    WidgetSpan(
-                        child: SizedBox(
-                      width: 5,
-                    )),
-                    TextSpan(
-                      text: widget.nextEvent.statusText,
-                    ),
-                    WidgetSpan(
-                        child: SizedBox(
-                      width: 5,
-                    )),
-                    WidgetSpan(
-                      child: Image.asset(
-                        widget.nextEvent.trafficLight,
-                        height: 15,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              /*child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      //give contrained size
-                      Expanded(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            widget.nextEvent.statusText +
-                                '', // 'jjjjhgztftrdrtdrdrzdrzzddrt',
-                            style: TextStyle(
-                                color: widget.nextEvent.statusTextColor),
-                          ),
-                        ),
-                      ),
-                      Image.asset(
-                        widget.nextEvent.trafficLight,
-                        width: 40,
-                        height: 20,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                    ]),
-              ),*/
-            ),
           ]),
     );
   }
