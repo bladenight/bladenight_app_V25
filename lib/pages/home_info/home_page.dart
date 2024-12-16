@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/server_connections.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/url_launch_helper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -187,7 +188,13 @@ class _HomePageState extends ConsumerState<HomePage>
                           Container(
                             color: CupertinoColors.systemOrange,
                             child: Text(
-                                'Warning ${kDebugMode ? 'DEBUG Mode on and' : ''} local testing ist set'),
+                                'Warning ${kDebugMode ? 'DEBUG Mode on and' : ''} local testing is set'),
+                          ),
+                        if (HiveSettingsDB.useCustomServer)
+                          Container(
+                            color: CupertinoColors.systemOrange,
+                            child: Text(
+                                'Warning server address is ${HiveSettingsDB.customServerAddress}'),
                           ),
                         EventInfo(),
                         //kIsWeb ? EventInfoWeb() : EventInfo(),

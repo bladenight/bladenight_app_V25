@@ -12,7 +12,7 @@ import '../../pages/widgets/main_app_widget.dart';
 import '../../pages/widgets/route_name_dialog.dart';
 import '../../pages/widgets/startup_widgets/app_start_error_widget.dart';
 import 'app_start_notifier.dart';
-import 'scaffold_with_nested_navigation.dart';
+import '../../navigation/scaffold_with_nested_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

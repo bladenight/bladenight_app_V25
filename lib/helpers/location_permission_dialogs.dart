@@ -1,7 +1,9 @@
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:location2/location2.dart' as loc2;
 import 'package:permission_handler/permission_handler.dart'
     hide PermissionStatus;
@@ -119,7 +121,8 @@ class LocationPermissionDialog {
     return true;
   }
 
-  Future<LocationPermissionStatus> requestAlwaysLocationPermissions() async {
+  Future<LocationPermissionStatus> requestAlwaysLocationPermissions(
+      BuildContext context) async {
     BnLog.info(
         text: 'requesting always permissions',
         className: toString(),
@@ -131,7 +134,7 @@ class LocationPermissionDialog {
     HiveSettingsDB.setHasAskedAlwaysAllowLocationPermission(true);
     var cancelPressed = false;
     await QuickAlert.show(
-        context: navigatorKey.currentContext!,
+        context: context,
         showCancelBtn: true,
         type: QuickAlertType.info,
         title: Localize.current.onlyWhenInUseEnabled,
@@ -172,7 +175,9 @@ class LocationPermissionDialog {
                     text:
                         'App settings could not opened while always location permissions are permanentlyDenied');
               }
-              return navigatorKey.currentState?.pop();
+              if (context.mounted) {
+                return context.pop();
+              }
             });
       }
     }

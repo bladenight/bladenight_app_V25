@@ -27,9 +27,9 @@ class AppStartNotifier extends _$AppStartNotifier {
     if (kDebugMode) {
       print(
           '${DateTime.now().toIso8601String()} Starting _complexInitializationLogic');
+      await Future.delayed(Duration(seconds: 7));
     }
     initializeMappers();
-    await Hive.initFlutter();
     Hive.registerAdapter(ColorAdapter());
     Hive.registerAdapter(ImageAndLinkAdapter());
     await Hive.openBox(hiveBoxSettingDbName);

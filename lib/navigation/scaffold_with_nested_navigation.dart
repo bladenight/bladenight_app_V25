@@ -7,24 +7,24 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import '../../app_settings/server_connections.dart';
-import '../../generated/l10n.dart';
-import '../../helpers/export_import_data_helper.dart';
-import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/logger.dart';
-import '../../main.dart';
-import '../../navigation/base_app_scaffold.dart';
-import '../../navigation/navigation_rail.dart';
-import '../../pages/bladeguard/bladeguard_page.dart';
-import '../../pages/widgets/route_name_dialog.dart';
+import '../app_settings/server_connections.dart';
+import '../generated/l10n.dart';
+import '../helpers/export_import_data_helper.dart';
+import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger.dart';
+import '../main.dart';
+import 'base_app_scaffold.dart';
+import 'navigation_rail.dart';
+import '../pages/bladeguard/bladeguard_page.dart';
+import '../pages/widgets/route_name_dialog.dart';
 
 // Stateful navigation based on:
 // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
 class ScaffoldWithNestedNavigation extends StatelessWidget {
-  const ScaffoldWithNestedNavigation({
+  ScaffoldWithNestedNavigation({
     Key? key,
     required this.navigationShell,
-  }) : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
+  }) : super(key: key ?? ValueKey(navigationShell.currentIndex));
   final StatefulNavigationShell navigationShell;
 
   void _goBranch(int index) {
@@ -194,7 +194,7 @@ class ScaffoldWithTabBarNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseAppScaffold(
       child: CupertinoTabScaffold(
-        key: ValueKey(navigationShell.currentIndex),
+        key: super.key, //  ValueKey(navigationShell.currentIndex),
         // controller: tabController,
         tabBar: CupertinoTabBar(
           onTap: onDestinationSelected,

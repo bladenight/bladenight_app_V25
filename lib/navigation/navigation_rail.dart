@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,20 +26,22 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
           // Fixed navigation rail on the left (start)
           NavigationRail(
             selectedIndex: currentIndex,
+            minWidth: 50,
+            minExtendedWidth: 70,
             onDestinationSelected: onDestinationSelected,
-            labelType: NavigationRailLabelType.all,
+            labelType: NavigationRailLabelType.none,
             destinations: [
               NavigationRailDestination(
                 label: Text(
                   Localize.of(context).home,
                 ),
-                icon: Icon(Icons.home),
+                icon: Icon(CupertinoIcons.home),
               ),
               NavigationRailDestination(
                 label: Text(
                   Localize.of(context).map,
                 ),
-                icon: Icon(Icons.map),
+                icon: Icon(CupertinoIcons.map),
               ),
               NavigationRailDestination(
                 label: Text(

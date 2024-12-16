@@ -83,6 +83,7 @@ void main() async {
       }
       // turn off the # in the URLs on the web
       usePathUrlStrategy();
+      await Hive.initFlutter();
       runApp(
         ProviderScope(
           observers: [
