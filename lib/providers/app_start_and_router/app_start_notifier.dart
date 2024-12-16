@@ -29,13 +29,13 @@ class AppStartNotifier extends _$AppStartNotifier {
           '${DateTime.now().toIso8601String()} Starting _complexInitializationLogic');
       await Future.delayed(Duration(seconds: 7));
     }
-    initializeMappers();
-    Hive.registerAdapter(ColorAdapter());
-    Hive.registerAdapter(ImageAndLinkAdapter());
+    //mappers and Hive Adapters must be initialized in main.app
+    //initializeMappers();
+    //Hive.registerAdapter(ColorAdapter());
+    //Hive.registerAdapter(ImageAndLinkAdapter());
     await Hive.openBox(hiveBoxSettingDbName);
     await Hive.openBox(hiveBoxLocationDbName);
     await Hive.openBox(hiveBoxServerConfigDBName);
-    Globals.logToCrashlytics = HiveSettingsDB.chrashlyticsEnabled;
     await DeviceId.initAppId();
     await initLogger();
     initSettings();

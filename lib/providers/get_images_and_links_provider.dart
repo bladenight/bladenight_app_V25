@@ -22,8 +22,8 @@ import 'network_connection_provider.dart';
 final updateImagesAndLinksProvider = FutureProvider<bool>((ref) async {
   ImageAndLinkList ial;
   var resultValue = false;
-  var res = ref.read(networkAwareProvider).connectivityStatus;
-  if (res != ConnectivityStatus.wampConnected) {
+  var connectionStatus = ref.read(networkAwareProvider).connectivityStatus;
+  if (connectionStatus != ConnectivityStatus.wampConnected) {
     if (HiveSettingsDB.imagesAndLinksJson.isNotEmpty) {
       var ialList = HiveSettingsDB.imagesAndLinksJson;
       ial = ImageAndLinkListMapper.fromJson(ialList);

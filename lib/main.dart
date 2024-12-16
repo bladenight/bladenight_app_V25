@@ -81,9 +81,15 @@ void main() async {
           return true;
         };
       }
+      initializeMappers();
+      await Hive.initFlutter();
+      Hive.registerAdapter(ColorAdapter());
+      Hive.registerAdapter(ImageAndLinkAdapter());
+      /*await Hive.openBox(hiveBoxSettingDbName);
+      await Hive.openBox(hiveBoxLocationDbName);
+      await Hive.openBox(hiveBoxServerConfigDBName);*/
       // turn off the # in the URLs on the web
       usePathUrlStrategy();
-      await Hive.initFlutter();
       runApp(
         ProviderScope(
           observers: [
