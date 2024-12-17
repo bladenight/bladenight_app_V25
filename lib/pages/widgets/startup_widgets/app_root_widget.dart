@@ -15,8 +15,6 @@ class AppRootWidget extends ConsumerWidget {
     //no localize if routerProvider deep linked
     final goRouter = ref.watch(goRouterProvider);
     return CupertinoApp.router(
-      //routeInformationParser: goRouter.routeInformationParser,
-      //routerDelegate: goRouter.routerDelegate,
       routerConfig: goRouter,
       supportedLocales: Localize.delegate.supportedLocales,
       localizationsDelegates: const [

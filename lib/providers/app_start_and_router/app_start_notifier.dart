@@ -17,6 +17,8 @@ part 'app_start_notifier.g.dart';
 //https://codewithandrea.com/articles/robust-app-initialization-riverpod/
 @Riverpod(keepAlive: true)
 class AppStartNotifier extends _$AppStartNotifier {
+  bool fMTCInitialized = false;
+
   @override
   Future<void> build() async {
     // Initially, load the database from JSON
@@ -39,8 +41,9 @@ class AppStartNotifier extends _$AppStartNotifier {
     await DeviceId.initAppId();
     await initLogger();
     initSettings();
-    if (!kIsWeb) {
+    if (!kIsWeb && !fMTCInitialized) {
       await FMTCObjectBoxBackend().initialise();
+      fMTCInitialized = true;
     }
     //await Future.delayed(Duration(seconds: 10));
     if (Platform.isAndroid) {

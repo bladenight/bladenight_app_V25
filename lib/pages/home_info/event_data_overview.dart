@@ -103,7 +103,20 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               child: Text.rich(
                 textAlign: TextAlign.center,
                 TextSpan(
-                  style: TextStyle(color: widget.nextEvent.statusTextColor),
+                  style: TextStyle(
+                      color: widget.nextEvent.statusTextColor,
+                      fontSize: CupertinoTheme.of(context)
+                                  .textTheme
+                                  .textStyle
+                                  .fontSize !=
+                              null
+                          ? CupertinoTheme.of(context)
+                                  .textTheme
+                                  .textStyle
+                                  .fontSize! *
+                              1.2
+                          : 14,
+                      fontWeight: FontWeight.w800),
                   children: [
                     WidgetSpan(
                       child: Image.asset(

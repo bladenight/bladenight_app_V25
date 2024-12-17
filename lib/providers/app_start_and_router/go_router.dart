@@ -175,17 +175,22 @@ GoRouter goRouter(Ref ref) {
                         parentNavigatorKey: _rootNavigatorKey,
                         pageBuilder: (context, state) {
                           var friendsAction = FriendsAction.addNew;
+                          var name = '';
                           var parameters = state.pathParameters;
                           if (parameters.containsKey('code') &&
                               parameters['code']!.length == 6) {
                             friendsAction = FriendsAction.addWithCode;
+                          }
+                          if (parameters.containsKey('name') &&
+                              parameters['name']!.length > 1) {
+                            name = parameters['name']!;
                           }
                           print('EditFriendDialogStatus ');
                           print(state.pathParameters);
                           return CupertinoPage(
                             fullscreenDialog: true,
                             child: EditFriendDialog(
-                              friend: Friend(name: '', friendId: -1),
+                              friend: Friend(name: name, friendId: -1),
                               action: friendsAction,
                             ),
                           );
@@ -196,12 +201,23 @@ GoRouter goRouter(Ref ref) {
                             name: 'code',
                             parentNavigatorKey: _rootNavigatorKey,
                             pageBuilder: (context, state) {
+                              var friendsAction = FriendsAction.addNew;
+                              var name = '';
+                              var parameters = state.pathParameters;
+                              if (parameters.containsKey('code') &&
+                                  parameters['code']!.length == 6) {
+                                friendsAction = FriendsAction.addWithCode;
+                              }
+                              if (parameters.containsKey('name') &&
+                                  parameters['name']!.length > 1) {
+                                name = parameters['name']!;
+                              }
                               print('EditFriendDialogStatus code');
                               print(state.pathParameters);
                               return CupertinoPage(
                                 fullscreenDialog: true,
                                 child: EditFriendDialog(
-                                  friend: Friend(name: '', friendId: -1),
+                                  friend: Friend(name: name, friendId: -1),
                                   action: FriendsAction.addNew,
                                 ),
                               );
@@ -213,12 +229,23 @@ GoRouter goRouter(Ref ref) {
                       name: AppRoute.addFriendWithCode.name,
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
+                        var friendsAction = FriendsAction.addNew;
+                        var name = '';
+                        var parameters = state.pathParameters;
+                        if (parameters.containsKey('code') &&
+                            parameters['code']!.length == 6) {
+                          friendsAction = FriendsAction.addWithCode;
+                        }
+                        if (parameters.containsKey('name') &&
+                            parameters['name']!.length > 1) {
+                          name = parameters['name']!;
+                        }
                         print('EditFriendDialogStatus ');
                         print(state.pathParameters);
                         return CupertinoPage(
                           fullscreenDialog: true,
                           child: EditFriendDialog(
-                            friend: Friend(name: '', friendId: -1),
+                            friend: Friend(name: name, friendId: -1),
                             action: FriendsAction.addWithCode,
                           ),
                         );

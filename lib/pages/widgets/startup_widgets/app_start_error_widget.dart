@@ -15,10 +15,13 @@ class AppStartErrorWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(message),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
             ElevatedButton(
               onPressed: onRetry,
-              child: const Text('Retry'),
+              child: const Text('Retry/ Neuer Versuch!'),
             ),
           ],
         ),
