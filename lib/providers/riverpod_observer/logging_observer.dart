@@ -9,7 +9,7 @@ class LoggingObserver extends ProviderObserver {
     Object? value,
     ProviderContainer container,
   ) {
-    var stack = StackTrace.current;
+    //var stack = StackTrace.current;
     print(
         '${DateTime.now().toIso8601String()} Provider $provider was initialized with $value');
   }

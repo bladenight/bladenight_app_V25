@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:universal_io/io.dart';
@@ -81,8 +82,8 @@ class _LinkFriendDevicePageState extends ConsumerState<LinkFriendDevicePage> {
               title: Localize.current.addNearBy,
               text: Localize.current.failedAddNearbyTryCode,
               cancelBtnText: Localize.current.cancel);
-          if (mounted && Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
+          if (mounted && context.canPop()) {
+            context.pop();
           }
           return;
         }

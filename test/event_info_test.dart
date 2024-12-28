@@ -1,5 +1,4 @@
 import 'package:bladenight_app_flutter/generated/l10n.dart';
-import 'package:bladenight_app_flutter/main.dart';
 import 'package:bladenight_app_flutter/models/event.dart';
 import 'package:bladenight_app_flutter/pages/home_info/event_data_overview.dart';
 import 'package:flutter/cupertino.dart';

@@ -20,8 +20,11 @@ class IsTracking extends _$IsTracking {
   }
 
   ///toggles tracking when user is in procession
-  ///set [userIsParticipant] to true if participant
-  ///set [userIsParticipant] to false if only in viewer-mode
+  ///
+  ///- set [trackingType] to [TrackingType.userParticipating]
+  ///  if participant
+  ///- set [trackingType] to [TrackingType.userNotParticipating]
+  ///  if only in viewer-mode
   Future<bool> toggleTracking(TrackingType trackingType) async {
     if (LocationProvider().isTracking) {
       stopTracking();
@@ -31,9 +34,12 @@ class IsTracking extends _$IsTracking {
     return state;
   }
 
-  ///toggles tracking when user is in procession
-  ///set [userIsParticipant] to true if participant
-  ///set [userIsParticipant] to false if only in viewer-mode
+  ///starts location tracking when user is in procession
+  ///
+  ///- set [trackingType] to [TrackingType.userParticipating]
+  ///  if participant
+  ///- set [trackingType] to [TrackingType.userNotParticipating]
+  ///  if only in viewer-mode
   Future<bool> _startTracking(TrackingType trackingType) async {
     if (trackingType == TrackingType.onlyTracking) {
       WampV2().stopWamp();
@@ -50,6 +56,11 @@ class IsTracking extends _$IsTracking {
   }
 
   Future<bool> stopTracking() async {
+    return _stopTracking();
+  }
+
+  ///stops location tracking
+  Future<bool> _stopTracking() async {
     if (LocationProvider().trackingType == TrackingType.onlyTracking) {
       MapSettings.setOpenStreetMapEnabled(
           MapSettings.wasOpenStreetMapEnabledFlag);

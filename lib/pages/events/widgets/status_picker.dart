@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../generated/l10n.dart';
@@ -51,16 +52,16 @@ class EventStatusPicker extends ConsumerStatefulWidget {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
+                if (context.canPop()) {
+                  context.pop();
                 }
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop(status);
+                if (context.canPop()) {
+                  context.pop(status);
                 }
               },
             ),

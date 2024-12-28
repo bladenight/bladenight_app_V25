@@ -255,7 +255,7 @@ class OnesignalHandler {
       await QuickAlert.show(
           showCancelBtn: true,
           cancelBtnText: Localize.current.cancel,
-          context: navigatorKey.currentContext!,
+          context: rootNavigatorKey.currentContext!,
           title: title ?? Localize.current.notification,
           text: body ?? '',
           confirmBtnText: button1.text,
@@ -267,7 +267,7 @@ class OnesignalHandler {
               }
             }
             ProviderContainer().read(messagesLogicProvider).addMessage(message);
-            return navigatorKey.currentState?.pop();
+            return rootNavigatorKey.currentState?.pop();
           });
     }
     //2 buttons
@@ -277,7 +277,7 @@ class OnesignalHandler {
       message.button1Text = button1.text;
       message.button2Text = button2.text;
       await QuickAlert.show(
-          context: navigatorKey.currentContext!,
+          context: rootNavigatorKey.currentContext!,
           title: title ?? Localize.current.notification,
           text: body ?? '',
           confirmBtnText: button1.text,
@@ -290,7 +290,7 @@ class OnesignalHandler {
               }
             }
             ProviderContainer().read(messagesLogicProvider).addMessage(message);
-            return navigatorKey.currentState?.pop();
+            return rootNavigatorKey.currentState?.pop();
           });
     }
   }

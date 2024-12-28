@@ -2,10 +2,12 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../providers/app_start_and_router/go_router.dart';
 
 class BaseAppScaffold extends StatelessWidget {
   const BaseAppScaffold({
@@ -20,30 +22,7 @@ class BaseAppScaffold extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, dynamic obj) async {
-        await showDialog<bool>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(Localize.of(context).closeApp),
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text(Localize.of(context).yes),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: Text(Localize.of(context).no),
-                ),
-              ],
-            );
-          },
-        );
-        return;
+        context.replaceNamed(AppRoute.map.name);
       },
       child: Builder(
         builder: (builder) => ResponsiveBreakpoints.builder(

@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
-import '../../../helpers/timeconverter_helper.dart';
+import '../../../helpers/time_converter_helper.dart';
 import '../../../models/route.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/friends_provider.dart';
@@ -129,7 +130,7 @@ class MapEventInformation extends ConsumerWidget {
                                                 rtu.head.longitude ??
                                                     defaultLongitude),
                                             15);
-                                        Navigator.of(context).pop();
+                                        context.pop();
                                       },
                                       child: Icon(Icons.gps_fixed_sharp,
                                           color: CupertinoTheme.of(context)
@@ -162,7 +163,7 @@ class MapEventInformation extends ConsumerWidget {
                                                 rtu.tail.longitude ??
                                                     defaultLongitude),
                                             15);
-                                        Navigator.of(context).pop();
+                                        context.pop();
                                       },
                                       child: Icon(Icons.gps_fixed_sharp,
                                           color: CupertinoTheme.of(context)
@@ -215,7 +216,7 @@ class MapEventInformation extends ConsumerWidget {
                                             location.userLatLng?.longitude ??
                                                 defaultLongitude),
                                         15);*/
-                                Navigator.of(context).pop();
+                                context.pop();
                               },
                               child: Icon(Icons.gps_fixed_sharp,
                                   color:
@@ -346,7 +347,7 @@ class MapEventInformation extends ConsumerWidget {
                                                         friend.longitude ??
                                                             defaultLongitude),
                                                     15);
-                                                Navigator.of(context).pop();
+                                                context.pop();
                                               },
                                               child: Icon(Icons.gps_fixed_sharp,
                                                   color:

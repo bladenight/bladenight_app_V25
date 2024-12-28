@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:go_router/go_router.dart';
 
+///Widget for a bottom sheet to handle and close it
 class GripBar extends StatelessWidget {
   const GripBar({super.key});
 
@@ -30,10 +32,10 @@ class GripBar extends StatelessWidget {
           child: Align(
               alignment: Alignment.center,
               child: GestureDetector(
-                  child: const Icon(material.Icons.close),
+                  child: const Icon(material.Icons.done_outline),
                   onTap: () {
-                    if (Navigator.of(context).canPop()) {
-                      Navigator.of(context).pop();
+                    if (context.canPop()) {
+                      context.pop();
                     }
                   })),
         )

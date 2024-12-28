@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import '../../../generated/l10n.dart';
 import '../../app_settings/server_connections.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
@@ -13,19 +14,19 @@ class InputPasswordDialog extends StatefulWidget {
 
   static Future<bool> show(BuildContext context) async {
     String bgPassword = utf8.decode(base64.decode(bladeGuardPassword));
-    String bgLeaderPassword = utf8.decode(base64.decode(bladeGuardLeaderPassword));
+    String bgLeaderPassword =
+        utf8.decode(base64.decode(bladeGuardLeaderPassword));
     var password = await showCupertinoDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) => const InputPasswordDialog(),
     );
 
-    if (password==null) return false;
+    if (password == null) return false;
     if (password == bgPassword) {
       HiveSettingsDB.setBgSettingVisible(true);
       return true;
-    }
-    else if (password == bgLeaderPassword) {
+    } else if (password == bgLeaderPassword) {
       HiveSettingsDB.setBgLeaderSettingVisible(true);
       return true;
     }
@@ -53,21 +54,21 @@ class _InputPasswordDialogState extends State<InputPasswordDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          context.pop(value);
         },
       ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            Navigator.of(context).pop();
+            context.pop();
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: password.isNotEmpty
               ? () {
-                  Navigator.of(context).pop(password);
+                  context.pop(password);
                 }
               : null,
           child: Text(Localize.of(context).submit),

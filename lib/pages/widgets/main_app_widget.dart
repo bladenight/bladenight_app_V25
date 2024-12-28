@@ -1,20 +1,14 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'route_name_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
-import '../../helpers/export_import_data_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/logger.dart';
 import '../../main.dart';
-import '../bladeguard/bladeguard_page.dart';
 import '../home_screen.dart';
-import '../loading_screen.dart';
-import 'intro_slider.dart';
 
 class MainAppWidget extends StatelessWidget {
   const MainAppWidget({super.key});
@@ -33,13 +27,13 @@ class MainAppWidget extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, true);
+                    context.pop(true);
                   },
                   child: Text(Localize.of(context).yes),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, false);
+                    context.pop(false);
                   },
                   child: Text(Localize.of(context).no),
                 ),
@@ -116,7 +110,7 @@ class MainAppWidget extends StatelessWidget {
                 supportedLocales: Localize.delegate.supportedLocales,
                 // AppLocalizations.supportedLocales,
                 home: const HomeScreen(),
-                navigatorKey: navigatorKey,
+                navigatorKey: rootNavigatorKey,
               ),
             ),
           ),

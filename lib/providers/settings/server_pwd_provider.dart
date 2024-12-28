@@ -7,7 +7,7 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 part 'server_pwd_provider.g.dart';
 
 @riverpod
-class ServerPwdSetProvider extends _$ServerPwdSetProvider {
+class ServerPwdSet extends _$ServerPwdSet {
   @override
   bool build() {
     Hive.box(hiveBoxSettingDbName)

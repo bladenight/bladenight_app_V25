@@ -1,5 +1,4 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:latlong2/latlong.dart';
 
 part 'sponsors.mapper.dart';
 

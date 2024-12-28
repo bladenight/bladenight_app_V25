@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
+import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -23,7 +24,7 @@ class BackgroundGeolocationHelper {
               .catchError((error) {
             BnLog.error(text: '[resetOdometer] ERROR: $error');
             if (!context.mounted) return false;
-            Navigator.pop(context);
+            context.pop();
             return false;
           });
         });
@@ -48,7 +49,7 @@ class BackgroundGeolocationHelper {
           onConfirmBtnTap: () async {
             await bg.DeviceSettings.show(request);
             if (!context.mounted) return;
-            Navigator.of(context).pop();
+            context.pop();
           });
     }).catchError((dynamic error) {
       BnLog.error(text: 'Batterieoptimierung fehlgeschlagen $error');

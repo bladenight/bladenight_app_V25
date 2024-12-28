@@ -2,6 +2,7 @@ import 'dart:ui';
 
 const String hiveBoxSettingDbName = 'settings';
 const String hiveBoxLocationDbName = 'locationTrkDb';
+const String hiveBoxLoggingDbName = 'logBox';
 const String hiveBoxServerConfigDBName = 'appServerConfigDb';
 const String fmtcTileStoreName = 'fmtcTileStore';
 

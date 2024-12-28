@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -37,8 +38,7 @@ class BladeGuardOnsite extends ConsumerWidget {
       canRegisterOnSite = true;
     }
     final isOnSiteAsync = ref.watch(bgIsOnSiteProvider);
-    var networkConnected = ref.watch(
-        networkAwareProvider.select((value) => value.connectivityStatus));
+    var networkConnected = ref.watch(networkAwareProvider);
     return isOnSiteAsync.when(error: (e, st) {
       return Column(mainAxisSize: MainAxisSize.max, children: [
         Padding(
@@ -80,13 +80,14 @@ class BladeGuardOnsite extends ConsumerWidget {
       return ((nextEventProvider.status == EventStatus.confirmed &&
                   !eventActive) &&
               canRegisterOnSite &&
-              networkConnected == ConnectivityStatus.wampConnected)
+              networkConnected.connectivityStatus !=
+                  ConnectivityStatus.internetOffline)
           ? Column(
               children: [
                 if (status == false) ...[
                   Column(mainAxisSize: MainAxisSize.max, children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+                      padding: const EdgeInsets.fromLTRB(10.0, 1, 10, 1),
                       child: Container(
                         width: double.infinity,
                         decoration: const BoxDecoration(
@@ -164,7 +165,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                                           .read(bgIsOnSiteProvider.notifier)
                                           .setOnSiteState(false);
                                       if (!context.mounted) return;
-                                      Navigator.of(context).pop();
+                                      context.pop();
                                     });
                               },
                               color: Colors.orange.withOpacity(0.8),

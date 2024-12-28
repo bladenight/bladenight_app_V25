@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
+import '../../helpers/logger.dart';
+import '../../models/user_gpx_point.dart';
 import '../../providers/location_provider.dart';
 import 'string_picker_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/export_import_data_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/timeconverter_helper.dart';
+import '../../helpers/time_converter_helper.dart';
 import '../../providers/map/map_settings_provider.dart';
 import 'user_tracking_dialog.dart';
 
@@ -27,6 +30,7 @@ class TrackingExportWidget extends ConsumerStatefulWidget {
 class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
   String dateString = '';
   var trackedDates = <String>[];
+  bool exportTrackingInProgress = false;
 
   void _onSelectedItemChanged(int value) {
     setState(() => dateString = trackedDates[value]);
@@ -38,7 +42,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
       return Container();
     }
     _updateDates();
-    bool exportTrackingInProgress = false;
+
     return Column(children: [
       CupertinoFormSection(
           header: Text(Localize.of(context).exportUserTrackingHeader),
@@ -72,14 +76,27 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                             exportTrackingInProgress = true;
                           });
                           var tp = await Future.microtask(() =>
-                              LocationStore.getUserTrackPointsListByDate(
-                                  DateFormatter.fromString(dateString)));
+                                  LocationStore.getUserTrackPointsListByDate(
+                                      DateFormatter.fromString(dateString)))
+                              .timeout(Duration(seconds: 120))
+                              .catchError((error) {
+                            BnLog.error(
+                                text:
+                                    'Future.microtask getUserTrackPointsListByDate failed $error',
+                                exception: error);
+                            return UserGPXPoints([]);
+                          });
                           if (!context.mounted) {
                             setState(() {
                               exportTrackingInProgress = false;
                             });
                             return;
                           }
+                          /*context.goNamed(AppRoute.userTrackDialog.name,
+                              queryParameters: {
+                                'userGPXPoints': tp.toJson(),
+                                'date': dateString
+                              });*/
                           UserTrackDialog.show(context, tp, dateString);
                           setState(() {
                             exportTrackingInProgress = false;
@@ -162,7 +179,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
           _updateDates();
           setState(() {});
           if (!context.mounted) return;
-          Navigator.of(context).pop();
+          context.pop();
         });
   }
 

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,6 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
 import 'map_tiles_copyright.dart';
-import 'open_street_map_copyright.dart';
 import 'tracking_icon_widget.dart';
 
 ///Shows a row at bottom with OSM copyright and GPS speed widget

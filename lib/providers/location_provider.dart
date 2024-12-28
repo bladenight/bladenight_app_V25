@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:go_router/go_router.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';
@@ -761,7 +762,11 @@ class LocationProvider with ChangeNotifier {
     });
   }
 
+  /// Starts location tracking with set values
+  ///
+  /// Returns false if no location-permissions given or fails
   Future<bool> startTracking(TrackingType trackingType) async {
+    var context = rootNavigatorKey.currentContext!;
     //if (kIsWeb) return false;
     _trackingType = trackingType;
     _userIsParticipant = trackingType == TrackingType.userParticipating;
@@ -781,11 +786,11 @@ class LocationProvider with ChangeNotifier {
       if (!acceptLocation) {
         BnLog.warning(
             text: 'No positive prominent disclosure or always denied');
-
         return false;
       }
       if (Platform.isAndroid && await DeviceHelper.isAndroidGreaterVNine()) {
-        await LocationPermissionDialog().showMotionSensorProminentDisclosure();
+        await LocationPermissionDialog()
+            .showMotionSensorProminentDisclosure(context);
       }
       HiveSettingsDB.setHasShownProminentDisclosure(true);
     }
@@ -800,14 +805,15 @@ class LocationProvider with ChangeNotifier {
           className: 'location_provider',
           methodName: '_startTracking');
 
-      await LocationPermissionDialog().requestAndOpenAppSettings();
+      await LocationPermissionDialog().requestAndOpenAppSettings(context);
       return false;
     }
 
     if (HiveSettingsDB.trackingFirstStart &&
-        HiveSettingsDB.autoStartTrackingEnabled) {
+        HiveSettingsDB.autoStartTrackingEnabled &&
+        context.mounted) {
       await QuickAlert.show(
-          context: navigatorKey.currentContext!,
+          context: context,
           type: QuickAlertType.confirm,
           showCancelBtn: true,
           confirmBtnColor: Colors.orange,
@@ -815,11 +821,11 @@ class LocationProvider with ChangeNotifier {
           text: Localize.current.autoStartTrackingInfoTitle,
           onConfirmBtnTap: () {
             HiveSettingsDB.setAutoStartTrackingEnabled(true);
-            navigatorKey.currentState?.pop();
+            rootNavigatorKey.currentState?.pop();
           },
           onCancelBtnTap: () {
             HiveSettingsDB.setAutoStartTrackingEnabled(false);
-            navigatorKey.currentState?.pop();
+            rootNavigatorKey.currentState?.pop();
           },
           confirmBtnText: 'Auto-Start',
           cancelBtnText: Localize.current.no);
@@ -1076,7 +1082,7 @@ class LocationProvider with ChangeNotifier {
             text: Localize.current.autoStartTracking);
       } else {
         QuickAlert.show(
-            context: navigatorKey.currentContext!,
+            context: rootNavigatorKey.currentContext!,
             type: QuickAlertType.info,
             title: Localize.current.autoStartTrackingTitle,
             text: Localize.current.autoStartTracking);
@@ -1344,7 +1350,7 @@ class LocationProvider with ChangeNotifier {
                 id: DateTime.now().hashCode,
                 text: Localize.current.finishReachedStopedTracking);
             QuickAlert.show(
-                context: navigatorKey.currentContext!,
+                context: rootNavigatorKey.currentContext!,
                 type: QuickAlertType.warning,
                 title: Localize.current.finishReachedTitle,
                 text: Localize.current.finishReachedStopedTracking);
@@ -1358,7 +1364,7 @@ class LocationProvider with ChangeNotifier {
                 text: Localize
                     .current.finishReachedtargetReachedPleaseStopTracking);
             QuickAlert.show(
-                context: navigatorKey.currentContext!,
+                context: rootNavigatorKey.currentContext!,
                 type: QuickAlertType.warning,
                 title: Localize.current.finishReachedTitle,
                 text: Localize
@@ -1401,7 +1407,7 @@ class LocationProvider with ChangeNotifier {
               text: Localize.current.finishStopTrackingEventOver);
         } else {
           QuickAlert.show(
-              context: navigatorKey.currentContext!,
+              context: rootNavigatorKey.currentContext!,
               type: QuickAlertType.info,
               title: Localize.current.finishForceStopEventOverTitle,
               text: Localize.current.finishStopTrackingEventOver);
@@ -1427,7 +1433,7 @@ class LocationProvider with ChangeNotifier {
             text: Localize.current.stopTrackingTimeOut(maxDuration));
       } else {
         QuickAlert.show(
-            context: navigatorKey.currentContext!,
+            context: rootNavigatorKey.currentContext!,
             type: QuickAlertType.warning,
             title: Localize.current.timeOutDurationExceedTitle,
             text: Localize.current.stopTrackingTimeOut(maxDuration));
@@ -1453,7 +1459,9 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  ///Clear all tracked points // Set ODO meter to  0.0 km
+  ///Clear all tracked points
+  ///
+  /// Set ODO meter to  0.0 km
   Future<bool> resetTrackPoints() async {
     try {
       if (HiveSettingsDB.useAlternativeLocationProvider) {
@@ -1475,7 +1483,7 @@ class LocationProvider with ChangeNotifier {
         //LocationStore.clearTrackPointStoreForDate(DateTime.now());
       }).catchError((error) {
         if (!kIsWeb) {
-          BnLog.error(text: '[resetOdometer] ERROR: $error');
+          BnLog.error(text: 'Reset trackPoint] ERROR: $error');
         }
         return null;
       });
@@ -1508,7 +1516,7 @@ class LocationProvider with ChangeNotifier {
         (gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse);
     if (alwaysPermissionGranted || whenInusePermissionGranted) {
       QuickAlert.show(
-          context: navigatorKey.currentContext!,
+          context: rootNavigatorKey.currentContext!,
           type: QuickAlertType.warning,
           showCancelBtn: true,
           title: Localize.current.resetOdoMeterTitle,
@@ -1523,7 +1531,7 @@ class LocationProvider with ChangeNotifier {
             resetTrackPoints();
             notifyListeners();
             if (!context.mounted) return;
-            Navigator.of(context).pop();
+            context.pop();
           });
     }
   }
@@ -1536,7 +1544,7 @@ class LocationProvider with ChangeNotifier {
     if ((alwaysPermissionGranted || whenInusePermissionGranted) &&
         !HiveSettingsDB.useAlternativeLocationProvider) {
       QuickAlert.show(
-          context: navigatorKey.currentContext!,
+          context: context,
           type: QuickAlertType.warning,
           showCancelBtn: true,
           title: Localize.current.resetOdoMeterTitle,
@@ -1549,8 +1557,8 @@ class LocationProvider with ChangeNotifier {
           onConfirmBtnTap: () {
             resetTrackPoints();
             notifyListeners();
-            if (!context.mounted) return;
-            Navigator.of(context).pop();
+            if (!rootNavigatorKey.currentContext!.mounted) return;
+            rootNavigatorKey.currentContext!.pop();
           });
     }
   }

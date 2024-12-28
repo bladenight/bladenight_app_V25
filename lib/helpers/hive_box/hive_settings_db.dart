@@ -22,7 +22,7 @@ import '../../models/route.dart';
 import '../../models/user_gpx_point.dart';
 import '../logger.dart';
 import '../notification/onesignal_handler.dart';
-import '../timeconverter_helper.dart';
+import '../time_converter_helper.dart';
 import '../uuid_helper.dart';
 import '../validator.dart';
 

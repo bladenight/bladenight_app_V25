@@ -104,7 +104,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (ref.watch(serverPwdSetProviderProvider))
+                    if (ref.watch(serverPwdSetProvider))
                       CupertinoButton(
                         padding: EdgeInsets.zero,
                         minSize: 0,

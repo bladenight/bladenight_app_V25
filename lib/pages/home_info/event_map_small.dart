@@ -13,7 +13,7 @@ import '../widgets/event_info/map_layer_overview.dart';
 
 class EventMapSmall extends ConsumerStatefulWidget {
   const EventMapSmall(
-      {super.key, this.borderRadius = 15.0, required this.nextEvent});
+      {super.key, this.borderRadius = 0, required this.nextEvent});
 
   final double borderRadius;
   final Event nextEvent;
@@ -35,8 +35,8 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(widget.borderRadius),
         topRight: Radius.circular(widget.borderRadius),
-        bottomLeft: Radius.zero,
-        bottomRight: Radius.zero,
+        bottomLeft: Radius.circular(widget.borderRadius),
+        bottomRight: Radius.circular(widget.borderRadius),
       ),
       child: Builder(
         builder: (context) {
@@ -44,7 +44,7 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
           return Stack(children: [
             MapLayerOverview(
               interactionOptions: const InteractionOptions(
-                flags: InteractiveFlag.none,
+                flags: InteractiveFlag.pinchZoom,
                 enableMultiFingerGestureRace: false,
               ),
               event: widget.nextEvent,

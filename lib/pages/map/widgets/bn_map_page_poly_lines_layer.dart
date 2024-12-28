@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../app_settings/app_configuration_helper.dart';
 import '../../../helpers/logger.dart';
 import '../../../models/images_and_links.dart';
 import '../../../providers/active_event_route_provider.dart';

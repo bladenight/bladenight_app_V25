@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import '../../../generated/l10n.dart';
 
 class InputNumberDialog extends StatefulWidget {
@@ -56,21 +57,20 @@ class _InputNumberDialogState extends State<InputNumberDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          context.pop(value);
         },
       ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            Navigator.of(context).pop();
+            context.pop();
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
-          onPressed: value != null && value! > 0
-              ? () => Navigator.of(context).pop(value)
-              : null,
+          onPressed:
+              value != null && value! > 0 ? () => context.pop(value) : null,
           child: Text(Localize.of(context).ok),
         ),
       ],

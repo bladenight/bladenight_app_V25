@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:universal_io/io.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 
 class IntroScreen extends StatefulWidget {
   static const String introScreenRouteName = '/intro';
@@ -177,30 +179,30 @@ class IntroScreenState extends State<IntroScreen> {
     super.initState();
   }
 
-  void onDonePress() {
+  void _onDonePress() {
     HiveSettingsDB.setHasShownIntro(true);
-    Navigator.of(context).pop();
-    //Navigator.of(context).pushNamed(HomeScreen.routeName);
+    context.goNamed(AppRoute.home.name);
+    //context.pushNamed(HomeScreen.routeName);
   }
 
-  void onTabChangeCompleted(index) {
+  void _onTabChangeCompleted(index) {
     //will called when next tab changed
     if (slides.length == index + 1) {
       HiveSettingsDB.setHasShownIntro(true);
-      Navigator.of(context).pop();
+      context.goNamed(AppRoute.home.name);
     }
   }
 
-  Widget renderNextBtn() {
+  Widget _renderNextBtn() {
     return Icon(Icons.navigate_next,
         color: CupertinoTheme.of(context).primaryColor, size: 35.0);
   }
 
-  Widget renderDoneBtn() {
+  Widget _renderDoneBtn() {
     return Text(Localize.current.start);
   }
 
-  Widget renderSkipBtn() {
+  Widget _renderSkipBtn() {
     return Icon(
       Icons.fast_forward,
       size: 35.0,
@@ -218,9 +220,9 @@ class IntroScreenState extends State<IntroScreen> {
     return IntroSlider(
       listContentConfig: slides,
       indicatorConfig: const IndicatorConfig(isShowIndicator: false),
-      renderSkipBtn: renderSkipBtn(),
-      renderNextBtn: renderNextBtn(),
-      renderDoneBtn: renderDoneBtn(),
+      renderSkipBtn: _renderSkipBtn(),
+      renderNextBtn: _renderNextBtn(),
+      renderDoneBtn: _renderDoneBtn(),
       isPauseAutoPlayOnTouch: true,
       navigationBarConfig: NavigationBarConfig(
           padding: const EdgeInsets.all(30),
@@ -229,14 +231,14 @@ class IntroScreenState extends State<IntroScreen> {
           backgroundColor:
               CupertinoTheme.of(context).scaffoldBackgroundColor.withAlpha(20)),
       autoScrollInterval: const Duration(seconds: 8),
-      onDonePress: onDonePress,
+      onDonePress: _onDonePress,
       backgroundColorAllTabs:
           CupertinoTheme.of(context).scaffoldBackgroundColor,
       refFuncGoToTab: (refFunc) {
         goToTab = refFunc;
       },
-      onTabChangeCompleted: onTabChangeCompleted,
-      onSkipPress: onDonePress,
+      onTabChangeCompleted: _onTabChangeCompleted,
+      onSkipPress: _onDonePress,
     );
   }
 }

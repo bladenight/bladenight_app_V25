@@ -1,5 +1,3 @@
-library flutter_clip_shadow;
-
 import 'package:flutter/widgets.dart';
 
 class _ClipShadowPainter extends CustomPainter {
@@ -35,25 +33,36 @@ class _ClipShadowPainter extends CustomPainter {
   }
 }
 
-/// Box Shadowing with clipper
+/// Box Shadow with clipper
 ///
 /// Example:
-/// ```
-/// ClipShadow( boxShadows: [
+/// ```ClipShadow(
+///                 boxShadows: [
 ///                   BoxShadow(
-///                     //outer shadow
+///                     // outer shadow
 ///                     offset: Offset(1.1, 1.1),
 ///                     blurRadius: 10.0,
 ///                     blurStyle: BlurStyle.outer,
-///                     spreadRadius: 0.0, //zero padding
-///                     color: Colors.red,
+///                     spreadRadius: 0.0,
+///                     color: actualOrNextEvent.statusColor,
 ///                   ),
-///                ],
-///            clipper: InfoClipper(),
-///            child: Text('ABC'),
-///               );```
+///                 ],
+///                 clipper: InfoClipper(),
+///                 child: BackdropFilter(
+///                   filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+///                   child: Text('),
+///                   ),
+///                 ),
+///                ]);
+///                ```
 ///
 class ClipShadow extends StatelessWidget {
+  const ClipShadow(
+      {super.key,
+      required this.boxShadows,
+      required this.clipper,
+      required this.child});
+
   /// A list of shadows cast by this box behind the box.
   final List<BoxShadow> boxShadows;
 
@@ -62,9 +71,6 @@ class ClipShadow extends StatelessWidget {
 
   /// The [Widget] below this widget in the tree.
   final Widget child;
-
-  ClipShadow(
-      {required this.boxShadows, required this.clipper, required this.child});
 
   @override
   Widget build(BuildContext context) {

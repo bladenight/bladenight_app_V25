@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,6 +15,7 @@ import '../../models/external_app_message.dart';
 import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
 import '../../providers/messages_provider.dart';
+import '../../providers/network_connection_provider.dart';
 
 class MessagesPage extends ConsumerStatefulWidget {
   const MessagesPage({super.key});
@@ -58,7 +60,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
               padding: EdgeInsets.zero,
               minSize: 0,
               onPressed: () async {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Icon(CupertinoIcons.back),
             ),
@@ -84,7 +86,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                                 .read(messagesLogicProvider)
                                 .clearMessages();
                             if (!context.mounted) return;
-                            Navigator.of(context).pop();
+                            context.pop();
                           });
                     }),
                 const SizedBox(
@@ -113,6 +115,12 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                   .updateServerMessages();
             },
           ),
+          if (ref.watch(networkAwareProvider).connectivityStatus !=
+              ConnectivityStatus.wampConnected)
+            const SliverToBoxAdapter(
+              child: FractionallySizedBox(
+                  widthFactor: 0.9, child: ConnectionWarning()),
+            ),
           SliverToBoxAdapter(
             child: FractionallySizedBox(
               widthFactor: 0.9,
@@ -135,10 +143,6 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                 ),
               ),
             ),
-          ),
-          const SliverToBoxAdapter(
-            child: FractionallySizedBox(
-                widthFactor: 0.9, child: ConnectionWarning()),
           ),
           Builder(builder: (context) {
             var messages = ref.watch(filteredMessages);
@@ -165,8 +169,8 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                                 ref
                                     .read(messagesLogicProvider)
                                     .deleteMessage(message);
-                                if (!mounted) return;
-                                Navigator.of(context).pop();
+                                if (!context.mounted) return;
+                                context.pop();
                               });
                         }
                         if (direction == DismissDirection.startToEnd) {
@@ -389,7 +393,7 @@ class MessagesActionModal extends StatelessWidget {
       cancelButton: CupertinoActionSheetAction(
         child: Text(Localize.of(context).cancel),
         onPressed: () {
-          Navigator.of(context).pop();
+          context.pop();
         },
       ),
     );

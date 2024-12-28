@@ -5,8 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:universal_io/io.dart';
 
+import '../helpers/enums/tracking_type.dart';
 import '../helpers/logger.dart';
 import '../wamp/wamp_v2.dart';
+import 'location_provider.dart';
 
 /// States to connection to internet and wamp server
 enum ConnectivityStatus {
@@ -70,7 +72,6 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
           '${DateTime.now().toIso8601String()} Internetconnection status change: {$status}');
       switch (status) {
         case InternetStatus.connected:
-
           // The internet is now connected
           _checkStatus(ConnectivityStatus.wampNotConnected);
           break;

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
 
@@ -39,21 +40,21 @@ class _PinDialogState extends State<PinDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          context.pop(value);
         },
       ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            Navigator.of(context).pop();
+            context.pop();
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: password.isNotEmpty
               ? () {
-                  Navigator.of(context).pop(password);
+                  context.pop(password);
                 }
               : null,
           child: Text(Localize.of(context).submit),

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../helpers/timeconverter_helper.dart';
+import '../../../helpers/time_converter_helper.dart';
 import '../../../models/bn_map_friend_marker.dart';
 import '../../../pages/widgets/data_widget_left_right.dart';
 

@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../generated/l10n.dart';
-import '../helpers/timeconverter_helper.dart';
+import '../helpers/time_converter_helper.dart';
 import 'event.dart';
 
 part 'watch_event.mapper.dart';

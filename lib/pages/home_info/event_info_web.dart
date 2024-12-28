@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/logger.dart';
-import '../../helpers/timeconverter_helper.dart';
+import '../../helpers/time_converter_helper.dart';
 import '../../helpers/url_launch_helper.dart';
 import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';

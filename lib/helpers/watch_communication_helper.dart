@@ -104,7 +104,7 @@ class SendToWatch {
   }
 }
 
-Future<void> initFlutterChannel() async {
+Future<void> initWatchFlutterChannel() async {
   channel.setMethodCallHandler((call) async {
     // Receive data from Native
     switch (call.method) {

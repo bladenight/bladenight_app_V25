@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../providers/get_all_routes_provider.dart';
@@ -24,8 +25,8 @@ class _EventRouteSelectorState extends ConsumerState<EventRouteSelector> {
           var res =
               await showUserTrackDialog(context, current: widget.routeName);
           if (!context.mounted) return;
-          if (Navigator.canPop(context)) {
-            Navigator.pop(context, res);
+          if (context.canPop()) {
+            context.pop(res);
           }
         });
   }
@@ -84,16 +85,16 @@ class _EventRouteSelectorState extends ConsumerState<EventRouteSelector> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
+                if (context.canPop()) {
+                  context.pop();
                 }
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop(route);
+                if (context.canPop()) {
+                  context.pop(route);
                 }
               },
             ),

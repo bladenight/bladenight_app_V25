@@ -28,19 +28,19 @@ class Launch {
         var res = true;
         if (!kIsWeb &&
             mode == LaunchMode.externalApplication &&
-            navigatorKey.currentContext != null) {
+            rootNavigatorKey.currentContext != null) {
           res = await QuickAlert.show(
               showCancelBtn: true,
               cancelBtnText: Localize.current.cancel,
-              context: navigatorKey.currentContext!,
+              context: rootNavigatorKey.currentContext!,
               title: Localize.current.leaveAppWarningTitle,
               text: '${Localize.current.leaveAppWarning}\n$inUrl',
               type: QuickAlertType.info,
               onConfirmBtnTap: () {
-                navigatorKey.currentState?.pop(true);
+                rootNavigatorKey.currentState?.pop(true);
               },
               onCancelBtnTap: () {
-                navigatorKey.currentState?.pop(false);
+                rootNavigatorKey.currentState?.pop(false);
               });
         }
         if (res) await launchUrlString(callUrl, mode: mode);
@@ -63,19 +63,19 @@ class Launch {
         var res = true;
         if (!kIsWeb &&
             mode == LaunchMode.externalApplication &&
-            navigatorKey.currentContext != null) {
+            rootNavigatorKey.currentContext != null) {
           res = await QuickAlert.show(
               showCancelBtn: true,
               cancelBtnText: Localize.current.cancel,
-              context: navigatorKey.currentContext!,
+              context: rootNavigatorKey.currentContext!,
               title: Localize.current.leaveAppWarningTitle,
               text: '${Localize.current.leaveAppWarning}\n${uri.toString()}',
               type: QuickAlertType.confirm,
               onConfirmBtnTap: () {
-                navigatorKey.currentState?.pop(true);
+                rootNavigatorKey.currentState?.pop(true);
               },
               onCancelBtnTap: () {
-                navigatorKey.currentState?.pop(false);
+                rootNavigatorKey.currentState?.pop(false);
               });
         }
         if (res) await launchUrl(uri, mode: mode);

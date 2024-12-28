@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../helpers/deviceid_helper.dart';
@@ -7,8 +8,8 @@ import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
 import '../../../helpers/wamp/exceptions/bad_result_exception.dart';
 import '../../../models/messages/admin.dart';
+import '../../../providers/app_start_and_router/go_router.dart';
 import '../../../wamp/admin_calls.dart';
-import '../admin_page.dart';
 
 const kInvalidPassword = 'http://app.bladenight/invalidPassword';
 
@@ -51,9 +52,8 @@ class AdminPasswordDialog extends StatefulWidget {
       }
       HiveSettingsDB.setServerPassword(password);
       if (!context.mounted) return;
-      await Navigator.of(context).push(CupertinoPageRoute(
-        builder: (context) => AdminPage(password: password!),
-      ));
+      await context.pushNamed(AppRoute.adminPage.name,
+          pathParameters: {'password': password});
     }
   }
 }
@@ -76,21 +76,21 @@ class _AdminPasswordDialogState extends State<AdminPasswordDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          context.pop(value);
         },
       ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            Navigator.of(context).pop();
+            context.pop();
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: password.isNotEmpty
               ? () {
-                  Navigator.of(context).pop(password);
+                  context.pop(password);
                 }
               : null,
           child: Text(Localize.of(context).submit),

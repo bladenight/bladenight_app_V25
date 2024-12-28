@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter_compass/flutter_compass.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_compass/flutter_compass.dart' show FlutterCompass;
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../location_provider.dart';
 
 part 'compass_provider.g.dart';
 
@@ -14,7 +13,7 @@ class Compass extends _$Compass {
 
   @override
   double build() {
-    print('starting compass build L: $_stopListening');
+    debugPrint('starting compass build L: $_stopListening');
     if (_stopListening) return 0;
     var listener = FlutterCompass.events?.listen((event) {
       if (event.heading != null) {

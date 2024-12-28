@@ -6,16 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/device_info_helper.dart';
 import '../../helpers/notification/toast_notification.dart';
-import '../../helpers/timeconverter_helper.dart';
+import '../../helpers/time_converter_helper.dart';
 import '../../models/friend.dart';
 import '../../pages/widgets/data_widget_left_right_small_text.dart';
 import '../../pages/widgets/no_connection_warning.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/friends_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../widgets/bottom_sheets/base_bottom_sheet_widget.dart';
@@ -150,31 +152,24 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           if (action == null || !mounted) return;
                           if (action == FriendsAction.addNearby &&
                               context.mounted) {
-                            await Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                builder: (context) =>
-                                    const LinkFriendDevicePage(
-                                  deviceType: DeviceType.advertiser,
-                                  friendsAction: FriendsAction.addNearby,
-                                ),
-                                fullscreenDialog: false,
-                              ),
-                            );
+                            await context.pushNamed(
+                                AppRoute.linkFriendDevicePage.name,
+                                queryParameters: {
+                                  'deviceType': DeviceType.advertiser,
+                                  'friendsAction': FriendsAction.addNearby,
+                                });
                             _runRefreshTimer();
                             return;
                           }
                           if (action == FriendsAction.acceptNearby &&
                               context.mounted) {
-                            await Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                builder: (context) =>
-                                    const LinkFriendDevicePage(
-                                  deviceType: DeviceType.browser,
-                                  friendsAction: FriendsAction.acceptNearby,
-                                ),
-                                fullscreenDialog: false,
-                              ),
-                            );
+                            await context.pushNamed(
+                                AppRoute.linkFriendDevicePage.name,
+                                queryParameters: {
+                                  'deviceType': DeviceType.browser,
+                                  'friendsAction': FriendsAction.acceptNearby
+                                });
+
                             _runRefreshTimer();
                             return;
                           }
@@ -210,10 +205,12 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
               return ref.read(friendsLogicProvider).refreshFriends();
             },
           ),
-          const SliverToBoxAdapter(
-            child: FractionallySizedBox(
-                widthFactor: 0.9, child: ConnectionWarning()),
-          ),
+          if (ref.watch(networkAwareProvider).connectivityStatus !=
+              ConnectivityStatus.wampConnected)
+            const SliverToBoxAdapter(
+              child: FractionallySizedBox(
+                  widthFactor: 0.9, child: ConnectionWarning()),
+            ),
           SliverToBoxAdapter(
             child: FractionallySizedBox(
               widthFactor: 0.9,
@@ -263,7 +260,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                 ref
                                     .read(friendsLogicProvider)
                                     .deleteRelationShip(friend.friendId);
-                                Navigator.pop(context);
+                                context.pop();
                               });
                         } else {
                           var result = await EditFriendDialog.show(context,
@@ -469,7 +466,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                     ),
                                   ]),
                                   onPressed: () {
-                                    Navigator.pop(context, FriendsAction.edit);
+                                    context.pop(FriendsAction.edit);
                                   },
                                 ),
                               ),

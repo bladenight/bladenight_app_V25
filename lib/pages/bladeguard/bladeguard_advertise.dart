@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../generated/l10n.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/settings/bladeguard_provider.dart';
 import '../widgets/shadow_box_widget.dart';
-import 'bladeguard_page.dart';
 
 class BladeGuardAdvertise extends ConsumerWidget {
   const BladeGuardAdvertise({super.key});
@@ -23,11 +24,7 @@ class BladeGuardAdvertise extends ConsumerWidget {
             backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
             heroTag: 'isBladeGuardTag',
             onPressed: () {
-              Navigator.of(context).push(
-                CupertinoPageRoute(
-                  builder: (context) => const BladeGuardPage(),
-                ),
-              );
+              context.pushNamed(AppRoute.bladeguard.name);
             },
             label: Text(Localize.of(context).becomeBladeguard),
             icon: Container(),
@@ -43,11 +40,7 @@ class BladeGuardAdvertise extends ConsumerWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
-                CupertinoPageRoute(
-                  builder: (context) => const BladeGuardPage(),
-                ),
-              );
+              context.pushNamed(AppRoute.bladeguard.name);
             },
             child: CircleAvatar(
               radius: 15,

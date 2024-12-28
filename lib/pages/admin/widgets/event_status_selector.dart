@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../generated/l10n.dart';
@@ -44,13 +45,13 @@ Future<EventStatus?> showEventStatusDialog(BuildContext context,
           CupertinoDialogAction(
             child: Text(Localize.of(context).cancel),
             onPressed: () {
-              Navigator.of(context).pop();
+              context.pop();
             },
           ),
           CupertinoDialogAction(
             child: Text(Localize.of(context).save),
             onPressed: () {
-              Navigator.of(context).pop(status);
+              context.pop(status);
             },
           ),
         ],

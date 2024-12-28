@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
 import '../generated/l10n.dart';
 import '../helpers/url_launch_helper.dart';
+import '../providers/app_start_and_router/go_router.dart';
 import 'widgets/about_page/privacy.dart';
 import 'widgets/version_widget.dart';
 
@@ -14,8 +16,7 @@ class AboutPage extends StatefulWidget {
   State<AboutPage> createState() => _AboutPageState();
 
   static Future<void> show(BuildContext context) async {
-    Navigator.of(context)
-        .push(CupertinoPageRoute(builder: (context) => const AboutPage()));
+    context.goNamed(AppRoute.aboutPage.name);
   }
 }
 
@@ -287,8 +288,6 @@ Widget _serverAppWidget(BuildContext context) {
     ],
   );
 }
-
-
 
 Widget _licenceWidget(BuildContext context) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -1,8 +1,10 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../helpers/url_launch_helper.dart';
+import '../../../providers/app_start_and_router/go_router.dart';
 import '../../widgets/grip_bar.dart';
 
 class QRCreatePage extends StatefulWidget {
@@ -20,14 +22,12 @@ class QRCreatePage extends StatefulWidget {
       {required BuildContext context,
       required String qrCodeText,
       required String headerText,
-      required String infotext}) async {
-    return Navigator.of(context).push(CupertinoPageRoute(
-      builder: (context) => QRCreatePage(
-        qrCodeText: qrCodeText,
-        headerText: headerText,
-        infoText: infotext,
-      ),
-    ));
+      required String infoText}) async {
+    return context.pushNamed(AppRoute.qrCreatePage.name, pathParameters: {
+      qrCodeText: qrCodeText,
+      headerText: headerText,
+      infoText: infoText
+    });
   }
 
   @override

@@ -91,7 +91,7 @@ class LoggerHelper {
             CupertinoDialogAction(
               child: const Text('Cancel'),
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
             CupertinoDialogAction(
@@ -148,7 +148,7 @@ class LoggerHelper {
                     }
                   }
                 }
-                Navigator.of(context).pop(logLevel);
+                context.pop(logLevel);
               },
             ),
           ],

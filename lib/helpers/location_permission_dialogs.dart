@@ -44,7 +44,8 @@ class LocationPermissions {
 
 class LocationPermissionDialog {
   ///Request and returns [LocationPermissionStatus]
-  Future<LocationPermissionStatus> getLocationPermissions() async {
+  Future<LocationPermissionStatus> getLocationPermissions(
+      BuildContext context) async {
     //get android version, on V11 you need 'always' permissions to use location, when app is not in Foreground
 
     var isAndroidPlatformGreater09BuildQ =
@@ -58,7 +59,7 @@ class LocationPermissionDialog {
         loc2.LocationPermission.denied.index) {
       var denied = false;
       await QuickAlert.show(
-          context: navigatorKey.currentContext!,
+          context: rootNavigatorKey.currentContext!,
           showCancelBtn: true,
           type: QuickAlertType.info,
           title: Localize.current.requestLocationPermissionTitle,
@@ -71,7 +72,7 @@ class LocationPermissionDialog {
           cancelBtnText: Localize.current.deny,
           onCancelBtnTap: () {
             denied = true;
-            return navigatorKey.currentState?.pop();
+            return rootNavigatorKey.currentState?.pop();
           });
       if (denied) {
         //user denies request
@@ -98,7 +99,7 @@ class LocationPermissionDialog {
     if (locationPermission.locationPermissionId ==
         loc2.LocationPermission.denied.index) {
       var acceptLocation = await QuickAlert.show(
-          context: navigatorKey.currentContext!,
+          context: rootNavigatorKey.currentContext!,
           showCancelBtn: true,
           type: QuickAlertType.confirm,
           title: Localize.current.requestLocationPermissionTitle,
@@ -110,10 +111,10 @@ class LocationPermissionDialog {
           confirmBtnText: Localize.current.change,
           cancelBtnText: Localize.current.deny,
           onCancelBtnTap: () {
-            return navigatorKey.currentState?.pop(false);
+            return rootNavigatorKey.currentState?.pop(false);
           },
           onConfirmBtnTap: () {
-            return navigatorKey.currentState?.pop(true);
+            return rootNavigatorKey.currentState?.pop(true);
           });
       return acceptLocation ?? false;
     }
@@ -127,7 +128,7 @@ class LocationPermissionDialog {
         text: 'requesting always permissions',
         className: toString(),
         methodName: 'requestAlwaysLocationPermission');
-    var permissions = getLocationPermissions();
+    var permissions = getLocationPermissions(context);
     if (HiveSettingsDB.hasAskedAlwaysAllowLocationPermission) {
       return permissions;
     }
@@ -159,7 +160,7 @@ class LocationPermissionDialog {
         }
 
         await QuickAlert.show(
-            context: navigatorKey.currentContext!,
+            context: rootNavigatorKey.currentContext!,
             showCancelBtn: true,
             type: QuickAlertType.info,
             title: Localize.current.alwaysPermantlyDenied,
@@ -194,10 +195,10 @@ class LocationPermissionDialog {
     return true;
   }
 
-  Future<bool> showMotionSensorProminentDisclosure() async {
+  Future<bool> showMotionSensorProminentDisclosure(BuildContext context) async {
     var prominentMotionDisclosureResult = true;
     await QuickAlert.show(
-        context: navigatorKey.currentContext!,
+        context: context,
         showCancelBtn: true,
         type: QuickAlertType.info,
         title: Localize.current.fitnessPermissionInfoTextTitle,
@@ -207,13 +208,13 @@ class LocationPermissionDialog {
         onConfirmBtnTap: () {
           HiveSettingsDB.setIsMotionDetectionDisabled(false);
           prominentMotionDisclosureResult = false;
-          return navigatorKey.currentState?.pop();
+          return rootNavigatorKey.currentState?.pop();
         },
         onCancelBtnTap: () {
           HiveSettingsDB.setIsMotionDetectionDisabled(true);
           prominentMotionDisclosureResult = true;
           //if (!mounted) return;
-          return navigatorKey.currentState?.pop();
+          return rootNavigatorKey.currentState?.pop();
         });
     return prominentMotionDisclosureResult;
   }
@@ -247,11 +248,11 @@ class LocationPermissionDialog {
     return LocationPermissionStatus.denied;
   }
 
-  Future<bool> requestAndOpenAppSettings() async {
+  Future<bool> requestAndOpenAppSettings(BuildContext context) async {
     var permanentDeniedResult = true;
 
     await QuickAlert.show(
-        context: navigatorKey.currentContext!,
+        context: context,
         showCancelBtn: true,
         type: QuickAlertType.info,
         title: Localize.current.noLocationPermissionGrantedAlertTitle,
@@ -260,20 +261,10 @@ class LocationPermissionDialog {
         cancelBtnText: Localize.current.no,
         onConfirmBtnTap: () {
           permanentDeniedResult = true;
-          return navigatorKey.currentState?.pop();
+          return rootNavigatorKey.currentState?.pop();
         });
     if (permanentDeniedResult) {
-      var res = await openAppSettings();
-      if (res == false) {
-        Fluttertoast.showToast(msg: Localize.current.couldNotOpenAppSettings);
-        if (!kIsWeb) {
-          BnLog.warning(
-              text:
-                  'App settings could not opened while location permissions are permanently denied');
-        }
-        return false;
-      }
-      return true;
+      return await openAppSettings();
     }
     return false;
   }

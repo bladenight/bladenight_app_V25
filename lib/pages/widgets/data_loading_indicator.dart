@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
+import '../../providers/network_connection_provider.dart';
 import 'no_connection_warning.dart';
 
-class DataLoadingIndicator extends StatelessWidget {
+class DataLoadingIndicator extends ConsumerWidget {
   const DataLoadingIndicator({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -23,7 +25,9 @@ class DataLoadingIndicator extends StatelessWidget {
           Localize.of(context).getwebdata,
           style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
         ),
-        const ConnectionWarning(),
+        if (ref.watch(networkAwareProvider).connectivityStatus !=
+            ConnectivityStatus.wampConnected)
+          ConnectionWarning(),
       ],
     );
   }

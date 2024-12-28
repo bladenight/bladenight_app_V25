@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../providers/friends_provider.dart';
@@ -49,7 +50,7 @@ class FriendsActionModal extends ConsumerWidget {
                     ),
                   ]),
                   onPressed: () {
-                    Navigator.pop(context, FriendsAction.addNew);
+                    context.pop(FriendsAction.addNew);
                   },
                 ),
               ),
@@ -70,7 +71,7 @@ class FriendsActionModal extends ConsumerWidget {
                           ),
                         ]),
                         onPressed: () {
-                          Navigator.pop(context, FriendsAction.addWithCode);
+                          context.pop(FriendsAction.addWithCode);
                         },
                       ),
                     ),
@@ -97,7 +98,7 @@ class FriendsActionModal extends ConsumerWidget {
                     if (!context.mounted || !Navigator.canPop(context)) {
                       return;
                     }
-                    Navigator.pop(context);
+                    context.pop();
                   },
                 ),
               ),

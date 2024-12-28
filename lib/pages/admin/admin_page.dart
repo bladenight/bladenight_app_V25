@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/deviceid_helper.dart';
 import '../../helpers/logger.dart';
-import '../../helpers/timeconverter_helper.dart';
+import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
 import '../../models/messages/kill_server.dart';
 import '../../models/messages/set_active_route.dart';
@@ -242,8 +243,8 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                     _resultText = 'ProcessionMode Server sent!';
                   });
 
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
+                  if (context.mounted && context.canPop()) {
+                    context.pop();
                   }
                 }
               },
@@ -276,7 +277,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                   setState(() {});
 
                   if (context.mounted) {
-                    Navigator.of(context).pop();
+                    context.pop();
                   }
                 }
               },
@@ -328,13 +329,13 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                Navigator.of(context).pop(status);
+                context.pop(status);
               },
             ),
           ],
@@ -398,13 +399,13 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                Navigator.of(context).pop(route);
+                context.pop(route);
               },
             ),
           ],
@@ -443,13 +444,13 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                Navigator.of(context).pop(status);
+                context.pop(status);
               },
             ),
           ],
@@ -484,13 +485,13 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).ok),
               onPressed: () {
-                Navigator.of(context).pop(status);
+                context.pop(status);
               },
             ),
           ],

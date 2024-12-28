@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import '../../../generated/l10n.dart';
 
 class InputTextDialog extends StatefulWidget {
@@ -57,19 +58,19 @@ class _InputTextDialogState extends State<InputTextDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          context.pop(value);
         },
       ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            Navigator.of(context).pop();
+            context.pop();
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
-          onPressed: () => Navigator.of(context).pop(value),
+          onPressed: () => context.pop(value),
           child: Text(Localize.of(context).ok),
         ),
       ],

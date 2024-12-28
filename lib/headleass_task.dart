@@ -11,7 +11,7 @@ import 'helpers/hive_box/app_server_config_db.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
 import 'helpers/logger.dart';
 import 'helpers/notification/notification_helper.dart';
-import 'helpers/timeconverter_helper.dart';
+import 'helpers/time_converter_helper.dart';
 
 /// Receive events from BackgroundGeolocation in Headless state.
 @pragma('vm:entry-point')

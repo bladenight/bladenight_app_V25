@@ -7,10 +7,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../helpers/enums/tracking_type.dart';
 import '../../helpers/logger.dart';
-import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/location_provider.dart';
+import '../../providers/network_connection_provider.dart';
 import '../bladeguard/bladeguard_advertise.dart';
 import '../bladeguard/bladeguard_on_site_page.dart';
 import '../widgets/app_outdated.dart';
@@ -102,7 +102,10 @@ class _EventInfoState extends ConsumerState<EventInfo>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ConnectionWarning(shimmerAnimationController: _animationController),
+            if (ref.watch(networkAwareProvider).connectivityStatus !=
+                ConnectivityStatus.wampConnected)
+              ConnectionWarning(
+                  shimmerAnimationController: _animationController),
             AppOutdated(animationController: _animationController),
             GestureDetector(
               onTap: () => context.go('/map')

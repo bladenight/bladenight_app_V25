@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../helpers/deviceid_helper.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/notification/toast_notification.dart';
-import '../../../helpers/timeconverter_helper.dart';
+import '../../../helpers/time_converter_helper.dart';
 import '../../../models/event.dart';
 import '../../../models/messages/edit_event_on_server.dart';
 import '../../../models/route.dart';
+import '../../../providers/app_start_and_router/go_router.dart';
 import '../../../providers/route_providers.dart';
 import '../../../wamp/admin_calls.dart';
 import '../../admin/widgets/event_status_selector.dart';
@@ -25,12 +27,7 @@ class EventEditor extends ConsumerStatefulWidget {
   final Event event;
 
   static Future<Event?> show(BuildContext context, Event event) {
-    return Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => EventEditor(event: event),
-        fullscreenDialog: false,
-      ),
-    );
+    return context.pushNamed(AppRoute.eventEditorPage.name, extra: event);
   }
 
   @override
@@ -61,7 +58,7 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                 padding: EdgeInsets.zero,
                 minSize: 0,
                 onPressed: () async {
-                  Navigator.of(context).pop();
+                  context.pop();
                 },
                 child: const Icon(CupertinoIcons.back),
               ),
@@ -377,8 +374,8 @@ class _EventEditorState extends ConsumerState<EventEditor> {
       isSaving = false;
     });
     if (!context.mounted) return;
-    if (res && Navigator.of(context).canPop()) {
-      Navigator.of(context).pop(_event);
+    if (res && context.canPop()) {
+      context.pop(_event);
     } else {
       (showToast(message: 'Fehler beim Speichern!'));
     }

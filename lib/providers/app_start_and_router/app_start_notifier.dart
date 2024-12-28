@@ -5,12 +5,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
 import '../../app_settings/app_constants.dart';
-import '../../app_settings/globals.dart';
 import '../../helpers/deviceid_helper.dart';
-import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../main.dart';
-import '../../main.init.dart';
-import '../../models/image_and_link.dart';
 
 part 'app_start_notifier.g.dart';
 
@@ -21,15 +17,14 @@ class AppStartNotifier extends _$AppStartNotifier {
 
   @override
   Future<void> build() async {
-    // Initially, load the database from JSON
-    await _complexInitializationLogic();
+    await _initializationLogic();
   }
 
-  Future<void> _complexInitializationLogic() async {
+  Future<void> _initializationLogic() async {
     if (kDebugMode) {
       print(
           '${DateTime.now().toIso8601String()} Starting _complexInitializationLogic');
-      await Future.delayed(Duration(seconds: 7));
+      await Future.delayed(Duration(seconds: 1));
     }
     //mappers and Hive Adapters must be initialized in main.app
     //initializeMappers();
@@ -38,13 +33,18 @@ class AppStartNotifier extends _$AppStartNotifier {
     await Hive.openBox(hiveBoxSettingDbName);
     await Hive.openBox(hiveBoxLocationDbName);
     await Hive.openBox(hiveBoxServerConfigDBName);
+    //await Hive.openBox(hiveBoxLoggingDbName);
     await DeviceId.initAppId();
+    print('initLogger');
     await initLogger();
+    print('initSettings');
     initSettings();
+    print('init FMTC');
     if (!kIsWeb && !fMTCInitialized) {
       await FMTCObjectBoxBackend().initialise();
       fMTCInitialized = true;
     }
+    print('55');
     //await Future.delayed(Duration(seconds: 10));
     if (Platform.isAndroid) {
       /// Register BackgroundGeolocation headless-task
@@ -77,12 +77,12 @@ class AppStartNotifier extends _$AppStartNotifier {
 */
     if (kDebugMode) {
       print(
-          '${DateTime.now().toIso8601String()} Finished _complexInitializationLogic');
+          '${DateTime.now().toIso8601String()} Finished _initializationLogic');
     }
   }
 
   Future<void> retry() async {
     // use AsyncValue.guard to handle errors gracefully
-    state = await AsyncValue.guard(_complexInitializationLogic);
+    state = await AsyncValue.guard(_initializationLogic);
   }
 }

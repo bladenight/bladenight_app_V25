@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
@@ -93,20 +94,20 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
               var _ = await ref.refresh(bgIsOnSiteProvider.future);
             },
           ),
-          const SliverToBoxAdapter(
-            child: FractionallySizedBox(
-                widthFactor: 0.9, child: ConnectionWarning()),
-          ),
           SliverToBoxAdapter(
             child: Column(
               children: [
-                const SettingsInvisibleOfflineWidget(),
-                const BladeGuardOnsite(),
+                const ConnectionWarning(),
+                if (networkConnected.connectivityStatus ==
+                    ConnectivityStatus.internetOffline) ...[
+                  const SettingsInvisibleOfflineWidget(),
+                ],
                 //online wamp not necessary
                 if (networkConnected.connectivityStatus ==
                         ConnectivityStatus.wampConnected ||
                     networkConnected.connectivityStatus ==
-                        ConnectivityStatus.wampNotConnected)
+                        ConnectivityStatus.wampNotConnected) ...[
+                  const BladeGuardOnsite(),
                   CupertinoFormSection(
                     header: HtmlWidget(
                         textStyle: TextStyle(
@@ -186,7 +187,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: CupertinoButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  context.pop();
                                 },
                                 color: Colors.redAccent,
                                 child: Text(Localize.of(context).later),
@@ -423,71 +424,73 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                     ],
                   ),
-                if (!kIsWeb &&
-                    (HiveSettingsDB.serverPassword != null ||
-                        HiveSettingsDB.hasSpecialRights ||
-                        HiveSettingsDB.bgIsAdmin))
-                  CupertinoFormSection(
-                    header: Text(Localize.of(context).showFullProcessionTitle),
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: DataLeftRightContent(
-                          descriptionLeft:
-                              Localize.of(context).showFullProcession,
-                          descriptionRight: '',
-                          rightWidget: CupertinoSwitch(
-                              onChanged: (val) {
-                                setState(() {
-                                  HiveSettingsDB.setWantSeeFullOfProcession(
-                                      val);
-                                });
-                              },
-                              value: HiveSettingsDB.wantSeeFullOfProcession),
+                  if (!kIsWeb &&
+                      (HiveSettingsDB.serverPassword != null ||
+                          HiveSettingsDB.hasSpecialRights ||
+                          HiveSettingsDB.bgIsAdmin))
+                    CupertinoFormSection(
+                      header:
+                          Text(Localize.of(context).showFullProcessionTitle),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).showFullProcession,
+                            descriptionRight: '',
+                            rightWidget: CupertinoSwitch(
+                                onChanged: (val) {
+                                  setState(() {
+                                    HiveSettingsDB.setWantSeeFullOfProcession(
+                                        val);
+                                  });
+                                },
+                                value: HiveSettingsDB.wantSeeFullOfProcession),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                const SizedBox(
-                  height: 10,
-                ),
-                if (!kIsWeb && HiveSettingsDB.bgIsAdmin) ...[
-                  CupertinoFormSection(
-                    header: const Text('Server-Admin'),
-                    children: <Widget>[
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        child: CupertinoButton(
-                            color: CupertinoTheme.of(context).primaryColor,
-                            child: const Text('Öffne Serveradmin'),
-                            onPressed: () async {
-                              await AdminPasswordDialog.show(context);
-                            }),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                   const SizedBox(
                     height: 10,
                   ),
-                  if (ref.watch(serverPwdSetProviderProvider))
+                  if (!kIsWeb && HiveSettingsDB.bgIsAdmin) ...[
                     CupertinoFormSection(
-                      header: const Text('Server-Admin-Logout'),
+                      header: const Text('Server-Admin'),
                       children: <Widget>[
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.7,
+                          width: MediaQuery.of(context).size.width * 0.9,
                           child: CupertinoButton(
                               color: CupertinoTheme.of(context).primaryColor,
-                              child: const Text('Logout'),
+                              child: const Text('Öffne Serveradmin'),
                               onPressed: () async {
-                                HiveSettingsDB.setServerPassword(null);
+                                await AdminPasswordDialog.show(context);
                               }),
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    if (ref.watch(serverPwdSetProvider))
+                      CupertinoFormSection(
+                        header: const Text('Server-Admin-Logout'),
+                        children: <Widget>[
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            child: CupertinoButton(
+                                color: CupertinoTheme.of(context).primaryColor,
+                                child: const Text('Logout'),
+                                onPressed: () async {
+                                  HiveSettingsDB.setServerPassword(null);
+                                }),
+                          ),
+                        ],
+                      ),
+                  ],
+                  const SizedBox(
+                    height: 50,
+                  ),
                 ],
-                const SizedBox(
-                  height: 50,
-                ),
               ],
             ),
           ),
@@ -527,13 +530,13 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                Navigator.of(context).pop(selected);
+                context.pop(selected);
               },
             ),
           ],

@@ -2,22 +2,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
-    show Icons, Colors, Scaffold, Badge, FloatingActionButton, Card, ListTile;
+    show Icons, Colors, Scaffold, Badge, FloatingActionButton, Card;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/server_connections.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/url_launch_helper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/sponsors_provider.dart';
 import 'event_info.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/messages_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/route_providers.dart';
-import '../messages/messages_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -69,12 +69,7 @@ class _HomePageState extends ConsumerState<HomePage>
                   : null,
               heroTag: 'msgActionBtn',
               onPressed: () async {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (context) => const MessagesPage(),
-                    fullscreenDialog: false,
-                  ),
-                );
+                context.pushNamed(AppRoute.messagesPage.name);
               },
               child: messageProvider.messages.isNotEmpty &&
                       messageProvider.readMessages > 0
@@ -91,79 +86,6 @@ class _HomePageState extends ConsumerState<HomePage>
               parent: AlwaysScrollableScrollPhysics(),
             ),
             slivers: [
-              /*CupertinoSliverNavigationBar(
-              leading: const Icon(CupertinoIcons.home),
-              largeTitle: Text(Localize.of(context).home),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minSize: 0,
-                    onPressed: () async {
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(
-                          builder: (context) => const MessagesPage(),
-                          fullscreenDialog: false,
-                        ),
-                      );
-                    },
-                    child: messageProvider.messages.isNotEmpty &&
-                            messageProvider.readMessages > 0
-                        ? Badge(
-                            label:
-                                Text(messageProvider.readMessages.toString()),
-                            child: const Icon(Icons.mark_email_unread),
-                          )
-                        : const Icon(CupertinoIcons.envelope),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minSize: 0,
-                    onPressed: () async {
-                      //_showOverlay(context, text: 'OK');
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(
-                          builder: (context) => const IntroScreen(),
-                          fullscreenDialog: false,
-                        ),
-                      );
-                    },
-                    child: const Icon(CupertinoIcons.question_circle),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minSize: 0,
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(
-                          builder: (context) => const SettingsPage(),
-                          fullscreenDialog: false,
-                        ),
-                      );
-                    },
-                    child: const Icon(CupertinoIcons.settings_solid),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minSize: 0,
-                    onPressed: () async {
-                      AboutPage.show(context);
-                    },
-                    child: const Icon(CupertinoIcons.info_circle),
-                  ),
-                ],
-              ),
-            ),*/
               CupertinoSliverRefreshControl(
                 onRefresh: () async {
                   ref.read(messagesLogicProvider).updateServerMessages();
@@ -185,16 +107,28 @@ class _HomePageState extends ConsumerState<HomePage>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         if (localTesting)
-                          Container(
-                            color: CupertinoColors.systemOrange,
-                            child: Text(
-                                'Warning ${kDebugMode ? 'DEBUG Mode on and' : ''} local testing is set'),
+                          Center(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: CupertinoColors.systemOrange,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              child: Text(
+                                'Warning ${kDebugMode ? 'DEBUG Mode on and' : ''} local testing is set',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
                         if (HiveSettingsDB.useCustomServer)
-                          Container(
-                            color: CupertinoColors.systemOrange,
-                            child: Text(
-                                'Warning server address is ${HiveSettingsDB.customServerAddress}'),
+                          Center(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: CupertinoColors.systemOrange,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              child: Text(
+                                  'Warning server address is ${HiveSettingsDB.customServerAddress}'),
+                            ),
                           ),
                         EventInfo(),
                         //kIsWeb ? EventInfoWeb() : EventInfo(),
@@ -272,6 +206,9 @@ class _HomePageState extends ConsumerState<HomePage>
                                           (sponsors.value!.length).round(),
                                       itemBuilder: (context, index, realIdx) {
                                         return Card(
+                                          color: CupertinoTheme.of(context)
+                                              .primaryColor,
+                                          //bg color for card
                                           child: Center(
                                             child: GestureDetector(
                                               onTap: () {
@@ -285,21 +222,28 @@ class _HomePageState extends ConsumerState<HomePage>
                                               },
                                               child:
                                                   Builder(builder: (context) {
+                                                var imageName = sponsors
+                                                    .value![index].imageUrl;
+                                                if (CupertinoTheme.brightnessOf(
+                                                        context) ==
+                                                    Brightness.light) {
+                                                  imageName =
+                                                      '${imageName}_dark';
+                                                }
                                                 return FadeInImage.assetNetwork(
-                                                  height: 50,
-                                                  width: 100,
+                                                  height: 80,
+                                                  //width: 100,
                                                   fit: BoxFit.contain,
                                                   placeholder: sponsors
                                                       .value![index]
                                                       .description,
-                                                  image: sponsors
-                                                      .value![index].imageUrl,
+                                                  image: imageName,
                                                   fadeOutDuration:
                                                       const Duration(
-                                                          milliseconds: 150),
+                                                          milliseconds: 300),
                                                   fadeInDuration:
                                                       const Duration(
-                                                          milliseconds: 150),
+                                                          milliseconds: 300),
                                                   imageErrorBuilder: (context,
                                                       error, stackTrace) {
                                                     BnLog.warning(

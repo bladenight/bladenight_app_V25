@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -18,6 +19,7 @@ import '../../../generated/l10n.dart';
 import '../../../helpers/logger.dart';
 import '../../../models/friend.dart';
 import '../../../providers/friends_provider.dart';
+import '../../../providers/network_connection_provider.dart';
 import '../../../wamp/wamp_exception.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_connection_warning.dart';
@@ -125,7 +127,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                 padding: EdgeInsets.zero,
                 minSize: 0,
                 onPressed: () async {
-                  Navigator.of(context).pop();
+                  context.pop();
                 },
                 child: const Icon(CupertinoIcons.back),
               ),
@@ -150,10 +152,12 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                     ])
                   : Container(),
             ),
-            const SliverToBoxAdapter(
-              child: FractionallySizedBox(
-                  widthFactor: 0.9, child: ConnectionWarning()),
-            ),
+            if (ref.watch(networkAwareProvider).connectivityStatus !=
+                ConnectivityStatus.wampConnected)
+              const SliverToBoxAdapter(
+                child: FractionallySizedBox(
+                    widthFactor: 0.9, child: ConnectionWarning()),
+              ),
             //if (!isLoading)
             SliverToBoxAdapter(
               child: FractionallySizedBox(
@@ -318,7 +322,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                           color: Colors.redAccent,
                           child: Text(Localize.of(context).cancel),
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            context.pop();
                           }),
                     ),
                   ],
@@ -368,16 +372,16 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                   Localize.current.sendlinkdescription(
                       friend.requestId, playStoreLink, iOSAppStoreLink),
                   subject: Localize.current.sendlink);
-              Navigator.pop(context);
+              context.pop();
             },
             onCancelBtnTap: () async {
               await Clipboard.setData(
                   ClipboardData(text: friend.requestId.toString()));
               if (!mounted) return;
-              Navigator.pop(context);
+              context.pop();
             });
         if (!mounted) return;
-        Navigator.of(context).pop(); //go back
+        context.pop(); //go back
       } else if (widget.action == FriendsAction.addWithCode) //validate code
       {
         var result = await ref
@@ -394,7 +398,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
         if (!mounted) {
           return;
         } else {
-          Navigator.of(context).pop();
+          context.pop();
         }
       }
     } on SocketException {

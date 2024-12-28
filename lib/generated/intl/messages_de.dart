@@ -711,7 +711,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "since": MessageLookupByLibrary.simpleMessage("seit"),
         "someSettingsNotAvailableBecauseOffline":
             MessageLookupByLibrary.simpleMessage(
-                "Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht."),
+                "Einige Einstellungen sind nicht verfügbar da keine Serververbindung besteht."),
         "spec": MessageLookupByLibrary.simpleMessage("Spezial"),
         "specialfunction": MessageLookupByLibrary.simpleMessage(
             "Sondereinstellungen - nur nach Rücksprache ändern!"),

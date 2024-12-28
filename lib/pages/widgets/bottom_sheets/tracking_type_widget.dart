@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../helpers/enums/tracking_type.dart';
@@ -43,8 +44,8 @@ class TrackingTypeWidget extends ConsumerWidget {
                           color: CupertinoTheme.of(context).primaryColor,
                           child: Text(Localize.of(context)
                               .startLocationWithoutParticipating),
-                          onPressed: () => Navigator.of(context)
-                              .pop(TrackingType.userNotParticipating)),
+                          onPressed: () =>
+                              context.pop(TrackingType.userNotParticipating)),
                     ),
                   ],
                 ),

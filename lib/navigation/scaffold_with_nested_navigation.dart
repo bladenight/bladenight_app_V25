@@ -85,13 +85,15 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, true);
+                    context.pop(true);
                   },
                   child: Text(Localize.of(context).yes),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, false);
+                    if (context.canPop()) {
+                      context.pop(false);
+                    }
                   },
                   child: Text(Localize.of(context).no),
                 ),

@@ -424,7 +424,7 @@
   "showWeblinkToRoute": "Zeige QRCode zum Weblink",
   "showonly": "Nur Anzeige",
   "since": "seit",
-  "someSettingsNotAvailableBecauseOffline": "Einige Einstellungen sind nicht verfügbar da keine Internetverbindung besteht.",
+  "someSettingsNotAvailableBecauseOffline": "Einige Einstellungen sind nicht verfügbar da keine Serververbindung besteht.",
   "specialfunction": "Sondereinstellungen - nur nach Rücksprache ändern!",
   "speed": "Geschwindigkeit",
   "start": "Start",

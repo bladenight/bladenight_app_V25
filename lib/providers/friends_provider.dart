@@ -191,7 +191,7 @@ class FriendsLogic with ChangeNotifier {
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
       QuickAlert.show(
-          context: navigatorKey.currentContext!,
+          context: rootNavigatorKey.currentContext!,
           type: QuickAlertType.error,
           title: Localize.current.addnewfriend,
           text: Localize.current.failed);

@@ -1,4 +1,3 @@
-import '../app_settings/app_configuration_helper.dart';
 import 'images_and_links.dart';
 
 ///LocationPoint ist a described [Location]

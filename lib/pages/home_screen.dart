@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../app_settings/app_constants.dart';
 import '../app_settings/server_connections.dart';
@@ -17,15 +17,14 @@ import '../helpers/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/watch_communication_helper.dart';
+import '../providers/app_start_and_router/go_router.dart';
 import '../providers/get_images_and_links_provider.dart';
 import '../providers/location_provider.dart';
-import 'bladeguard/bladeguard_page.dart';
 import 'events/events_page.dart';
 import 'friends/friends_page.dart';
 import 'home_info/home_page.dart';
 import 'map/map_page.dart';
 import 'settings/settings_page.dart';
-import 'widgets/intro_slider.dart';
 
 bool _initialURILinkHandled = false;
 
@@ -46,7 +45,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   StreamSubscription? _uniLinkStreamSubscription;
   StreamSubscription? _oneSignalOSNotificationOpenedResultSubSubscription;
   late CupertinoTabController tabController;
-  final _appLinks = AppLinks();
 
   @override
   Future<AppExitResponse> didRequestAppExit() async {
@@ -155,14 +153,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         });
     }
     _initImages();
-    _initURIHandler();
-    _incomingLinkHandler();
-    initFlutterChannel();
+    //_initURIHandler();
+    //_incomingLinkHandler();
+    initWatchFlutterChannel();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!kIsWeb) {
         await FMTCStore(fmtcTileStoreName).manage.create();
-        //_openIntroScreenFirstTime();
+        _openIntroScreenFirstTime();
         _openBladeguardRequestFirstTime();
         await initOneSignal();
         await _initNotifications();
@@ -193,20 +191,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _openIntroScreenFirstTime() async {
-    if (!kIsWeb && !HiveSettingsDB.hasShownIntro) {
+    if (!kIsWeb && !HiveSettingsDB.hasShownIntro || localTesting) {
       BnLog.info(
           className: 'home_screen',
           methodName: 'openIntroScreenFirstTime',
-          text: 'Will open IntroScreen');
-
+          text: 'Opening IntroScreen');
       HiveSettingsDB.setHasShownIntro(true);
       if (!mounted) return;
-      await Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (context) => const IntroScreen(),
-          fullscreenDialog: false,
-        ),
-      );
+      await context.pushNamed(AppRoute.introScreen.name);
     }
   }
 
@@ -215,63 +207,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       BnLog.info(
           className: 'home_screen',
           methodName: 'openBladeguardRequestFirstTime',
-          text: 'Will open BladeguardRequestFirstTime');
-
+          text: 'Opening BladeguardRequestFirstTime');
       if (!mounted) return;
-      await Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (context) => const BladeGuardPage(),
-          fullscreenDialog: false,
-        ),
-      );
+      await context.pushNamed(AppRoute.bladeguard.name);
       HiveSettingsDB.setHasShownBladeGuard(true);
     }
   }
 
-  Future<void> _initURIHandler() async {
-    if (kIsWeb) return;
-    if (!_initialURILinkHandled) {
-      _initialURILinkHandled = true;
-
-      try {
-        Uri? initUri = await _appLinks.getInitialLink();
-        print('Invoked _initURIHandler');
-        if (!kIsWeb) BnLog.info(text: 'Invoked _initURIHandler $initUri');
-        if (initUri == null) return;
-        _handleIncomingUriResult(initUri.toString());
-        // Use the initialURI and warn the user if it is not correct,
-        // but keep in mind it could be `null`.
-      } on PlatformException catch (ex) {
-        // Platform messages may fail but we ignore the exception
-        if (!kIsWeb) {
-          BnLog.error(text: 'Platform exception failed to get initial uri $ex');
-        }
-      } on FormatException catch (err) {
-        if (!kIsWeb) BnLog.error(text: 'malformed initial uri $err');
-      }
-    }
-  }
-
-  /// Handle incoming links - the ones that the app will receive from the OS
-  /// while already started.
-  void _incomingLinkHandler() async {
-    if (kIsWeb) return;
-    // It will handle app links while the app is already started - be it in
-    // the foreground or in the background.
-    _uniLinkStreamSubscription = _appLinks.uriLinkStream.listen((uri) async {
-      if (!kIsWeb) BnLog.info(text: 'Received URI: $uri');
-      _handleIncomingUriResult(uri.toString());
-
-      //uri received
-      //check from terminal
-      //ios  /usr/bin/xcrun simctl openurl booted "bna://bladenight.app?addFriend&code=620087&name=Test"
-      //android
-      // ~/Library/Android/sdk/platform-tools/adb adb -s devicename shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app?addFriend&code=620087&name=Test"'
-    }, onError: (Object err) {
-      print('Error occurred: $err');
-    });
-  }
-
+  /*
   void _handleIncomingUriResult(String? uriString) async {
     //import friends and Id
     if (uriString == null) return;
@@ -280,12 +223,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     } else if (uriString.contains('?addFriend')) {
       tabController.index = 3;
       await addFriendWithCodeFromUrl(context, uriString);
-    } else if (uriString.contains('?$specialCode=1')) {
-      HiveSettingsDB.setHasSpecialRightsPrefs(true);
-    } else if (uriString.contains('?$specialCode=0')) {
-      HiveSettingsDB.setHasSpecialRightsPrefs(false);
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

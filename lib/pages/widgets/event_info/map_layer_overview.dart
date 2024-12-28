@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../models/event.dart';
 import '../../../models/route.dart';
 import '../../map/widgets/gps_info_and_map_copyright.dart';
@@ -51,8 +49,6 @@ class MapLayerOverview extends ConsumerStatefulWidget {
 }
 
 class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
-  final PopupController _popupController = PopupController();
-
   @override
   Widget build(BuildContext context) {
     var bounds = widget.event.nodes.getBounds;

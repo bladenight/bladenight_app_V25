@@ -1,7 +1,7 @@
 import UIKit
 import Flutter
 import AVKit
-import app_links
+//import app_links
 import BackgroundTasks
 import WatchConnectivity
 //import workmanager
@@ -34,11 +34,11 @@ import WatchConnectivity
         
         GeneratedPluginRegistrant.register(with: self);
         
-        if let url = AppLinks.shared.getLink(launchOptions: launchOptions) {
+        /*if let url = AppLinks.shared.getLink(launchOptions: launchOptions) {
               // We have a link, propagate it to your Flutter app or not
               AppLinks.shared.handleLink(url: url)
               return true // Returning true will stop the propagation to other packages
-            }
+            }*/
         
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import '../../../generated/l10n.dart';
 
 class InputDoubleDialog extends StatefulWidget {
@@ -56,20 +57,19 @@ class _InputDoubleDialogState extends State<InputDoubleDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          context.pop(value);
         },
       ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            Navigator.of(context).pop();
+            context.pop();
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
-          onPressed:
-              value != null ? () => Navigator.of(context).pop(value) : null,
+          onPressed: value != null ? () => context.pop(value) : null,
           child: Text(Localize.of(context).ok),
         ),
       ],

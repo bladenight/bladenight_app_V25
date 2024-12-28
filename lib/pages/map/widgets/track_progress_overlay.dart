@@ -12,7 +12,7 @@ import '../../../generated/l10n.dart';
 import '../../../helpers/enums/tracking_type.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
-import '../../../helpers/timeconverter_helper.dart';
+import '../../../helpers/time_converter_helper.dart';
 import '../../../models/event.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/is_tracking_provider.dart';

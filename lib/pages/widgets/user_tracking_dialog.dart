@@ -4,13 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/notification/toast_notification.dart';
+import '../../models/route.dart';
 import '../../models/user_gpx_point.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 import '../map/widgets/map_buttons_light.dart';
 import '../map/widgets/map_tile_layer.dart';
 import '../map/widgets/open_street_map_copyright.dart';
@@ -28,22 +31,21 @@ class UserTrackDialog extends ConsumerWidget {
 
   static void show(
       BuildContext context, UserGPXPoints userGPXPoints, String date) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) =>
-            UserTrackDialog(userGPXPoints: userGPXPoints, date: date),
-        fullscreenDialog: false,
-      ),
-    );
+    context.goNamed(AppRoute.userTrackDialog.name, queryParameters: {
+      'userGPXPoints': userGPXPoints.toJson(),
+      'date': date
+    });
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var initLatLng = defaultLatLng;
+    LatLngBounds? bounds;
 
     if (userGPXPoints.latLngList.isNotEmpty) {
       var lastCoordinate = userGPXPoints.latLngList.last;
       initLatLng = LatLng(lastCoordinate.latitude, lastCoordinate.longitude);
+      bounds = userGPXPoints.latLngList.getBounds;
     }
     return ScaffoldMessenger(
       child: CupertinoPageScaffold(
@@ -55,6 +57,9 @@ class UserTrackDialog extends ConsumerWidget {
             options: MapOptions(
               keepAlive: true,
               initialZoom: 13.0,
+              initialCameraFit: bounds != null
+                  ? CameraFit.insideBounds(bounds: bounds)
+                  : null,
               minZoom: MapSettings.openStreetMapEnabled
                   ? MapSettings.minZoom
                   : MapSettings.minZoomDefault,
@@ -73,13 +78,15 @@ class UserTrackDialog extends ConsumerWidget {
               ),
             ),
             children: [
-              MapTileLayer(
-                  hasSpecialStartPoint: MapSettings.openStreetMapEnabled),
+              MapTileLayer(hasSpecialStartPoint: true),
               GestureDetector(
                 onTap: () {
                   final LayerHitResult? hitResult = hitNotifier.value;
                   if (hitResult == null) return;
-                  // If running frequently (such as on a hover handler), and heavy work or state changes are performed here, store each result so it can be compared to the newest result, then avoid work if they are equal
+                  // If running frequently (such as on a hover handler),
+                  // and heavy work or state changes are performed here,
+                  // store each result so it can be compared to the newest
+                  // result, then avoid work if they are equal
                   for (final hitValue in hitResult.hitValues) {
                     if (kDebugMode) {
                       print(hitValue);

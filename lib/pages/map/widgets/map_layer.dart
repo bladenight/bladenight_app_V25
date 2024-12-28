@@ -58,8 +58,7 @@ class _MapLayerState extends State<MapLayer> {
       mapController: widget.controller,
       options: MapOptions(
         keepAlive: true,
-        initialCameraFit:
-            bounds != null ? CameraFit.insideBounds(bounds: bounds) : null,
+        initialCameraFit: CameraFit.insideBounds(bounds: bounds),
         initialZoom: initialZoom,
         minZoom: MapSettings.openStreetMapEnabled
             ? MapSettings.minZoom

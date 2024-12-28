@@ -1,26 +1,10 @@
-import 'dart:math' as math;
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import '../../app_settings/app_configuration_helper.dart';
-import '../../generated/l10n.dart';
-import '../../helpers/location_bearing_distance.dart';
-import '../../helpers/timeconverter_helper.dart';
-import '../../models/bn_map_marker.dart';
-import '../../models/event.dart';
-import '../../models/route.dart';
 import '../../providers/active_event_provider.dart';
-import '../../providers/map/icon_size_provider.dart';
-import '../../providers/route_providers.dart';
 import '../home_info/event_data_overview.dart';
 import '../home_info/event_map_small.dart';
-import 'data_loading_indicator.dart';
-import 'event_info/map_layer_overview.dart';
-import 'hidden_admin_button.dart';
-import 'no_data_warning.dart';
 
 class CurrentEventOverview extends ConsumerStatefulWidget {
   const CurrentEventOverview({super.key});

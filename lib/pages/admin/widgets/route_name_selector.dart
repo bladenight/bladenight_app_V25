@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../providers/get_all_routes_provider.dart';
@@ -36,7 +37,7 @@ class RouteNameSelector extends ConsumerStatefulWidget {
               CupertinoDialogAction(
                 child: Text(Localize.of(context).ok),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  context.pop();
                 },
               ),
             ],

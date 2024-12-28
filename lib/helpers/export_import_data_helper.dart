@@ -10,6 +10,7 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -43,7 +44,7 @@ void exportData(BuildContext context) async {
         onConfirmBtnTap: () {
           res = true;
           if (!context.mounted) return;
-          Navigator.of(context).pop();
+          context.pop();
         });
     if (res == false) {
       return;
@@ -110,8 +111,8 @@ void importData(BuildContext context, String dataString) async {
             title:
                 '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
           );
-          if (!context.mounted) return;
-          Navigator.pop(context);
+          if (!context.mounted || !context.canPop()) return;
+          context.pop(context);
         });
     if (res == false) {
       return;

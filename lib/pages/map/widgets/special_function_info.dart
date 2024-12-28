@@ -1,12 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../providers/is_tracking_provider.dart';
-import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/special_procession_function_provider.dart';
-import 'speed_info_colors.dart';
 
 class SpecialFunctionInfo extends ConsumerWidget {
   const SpecialFunctionInfo({super.key});

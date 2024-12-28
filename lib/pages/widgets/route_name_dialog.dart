@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
@@ -10,6 +11,7 @@ import '../../helpers/location_bearing_distance.dart';
 import '../../models/bn_map_marker.dart';
 import '../../models/event.dart';
 import '../../models/route.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/map/icon_size_provider.dart';
 import '../../providers/route_providers.dart';
 import '../map/widgets/map_layer.dart';
@@ -22,14 +24,8 @@ class RouteNameDialog extends ConsumerWidget {
   final String routeName;
 
   static show(BuildContext context, String routeName) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => RouteNameDialog(
-          routeName: routeName,
-        ),
-        fullscreenDialog: true,
-      ),
-    );
+    context.pushNamed(AppRoute.showRoute.name,
+        pathParameters: {'name': routeName});
   }
 
   @override

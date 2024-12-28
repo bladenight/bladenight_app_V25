@@ -9,6 +9,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_compass/flutter_map_compass.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -23,6 +24,7 @@ import '../../../helpers/notification/toast_notification.dart';
 import '../../../models/follow_location_state.dart';
 import '../../../models/route.dart';
 import '../../../pages/widgets/following_location_icon.dart';
+import '../../../providers/app_start_and_router/go_router.dart';
 import '../../../providers/images_and_links/live_map_image_and_link_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
@@ -32,7 +34,6 @@ import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/messages_provider.dart';
 import '../../../providers/route_providers.dart';
-import '../../messages/messages_page.dart';
 import '../../widgets/align_map_icon.dart';
 import '../../widgets/bottom_sheets/tracking_type_widget.dart';
 import '../../widgets/positioned_visibility_opacity.dart';
@@ -50,9 +51,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   StreamSubscription<LatLng?>? locationSubscription;
   AnimationController? animationController;
   Animation<double>? animation;
-  Orientation? _currentOrientation;
-  late var _width = double.infinity;
-  late var _height = double.infinity;
 
   @override
   void initState() {
@@ -72,14 +70,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
 
   @override
   void didChangeMetrics() {
-    _currentOrientation = MediaQuery.of(context).orientation;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        _currentOrientation = MediaQuery.of(context).orientation;
-        _width = MediaQuery.of(context).size.width;
-        _height = MediaQuery.of(context).size.height;
-        //_height = MediaQuery.of(context).size.height;
-      });
+      setState(() {});
     });
   }
 
@@ -125,10 +117,10 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                           text: Localize.of(context).friendswillmissyou,
                           confirmBtnText: Localize.of(context).yes,
                           cancelBtnText: Localize.of(context).no,
-                          onConfirmBtnTap: () {
-                            _stopLocationService();
-                            if (!mounted) return;
-                            Navigator.of(context).pop();
+                          onConfirmBtnTap: () async {
+                            await _stopLocationService();
+                            if (!context.mounted) return;
+                            context.pop();
                           });
                       break;
                     case TrackingType.userNotParticipating:
@@ -439,12 +431,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 return FloatingActionButton(
                     heroTag: 'messageBtnTag',
                     onPressed: () async {
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(
-                          builder: (context) => const MessagesPage(),
-                          fullscreenDialog: false,
-                        ),
-                      );
+                      context.pushNamed(AppRoute.messagesPage.name);
                     },
                     child: messageProvider.messages.isNotEmpty &&
                             messageProvider.readMessages > 0
