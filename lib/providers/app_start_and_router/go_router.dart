@@ -387,12 +387,12 @@ GoRouter goRouter(Ref ref) {
                             return NoTransitionPage(child: IntroScreen());
                           }),
                       GoRoute(
-                          path: '/adminPage',
+                          path: '/adminPage/:password',
                           name: AppRoute.adminPage.name,
                           redirect:
                               (BuildContext context, GoRouterState state) {
                             if (!ref.read(serverPwdSetProvider)) {
-                              return '/home';
+                              return '/';
                             } else {
                               return null;
                             }

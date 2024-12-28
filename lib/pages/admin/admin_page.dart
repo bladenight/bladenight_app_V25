@@ -433,9 +433,9 @@ class _AdminPageState extends ConsumerState<AdminPage> {
               },
               itemExtent: 50,
               children: [
-                for (var status in AdminProcessionMode.values)
+                for (var modeValue in AdminProcessionMode.values)
                   Center(
-                    child: Text(status.toString()),
+                    child: Text(modeValue.toString()),
                   ),
               ],
             ),
