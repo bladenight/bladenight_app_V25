@@ -4,23 +4,28 @@ import '../../../generated/l10n.dart';
 
 class InputNumberDialog extends StatefulWidget {
   const InputNumberDialog(this.title,
-      {this.initialValue = 180, this.maxInputLength = 5, super.key});
+      {this.initialValue = 180,
+      this.maxInputLength = 5,
+      this.minValue = 0,
+      super.key});
 
   final int initialValue;
   final int maxInputLength;
+  final int minValue;
   final String title;
 
   @override
   State<InputNumberDialog> createState() => _InputNumberDialogState();
 
   static Future<int?> show(BuildContext context, String title,
-      {initialValue = 180}) async {
+      {initialValue = 180, minValue = 60}) async {
     var resultNumber = await showCupertinoDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) => InputNumberDialog(
         title,
         initialValue: initialValue,
+        minValue: minValue,
       ),
     );
     return resultNumber;
@@ -53,24 +58,25 @@ class _InputNumberDialogState extends State<InputNumberDialog> {
         maxLength: widget.maxInputLength,
         onChanged: (val) {
           setState(() {
-            value = int.tryParse(val) ?? 180;
+            value = int.tryParse(val) ?? widget.minValue;
           });
         },
         onSubmitted: (value) {
-          context.pop(value);
+          Navigator.of(context).pop(value);
         },
       ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            context.pop();
+            Navigator.pop(context);
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
-          onPressed:
-              value != null && value! > 0 ? () => context.pop(value) : null,
+          onPressed: value != null && value! >= widget.minValue
+              ? () => Navigator.of(context).pop(value)
+              : null,
           child: Text(Localize.of(context).ok),
         ),
       ],

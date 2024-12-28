@@ -315,7 +315,7 @@ class BnLog {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                context.pop();
+                Navigator.pop(context);
               },
             ),
             CupertinoDialogAction(
@@ -358,7 +358,7 @@ class BnLog {
                     }
                   }
                 }
-                context.pop(logLevel);
+                Navigator.of(context).pop(logLevel);
               },
             ),
           ],

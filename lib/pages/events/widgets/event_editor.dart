@@ -257,7 +257,8 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                               var participantsCount =
                                   await InputNumberDialog.show(
                                       context, 'Teilnehmeranzahl',
-                                      initialValue: _event.participants);
+                                      initialValue: _event.participants,
+                                      minValue: 0);
                               if (participantsCount != null) {
                                 _event = _event.copyWith(
                                     participants: participantsCount);

@@ -37,7 +37,8 @@ class RouteNameSelector extends ConsumerStatefulWidget {
               CupertinoDialogAction(
                 child: Text(Localize.of(context).ok),
                 onPressed: () {
-                  context.pop();
+                  //important go_router issue - context pop not working
+                  Navigator.pop(context);
                 },
               ),
             ],

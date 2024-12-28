@@ -329,13 +329,13 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                context.pop();
+                Navigator.pop(context);
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                context.pop(status);
+                Navigator.of(context).pop(status);
               },
             ),
           ],
@@ -399,13 +399,13 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                context.pop();
+                Navigator.pop(context);
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                context.pop(route);
+                Navigator.of(context).pop(route);
               },
             ),
           ],
@@ -444,13 +444,13 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                context.pop();
+                Navigator.pop(context);
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                context.pop(status);
+                Navigator.of(context).pop(status);
               },
             ),
           ],
@@ -485,13 +485,13 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                context.pop();
+                Navigator.pop(context);
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).ok),
               onPressed: () {
-                context.pop(status);
+                Navigator.of(context).pop(status);
               },
             ),
           ],

@@ -86,7 +86,7 @@ class _EventRouteSelectorState extends ConsumerState<EventRouteSelector> {
               child: Text(Localize.of(context).cancel),
               onPressed: () {
                 if (context.canPop()) {
-                  context.pop();
+                  Navigator.pop(context);
                 }
               },
             ),
@@ -94,7 +94,7 @@ class _EventRouteSelectorState extends ConsumerState<EventRouteSelector> {
               child: Text(Localize.of(context).save),
               onPressed: () {
                 if (context.canPop()) {
-                  context.pop(route);
+                  Navigator.of(context).pop(route);
                 }
               },
             ),

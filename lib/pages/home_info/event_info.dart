@@ -107,18 +107,10 @@ class _EventInfoState extends ConsumerState<EventInfo>
               ConnectionWarning(
                   shimmerAnimationController: _animationController),
             AppOutdated(animationController: _animationController),
-            GestureDetector(
-              onTap: () => context.go('/map')
-              /*if (nextEvent.isActive ||
-                    nextEvent.status == EventStatus.confirmed)
-                  {}*/
-
-              ,
-              child: ShadowBoxWidget(
-                boxShadowColor: nextEvent.statusColor,
-                child: EventDataOverview(
-                  nextEvent: nextEvent,
-                ),
+            ShadowBoxWidget(
+              boxShadowColor: nextEvent.statusColor,
+              child: EventDataOverview(
+                nextEvent: nextEvent,
               ),
             ),
             const BladeGuardAdvertise(),

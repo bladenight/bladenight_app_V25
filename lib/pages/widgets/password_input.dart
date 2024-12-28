@@ -54,21 +54,21 @@ class _InputPasswordDialogState extends State<InputPasswordDialog> {
           });
         },
         onSubmitted: (value) {
-          context.pop(value);
+          Navigator.pop(context);
         },
       ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            context.pop();
+            Navigator.pop(context);
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: password.isNotEmpty
               ? () {
-                  context.pop(password);
+                  Navigator.of(context).pop(password);
                 }
               : null,
           child: Text(Localize.of(context).submit),
