@@ -119,6 +119,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                       fontWeight: FontWeight.w800),
                   children: [
                     WidgetSpan(
+                      alignment: PlaceholderAlignment.middle,
                       child: Image.asset(
                         widget.nextEvent.trafficLight,
                         height: 15,
@@ -135,12 +136,6 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                         child: SizedBox(
                       width: 5,
                     )),
-                    WidgetSpan(
-                      child: Image.asset(
-                        widget.nextEvent.trafficLight,
-                        height: 15,
-                      ),
-                    ),
                   ],
                 ),
               ),

@@ -102,7 +102,7 @@ GoRouter goRouter(Ref ref) {
       // Add your navigator observers
       GoRouterNavigatorObserver(),
     ],
-    initialLocation: '/home',
+    initialLocation: '/',
     navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: [
@@ -126,30 +126,6 @@ GoRouter goRouter(Ref ref) {
             );
           }),
 
-      GoRoute(
-          path: '/eventEditorPage',
-          name: AppRoute.eventEditorPage.name,
-          pageBuilder: (context, state) {
-            var event = state.extra as Event;
-            return NoTransitionPage(
-              child: EventEditor(event: event),
-            );
-          }),
-
-      GoRoute(
-        path: '/signIn',
-        name: AppRoute.signIn.name,
-        pageBuilder: (context, state) => const NoTransitionPage(
-          child: BladeGuardPage(),
-        ),
-      ),
-      GoRoute(
-        path: '/showRoute/:name',
-        pageBuilder: (context, state) => NoTransitionPage(
-          child: RouteNameDialog(routeName: state.pathParameters['name']!),
-        ),
-      ),
-
       // Stateful navigation based on:
       // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
       StatefulShellRoute.indexedStack(
@@ -167,13 +143,12 @@ GoRouter goRouter(Ref ref) {
                   // The screen to display as the root in the first tab of the
                   // bottom navigation bar.
                   name: AppRoute.home.name,
-                  path: '/home',
+                  path: '/',
                   builder: (BuildContext context, GoRouterState state) {
                     var queryParameters = state.uri.queryParameters;
                     if (queryParameters.containsKey('data')) {
                       importData(context, queryParameters.toString());
                     }
-
                     return const HomePage();
                   },
                   routes: <RouteBase>[
@@ -216,8 +191,7 @@ GoRouter goRouter(Ref ref) {
                       },
                       routes: [
                         GoRoute(
-                          path: 'showRoute/:name',
-                          name: AppRoute.showRouteDetails.name,
+                          path: '/showRoute/:name',
                           pageBuilder: (context, state) => NoTransitionPage(
                             child: RouteNameDialog(
                                 routeName: state.pathParameters['name']!),
@@ -230,6 +204,15 @@ GoRouter goRouter(Ref ref) {
                             child: RouteDialog(event: state.extra as Event),
                           ),
                         ),
+                        GoRoute(
+                            path: '/eventEditorPage',
+                            name: AppRoute.eventEditorPage.name,
+                            pageBuilder: (context, state) {
+                              var event = state.extra as Event;
+                              return NoTransitionPage(
+                                child: EventEditor(event: event),
+                              );
+                            }),
                       ]),
                 ]),
             if (!kIsWeb)
@@ -366,6 +349,13 @@ GoRouter goRouter(Ref ref) {
                         name: AppRoute.bladeguard.name,
                         builder: (context, state) => BladeGuardPage(),
                         pageBuilder: GoTransitions.slide.withBackGesture.call,
+                      ),
+                      GoRoute(
+                        path: '/signIn',
+                        name: AppRoute.signIn.name,
+                        pageBuilder: (context, state) => const NoTransitionPage(
+                          child: BladeGuardPage(),
+                        ),
                       ),
                       GoRoute(
                           path: '/${AppRoute.userTrackDialog.name}',

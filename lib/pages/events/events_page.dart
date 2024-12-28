@@ -589,6 +589,9 @@ Widget _listTile(
                     event.participants.toString(),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
+                  SizedBox(
+                    width: 5,
+                  ),
                   const Image(
                     height: 25,
                     width: 30,

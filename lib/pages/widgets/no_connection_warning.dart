@@ -77,7 +77,12 @@ class _ConnectionWarning extends ConsumerState<ConnectionWarning>
       _fadeAnimationController.forward();
     } else if (networkAware.connectivityStatus ==
         ConnectivityStatus.wampConnected) {
-      _fadeAnimationController.reverse();
+      if (_fadeAnimationController.value == 0) {
+        //avoid placeholder size if wamp is connected on first load
+        wampConnected = true;
+      } else {
+        _fadeAnimationController.reverse();
+      }
     }
     return wampConnected
         ? Container()

@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app_settings/server_connections.dart';
+import '../../helpers/file_name_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/url_launch_helper.dart';
@@ -228,7 +229,7 @@ class _HomePageState extends ConsumerState<HomePage>
                                                         context) ==
                                                     Brightness.light) {
                                                   imageName =
-                                                      '${imageName}_dark';
+                                                      getDarkName(imageName);
                                                 }
                                                 return FadeInImage.assetNetwork(
                                                   height: 80,
