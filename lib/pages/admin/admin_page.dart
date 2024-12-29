@@ -19,6 +19,7 @@ import '../../providers/active_event_provider.dart';
 import '../../providers/get_all_routes_provider.dart';
 import '../../providers/route_providers.dart';
 import '../../wamp/admin_calls.dart';
+import '../widgets/common_widgets/tinted_cupertino_button.dart';
 import '../widgets/no_connection_warning.dart';
 
 class AdminPage extends ConsumerStatefulWidget {
@@ -111,7 +112,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
               height: 1,
             ),
             const ConnectionWarning(),
-            CupertinoButton.filled(
+            SizedTintedCupertinoButton(
               child: Text(Localize.of(context).setState),
               onPressed: () async {
                 var status = await showEventStatusDialog(
@@ -148,7 +149,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                 child: Text(_resultText),
               ),
             ),
-            CupertinoButton.filled(
+            SizedTintedCupertinoButton(
               child: Text(Localize.of(context).setRoute),
               onPressed: () async {
                 var route = await showRouteSelectorDialog(
@@ -212,7 +213,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
               },
             ),
             const SizedBox(height: 15),
-            CupertinoButton.filled(
+            SizedTintedCupertinoButton(
               child: const Text('ProcessionMode'),
               onPressed: () async {
                 setState(() {
@@ -250,7 +251,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
               },
             ),
             const SizedBox(height: 15),
-            CupertinoButton.filled(
+            SizedTintedCupertinoButton(
               child: const Text('Restart BN-Server'),
               onPressed: () async {
                 var status = await showKillServerDialog(

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../providers/get_all_routes_provider.dart';
+import '../../widgets/common_widgets/tinted_cupertino_button.dart';
 import '../../widgets/no_data_warning.dart';
 
 class EventRouteSelector extends ConsumerStatefulWidget {
@@ -19,7 +20,7 @@ class EventRouteSelector extends ConsumerStatefulWidget {
 class _EventRouteSelectorState extends ConsumerState<EventRouteSelector> {
   @override
   Widget build(BuildContext context) {
-    return CupertinoButton.filled(
+    return SizedTintedCupertinoButton(
         child: Text(widget.routeName),
         onPressed: () async {
           var res =
