@@ -539,5 +539,9 @@
   "refresh": "Aktualisieren",
   "refreshHeader": "Daten aktualisieren",
   "serverConnected": "Server verbunden",
-  "appInitialisationError": "Ladefehler der App."
+  "appInitialisationError": "Ladefehler der App.",
+  "appName": "BladeNight München",
+  "changeLightColor": "Ändere Normalmodus Farbe",
+  "changeDarkColor": "Ändere Dunkelmodus Farbe",
+  "changeMeColor": "Ändere Eigene Farbe"
 }

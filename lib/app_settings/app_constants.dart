@@ -29,6 +29,8 @@ const int defaultMinPreOnsiteLogin = 180;
 ///Maximum duration in Server in milli sec bnserver.relationships.collector.maxage=3600000
 const int maxDurationCodeIsValid = 3600000; //1hour
 
+const double primaryContrastingAlpha = 0.3;
+
 class ColorConstants {
   static const List<Color> friendPickerColors = [
     ...colors1,

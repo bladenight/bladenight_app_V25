@@ -3,6 +3,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app_settings/app_constants.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../providers/settings/dark_color_provider.dart';
@@ -37,7 +38,7 @@ class _ColorSettingsState extends ConsumerState<ColorSettingsWidget> {
                         .read(themePrimaryDarkColorProvider.notifier)
                         .setColor(res);
                   },
-                  child: Text(Localize.of(context).setcolor),
+                  child: Text(Localize.of(context).changeMeColor),
                 ),
                 trailing: ColorIndicator(
                   width: 20,
@@ -55,7 +56,7 @@ class _ColorSettingsState extends ConsumerState<ColorSettingsWidget> {
               ),
             ]),
         CupertinoFormSection(
-            header: Text(Localize.of(context).setPrimaryColor),
+            header: Text(Localize.of(context).changeLightColor),
             children: <Widget>[
               CupertinoListTile(
                 title: GestureDetector(
@@ -68,7 +69,7 @@ class _ColorSettingsState extends ConsumerState<ColorSettingsWidget> {
                         .read(themePrimaryLightColorProvider.notifier)
                         .setColor(res);
                   },
-                  child: Text(Localize.of(context).setcolor),
+                  child: Text(Localize.of(context).changeLightColor),
                 ),
                 trailing: ColorIndicator(
                   width: 20,
@@ -87,10 +88,16 @@ class _ColorSettingsState extends ConsumerState<ColorSettingsWidget> {
                     if (!context.mounted) return;
                     CupertinoAdaptiveTheme.of(context).setTheme(
                         light: CupertinoThemeData(
-                            brightness: Brightness.light, primaryColor: res),
+                            brightness: Brightness.light,
+                            primaryColor: res,
+                            primaryContrastingColor:
+                                res.withValues(alpha: primaryContrastingAlpha)),
                         dark: CupertinoThemeData(
                           brightness: Brightness.dark,
                           primaryColor: ref.read(themePrimaryDarkColorProvider),
+                          primaryContrastingColor: ref
+                              .read(themePrimaryDarkColorProvider)
+                              .withValues(alpha: primaryContrastingAlpha),
                         ));
                   },
                 ),
@@ -100,7 +107,7 @@ class _ColorSettingsState extends ConsumerState<ColorSettingsWidget> {
             header: Text(Localize.of(context).setPrimaryDarkColor),
             children: [
               CupertinoListTile(
-                title: Text(Localize.of(context).setcolor),
+                title: Text(Localize.of(context).changeDarkColor),
                 trailing: ColorIndicator(
                   width: 20,
                   height: 20,
@@ -119,10 +126,15 @@ class _ColorSettingsState extends ConsumerState<ColorSettingsWidget> {
                         light: CupertinoThemeData(
                             brightness: Brightness.light,
                             primaryColor:
-                                ref.read(themePrimaryLightColorProvider)),
+                                ref.read(themePrimaryLightColorProvider),
+                            primaryContrastingColor: ref
+                                .read(themePrimaryLightColorProvider)
+                                .withValues(alpha: primaryContrastingAlpha)),
                         dark: CupertinoThemeData(
                           brightness: Brightness.dark,
                           primaryColor: res,
+                          primaryContrastingColor:
+                              res.withValues(alpha: primaryContrastingAlpha),
                         ));
                   },
                 ),
@@ -165,7 +177,7 @@ class _ColorSettingsState extends ConsumerState<ColorSettingsWidget> {
                   descriptionLeft: Localize.of(context).setDarkMode,
                   descriptionRight: '',
                   rightWidget: CupertinoSwitch(
-                    activeColor: CupertinoTheme.of(context).primaryColor,
+                    activeTrackColor: CupertinoTheme.of(context).primaryColor,
                     onChanged: (val) async {
                       if (val) {
                         setState(() {

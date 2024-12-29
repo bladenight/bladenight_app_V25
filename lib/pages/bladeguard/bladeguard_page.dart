@@ -253,7 +253,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   leftWidget: Padding(
                                     padding: const EdgeInsets.only(
                                         top: 5, bottom: 5),
-                                    child: CupertinoButton.filled(
+                                    child: CupertinoButton(
                                         child: FittedBox(
                                           fit: BoxFit.fitWidth,
                                           child: Text(Localize.of(context)
@@ -460,7 +460,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: CupertinoButton(
-                              color: CupertinoTheme.of(context).primaryColor,
+                              color: CupertinoTheme.of(context)
+                                  .primaryContrastingColor,
                               child: const Text('Öffne Serveradmin'),
                               onPressed: () async {
                                 await AdminPasswordDialog.show(context);
@@ -478,7 +479,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: CupertinoButton(
-                                color: CupertinoTheme.of(context).primaryColor,
+                                color: CupertinoTheme.of(context)
+                                    .primaryContrastingColor,
                                 child: const Text('Logout'),
                                 onPressed: () async {
                                   HiveSettingsDB.setServerPassword(null);

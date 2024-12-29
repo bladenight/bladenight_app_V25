@@ -909,39 +909,39 @@ class HiveSettingsDB {
   //Colors
   static const String meColorKey = 'meColorPref';
 
-  ///get RoutePointsstring DateTimeStamp
+  ///get me Color for location icon etc.
   static Color get meColor {
     return _hiveBox.get(meColorKey, defaultValue: meDefaultColor);
   }
 
-  ///set RoutePointsstring DateTimeStamp
+  ///set me Color for location icon etc.
   static void setMeColor(Color val) {
     _hiveBox.put(meColorKey, val);
   }
 
   static const String themePrimaryLightColorKey = 'primaryLightColorPref';
 
-  ///get RoutePointsstring DateTimeStamp
+  ///get ThemePrimaryLightColor
   static Color get themePrimaryLightColor {
     return _hiveBox.get(themePrimaryLightColorKey,
         defaultValue: systemPrimaryDefaultColor);
   }
 
-  ///set RoutePointsstring DateTimeStamp
+  ///set ThemePrimaryLightColor
   static void setThemePrimaryLightColor(Color val) {
     _hiveBox.put(themePrimaryLightColorKey, val);
   }
 
   static const String themePrimaryDarkColorKey = 'primaryDarkColorPref';
 
-  ///get RoutePointsstring DateTimeStamp
+  ///get ThemePrimaryDarkColor
   static Color get themePrimaryDarkColor {
     var val = _hiveBox.get(themePrimaryDarkColorKey,
         defaultValue: systemPrimaryDarkDefaultColor);
     return val;
   }
 
-  ///set RoutePointsstring DateTimeStamp
+  ///set ThemePrimaryDarkColor
   static void setThemePrimaryDarkColor(Color val) {
     _hiveBox.put(themePrimaryDarkColorKey, val);
   }

@@ -2,6 +2,8 @@ import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wakelock/wakelock.dart';
 import '../../providers/app_start_and_router/go_router.dart';
+import '../../providers/settings/server_pwd_provider.dart';
+import '../widgets/common_widgets/tinted_cupertino_button.dart';
 import '../widgets/tracking_export_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -53,6 +55,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     var networkConnected = ref.watch(networkAwareProvider);
+    var adminPass = ref.watch(serverPwdSetProvider);
     return CupertinoPageScaffold(
       child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -78,16 +81,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       header:
                           Text(Localize.of(context).bladeGuardSettingsTitle),
                       children: <Widget>[
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width * 0.9,
-                          child: CupertinoButton(
-                            color: CupertinoTheme.of(context).primaryColor,
-                            child:
-                                Text(Localize.of(context).bladeGuardSettings),
-                            onPressed: () => {
-                              context.pushNamed(AppRoute.bladeguard.name),
-                            },
-                          ),
+                        SizedTintedCupertinoButton(
+                          child: Text(Localize.of(context).bladeGuardSettings),
+                          onPressed: () => {
+                            context.pushNamed(AppRoute.bladeguard.name),
+                          },
+                          onLongPress: () => {
+                            adminPass
+                                ? context.pushNamed(AppRoute.adminPage.name,
+                                    queryParameters: {
+                                        'password':
+                                            HiveSettingsDB.serverPassword
+                                      })
+                                : context.pushNamed(AppRoute.bladeguard.name)
+                          },
                         ),
                       ]),
                   const TrackingExportWidget(),
@@ -103,7 +110,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 Localize.of(context).automatedStopSettingText,
                             descriptionRight: '',
                             rightWidget: CupertinoSwitch(
-                              activeColor:
+                              activeTrackColor:
                                   CupertinoTheme.of(context).primaryColor,
                               onChanged: (val) {
                                 setState(() {
@@ -128,7 +135,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 Localize.of(context).autoStartTrackingInfo,
                             descriptionRight: '',
                             rightWidget: CupertinoSwitch(
-                              activeColor:
+                              activeTrackColor:
                                   CupertinoTheme.of(context).primaryColor,
                               onChanged: (val) {
                                 setState(() {
@@ -152,7 +159,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 Localize.of(context).showOwnTrackSwitchTitle,
                             descriptionRight: '',
                             rightWidget: CupertinoSwitch(
-                              activeColor:
+                              activeTrackColor:
                                   CupertinoTheme.of(context).primaryColor,
                               onChanged: (val) {
                                 setState(() {
@@ -173,7 +180,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   Localize.of(context).showOwnColoredTrack,
                               descriptionRight: '',
                               rightWidget: CupertinoSwitch(
-                                activeColor:
+                                activeTrackColor:
                                     CupertinoTheme.of(context).primaryColor,
                                 onChanged: (val) {
                                   setState(() {
@@ -198,7 +205,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               descriptionLeft: Localize.of(context).showCompass,
                               descriptionRight: '',
                               rightWidget: CupertinoSwitch(
-                                activeColor:
+                                activeTrackColor:
                                     CupertinoTheme.of(context).primaryColor,
                                 onChanged: (val) {
                                   setState(() {
@@ -248,7 +255,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   rightWidget: _showPushProgressIndicator
                                       ? const CircularProgressIndicator()
                                       : CupertinoSwitch(
-                                          activeColor:
+                                          activeTrackColor:
                                               CupertinoTheme.of(context)
                                                   .primaryColor,
                                           onChanged: (val) async {
@@ -292,7 +299,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       Localize.of(context).fireBaseCrashlytics,
                                   descriptionRight: '',
                                   rightWidget: CupertinoSwitch(
-                                    activeColor:
+                                    activeTrackColor:
                                         CupertinoTheme.of(context).primaryColor,
                                     onChanged: (val) async {
                                       HiveSettingsDB.setChrashlyticsEnabled(
@@ -317,7 +324,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       .fitnessPermissionSwitchSettingsText,
                                   descriptionRight: '',
                                   rightWidget: CupertinoSwitch(
-                                    activeColor:
+                                    activeTrackColor:
                                         CupertinoTheme.of(context).primaryColor,
                                     onChanged: (val) {
                                       HiveSettingsDB
@@ -346,7 +353,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       Localize.of(context).allowWakeLock,
                                   descriptionRight: '',
                                   rightWidget: CupertinoSwitch(
-                                    activeColor:
+                                    activeTrackColor:
                                         CupertinoTheme.of(context).primaryColor,
                                     onChanged: (val) {
                                       HiveSettingsDB.setWakeLockEnabled(val);
@@ -363,31 +370,21 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               header: Text(Localize.of(context)
                                   .ignoreBatteriesOptimisation),
                               children: <Widget>[
-                                SizedBox(
-                                  width: MediaQuery.sizeOf(context).width * 0.9,
-                                  child: CupertinoButton(
-                                      color: CupertinoTheme.of(context)
-                                          .primaryColor,
-                                      child: Text(Localize.of(context)
-                                          .ignoreBatteriesOptimisationTitle),
-                                      onPressed: () async =>
-                                          await BackgroundGeolocationHelper
-                                              .openBatteriesSettings(context)),
-                                ),
+                                SizedTintedCupertinoButton(
+                                    child: Text(Localize.of(context)
+                                        .ignoreBatteriesOptimisationTitle),
+                                    onPressed: () async =>
+                                        await BackgroundGeolocationHelper
+                                            .openBatteriesSettings(context)),
                               ]),
                         if (!kIsWeb)
                           CupertinoFormSection(
                               header: Text(Localize.of(context).setSystem),
                               children: <Widget>[
-                                SizedBox(
-                                  width: MediaQuery.sizeOf(context).width * 0.9,
-                                  child: CupertinoButton(
-                                      color: CupertinoTheme.of(context)
-                                          .primaryColor,
-                                      child: Text(Localize.of(context)
-                                          .openOperatingSystemSettings),
-                                      onPressed: () => openAppSettings()),
-                                ),
+                                SizedTintedCupertinoButton(
+                                    child: Text(Localize.of(context)
+                                        .openOperatingSystemSettings),
+                                    onPressed: () => openAppSettings()),
                               ]),
                         CupertinoFormSection(
                           header: Text(Localize.of(context).exportLogData),
@@ -397,9 +394,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 : SizedBox(
                                     width:
                                         MediaQuery.sizeOf(context).width * 0.9,
-                                    child: CupertinoButton(
-                                        color: CupertinoTheme.of(context)
-                                            .primaryColor,
+                                    child: SizedTintedCupertinoButton(
                                         child: Text(Localize.of(context)
                                             .setExportLogSupport),
                                         onPressed: () async {
@@ -425,7 +420,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               CupertinoFormSection(
                                   header: Text(Localize.of(context).setLogData),
                                   children: <Widget>[
-                                    CupertinoButton(
+                                    SizedTintedCupertinoButton(
                                         child: Text(
                                             'Loglevel ${BnLog.getActiveLogLevel().name}'),
                                         onPressed: () async {
@@ -433,7 +428,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                               context);
                                           setState(() {});
                                         }),
-                                    CupertinoButton(
+                                    SizedTintedCupertinoButton(
                                         child: Text(
                                             Localize.of(context).setClearLogs),
                                         onPressed: () async {
@@ -466,7 +461,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 CupertinoFormSection(
                                     header: const Text('Geolocation Log'),
                                     children: <Widget>[
-                                      CupertinoButton(
+                                      SizedTintedCupertinoButton(
                                           child: Text(Localize.of(context)
                                               .setExportLogSupport),
                                           onPressed: () =>
@@ -594,7 +589,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   header: Text(
                                       Localize.of(context).setexportDataHeader),
                                   children: <Widget>[
-                                    CupertinoButton(
+                                    SizedTintedCupertinoButton(
                                         child: Text(Localize.of(context)
                                             .setexportIdAndFriends),
                                         onPressed: () => exportData(context)),
@@ -626,14 +621,18 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                     opacity: inputText.length > 10 ? 1.0 : 0.2,
                                     duration: const Duration(milliseconds: 500),
                                     // The green box must be a child of the AnimatedOpacity widget.
-                                    child: CupertinoButton(
-                                      child: Text(
-                                          Localize.of(context).setStartImport),
-                                      onPressed: () {
-                                        inputText.length > 10
-                                            ? importData(context, inputText)
-                                            : null;
-                                      },
+                                    child: SizedBox(
+                                      width: MediaQuery.sizeOf(context).width *
+                                          0.9,
+                                      child: SizedTintedCupertinoButton(
+                                        child: Text(Localize.of(context)
+                                            .setStartImport),
+                                        onPressed: () {
+                                          inputText.length > 10
+                                              ? importData(context, inputText)
+                                              : null;
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ],

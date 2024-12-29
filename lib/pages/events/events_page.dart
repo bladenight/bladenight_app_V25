@@ -106,6 +106,8 @@ class _EventsPageState extends ConsumerState<EventsPage>
                   children: [
                     if (ref.watch(serverPwdSetProvider))
                       CupertinoButton(
+                        color:
+                            CupertinoTheme.of(context).primaryContrastingColor,
                         padding: EdgeInsets.zero,
                         minSize: 0,
                         onPressed: () async {

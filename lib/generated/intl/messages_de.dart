@@ -174,6 +174,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "appIdTitle": MessageLookupByLibrary.simpleMessage("App-Id "),
         "appInitialisationError":
             MessageLookupByLibrary.simpleMessage("Ladefehler der App."),
+        "appName": MessageLookupByLibrary.simpleMessage("BladeNight München"),
         "appOutDated": MessageLookupByLibrary.simpleMessage(
             "Appversion veralted!\nBitte im Store aktualisieren."),
         "appTitle": MessageLookupByLibrary.simpleMessage("BladeNight"),
@@ -234,6 +235,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Abbruch"),
         "canceled": MessageLookupByLibrary.simpleMessage("Abgesagt 😞"),
         "change": MessageLookupByLibrary.simpleMessage("Ändern"),
+        "changeDarkColor":
+            MessageLookupByLibrary.simpleMessage("Ändere Dunkelmodus Farbe"),
+        "changeLightColor":
+            MessageLookupByLibrary.simpleMessage("Ändere Normalmodus Farbe"),
+        "changeMeColor":
+            MessageLookupByLibrary.simpleMessage("Ändere Eigene Farbe"),
         "changetoalways": MessageLookupByLibrary.simpleMessage(
             "Zu \'Immer zulassen\' ändern"),
         "checkBgRegistration": MessageLookupByLibrary.simpleMessage(

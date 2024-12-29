@@ -397,13 +397,12 @@ GoRouter goRouter(Ref ref) {
                               return null;
                             }
                           },
-                          pageBuilder: (context, state) {
+                          builder: (context, state) {
                             var pathParameters = state.pathParameters;
-                            return NoTransitionPage(
-                              child: AdminPage(
-                                  password: pathParameters['password']!),
-                            );
-                          }),
+                            return AdminPage(
+                                password: pathParameters['password']!);
+                          },
+                          pageBuilder: GoTransitions.bottomSheet),
                     ],
                   ),
                 ]),

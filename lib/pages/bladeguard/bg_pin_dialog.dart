@@ -47,14 +47,14 @@ class _PinDialogState extends State<PinDialog> {
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            context.pop();
+            Navigator.of(context).pop();
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: password.isNotEmpty
               ? () {
-                  context.pop(password);
+                  Navigator.of(context).pop(password);
                 }
               : null,
           child: Text(Localize.of(context).submit),

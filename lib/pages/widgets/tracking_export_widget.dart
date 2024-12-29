@@ -7,6 +7,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../../helpers/logger.dart';
 import '../../models/user_gpx_point.dart';
 import '../../providers/location_provider.dart';
+import 'common_widgets/tinted_cupertino_button.dart';
 import 'string_picker_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -52,7 +53,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CupertinoButton(
+                    TintedCupertinoButton(
                         child: exportTrackingInProgress
                             ? const CircularProgressIndicator()
                             : const Icon(Icons.edit),
@@ -66,7 +67,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                             openDatePicker(context);
                           }),
                     ),
-                    CupertinoButton(
+                    TintedCupertinoButton(
                         child: exportTrackingInProgress
                             ? const CircularProgressIndicator()
                             : const Icon(Icons.map_rounded),
@@ -106,8 +107,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
             ),
             SizedBox(
               width: MediaQuery.sizeOf(context).width * 0.9,
-              child: CupertinoButton(
-                  color: CupertinoTheme.of(context).primaryColor,
+              child: TintedCupertinoButton(
                   child: exportTrackingInProgress
                       ? const CircularProgressIndicator()
                       : Text(Localize.of(context).exportUserTracking),
@@ -134,8 +134,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                   children: <Widget>[
                     SizedBox(
                       width: MediaQuery.sizeOf(context).width * 0.9,
-                      child: CupertinoButton(
-                        color: CupertinoTheme.of(context).primaryColor,
+                      child: TintedCupertinoButton(
                         child: Text(Localize.of(context).resetOdoMeterTitle),
                         onPressed: () async {
                           await LocationProvider().resetOdoMeter(context);
@@ -149,8 +148,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                   children: <Widget>[
                     SizedBox(
                       width: MediaQuery.sizeOf(context).width * 0.9,
-                      child: CupertinoButton(
-                        color: CupertinoTheme.of(context).primaryColor,
+                      child: TintedCupertinoButton(
                         child: Text(Localize.of(context).resetTrackPointsStore),
                         onPressed: () async {
                           await clearAllTrackPoints();

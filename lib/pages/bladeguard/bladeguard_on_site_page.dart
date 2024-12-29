@@ -168,7 +168,7 @@ class BladeGuardOnsite extends ConsumerWidget {
                                       context.pop();
                                     });
                               },
-                              color: Colors.orange.withOpacity(0.8),
+                              color: Colors.orange.withValues(alpha: 0.8),
                               child: Text(
                                 Localize.of(context).bgTodayNotParticipation,
                                 style: const TextStyle(

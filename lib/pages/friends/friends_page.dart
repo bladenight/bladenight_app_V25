@@ -477,8 +477,6 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                                     SizedBox(
                                       width: double.infinity,
                                       child: CupertinoButton(
-                                        color: CupertinoTheme.of(context)
-                                            .primaryColor,
                                         child: Row(children: [
                                           const Icon(
                                             Icons.delete,

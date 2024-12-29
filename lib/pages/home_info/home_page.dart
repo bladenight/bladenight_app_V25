@@ -208,7 +208,7 @@ class _HomePageState extends ConsumerState<HomePage>
                                       itemBuilder: (context, index, realIdx) {
                                         return Card(
                                           color: CupertinoTheme.of(context)
-                                              .primaryColor,
+                                              .primaryContrastingColor,
                                           //bg color for card
                                           child: Center(
                                             child: GestureDetector(
@@ -232,8 +232,11 @@ class _HomePageState extends ConsumerState<HomePage>
                                                       getDarkName(imageName);
                                                 }
                                                 return FadeInImage.assetNetwork(
-                                                  height: 80,
-                                                  //width: 100,
+                                                  //height: 80,
+                                                  width:
+                                                      MediaQuery.sizeOf(context)
+                                                              .width *
+                                                          0.66,
                                                   fit: BoxFit.contain,
                                                   placeholder: sponsors
                                                       .value![index]

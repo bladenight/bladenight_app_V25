@@ -5,14 +5,16 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:bladenight_app_flutter/pages/widgets/main_app_widget.dart';
+import 'package:bladenight_app_flutter/navigation/base_app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MainAppWidget());
+    await tester.pumpWidget(const BaseAppScaffold(
+      child: Text('test'),
+    ));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

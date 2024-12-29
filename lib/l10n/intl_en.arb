@@ -539,5 +539,9 @@
   "refresh": "Update",
   "refreshHeader": "Update data",
   "serverConnected": "Server connected",
-  "appInitialisationError": "App initialisation failed"
+  "appInitialisationError": "App initialisation failed",
+  "appName": "BladeNight Munich",
+  "changeLightColor": "Change light mode color",
+  "changeDarkColor": "Change dark mode color",
+  "changeMeColor": "Change me color"
 }

@@ -172,6 +172,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Unique application identification string"),
         "appInitialisationError":
             MessageLookupByLibrary.simpleMessage("App initialisation failed"),
+        "appName": MessageLookupByLibrary.simpleMessage("BladeNight Munich"),
         "appOutDated": MessageLookupByLibrary.simpleMessage(
             "App is outdated!\nPlease update in Appstore."),
         "appTitle": MessageLookupByLibrary.simpleMessage("BladeNight"),
@@ -232,6 +233,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "canceled": MessageLookupByLibrary.simpleMessage("Canceled 😞"),
         "change": MessageLookupByLibrary.simpleMessage("Change it."),
+        "changeDarkColor":
+            MessageLookupByLibrary.simpleMessage("Change dark mode color"),
+        "changeLightColor":
+            MessageLookupByLibrary.simpleMessage("Change light mode color"),
+        "changeMeColor":
+            MessageLookupByLibrary.simpleMessage("Change me color"),
         "changetoalways": MessageLookupByLibrary.simpleMessage(
             "Change it to \'Allow all time\'"),
         "checkBgRegistration": MessageLookupByLibrary.simpleMessage(

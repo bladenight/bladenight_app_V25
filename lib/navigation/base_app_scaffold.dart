@@ -3,8 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../app_settings/app_constants.dart';
+import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../providers/app_start_and_router/go_router.dart';
@@ -36,30 +39,43 @@ class BaseAppScaffold extends StatelessWidget {
             view: View.of(context),
             child: CupertinoAdaptiveTheme(
               light: CupertinoThemeData(
-                  brightness: Brightness.light,
-                  primaryColor: HiveSettingsDB.themePrimaryLightColor),
+                brightness: Brightness.light,
+                primaryColor: HiveSettingsDB.themePrimaryLightColor,
+                primaryContrastingColor: HiveSettingsDB.themePrimaryLightColor
+                    .withValues(alpha: primaryContrastingAlpha),
+              ),
               dark: CupertinoThemeData(
                 brightness: Brightness.dark,
                 primaryColor: HiveSettingsDB.themePrimaryDarkColor,
+                primaryContrastingColor: HiveSettingsDB.themePrimaryDarkColor
+                    .withValues(alpha: primaryContrastingAlpha),
               ),
               initial: HiveSettingsDB.adaptiveThemeMode,
               builder: (theme) => CupertinoApp(
-                localizationsDelegates: const [
-                  //AppLocalizations.delegate,
-                  Localize.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  DefaultMaterialLocalizations.delegate,
-                  DefaultWidgetsLocalizations.delegate,
-                  DefaultCupertinoLocalizations.delegate
-                ],
-                supportedLocales: Localize.delegate.supportedLocales,
-                title: 'BladeNight München',
-                debugShowCheckedModeBanner: false,
-                theme: theme,
-                home: child,
-              ),
+                  localizationsDelegates: const [
+                    //AppLocalizations.delegate,
+                    Localize.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    DefaultMaterialLocalizations.delegate,
+                    DefaultWidgetsLocalizations.delegate,
+                    DefaultCupertinoLocalizations.delegate
+                  ],
+                  supportedLocales: Localize.delegate.supportedLocales,
+                  title: 'BladeNight',
+                  debugShowCheckedModeBanner: false,
+                  theme: theme,
+                  home: Stack(
+                    children: [
+                      child,
+                      localTesting
+                          ? SafeArea(
+                              child: Text(
+                                  'Size w:${round(MediaQuery.sizeOf(context).width, decimals: 0)} h:${round(MediaQuery.sizeOf(context).height, decimals: 0)}'))
+                          : Container(),
+                    ],
+                  )),
             ),
           ),
         ),

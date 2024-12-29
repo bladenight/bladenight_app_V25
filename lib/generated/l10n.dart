@@ -4572,6 +4572,46 @@ class Localize {
       args: [],
     );
   }
+
+  /// `BladeNight Munich`
+  String get appName {
+    return Intl.message(
+      'BladeNight Munich',
+      name: 'appName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change light mode color`
+  String get changeLightColor {
+    return Intl.message(
+      'Change light mode color',
+      name: 'changeLightColor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change dark mode color`
+  String get changeDarkColor {
+    return Intl.message(
+      'Change dark mode color',
+      name: 'changeDarkColor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change me color`
+  String get changeMeColor {
+    return Intl.message(
+      'Change me color',
+      name: 'changeMeColor',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {
