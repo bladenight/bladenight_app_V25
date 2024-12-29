@@ -130,7 +130,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               : Localize.of(context).iAmBladeGuard,
                           descriptionRight: '',
                           rightWidget: CupertinoSwitch(
-                            activeColor:
+                            activeTrackColor:
                                 CupertinoTheme.of(context).primaryColor,
                             onChanged: (val) {
                               ref
@@ -285,7 +285,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 descriptionLeft:
                                     Localize.of(context).geoFencing,
                                 rightWidget: CupertinoSwitch(
-                                  activeColor:
+                                  activeTrackColor:
                                       CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) async {
                                     await HiveSettingsDB
@@ -312,7 +312,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 descriptionLeft: Localize.of(context)
                                     .pushMessageParticipateAsBladeGuard,
                                 rightWidget: CupertinoSwitch(
-                                  activeColor:
+                                  activeTrackColor:
                                       CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) async {
                                     setState(() {
@@ -344,7 +344,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     .pushMessageSkateMunichInfos,
                                 descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
-                                  activeColor:
+                                  activeTrackColor:
                                       CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) async {
                                     setState(() {
@@ -376,7 +376,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 descriptionLeft: Localize.of(context).head,
                                 descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
-                                  activeColor:
+                                  activeTrackColor:
                                       CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) {
                                     setState(() {
@@ -406,7 +406,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 descriptionLeft: Localize.of(context).tail,
                                 descriptionRight: '',
                                 rightWidget: CupertinoSwitch(
-                                  activeColor:
+                                  activeTrackColor:
                                       CupertinoTheme.of(context).primaryColor,
                                   onChanged: (val) {
                                     setState(() {

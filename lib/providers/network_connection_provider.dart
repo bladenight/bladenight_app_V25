@@ -5,10 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:universal_io/io.dart';
 
-import '../helpers/enums/tracking_type.dart';
 import '../helpers/logger.dart';
 import '../wamp/wamp_v2.dart';
-import 'location_provider.dart';
 
 /// States to connection to internet and wamp server
 enum ConnectivityStatus {
@@ -133,7 +131,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
       if (_wasWampDisconnected == true && !WampV2().webSocketIsConnected) {
         await Future.delayed(Duration(seconds: 1));
         var wampinitres = await WampV2().refresh();
-        print('wampinitres ${wampinitres}');
+        print('wampinitres $wampinitres');
       }
       if (WampV2().webSocketIsConnected) {
         _wasWampDisconnected = false;

@@ -37,7 +37,7 @@ class _AboutPageState extends State<AboutPage> {
       navigationBar: CupertinoNavigationBar(
         middle: Text(Localize.of(context).about_bnapp),
         backgroundColor:
-            CupertinoTheme.of(context).barBackgroundColor.withOpacity(1),
+            CupertinoTheme.of(context).barBackgroundColor.withValues(alpha: 1),
       ),
       child: SafeArea(
         child: SingleChildScrollView(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_compass/flutter_compass.dart' show FlutterCompass;
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'compass_provider.g.dart';
@@ -43,7 +44,7 @@ final userLocationMarkerHeadingStreamController =
     StreamController<LocationMarkerHeading>.broadcast();
 
 @riverpod
-Raw<Stream<LocationMarkerHeading>> rawStream(RawStreamRef ref) {
+Raw<Stream<LocationMarkerHeading>> rawStream(Ref ref) {
   var listener = FlutterCompass.events?.listen((event) {
     if (event.heading != null) {
       userLocationMarkerHeadingStreamController.sink.add(LocationMarkerHeading(

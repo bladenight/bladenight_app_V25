@@ -752,7 +752,9 @@ class LocationProvider with ChangeNotifier {
 
   void setGeoFence() async {
     if (!HiveSettingsDB.bgSettingVisible ||
-        !HiveSettingsDB.onsiteGeoFencingActive) return;
+        !HiveSettingsDB.onsiteGeoFencingActive) {
+      return;
+    }
     var points = await ProviderContainer().read(geofencePointsProvider.future);
     var geofencePoints = gfp.GeofencePoints.getGeofenceList(points);
     bg.BackgroundGeolocation.addGeofences(geofencePoints).then((bool success) {
@@ -788,7 +790,9 @@ class LocationProvider with ChangeNotifier {
             text: 'No positive prominent disclosure or always denied');
         return false;
       }
-      if (Platform.isAndroid && await DeviceHelper.isAndroidGreaterVNine()) {
+      if (Platform.isAndroid &&
+          await DeviceHelper.isAndroidGreaterVNine() &&
+          context.mounted) {
         await LocationPermissionDialog()
             .showMotionSensorProminentDisclosure(context);
       }
@@ -804,8 +808,9 @@ class LocationProvider with ChangeNotifier {
           text: 'location permanentlyDenied by os',
           className: 'location_provider',
           methodName: '_startTracking');
-
-      await LocationPermissionDialog().requestAndOpenAppSettings(context);
+      if (context.mounted) {
+        return LocationPermissionDialog().requestAndOpenAppSettings(context);
+      }
       return false;
     }
 

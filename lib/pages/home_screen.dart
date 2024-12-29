@@ -11,7 +11,6 @@ import 'package:go_router/go_router.dart';
 import '../app_settings/app_constants.dart';
 import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
-import '../helpers/export_import_data_helper.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger.dart';
 import '../helpers/notification/notification_helper.dart';
@@ -25,8 +24,6 @@ import 'friends/friends_page.dart';
 import 'home_info/home_page.dart';
 import 'map/map_page.dart';
 import 'settings/settings_page.dart';
-
-bool _initialURILinkHandled = false;
 
 class HomeScreen extends ConsumerStatefulWidget {
   static const String homeRouteName = '/homeScreen';
@@ -231,8 +228,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     return CupertinoTabScaffold(
       controller: tabController,
       tabBar: CupertinoTabBar(
-        backgroundColor:
-            CupertinoTheme.of(context).barBackgroundColor.withOpacity(1.0),
+        backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
         items: [
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.home),

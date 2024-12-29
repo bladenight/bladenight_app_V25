@@ -91,7 +91,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                 child: Builder(builder: (context) {
                   return Container(
                     color: CupertinoDynamicColor.resolve(
-                        CupertinoColors.systemBackground.withOpacity(0.2),
+                        CupertinoColors.systemBackground.withValues(alpha: 0.2),
                         context),
                     padding: const EdgeInsets.all(15),
                     child: Center(
@@ -252,10 +252,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                   rtu.runningLength
                                         ],
                                         backgroundColor:
-                                            Colors.grey.withOpacity(0.2),
+                                            Colors.grey.withValues(alpha: 0.2),
                                         pointColor: CupertinoTheme.of(context)
                                             .primaryColor
-                                            .withOpacity(0.8),
+                                            .withValues(alpha: 0.8),
                                         progressColor:
                                             CupertinoTheme.of(context)
                                                 .primaryColor,
@@ -273,7 +273,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     child: Progresso(
                                         //user
                                         backgroundColor:
-                                            Colors.grey.withOpacity(0.5),
+                                            Colors.grey.withValues(alpha: 0.5),
                                         progressStrokeWidth: 6,
                                         points: [
                                           0,
@@ -285,7 +285,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         pointColor: Colors.black,
                                         progressColor: ref
                                             .watch(meColorProvider)
-                                            .withOpacity(0.8),
+                                            .withValues(alpha: 0.8),
                                         start: 0,
                                         progress: rtu.runningLength == 0
                                             ? 0
@@ -484,14 +484,16 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                                                       colors: [
                                                                     actualOrNextEvent
                                                                         .statusColor
-                                                                        .withOpacity(
-                                                                            0.8),
+                                                                        .withValues(
+                                                                            alpha:
+                                                                                0.8),
                                                                     actualOrNextEvent
                                                                         .statusColor,
                                                                     actualOrNextEvent
                                                                         .statusColor
-                                                                        .withOpacity(
-                                                                            0.8)
+                                                                        .withValues(
+                                                                            alpha:
+                                                                                0.8)
                                                                   ]),
                                                               child: Text(
                                                                 Localize.of(
@@ -545,8 +547,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     SizedBox(
                                       height: 15,
                                       child: Progresso(
-                                          backgroundColor:
-                                              Colors.grey.withOpacity(0.5),
+                                          backgroundColor: Colors.grey
+                                              .withValues(alpha: 0.5),
                                           points: [
                                             rtu.runningLength == 0
                                                 ? 0
@@ -559,7 +561,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                           ],
                                           pointColor: CupertinoTheme.of(context)
                                               .primaryColor
-                                              .withOpacity(0.8),
+                                              .withValues(alpha: 0.8),
                                           progressColor:
                                               CupertinoTheme.of(context)
                                                   .primaryColor,

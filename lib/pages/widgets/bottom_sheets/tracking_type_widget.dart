@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../helpers/enums/tracking_type.dart';
+import '../common_widgets/tinted_cupertino_button.dart';
 import '../grip_bar.dart';
 
 class TrackingTypeWidget extends ConsumerWidget {
@@ -23,43 +24,34 @@ class TrackingTypeWidget extends ConsumerWidget {
                 CupertinoFormSection(
                   header: Text(Localize.of(context).startParticipation),
                   children: [
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width * 0.9,
-                      child: CupertinoButton(
-                          color: CupertinoTheme.of(context).primaryColor,
-                          child: Text(
-                              Localize.of(context).startParticipationTracking),
-                          onPressed: () => Navigator.of(context)
-                              .pop(TrackingType.userParticipating)),
-                    ),
+                    SizedTintedCupertinoButton(
+                        child: Text(
+                            '▶ ${Localize.of(context).startParticipationTracking}'),
+                        onPressed: () => Navigator.of(context)
+                            .pop(TrackingType.userParticipating)),
                   ],
                 ),
                 CupertinoFormSection(
                   header: Text(Localize.of(context)
                       .startLocationWithoutParticipatingInfo),
                   children: [
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width * 0.9,
-                      child: CupertinoButton(
-                          color: CupertinoTheme.of(context).primaryColor,
-                          child: Text(Localize.of(context)
-                              .startLocationWithoutParticipating),
-                          onPressed: () =>
-                              context.pop(TrackingType.userNotParticipating)),
-                    ),
+                    SizedTintedCupertinoButton(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        child: Text(
+                            '▶ ${Localize.of(context).startLocationWithoutParticipating}'),
+                        onPressed: () =>
+                            context.pop(TrackingType.userNotParticipating)),
                   ],
                 ),
                 CupertinoFormSection(
                   header: Text(Localize.of(context).startTrackingOnlyTitle),
                   children: [
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width * 0.9,
-                      child: CupertinoButton(
-                          color: CupertinoTheme.of(context).primaryColor,
-                          child: Text(Localize.of(context).startTrackingOnly),
-                          onPressed: () => Navigator.of(context)
-                              .pop(TrackingType.onlyTracking)),
-                    )
+                    SizedTintedCupertinoButton(
+                        color: CupertinoTheme.of(context).primaryColor,
+                        child:
+                            Text('▶ ${Localize.of(context).startTrackingOnly}'),
+                        onPressed: () => Navigator.of(context)
+                            .pop(TrackingType.onlyTracking)),
                   ],
                 ),
               ],

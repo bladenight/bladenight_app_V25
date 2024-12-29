@@ -147,7 +147,7 @@ GoRouter goRouter(Ref ref) {
                   builder: (BuildContext context, GoRouterState state) {
                     var queryParameters = state.uri.queryParameters;
                     if (queryParameters.containsKey('data')) {
-                      importData(context, queryParameters.toString());
+                      importData(context, queryParameters['data']!);
                     }
                     return const HomePage();
                   },

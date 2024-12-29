@@ -41,7 +41,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor:
-            CupertinoTheme.of(context).barBackgroundColor.withOpacity(1),
+            CupertinoTheme.of(context).barBackgroundColor.withValues(alpha: 1),
         middle: const Text('Admin'),
       ),
       child: CupertinoScrollbar(

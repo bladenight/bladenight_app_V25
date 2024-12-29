@@ -25,11 +25,12 @@ class _MapMarkerPopupState extends State<MapMarkerPopup> {
             : MediaQuery.of(context).size.width * 0.5,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color:
-              CupertinoTheme.of(context).barBackgroundColor.withOpacity(0.65),
+          color: CupertinoTheme.of(context)
+              .barBackgroundColor
+              .withValues(alpha: 0.65),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.65),
+              color: Colors.grey.withValues(alpha: 0.65),
               blurRadius: 4,
               spreadRadius: 4,
               offset: const Offset(0, 0),

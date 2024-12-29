@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../generated/l10n.dart';
@@ -63,37 +62,7 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (bool didPop, dynamic obj) async {
-          await showDialog<bool>(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text(Localize.of(context).closeApp),
-                actionsAlignment: MainAxisAlignment.spaceBetween,
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      context.pop(true);
-                    },
-                    child: Text(Localize.of(context).yes),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      if (context.canPop()) {
-                        context.pop(false);
-                      }
-                    },
-                    child: Text(Localize.of(context).no),
-                  ),
-                ],
-              );
-            },
-          );
-          return;
-        },
-        child: BaseAppScaffold(child: body));
+    return BaseAppScaffold(child: body);
   }
 }
 
@@ -149,7 +118,7 @@ class ScaffoldWithTabBarNavigation extends StatelessWidget {
           ],
         ),
         tabBuilder: (context, index) {
-          return navigationShell;
+          return SafeArea(child: navigationShell);
         },
       ),
     );

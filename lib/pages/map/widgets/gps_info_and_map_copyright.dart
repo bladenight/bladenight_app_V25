@@ -147,17 +147,17 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
                                             ? alwaysPermissionGranted
                                                 ? CupertinoTheme.of(context)
                                                     .barBackgroundColor
-                                                    .withOpacity(0.6)
+                                                    .withValues(alpha: 0.6)
                                                 : CupertinoColors.systemYellow
                                             : CupertinoTheme.of(context)
                                                 .barBackgroundColor
-                                                .withOpacity(0.4),
+                                                .withValues(alpha: 0.4),
                                     foregroundColor:
                                         ref.watch(isTrackingProvider)
                                             ? alwaysPermissionGranted
                                                 ? CupertinoTheme.of(context)
                                                     .primaryColor
-                                                    .withOpacity(0.9)
+                                                    .withValues(alpha: 0.9)
                                                 : CupertinoColors.black
                                             : CupertinoColors.black,
                                     icon: Row(children: [

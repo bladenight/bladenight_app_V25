@@ -208,7 +208,7 @@ class _HomePageState extends ConsumerState<HomePage>
                                       itemBuilder: (context, index, realIdx) {
                                         return Card(
                                           color: CupertinoTheme.of(context)
-                                              .primaryContrastingColor,
+                                              .scaffoldBackgroundColor,
                                           //bg color for card
                                           child: Center(
                                             child: GestureDetector(

@@ -374,8 +374,7 @@ class _EventEditorState extends ConsumerState<EventEditor> {
     setState(() {
       isSaving = false;
     });
-    if (!context.mounted) return;
-    if (res && context.canPop()) {
+    if (context.mounted && res && context.canPop()) {
       context.pop(_event);
     } else {
       (showToast(message: 'Fehler beim Speichern!'));

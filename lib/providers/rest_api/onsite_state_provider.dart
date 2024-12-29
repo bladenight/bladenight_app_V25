@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../generated/l10n.dart';
@@ -222,13 +223,12 @@ class BladeGuardApiRepository {
 }
 
 @riverpod
-BladeGuardApiRepository bladeGuardApiRepository(
-        BladeGuardApiRepositoryRef ref) =>
+BladeGuardApiRepository bladeGuardApiRepository(Ref ref) =>
     BladeGuardApiRepository(dioClient: ref.read(dioProvider));
 
 @riverpod
-Future<ResultStringOrError> checkBladeguardMail(CheckBladeguardMailRef ref,
-    String email, DateTime birthday, String phone, String? pin) async {
+Future<ResultStringOrError> checkBladeguardMail(
+    Ref ref, String email, DateTime birthday, String phone, String? pin) async {
   final repo = ref.read(bladeGuardApiRepositoryProvider);
   return repo.checkBladeguardEmail(email, birthday, phone, pin);
 }

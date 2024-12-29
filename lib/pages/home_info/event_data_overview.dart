@@ -83,63 +83,64 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              alignment: Alignment.topCenter,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  widget.nextEvent.statusColor.withOpacity(0.8),
-                  widget.nextEvent.statusColor,
-                  widget.nextEvent.statusColor.withOpacity(0.8)
-                ]),
-                color: widget.nextEvent.statusColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(widget.borderRadius),
-                  topRight: Radius.circular(widget.borderRadius),
-                  bottomLeft: Radius.circular(0),
-                  bottomRight: Radius.circular(0),
+            if (!widget.nextEvent.isActive)
+              Container(
+                alignment: Alignment.topCenter,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    widget.nextEvent.statusColor.withValues(alpha: 0.8),
+                    widget.nextEvent.statusColor,
+                    widget.nextEvent.statusColor.withValues(alpha: 0.8)
+                  ]),
+                  color: widget.nextEvent.statusColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(widget.borderRadius),
+                    topRight: Radius.circular(widget.borderRadius),
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(0),
+                  ),
                 ),
-              ),
-              child: Text.rich(
-                textAlign: TextAlign.center,
-                TextSpan(
-                  style: TextStyle(
-                      color: widget.nextEvent.statusTextColor,
-                      fontSize: CupertinoTheme.of(context)
-                                  .textTheme
-                                  .textStyle
-                                  .fontSize !=
-                              null
-                          ? CupertinoTheme.of(context)
-                                  .textTheme
-                                  .textStyle
-                                  .fontSize! *
-                              1.2
-                          : 14,
-                      fontWeight: FontWeight.w800),
-                  children: [
-                    WidgetSpan(
-                      alignment: PlaceholderAlignment.middle,
-                      child: Image.asset(
-                        widget.nextEvent.trafficLight,
-                        height: 15,
+                child: Text.rich(
+                  textAlign: TextAlign.center,
+                  TextSpan(
+                    style: TextStyle(
+                        color: widget.nextEvent.statusTextColor,
+                        fontSize: CupertinoTheme.of(context)
+                                    .textTheme
+                                    .textStyle
+                                    .fontSize !=
+                                null
+                            ? CupertinoTheme.of(context)
+                                    .textTheme
+                                    .textStyle
+                                    .fontSize! *
+                                1.2
+                            : 14,
+                        fontWeight: FontWeight.w800),
+                    children: [
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Image.asset(
+                          widget.nextEvent.trafficLight,
+                          height: 15,
+                        ),
                       ),
-                    ),
-                    WidgetSpan(
-                        child: SizedBox(
-                      width: 5,
-                    )),
-                    TextSpan(
-                      text: widget.nextEvent.statusText,
-                    ),
-                    WidgetSpan(
-                        child: SizedBox(
-                      width: 5,
-                    )),
-                  ],
+                      WidgetSpan(
+                          child: SizedBox(
+                        width: 5,
+                      )),
+                      TextSpan(
+                        text: widget.nextEvent.statusText,
+                      ),
+                      WidgetSpan(
+                          child: SizedBox(
+                        width: 5,
+                      )),
+                    ],
+                  ),
                 ),
               ),
-            ),
             if (widget.showMap)
               GestureDetector(
                 onTap: () {
@@ -285,7 +286,7 @@ Widget eventDetail(
                       fontSize: normalFontSize * 0.7,
                       color: CupertinoTheme.of(context)
                           .primaryColor
-                          .withOpacity(0.8),
+                          .withValues(alpha: 0.8),
                     ),
                   ),
                 ),
@@ -297,7 +298,7 @@ Widget eventDetail(
                     height: 2,
                     width: dividerWidth,
                     decoration: BoxDecoration(
-                      color: dividerColor.withOpacity(0.2),
+                      color: dividerColor.withValues(alpha: 0.2),
                       borderRadius:
                           const BorderRadius.all(Radius.circular(4.0)),
                     ),
@@ -308,7 +309,7 @@ Widget eventDetail(
                           height: 2,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(colors: <Color>[
-                              dividerColor.withOpacity(0.4),
+                              dividerColor.withValues(alpha: 0.4),
                               dividerColor,
                             ]),
                             borderRadius:

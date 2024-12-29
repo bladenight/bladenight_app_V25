@@ -90,9 +90,13 @@ void importData(BuildContext context, String dataString) async {
           res = true;
           const String dataId = 'data=';
           var dataPartIdx = dataString.indexOf(dataId);
-          if (dataPartIdx == -1) return;
-          var base64dataString = dataString.substring(
-              dataPartIdx + dataId.length, dataString.length);
+          var base64dataString = '';
+          if (dataPartIdx == -1) {
+            base64dataString = dataString;
+          } else {
+            base64dataString = dataString.substring(
+                dataPartIdx + dataId.length, dataString.length);
+          }
           var base64Decoded = utf8.decode(base64.decode(base64dataString));
           var dataParts = base64Decoded.split('&');
           var id = dataParts[0].substring(3);
@@ -111,8 +115,8 @@ void importData(BuildContext context, String dataString) async {
             title:
                 '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
           );
-          if (!context.mounted || !context.canPop()) return;
-          context.pop(context);
+          if (!context.mounted || !Navigator.of(context).canPop()) return;
+          Navigator.pop(context);
         });
     if (res == false) {
       return;
@@ -123,6 +127,11 @@ void importData(BuildContext context, String dataString) async {
         message: '${Localize.current.import} ${Localize.current.failed}',
         backgroundColor: CupertinoColors.systemRed,
         textColor: CupertinoColors.black);
+    QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: Localize.current.import,
+        text: '${Localize.current.import} ${Localize.current.failed}');
   }
 }
 

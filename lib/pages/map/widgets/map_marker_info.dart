@@ -37,7 +37,7 @@ class _MapPinWidgetState extends State<MapPinWidget> {
               BoxShadow(
                   blurRadius: 20,
                   offset: Offset.zero,
-                  color: Colors.grey.withOpacity(0.5))
+                  color: Colors.grey.withValues(alpha: 0.5))
             ]),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
