@@ -18,6 +18,7 @@ import '../../../app_settings/app_constants.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/logger.dart';
 import '../../../models/friend.dart';
+import '../../../providers/app_start_and_router/go_router.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../providers/network_connection_provider.dart';
 import '../../../wamp/wamp_exception.dart';
@@ -49,7 +50,13 @@ class EditFriendDialog extends ConsumerStatefulWidget {
     Friend? friend,
     required FriendsAction friendDialogAction,
   }) async {
-    return showCupertinoModalBottomSheet(
+    var queryParameters = {'action': friendDialogAction.name};
+    if (friend != null) {
+      queryParameters['friend'] = friend.toJson();
+    }
+    return context.pushNamed(AppRoute.editFriendDialog.name,
+        queryParameters: queryParameters);
+    showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => EditFriendDialog(
         friend: friend,
@@ -169,7 +176,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                         children: <Widget>[
                           CupertinoTextFormFieldRow(
                             controller: nameController,
-                            focusNode: nameFocusNode,
+                            //focusNode: nameFocusNode,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             validator: (String? value) {
@@ -305,12 +312,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                             : null,
                         child: isLoading
                             ? const CircularProgressIndicator()
-                            : Center(
-                                child: Row(children: [
-                                  Text(Localize.of(context).save),
-                                  const Icon(Icons.send_rounded)
-                                ]),
-                              ),
+                            : Text(Localize.of(context).ok),
                       ),
                     ),
                     const SizedBox(
@@ -412,7 +414,6 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
         isLoading = false;
       });
     } catch (e) {
-      print(e);
       BnLog.error(
           className: toString(),
           methodName: 'friendActionDialog',

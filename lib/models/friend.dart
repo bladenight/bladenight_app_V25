@@ -5,9 +5,32 @@ import 'package:flutter/material.dart';
 
 import '../app_settings/app_configuration_helper.dart';
 import '../generated/l10n.dart';
+import '../pages/friends/widgets/friends_action_sheet.dart';
 import 'color_mapper.dart';
 
 part 'friend.mapper.dart';
+
+/// Actions if edit a friend
+///
+enum FriendsAction {
+  /// add a new friend
+  addNew,
+
+  /// link and add friend with received code
+  addWithCode,
+
+  /// send as nearby service advertiser
+  addNearby,
+
+  /// be browser and create a nearby connection
+  acceptNearby,
+
+  /// edit friend's data
+  edit,
+
+  /// remove friend and delete from server
+  delete,
+}
 
 @MappableClass(includeCustomMappers: [ColorMapper()])
 class Friend with FriendMappable {
@@ -35,8 +58,8 @@ class Friend with FriendMappable {
   int? relativeTime;
 
   ///driven distance from start
-  int relativeDistance=0;
-  int absolutePosition=0;
+  int relativeDistance = 0;
+  int absolutePosition = 0;
 
   ///positive when in front //negative when behind
   int? timeToUser;
@@ -129,7 +152,13 @@ class Friend with FriendMappable {
   ///Compare two friends by [friend.name]
   ///returns 0 if equivalent
   int compareTo(Friend another) {
-    return name.toLowerCase().compareTo(another.name.toLowerCase());
+    if (name.toLowerCase().compareTo(another.name.toLowerCase()) != 0) {
+      return 1;
+    }
+    if (friendId != another.friendId) {
+      return 2;
+    }
+    return 0;
   }
 
   @override
@@ -137,3 +166,16 @@ class Friend with FriendMappable {
     return 'Friend name:$name,online: ${isOnline.toString()},color: $color,lat: $latitude,lon: $longitude,reldistance: $relativeDistance,active: ${isActive.toString()}';
   }
 }
+
+/*
+@MappableClass()
+class EditFriend with EditFriendMappable {
+  @MappableField(key: 'action')
+  late FriendsAction action;
+  @MappableField(key: 'friend')
+  late Friend? friend;
+  @MappableField(key: 'name')
+  late String? name;
+  @MappableField(key: 'code')
+  late int? code;
+}*/

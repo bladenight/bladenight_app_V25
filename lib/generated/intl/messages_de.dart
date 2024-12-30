@@ -314,7 +314,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "enableOnesignalPushMessage":
             MessageLookupByLibrary.simpleMessage("Push Mitteilung aktiv"),
         "enableOnesignalPushMessageTitle": MessageLookupByLibrary.simpleMessage(
-            "Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die Bladenight stattfindet empfangen werden. Empfohlene Einstellung \'Ein\'."),
+            "Onesignal Push Benachrichtigungen aktivieren. Hiermit können allgemeine Informationen per Push-Mitteilung z.B. ob die BladeNight stattfindet empfangen werden. Empfohlene Einstellung \'Ein\'."),
         "enter6digitcode": MessageLookupByLibrary.simpleMessage(
             "Bitte 6-stelligen Code eingeben"),
         "enterBirthday":
@@ -323,7 +323,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "enterPassword":
             MessageLookupByLibrary.simpleMessage("Passwort eingeben"),
         "enterPhoneNumber": MessageLookupByLibrary.simpleMessage(
-            "Deine Mobiltelefonnummer (Nur für die Bladenight und falls die Polizei bei der Ordnerprüfung dich sehen möchte.)"),
+            "Deine Mobiltelefonnummer (Nur für die BladeNight und falls die Polizei bei der Ordnerprüfung dich sehen möchte.)"),
         "entercode": MessageLookupByLibrary.simpleMessage("Code: "),
         "enterfriendname":
             MessageLookupByLibrary.simpleMessage("Name eingeben"),
@@ -730,7 +730,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "Tracking ohne Teilnahme\nDies startet die Standortdarstellung auf der Karte ohne Teilnahme an der BladeNight und überträgt zur Berechnung der Zeiten deinen Standort auf den Server. Deine Freunde im Zug werden Dir angezeigt. Die Zeit zum Zuganfang /-ende von deinem Standort werden berechnet. Weiterhin, werden deine Geschwindigkeit und Trackingdaten aufgezeichnet die du speichern kannst. Bitte diese Funktion nicht verwenden, wenn du an der BladeNight teilnimmst. Der Modus muss manuell beendet werden. \nSoll dies gestartet werden?"),
         "startParticipation": MessageLookupByLibrary.simpleMessage(
-            "Teilnahme starten\nDu bist aktiver Skater im Zug und möchtest die Darstellung des Bladenightzuges unterstützen. Danke wenn du Teilnahme an Bladenight starten drückst."),
+            "Teilnahme starten\nDu bist aktiver Skater im Zug und möchtest die Darstellung des BladeNight-Zuges unterstützen. Danke wenn du Teilnahme an Bladenight starten drückst."),
         "startParticipationHeader": MessageLookupByLibrary.simpleMessage(
             "Du fährst heute bei der Bladenight mit und möchtest die Darstellung des Zuges unterstützen und deinen Standort mit Freunden teilen. Standortfreigabe starten?"),
         "startParticipationShort":

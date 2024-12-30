@@ -41,6 +41,10 @@ class BladeGuardOnsite extends ConsumerWidget {
     var networkConnected = ref.watch(networkAwareProvider);
     return isOnSiteAsync.when(error: (e, st) {
       return Column(mainAxisSize: MainAxisSize.max, children: [
+        Expanded(
+            child: Row(
+          children: [],
+        )),
         Padding(
             padding: const EdgeInsets.fromLTRB(15.0, 1, 15.0, 1),
             child: Container(

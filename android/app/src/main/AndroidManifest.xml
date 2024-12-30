@@ -48,7 +48,8 @@
             android:label="BladeNight!"
             android:logo="@drawable/ic_launcher"
             android:roundIcon="@drawable/app_icon_round"
-            tools:replace="android:label">
+            tools:replace="android:label"
+            android:enableOnBackInvokedCallback="true">
         <receiver
                 android:name=".BladeNightWidget"
                 android:exported="false">

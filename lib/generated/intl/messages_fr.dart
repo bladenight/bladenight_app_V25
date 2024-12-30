@@ -43,7 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Votre ami peut-il également scanner le code-barres ci-dessous ou saisir manuellement le code ${code} dans son application";
 
   static String m9(bladeguardPrivacyLink) =>
-      "Nous avons besoin du soutien de bénévoles. En tant que Bladeguard, vous soutenez activement Bladenight. Les <a href=\"${bladeguardPrivacyLink}\">Règlements de Munich BladeNight sur la protection des données</a></p> s\'appliquent";
+      "Nous avons besoin du soutien de bénévoles. En tant que Bladeguard, vous soutenez activement BladeNight. Les <a href=\"${bladeguardPrivacyLink}\">Règlements de Munich BladeNight sur la protection des données</a></p> s\'appliquent";
 
   static String m10(name) => "inviter ${name}";
 
@@ -750,7 +750,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "startParticipation":
             MessageLookupByLibrary.simpleMessage("Démarrer la participation"),
         "startParticipationHeader": MessageLookupByLibrary.simpleMessage(
-            "Tu participes aujourd\'hui à la Bladenight et tu souhaites soutenir la représentation du train et partager ton emplacement avec tes amis. Démarrer le partage de site ?"),
+            "Tu participes aujourd\'hui à la BladeNight et tu souhaites soutenir la représentation du train et partager ton emplacement avec tes amis. Démarrer le partage de site ?"),
         "startParticipationShort":
             MessageLookupByLibrary.simpleMessage("Début de la participation"),
         "startParticipationTracking":

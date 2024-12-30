@@ -63,7 +63,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    //SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
   _runRefreshTimer() {
@@ -78,37 +78,38 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var networkAvailable = ref.watch(networkAwareProvider);
+    var actionButton = ExpandableFloatingActionButton(
+        distance: 90,
+        startAngleInDegrees: 00,
+        buttonIcon: const Icon(Icons.menu_open_rounded),
+        children: [
+          FloatingActionButton(
+              heroTag: 'addFABTag',
+              onPressed: () async {
+                var _ = await EditFriendDialog.show(
+                  context,
+                  friendDialogAction: FriendsAction.addNew,
+                );
+              },
+              child: const Icon(Icons.add)),
+          FloatingActionButton(
+              heroTag: 'addWithCodeFABTag',
+              onPressed: () async {
+                var _ = await EditFriendDialog.show(
+                  context,
+                  friendDialogAction: FriendsAction.addWithCode,
+                );
+              },
+              child: const Icon(Icons.pin)),
+          FloatingActionButton(
+              heroTag: 'refreshFABTag',
+              child: const Icon(Icons.update),
+              onPressed: () async {
+                ref.read(friendsLogicProvider).refreshFriends();
+              }),
+        ]);
     return Scaffold(
-      floatingActionButton: ExpandableFloatingActionButton(
-          distance: 90,
-          startAngleInDegrees: 00,
-          buttonIcon: const Icon(Icons.menu_open_rounded),
-          children: [
-            FloatingActionButton(
-                heroTag: 'addFABTag',
-                onPressed: () async {
-                  var _ = await EditFriendDialog.show(
-                    context,
-                    friendDialogAction: FriendsAction.addNew,
-                  );
-                },
-                child: const Icon(Icons.add)),
-            FloatingActionButton(
-                heroTag: 'addWithCodeFABTag',
-                onPressed: () async {
-                  var _ = await EditFriendDialog.show(
-                    context,
-                    friendDialogAction: FriendsAction.addWithCode,
-                  );
-                },
-                child: const Icon(Icons.pin)),
-            FloatingActionButton(
-                heroTag: 'refreshFABTag',
-                child: const Icon(Icons.update),
-                onPressed: () async {
-                  ref.read(friendsLogicProvider).refreshFriends();
-                }),
-          ]),
+      floatingActionButton: actionButton,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),

@@ -42,7 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Alternative can your friend scan the barcode below or manually enter the code ${code} in his app";
 
   static String m9(bladeguardPrivacyLink) =>
-      "We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href=\"${bladeguardPrivacyLink}\">Munich BladeNight data protection regulations</a></p> apply";
+      "We need support from volunteers. As a Bladeguard you actively support BladeNight. The <a href=\"${bladeguardPrivacyLink}\">Munich BladeNight data protection regulations</a></p> apply";
 
   static String m10(name) => "invite ${name}";
 
@@ -444,7 +444,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Location sharing was started and is active."),
         "login": MessageLookupByLibrary.simpleMessage("login"),
         "loginThreeHoursBefore": MessageLookupByLibrary.simpleMessage(
-            "You can sign up as a Bladeguard for tonight’s Bladenight when you are already registered as a Bladeguard, you are near the starting point, and it’s less than 3 hours before the start."),
+            "You can sign up as a Bladeguard for tonight’s BladeNight when you are already registered as a Bladeguard, you are near the starting point, and it’s less than 3 hours before the start."),
         "manufacturer": MessageLookupByLibrary.simpleMessage("Manufacturer"),
         "map": MessageLookupByLibrary.simpleMessage("Map"),
         "mapAlign": MessageLookupByLibrary.simpleMessage("Map alignment"),
@@ -717,7 +717,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "startParticipation":
             MessageLookupByLibrary.simpleMessage("Start participation"),
         "startParticipationHeader": MessageLookupByLibrary.simpleMessage(
-            "You are participating on the Bladenight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?"),
+            "You are participating on the BladeNight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?"),
         "startParticipationShort":
             MessageLookupByLibrary.simpleMessage("Start participation"),
         "startParticipationTracking":

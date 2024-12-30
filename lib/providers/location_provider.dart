@@ -51,7 +51,7 @@ import 'active_event_provider.dart';
 import 'images_and_links/geofence_image_and_link_provider.dart';
 import 'rest_api/onsite_state_provider.dart';
 
-///[LocationProvider] gets actual procession of Bladenight
+///[LocationProvider] gets actual procession of BladeNight
 ///when tracking is active is result included users position and friends
 ///is tracking inactive result contains only head,tail and route data
 class LocationProvider with ChangeNotifier {

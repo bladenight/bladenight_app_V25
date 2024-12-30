@@ -25,8 +25,16 @@ class TrackingTypeWidget extends ConsumerWidget {
                   header: Text(Localize.of(context).startParticipation),
                   children: [
                     SizedTintedCupertinoButton(
-                        child: Text(
-                            '▶ ${Localize.of(context).startParticipationTracking}'),
+                        child: Row(children: [
+                          const Icon(CupertinoIcons.play_arrow_solid),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Text(Localize.of(context)
+                                .startParticipationTracking),
+                          ),
+                        ]),
                         onPressed: () => Navigator.of(context)
                             .pop(TrackingType.userParticipating)),
                   ],
@@ -37,8 +45,16 @@ class TrackingTypeWidget extends ConsumerWidget {
                   children: [
                     SizedTintedCupertinoButton(
                         color: CupertinoTheme.of(context).primaryColor,
-                        child: Text(
-                            '▶ ${Localize.of(context).startLocationWithoutParticipating}'),
+                        child: Row(children: [
+                          const Icon(CupertinoIcons.play_arrow_solid),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Text(Localize.of(context)
+                                .startLocationWithoutParticipating),
+                          ),
+                        ]),
                         onPressed: () =>
                             context.pop(TrackingType.userNotParticipating)),
                   ],
@@ -48,8 +64,15 @@ class TrackingTypeWidget extends ConsumerWidget {
                   children: [
                     SizedTintedCupertinoButton(
                         color: CupertinoTheme.of(context).primaryColor,
-                        child:
-                            Text('▶ ${Localize.of(context).startTrackingOnly}'),
+                        child: Row(children: [
+                          const Icon(CupertinoIcons.play_arrow_solid),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Text(Localize.of(context).startTrackingOnly),
+                          ),
+                        ]),
                         onPressed: () => Navigator.of(context)
                             .pop(TrackingType.onlyTracking)),
                   ],

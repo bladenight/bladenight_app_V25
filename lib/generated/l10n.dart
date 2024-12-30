@@ -1716,10 +1716,10 @@ class Localize {
     );
   }
 
-  /// `We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href="{bladeguardPrivacyLink}">Munich BladeNight data protection regulations</a></p> apply`
+  /// `We need support from volunteers. As a Bladeguard you actively support BladeNight. The <a href="{bladeguardPrivacyLink}">Munich BladeNight data protection regulations</a></p> apply`
   String iAmBladeGuardTitle(Object bladeguardPrivacyLink) {
     return Intl.message(
-      'We need support from volunteers. As a Bladeguard you actively support Bladenight. The <a href="$bladeguardPrivacyLink">Munich BladeNight data protection regulations</a></p> apply',
+      'We need support from volunteers. As a Bladeguard you actively support BladeNight. The <a href="$bladeguardPrivacyLink">Munich BladeNight data protection regulations</a></p> apply',
       name: 'iAmBladeGuardTitle',
       desc: '',
       args: [bladeguardPrivacyLink],
@@ -4093,10 +4093,10 @@ class Localize {
     );
   }
 
-  /// `You can sign up as a Bladeguard for tonight’s Bladenight when you are already registered as a Bladeguard, you are near the starting point, and it’s less than 3 hours before the start.`
+  /// `You can sign up as a Bladeguard for tonight’s BladeNight when you are already registered as a Bladeguard, you are near the starting point, and it’s less than 3 hours before the start.`
   String get loginThreeHoursBefore {
     return Intl.message(
-      'You can sign up as a Bladeguard for tonight’s Bladenight when you are already registered as a Bladeguard, you are near the starting point, and it’s less than 3 hours before the start.',
+      'You can sign up as a Bladeguard for tonight’s BladeNight when you are already registered as a Bladeguard, you are near the starting point, and it’s less than 3 hours before the start.',
       name: 'loginThreeHoursBefore',
       desc: '',
       args: [],
@@ -4473,10 +4473,10 @@ class Localize {
     );
   }
 
-  /// `You are participating on the Bladenight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?`
+  /// `You are participating on the BladeNight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?`
   String get startParticipationHeader {
     return Intl.message(
-      'You are participating on the Bladenight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?',
+      'You are participating on the BladeNight today and would like to support the presentation of the procession and share your location with friends. Start location sharing?',
       name: 'startParticipationHeader',
       desc: '',
       args: [],

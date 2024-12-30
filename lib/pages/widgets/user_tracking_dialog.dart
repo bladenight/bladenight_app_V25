@@ -30,7 +30,7 @@ class UserTrackDialog extends ConsumerWidget {
 
   static void show(
       BuildContext context, UserGPXPoints userGPXPoints, String date) {
-    context.goNamed(AppRoute.userTrackDialog.name, queryParameters: {
+    context.pushNamed(AppRoute.userTrackDialog.name, queryParameters: {
       'userGPXPoints': userGPXPoints.toJson(),
       'date': date
     });

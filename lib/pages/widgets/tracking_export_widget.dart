@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -70,7 +71,7 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
                     TintedCupertinoButton(
                         child: exportTrackingInProgress
                             ? const CircularProgressIndicator()
-                            : const Icon(Icons.map_rounded),
+                            : const Icon(CupertinoIcons.map),
                         onPressed: () async {
                           if (exportTrackingInProgress) return;
                           setState(() {

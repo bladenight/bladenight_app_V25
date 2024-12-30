@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:go_transitions/go_transitions.dart';
 
 import '../../helpers/export_import_data_helper.dart';
@@ -68,8 +69,13 @@ enum AppRoute {
   showEventRouteDetails,
   onboarding,
   signIn,
+
+  //friends
+  editFriendDialog,
   addFriend,
   addFriendWithCode,
+
+  //messages
   message,
   messagesPage,
   bladeguard,
@@ -228,6 +234,35 @@ GoRouter goRouter(Ref ref) {
                       return FriendsPage();
                     },
                     pageBuilder: GoTransitions.fade.withBackGesture.call,
+                    routes: [
+                      GoRoute(
+                        //"/sample?id1=$param1&id2=$param2");
+                        //bna://bladenight.app?addFriend&code=148318'
+                        //
+                        // oder 'https://bladenight.app?code=148318
+                        path: '/addFriend',
+                        name: AppRoute.addFriend.name,
+                        parentNavigatorKey: rootNavigatorKey,
+                        pageBuilder: GoTransitions.fullscreenDialog,
+                        builder: (context, state) {
+                          var friendsAction = FriendsAction.addNew;
+                          var name = '';
+                          var parameters = state.uri.queryParameters;
+                          if (parameters.containsKey('code') &&
+                              parameters['code']!.length == 6) {
+                            friendsAction = FriendsAction.addWithCode;
+                          }
+                          if (parameters.containsKey('name') &&
+                              parameters['name']!.length > 1) {
+                            name = parameters['name']!;
+                          }
+                          return EditFriendDialog(
+                            friend: Friend(name: name, friendId: -1),
+                            action: friendsAction,
+                          );
+                        },
+                      ),
+                    ],
                   ),
                   GoRoute(
                     // const LinkFriendDevicePage(deviceType: DeviceType.advertiser,
@@ -246,91 +281,40 @@ GoRouter goRouter(Ref ref) {
                             friendsAction: friendsAction),
                       );
                     },
-                    routes: [
-                      GoRoute(
-                          //"/sample?id1=$param1&id2=$param2");
-                          path: 'addfriend/:query',
-                          name: AppRoute.addFriend.name,
-                          parentNavigatorKey: rootNavigatorKey,
-                          pageBuilder: (context, state) {
-                            var friendsAction = FriendsAction.addNew;
-                            var name = '';
-                            var parameters = state.pathParameters;
-                            if (parameters.containsKey('code') &&
-                                parameters['code']!.length == 6) {
-                              friendsAction = FriendsAction.addWithCode;
-                            }
-                            if (parameters.containsKey('name') &&
-                                parameters['name']!.length > 1) {
-                              name = parameters['name']!;
-                            }
-                            print('EditFriendDialogStatus ');
-                            print(state.pathParameters);
-                            return CupertinoPage(
-                              fullscreenDialog: true,
-                              child: EditFriendDialog(
-                                friend: Friend(name: name, friendId: -1),
-                                action: friendsAction,
-                              ),
-                            );
-                          },
-                          routes: [
-                            GoRoute(
-                              path: '/:code',
-                              name: 'code',
-                              parentNavigatorKey: rootNavigatorKey,
-                              pageBuilder: (context, state) {
-                                var friendsAction = FriendsAction.addNew;
-                                var name = '';
-                                var parameters = state.pathParameters;
-                                if (parameters.containsKey('code') &&
-                                    parameters['code']!.length == 6) {
-                                  friendsAction = FriendsAction.addWithCode;
-                                }
-                                if (parameters.containsKey('name') &&
-                                    parameters['name']!.length > 1) {
-                                  name = parameters['name']!;
-                                }
-                                print('EditFriendDialogStatus code');
-                                print(state.pathParameters);
-                                return CupertinoPage(
-                                  fullscreenDialog: true,
-                                  child: EditFriendDialog(
-                                    friend: Friend(name: name, friendId: -1),
-                                    action: FriendsAction.addNew,
-                                  ),
-                                );
-                              },
-                            )
-                          ]),
-                      GoRoute(
-                        path: 'addfriendwithcode',
-                        name: AppRoute.addFriendWithCode.name,
-                        parentNavigatorKey: rootNavigatorKey,
-                        pageBuilder: (context, state) {
-                          var friendsAction = FriendsAction.addNew;
-                          var name = '';
-                          var parameters = state.pathParameters;
-                          if (parameters.containsKey('code') &&
-                              parameters['code']!.length == 6) {
-                            friendsAction = FriendsAction.addWithCode;
-                          }
-                          if (parameters.containsKey('name') &&
-                              parameters['name']!.length > 1) {
-                            name = parameters['name']!;
-                          }
-                          print('EditFriendDialogStatus ');
-                          print(state.pathParameters);
-                          return CupertinoPage(
-                            fullscreenDialog: true,
-                            child: EditFriendDialog(
-                              friend: Friend(name: name, friendId: -1),
-                              action: FriendsAction.addWithCode,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                  ),
+                  GoRoute(
+                    path: '/editFriendDialog',
+                    name: AppRoute.editFriendDialog.name,
+                    redirect: (BuildContext context, GoRouterState state) {
+                      var parameters = state.uri.queryParameters;
+                      if (!parameters.containsKey('action')) {
+                        return '/friends';
+                      } else if (parameters.containsKey('action')) {
+                        var action = FriendsAction.values.firstWhereOrNull(
+                            (x) => parameters['action'] == x.name);
+                        if (action == null) {
+                          return '/friends';
+                        }
+                        return null;
+                      }
+                    },
+                    builder: (context, state) {
+                      var parameters = state.uri.queryParameters;
+                      Friend? friend;
+                      FriendsAction action;
+                      if (parameters.containsKey('friend') &&
+                          parameters['friend']!.isNotEmpty) {
+                        friend = FriendMapper.fromJson(parameters['friend']!);
+                      }
+                      action = FriendsAction.values
+                          .firstWhere((x) => parameters['action'] == x.name);
+
+                      return EditFriendDialog(
+                        friend: friend,
+                        action: action,
+                      );
+                    },
+                    pageBuilder: GoTransitions.fade.withBackGesture.call,
                   ),
                 ],
               ),
