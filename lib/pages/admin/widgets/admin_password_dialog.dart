@@ -1,65 +1,31 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../helpers/deviceid_helper.dart';
-import '../../../helpers/hive_box/hive_settings_db.dart';
-import '../../../helpers/logger.dart';
-import '../../../helpers/wamp/exceptions/bad_result_exception.dart';
-import '../../../models/messages/admin.dart';
+import '../../../providers/admin/admin_pwd_provider.dart';
 import '../../../providers/app_start_and_router/go_router.dart';
-import '../../../wamp/admin_calls.dart';
 
 const kInvalidPassword = 'http://app.bladenight/invalidPassword';
 
-class AdminPasswordDialog extends StatefulWidget {
+class AdminPasswordDialog extends ConsumerStatefulWidget {
   const AdminPasswordDialog({super.key});
 
   @override
-  State<AdminPasswordDialog> createState() => _AdminPasswordDialogState();
-
-  static Future<void> show(BuildContext context) async {
-    String? password;
-    if (HiveSettingsDB.serverPassword == null) {
-      password = await showCupertinoDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (context) => const AdminPasswordDialog(),
-      );
-    } else {
-      password = HiveSettingsDB.serverPassword;
-    }
-
-    if (password != null) {
-      try {
-        //Add loading indicator
-        var res = await AdminCalls.verifyAdminPassword(MapperContainer.globals
-            .toMap(AdminMessage.authenticate(
-                password: password, deviceId: DeviceId.appId)));
-
-        if (res != 'OK') {
-          throw BadResultException(kInvalidPassword);
-        }
-      } on BadResultException catch (e) {
-        if (e.reason == kInvalidPassword) {
-          BnLog.warning(text: 'Admin has sent an invalid password');
-          HiveSettingsDB.setServerPassword(null);
-          return;
-        } else {
-          rethrow;
-        }
-      }
-      HiveSettingsDB.setServerPassword(password);
-      if (!context.mounted) return;
-      await context.pushNamed(AppRoute.adminPage.name,
-          pathParameters: {'password': password});
-    }
-  }
+  ConsumerState<AdminPasswordDialog> createState() =>
+      _AdminPasswordDialogState();
 }
 
-class _AdminPasswordDialogState extends State<AdminPasswordDialog> {
+class _AdminPasswordDialogState extends ConsumerState<AdminPasswordDialog> {
   String password = '';
+  bool isLoading = false;
+  var counter = 0;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,17 +34,22 @@ class _AdminPasswordDialogState extends State<AdminPasswordDialog> {
         padding: const EdgeInsets.only(bottom: 10),
         child: Text(Localize.of(context).enterPassword),
       ),
-      content: CupertinoTextField(
-        placeholder: Localize.of(context).enterPassword,
-        onChanged: (value) {
-          setState(() {
-            password = value;
-          });
-        },
-        onSubmitted: (value) {
-          context.pop(value);
-        },
-      ),
+      content: isLoading
+          ? CupertinoActivityIndicator()
+          : CupertinoTextField(
+              placeholder: Localize.of(context).enterPassword,
+              obscureText: true,
+              autocorrect: false,
+              autofocus: true,
+              onChanged: (value) {
+                setState(() {
+                  password = value;
+                });
+              },
+              onSubmitted: (value) {
+                //Navigator.of(context).pop(value);
+              },
+            ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
@@ -89,8 +60,19 @@ class _AdminPasswordDialogState extends State<AdminPasswordDialog> {
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: password.isNotEmpty
-              ? () {
-                  context.pop(password);
+              ? () async {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  var res = await ref
+                      .read(adminPasswordCheckProvider.notifier)
+                      .login(password);
+                  setState(() {
+                    isLoading = false;
+                  });
+                  if (res && context.mounted) {
+                    context.goNamed(AppRoute.adminPage.name);
+                  }
                 }
               : null,
           child: Text(Localize.of(context).submit),

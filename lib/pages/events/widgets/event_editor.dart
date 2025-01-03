@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../helpers/deviceid_helper.dart';
+import '../../../helpers/device_id_helper.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/notification/toast_notification.dart';
 import '../../../helpers/time_converter_helper.dart';
@@ -12,6 +12,7 @@ import '../../../models/event.dart';
 import '../../../models/messages/edit_event_on_server.dart';
 import '../../../models/route.dart';
 import '../../../providers/app_start_and_router/go_router.dart';
+import '../../../providers/event_providers.dart';
 import '../../../providers/route_providers.dart';
 import '../../../wamp/admin_calls.dart';
 import '../../admin/widgets/event_status_selector.dart';
@@ -158,7 +159,7 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                           trailing: Text(_event.routeName),
                           onTap: () async {
                             await RouteNameSelector.showRouteNameDialog(
-                                context, _event.routeName, (val) {
+                                context, _event.routeName, onChanged: (val) {
                               setState(() {
                                 _event = _event.copyWith(routeName: val);
                               });
@@ -374,6 +375,7 @@ class _EventEditorState extends ConsumerState<EventEditor> {
     setState(() {
       isSaving = false;
     });
+    ref.invalidate(allEventsProvider);
     if (context.mounted && res && context.canPop()) {
       context.pop(_event);
     } else {

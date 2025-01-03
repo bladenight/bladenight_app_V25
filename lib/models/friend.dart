@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import '../app_settings/app_configuration_helper.dart';
 import '../generated/l10n.dart';
-import '../pages/friends/widgets/friends_action_sheet.dart';
 import 'color_mapper.dart';
 
 part 'friend.mapper.dart';

@@ -16,7 +16,6 @@ import 'logger/console_output.dart';
 import 'logger/log_printer.dart';
 
 class BnLog {
-  static const String dbName = hiveBoxLoggingDbName;
   static Logger _logger = Logger();
   static bool _isInitialized = false;
   static final List<LogOutput> _logOutputs = [];
@@ -24,9 +23,9 @@ class BnLog {
   static final DateTime _startTime = DateTime.now();
 
   BnLog._() {
-    if (_isInitialized == false) {
-      init();
-    }
+    //if (_isInitialized == false) {
+    init();
+    //}
   }
 
   static flush() {
@@ -39,8 +38,12 @@ class BnLog {
     await Hive.initFlutter();
     print('logger.dart open logbox');
     try {
-      var logBox = await Hive.openLazyBox(dbName).timeout(Duration(seconds: 5));
-      if (logBox.runtimeType == Box<String>) {
+      LazyBox<dynamic>? logBox;
+      if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
+        logBox = await Hive.openLazyBox(hiveBoxLoggingDbName)
+            .timeout(Duration(seconds: 5));
+      }
+      if (logBox != null && logBox.runtimeType == Box<String>) {
         _logBox = logBox as LazyBox<String>;
       } else {
         return;
@@ -204,8 +207,9 @@ class BnLog {
   }
 
   static Future<String> collectLogs() async {
-    //_logBox = Hive.box(dbName);
-    _logBox = await Hive.openLazyBox(dbName);
+    if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
+      _logBox = await Hive.openLazyBox(hiveBoxLoggingDbName);
+    }
     await _logBox?.flush();
     List<String> valList = [];
     if (_logBox == null) {
@@ -236,7 +240,9 @@ class BnLog {
 
   static Future<bool> clearLogs() async {
     await Hive.initFlutter();
-    _logBox = await Hive.openLazyBox(dbName);
+    if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
+      _logBox = await Hive.openLazyBox(hiveBoxLoggingDbName);
+    }
     if (_logBox == null) {
       return false;
     }
@@ -251,7 +257,9 @@ class BnLog {
   /// endTimeInMillis
   static Future<bool> cleanUpLogsByFilter(Duration deleteOlderThan) async {
     await Hive.initFlutter();
-    _logBox = await Hive.openLazyBox(dbName);
+    if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
+      _logBox = await Hive.openLazyBox(hiveBoxLoggingDbName);
+    }
     int counter = 0;
     var leftDate =
         DateTime.now().subtract(deleteOlderThan).millisecondsSinceEpoch;
@@ -280,7 +288,9 @@ class BnLog {
     HiveSettingsDB.setFlogLevel(logLevel);
     BnLog.info(text: 'Loglevel changed to ${logLevel.name}');
     await Hive.initFlutter();
-    _logBox = await Hive.openLazyBox(dbName);
+    if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
+      _logBox = await Hive.openLazyBox(hiveBoxLoggingDbName);
+    }
     await _logBox?.flush();
     await _logBox?.close();
     init();

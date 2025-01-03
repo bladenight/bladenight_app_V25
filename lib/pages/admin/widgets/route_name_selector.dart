@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../providers/get_all_routes_provider.dart';
+import '../../../providers/server_route_names_provider.dart';
 import '../../widgets/no_data_warning.dart';
 
 class RouteNameSelector extends ConsumerStatefulWidget {
@@ -18,7 +18,9 @@ class RouteNameSelector extends ConsumerStatefulWidget {
 
   ///Opens a picker and returns the selected value onChanged
   static Future<String?> showRouteNameDialog(
-      BuildContext context, String current, ValueChanged<String>? onChanged) {
+      BuildContext context, String current,
+      {ValueChanged<String>? onChanged}) {
+    var newValue = current;
     return showCupertinoDialog(
         context: context,
         barrierDismissible: true,
@@ -29,7 +31,12 @@ class RouteNameSelector extends ConsumerStatefulWidget {
               height: 100,
               child: RouteNameSelector(
                 currentRouteName: current,
-                onChanged: onChanged,
+                onChanged: (val) {
+                  newValue = val;
+                  if (onChanged != null) {
+                    onChanged(val);
+                  }
+                },
               ),
             ),
             actions: [
@@ -37,7 +44,7 @@ class RouteNameSelector extends ConsumerStatefulWidget {
                 child: Text(Localize.of(context).ok),
                 onPressed: () {
                   //important go_router issue - context pop not working
-                  Navigator.pop(context);
+                  Navigator.of(context).pop(newValue);
                 },
               ),
             ],
@@ -50,14 +57,14 @@ class _RouteNameSelectorState extends ConsumerState<RouteNameSelector> {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      var routeNames = ref.watch(getAllRouteNamesProvider);
-      return routeNames.maybeWhen(
+      var routeNames = ref.watch(serverRouteNamesProvider);
+      return routeNames.when(
           skipLoadingOnRefresh: false,
           skipLoadingOnReload: false,
           data: (routeNames) {
             if (routeNames.exception != null) {
               return NoDataWarning(
-                onReload: () => ref.read(getAllRouteNamesProvider),
+                onReload: () => ref.read(serverRouteNamesProvider),
               );
             }
             var routeName = routeNames.routeNames?.first;
@@ -90,9 +97,9 @@ class _RouteNameSelectorState extends ConsumerState<RouteNameSelector> {
               child: CircularProgressIndicator(),
             );
           },
-          orElse: () {
+          error: (error, stackTrace) {
             return NoDataWarning(
-              onReload: () => ref.refresh(getAllRouteNamesProvider),
+              onReload: () => ref.refresh(serverRouteNamesProvider),
             );
           });
     });

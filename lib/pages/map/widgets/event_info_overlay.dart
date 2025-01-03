@@ -90,7 +90,7 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                       Center(
                         child: FittedBox(
                           child: Text(
-                            '${Localize.of(context).status} ${widget.event.statusText}',
+                            widget.event.statusText,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),

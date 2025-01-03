@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../pages/admin/widgets/admin_password_dialog.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 
 class HiddenAdminButton extends StatefulWidget {
   const HiddenAdminButton({required this.child, super.key});
@@ -19,11 +20,11 @@ class _HiddenAdminButtonState extends State<HiddenAdminButton> {
   Timer? _timeout;
 
   void onTap() async {
-    if(kIsWeb) return;
+    if (kIsWeb) return;
     _timeout?.cancel();
     tap++;
-    if (tap >= 5 && tap <=8) {
-      await AdminPasswordDialog.show(context);
+    if (tap >= 5 && tap <= 8) {
+      context.pushNamed(AppRoute.adminLogin.name);
       tap = 0;
     } else {
       _timeout = Timer(const Duration(milliseconds: 1500), resetTaps);

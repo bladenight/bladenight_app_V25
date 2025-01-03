@@ -21,10 +21,9 @@ import '../generated/l10n.dart';
 import '../models/friend.dart';
 import '../models/user_gpx_point.dart';
 import '../pages/friends/widgets/edit_friend_dialog.dart';
-import '../pages/friends/widgets/friends_action_sheet.dart';
 import '../providers/friends_provider.dart';
 import 'device_info_helper.dart';
-import 'deviceid_helper.dart';
+import 'device_id_helper.dart';
 import 'hive_box/hive_settings_db.dart';
 import 'logger.dart';
 import 'notification/toast_notification.dart';
@@ -127,11 +126,13 @@ void importData(BuildContext context, String dataString) async {
         message: '${Localize.current.import} ${Localize.current.failed}',
         backgroundColor: CupertinoColors.systemRed,
         textColor: CupertinoColors.black);
-    QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        title: Localize.current.import,
-        text: '${Localize.current.import} ${Localize.current.failed}');
+    if (context.mounted) {
+      QuickAlert.show(
+          context: context,
+          type: QuickAlertType.error,
+          title: Localize.current.import,
+          text: '${Localize.current.import} ${Localize.current.failed}');
+    }
   }
 }
 

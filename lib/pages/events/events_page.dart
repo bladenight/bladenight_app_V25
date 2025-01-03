@@ -7,17 +7,17 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 import '../../generated/l10n.dart';
-import '../../helpers/deviceid_helper.dart';
+import '../../helpers/device_id_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../models/event.dart';
 import '../../models/messages/edit_event_on_server.dart';
+import '../../providers/admin/admin_pwd_provider.dart';
 import '../widgets/data_loading_indicator.dart';
 import '../widgets/no_data_warning.dart';
 import '../widgets/route_dialog.dart';
 import '../../providers/event_providers.dart';
 import '../../providers/network_connection_provider.dart';
-import '../../providers/settings/server_pwd_provider.dart';
 import '../../wamp/admin_calls.dart';
 import 'widgets/event_editor.dart';
 import '../widgets/no_connection_warning.dart';
@@ -104,7 +104,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (ref.watch(serverPwdSetProvider))
+                    if (ref.watch(adminPwdSetProvider))
                       CupertinoButton(
                         color:
                             CupertinoTheme.of(context).primaryContrastingColor,
@@ -448,20 +448,20 @@ enum EventStartState { eventOver, eventActual, eventFuture }
 
 Widget _editEventWidget(BuildContext context, WidgetRef ref, Event event,
     EventStartState startState) {
-  if (HiveSettingsDB.serverPassword != null) {
+  if (ref.watch(adminPwdSetProvider)) {
     return Dismissible(
       onDismissed: (direction) async {
         try {
           await AdminCalls.editEvent(EditEventOnServerMessage.authenticate(
             event: event,
             deviceId: DeviceId.appId,
-            password: HiveSettingsDB.serverPassword ?? 'wrong',
+            password: HiveSettingsDB.serverPassword ?? 'wrongPass',
           ).toMap());
         } catch (e) {
           BnLog.error(
-              text: 'Error Restart Server',
+              text: 'Error Edit Event  Server',
               className: 'eventsPage',
-              methodName: 'Adminpage Restart server');
+              methodName: '_editEventWidget');
         }
       },
       key: ObjectKey(event.hashCode),

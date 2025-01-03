@@ -7,7 +7,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../generated/l10n.dart';
-import '../helpers/deviceid_helper.dart';
+import '../helpers/device_id_helper.dart';
 import '../helpers/location_bearing_distance.dart';
 import '../helpers/logger.dart';
 import '../helpers/preferences_helper.dart';

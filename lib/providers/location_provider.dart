@@ -23,7 +23,7 @@ import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/average_list.dart';
 import '../helpers/device_info_helper.dart';
-import '../helpers/deviceid_helper.dart';
+import '../helpers/device_id_helper.dart';
 import '../helpers/distance_converter.dart';
 import '../helpers/double_helper.dart';
 import '../helpers/enums/tracking_type.dart';

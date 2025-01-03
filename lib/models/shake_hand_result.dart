@@ -5,7 +5,7 @@ import 'shake_hands.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../app_settings/app_constants.dart';
-import '../helpers/deviceid_helper.dart';
+import '../helpers/device_id_helper.dart';
 import '../helpers/wamp/message_types.dart';
 import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_exception.dart';

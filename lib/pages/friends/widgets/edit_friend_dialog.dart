@@ -24,7 +24,6 @@ import '../../../providers/network_connection_provider.dart';
 import '../../../wamp/wamp_exception.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_connection_warning.dart';
-import 'friends_action_sheet.dart';
 
 class EditFriendResult {
   final String name;

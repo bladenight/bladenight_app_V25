@@ -17,7 +17,6 @@ import '../../../helpers/uuid_helper.dart';
 import '../../../models/color_mapper.dart';
 import '../../../models/friend.dart';
 import '../../../providers/friends_provider.dart';
-import 'friends_action_sheet.dart';
 
 enum DeviceType { advertiser, browser }
 

@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:go_transitions/go_transitions.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../helpers/export_import_data_helper.dart';
 import '../../main.dart';
@@ -9,9 +13,9 @@ import '../../models/friend.dart';
 import '../../models/user_gpx_point.dart';
 import '../../observers/go_router_observer.dart';
 import '../../pages/admin/admin_page.dart';
+import '../../pages/admin/widgets/admin_password_dialog.dart';
 import '../../pages/events/events_page.dart';
 import '../../pages/events/widgets/event_editor.dart';
-import '../../pages/friends/widgets/friends_action_sheet.dart';
 import '../../pages/friends/widgets/nearby_widget.dart';
 import '../../pages/home_info/home_page.dart';
 import '../../pages/map/map_page.dart';
@@ -22,13 +26,9 @@ import '../../pages/widgets/route_dialog.dart';
 import '../../pages/widgets/route_name_dialog.dart';
 import '../../pages/widgets/startup_widgets/app_route_error_widget.dart';
 import '../../pages/widgets/user_tracking_dialog.dart';
-import '../settings/server_pwd_provider.dart';
+import '../admin/admin_pwd_provider.dart';
+import '../settings/bladeguard_provider.dart';
 import '../../navigation/scaffold_with_nested_navigation.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:riverpod/riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:go_router/go_router.dart';
-
 import '../../pages/bladeguard/bladeguard_page.dart';
 import '../../pages/friends/friends_page.dart';
 import '../../pages/friends/widgets/edit_friend_dialog.dart';
@@ -55,8 +55,13 @@ final _showRouteNavigatorKey =
 enum AppRoute {
   aboutPage,
 
-  /// required pathParameters password
+  /// open Admin Page if password set
+  /// redirect to home
   adminPage,
+
+  /// request Admin Page if password set
+  /// redirect to home
+  adminLogin,
   home,
   map,
   events,
@@ -230,7 +235,6 @@ GoRouter goRouter(Ref ref) {
                     path: '/friend',
                     name: AppRoute.friend.name,
                     builder: (context, state) {
-                      var parameters = state.uri.queryParameters;
                       return FriendsPage();
                     },
                     pageBuilder: GoTransitions.fade.withBackGesture.call,
@@ -243,7 +247,7 @@ GoRouter goRouter(Ref ref) {
                         path: '/addFriend',
                         name: AppRoute.addFriend.name,
                         parentNavigatorKey: rootNavigatorKey,
-                        pageBuilder: GoTransitions.fullscreenDialog,
+                        pageBuilder: GoTransitions.dialog,
                         builder: (context, state) {
                           var friendsAction = FriendsAction.addNew;
                           var name = '';
@@ -295,8 +299,8 @@ GoRouter goRouter(Ref ref) {
                         if (action == null) {
                           return '/friends';
                         }
-                        return null;
                       }
+                      return null;
                     },
                     builder: (context, state) {
                       var parameters = state.uri.queryParameters;
@@ -344,7 +348,7 @@ GoRouter goRouter(Ref ref) {
                       GoRoute(
                           path: '/${AppRoute.userTrackDialog.name}',
                           name: AppRoute.userTrackDialog.name,
-                          pageBuilder: GoTransitions.dialog,
+                          pageBuilder: GoTransitions.slide.call,
                           builder: (context, state) {
                             var queryParameters = state.uri.queryParameters;
                             var date = queryParameters['date'] as String;
@@ -367,24 +371,38 @@ GoRouter goRouter(Ref ref) {
                           path: '/intro',
                           name: AppRoute.introScreen.name,
                           pageBuilder: (context, state) {
-                            var pathParameters = state.pathParameters;
                             return NoTransitionPage(child: IntroScreen());
                           }),
                       GoRoute(
-                          path: '/adminPage/:password',
-                          name: AppRoute.adminPage.name,
+                          path: '/${AppRoute.adminLogin.name}',
+                          name: AppRoute.adminLogin.name,
                           redirect:
                               (BuildContext context, GoRouterState state) {
-                            if (!ref.read(serverPwdSetProvider)) {
+                            if (!ref.read(userIsAdminProvider)) {
                               return '/';
+                            } else if (ref.read(adminPwdSetProvider)) {
+                              return '/${AppRoute.adminPage.name}';
                             } else {
                               return null;
                             }
                           },
                           builder: (context, state) {
-                            var pathParameters = state.pathParameters;
-                            return AdminPage(
-                                password: pathParameters['password']!);
+                            return AdminPasswordDialog();
+                          },
+                          pageBuilder: GoTransitions.bottomSheet),
+                      GoRoute(
+                          path: '/adminPage',
+                          name: AppRoute.adminPage.name,
+                          redirect:
+                              (BuildContext context, GoRouterState state) {
+                            if (!ref.read(adminPwdSetProvider)) {
+                              return '/${AppRoute.adminLogin.name}';
+                            } else {
+                              return null;
+                            }
+                          },
+                          builder: (context, state) {
+                            return AdminPage();
                           },
                           pageBuilder: GoTransitions.bottomSheet),
                     ],

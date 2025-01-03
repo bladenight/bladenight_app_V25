@@ -30,13 +30,16 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
   Widget build(BuildContext context) {
     var locationUpdate = ref.watch(locationProvider);
     var activeEventRouteP = ref.watch(activeEventRouteProvider);
-    var processionRoutePointsP = ref.watch(processionRoutePointsProvider);
+
     var activeEventRoutePoints = <LatLng>[];
     activeEventRouteP.hasValue
         ? activeEventRoutePoints = activeEventRouteP.value!.points
         : <LatLng>[];
 
     var processionRoutePoints = <LatLng>[];
+
+    ///TODO Singe build layer - on locationUpdate get processionRoutePoints
+    var processionRoutePointsP = ref.read(processionRoutePointsProvider);
     processionRoutePointsP.hasValue
         ? processionRoutePoints = processionRoutePointsP.value!
         : <LatLng>[];

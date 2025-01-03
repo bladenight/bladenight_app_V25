@@ -233,16 +233,23 @@ class WampV2 {
   }
 
   void _put(BnWampMessage message) {
-    var depreciatedCalls = <int, BnWampMessage>{};
+    var outdatedCalls = <int, BnWampMessage>{};
     for (var call in calls.entries) {
       if (call.value.endpoint == message.endpoint) {
-        depreciatedCalls[call.value.requestId] = call.value;
+        //throws bad state future completed without isCompleted
+        outdatedCalls[call.value.requestId] = call.value;
+      }
+      var age = DateTime.now().difference(call.value.dateTime);
+      if (age > Duration(seconds: 60)) {
+        outdatedCalls[call.value.requestId] = call.value;
       }
     }
-    for (var call in depreciatedCalls.entries) {
-      call.value.completer.completeError(MultipleRequestException(
-          'multiple request for ${call.value.endpoint}'));
-      calls.remove(call.key);
+    for (var call in outdatedCalls.entries) {
+      if (!call.value.completer.isCompleted) {
+        call.value.completer.completeError(MultipleRequestException(
+            'multiple request for ${call.value.endpoint}'));
+        calls.remove(call.key);
+      }
     }
 
     calls[message.requestId] = message;
@@ -377,7 +384,9 @@ class WampV2 {
               // realTimeUpdateStreamController.sink.add(RealtimeUpdateMapper.fromMap(messageResult));
             } catch (_) {}
             var cpl = calls[requestId]?.completer;
-            cpl?.complete(messageResult);
+            if (cpl != null && !cpl.isCompleted) {
+              cpl.complete(messageResult);
+            }
             cpl = null;
             calls.remove(requestId);
             messageResult = null;
@@ -387,7 +396,9 @@ class WampV2 {
             var strId = wampMessage[2].toString();
             requestId = int.parse(strId);
             var cpl = calls[requestId]?.completer;
-            cpl?.completeError(WampException(wampMessage[3]));
+            if (cpl != null && !cpl.isCompleted) {
+              cpl.completeError(WampException(wampMessage[3]));
+            }
             calls.remove(wampMessage[2]);
             strId = '';
             cpl = null;

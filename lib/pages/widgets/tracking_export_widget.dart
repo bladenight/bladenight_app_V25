@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';

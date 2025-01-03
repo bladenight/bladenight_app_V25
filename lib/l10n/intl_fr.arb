@@ -542,6 +542,7 @@
   "appName": "BladeNight Munich",
   "changeLightColor": "Change light mode color",
   "changeDarkColor": "Change dark mode color",
-  "changeMeColor": "Change me color"
+  "changeMeColor": "Change me color",
+  "enterBgPassword": "Please enter Bladeguard security password"
 }
 

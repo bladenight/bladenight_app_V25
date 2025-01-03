@@ -387,7 +387,7 @@ class _HomePageState extends ConsumerState<HomePage>
   }
 
   void _openIntroScreenFirstTime() async {
-    if (!kIsWeb && !HiveSettingsDB.hasShownIntro || localTesting) {
+    if (!kIsWeb && !HiveSettingsDB.hasShownIntro) {
       BnLog.info(
           className: 'home_screen',
           methodName: 'openIntroScreenFirstTime',

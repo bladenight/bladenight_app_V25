@@ -312,6 +312,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Enable Onesignal Push Notifications. Herewith general information can be received via push notification e.g. if the bladenight takes place. Recommended setting is \'On\'"),
         "enter6digitcode": MessageLookupByLibrary.simpleMessage(
             "You must enter a 6-digit-code"),
+        "enterBgPassword": MessageLookupByLibrary.simpleMessage(
+            "Please enter Bladeguard security password"),
         "enterBirthday": MessageLookupByLibrary.simpleMessage("Your Birthday"),
         "enterEmail": MessageLookupByLibrary.simpleMessage("Enter email"),
         "enterPassword": MessageLookupByLibrary.simpleMessage("Enter password"),

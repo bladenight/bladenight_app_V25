@@ -16,13 +16,14 @@ import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../helpers/url_launch_helper.dart';
 import '../../pages/widgets/no_connection_warning.dart';
+import '../../providers/admin/admin_pwd_provider.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
-import '../../providers/settings/server_pwd_provider.dart';
-import '../admin/widgets/admin_password_dialog.dart';
 import '../widgets/birthday_date_picker.dart';
+import '../widgets/common_widgets/tinted_cupertino_button.dart';
 import '../widgets/data_widget_left_right.dart';
 import '../widgets/data_widget_left_right_text.dart';
 import '../widgets/email_widget.dart';
@@ -457,35 +458,25 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                     CupertinoFormSection(
                       header: const Text('Server-Admin'),
                       children: <Widget>[
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: CupertinoButton(
-                              color: CupertinoTheme.of(context)
-                                  .primaryContrastingColor,
-                              child: const Text('Öffne Serveradmin'),
-                              onPressed: () async {
-                                await AdminPasswordDialog.show(context);
-                              }),
-                        ),
+                        SizedTintedCupertinoButton(
+                            child: const Text('Öffne Serveradmin'),
+                            onPressed: () async {
+                              context.pushNamed(AppRoute.adminLogin.name);
+                            }),
                       ],
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    if (ref.watch(serverPwdSetProvider))
+                    if (ref.watch(adminPwdSetProvider))
                       CupertinoFormSection(
                         header: const Text('Server-Admin-Logout'),
                         children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            child: CupertinoButton(
-                                color: CupertinoTheme.of(context)
-                                    .primaryContrastingColor,
-                                child: const Text('Logout'),
-                                onPressed: () async {
-                                  HiveSettingsDB.setServerPassword(null);
-                                }),
-                          ),
+                          SizedTintedCupertinoButton(
+                              child: const Text('Logout'),
+                              onPressed: () async {
+                                HiveSettingsDB.setServerPassword(null);
+                              }),
                         ],
                       ),
                   ],
@@ -532,13 +523,13 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                context.pop();
+                Navigator.of(context).pop();
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                context.pop(selected);
+                Navigator.of(context).pop(selected);
               },
             ),
           ],

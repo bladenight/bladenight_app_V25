@@ -21,6 +21,7 @@ import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/friends_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../widgets/bottom_sheets/base_bottom_sheet_widget.dart';
+import '../widgets/common_widgets/tinted_cupertino_button.dart';
 import '../widgets/expandable_floating_action_button.dart';
 import 'widgets/edit_friend_dialog.dart';
 import 'widgets/friends_action_sheet.dart';
@@ -63,7 +64,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-    //SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
   _runRefreshTimer() {
@@ -447,52 +448,44 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                       constraints: BoxConstraints(
                         maxHeight: kIsWeb
                             ? MediaQuery.of(context).size.height * 0.4
-                            : MediaQuery.of(context).size.height * 0.4,
+                            : MediaQuery.of(context).size.height * 0.5,
                       ),
                       child: BaseBottomSheetWidget(children: [
                         CupertinoFormSection(
                             header: Text(Localize.of(context)
                                 .editFriendHeader(friend.name)),
                             children: [
-                              SizedBox(
-                                width: double.infinity,
-                                child: CupertinoButton(
-                                  color:
-                                      CupertinoTheme.of(context).primaryColor,
-                                  child: Row(children: [
-                                    const Icon(Icons.edit),
-                                    Expanded(
-                                      child:
-                                          Text(Localize.of(context).editfriend),
-                                    ),
-                                  ]),
-                                  onPressed: () {
-                                    context.pop(FriendsAction.edit);
-                                  },
-                                ),
+                              SizedTintedCupertinoButton(
+                                child: Row(children: [
+                                  const Icon(Icons.edit),
+                                  Expanded(
+                                    child:
+                                        Text(Localize.of(context).editfriend),
+                                  ),
+                                ]),
+                                onPressed: () {
+                                  context.pop(FriendsAction.edit);
+                                },
                               ),
                               CupertinoFormSection(
                                   header: Text(Localize.of(context)
                                       .deleteFriendHeader(friend.name)),
                                   children: [
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: CupertinoButton(
-                                        child: Row(children: [
-                                          const Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
-                                          ),
-                                          Expanded(
-                                            child: Text(Localize.of(context)
-                                                .deletefriend),
-                                          ),
-                                        ]),
-                                        onPressed: () {
-                                          Navigator.pop(
-                                              context, FriendsAction.delete);
-                                        },
-                                      ),
+                                    SizedTintedCupertinoButton(
+                                      child: Row(children: [
+                                        const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                        Expanded(
+                                          child: Text(Localize.of(context)
+                                              .deletefriend),
+                                        ),
+                                      ]),
+                                      onPressed: () {
+                                        Navigator.pop(
+                                            context, FriendsAction.delete);
+                                      },
                                     ),
                                   ]),
                             ]),

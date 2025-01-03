@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../generated/l10n.dart';
-
-const kInvalidPassword = 'http://app.bladenight/invalidPassword';
 
 class PinDialog extends StatefulWidget {
   const PinDialog({super.key});
@@ -30,17 +27,17 @@ class _PinDialogState extends State<PinDialog> {
     return CupertinoAlertDialog(
       title: Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: Text(Localize.of(context).enterPassword),
+        child: Text(Localize.of(context).enterBgPassword),
       ),
       content: CupertinoTextField(
-        placeholder: Localize.of(context).enterPassword,
+        placeholder: Localize.of(context).enterBgPassword,
         onChanged: (value) {
           setState(() {
             password = value;
           });
         },
         onSubmitted: (value) {
-          context.pop(value);
+          Navigator.of(context).pop(value);
         },
       ),
       actions: [

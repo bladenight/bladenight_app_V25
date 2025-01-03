@@ -4612,6 +4612,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Please enter Bladeguard security password`
+  String get enterBgPassword {
+    return Intl.message(
+      'Please enter Bladeguard security password',
+      name: 'enterBgPassword',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

@@ -27,6 +27,7 @@ import 'main.init.dart';
 import 'models/image_and_link.dart';
 
 import 'pages/widgets/startup_widgets/app_root_widget.dart';
+import 'providers/riverpod_observer/logging_observer.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 const String openRouteMapRoute = '/eventRoute';
@@ -72,7 +73,7 @@ void main() async {
       runApp(
         ProviderScope(
           observers: [
-            // LoggingObserver(),
+            //LoggingObserver(),
           ],
           child: AppRootWidget(),
         ),

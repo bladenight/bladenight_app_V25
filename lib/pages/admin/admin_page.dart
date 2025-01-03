@@ -1,31 +1,26 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../generated/l10n.dart';
-import '../../helpers/deviceid_helper.dart';
+import '../../helpers/device_id_helper.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
 import '../../models/messages/kill_server.dart';
-import '../../models/messages/set_active_route.dart';
-import '../../models/messages/set_active_status.dart';
 import '../../models/messages/set_procession_mode.dart';
-import '../../pages/widgets/no_data_warning.dart';
 import '../../providers/active_event_provider.dart';
-import '../../providers/get_all_routes_provider.dart';
-import '../../providers/route_providers.dart';
+import '../../providers/admin/admin_pwd_provider.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 import '../../wamp/admin_calls.dart';
+import '../events/widgets/event_editor.dart';
 import '../widgets/common_widgets/tinted_cupertino_button.dart';
 import '../widgets/no_connection_warning.dart';
 
 class AdminPage extends ConsumerStatefulWidget {
-  const AdminPage({required this.password, super.key});
-
-  final String password;
+  const AdminPage({super.key});
 
   @override
   ConsumerState<AdminPage> createState() => _AdminPageState();
@@ -39,252 +34,275 @@ class _AdminPageState extends ConsumerState<AdminPage> {
   @override
   Widget build(BuildContext context) {
     var nextEventProvider = ref.watch(activeEventProvider);
+    var password = ref.watch(adminPwdProvider);
+    if (password == null || password.isEmpty) {
+      return CupertinoPageScaffold(
+        child: Column(mainAxisSize: MainAxisSize.max, children: [
+          Center(
+            child: SizedTintedCupertinoButton(
+                onPressed: () => context.goNamed(AppRoute.home.name),
+                child: Text(Localize.of(context).home)),
+          ),
+        ]),
+      );
+    }
+
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        backgroundColor:
-            CupertinoTheme.of(context).barBackgroundColor.withValues(alpha: 1),
+        backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
         middle: const Text('Admin'),
       ),
-      child: CupertinoScrollbar(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Visibility(
-              visible: _activityVisible,
-              child: const Center(
-                child: CupertinoActivityIndicator(
-                  radius: 20,
-                  color: Colors.green,
+      child: SafeArea(
+        child: CupertinoScrollbar(
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Visibility(
+                visible: _activityVisible,
+                child: const Center(
+                  child: CupertinoActivityIndicator(
+                    radius: 20,
+                    color: Colors.green,
+                  ),
                 ),
               ),
-            ),
-            Text(Localize.of(context).nextEvent,
-                textAlign: TextAlign.center,
-                style: CupertinoTheme.of(context).textTheme.textStyle),
-            const SizedBox(height: 5),
-            FittedBox(
-              child: Text(
-                  '${Localize.of(context).route} ${nextEventProvider.routeName}',
+              Text(Localize.of(context).nextEvent,
                   textAlign: TextAlign.center,
-                  style: CupertinoTheme.of(context)
-                      .textTheme
-                      .navLargeTitleTextStyle),
-            ),
-            const SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(15.0, 5, 15, 5),
-              child: FittedBox(
+                  style: CupertinoTheme.of(context).textTheme.textStyle),
+              const SizedBox(height: 5),
+              FittedBox(
                 child: Text(
-                    DateFormatter(Localize.of(context))
-                        .getLocalDayDateTimeRepresentation(
-                            nextEventProvider.getUtcIso8601DateTime),
+                    '${Localize.of(context).route} ${nextEventProvider.routeName}',
+                    textAlign: TextAlign.center,
                     style: CupertinoTheme.of(context)
                         .textTheme
                         .navLargeTitleTextStyle),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: nextEventProvider.status == EventStatus.cancelled
-                      ? Colors.redAccent
-                      : nextEventProvider.status == EventStatus.confirmed
-                          ? Colors.green
-                          : Colors.transparent,
-                  borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(10.0),
-                      bottomRight: Radius.circular(10.0),
-                      topLeft: Radius.circular(10.0),
-                      bottomLeft: Radius.circular(10.0)),
-                ),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15.0, 5, 15, 5),
                 child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(nextEventProvider.statusText,
-                      style:
-                          CupertinoTheme.of(context).textTheme.pickerTextStyle),
+                  child: Text(
+                      DateFormatter(Localize.of(context))
+                          .getLocalDayDateTimeRepresentation(
+                              nextEventProvider.getUtcIso8601DateTime),
+                      style: CupertinoTheme.of(context)
+                          .textTheme
+                          .navLargeTitleTextStyle),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 1,
-            ),
-            const ConnectionWarning(),
-            SizedTintedCupertinoButton(
-              child: Text(Localize.of(context).setState),
-              onPressed: () async {
-                var status = await showEventStatusDialog(
-                  context,
-                  current: ref.read(activeEventProvider).status,
-                );
-
-                if (status != null) {
-                  try {
-                    setState(() => _activityVisible = true);
-                    await AdminCalls.setActiveStatus(
-                      SetActiveStatusMessage.authenticate(
-                        status: status,
-                        deviceId: DeviceId.appId,
-                        password: widget.password,
-                      ).toMap(),
-                    );
-                  } catch (e) {
-                    BnLog.error(
-                        text: 'SetActiveStatusMessage failed', exception: e);
-                  }
-                  setState(() => _activityVisible = false);
-                  Future.delayed(const Duration(seconds: 1), () {
-                    ref.read(activeEventProvider.notifier).refresh();
-                    ref.read(currentRouteProvider);
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 15),
-            Visibility(
-              visible: _resultTextVisibility,
-              child: Center(
-                child: Text(_resultText),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: nextEventProvider.status == EventStatus.cancelled
+                        ? Colors.redAccent
+                        : nextEventProvider.status == EventStatus.confirmed
+                            ? Colors.green
+                            : Colors.transparent,
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                        topLeft: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0)),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(nextEventProvider.statusText,
+                        style: CupertinoTheme.of(context)
+                            .textTheme
+                            .pickerTextStyle),
+                  ),
+                ),
               ),
-            ),
-            SizedTintedCupertinoButton(
-              child: Text(Localize.of(context).setRoute),
-              onPressed: () async {
-                var route = await showRouteSelectorDialog(
-                  context,
-                  current: ref.read(currentRouteProvider).value?.name,
-                );
+              const SizedBox(
+                height: 1,
+              ),
+              const ConnectionWarning(),
+              /* SizedTintedCupertinoButton(
+                child: Text(Localize.of(context).setState),
+                onPressed: () async {
+                  var status = await showEventStatusDialog(
+                    context,
+                    current: ref.read(activeEventProvider).status,
+                  );
 
-                if (route != null) {
-                  try {
-                    setState(() => _activityVisible = true);
-                    await AdminCalls.setActiveStatus(
-                      SetActiveStatusMessage.authenticate(
-                        status: EventStatus.cancelled,
-                        deviceId: DeviceId.appId,
-                        password: widget.password,
-                      ).toMap(),
-                    );
-                    await Future.delayed(const Duration(milliseconds: 500));
-                    await AdminCalls.setActiveRoute(
-                      SetActiveRouteMessage.authenticate(
-                        route: route,
-                        deviceId: DeviceId.appId,
-                        password: widget.password,
-                      ).toMap(),
-                    );
-                    await Future.delayed(const Duration(milliseconds: 1000));
-                    await AdminCalls.setActiveStatus(
-                      SetActiveStatusMessage.authenticate(
-                        status: EventStatus.confirmed,
-                        deviceId: DeviceId.appId,
-                        password: widget.password,
-                      ).toMap(),
-                    );
-                  } catch (e) {
-                    if (!kIsWeb) {
+                  if (status != null) {
+                    try {
+                      setState(() => _activityVisible = true);
+                      await AdminCalls.setActiveStatus(
+                        SetActiveStatusMessage.authenticate(
+                          status: status,
+                          deviceId: DeviceId.appId,
+                          password: password,
+                        ).toMap(),
+                      );
+                    } catch (e) {
                       BnLog.error(
-                          text: 'Error setroute',
-                          className: toString(),
-                          methodName: 'Adminpage Setroute');
+                          text: 'SetActiveStatusMessage failed', exception: e);
                     }
+                    setState(() => _activityVisible = false);
+                    Future.delayed(const Duration(seconds: 1), () {
+                      ref.read(activeEventProvider.notifier).refresh();
+                      ref.read(currentRouteProvider);
+                    });
                   }
-                  setState(() => _activityVisible = false);
-                  setState(
-                      () => _resultText = Localize.of(context).sendData30sec);
-                  setState(() => _resultTextVisibility = true);
-                  await Future.delayed(const Duration(seconds: 2));
-                  setState(() => _resultTextVisibility = false);
-                  var routeRes = ref.read(currentRouteProvider);
-                  var eventRes = ref.read(activeEventProvider);
-                  if (!kIsWeb) {
-                    BnLog.info(
-                        text: 'Admin set route $routeRes,event $eventRes');
-                  }
-                } else {
-                  setState(() =>
-                      _resultText = Localize.of(context).noChoiceNoAction);
-                  setState(() => _resultTextVisibility = true);
-                  await Future.delayed(const Duration(seconds: 2));
-                  setState(() => _resultTextVisibility = false);
-                }
-              },
-            ),
-            const SizedBox(height: 15),
-            SizedTintedCupertinoButton(
-              child: const Text('ProcessionMode'),
-              onPressed: () async {
-                setState(() {
-                  _activityVisible = false;
-                });
-                var status = await showProcessionModeDialog(
-                  context,
-                  current: null,
-                );
+                },
+              ),*/
+              const SizedBox(height: 15),
+              Visibility(
+                visible: _resultTextVisibility,
+                child: Center(
+                  child: Text(_resultText),
+                ),
+              ),
+              SizedTintedCupertinoButton(
+                  child: Text('Event anpassen'),
+                  onPressed: () async {
+                    var event = ref.read(activeEventProvider);
+                    var _ = await EventEditor.show(context, event);
+                  }),
+              const SizedBox(height: 15),
+              /*SizedTintedCupertinoButton(
+                child: Text(Localize.of(context).setRoute),
+                onPressed: () async {
+                  var route = await RouteNameSelector.showRouteNameDialog(
+                    context,
+                    ref.read(currentRouteProvider).value?.name ?? '',
+                  );
 
-                if (status != null) {
-                  try {
-                    await AdminCalls.setProcessionMode(
-                        SetProcessionModeMessage.authenticate(
-                                deviceId: DeviceId.appId,
-                                password: widget.password,
-                                mode: status)
-                            .toMap());
-                  } catch (e) {
-                    BnLog.error(
-                        text: 'Error ProcessionMode',
-                        className: toString(),
-                        methodName: 'Adminpage ProcessionMode');
+                  if (route != null && route.isNotEmpty) {
+                    try {
+                      setState(() => _activityVisible = true);
+                      await AdminCalls.setActiveStatus(
+                        SetActiveStatusMessage.authenticate(
+                          status: EventStatus.cancelled,
+                          deviceId: DeviceId.appId,
+                          password: password,
+                        ).toMap(),
+                      );
+                      await Future.delayed(const Duration(milliseconds: 500));
+                      await AdminCalls.setActiveRoute(
+                        SetActiveRouteMessage.authenticate(
+                          route: route,
+                          deviceId: DeviceId.appId,
+                          password: password,
+                        ).toMap(),
+                      );
+                      await Future.delayed(const Duration(milliseconds: 1000));
+                      await AdminCalls.setActiveStatus(
+                        SetActiveStatusMessage.authenticate(
+                          status: EventStatus.confirmed,
+                          deviceId: DeviceId.appId,
+                          password: password,
+                        ).toMap(),
+                      );
+                    } catch (e) {
+                      if (!kIsWeb) {
+                        BnLog.error(
+                            text: 'Error set route',
+                            className: toString(),
+                            methodName: 'Admin page setRoute');
+                      }
+                    }
+                    setState(() => _activityVisible = false);
+                    setState(
+                        () => _resultText = Localize.of(context).sendData30sec);
+                    setState(() => _resultTextVisibility = true);
+                    await Future.delayed(const Duration(seconds: 2));
+                    setState(() => _resultTextVisibility = false);
+                    var routeRes = ref.read(currentRouteProvider);
+                    var eventRes = ref.read(activeEventProvider);
+                    if (!kIsWeb) {
+                      BnLog.info(
+                          text: 'Admin set route $routeRes,event $eventRes');
+                    }
+                  } else {
+                    setState(() =>
+                        _resultText = Localize.of(context).noChoiceNoAction);
+                    setState(() => _resultTextVisibility = true);
+                    await Future.delayed(const Duration(seconds: 2));
+                    setState(() => _resultTextVisibility = false);
                   }
-
+                },
+              ),
+              const SizedBox(height: 15),*/ //
+              SizedTintedCupertinoButton(
+                child: const Text('ProcessionMode'),
+                onPressed: () async {
                   setState(() {
                     _activityVisible = false;
-                    _resultText = 'ProcessionMode Server sent!';
                   });
+                  var status = await showProcessionModeDialog(
+                    context,
+                    current: null,
+                  );
 
-                  if (context.mounted && context.canPop()) {
-                    context.pop();
+                  if (status != null) {
+                    try {
+                      await AdminCalls.setProcessionMode(
+                          SetProcessionModeMessage.authenticate(
+                                  deviceId: DeviceId.appId,
+                                  password: password,
+                                  mode: status)
+                              .toMap());
+                    } catch (e) {
+                      BnLog.error(
+                          text: 'Error ProcessionMode',
+                          className: toString(),
+                          methodName: 'Admin page ProcessionMode');
+                    }
+
+                    setState(() {
+                      _activityVisible = false;
+                      _resultText = 'ProcessionMode Server sent!';
+                    });
+
+                    if (context.mounted && context.canPop()) {
+                      context.pop();
+                    }
                   }
-                }
-              },
-            ),
-            const SizedBox(height: 15),
-            SizedTintedCupertinoButton(
-              child: const Text('Restart BN-Server'),
-              onPressed: () async {
-                var status = await showKillServerDialog(
-                  context,
-                  current: 0,
-                );
+                },
+              ),
+              const SizedBox(height: 15),
+              SizedTintedCupertinoButton(
+                child: const Text('Restart BN-Server'),
+                onPressed: () async {
+                  var status = await showKillServerDialog(
+                    context,
+                    current: 0,
+                  );
 
-                if (status != null && status == 1) {
-                  try {
-                    await AdminCalls.killServer(KillServerMessage.authenticate(
-                      killValue: true,
-                      deviceId: DeviceId.appId,
-                      password: widget.password,
-                    ).toMap());
-                  } catch (e) {
-                    BnLog.error(
-                        text: 'Error Restart Server',
-                        className: toString(),
-                        methodName: 'Adminpage Restart server');
+                  if (status != null && status == 1) {
+                    try {
+                      await AdminCalls.killServer(
+                          KillServerMessage.authenticate(
+                        killValue: true,
+                        deviceId: DeviceId.appId,
+                        password: password,
+                      ).toMap());
+                    } catch (e) {
+                      BnLog.error(
+                          text: 'Error Restart Server',
+                          className: toString(),
+                          methodName: 'Admin page - Restart server');
+                    }
+
+                    _activityVisible = false;
+                    _resultText = 'Restart Server sent!';
+                    setState(() {});
+
+                    if (context.mounted) {
+                      context.pop();
+                    }
                   }
-
-                  _activityVisible = false;
-                  _resultText = 'Restart Server sent!';
-                  setState(() {});
-
-                  if (context.mounted) {
-                    context.pop();
-                  }
-                }
-              },
-            ),
-            SizedBox(height: 15 + MediaQuery.of(context).padding.bottom),
-          ],
+                },
+              ),
+              SizedBox(height: 15 + MediaQuery.of(context).padding.bottom),
+            ],
+          ),
         ),
       ),
     );
@@ -345,76 +363,6 @@ class _AdminPageState extends ConsumerState<AdminPage> {
     );
   }
 
-  Future<String?> showRouteSelectorDialog(BuildContext context,
-      {String? current}) {
-    String? route;
-    return showCupertinoDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return CupertinoAlertDialog(
-          title: Text(Localize.of(context).setRoute),
-          content: SizedBox(
-            height: 100,
-            child: Builder(builder: (context) {
-              //ref not working here in Alert
-              var routeNames = ref.watch(getAllRouteNamesProvider);
-              return routeNames.maybeWhen(
-                  skipLoadingOnRefresh: false,
-                  skipLoadingOnReload: false,
-                  data: (routeNames) {
-                    if (routeNames.exception != null) {
-                      return NoDataWarning(
-                        onReload: () => ref.read(getAllRouteNamesProvider),
-                      );
-                    }
-                    route = routeNames.routeNames?.first;
-                    return CupertinoPicker(
-                        scrollController:
-                            FixedExtentScrollController(initialItem: 0),
-                        onSelectedItemChanged: (int value) {
-                          if (routeNames.routeNames != null) {
-                            route = routeNames.routeNames![value];
-                          }
-                        },
-                        itemExtent: 50,
-                        children: [
-                          if (routeNames.routeNames != null)
-                            for (var i in routeNames.routeNames!)
-                              Center(child: Text(i.toString()))
-                        ]);
-                  },
-                  loading: () {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                  orElse: () {
-                    return NoDataWarning(
-                      onReload: () => ref.refresh(getAllRouteNamesProvider),
-                    );
-                  });
-            }),
-          ),
-          actions: [
-            CupertinoDialogAction(
-              child: Text(Localize.of(context).cancel),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            CupertinoDialogAction(
-              child: Text(Localize.of(context).save),
-              onPressed: () {
-                Navigator.of(context).pop(route);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<AdminProcessionMode?> showProcessionModeDialog(BuildContext context,
       {AdminProcessionMode? current}) {
     AdminProcessionMode? status;
@@ -467,7 +415,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
       barrierDismissible: true,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: const Text('Wirklich killen'),
+          title: const Text('Wirklich neu starten'),
           content: SizedBox(
             height: 100,
             child: CupertinoPicker(

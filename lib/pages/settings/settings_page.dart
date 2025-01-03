@@ -1,10 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wakelock/wakelock.dart';
-import '../../providers/app_start_and_router/go_router.dart';
-import '../../providers/settings/server_pwd_provider.dart';
-import '../widgets/common_widgets/tinted_cupertino_button.dart';
-import '../widgets/tracking_export_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +11,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
 
+import '../../providers/admin/admin_pwd_provider.dart';
+import '../../providers/app_start_and_router/go_router.dart';
+import '../widgets/common_widgets/tinted_cupertino_button.dart';
+import '../widgets/tracking_export_widget.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/background_location_helper.dart';
 import '../../helpers/export_import_data_helper.dart';
@@ -55,7 +55,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     var networkConnected = ref.watch(networkAwareProvider);
-    var adminPass = ref.watch(serverPwdSetProvider);
+    var adminPass = ref.watch(adminPwdSetProvider);
     return CupertinoPageScaffold(
       child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -88,11 +88,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           },
                           onLongPress: () => {
                             adminPass
-                                ? context.pushNamed(AppRoute.adminPage.name,
-                                    queryParameters: {
-                                        'password':
-                                            HiveSettingsDB.serverPassword
-                                      })
+                                ? context.pushNamed(AppRoute.adminPage.name)
                                 : context.pushNamed(AppRoute.bladeguard.name)
                           },
                         ),

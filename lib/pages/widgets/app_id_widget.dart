@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
-import '../../helpers/deviceid_helper.dart';
+import '../../helpers/device_id_helper.dart';
 
 class AppIdWidget extends ConsumerWidget {
   const AppIdWidget({super.key});

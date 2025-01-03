@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../app_settings/app_constants.dart';
+import '../helpers/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../pages/admin/widgets/admin_password_dialog.dart';
 import 'bn_wamp_message.dart';
@@ -100,13 +101,19 @@ class AdminCalls {
       message,
     );
 
-    var wampResult = await WampV2()
-        .addToWamp(bnWampMessage)
-        .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampException(error.toString()));
-    if (wampResult is String) {
-      return wampResult;
+    try {
+      var wampResult = await WampV2()
+          .addToWamp(bnWampMessage)
+          .timeout(wampTimeout)
+          .catchError((error, stackTrace) => {WampException(error.toString())});
+      if (wampResult is String) {
+        return wampResult;
+      }
+    } catch (e) {
+      BnLog.error(text: 'Admin password check failed', exception: e);
+      return kInvalidPassword;
     }
+
     return kInvalidPassword;
   }
 }

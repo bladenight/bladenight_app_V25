@@ -23,11 +23,26 @@ class UserIsBladeguard extends _$UserIsBladeguard {
       //switch off and unregister
       HiveSettingsDB.setBgSettingVisible(false);
       HiveSettingsDB.setBgLeaderSettingVisible(false);
-      OnesignalHandler.registerPushAsBladeGuard(false,'');
+      OnesignalHandler.registerPushAsBladeGuard(false, '');
       state = value;
       return;
     }
     HiveSettingsDB.setIsBladeGuard(value);
+  }
+}
+
+@riverpod
+class UserIsAdmin extends _$UserIsAdmin {
+  @override
+  bool build() {
+    Hive.box(hiveBoxSettingDbName)
+        .watch(key: HiveSettingsDB.bgIsAdmin)
+        .listen((event) => state = event.value);
+    return HiveSettingsDB.bgIsAdmin;
+  }
+
+  void setValue(bool value) {
+    HiveSettingsDB.setBgIsAdmin(value);
   }
 }
 
@@ -51,7 +66,7 @@ class IsValidBladeGuardEmail extends _$IsValidBladeGuardEmail {
   @override
   bool build() {
     Hive.box(hiveBoxSettingDbName)
-        .watch(key: HiveSettingsDB.isBladeguardEmailValidKey )
+        .watch(key: HiveSettingsDB.isBladeguardEmailValidKey)
         .listen((event) => state = event.value);
     return validateEmail(HiveSettingsDB.bladeguardEmail);
   }

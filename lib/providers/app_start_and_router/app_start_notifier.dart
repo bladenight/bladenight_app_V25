@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
 import '../../app_settings/app_constants.dart';
-import '../../helpers/deviceid_helper.dart';
+import '../../helpers/device_id_helper.dart';
 import '../../main.dart';
 
 part 'app_start_notifier.g.dart';

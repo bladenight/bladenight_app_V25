@@ -201,9 +201,9 @@ class HiveSettingsDB {
       setIsSpecialHead(false);
       setWantSeeFullOfProcession(false);
       setHasSpecialRightsPrefs(false);
-      setBgIsAdmin(false);
-      setBladeguardPin(null);
-      setServerPassword(null);
+      await setBgIsAdmin(false);
+      await setBladeguardPin(null);
+      await setServerPassword(null);
 
       await OnesignalHandler.unRegisterPushAsBladeGuard();
       //including remove special rights
@@ -489,8 +489,8 @@ class HiveSettingsDB {
   }
 
   ///set BladeguardPin for Bladeguard
-  static void setBladeguardPin(String? val) {
-    _hiveBox.put(bladeguardPinKey, val);
+  static Future<void> setBladeguardPin(String? val) async {
+    await _hiveBox.put(bladeguardPinKey, val);
   }
 
   static const String _bgTeamKey = 'bgTeamPref';
@@ -513,8 +513,8 @@ class HiveSettingsDB {
   }
 
   ///set IsAdmin for Bladeguard
-  static void setBgIsAdmin(bool val) {
-    _hiveBox.put(_bgIsAdminKey, val);
+  static Future<void> setBgIsAdmin(bool val) async {
+    await _hiveBox.put(_bgIsAdminKey, val);
   }
 
   static const String setOnsiteGeoFencingKey = 'setOnsiteGeoFencingPref';

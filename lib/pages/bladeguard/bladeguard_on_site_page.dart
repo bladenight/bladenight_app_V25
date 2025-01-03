@@ -41,10 +41,6 @@ class BladeGuardOnsite extends ConsumerWidget {
     var networkConnected = ref.watch(networkAwareProvider);
     return isOnSiteAsync.when(error: (e, st) {
       return Column(mainAxisSize: MainAxisSize.max, children: [
-        Expanded(
-            child: Row(
-          children: [],
-        )),
         Padding(
             padding: const EdgeInsets.fromLTRB(15.0, 1, 15.0, 1),
             child: Container(
@@ -89,6 +85,12 @@ class BladeGuardOnsite extends ConsumerWidget {
           ? Column(
               children: [
                 if (status == false) ...[
+                  Expanded(
+                      child: Row(
+                    children: [
+                      Image.asset('assets/images/bladeguard_smile.jpg'),
+                    ],
+                  )),
                   Column(mainAxisSize: MainAxisSize.max, children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10.0, 1, 10, 1),
