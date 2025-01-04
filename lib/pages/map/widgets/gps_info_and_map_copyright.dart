@@ -221,9 +221,8 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
                                   foregroundColor: CupertinoColors.white,
                                   tooltip:
                                       Localize.of(context).locationServiceOff,
-                                  icon: const Row(children: [
-                                    Icon(CupertinoIcons.location_slash_fill),
-                                  ]),
+                                  icon:
+                                      Icon(CupertinoIcons.location_slash_fill),
                                   label: const Text(
                                     '',
                                     style:

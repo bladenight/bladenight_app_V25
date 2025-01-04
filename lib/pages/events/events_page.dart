@@ -30,7 +30,7 @@ class EventsPage extends ConsumerStatefulWidget {
 }
 
 class _EventsPageState extends ConsumerState<EventsPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final _dataKey = GlobalKey();
   bool _noActualEventFound = false;
   final _pageController = PageController(viewportFraction: 1, keepPage: true);
@@ -61,7 +61,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
         }
       }
     });
-
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() => _header = Localize.of(context).events);
       _scrollToActualEvent();
@@ -78,6 +78,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     _pageController.dispose();
     super.dispose();

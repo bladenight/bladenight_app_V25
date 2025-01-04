@@ -12,6 +12,7 @@ import 'package:quickalert/quickalert.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/device_info_helper.dart';
+import '../../helpers/keyboard_helper.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../helpers/time_converter_helper.dart';
 import '../../models/friend.dart';
@@ -21,6 +22,7 @@ import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/friends_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../widgets/bottom_sheets/base_bottom_sheet_widget.dart';
+import '../widgets/common_widgets/multi_expandable_button_widget.dart';
 import '../widgets/common_widgets/tinted_cupertino_button.dart';
 import '../widgets/expandable_floating_action_button.dart';
 import 'widgets/edit_friend_dialog.dart';
@@ -57,16 +59,6 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
     }
   }
 
-  _dismissKeyboard(BuildContext context) {
-    if (!mounted) return;
-    //Dismiss keyboard
-    FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus) {
-      currentFocus.unfocus();
-    }
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
-  }
-
   _runRefreshTimer() {
     final _ = Timer(
       const Duration(seconds: 3),
@@ -79,7 +71,41 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var networkAvailable = ref.watch(networkAwareProvider);
-    var actionButton = ExpandableFloatingActionButton(
+    var actionButton = MultiExpandableButton(
+      onPressed: () {},
+      tooltip: '',
+      iconData: AnimatedIcons.menu_close,
+      children: [
+        MultiButton(
+            heroTag: 'addFABTag',
+            labelText: Localize.of(context).addnewfriend,
+            onPressed: () async {
+              var _ = await EditFriendDialog.show(
+                context,
+                friendDialogAction: FriendsAction.addNew,
+              );
+            },
+            icon: const Icon(Icons.add)),
+        MultiButton(
+            heroTag: 'addWithCodeFABTag',
+            labelText: Localize.of(context).addfriendwithcode,
+            onPressed: () async {
+              var _ = await EditFriendDialog.show(
+                context,
+                friendDialogAction: FriendsAction.addWithCode,
+              );
+            },
+            icon: const Icon(Icons.pin)),
+        MultiButton(
+            heroTag: 'refreshFABTag',
+            labelText: Localize.of(context).refresh,
+            icon: const Icon(Icons.update),
+            onPressed: () async {
+              ref.read(friendsLogicProvider).refreshFriends();
+            }),
+      ],
+    );
+    /*ExpandableFloatingActionButton(
         distance: 90,
         startAngleInDegrees: 00,
         buttonIcon: const Icon(Icons.menu_open_rounded),
@@ -108,7 +134,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
               onPressed: () async {
                 ref.read(friendsLogicProvider).refreshFriends();
               }),
-        ]);
+        ]);*/
     return Scaffold(
       floatingActionButton: actionButton,
       body: CustomScrollView(
@@ -131,7 +157,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                         minSize: 0,
                         onPressed: () async {
                           if (mounted) {
-                            _dismissKeyboard(context);
+                            dismissKeyboard(context);
                           }
                           if (GetPlatform.isAndroid &&
                               !await DeviceHelper
@@ -182,18 +208,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           );
                           // if (result != null) {}
                         },
-                        child: const Icon(CupertinoIcons.plus_circle),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        minSize: 0,
-                        onPressed: () async {
-                          ref.read(friendsLogicProvider).refreshFriends();
-                        },
-                        child: const Icon(Icons.update),
+                        child: const Icon(Icons.menu),
                       ),
                     ],
                   )
@@ -202,7 +217,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
           CupertinoSliverRefreshControl(
             onRefresh: () async {
               if (mounted) {
-                _dismissKeyboard(context);
+                dismissKeyboard(context);
               }
               return ref.read(friendsLogicProvider).refreshFriends();
             },
@@ -509,7 +524,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     .deleteRelationShip(friend.friendId);
               }
               if (context.mounted) {
-                _dismissKeyboard(context);
+                dismissKeyboard(context);
               }
             },
           ),

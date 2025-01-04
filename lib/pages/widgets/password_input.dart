@@ -47,6 +47,8 @@ class _InputPasswordDialogState extends State<InputPasswordDialog> {
       ),
       content: CupertinoTextField(
         placeholder: Localize.of(context).entercode,
+        obscureText: true,
+        obscuringCharacter: '*',
         onChanged: (value) {
           setState(() {
             password = value;

@@ -22,47 +22,59 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseAppScaffold(
       child: Row(
-        children: [
-          // Fixed navigation rail on the left (start)
-          NavigationRail(
-            selectedIndex: currentIndex,
-            minWidth: 50,
-            minExtendedWidth: 70,
-            onDestinationSelected: onDestinationSelected,
-            labelType: NavigationRailLabelType.none,
-            destinations: [
-              NavigationRailDestination(
-                label: Text(
-                  Localize.of(context).home,
-                ),
-                icon: Icon(CupertinoIcons.home),
-              ),
-              NavigationRailDestination(
-                label: Text(
-                  Localize.of(context).map,
-                ),
-                icon: Icon(CupertinoIcons.map),
-              ),
-              NavigationRailDestination(
-                label: Text(
-                  Localize.of(context).events,
-                ),
-                icon: Icon(Icons.event_available_rounded),
-              ),
-              if (!kIsWeb)
-                NavigationRailDestination(
-                  label: Text(
-                    Localize.of(context).friends,
+        children: <Widget>[
+          LayoutBuilder(
+            builder: (context, constraint) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraint.maxHeight),
+                  child: IntrinsicHeight(
+                    child:
+                        // Fixed navigation rail on the left (start)
+                        NavigationRail(
+                      selectedIndex: currentIndex,
+                      minWidth: 50,
+                      minExtendedWidth: 70,
+                      onDestinationSelected: onDestinationSelected,
+                      labelType: NavigationRailLabelType.all,
+                      destinations: [
+                        NavigationRailDestination(
+                          label: Text(
+                            Localize.of(context).home,
+                          ),
+                          icon: Icon(CupertinoIcons.home),
+                        ),
+                        NavigationRailDestination(
+                          label: Text(
+                            Localize.of(context).map,
+                          ),
+                          icon: Icon(CupertinoIcons.map),
+                        ),
+                        NavigationRailDestination(
+                          label: Text(
+                            Localize.of(context).events,
+                          ),
+                          icon: Icon(Icons.event_available_rounded),
+                        ),
+                        if (!kIsWeb)
+                          NavigationRailDestination(
+                            label: Text(
+                              Localize.of(context).friends,
+                            ),
+                            icon: Icon(Icons.people_alt_rounded),
+                          ),
+                        NavigationRailDestination(
+                          label: Text(
+                            Localize.of(context).settings,
+                          ),
+                          icon: Icon(Icons.settings),
+                        ),
+                      ],
+                    ),
                   ),
-                  icon: Icon(Icons.people_alt_rounded),
                 ),
-              NavigationRailDestination(
-                label: Text(
-                  Localize.of(context).settings,
-                ),
-                icon: Icon(Icons.settings),
-              ),
-            ],
+              );
+            },
           ),
           const VerticalDivider(thickness: 1, width: 1),
           // Main content on the right (end)

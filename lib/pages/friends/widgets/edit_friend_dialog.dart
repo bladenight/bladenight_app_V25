@@ -1,13 +1,11 @@
 import 'dart:math';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:share_plus/share_plus.dart';
@@ -24,6 +22,8 @@ import '../../../providers/network_connection_provider.dart';
 import '../../../wamp/wamp_exception.dart';
 import '../../widgets/data_widget_left_right.dart';
 import '../../widgets/no_connection_warning.dart';
+import '../../widgets/number_input_widget.dart';
+import '../../widgets/text_input_widget.dart';
 
 class EditFriendResult {
   final String name;
@@ -55,24 +55,15 @@ class EditFriendDialog extends ConsumerStatefulWidget {
     }
     return context.pushNamed(AppRoute.editFriendDialog.name,
         queryParameters: queryParameters);
-    showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context) => EditFriendDialog(
-        friend: friend,
-        action: friendDialogAction,
-      ),
-    );
   }
 }
 
 class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
     with WidgetsBindingObserver {
-  late final TextEditingController nameController;
-  late final TextEditingController codeController;
-  late FocusNode nameFocusNode;
   String? errorText;
   String name = '';
   bool nameOk = false;
+  bool codeIsValid = false;
   String? code;
   Color? color;
   bool isActive = true;
@@ -83,7 +74,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
 
   bool get isValid =>
       name.isNotEmpty &&
-      (widget.action != FriendsAction.addWithCode || isCodeValid);
+      (widget.action != FriendsAction.addWithCode || codeIsValid);
 
   @override
   void initState() {
@@ -94,12 +85,6 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
             Random().nextInt(ColorConstants.friendPickerColors.length)];
     code = widget.friend?.requestId.toString();
     isActive = widget.friend?.isActive ?? true;
-    nameController = TextEditingController(text: name);
-    codeController = TextEditingController(text: code);
-    nameFocusNode = FocusNode();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      nameFocusNode.requestFocus();
-    });
   }
 
   @override
@@ -108,15 +93,6 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
     color ??= widget.friend?.color ??
         ColorConstants.friendPickerColors[
             Random().nextInt(ColorConstants.friendPickerColors.length)];
-  }
-
-  @override
-  void dispose() {
-    // Clean up the focus node when the Form is disposed.
-    nameFocusNode.dispose();
-    nameController.dispose();
-    codeController.dispose();
-    super.dispose();
   }
 
   @override
@@ -146,14 +122,14 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                       ((nameOk && widget.action != FriendsAction.addWithCode) ||
                           (nameOk &&
                               widget.action == FriendsAction.addWithCode &&
-                              isCodeValid))
+                              codeIsValid))
                   ? Row(mainAxisSize: MainAxisSize.min, children: [
                       CupertinoButton(
                         padding: EdgeInsets.zero,
                         onPressed: () async {
                           _saveData();
                         },
-                        child: const Icon(Icons.send_rounded),
+                        child: const Icon(Icons.save_alt_outlined),
                       ),
                     ])
                   : Container(),
@@ -170,99 +146,30 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                 widthFactor: 0.9,
                 child: Column(
                   children: [
-                    CupertinoFormSection(
-                        header: Text(Localize.current.enterfriendname),
-                        children: <Widget>[
-                          CupertinoTextFormFieldRow(
-                            controller: nameController,
-                            //focusNode: nameFocusNode,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return Localize.of(context).missingName;
-                              }
-                              return null;
-                            },
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: nameOk
-                                    ? CupertinoAdaptiveTheme.of(context)
-                                                .theme
-                                                .brightness ==
-                                            Brightness.light
-                                        ? CupertinoColors.black
-                                        : CupertinoColors.white
-                                    : Colors.red,
-                                width: 2.0,
-                              ),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5.0)),
-                            ),
-                            placeholder: Localize.of(context).enterfriendname,
-                            autofocus: true,
-                            autocorrect: false,
-                            onChanged: (value) {
-                              setState(() {
-                                name = value;
-                                nameOk = value.isNotEmpty;
-                              });
-                            },
-                          ),
-                        ]),
+                    TextInputWidget(
+                      header: Localize.current.enterfriendname,
+                      placeholder: Localize.current.enterfriendname,
+                      value: name,
+                      minLength: 1,
+                      onChanged: (value) {
+                        name = value;
+                        setState(() {
+                          nameOk = value.isNotEmpty;
+                        });
+                      },
+                    ),
                     if (widget.action == FriendsAction.addWithCode) ...[
-                      CupertinoFormSection(
-                          header: Text(Localize.current.enter6digitcode),
-                          children: <Widget>[
-                            CupertinoTextFormFieldRow(
-                              placeholder: Localize.of(context).enter6digitcode,
-                              maxLength: 6,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (String? value) {
-                                if (value == null ||
-                                    value.isEmpty ||
-                                    value.length != 6) {
-                                  return Localize.of(context).enter6digitcode;
-                                }
-                                return null;
-                              },
-                              controller: codeController,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: code == null || isCodeValid
-                                      ? CupertinoAdaptiveTheme.of(context)
-                                                  .theme
-                                                  .brightness ==
-                                              Brightness.light
-                                          ? CupertinoColors.black
-                                          : CupertinoColors.white
-                                      : CupertinoColors.destructiveRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(5.0)),
-                              ),
-                              keyboardType: TextInputType.number,
-                              onChanged: (value) {
-                                setState(() {
-                                  code = value;
-                                });
-                              },
-                              onFieldSubmitted: (val) {
-                                if (!isLoading &&
-                                        (nameOk &&
-                                            widget.action !=
-                                                FriendsAction.addWithCode) ||
-                                    (nameOk &&
-                                        widget.action ==
-                                            FriendsAction.addWithCode &&
-                                        isCodeValid)) {
-                                  _saveData();
-                                }
-                              },
-                            ),
-                          ]),
+                      NumberInputWidget(
+                        header: Localize.current.enter6digitcode,
+                        placeholder: Localize.current.enter6digitcode,
+                        code: '',
+                        onChanged: (value) {
+                          code = value;
+                          setState(() {
+                            codeIsValid = isCodeValid;
+                          });
+                        },
+                      )
                     ],
                     if (errorText != null)
                       Text(
@@ -304,7 +211,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                                 (nameOk &&
                                     widget.action ==
                                         FriendsAction.addWithCode &&
-                                    isCodeValid)
+                                    codeIsValid)
                             ? () {
                                 _saveData();
                               }

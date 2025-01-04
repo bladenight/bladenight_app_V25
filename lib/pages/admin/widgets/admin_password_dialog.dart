@@ -39,6 +39,7 @@ class _AdminPasswordDialogState extends ConsumerState<AdminPasswordDialog> {
           : CupertinoTextField(
               placeholder: Localize.of(context).enterPassword,
               obscureText: true,
+              obscuringCharacter: '*',
               autocorrect: false,
               autofocus: true,
               onChanged: (value) {
