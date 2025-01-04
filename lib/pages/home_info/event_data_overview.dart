@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
-import '../widgets/hidden_admin_button.dart';
+import '../widgets/buttons/hidden_admin_button.dart';
 import 'event_map_small.dart';
 
 ///Event overview

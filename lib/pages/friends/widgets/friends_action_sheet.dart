@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../generated/l10n.dart';
 import '../../../models/friend.dart';
 import '../../../providers/friends_provider.dart';
-import '../../widgets/bottom_sheets/base_bottom_sheet_widget.dart';
-import '../../widgets/common_widgets/tinted_cupertino_button.dart';
+import '../../widgets/sheets/base_bottom_sheet_widget.dart';
+import '../../widgets/buttons/tinted_cupertino_button.dart';
 
 class FriendsActionModal extends ConsumerWidget {
   const FriendsActionModal({super.key});

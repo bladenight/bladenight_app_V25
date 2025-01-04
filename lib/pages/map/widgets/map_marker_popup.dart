@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../models/bn_map_marker.dart';
-import '../../../pages/widgets/data_widget_left_right.dart';
+import '../../widgets/common_widgets/data_widget_left_right.dart';
 
 class MapMarkerPopup extends StatefulWidget {
   final BnMapMarker marker;

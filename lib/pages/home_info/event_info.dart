@@ -12,9 +12,9 @@ import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../bladeguard/bladeguard_advertise.dart';
 import '../bladeguard/bladeguard_on_site_page.dart';
-import '../widgets/app_outdated.dart';
-import '../widgets/no_connection_warning.dart';
-import '../widgets/shadow_box_widget.dart';
+import '../widgets/common_widgets/app_outdated.dart';
+import '../widgets/common_widgets/no_connection_warning.dart';
+import '../widgets/common_widgets/shadow_box_widget.dart';
 import 'event_data_overview.dart';
 
 class EventInfo extends ConsumerStatefulWidget {

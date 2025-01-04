@@ -17,10 +17,10 @@ import '../../../providers/route_providers.dart';
 import '../../../wamp/admin_calls.dart';
 import '../../admin/widgets/event_status_selector.dart';
 import '../../admin/widgets/route_name_selector.dart';
-import '../../widgets/input_double_alert_dialog.dart';
-import '../../widgets/input_text_alert_dialog.dart';
-import '../../widgets/no_connection_warning.dart';
-import '../../widgets/input_int_alert_dialog.dart';
+import '../../widgets/input/input_double_dialog.dart';
+import '../../widgets/input/input_text_alert_dialog.dart';
+import '../../widgets/common_widgets/no_connection_warning.dart';
+import '../../widgets/input/input_int_dialog.dart';
 
 class EventEditor extends ConsumerStatefulWidget {
   const EventEditor({required this.event, super.key});

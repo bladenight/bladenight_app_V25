@@ -23,7 +23,7 @@ import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/notification/toast_notification.dart';
 import '../../../models/follow_location_state.dart';
 import '../../../models/route.dart';
-import '../../../pages/widgets/following_location_icon.dart';
+import '../../widgets/map/following_location_icon.dart';
 import '../../../providers/app_start_and_router/go_router.dart';
 import '../../../providers/images_and_links/live_map_image_and_link_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
@@ -34,9 +34,9 @@ import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/messages_provider.dart';
 import '../../../providers/route_providers.dart';
-import '../../widgets/align_map_icon.dart';
-import '../../widgets/bottom_sheets/tracking_type_widget.dart';
-import '../../widgets/positioned_visibility_opacity.dart';
+import '../../widgets/map/align_map_icon.dart';
+import '../../widgets/map/tracking_type_widget.dart';
+import '../../widgets/common_widgets/positioned_visibility_opacity.dart';
 import '../widgets/qr_create_page.dart';
 
 class MapButtonsLayer extends ConsumerStatefulWidget {

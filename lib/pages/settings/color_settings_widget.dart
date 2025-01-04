@@ -9,7 +9,7 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../providers/settings/dark_color_provider.dart';
 import '../../providers/settings/light_color_provider.dart';
 import '../../providers/settings/me_color_provider.dart';
-import '../widgets/data_widget_left_right.dart';
+import '../widgets/common_widgets/data_widget_left_right.dart';
 
 class ColorSettingsWidget extends ConsumerStatefulWidget {
   const ColorSettingsWidget({super.key});

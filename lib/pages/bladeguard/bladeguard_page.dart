@@ -15,21 +15,21 @@ import '../../helpers/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../helpers/url_launch_helper.dart';
-import '../../pages/widgets/no_connection_warning.dart';
+import '../widgets/common_widgets/no_connection_warning.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
-import '../widgets/birthday_date_picker.dart';
-import '../widgets/common_widgets/tinted_cupertino_button.dart';
-import '../widgets/data_widget_left_right.dart';
-import '../widgets/data_widget_left_right_text.dart';
-import '../widgets/email_widget.dart';
-import '../widgets/phone_number.dart';
-import '../widgets/send_mail.dart';
-import '../widgets/settings_invisible_offline.dart';
+import '../widgets/picker/birthday_date_picker.dart';
+import '../widgets/buttons/tinted_cupertino_button.dart';
+import '../widgets/common_widgets/data_widget_left_right.dart';
+import '../widgets/common_widgets/data_widget_left_right_text.dart';
+import '../widgets/input/email_widget.dart';
+import '../widgets/input/phone_number.dart';
+import '../widgets/common_widgets/send_mail.dart';
+import '../widgets/animated/settings_invisible_offline.dart';
 import 'bg_pin_dialog.dart';
 import 'bladeguard_on_site_page.dart';
 
@@ -213,7 +213,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   'E-Mail: ${HiveSettingsDB.bladeguardEmail}'),
                             ),
                           ),
-                        const PhoneTextField(),
+                        const PhoneNumberInput(),
                         if ((networkConnected.connectivityStatus ==
                                     ConnectivityStatus.wampConnected ||
                                 networkConnected.connectivityStatus ==

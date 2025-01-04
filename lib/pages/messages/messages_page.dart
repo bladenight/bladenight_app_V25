@@ -12,11 +12,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/url_launch_helper.dart';
 import '../../models/external_app_message.dart';
-import '../../pages/widgets/data_widget_left_right_small_text.dart';
-import '../../pages/widgets/no_connection_warning.dart';
+import '../widgets/common_widgets/data_widget_left_right_small_text.dart';
+import '../widgets/common_widgets/no_connection_warning.dart';
 import '../../providers/messages_provider.dart';
 import '../../providers/network_connection_provider.dart';
-import '../widgets/common_widgets/tinted_cupertino_button.dart';
+import '../widgets/buttons/tinted_cupertino_button.dart';
 
 class MessagesPage extends ConsumerStatefulWidget {
   const MessagesPage({super.key});

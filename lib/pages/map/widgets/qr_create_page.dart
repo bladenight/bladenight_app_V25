@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../helpers/url_launch_helper.dart';
 import '../../../providers/app_start_and_router/go_router.dart';
-import '../../widgets/grip_bar.dart';
+import '../../widgets/sheets/grip_bar.dart';
 
 class QRCreatePage extends StatefulWidget {
   const QRCreatePage(

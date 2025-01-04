@@ -17,7 +17,7 @@ import '../../providers/active_event_provider.dart';
 import '../../providers/active_event_route_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/map/use_open_street_map_provider.dart';
-import '../widgets/no_connection_warning.dart';
+import '../widgets/common_widgets/no_connection_warning.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/gps_info_and_map_copyright.dart';
 import 'widgets/headings_layer.dart';
@@ -25,7 +25,7 @@ import 'widgets/map_buttons.dart';
 import 'widgets/map_tile_layer.dart';
 import 'widgets/markers_layer.dart';
 import 'widgets/bn_map_page_poly_lines_layer.dart';
-import 'widgets/track_progress_overlay.dart';
+import 'widgets/map_overlays/track_progress_overlay.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});

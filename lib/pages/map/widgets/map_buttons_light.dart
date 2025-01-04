@@ -13,7 +13,7 @@ import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../models/route.dart';
 import '../../../providers/map/heading_marker_size_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
-import '../../widgets/positioned_visibility_opacity.dart';
+import '../../widgets/common_widgets/positioned_visibility_opacity.dart';
 
 ///Overlay for [flutter_map] to show zoom and light/dark button
 ///

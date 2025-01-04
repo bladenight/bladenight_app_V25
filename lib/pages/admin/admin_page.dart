@@ -16,8 +16,8 @@ import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../wamp/admin_calls.dart';
 import '../events/widgets/event_editor.dart';
-import '../widgets/common_widgets/tinted_cupertino_button.dart';
-import '../widgets/no_connection_warning.dart';
+import '../widgets/buttons/tinted_cupertino_button.dart';
+import '../widgets/common_widgets/no_connection_warning.dart';
 
 class AdminPage extends ConsumerStatefulWidget {
   const AdminPage({super.key});

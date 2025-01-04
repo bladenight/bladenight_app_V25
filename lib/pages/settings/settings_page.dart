@@ -13,8 +13,8 @@ import 'package:universal_io/io.dart';
 
 import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
-import '../widgets/common_widgets/tinted_cupertino_button.dart';
-import '../widgets/tracking_export_widget.dart';
+import '../widgets/buttons/tinted_cupertino_button.dart';
+import '../widgets/map/tracking_export_widget.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/background_location_helper.dart';
 import '../../helpers/export_import_data_helper.dart';
@@ -22,14 +22,14 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
-import '../widgets/app_id_widget.dart';
-import '../widgets/data_widget_left_right.dart';
+import '../widgets/common_widgets/app_id_widget.dart';
+import '../widgets/common_widgets/data_widget_left_right.dart';
 import '../../providers/is_tracking_provider.dart';
 import '../../providers/map/map_settings_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../wamp/wamp_v2.dart';
-import '../widgets/one_signal_id_widget.dart';
-import '../widgets/settings_invisible_offline.dart';
+import '../widgets/common_widgets/one_signal_id_widget.dart';
+import '../widgets/animated/settings_invisible_offline.dart';
 import 'color_settings_widget.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../providers/server_route_names_provider.dart';
-import '../../widgets/no_data_warning.dart';
+import '../../widgets/common_widgets/no_data_warning.dart';
 
 class RouteNameSelector extends ConsumerStatefulWidget {
   const RouteNameSelector(

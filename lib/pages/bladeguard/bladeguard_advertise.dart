@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../generated/l10n.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/settings/bladeguard_provider.dart';
-import '../widgets/shadow_box_widget.dart';
+import '../widgets/common_widgets/shadow_box_widget.dart';
 
 class BladeGuardAdvertise extends ConsumerWidget {
   const BladeGuardAdvertise({super.key});

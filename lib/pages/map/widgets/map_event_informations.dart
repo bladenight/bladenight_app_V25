@@ -14,9 +14,9 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
 import '../../../providers/special_procession_function_provider.dart';
-import '../../widgets/data_widget_left_right.dart';
-import '../../widgets/grip_bar.dart';
-import '../../widgets/no_data_warning.dart';
+import '../../widgets/common_widgets/data_widget_left_right.dart';
+import '../../widgets/sheets/grip_bar.dart';
+import '../../widgets/common_widgets/no_data_warning.dart';
 import 'speed_info_colors.dart';
 import 'update_progress.dart';
 

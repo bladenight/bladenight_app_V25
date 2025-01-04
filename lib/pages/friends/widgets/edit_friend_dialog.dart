@@ -20,10 +20,10 @@ import '../../../providers/app_start_and_router/go_router.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../providers/network_connection_provider.dart';
 import '../../../wamp/wamp_exception.dart';
-import '../../widgets/data_widget_left_right.dart';
-import '../../widgets/no_connection_warning.dart';
-import '../../widgets/number_input_widget.dart';
-import '../../widgets/text_input_widget.dart';
+import '../../widgets/common_widgets/data_widget_left_right.dart';
+import '../../widgets/common_widgets/no_connection_warning.dart';
+import '../../widgets/input/number_input_widget.dart';
+import '../../widgets/input/text_input_widget.dart';
 
 class EditFriendResult {
   final String name;

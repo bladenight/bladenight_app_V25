@@ -13,14 +13,14 @@ import '../../helpers/logger.dart';
 import '../../models/event.dart';
 import '../../models/messages/edit_event_on_server.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
-import '../widgets/data_loading_indicator.dart';
-import '../widgets/no_data_warning.dart';
-import '../widgets/route_dialog.dart';
+import '../widgets/indicators/data_loading_indicator.dart';
+import '../widgets/common_widgets/no_data_warning.dart';
+import '../widgets/route/route_dialog.dart';
 import '../../providers/event_providers.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../wamp/admin_calls.dart';
 import 'widgets/event_editor.dart';
-import '../widgets/no_connection_warning.dart';
+import '../widgets/common_widgets/no_connection_warning.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
   const EventsPage({super.key});

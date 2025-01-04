@@ -7,7 +7,7 @@ import '../generated/l10n.dart';
 import '../helpers/url_launch_helper.dart';
 import '../providers/app_start_and_router/go_router.dart';
 import 'widgets/about_page/privacy.dart';
-import 'widgets/version_widget.dart';
+import 'widgets/common_widgets/version_widget.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
