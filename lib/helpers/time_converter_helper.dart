@@ -17,7 +17,9 @@ class TimeConverter {
   ///Format millisecond  to time 00:30:00
   ///if [maxvalue] greater [value] '-' will returned
   static millisecondsToDateTimeString({required int value, int? maxvalue}) {
-    // if (maxvalue != null && value > maxvalue) return '-';
+    if (maxvalue != null && value > maxvalue) {
+      return '~${formatDuration(Duration(milliseconds: maxvalue))}';
+    }
     return formatDuration(Duration(milliseconds: value));
   }
 
@@ -74,32 +76,32 @@ class DateFormatter {
 
   ///Convert [dateTime] to [DateTime] tomorrow, today else date and time
   String getLocalDayDateTimeRepresentation(DateTime dateTime) {
-    DateTime now = DateTime.now().toUtc();
-    DateTime utcDateTime = dateTime.toUtc();
+    DateTime now = DateTime.now().toLocal();
+    DateTime localDateTime = dateTime.toLocal();
     DateTime yesterday = now.subtract(const Duration(days: 1));
     DateTime tomorrow = now.add(const Duration(days: 1));
     //today
     if (dateTime.year < now.year) return '-';
-    if ((now.difference(utcDateTime)).inSeconds > 0) {
-      return '${localizations.now} ${localizations.since} ${localizations.timeIntl(dateTime.toLocal())}';
+    if ((now.difference(localDateTime)).inSeconds > 0) {
+      return '${localizations.now} ${localizations.since} ${localizations.timeIntl(localDateTime)}';
     }
 
-    if (utcDateTime.day == now.day &&
-        utcDateTime.month == now.month &&
-        utcDateTime.year == now.year) {
-      return '${localizations.today} ${localizations.timeIntl(dateTime.toLocal())}';
+    if (localDateTime.day == now.day &&
+        localDateTime.month == now.month &&
+        localDateTime.year == now.year) {
+      return '${localizations.today} ${localizations.timeIntl(localDateTime)}';
     }
     //tomorrow
-    if (utcDateTime.day == tomorrow.day &&
-        utcDateTime.month == tomorrow.month &&
-        utcDateTime.year == tomorrow.year) {
-      return '${localizations.tomorrow} ${Localize.current.timeIntl(dateTime.toLocal())}';
+    if (localDateTime.day == tomorrow.day &&
+        localDateTime.month == tomorrow.month &&
+        localDateTime.year == tomorrow.year) {
+      return '${localizations.tomorrow} ${Localize.current.timeIntl(localDateTime)}';
     }
     //yesterday
-    if (utcDateTime.day == yesterday.day &&
-        utcDateTime.month == yesterday.month &&
-        utcDateTime.year == yesterday.year) {
-      return '${localizations.yesterday} ${localizations.timeIntl(dateTime.toLocal())}';
+    if (localDateTime.day == yesterday.day &&
+        localDateTime.month == yesterday.month &&
+        localDateTime.year == yesterday.year) {
+      return '${localizations.yesterday} ${localizations.timeIntl(localDateTime)}';
     }
 
     ///TODO sometime 19:00 shown - why??
@@ -108,7 +110,7 @@ class DateFormatter {
     if (res.contains('19:00')) {
       print('current locale ${Intl.getCurrentLocale()}');
       BnLog.warning(text: 'wrong date');
-      return Localize.current.dateTimeIntl(dateTime.toLocal(), _startTime2100);
+      return Localize.current.dateTimeIntl(localDateTime, _startTime2100);
     }
     return res;
   }
