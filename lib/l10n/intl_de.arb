@@ -154,9 +154,10 @@
   "bgNotificationTitle": "BladeNight Hintergrundstandortupdate",
   "bgTeam": "Bladeguard Team",
   "bgTodayIsRegistered": "Du bist heute als Bladeguard eingetragen.",
-  "bgTodayNotParticipation": "Ich kann doch nicht als Bladeguard teilnehmen und möchte mich abmelden.",
-  "bgTodayTapToRegister": "Hier tippen und heute als Bladeguard eintragen!",
-  "bgTodayNotRegistered": "Du heute noch nicht als Bladeguard angemeldet!",
+  "bgTodayNotParticipation": "Ich kann heute doch nicht als Bladeguard teilnehmen und möchte mich wieder austragen.",
+  "bgTodayTapToRegister": "Hier tippen und für heute als Bladeguard eintragen!",
+  "bgTodayTapToUnRegister": "Hier tippen und für heute als Bladeguard wieder austragen!",
+  "bgTodayNotRegistered": "Du bist heute noch nicht als Bladeguard eingetragen!",
   "bgUpdatePhone": "Aktualisieren",
   "birthday": "Geburtstag",
   "bladeGuard": "Bladeguard",
@@ -544,5 +545,7 @@
   "changeLightColor": "Ändere Normalmodus Farbe",
   "changeDarkColor": "Ändere Dunkelmodus Farbe",
   "changeMeColor": "Ändere Eigene Farbe",
-  "enterBgPassword": "Sicherheits-Passwort Bladeguard eingeben"
+  "enterBgPassword": "Sicherheits-Passwort Bladeguard eingeben",
+  "sponsors": "Unsere Sponsoren",
+  "startsIn": "Startet in"
 }

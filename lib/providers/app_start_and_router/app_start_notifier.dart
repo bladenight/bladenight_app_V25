@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
 import '../../app_settings/app_constants.dart';
+import '../../helpers/debug_helper.dart';
 import '../../helpers/device_id_helper.dart';
 import '../../main.dart';
 
@@ -35,16 +36,14 @@ class AppStartNotifier extends _$AppStartNotifier {
     await Hive.openBox(hiveBoxServerConfigDBName);
     //await Hive.openBox(hiveBoxLoggingDbName);
     await DeviceId.initAppId();
-    print('initLogger');
+    debugPrintTime('initLogger');
     await initLogger();
-    print('initSettings');
     initSettings();
-    print('init FMTC');
+    debugPrintTime('init FMTC');
     if (!kIsWeb && !fMTCInitialized) {
       await FMTCObjectBoxBackend().initialise();
       fMTCInitialized = true;
     }
-    print('55');
     //await Future.delayed(Duration(seconds: 10));
     if (Platform.isAndroid) {
       /// Register BackgroundGeolocation headless-task

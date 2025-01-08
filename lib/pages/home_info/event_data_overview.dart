@@ -43,6 +43,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
   late final AnimationController _animationController;
   late final Animation<Color?> _colorAnimation;
   late final Animation<double> _valueAnimation;
+  late final Animation<double> _timerAnimation;
 
   @override
   void initState() {

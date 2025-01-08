@@ -14,6 +14,7 @@ import 'package:universal_io/io.dart';
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../app_settings/app_constants.dart';
 import '../../../generated/l10n.dart';
+import '../../../helpers/keyboard_helper.dart';
 import '../../../helpers/logger.dart';
 import '../../../models/friend.dart';
 import '../../../providers/app_start_and_router/go_router.dart';
@@ -115,7 +116,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
               ),
               largeTitle: Text(widget.action == FriendsAction.addWithCode
                   ? Localize.of(context).addfriendwithcode
-                  : widget.friend != null
+                  : widget.friend != null && widget.friend?.friendId != -1
                       ? Localize.of(context).editfriend
                       : Localize.of(context).addnewfriend),
               trailing: !isLoading &&
@@ -162,7 +163,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                       NumberInputWidget(
                         header: Localize.current.enter6digitcode,
                         placeholder: Localize.current.enter6digitcode,
-                        code: '',
+                        code: code ?? '',
                         onChanged: (value) {
                           code = value;
                           setState(() {
@@ -218,7 +219,28 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                             : null,
                         child: isLoading
                             ? const CircularProgressIndicator()
-                            : Text(Localize.of(context).ok),
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                    Expanded(
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Icon(
+                                              Icons.save_alt,
+                                            ),
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Text(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  Localize.of(context).save),
+                                            ),
+                                          ]),
+                                    ),
+                                  ]),
                       ),
                     ),
                     const SizedBox(
@@ -230,7 +252,12 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                           color: Colors.redAccent,
                           child: Text(Localize.of(context).cancel),
                           onPressed: () {
-                            context.pop();
+                            dismissKeyboard(context);
+                            if (context.canPop()) {
+                              context.pop();
+                            } else {
+                              context.pushNamed(AppRoute.friend.name);
+                            }
                           }),
                     ),
                   ],
@@ -306,7 +333,12 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
         if (!mounted) {
           return;
         } else {
-          context.pop();
+          dismissKeyboard(context);
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.pushNamed(AppRoute.friend.name);
+          }
         }
       }
     } on SocketException {

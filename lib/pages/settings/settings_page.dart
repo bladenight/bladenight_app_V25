@@ -75,24 +75,25 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     ),
                   ),
             SliverToBoxAdapter(
+              child: CupertinoFormSection(
+                  header: Text(Localize.of(context).bladeGuardSettingsTitle),
+                  children: <Widget>[
+                    SizedTintedCupertinoButton(
+                      child: Text(Localize.of(context).bladeGuardSettings),
+                      onPressed: () => {
+                        context.pushNamed(AppRoute.bladeguard.name),
+                      },
+                      onLongPress: () => {
+                        adminPass
+                            ? context.pushNamed(AppRoute.adminPage.name)
+                            : context.pushNamed(AppRoute.bladeguard.name)
+                      },
+                    ),
+                  ]),
+            ),
+            SliverToBoxAdapter(
               child: Column(
                 children: [
-                  CupertinoFormSection(
-                      header:
-                          Text(Localize.of(context).bladeGuardSettingsTitle),
-                      children: <Widget>[
-                        SizedTintedCupertinoButton(
-                          child: Text(Localize.of(context).bladeGuardSettings),
-                          onPressed: () => {
-                            context.pushNamed(AppRoute.bladeguard.name),
-                          },
-                          onLongPress: () => {
-                            adminPass
-                                ? context.pushNamed(AppRoute.adminPage.name)
-                                : context.pushNamed(AppRoute.bladeguard.name)
-                          },
-                        ),
-                      ]),
                   const TrackingExportWidget(),
                   const ColorSettingsWidget(),
                   CupertinoFormSection(

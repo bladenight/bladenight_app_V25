@@ -206,13 +206,15 @@ class MessageLookup extends MessageLookupByLibrary {
             "BladeNight background location sharing"),
         "bgTeam": MessageLookupByLibrary.simpleMessage("Bladeguard team"),
         "bgTodayIsRegistered": MessageLookupByLibrary.simpleMessage(
-            "You\'re registered as BladeGuard today!"),
+            "You\'re registered as Bladeguard today!"),
         "bgTodayNotParticipation": MessageLookupByLibrary.simpleMessage(
             "Unfortunately I cannot participate as a Bladeguard today"),
         "bgTodayNotRegistered": MessageLookupByLibrary.simpleMessage(
-            "Please log in as Bladeguard today!"),
+            "Please login as Bladeguard today!"),
         "bgTodayTapToRegister": MessageLookupByLibrary.simpleMessage(
-            "Register as a bladeguard today!"),
+            "Login as a Bladeguard today!"),
+        "bgTodayTapToUnRegister": MessageLookupByLibrary.simpleMessage(
+            "Unregister as a Bladeguard today!"),
         "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Update data"),
         "birthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
@@ -709,6 +711,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "specialfunction": MessageLookupByLibrary.simpleMessage(
             "Special functions - change only when you know what you do!"),
         "speed": MessageLookupByLibrary.simpleMessage("Speed"),
+        "sponsors": MessageLookupByLibrary.simpleMessage("Our sponsors"),
         "start": MessageLookupByLibrary.simpleMessage("Start"),
         "startLocationWithoutParticipating":
             MessageLookupByLibrary.simpleMessage(
@@ -733,6 +736,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Start route recording"),
         "startTrackingOnlyTitle": MessageLookupByLibrary.simpleMessage(
             "Start location recording without sending data to server."),
+        "startsIn": MessageLookupByLibrary.simpleMessage("Starts in"),
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "status_active": MessageLookupByLibrary.simpleMessage("active"),
         "status_inactive": MessageLookupByLibrary.simpleMessage("inactive"),

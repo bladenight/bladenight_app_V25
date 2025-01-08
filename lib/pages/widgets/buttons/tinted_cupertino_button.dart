@@ -17,6 +17,7 @@ class TintedCupertinoButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoButton.tinted(
         sizeStyle: CupertinoButtonSize.small,
+        borderRadius: BorderRadius.all(Radius.circular(15)),
         color: color ?? CupertinoTheme.of(context).primaryContrastingColor,
         onPressed: onPressed,
         onLongPress: onLongPress,

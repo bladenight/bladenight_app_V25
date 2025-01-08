@@ -134,7 +134,10 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
               }),
         ]);*/
     return Scaffold(
-      floatingActionButton: actionButton,
+      floatingActionButton: networkAvailable.connectivityStatus ==
+              ConnectivityStatus.wampConnected
+          ? actionButton
+          : null,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),

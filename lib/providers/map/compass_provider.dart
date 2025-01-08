@@ -6,6 +6,8 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../helpers/debug_helper.dart';
+
 part 'compass_provider.g.dart';
 
 @riverpod
@@ -14,7 +16,7 @@ class Compass extends _$Compass {
 
   @override
   double build() {
-    debugPrint('starting compass build L: $_stopListening');
+    debugPrintTime('starting compass build L: $_stopListening');
     if (_stopListening) return 0;
     var listener = FlutterCompass.events?.listen((event) {
       if (event.heading != null) {
@@ -23,18 +25,19 @@ class Compass extends _$Compass {
     });
     ref.onDispose(() {
       listener?.cancel();
+      listener = null;
     });
     return 0;
   }
 
   void stopCompass() {
-    print('stopping compass');
+    debugPrintTime('stopping compass');
     _stopListening = true;
     ref.invalidateSelf();
   }
 
   void startCompass() {
-    print('starting compass');
+    debugPrintTime('starting compass');
     _stopListening = false;
     ref.invalidateSelf();
   }
@@ -53,6 +56,7 @@ Raw<Stream<LocationMarkerHeading>> rawStream(Ref ref) {
   });
   ref.onDispose(() {
     listener?.cancel();
+    listener = null;
   });
   return userLocationMarkerHeadingStreamController.stream;
 }
@@ -70,6 +74,7 @@ class CompassHeading extends _$CompassHeading {
     });
     ref.onDispose(() {
       listener?.cancel();
+      listener = null;
     });
     return userLocationMarkerHeadingStreamController.stream;
   }

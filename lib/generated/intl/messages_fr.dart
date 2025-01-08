@@ -220,6 +220,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Veuillez vous connecter en tant que Bladeguard aujourd\'hui!"),
         "bgTodayTapToRegister": MessageLookupByLibrary.simpleMessage(
             "Etes-vous sur place aujourd\'hui en tant que protège-lame!"),
+        "bgTodayTapToUnRegister": MessageLookupByLibrary.simpleMessage(
+            "Unregister as a Bladeguard today!"),
         "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Mettre à jour"),
         "birthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
@@ -742,6 +744,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "specialfunction": MessageLookupByLibrary.simpleMessage(
             "Fonctions spéciales - ne changez que si vous savez ce que vous faites !"),
         "speed": MessageLookupByLibrary.simpleMessage("vitesse"),
+        "sponsors": MessageLookupByLibrary.simpleMessage("Our sponsors"),
         "start": MessageLookupByLibrary.simpleMessage("Commence le"),
         "startLocationWithoutParticipating":
             MessageLookupByLibrary.simpleMessage(
@@ -766,6 +769,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Démarrer le journal de trajet"),
         "startTrackingOnlyTitle": MessageLookupByLibrary.simpleMessage(
             "Démarre le journal de trajet sans envoyer de données au serveur"),
+        "startsIn": MessageLookupByLibrary.simpleMessage("Starts in"),
         "status": MessageLookupByLibrary.simpleMessage("Statut"),
         "status_active": MessageLookupByLibrary.simpleMessage("actif"),
         "status_inactive": MessageLookupByLibrary.simpleMessage("inactif"),

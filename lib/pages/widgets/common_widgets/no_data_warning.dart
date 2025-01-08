@@ -24,9 +24,6 @@ class NoDataWarning extends ConsumerWidget {
         children: [
           Builder(builder: (context) {
             var networkAware = ref.watch(networkAwareProvider);
-            if (LocationProvider().trackingType == TrackingType.onlyTracking) {
-              return Text(Localize.of(context).onlyTracking);
-            }
             if (networkAware.connectivityStatus ==
                 ConnectivityStatus.internetOffline) {
               return const NoNetworkWarning();

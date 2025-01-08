@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:universal_io/io.dart';
 
+import '../helpers/debug_helper.dart';
 import '../helpers/logger.dart';
 import '../wamp/wamp_v2.dart';
 
@@ -39,7 +40,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   final StreamController<ConnectivityStatus> _connectionStreamController =
       StreamController<ConnectivityStatus>();
 
-  InternetConnection? _internetConnection;
+  InternetConnectionChecker? _internetConnection;
 
   static bool _wasWampDisconnected = false;
 
@@ -58,24 +59,27 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   final bool printDebug = true && kDebugMode;
 
   _init() async {
-    _internetConnection = InternetConnection.createInstance(
-        /*customCheckOptions: [
-      InternetCheckOption(uri: WampV2.getServerUri()),
-    ],*/
-        );
-    //WampV2().internetConnChecker;
-    _icCheckerSubscription =
-        _internetConnection!.onStatusChange.listen((InternetStatus status) {
-      print(
-          '${DateTime.now().toIso8601String()} Internetconnection status change: {$status}');
+    _internetConnection = WampV2().internetConnChecker;
+    _icCheckerSubscription = _internetConnection!.onStatusChange
+        .listen((InternetConnectionStatus status) {
+      BnLog.trace(
+          text:
+              '${DateTime.now().toIso8601String()} Internet connection status change: {$status}',
+          methodName: 'Internet connection listener',
+          className: toString());
+
       switch (status) {
-        case InternetStatus.connected:
+        case InternetConnectionStatus.connected:
           // The internet is now connected
           _checkStatus(ConnectivityStatus.wampNotConnected);
           break;
-        case InternetStatus.disconnected:
+        case InternetConnectionStatus.disconnected:
           // The internet is now disconnected
           _checkStatus(ConnectivityStatus.internetOffline);
+          break;
+        case InternetConnectionStatus.slow:
+          // The internet is now disconnected
+          _checkStatus(ConnectivityStatus.wampConnected);
           break;
       }
     });
@@ -114,11 +118,17 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
       _connectionStreamController.sink.add(ConnectivityStatus.wampConnected);
       return;
     }
-
     bool isOnline = false;
     try {
-      isOnline = await _internetConnection!
-          .hasInternetAccess; //; await InternetAddress.lookup('skatemunich.de');
+      if (_internetConnection == null) {
+        BnLog.warning(
+            text: 'network_connection_provider - _internetConnection==null');
+        debugPrintTime(
+            'network_connection_provider - _internetConnection==null');
+        isOnline = true;
+      } else {
+        isOnline = await _internetConnection!.hasConnection;
+      } //; await InternetAddress.lookup('skatemunich.de');
     } on SocketException catch (e) {
       BnLog.error(
           text:
@@ -130,8 +140,8 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     if (isOnline == true) {
       if (_wasWampDisconnected == true && !WampV2().webSocketIsConnected) {
         await Future.delayed(Duration(seconds: 1));
-        var wampinitres = await WampV2().refresh();
-        print('wampinitres $wampinitres');
+        var wampInitResult = await WampV2().refresh();
+        debugPrintTime('nw_conn wampInitResult is  $wampInitResult');
       }
       if (WampV2().webSocketIsConnected) {
         _wasWampDisconnected = false;
@@ -152,7 +162,10 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
 
   void setStateIfChanged(ConnectivityStatus connectivityStatus) {
     if (state.connectivityStatus != connectivityStatus) {
-      print('Networkstate changed from $state to $connectivityStatus');
+      BnLog.trace(
+          text: 'Networkstate changed from $state to $connectivityStatus',
+          methodName: 'setStateIfChanged',
+          className: toString());
       state = NetworkStateModel(connectivityStatus: connectivityStatus);
     }
   }

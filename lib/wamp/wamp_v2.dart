@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:universal_io/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/server_connections.dart';
@@ -50,7 +50,7 @@ class WampV2 {
     return _instance!;
   }
 
-  final internetConnChecker = InternetConnection.createInstance(
+  final internetConnChecker = InternetConnectionChecker.createInstance(
       /*customCheckOptions: [
       InternetCheckOption(uri: WampV2.getServerUri()),
     ],*/
@@ -97,9 +97,9 @@ class WampV2 {
   void _init() {
     BnLog.info(text: 'Wamp Init', methodName: '_init', className: toString());
     if (!kIsWeb) {
-      _icCheckerSubscription =
-          internetConnChecker.onStatusChange.listen((InternetStatus result) {
-        if (result == InternetStatus.connected) {
+      _icCheckerSubscription = internetConnChecker.onStatusChange
+          .listen((InternetConnectionStatus result) {
+        if (result == InternetConnectionStatus.connected) {
           _isConnectedToInternet = true;
           BnLog.debug(
               text: 'Wamp internet online',

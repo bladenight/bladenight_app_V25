@@ -74,7 +74,7 @@ class Friend with FriendMappable {
       {required this.name,
       required this.friendId,
       this.color = Colors.white24,
-      this.isActive = false,
+      this.isActive = true,
       this.requestId = 0,
       this.isOnline = false,
       this.speed = 0,

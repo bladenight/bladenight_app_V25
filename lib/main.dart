@@ -9,6 +9,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:leak_tracker/leak_tracker.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -17,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_settings/app_configuration_helper.dart';
 import 'app_settings/globals.dart';
+import 'app_settings/server_connections.dart';
 import 'firebase_options.dart';
 import 'helpers/hive_box/adapter/color_adapter.dart';
 import 'helpers/hive_box/app_server_config_db.dart';
@@ -80,8 +82,9 @@ void main() async {
       );
     },
     (dynamic error, StackTrace stackTrace) {
-      print('Application error 82: $error\n$stackTrace');
-      if (!kDebugMode && !kIsWeb) {
+      print(
+          '${DateTime.now().toIso8601String()} Application error 84: \n$error\n$stackTrace');
+      if (!kDebugMode && !kIsWeb && !localTesting) {
         FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }
       BnLog.error(
@@ -94,7 +97,7 @@ void main() async {
 
 Future<bool> initLogger() async {
   try {
-    return BnLog.init();
+    return await BnLog.init() != null;
   } catch (e) {
     print('Logger init failed --> $e');
     return false;

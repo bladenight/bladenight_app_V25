@@ -30,7 +30,7 @@ import '../widgets/input/email_widget.dart';
 import '../widgets/input/phone_number.dart';
 import '../widgets/common_widgets/send_mail.dart';
 import '../widgets/animated/settings_invisible_offline.dart';
-import 'bg_pin_dialog.dart';
+import 'widgets/bg_pin_dialog.dart';
 import 'bladeguard_on_site_page.dart';
 
 class BladeGuardPage extends ConsumerStatefulWidget {
@@ -253,12 +253,14 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   descriptionRight: HiveSettingsDB.bgTeam,
                                   leftWidget: Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 5, bottom: 5),
-                                    child: CupertinoButton(
-                                        child: FittedBox(
-                                          fit: BoxFit.fitWidth,
-                                          child: Text(Localize.of(context)
-                                              .bgUpdatePhone),
+                                        top: 5, bottom: 5, right: 10),
+                                    child: TintedCupertinoButton(
+                                        child: Expanded(
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(Localize.of(context)
+                                                .bgUpdatePhone),
+                                          ),
                                         ),
                                         onPressed: () async {
                                           await checkOrUpdateBladeGuardData();

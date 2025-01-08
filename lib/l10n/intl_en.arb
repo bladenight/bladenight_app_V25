@@ -153,10 +153,11 @@
   "bgNotificationText": "Background location update is active. Thank you for participating.",
   "bgNotificationTitle": "BladeNight background location sharing",
   "bgTeam": "Bladeguard team",
-  "bgTodayIsRegistered": "You're registered as BladeGuard today!",
+  "bgTodayIsRegistered": "You're registered as Bladeguard today!",
   "bgTodayNotParticipation": "Unfortunately I cannot participate as a Bladeguard today",
-  "bgTodayTapToRegister": "Register as a bladeguard today!",
-  "bgTodayNotRegistered": "Please log in as Bladeguard today!",
+  "bgTodayTapToRegister": "Login as a Bladeguard today!",
+  "bgTodayTapToUnRegister": "Unregister as a Bladeguard today!",
+  "bgTodayNotRegistered": "Please login as Bladeguard today!",
   "bgUpdatePhone": "Update data",
   "birthday": "Birthday",
   "bladeGuard": "Bladeguard",
@@ -544,5 +545,7 @@
   "changeLightColor": "Change light mode color",
   "changeDarkColor": "Change dark mode color",
   "changeMeColor": "Change me color",
-  "enterBgPassword": "Please enter Bladeguard security password"
+  "enterBgPassword": "Please enter Bladeguard security password",
+  "sponsors": "Our sponsors",
+  "startsIn": "Starts in"
 }

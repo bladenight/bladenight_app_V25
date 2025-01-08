@@ -670,10 +670,10 @@ class Localize {
     );
   }
 
-  /// `You're registered as BladeGuard today!`
+  /// `You're registered as Bladeguard today!`
   String get bgTodayIsRegistered {
     return Intl.message(
-      'You\'re registered as BladeGuard today!',
+      'You\'re registered as Bladeguard today!',
       name: 'bgTodayIsRegistered',
       desc: '',
       args: [],
@@ -690,20 +690,30 @@ class Localize {
     );
   }
 
-  /// `Register as a bladeguard today!`
+  /// `Login as a Bladeguard today!`
   String get bgTodayTapToRegister {
     return Intl.message(
-      'Register as a bladeguard today!',
+      'Login as a Bladeguard today!',
       name: 'bgTodayTapToRegister',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please log in as Bladeguard today!`
+  /// `Unregister as a Bladeguard today!`
+  String get bgTodayTapToUnRegister {
+    return Intl.message(
+      'Unregister as a Bladeguard today!',
+      name: 'bgTodayTapToUnRegister',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please login as Bladeguard today!`
   String get bgTodayNotRegistered {
     return Intl.message(
-      'Please log in as Bladeguard today!',
+      'Please login as Bladeguard today!',
       name: 'bgTodayNotRegistered',
       desc: '',
       args: [],
@@ -4618,6 +4628,26 @@ class Localize {
     return Intl.message(
       'Please enter Bladeguard security password',
       name: 'enterBgPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Our sponsors`
+  String get sponsors {
+    return Intl.message(
+      'Our sponsors',
+      name: 'sponsors',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Starts in`
+  String get startsIn {
+    return Intl.message(
+      'Starts in',
+      name: 'startsIn',
       desc: '',
       args: [],
     );

@@ -5,6 +5,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/device_info_helper.dart';
 import '../../../helpers/notification/toast_notification.dart';
+import '../buttons/tinted_cupertino_button.dart';
 
 class SendMailWidget extends StatelessWidget {
   const SendMailWidget({super.key});
@@ -13,7 +14,7 @@ class SendMailWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 5, bottom: 5),
-      child: CupertinoButton(
+      child: SizedTintedCupertinoButton(
           color: Colors.orange.shade500,
           child: FittedBox(
             fit: BoxFit.fitWidth,

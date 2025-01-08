@@ -27,11 +27,11 @@ class _HiddenAdminButtonState extends State<HiddenAdminButton> {
       context.pushNamed(AppRoute.adminLogin.name);
       tap = 0;
     } else {
-      _timeout = Timer(const Duration(milliseconds: 1500), resetTaps);
+      _timeout = Timer(const Duration(milliseconds: 1500), _resetTaps);
     }
   }
 
-  void resetTaps() {
+  void _resetTaps() {
     tap = 0;
   }
 

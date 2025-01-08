@@ -33,22 +33,7 @@ class BladeGuardAdvertise extends ConsumerWidget {
         ),
       );
     } else {
-      return Row(
-        children: [
-          Expanded(
-            child: Container(),
-          ),
-          GestureDetector(
-            onTap: () {
-              context.pushNamed(AppRoute.bladeguard.name);
-            },
-            child: CircleAvatar(
-              radius: 15,
-              backgroundImage: AssetImage('assets/images/bladeguard_smile.jpg'),
-            ),
-          ),
-        ],
-      );
+      return Container();
     }
   }
 }

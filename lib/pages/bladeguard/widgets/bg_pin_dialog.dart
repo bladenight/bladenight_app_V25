@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../../generated/l10n.dart';
+import '../../../../generated/l10n.dart';
 
 class PinDialog extends StatefulWidget {
   const PinDialog({super.key});

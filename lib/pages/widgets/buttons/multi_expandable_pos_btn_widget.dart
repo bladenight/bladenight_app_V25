@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../generated/l10n.dart';
 
-class MultiExpandableButton extends ConsumerStatefulWidget {
-  MultiExpandableButton(
+class MultiExpandablePositionedButton extends ConsumerStatefulWidget {
+  MultiExpandablePositionedButton(
       {super.key,
       required this.children,
       required this.onPressed,
@@ -21,11 +21,12 @@ class MultiExpandableButton extends ConsumerStatefulWidget {
   final AnimatedIconData? iconData;
 
   @override
-  ConsumerState<MultiExpandableButton> createState() =>
-      _MultiExpandableButtonState();
+  ConsumerState<MultiExpandablePositionedButton> createState() =>
+      _MultiExpandablePositionedButtonState();
 }
 
-class _MultiExpandableButtonState extends ConsumerState<MultiExpandableButton>
+class _MultiExpandablePositionedButtonState
+    extends ConsumerState<MultiExpandablePositionedButton>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   bool isOpened = false;
   late AnimationController _animationController;

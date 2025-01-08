@@ -155,12 +155,12 @@ GoRouter goRouter(Ref ref) {
                   // bottom navigation bar.
                   name: AppRoute.home.name,
                   path: '/',
-                  builder: (BuildContext context, GoRouterState state) {
+                  pageBuilder: (BuildContext context, GoRouterState state) {
                     var queryParameters = state.uri.queryParameters;
                     if (queryParameters.containsKey('data')) {
                       importData(context, queryParameters['data']!);
                     }
-                    return const HomePage();
+                    return NoTransitionPage(child: const HomePage());
                   },
                   routes: <RouteBase>[
                     // The details screen to display stacked on navigator of the
@@ -168,7 +168,9 @@ GoRouter goRouter(Ref ref) {
                     // shell (bottom navigation bar).
                     GoRoute(
                       name: AppRoute.messagesPage.name,
-                      path: 'messages',
+                      path: '/messages',
+                      parentNavigatorKey: _sectionHomeNavigatorKey,
+                      pageBuilder: GoTransitions.bottomSheet,
                       builder: (BuildContext context, GoRouterState state) =>
                           const MessagesPage(),
                     ),
@@ -234,31 +236,48 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     path: '/friend',
                     name: AppRoute.friend.name,
-                    builder: (context, state) {
-                      return FriendsPage();
+                    pageBuilder: (context, state) {
+                      return NoTransitionPage(child: FriendsPage());
                     },
-                    pageBuilder: GoTransitions.fade.withBackGesture.call,
                     routes: [
                       GoRoute(
                         //"/sample?id1=$param1&id2=$param2");
                         //bna://bladenight.app?addFriend&code=148318'
                         //
                         // oder 'https://bladenight.app?code=148318
+                        //
+                        //test:
+                        ///usr/bin/xcrun simctl openurl booted "bna://bladenight.app/friend/addFriend?code=123456&name=tom"
+                        //adb shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app/friend/addFriend?code=123456&name=tom"'
                         path: '/addFriend',
                         name: AppRoute.addFriend.name,
-                        parentNavigatorKey: rootNavigatorKey,
-                        pageBuilder: GoTransitions.dialog,
+                        parentNavigatorKey: _friendsNavigatorKey,
+                        pageBuilder: GoTransitions.fullscreenDialog,
                         builder: (context, state) {
                           var friendsAction = FriendsAction.addNew;
                           var name = '';
                           var parameters = state.uri.queryParameters;
+                          if (parameters.containsKey('name') &&
+                              parameters['name']!.isNotEmpty) {
+                            name = parameters['name']!;
+                          }
                           if (parameters.containsKey('code') &&
                               parameters['code']!.length == 6) {
-                            friendsAction = FriendsAction.addWithCode;
-                          }
-                          if (parameters.containsKey('name') &&
-                              parameters['name']!.length > 1) {
-                            name = parameters['name']!;
+                            var code = int.tryParse(parameters['code']!);
+                            if (code != null) {
+                              return EditFriendDialog(
+                                friend: Friend(
+                                    name: name, friendId: -1, requestId: code),
+                                action: FriendsAction.addWithCode,
+                              );
+                            } else {
+                              return EditFriendDialog(
+                                  friend: Friend(
+                                    name: name,
+                                    friendId: -1,
+                                  ),
+                                  action: FriendsAction.addWithCode);
+                            }
                           }
                           return EditFriendDialog(
                             friend: Friend(name: name, friendId: -1),
@@ -379,9 +398,9 @@ GoRouter goRouter(Ref ref) {
                           redirect:
                               (BuildContext context, GoRouterState state) {
                             if (!ref.read(userIsAdminProvider)) {
-                              return '/';
+                              return AppRoute.home.name;
                             } else if (ref.read(adminPwdSetProvider)) {
-                              return '/${AppRoute.adminPage.name}';
+                              return '/settings/${AppRoute.adminPage.name}';
                             } else {
                               return null;
                             }

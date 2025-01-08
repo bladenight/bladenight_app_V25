@@ -103,8 +103,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
           children: [
             if (ref.watch(networkAwareProvider).connectivityStatus !=
                 ConnectivityStatus.wampConnected)
-              ConnectionWarning(
-                  shimmerAnimationController: _animationController),
+              ConnectionWarning(animationController: _animationController),
             AppOutdated(animationController: _animationController),
             ShadowBoxWidget(
               boxShadowColor: nextEvent.statusColor,
@@ -112,95 +111,11 @@ class _EventInfoState extends ConsumerState<EventInfo>
                 nextEvent: nextEvent,
               ),
             ),
-            const BladeGuardAdvertise(),
-            const BladeGuardOnsite(),
-            const SizedBox(
+            SizedBox(
               height: 5,
             ),
-            /*GridView.count(
-                primary: false,
-                padding: const EdgeInsets.all(5),
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
-                crossAxisCount: 2,
-                children: <Widget>[
-                  SizedBox(
-                    height: 100,
-                    child: GestureDetector(
-                      onTap: () {
-                        if (ref.read(mainSponsorImageAndLinkProvider).link !=
-                            null) {
-                          Launch.launchUrlFromString(
-                              ref.read(mainSponsorImageAndLinkProvider).link!);
-                        }
-                      },
-                      child: Builder(builder: (context) {
-                        var ms = ref.watch(mainSponsorImageAndLinkProvider);
-                        //var nw = ref.watch(networkAwareProvider);
-                        return (ms.image != null)
-                            // && nw.connectivityStatus == ConnectivityStatus.online)
-                            ? FadeInImage.assetNetwork(
-                                placeholder: mainSponsorPlaceholder,
-                                image: ms.image!,
-                                fadeOutDuration:
-                                    const Duration(milliseconds: 150),
-                                fadeInDuration:
-                                    const Duration(milliseconds: 150),
-                                imageErrorBuilder:
-                                    (context, error, stackTrace) {
-                                  BnLog.error(
-                                      text:
-                                          'mainSponsorPlaceholder ${ms.image}) could not been loaded',
-                                      exception: error);
-                                  return Image.asset(mainSponsorPlaceholder,
-                                      fit: BoxFit.fitWidth);
-                                },
-                              )
-                            : const Image(
-                                image: AssetImage(mainSponsorPlaceholder),
-                              );
-                      }),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    child: GestureDetector(
-                      onTap: () {
-                        if (ref.read(secondSponsorImageAndLinkProvider).link !=
-                            null) {
-                          Launch.launchUrlFromString(ref
-                              .read(secondSponsorImageAndLinkProvider)
-                              .link!);
-                        }
-                      },
-                      child: Builder(builder: (context) {
-                        var ssp = ref.watch(secondSponsorImageAndLinkProvider);
-                        return ssp.image != null
-                            ? FadeInImage.assetNetwork(
-                                placeholder: secondLogoPlaceholder,
-                                image: ssp.image!,
-                                fadeOutDuration:
-                                    const Duration(milliseconds: 150),
-                                fadeInDuration:
-                                    const Duration(milliseconds: 150),
-                                imageErrorBuilder:
-                                    (context, error, stackTrace) {
-                                  if (!kIsWeb) {
-                                    BnLog.error(
-                                        text:
-                                            'secondSponsorPlaceholder ${ssp.image} could not been loaded',
-                                        exception: error);
-                                  }
-                                  return Image.asset(secondLogoPlaceholder,
-                                      fit: BoxFit.fitWidth);
-                                },
-                              )
-                            : Image.asset(secondLogoPlaceholder,
-                                fit: BoxFit.fitWidth);
-                      }),
-                    ),
-                  ),
-                ]),*/
+            const BladeGuardAdvertise(),
+            const BladeGuardOnsite(),
           ],
         ),
       ),

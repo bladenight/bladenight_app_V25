@@ -543,6 +543,9 @@
   "changeLightColor": "Change light mode color",
   "changeDarkColor": "Change dark mode color",
   "changeMeColor": "Change me color",
-  "enterBgPassword": "Please enter Bladeguard security password"
+  "enterBgPassword": "Please enter Bladeguard security password",
+  "sponsors": "Our sponsors",
+  "bgTodayTapToUnRegister": "Unregister as a Bladeguard today!",
+  "startsIn": "Starts in"
 }
 

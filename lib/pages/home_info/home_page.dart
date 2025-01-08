@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app_settings/app_constants.dart';
 import '../../app_settings/server_connections.dart';
+import '../../generated/l10n.dart';
 import '../../helpers/file_name_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger.dart';
@@ -230,7 +231,7 @@ class _HomePageState extends ConsumerState<HomePage>
                           if (sponsors.hasValue && sponsors.value!.isNotEmpty) {
                             return Center(
                               child: Text(
-                                'Sponsoren',
+                                Localize.of(context).sponsors,
                                 style: TextStyle(fontSize: 12),
                               ),
                             );

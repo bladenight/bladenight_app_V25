@@ -210,11 +210,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "bgTodayIsRegistered": MessageLookupByLibrary.simpleMessage(
             "Du bist heute als Bladeguard eingetragen."),
         "bgTodayNotParticipation": MessageLookupByLibrary.simpleMessage(
-            "Ich kann doch nicht als Bladeguard teilnehmen und möchte mich abmelden."),
+            "Ich kann heute doch nicht als Bladeguard teilnehmen und möchte mich wieder austragen."),
         "bgTodayNotRegistered": MessageLookupByLibrary.simpleMessage(
-            "Du heute noch nicht als Bladeguard angemeldet!"),
+            "Du bist heute noch nicht als Bladeguard eingetragen!"),
         "bgTodayTapToRegister": MessageLookupByLibrary.simpleMessage(
-            "Hier tippen und heute als Bladeguard eintragen!"),
+            "Hier tippen und für heute als Bladeguard eintragen!"),
+        "bgTodayTapToUnRegister": MessageLookupByLibrary.simpleMessage(
+            "Hier tippen und für heute als Bladeguard wieder austragen!"),
         "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Aktualisieren"),
         "birthday": MessageLookupByLibrary.simpleMessage("Geburtstag"),
         "bladeGuard": MessageLookupByLibrary.simpleMessage("Bladeguard"),
@@ -725,6 +727,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "specialfunction": MessageLookupByLibrary.simpleMessage(
             "Sondereinstellungen - nur nach Rücksprache ändern!"),
         "speed": MessageLookupByLibrary.simpleMessage("Geschwindigkeit"),
+        "sponsors": MessageLookupByLibrary.simpleMessage("Unsere Sponsoren"),
         "start": MessageLookupByLibrary.simpleMessage("Start"),
         "startLocationWithoutParticipating":
             MessageLookupByLibrary.simpleMessage("Tracking ohne Teilnahme"),
@@ -747,6 +750,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Starte Routenaufzeichnung"),
         "startTrackingOnlyTitle": MessageLookupByLibrary.simpleMessage(
             "Starte die Routenaufzeichnung ohne die Standortdaten an den Server zu übermitteln."),
+        "startsIn": MessageLookupByLibrary.simpleMessage("Startet in"),
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "status_active": MessageLookupByLibrary.simpleMessage("Aktiv"),
         "status_inactive": MessageLookupByLibrary.simpleMessage("Inaktiv"),

@@ -70,7 +70,7 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                 onPressed: () async {
                   await _saveEvent();
                 },
-                child: const Icon(Icons.send_rounded),
+                child: const Icon(Icons.save_alt),
               ),
             ),
             isSaving
@@ -182,9 +182,7 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                           color: CupertinoTheme.of(context).primaryColor,
                         ),
                         CupertinoListTile(
-                            title: const Text(
-                              'Routenlänge',
-                            ),
+                            title: Text(Localize.of(context).length),
                             trailing: isUpdating
                                 ? const CircularProgressIndicator()
                                 : Text('${_event.routeLength.toString()} m'),
@@ -339,14 +337,19 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                             onPressed: () async {
                               await _saveEvent();
                             },
-                            child: Center(
-                              child: Row(children: [
-                                Text(Localize.of(context).save),
-                                const SizedBox(
-                                  width: 4,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.save_alt,
                                 ),
-                                const Icon(Icons.send_rounded)
-                              ]),
+                                Expanded(
+                                  child: Center(
+                                    child: FittedBox(
+                                      child: Text(Localize.of(context).save),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

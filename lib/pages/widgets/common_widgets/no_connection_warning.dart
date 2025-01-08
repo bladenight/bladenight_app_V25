@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../generated/l10n.dart';
+import '../../../helpers/enums/tracking_type.dart';
+import '../../../providers/location_provider.dart';
 import '../../../providers/network_connection_provider.dart';
 import '../../../wamp/wamp_v2.dart';
 import '../animated/alert_animated_widget.dart';
@@ -10,14 +13,11 @@ import '../animated/no_alert_animated_widget.dart';
 
 class ConnectionWarning extends ConsumerStatefulWidget {
   const ConnectionWarning(
-      {super.key,
-      this.reason,
-      this.height = 40,
-      this.shimmerAnimationController});
+      {super.key, this.reason, this.height = 40, this.animationController});
 
   final Exception? reason;
   final double height;
-  final AnimationController? shimmerAnimationController;
+  final AnimationController? animationController;
 
   @override
   ConsumerState<ConnectionWarning> createState() => _ConnectionWarning();
@@ -72,6 +72,10 @@ class _ConnectionWarning extends ConsumerState<ConnectionWarning>
   @override
   Widget build(BuildContext context) {
     var networkAware = ref.watch(networkAwareProvider);
+    var trackingType = ref.watch(trackingTypeProvider);
+    if (trackingType == TrackingType.onlyTracking) {
+      return kDebugMode ? Text('only Tracking') : Container();
+    }
     if (networkAware.connectivityStatus != ConnectivityStatus.wampConnected) {
       wampConnected = false;
       _fadeAnimationController.forward();
@@ -95,8 +99,7 @@ class _ConnectionWarning extends ConsumerState<ConnectionWarning>
                     return SizedBox(
                         height: _fadeInAnimation.value ?? 20,
                         child: AlertAnimated(
-                          animationController:
-                              widget.shimmerAnimationController,
+                          animationController: widget.animationController,
                           child: GestureDetector(
                             onTap: () => ref
                                 .read(networkAwareProvider.notifier)
