@@ -54,6 +54,10 @@ extension LocationStore on HiveSettingsDB {
   static Future<bool> saveUserTrackPointList(
       List<UserGpxPoint> val, DateTime dateTime) async {
     try {
+      BnLog.trace(
+          text:
+              'Will save user track points list with an amount of ${val.length}');
+
       if (MapSettings.showOwnTrack == false || val.isEmpty) {
         return Future.value(false);
       }
@@ -93,7 +97,7 @@ extension LocationStore on HiveSettingsDB {
         defaultValue: DateTime(2000, 1, 1, 0, 0, 0));
   }
 
-  ///set UserTrackPointsstring DateTimeStamp
+  ///set UserTrackPoints last update
   static void setUserTrackPointsLastUpdate(DateTime val) {
     HiveSettingsDB._locationHiveBox.put(_userTrackPointsLastUpdate, val);
   }
@@ -108,7 +112,7 @@ extension LocationStore on HiveSettingsDB {
     return false;
   }
 
-  ///Returns a datelist (not empty) hich dates has availible trackingdata
+  ///Returns a date list (not empty) which dates have available tracking data
   static List<String> getTrackDates() {
     var dateList = <String>[];
     try {

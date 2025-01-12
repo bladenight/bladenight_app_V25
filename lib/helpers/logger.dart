@@ -5,82 +5,93 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:universal_io/io.dart';
 
-import '../app_settings/app_constants.dart';
+import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import 'hive_box/hive_settings_db.dart';
 import 'log_filter.dart';
-import 'logger/bn_log_output.dart';
 import 'logger/console_output.dart';
+import 'logger/file_logger.dart';
 import 'logger/log_printer.dart';
 
 class BnLog {
   static Logger _logger = Logger();
-  static bool _isInitialized = false;
   static final List<LogOutput> _logOutputs = [];
-  static late LazyBox<String>? _logBox;
+
+  //static late LazyBox<String>? _logBox;
   static final DateTime _startTime = DateTime.now();
 
   BnLog._() {
-    //if (_isInitialized == false) {
     init();
-    //}
   }
 
-  static flush() {
-    _logBox?.flush();
+  static Future<Directory> _getLogDir() async {
+    final appDirectory = await getApplicationDocumentsDirectory();
+    var logDir = '${appDirectory.path}/log/';
+    return await Directory(logDir).create();
+  }
+
+  static void flush() {
+    //if (_logBox != null && _logBox!.isOpen) _logBox?.flush();
+  }
+
+  static void close() {
+    /* if (_logBox != null && _logBox!.isOpen) _logBox?.flush();
     _logBox?.close();
+    _logBox = null;*/
   }
 
-  static init({Level? logLevel, LogFilter? filter}) async {
-    print('logger.dart initLogger');
+  static Future<bool> init({Level? logLevel, LogFilter? filter}) async {
     await Hive.initFlutter();
-    print('logger.dart open logbox');
     try {
-      LazyBox<dynamic>? logBox;
-      if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
-        logBox = await Hive.openLazyBox(hiveBoxLoggingDbName)
-            .timeout(Duration(seconds: 5));
+      //if (!Hive.isBoxOpen(hiveBoxLoggingDbName) || _logBox == null) {
+      //_logBox = await Hive.openLazyBox<String>(hiveBoxLoggingDbName).timeout(Duration(seconds: 5));
+      // if (_logBox != null) {
+      //add logger
+      _logOutputs.clear();
+      //_logOutputs.add(BnLogOutput(_logBox!, _startTime));
+
+      if (kDebugMode || kProfileMode || localTesting) {
+        _logOutputs.add(ConsoleLogOutput());
       }
-      if (logBox != null && logBox.runtimeType == Box<String>) {
-        _logBox = logBox as LazyBox<String>;
-      } else {
-        return;
+
+      try {
+        final directory = await _getLogDir();
+        final ds = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        _logOutputs.add(FileLogger('${directory.path}/${ds}_logger.txt'));
+      } catch (e) {
+        print("Can't open logfile getLogDir_logger.txt ${e.toString()}");
+        return false;
       }
+
+      //_logger.close();
+      _logger = Logger(
+        filter: BnLogFilter(), //important for logging in release version
+        output: MultiOutput(_logOutputs),
+        level: logLevel ?? HiveSettingsDB.flogLogLevel,
+        printer: BnLogPrinter(
+          startTime: _startTime,
+          methodCount: 3,
+          errorMethodCount: 8,
+          lineLength: 120,
+          colors: false,
+          printEmojis: false,
+          printTime: true,
+        ),
+      );
+      _logger.i(
+          '${DateTime.now().toIso8601String()} Started logging ${logLevel ?? HiveSettingsDB.flogLogLevel}');
+
+      return true;
     } catch (e) {
       print('error open logBox $error');
-      return null;
+      return false;
     }
-
-    print('logger.dart put start');
-    _logBox?.put(DateTime.now().millisecondsSinceEpoch.toString(),
-        '${DateTime.now().toIso8601String()} Started logging ${logLevel ?? HiveSettingsDB.flogLogLevel}');
-    //add logger
-    _logOutputs.clear();
-    _logOutputs.add(BnLogOutput(_logBox!, _startTime));
-    if (kDebugMode || kProfileMode) {
-      _logOutputs.add(ConsoleLogOutput());
-    }
-
-    //_logger.close();
-    _logger = Logger(
-      filter: BnLogFilter(), //important for logging in release version
-      output: MultiOutput(_logOutputs),
-      level: logLevel ?? HiveSettingsDB.flogLogLevel,
-      printer: BnLogPrinter(
-        logBox: _logBox!,
-        startTime: _startTime,
-        methodCount: 3,
-        errorMethodCount: 8,
-        lineLength: 120,
-        colors: false,
-        printEmojis: true,
-        printTime: true,
-      ),
-    );
-    _isInitialized = true;
-    print('logger.dart ready');
+    return true;
   }
 
   static void debug({
@@ -206,22 +217,13 @@ class BnLog {
         stackTrace: stacktrace);
   }
 
-  static Future<String> collectLogs() async {
-    if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
-      _logBox = await Hive.openLazyBox(hiveBoxLoggingDbName);
+  static Future<List<FileSystemEntity>> collectLogFiles() async {
+    try {
+      final directory = await _getLogDir();
+      return directory.list().toList();
+    } catch (e) {
+      return Future.value([]);
     }
-    await _logBox?.flush();
-    List<String> valList = [];
-    if (_logBox == null) {
-      return '';
-    }
-    for (var val in _logBox!.keys) {
-      var str = await _logBox!.get(val as String);
-      if (str != null) {
-        valList.add(str);
-      }
-    }
-    return await compute(logValuesAsString, valList);
   }
 
   ///executed in isolate
@@ -239,34 +241,28 @@ class BnLog {
   }
 
   static Future<bool> clearLogs() async {
-    await Hive.initFlutter();
-    if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
-      _logBox = await Hive.openLazyBox(hiveBoxLoggingDbName);
+    if (await init() == true) {
+      return Future.value(false);
     }
-    if (_logBox == null) {
-      return false;
-    }
-    for (var key in _logBox!.keys) {
+    var dir = _getLogDir();
+    /* for (var key in _logBox!.keys) {
       await _logBox?.delete(key);
     }
-    BnLog.info(text: 'Cleared logs');
-    return Future(() => true);
+    BnLog.info(text: 'Cleared logs');*/
+    return Future.value(true);
   }
 
   ///
   /// endTimeInMillis
   static Future<bool> cleanUpLogsByFilter(Duration deleteOlderThan) async {
-    await Hive.initFlutter();
-    if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
-      _logBox = await Hive.openLazyBox(hiveBoxLoggingDbName);
+    if (!await init()) {
+      return Future.value(true);
     }
     int counter = 0;
     var leftDate =
         DateTime.now().subtract(deleteOlderThan).millisecondsSinceEpoch;
-    if (_logBox == null) {
-      return false;
-    }
-    for (var key in _logBox!.keys) {
+
+    /* for (var key in _logBox!.keys) {
       var intVal = int.tryParse(key);
       if (intVal != null && intVal < leftDate) {
         await _logBox?.delete(key);
@@ -276,7 +272,8 @@ class BnLog {
     BnLog.info(
         text:
             'Tidied up logs before ${DateTime.fromMillisecondsSinceEpoch(leftDate)}  - $counter entries removed');
-    return Future(() => true);
+    */
+    return Future.value(true);
   }
 
   static Level getActiveLogLevel() {
@@ -284,16 +281,15 @@ class BnLog {
   }
 
   static void setActiveLogLevel(Level logLevel) async {
-    //_logger.close();
     HiveSettingsDB.setFlogLevel(logLevel);
-    BnLog.info(text: 'Loglevel changed to ${logLevel.name}');
-    await Hive.initFlutter();
-    if (!Hive.isBoxOpen(hiveBoxLoggingDbName)) {
-      _logBox = await Hive.openLazyBox(hiveBoxLoggingDbName);
+    return;
+    if (await init()) {
+      return;
     }
-    await _logBox?.flush();
-    await _logBox?.close();
+    //await _logBox?.flush();
+    //await _logBox?.close();
     init();
+    BnLog.info(text: 'Loglevel changed to ${logLevel.name}');
   }
 
   static Future<Level?> showLogLevelDialog(BuildContext context,

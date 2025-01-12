@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../generated/l10n.dart';
@@ -144,9 +143,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               ),
             if (widget.showMap)
               GestureDetector(
-                onTap: () {
-                  print('tap on event map small');
-                },
+                onTap: () {},
                 child: EventMapSmall(nextEvent: widget.nextEvent),
               ),
             HiddenAdminButton(

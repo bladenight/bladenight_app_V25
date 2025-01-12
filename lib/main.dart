@@ -9,7 +9,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:leak_tracker/leak_tracker.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -29,7 +28,6 @@ import 'main.init.dart';
 import 'models/image_and_link.dart';
 
 import 'pages/widgets/startup_widgets/app_root_widget.dart';
-import 'providers/riverpod_observer/logging_observer.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 const String openRouteMapRoute = '/eventRoute';
@@ -97,7 +95,7 @@ void main() async {
 
 Future<bool> initLogger() async {
   try {
-    return await BnLog.init() != null;
+    return await BnLog.init();
   } catch (e) {
     print('Logger init failed --> $e');
     return false;

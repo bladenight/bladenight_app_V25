@@ -1,20 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../app_settings/app_constants.dart';
-import '../../app_settings/server_connections.dart';
-import '../../generated/l10n.dart';
 import '../../models/event.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
-import '../widgets/common_widgets/shadow_box_widget.dart';
 import 'widgets/is_onsite_error.dart';
 import 'widgets/is_onsite_not_registered.dart';
 import 'widgets/is_onsite_registered.dart';

@@ -74,7 +74,9 @@ class _ConnectionWarning extends ConsumerState<ConnectionWarning>
     var networkAware = ref.watch(networkAwareProvider);
     var trackingType = ref.watch(trackingTypeProvider);
     if (trackingType == TrackingType.onlyTracking) {
-      return kDebugMode ? Text('only Tracking') : Container();
+      return kDebugMode
+          ? Text('Debug only Tracking no www needed')
+          : Container();
     }
     if (networkAware.connectivityStatus != ConnectivityStatus.wampConnected) {
       wampConnected = false;

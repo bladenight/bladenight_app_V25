@@ -59,6 +59,8 @@ class WampV2 {
   var _lock = Lock();
   WebSocketChannel? channel; //initialize a websocket channel
   static bool _hadShakeHands = false;
+
+  /// Stop wamp if only tracking
   static bool _wampStopped = false;
   static bool _startShakeHands = false;
   static int _startShakeHandsRetryCounter = 0;
@@ -95,7 +97,7 @@ class WampV2 {
   bool _isConnectedToInternet = true;
 
   void _init() {
-    BnLog.info(text: 'Wamp Init', methodName: '_init', className: toString());
+    BnLog.info(text: 'Wamp init', methodName: '_init', className: toString());
     if (!kIsWeb) {
       _icCheckerSubscription = internetConnChecker.onStatusChange
           .listen((InternetConnectionStatus result) {
@@ -137,6 +139,10 @@ class WampV2 {
     if (startResult == false) {
       return WampConnectionState.failed;
     }
+    BnLog.debug(
+        text: 'Wamp start result $startResult',
+        methodName: '_initWamp',
+        className: toString());
     if (kIsWeb) {
       _hadShakeHands = true;
       return startResult == true
@@ -151,16 +157,26 @@ class WampV2 {
 
   Future<WampConnectionState> refresh() async {
     BnLog.info(
-        text: 'Wamp refresh after offline',
+        text: 'Wamp refresh after offline - will initWamp',
         methodName: 'refresh',
         className: toString());
     return _initWamp();
   }
 
   ///called from App and put to queue
-  Future addToWamp<T>(BnWampMessage message) {
+  Future addToWamp<T>(BnWampMessage message) async {
     if (_wampStopped) {
-      startWamp();
+      BnLog.debug(
+          text: 'Wamp stopped- startWamp',
+          methodName: 'addToWamp',
+          className: toString());
+      var connStatus = await startWamp();
+      if (connStatus != WampConnectionState.connected) {
+        BnLog.debug(
+            text: 'Wamp not online after startWamp()',
+            methodName: 'addToWamp',
+            className: toString());
+      }
     }
     _put(message);
     return message.completer.future;
@@ -174,14 +190,16 @@ class WampV2 {
   }
 
   ///called by [LocationProvider] in [LocationProvider.setToBackground] method
-  void startWamp() {
+  Future<WampConnectionState> startWamp() async {
     _wampStopped = false;
     _wampCallStreamController?.close();
     _wampCallStreamController = null;
     _wampCallStreamController = StreamController<BnWampMessage>();
-    _initWamp();
-    //_connLoop(); //
-    _runner();
+    var connState = await _initWamp();
+    if (connState == WampConnectionState.connected) {
+      _runner();
+    }
+    return connState;
   }
 
   ///called by [LocationProvider] in [LocationProvider.setToBackground] method
@@ -232,11 +250,13 @@ class WampV2 {
     }
   }
 
+  ///Put messages to queue
+  ///removing double
+  ///remove calls older 60 secs
   void _put(BnWampMessage message) {
     var outdatedCalls = <int, BnWampMessage>{};
     for (var call in calls.entries) {
       if (call.value.endpoint == message.endpoint) {
-        //throws bad state future completed without isCompleted
         outdatedCalls[call.value.requestId] = call.value;
       }
       var age = DateTime.now().difference(call.value.dateTime);
@@ -279,6 +299,8 @@ class WampV2 {
     });
   }
 
+  ///loop to add messages to wamp and request results
+  ///clears outdated messages
   void _runner() async {
     _wampCallStreamController?.stream.listen((message) async {
       runZonedGuarded(() async {
@@ -288,7 +310,7 @@ class WampV2 {
           // if (_liveCycleTimer != null && !_liveCycleTimer!.isActive) {
           var _ = await _initWamp(); //_connLoop();
           // }
-          await Future.delayed(const Duration(milliseconds: 250));
+          await Future.delayed(const Duration(milliseconds: 500));
         }
         if (DateTime.now().difference(_busyTimeStamp) >
             const Duration(milliseconds: 1000)) {
@@ -328,10 +350,10 @@ class WampV2 {
     });
   }
 
+  ///WampStream and WampHandler
   Future<bool> _startStream() async {
-    //avoid long view of waiting for server
     await runZonedGuarded(() async {
-      if (_websocketIsConnected) return true; //check if its already running
+      if (_websocketIsConnected) return true; //check if already running
 
       if ((localTesting || useSelfCreatedCertificate) && !kIsWeb) {
         HttpOverrides.global = MyHttpOverrides();

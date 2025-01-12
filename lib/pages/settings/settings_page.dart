@@ -51,6 +51,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   bool _exportLogInProgress = false;
   bool _showPushProgressIndicator = false;
   final _textController = TextEditingController();
+  ValueNotifier<double> exportProgressNotifier = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context) {
@@ -387,7 +388,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           header: Text(Localize.of(context).exportLogData),
                           children: <Widget>[
                             _exportLogInProgress
-                                ? const CircularProgressIndicator()
+                                ? /*ValueListenableBuilder<double>(
+                                    valueListenable: exportProgressNotifier,
+                                    builder: (BuildContext context,
+                                        double progress, child) {
+                                      return CircularProgressIndicator(
+                                        value: progress,
+                                      );
+                                    })*/
+                                CircularProgressIndicator()
                                 : SizedBox(
                                     width:
                                         MediaQuery.sizeOf(context).width * 0.9,
@@ -399,7 +408,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           setState(() {
                                             _exportLogInProgress = true;
                                           });
-                                          await exportLogs();
+                                          await exportLogFiles(
+                                              exportProgressNotifier);
                                           setState(() {
                                             _exportLogInProgress = false;
                                           });

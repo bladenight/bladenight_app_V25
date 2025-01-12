@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../helpers/enums/tracking_type.dart';
-import '../../../providers/location_provider.dart';
 import '../../../providers/network_connection_provider.dart';
 import 'no_network_warning.dart';
 import 'no_server_reachable_warning.dart';

@@ -5,7 +5,6 @@ import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
-import '../../../app_settings/app_constants.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
 import '../../../providers/active_event_provider.dart';
@@ -68,9 +67,6 @@ class MapTileLayerWidget extends ConsumerStatefulWidget {
 class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
   @override
   Widget build(BuildContext context) {
-    if (!kIsWeb) {
-      FMTCTileProviderSettings(cachedValidDuration: Duration(days: 90));
-    }
     var osmEnabled =
         ref.watch(useOpenStreetMapProvider) || widget.hasSpecialStartPoint;
     return TileLayer(
@@ -103,7 +99,9 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
       tileProvider: kIsWeb
           ? CancellableNetworkTileProvider()
-          : FMTCStore(fmtcTileStoreName).getTileProvider(),
+          : FMTCTileProvider(
+              stores: {'fmtcTileStoreName': null},
+              cachedValidDuration: Duration(days: 90)),
       /*BnCachedAssetProvider(
               context: context,
               errorListener: () {

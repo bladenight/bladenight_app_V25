@@ -68,6 +68,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   int _maxFails = 3;
+  AverageList<double> realtimeSpeedAvgList = AverageList(maxLength: 5);
 
   bg.State? _state;
   StreamSubscription? _locationSubscription;
@@ -316,7 +317,7 @@ class LocationProvider with ChangeNotifier {
       bg.BackgroundGeolocation.onActivityChange(_onActivityChange);
       bg.BackgroundGeolocation.onHeartbeat(_onHeartBeat);
       bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
-      bg.BackgroundGeolocation.onConnectivityChange(_onConnectionChange);
+      bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
       bg.BackgroundGeolocation.onGeofence(_onGeoFence);
 
       var isMotionDetectionDisabled = HiveSettingsDB.isMotionDetectionDisabled;
@@ -425,13 +426,12 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onLocation(bg.Location location) {
-    //BnLog.trace(text: '_onLocation $location');
+    BnLog.trace(
+        text:
+            '_onLocation ${location.coords} battery: ${location.battery.level}%');
     updateUserLocation(location);
-    //sendLocationToServer(location);
     checkWakeLock(location.battery.level, location.battery.isCharging);
   }
-
-  AverageList<double> realtimeSpeedAvgList = AverageList(maxLength: 5);
 
   ///Update user location and track points list
   void updateUserLocation(bg.Location location) {
@@ -591,14 +591,15 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onLocationError(bg.LocationError error) {
-    if (!kIsWeb) BnLog.trace(text: 'Location error reason:$error');
+    if (!kIsWeb) BnLog.trace(text: 'Location error reason: $error');
     if (_lastKnownPoint != null) {
       //sendLocation(_lastKnownPoint!);
     }
   }
 
   void _onMotionChange(bg.Location location) {
-    BnLog.trace(text: 'OnMotionChange location');
+    BnLog.trace(
+        text: '_onMotionChange ${location.coords} ${location.battery.level}% ');
     _isMoving = location.isMoving;
     if (!_isInBackground) {
       notifyListeners();
@@ -607,22 +608,23 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onActivityChange(bg.ActivityChangeEvent event) {
-    BnLog.trace(text: 'On ActivityChangeEvent $event');
+    BnLog.trace(text: '_onActivityChangeEvent ${event.activity}');
     //_subToUpdates();
   }
 
   void _onHeartBeat(bg.HeartbeatEvent event) {
-    BnLog.trace(text: 'On Heartbeat  $event');
+    BnLog.trace(text: '_onHeartbeatEvent  ${event.location}');
     _getHeartBeatLocation();
   }
 
-  _onConnectionChange(bg.ConnectivityChangeEvent event) {
-    BnLog.debug(text: 'On ConnectivityChange  $event');
+  _onConnectivityChange(bg.ConnectivityChangeEvent event) {
+    BnLog.trace(text: '_onConnectivityChange  $event');
     //_networkConnected = event.connected;
   }
 
   void _getHeartBeatLocation() async {
     if (!isTracking) return;
+    BnLog.trace(text: '_getHeartBeatLocation');
     try {
       await bg.BackgroundGeolocation.getCurrentPosition(
         timeout: 2,
@@ -630,7 +632,7 @@ class LocationProvider with ChangeNotifier {
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         samples: 2, // How many location samples to attempt.
       );
-      return;
+      //triggers update
     } catch (e) {
       BnLog.warning(
           className: toString(),
@@ -638,11 +640,10 @@ class LocationProvider with ChangeNotifier {
           text: '_subUpdates Failed:',
           exception: e);
     }
-    refreshRealtimeData();
   }
 
   _onProviderChange(bg.ProviderChangeEvent event) {
-    if (!kIsWeb) BnLog.info(text: 'onProviderChangeEvent  $event');
+    BnLog.info(text: '_onProviderChangeEvent  ${event.toString()}');
     switch (event.status) {
       case bg.ProviderChangeEvent.AUTHORIZATION_STATUS_NOT_DETERMINED:
         _gpsLocationPermissionsStatus = LocationPermissionStatus.notDetermined;
@@ -668,6 +669,35 @@ class LocationProvider with ChangeNotifier {
 
   _onGeoFence(bg.GeofenceEvent event) {
     _onGeoFenceEvent(event);
+  }
+
+  void _onGeoFenceEvent(bg.GeofenceEvent event) async {
+    if (HiveSettingsDB.isBladeGuard && HiveSettingsDB.onsiteGeoFencingActive) {
+      BnLog.info(text: '_geofenceEvent recognized ${event.toString()}');
+      if (event.action != 'ENTER') {
+        return;
+      }
+      var lastTimeStamp = HiveSettingsDB.bladeguardLastSetOnsite;
+      var now = DateTime.now();
+      var diff = now.difference(lastTimeStamp);
+      var minTimeDiff =
+          kDebugMode ? const Duration(seconds: 5) : const Duration(hours: 1);
+      if (diff < minTimeDiff || eventIsActive) {
+        return;
+      }
+      final repo = ProviderContainer().read(bladeGuardApiRepositoryProvider);
+      var res = await repo.checkBladeguardIsOnSite();
+      //is is already onsite do nothing
+      if (res.result != null && res.result == true) {
+        return;
+      }
+      //set onsite and notify user
+      var _ = await ProviderContainer()
+          .read(bgIsOnSiteProvider.notifier)
+          .setOnSiteState(true, triggeredByGeofence: true);
+      //invalidate provider to reload state
+      _geoFenceEventStreamController.sink.add(event);
+    }
   }
 
   void toggleAutoStop() async {
@@ -722,7 +752,9 @@ class LocationProvider with ChangeNotifier {
 
   ///Starts or stops geofencing
   Future<void> startStopGeoFencing() async {
-    if (!HiveSettingsDB.isBladeGuard ||
+    //stop geofencing if not Bladeguard
+    if (!HiveSettingsDB.bgSettingVisible ||
+        !HiveSettingsDB.isBladeGuard ||
         !HiveSettingsDB.onsiteGeoFencingActive) {
       if (!isTracking) {
         await bg.BackgroundGeolocation.stop().catchError((error) {
@@ -752,6 +784,7 @@ class LocationProvider with ChangeNotifier {
 
   void setGeoFence() async {
     if (!HiveSettingsDB.bgSettingVisible ||
+        !HiveSettingsDB.isBladeGuard ||
         !HiveSettingsDB.onsiteGeoFencingActive) {
       return;
     }
@@ -1151,13 +1184,15 @@ class LocationProvider with ChangeNotifier {
   }
 
   void checkWakeLock(double batteryLevel, bool isCharging) async {
+    if (_isInBackground) return;
+    BnLog.trace(text: 'checkWakelock');
     if (HiveSettingsDB.wakeLockEnabled &&
         _wakelockDisabled == false &&
         !isCharging &&
         batteryLevel < 0.3) {
+      BnLog.trace(text: 'checkWakelock disable Wakelock');
       await Wakelock.disable();
       _wakelockDisabled = true;
-      //showToast(message: Localize.current.wakelockDisabled);
     }
     if (HiveSettingsDB.wakeLockEnabled &&
         _wakelockDisabled == true &&
@@ -1565,35 +1600,6 @@ class LocationProvider with ChangeNotifier {
             if (!rootNavigatorKey.currentContext!.mounted) return;
             rootNavigatorKey.currentContext!.pop();
           });
-    }
-  }
-
-  void _onGeoFenceEvent(bg.GeofenceEvent event) async {
-    if (HiveSettingsDB.isBladeGuard && HiveSettingsDB.onsiteGeoFencingActive) {
-      BnLog.info(text: 'geofenceevent recognized ${event.toString()}');
-      if (event.action != 'ENTER') {
-        return;
-      }
-      var lastTimeStamp = HiveSettingsDB.bladeguardLastSetOnsite;
-      var now = DateTime.now();
-      var diff = now.difference(lastTimeStamp);
-      var minTimeDiff =
-          kDebugMode ? const Duration(seconds: 5) : const Duration(hours: 1);
-      if (diff < minTimeDiff || eventIsActive) {
-        return;
-      }
-      final repo = ProviderContainer().read(bladeGuardApiRepositoryProvider);
-      var res = await repo.checkBladeguardIsOnSite();
-      //is is already onsite do nothing
-      if (res.result != null && res.result == true) {
-        return;
-      }
-      //set onsite and notify user
-      var _ = await ProviderContainer()
-          .read(bgIsOnSiteProvider.notifier)
-          .setOnSiteState(true, triggeredByGeofence: true);
-      //invalidate provider to reload state
-      _geoFenceEventStreamController.sink.add(event);
     }
   }
 

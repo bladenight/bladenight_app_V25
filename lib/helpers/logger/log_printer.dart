@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
 /// Default implementation of [LogPrinter].
@@ -37,10 +36,10 @@ class BnLogPrinter extends LogPrinter {
   static final Map<Level, String> defaultLevelEmojis = {
     Level.trace: '🦉Trace:',
     Level.debug: '⏳Debug:',
-    Level.info: 'ℹ ',
-    Level.warning: '⚠️ ',
-    Level.error: '‼️ ',
-    Level.fatal: '💀 ',
+    Level.info: 'ℹ Info',
+    Level.warning: '⚠️ Warn',
+    Level.error: '‼️ Error',
+    Level.fatal: '💀 Fatal',
   };
 
   /// Matches a stacktrace line as generated on Android/iOS devices.
@@ -122,8 +121,6 @@ class BnLogPrinter extends LogPrinter {
   /// Whether [LogEvent.time] is printed.
   final bool printTime;
 
-  final LazyBox logBox;
-
   /// Controls the ascii 'boxing' of different [Level]s.
   ///
   /// By default all levels are 'boxed',
@@ -179,6 +176,7 @@ class BnLogPrinter extends LogPrinter {
 
   /// Contains the parsed rules resulting from [excludeBox] and [noBoxingByDefault].
   late final Map<Level, bool> _includeBox;
+
   String _topBorder = '';
   String _middleBorder = '';
   String _bottomBorder = '';
@@ -194,7 +192,7 @@ class BnLogPrinter extends LogPrinter {
   final Map<Level, String>? levelEmojis;
 
   BnLogPrinter({
-    required this.logBox,
+    //required this.logBox,
     required this.startTime,
     this.stackTraceBeginIndex = 0,
     this.methodCount = kDebugMode ? 5 : 2,
@@ -209,7 +207,7 @@ class BnLogPrinter extends LogPrinter {
     this.levelColors,
     this.levelEmojis,
   }) {
-    var doubleDividerLine = StringBuffer();
+    /* var doubleDividerLine = StringBuffer();
     var singleDividerLine = StringBuffer();
     for (var i = 0; i < lineLength - 1; i++) {
       doubleDividerLine.write(doubleDivider);
@@ -219,7 +217,7 @@ class BnLogPrinter extends LogPrinter {
     _topBorder = '$topLeftCorner$doubleDividerLine';
     _middleBorder = '$middleCorner$singleDividerLine';
     _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
-
+    */
     // Translate excludeBox map (constant if default) to includeBox map with all Level enum possibilities
     _includeBox = {};
     for (var l in Level.values) {
@@ -407,17 +405,14 @@ class BnLogPrinter extends LogPrinter {
     return '';
   }
 
-  List<String> _formatAndPrint(
-    Level level,
-    String message,
-    String? time,
-    String? error,
-    String? stacktrace,
-  ) {
+  List<String> _formatAndPrint(Level level, String message, String? time,
+      String? error, String? stacktrace,
+      {bool addBorders = false}) {
     List<String> buffer = [];
-    var verticalLineAtLevel = (_includeBox[level]!) ? ('$verticalLine ') : '';
+    var verticalLineAtLevel =
+        (addBorders && _includeBox[level]!) ? ('$verticalLine ') : '';
     var color = _getLevelColor(level);
-    if (_includeBox[level]!) buffer.add(color(_topBorder));
+    if (addBorders && _includeBox[level]!) buffer.add(color(_topBorder));
 
     if (time != null) {
       buffer.add(color('$verticalLineAtLevel$time'));
@@ -428,13 +423,13 @@ class BnLogPrinter extends LogPrinter {
       if (line == 'null') continue;
       buffer.add(color('$verticalLineAtLevel $emoji $line'));
     }
-    if (_includeBox[level]!) buffer.add(color(_middleBorder));
+    if (addBorders && _includeBox[level]!) buffer.add(color(_middleBorder));
 
     if (error != null) {
       for (var line in error.split('\n')) {
         buffer.add(color('$verticalLineAtLevel $line'));
       }
-      if (_includeBox[level]!) buffer.add(color(_middleBorder));
+      if (addBorders && _includeBox[level]!) buffer.add(color(_middleBorder));
     }
 
     if (stacktrace != null) {
@@ -443,7 +438,7 @@ class BnLogPrinter extends LogPrinter {
       }
       //if (_includeBox[level]!) buffer.add(color(_middleBorder));
     }
-    if (_includeBox[level]!) buffer.add(color(_bottomBorder));
+    if (addBorders && _includeBox[level]!) buffer.add(color(_bottomBorder));
 
     return buffer;
   }

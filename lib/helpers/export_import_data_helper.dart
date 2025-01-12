@@ -169,9 +169,62 @@ Future<File> _createLogFile(String fileName) async {
   return await file.create();
 }
 
-Future<bool> exportLogs() async {
+Future<bool> exportLogFiles(ValueNotifier<double> progress) async {
   try {
-    var fileContent = await BnLog.collectLogs();
+    var files = await BnLog.collectLogFiles();
+    if (kIsWeb) {
+      //print(fileContent);
+      showToast(message: 'Siehe Console');
+      return true;
+    }
+    var fileName = '${DateTime.now().year}_'
+        '${DateTime.now().month}_'
+        '${DateTime.now().day}_'
+        '${DateTime.now().hour}_'
+        '${DateTime.now().minute}_'
+        '${DateTime.now().second}_Bladenight';
+    var logfile = await _createLogFile(fileName);
+    var zipFilePath = '${logfile.path}.zip';
+    //var logfilePath = await logfile.writeAsString(fileContent, flush: true);
+
+    var encoder = ZipFileEncoder();
+    encoder.create(zipFilePath);
+    for (var file in files) {
+      try {
+        await encoder.addFile(File(file.path));
+      } catch (e) {
+        print('could not write ${file.path} to export');
+      }
+    }
+    encoder.close();
+    showToast(
+        message:
+            '${files.length.toString()} Files exported  ${Localize.current.ok}');
+    var aV = await DeviceHelper.getAppVersionsData();
+
+    final Email email = Email(
+      subject:
+          'Supportanfrage Bladenight München App V${aV.version} build${aV.buildNumber} ',
+      body: 'Folgendes Problem ist aufgetreten:\n'
+          'Folgenden Vorschlag habe ich:\n\n'
+          'Bitte löschen falls nicht gewünscht !\n\n'
+          'Anbei auch die Logdaten der App (maximal 8 Tage alt). Diese können persönliche Standortdaten und Nutzerverhalten enthalten. Ich bin damit einverstanden die Daten für die Supportanfrage zu nutzen.',
+      recipients: ['it@huth.app'],
+      //cc: ['cc@example.com'],
+      //bcc: ['bcc@example.com'],
+      attachmentPaths: [zipFilePath],
+      isHTML: true,
+    );
+    FlutterEmailSender.send(email);
+  } catch (e) {
+    showToast(message: 'Log export fail $e');
+  }
+  return true;
+}
+
+/*Future<bool> exportLogs(ValueNotifier<double> progress) async {
+  try {
+    var fileContent = await BnLog.collectLogs(progress);
     if (kIsWeb) {
       print(fileContent);
       showToast(message: 'Siehe Console');
@@ -209,7 +262,7 @@ Future<bool> exportLogs() async {
       isHTML: true,
     );
 
-    await FlutterEmailSender.send(email);
+    FlutterEmailSender.send(email);
 
     /*Share.shareXFiles(
       [XFile(logfile.path)],
@@ -222,7 +275,7 @@ Future<bool> exportLogs() async {
     showToast(message: 'Log export fail $e');
   }
   return true;
-}
+}*/
 
 String exportUserTrackingToXml(List<UserGpxPoint> userTrackPoints) {
   var trkPts =
