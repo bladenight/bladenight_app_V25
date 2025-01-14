@@ -547,5 +547,6 @@
   "changeMeColor": "Ändere Eigene Farbe",
   "enterBgPassword": "Sicherheits-Passwort Bladeguard eingeben",
   "sponsors": "Unsere Sponsoren",
-  "startsIn": "Startet in"
+  "startsIn": "Startet in",
+  "trackingStoppedLowBat": "Tracking gestoppt wegen niedriger Batterie {level}%. Um dies zu vermeiden, deaktivieren Sie Autostop in den Einstellungen"
 }

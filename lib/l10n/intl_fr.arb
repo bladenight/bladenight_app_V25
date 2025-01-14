@@ -546,6 +546,7 @@
   "enterBgPassword": "Please enter Bladeguard security password",
   "sponsors": "Our sponsors",
   "bgTodayTapToUnRegister": "Unregister as a Bladeguard today!",
-  "startsIn": "Starts in"
+  "startsIn": "Starts in",
+  "trackingStoppedLowBat": "Tracking stopped due to low battery {level}%. To avoid turn off Autostop in settings"
 }
 

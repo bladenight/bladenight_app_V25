@@ -69,7 +69,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m18(time) => "${time}";
 
-  static String m19(date) => "${date}";
+  static String m19(level) =>
+      "Tracking stopped due to low battery ${level}%. To avoid turn off Autostop in settings";
+
+  static String m20(date) => "${date}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -779,6 +782,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Recorded route points"),
         "trackingRestarted":
             MessageLookupByLibrary.simpleMessage("Location sharing restartet"),
+        "trackingStoppedLowBat": m19,
         "train": MessageLookupByLibrary.simpleMessage("Train"),
         "trainlength": MessageLookupByLibrary.simpleMessage("Trainlength"),
         "tryOpenAppSettings": MessageLookupByLibrary.simpleMessage(
@@ -803,7 +807,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Display remains an"),
         "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
             "is canceled! Please check this on https://bladenight-muenchen.de"),
-        "weekdayIntl": m19,
+        "weekdayIntl": m20,
         "yes": MessageLookupByLibrary.simpleMessage("Yes"),
         "yesterday": MessageLookupByLibrary.simpleMessage("was yesterday")
       };

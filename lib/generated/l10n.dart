@@ -4652,6 +4652,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Tracking stopped due to low battery {level}%. To avoid turn off Autostop in settings`
+  String trackingStoppedLowBat(Object level) {
+    return Intl.message(
+      'Tracking stopped due to low battery $level%. To avoid turn off Autostop in settings',
+      name: 'trackingStoppedLowBat',
+      desc: '',
+      args: [level],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {
