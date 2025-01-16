@@ -33,10 +33,13 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                         // Fixed navigation rail on the left (start)
                         NavigationRail(
                       selectedIndex: currentIndex,
-                      minWidth: 50,
-                      minExtendedWidth: 70,
+                      minWidth: 60,
+                      minExtendedWidth:
+                          MediaQuery.sizeOf(context).width < 800 ? 90 : 120,
                       onDestinationSelected: onDestinationSelected,
-                      labelType: NavigationRailLabelType.all,
+                      labelType: MediaQuery.sizeOf(context).width < 800
+                          ? NavigationRailLabelType.none
+                          : NavigationRailLabelType.all,
                       destinations: [
                         NavigationRailDestination(
                           label: Text(
@@ -68,6 +71,12 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                             Localize.of(context).settings,
                           ),
                           icon: Icon(Icons.settings),
+                        ),
+                        NavigationRailDestination(
+                          label: Text(
+                            Localize.of(context).messages,
+                          ),
+                          icon: Icon(CupertinoIcons.envelope),
                         ),
                       ],
                     ),

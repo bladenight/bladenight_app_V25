@@ -31,7 +31,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     //add localize and delegates
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 450) {
+      if (constraints.maxWidth > 850) {
         return ScaffoldWithNavigationRail(
           navigationShell: navigationShell,
           currentIndex: navigationShell.currentIndex,

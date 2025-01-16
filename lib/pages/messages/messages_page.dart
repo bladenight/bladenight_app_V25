@@ -57,14 +57,16 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
         ),
         slivers: [
           CupertinoSliverNavigationBar(
-            leading: CupertinoButton(
-              padding: EdgeInsets.zero,
-              minSize: 0,
-              onPressed: () async {
-                context.pop();
-              },
-              child: const Icon(CupertinoIcons.back),
-            ),
+            leading: context.canPop()
+                ? CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minSize: 0,
+                    onPressed: () async {
+                      if (context.canPop()) context.pop();
+                    },
+                    child: const Icon(CupertinoIcons.back),
+                  )
+                : SizedBox(),
             largeTitle: Text(Localize.of(context).messages),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,

@@ -83,6 +83,7 @@ enum AppRoute {
   //messages
   message,
   messagesPage,
+  messagesPageMenu,
   bladeguard,
   showRoute,
   linkFriendDevicePage,
@@ -249,6 +250,9 @@ GoRouter goRouter(Ref ref) {
                         //test:
                         ///usr/bin/xcrun simctl openurl booted "bna://bladenight.app/friend/addFriend?code=123456&name=tom"
                         //adb shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app/friend/addFriend?code=123456&name=tom"'
+                        //
+                        // adb devices with -s "xxxxx"
+                        //adb -s "R3CT50CK8FP" shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app/friend/addFriend?code=123456&name=tom"'
                         path: '/addFriend',
                         name: AppRoute.addFriend.name,
                         parentNavigatorKey: _friendsNavigatorKey,
@@ -425,6 +429,17 @@ GoRouter goRouter(Ref ref) {
                           },
                           pageBuilder: GoTransitions.bottomSheet),
                     ],
+                  ),
+                ]),
+            StatefulShellBranch(
+                navigatorKey: _messageLinkNavigatorKey,
+                routes: [
+                  GoRoute(
+                    path: '/messagesPageMenu',
+                    name: AppRoute.messagesPageMenu.name,
+                    pageBuilder: (context, state) => const NoTransitionPage(
+                      child: MessagesPage(),
+                    ),
                   ),
                 ]),
           ]),

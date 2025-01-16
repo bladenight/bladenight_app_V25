@@ -20,6 +20,7 @@ import 'logger/log_printer.dart';
 
 class BnLog {
   static Logger _logger = Logger();
+  static FileLogger? _fileLogger;
   static final List<LogOutput> _logOutputs = [];
 
   //static late LazyBox<String>? _logBox;
@@ -55,17 +56,19 @@ class BnLog {
       _logOutputs.clear();
       //_logOutputs.add(BnLogOutput(_logBox!, _startTime));
 
-      if (kDebugMode || kProfileMode || localTesting) {
-        _logOutputs.add(ConsoleLogOutput());
-      }
+      if (HiveSettingsDB.flogLogLevel != Level.off) {
+        if (kDebugMode || kProfileMode || localTesting) {
+          _logOutputs.add(ConsoleLogOutput());
+        }
 
-      try {
-        final directory = await _getLogDir();
-        final ds = DateFormat('yyyy-MM-dd').format(DateTime.now());
-        _logOutputs.add(FileLogger('${directory.path}/${ds}_logger.txt'));
-      } catch (e) {
-        print("Can't open logfile getLogDir_logger.txt ${e.toString()}");
-        return false;
+        try {
+          final directory = await _getLogDir();
+          _fileLogger = FileLogger(directory);
+          _logOutputs.add(_fileLogger!);
+        } catch (e) {
+          print("Can't open logfile getLogDir_logger.txt ${e.toString()}");
+          return false;
+        }
       }
 
       //_logger.close();
@@ -257,6 +260,11 @@ class BnLog {
   static Future<bool> cleanUpLogsByFilter(Duration deleteOlderThan) async {
     if (!await init()) {
       return Future.value(true);
+    }
+    for (var logger in _logOutputs) {
+      if (logger.runtimeType == FileLogger) {
+        (logger as FileLogger).clearLogs();
+      }
     }
     int counter = 0;
     var leftDate =

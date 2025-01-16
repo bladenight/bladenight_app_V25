@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
@@ -136,9 +137,9 @@ class _HomePageState extends ConsumerState<HomePage>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!kIsWeb) {
         await FMTCStore(fmtcTileStoreName).manage.create();
-        _openIntroScreenFirstTime();
+        //_openIntroScreenFirstTime();
         _openBladeguardRequestFirstTime();
-        await initOneSignal();
+        initOneSignal();
         await _initNotifications();
       }
       await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
@@ -300,7 +301,7 @@ class _HomePageState extends ConsumerState<HomePage>
                                       itemBuilder: (context, index, realIdx) {
                                         return Card(
                                           color: CupertinoTheme.of(context)
-                                              .scaffoldBackgroundColor,
+                                              .barBackgroundColor,
                                           //bg color for card
                                           child: Center(
                                             child: GestureDetector(
@@ -323,38 +324,38 @@ class _HomePageState extends ConsumerState<HomePage>
                                                   imageName =
                                                       getDarkName(imageName);
                                                 }
-                                                return FadeInImage.assetNetwork(
-                                                  //height: 80,
-                                                  width:
-                                                      MediaQuery.sizeOf(context)
-                                                              .width *
-                                                          0.66,
-                                                  fit: BoxFit.contain,
-                                                  placeholder: sponsors
-                                                      .value![index]
-                                                      .description,
-                                                  image: imageName,
-                                                  fadeOutDuration:
-                                                      const Duration(
-                                                          milliseconds: 300),
-                                                  fadeInDuration:
-                                                      const Duration(
-                                                          milliseconds: 300),
-                                                  imageErrorBuilder: (context,
-                                                      error, stackTrace) {
-                                                    BnLog.warning(
-                                                        text:
-                                                            'The sponsor image error ${sponsors.value![index].imageUrl}) could not been loaded',
-                                                        exception: error);
-                                                    return Text(
-                                                      sponsors.value![index]
-                                                          .description,
-                                                    );
+                                                return CachedNetworkImage(
+                                                    //height: 80,
+                                                    width: MediaQuery.sizeOf(
+                                                                context)
+                                                            .width *
+                                                        0.66,
+                                                    fit: BoxFit.contain,
+                                                    placeholder: (c, s) {
+                                                      return Text(
+                                                        sponsors.value![index]
+                                                            .description,
+                                                      );
+                                                    },
+                                                    imageUrl: imageName,
+                                                    fadeOutDuration:
+                                                        const Duration(
+                                                            milliseconds: 300),
+                                                    fadeInDuration:
+                                                        const Duration(
+                                                            milliseconds: 300),
+                                                    errorListener: (error) {
+                                                      BnLog.warning(
+                                                          text:
+                                                              'The sponsor image error ${sponsors.value![index].imageUrl}) could not been loaded',
+                                                          exception: error);
+                                                    }
+
                                                     /* Image.asset(
                                                         emptySponsorPlaceholder,
                                                         fit: BoxFit.fill);*/
-                                                  },
-                                                );
+
+                                                    );
                                               }),
                                             ),
                                           ),

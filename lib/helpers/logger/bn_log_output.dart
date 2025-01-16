@@ -34,9 +34,9 @@ class BnLogOutput extends LogOutput {
     List<String> buffer = [];
     String key = DateTime.now().millisecondsSinceEpoch.toString();
     if (time != null) {
-      buffer.add('$time ${level.toString()}');
+      buffer.add(' $time ${level.toString()}');
     } else {
-      buffer.add('${getTime(DateTime.now())} ${level.toString()}');
+      buffer.add(' ${getTime(DateTime.now())} ${level.toString()}');
     }
 
     for (var line in message.split('\n')) {
