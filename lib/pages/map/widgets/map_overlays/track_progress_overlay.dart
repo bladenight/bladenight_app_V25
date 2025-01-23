@@ -18,6 +18,7 @@ import '../../../../providers/is_tracking_provider.dart';
 import '../../../../providers/location_provider.dart';
 import '../../../../providers/refresh_timer_provider.dart';
 import '../../../home_info/event_data_overview.dart';
+import '../../../widgets/common_widgets/no_connection_warning.dart';
 import '../../../widgets/common_widgets/shadow_clipper.dart';
 import '../map_event_informations.dart';
 import '../special_function_info.dart';
@@ -95,104 +96,106 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
         event: actualOrNextEvent,
       );
     } else {
-      return Stack(
-        children: [
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 10,
-            left: 15,
-            right: 15,
-            child: GestureDetector(
-              onLongPress: () async {},
-              onTap: () {
-                showCupertinoModalBottomSheet(
-                    backgroundColor: CupertinoDynamicColor.resolve(
-                        CupertinoColors.systemBackground, context),
-                    context: context,
-                    builder: (context) {
-                      return Container(
-                        constraints: BoxConstraints(
-                          maxHeight: kIsWeb
-                              ? MediaQuery.of(context).size.height * 0.5
-                              : MediaQuery.of(context).size.height * 0.7,
-                        ),
-                        child: MapEventInformation(
-                          mapController: widget.controller,
-                        ),
-                      );
-                    });
-              },
-              child: ClipShadow(
-                boxShadows: [
-                  BoxShadow(
-                    //outer shadow
-                    offset: Offset(1.1, 1.1),
-                    blurRadius: 10.0,
-                    blurStyle: BlurStyle.outer,
-                    spreadRadius: 0.0,
-                    color: actualOrNextEvent.statusColor,
-                  ),
-                ],
-                clipper: InfoClipper(),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Stack(children: [
-                    Builder(builder: (context) {
-                      return Container(
-                        color: CupertinoDynamicColor.resolve(
-                            CupertinoColors.transparent, context),
-                        padding: const EdgeInsets.all(10),
-                        child: Column(children: [
-                          if (eventIsActive &&
-                              ref.watch(isTrackingProvider) &&
-                              rtu.user.isOnRoute)
-                            EventActiveTrackingActiveUserOnRoute(),
-                          if (eventIsActive && !ref.watch(isTrackingProvider) ||
-                              !rtu.user.isOnRoute)
-                            EventActiveNoTrackingNotOnRouteWidget(),
-                          if (eventIsActive)
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  // estimated time of arrival is time from start
-                                  Flexible(
-                                    fit: FlexFit.tight,
-                                    child: Text(
-                                      '⏱ Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 30 * 60 * 1000)}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.clip,
-                                      softWrap: false,
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  if (ref.watch(isTrackingProvider))
+      return SafeArea(
+        child: Stack(
+          children: [
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 10,
+              left: 15,
+              right: 15,
+              child: GestureDetector(
+                onLongPress: () async {},
+                onTap: () {
+                  showCupertinoModalBottomSheet(
+                      backgroundColor: CupertinoDynamicColor.resolve(
+                          CupertinoColors.systemBackground, context),
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          constraints: BoxConstraints(
+                            maxHeight: kIsWeb
+                                ? MediaQuery.of(context).size.height * 0.5
+                                : MediaQuery.of(context).size.height * 0.7,
+                          ),
+                          child: MapEventInformation(
+                            mapController: widget.controller,
+                          ),
+                        );
+                      });
+                },
+                child: ClipShadow(
+                  boxShadows: [
+                    BoxShadow(
+                      //outer shadow
+                      offset: Offset(1.1, 1.1),
+                      blurRadius: 10.0,
+                      blurStyle: BlurStyle.outer,
+                      spreadRadius: 0.0,
+                      color: actualOrNextEvent.statusColor,
+                    ),
+                  ],
+                  clipper: InfoClipper(),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Stack(children: [
+                      Builder(builder: (context) {
+                        return Container(
+                          color: CupertinoDynamicColor.resolve(
+                              CupertinoColors.transparent, context),
+                          padding: const EdgeInsets.all(10),
+                          child: Column(children: [
+                            if (eventIsActive &&
+                                ref.watch(isTrackingProvider) &&
+                                rtu.user.isOnRoute)
+                              EventActiveTrackingActiveUserOnRoute(),
+                            if (eventIsActive &&
+                                    !ref.watch(isTrackingProvider) ||
+                                !rtu.user.isOnRoute)
+                              EventActiveNoTrackingNotOnRouteWidget(),
+                            if (eventIsActive)
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    // estimated time of arrival is time from start
                                     Flexible(
                                       fit: FlexFit.tight,
                                       child: Text(
-                                        '⇥ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail(), maxvalue: 120 * 60 * 1000)}',
+                                        '⏱ Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 30 * 60 * 1000)}',
                                         maxLines: 1,
+                                        overflow: TextOverflow.clip,
                                         softWrap: false,
-                                        overflow: TextOverflow.fade,
                                       ),
                                     ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Flexible(
-                                    fit: FlexFit.tight,
-                                    child: Text(
-                                      '📏 ${(rtu.distanceOfTrainComplete() / 1000).toStringAsFixed(1)} km',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.end,
-                                      softWrap: false,
+
+                                    const SizedBox(
+                                      width: 5,
                                     ),
-                                  )
-                                ]),
-                          /*    if (!actualOrNextEvent.isActive ||
+                                    if (ref.watch(isTrackingProvider))
+                                      Flexible(
+                                        fit: FlexFit.tight,
+                                        child: Text(
+                                          '⇥ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail(), maxvalue: 120 * 60 * 1000)}',
+                                          maxLines: 1,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                        ),
+                                      ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Flexible(
+                                      fit: FlexFit.tight,
+                                      child: Text(
+                                        '📏 ${(rtu.distanceOfTrainComplete() / 1000).toStringAsFixed(1)} km',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.end,
+                                        softWrap: false,
+                                      ),
+                                    )
+                                  ]),
+                            /*    if (!actualOrNextEvent.isActive ||
                               actualOrNextEvent.status ==
                                   EventStatus.cancelled ||
                               actualOrNextEvent.status == EventStatus.pending)
@@ -228,39 +231,44 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                 ),
                               ]),
                             ),*/
-                          if (rtu.rpcException == null) ...[
-                            EventDataOverview(
-                              nextEvent: actualOrNextEvent,
-                              showMap: false,
-                              showSeparator: false,
-                              eventIsRunning: eventIsActive,
-                            ),
-                            Center(
-                              child: FittedBox(
-                                child: Text(
-                                  '${Localize.of(context).route}: ${rtu.routeName}  '
-                                  '${Localize.of(context).length}: ${((rtu.runningLength) / 1000).toStringAsFixed(1)} km  '
-                                  '${actualOrNextEvent.status == EventStatus.confirmed || actualOrNextEvent.status == EventStatus.running ? "${rtu.usersTracking.toString()} ${Localize.of(context).trackers}" : ""}',
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
+                            if (rtu.rpcException == null) ...[
+                              EventDataOverview(
+                                nextEvent: actualOrNextEvent,
+                                showMap: false,
+                                showSeparator: false,
+                                eventIsRunning: eventIsActive,
+                              ),
+                              Center(
+                                child: FittedBox(
+                                  child: Text(
+                                    '${Localize.of(context).route}: ${rtu.routeName}  '
+                                    '${Localize.of(context).length}: ${((rtu.runningLength) / 1000).toStringAsFixed(1)} km  '
+                                    '${actualOrNextEvent.status == EventStatus.confirmed || actualOrNextEvent.status == EventStatus.running ? "${rtu.usersTracking.toString()} ${Localize.of(context).trackers}" : ""}',
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                  ),
                                 ),
                               ),
+                            ],
+                            const SpecialFunctionInfo(),
+                            const SizedBox(
+                              height: 2,
                             ),
-                          ],
-                          const SpecialFunctionInfo(),
-                          const SizedBox(
-                            height: 2,
-                          ),
-                          const UpdateProgress(),
-                        ]),
-                      );
-                    }),
-                  ]),
+                            const UpdateProgress(),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: ConnectionWarning(),
+                            ),
+                          ]),
+                        );
+                      }),
+                    ]),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
   }

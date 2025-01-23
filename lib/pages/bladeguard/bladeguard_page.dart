@@ -224,7 +224,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             width: MediaQuery.of(context).size.width * 0.9,
                             child: Padding(
                               padding: const EdgeInsets.only(top: 5, bottom: 5),
-                              child: CupertinoButton(
+                              child: SizedTintedCupertinoButton(
                                   color: Colors.yellowAccent,
                                   child: FittedBox(
                                     fit: BoxFit.fitWidth,
@@ -254,13 +254,25 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                   leftWidget: Padding(
                                     padding: const EdgeInsets.only(
                                         top: 5, bottom: 5, right: 10),
-                                    child: TintedCupertinoButton(
-                                        child: Expanded(
-                                          child: FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Text(Localize.of(context)
-                                                .bgUpdatePhone),
-                                          ),
+                                    child: SizedTintedCupertinoButton(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                .33,
+                                        height: CupertinoTheme.of(context)
+                                                    .textTheme
+                                                    .textStyle
+                                                    .height !=
+                                                null
+                                            ? CupertinoTheme.of(context)
+                                                    .textTheme
+                                                    .textStyle
+                                                    .height! *
+                                                2
+                                            : null,
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(Localize.of(context)
+                                              .bgUpdatePhone),
                                         ),
                                         onPressed: () async {
                                           await checkOrUpdateBladeGuardData();

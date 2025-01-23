@@ -169,10 +169,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
             ],
           ),
           const GPSInfoAndMapCopyright(),
-          const SafeArea(
-            child: Align(
-                alignment: Alignment.topCenter, child: ConnectionWarning()),
-          ),
         ]),
       ),
     );
