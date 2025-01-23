@@ -91,9 +91,14 @@ class FileLogger implements LogOutput {
   }
 
   bool wantDeleteFile(File file) {
-    final filename = path.basenameWithoutExtension(file.path);
-    final created = DateTime.fromMicrosecondsSinceEpoch(int.parse(filename));
-    return wantsDeleteFromDateTime(created);
+    try {
+      final filename = path.basenameWithoutExtension(file.path);
+      var date = DateTime.tryParse((filename.split('_'))[0]);
+      if (date != null) {
+        return wantsDeleteFromDateTime(date);
+      }
+    } catch (_) {}
+    return true;
   }
 
   bool wantsDeleteFromDateTime(DateTime created) {
