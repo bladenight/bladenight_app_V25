@@ -163,7 +163,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   void setStateIfChanged(ConnectivityStatus connectivityStatus) {
     if (state.connectivityStatus != connectivityStatus) {
       BnLog.trace(
-          text: 'Networkstate changed from $state to $connectivityStatus',
+          text: 'Network state changed from $state to $connectivityStatus',
           methodName: 'setStateIfChanged',
           className: toString());
       state = NetworkStateModel(connectivityStatus: connectivityStatus);

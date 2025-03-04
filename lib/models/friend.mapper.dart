@@ -31,7 +31,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
       Field('color', _$color, opt: true, def: Colors.white24);
   static bool _$isActive(Friend v) => v.isActive;
   static const Field<Friend, bool> _f$isActive =
-      Field('isActive', _$isActive, opt: true, def: false);
+      Field('isActive', _$isActive, opt: true, def: true);
   static int _$requestId(Friend v) => v.requestId;
   static const Field<Friend, int> _f$requestId =
       Field('requestId', _$requestId, opt: true, def: 0);

@@ -72,12 +72,6 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                           ),
                           icon: Icon(Icons.settings),
                         ),
-                        NavigationRailDestination(
-                          label: Text(
-                            Localize.of(context).messages,
-                          ),
-                          icon: Icon(CupertinoIcons.envelope),
-                        ),
                       ],
                     ),
                   ),

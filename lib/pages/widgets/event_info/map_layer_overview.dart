@@ -62,6 +62,7 @@ class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
               initialZoom: widget.initialZoom,
               minZoom: widget.minZoom,
               maxZoom: widget.maxZoom,
+              cameraConstraint: CameraConstraint.containCenter(bounds: bounds),
               //initialCenter: widget.startPoint,
               /* cameraConstraint: MapSettings.openStreetMapEnabled ||
                     widget.event.hasSpecialStartPoint

@@ -23,6 +23,7 @@ import WatchConnectivity
             UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
             //not working on iOS registerBackgroundPlugins()
         }
+
         initFlutterChannel()
         
         if WCSession.isSupported() {

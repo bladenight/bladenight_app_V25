@@ -17,7 +17,7 @@ class InputNumberDialog extends StatefulWidget {
   State<InputNumberDialog> createState() => _InputNumberDialogState();
 
   static Future<int?> show(BuildContext context, String title,
-      {initialValue = 180, minValue = 60}) async {
+      {initialValue = 180, minValue = 0}) async {
     var resultNumber = await showCupertinoDialog(
       context: context,
       barrierDismissible: true,

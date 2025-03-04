@@ -606,14 +606,26 @@ Widget _listTile(
                 ],
               ),
             if (event.status == EventStatus.pending)
-              Text(Localize.of(context).pending),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(Localize.of(context).pending),
+              ),
             if (event.status == EventStatus.cancelled)
-              Text(Localize.of(context).canceled),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(Localize.of(context).canceled),
+              ),
             if (event.status == EventStatus.confirmed &&
                 event.participants <= 0)
               Row(
                 children: [
-                  Text(Localize.of(context).confirmed),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(Localize.of(context).confirmed),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
                   const Image(
                     height: 25,
                     width: 30,
@@ -628,6 +640,9 @@ Widget _listTile(
               Row(
                 children: [
                   Text(Localize.of(context).running),
+                  SizedBox(
+                    width: 5,
+                  ),
                   ImageIcon(
                     Image.asset('assets/images/skater_icon_256.png').image,
                     color: Theme.of(context).iconTheme.color,
@@ -650,7 +665,7 @@ Widget _listTile(
               )
           ]),
           const SizedBox(
-            width: 10,
+            width: 5,
           ),
           const Icon(CupertinoIcons.map),
         ],

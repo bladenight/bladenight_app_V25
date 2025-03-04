@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_settings/app_configuration_helper.dart';
@@ -32,6 +33,13 @@ import 'pages/widgets/startup_widgets/app_root_widget.dart';
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 const String openRouteMapRoute = '/eventRoute';
 const String openBladeguardOnSite = '/bgOnsite';
+
+@pragma('vm:entry-point')
+FutureOr<void> backgroundCallback(Uri? data) async {
+  if (data == null) {
+    return;
+  }
+}
 
 void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -62,14 +70,39 @@ void main() async {
         };
       }
       initializeMappers();
+
+      HomeWidget.registerInteractivityCallback(backgroundCallback);
       await Hive.initFlutter();
       Hive.registerAdapter(ColorAdapter());
       Hive.registerAdapter(ImageAndLinkAdapter());
       /*await Hive.openBox(hiveBoxSettingDbName);
       await Hive.openBox(hiveBoxLocationDbName);
       await Hive.openBox(hiveBoxServerConfigDBName);*/
+
       // turn off the # in the URLs on the web
       usePathUrlStrategy();
+
+      /*await SentryFlutter.init((options) {
+        options.dsn =
+            'https://260152b2325af41400820edd53e3a54c@o4507936224706560.ingest.de.sentry.io/4507936226541648';
+        https: //examplePublicKey@o0.ingest.sentry.io/0';
+        // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
+        // We recommend adjusting this value in production.
+        options.tracesSampleRate = 1.0;
+        // The sampling rate for profiling is relative to tracesSampleRate
+        // Setting to 1.0 will profile 100% of sampled transactions:
+        // Note: Profiling alpha is available for iOS and macOS since SDK version 7.12.0
+        options.profilesSampleRate = 1.0;
+      },
+          appRunner: () => runApp(
+                ProviderScope(
+                  observers: [
+                    LoggingObserver(),
+                  ],
+                  child: AppRootWidget(),
+                ),
+              ));
+*/
       runApp(
         ProviderScope(
           observers: [
@@ -81,7 +114,7 @@ void main() async {
     },
     (dynamic error, StackTrace stackTrace) {
       print(
-          '${DateTime.now().toIso8601String()} Application error 84: \n$error\n$stackTrace');
+          '${DateTime.now().toIso8601String()} Application error 94: \n$error\n$stackTrace');
       if (!kDebugMode && !kIsWeb && !localTesting) {
         FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }

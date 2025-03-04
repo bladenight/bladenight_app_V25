@@ -1,3 +1,4 @@
+import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -7,6 +8,7 @@ import 'package:universal_io/io.dart';
 import '../../app_settings/app_constants.dart';
 import '../../helpers/debug_helper.dart';
 import '../../helpers/device_id_helper.dart';
+import '../../helpers/logger.dart';
 import '../../main.dart';
 
 part 'app_start_notifier.g.dart';
@@ -19,6 +21,9 @@ class AppStartNotifier extends _$AppStartNotifier {
   @override
   Future<void> build() async {
     await _initializationLogic();
+    ref.onDispose(() {
+      BnLog.trace(text: 'start notifier was disposed');
+    });
   }
 
   Future<void> _initializationLogic() async {
@@ -44,7 +49,8 @@ class AppStartNotifier extends _$AppStartNotifier {
       await FMTCObjectBoxBackend().initialise();
       fMTCInitialized = true;
     }
-    //await Future.delayed(Duration(seconds: 10));
+
+    await initPlatformState();
     if (Platform.isAndroid) {
       /// Register BackgroundGeolocation headless-task
       /* bg.BackgroundGeolocation.registerHeadlessTask(
@@ -53,27 +59,6 @@ class AppStartNotifier extends _$AppStartNotifier {
       /// Register BackgroundFetch headless-task.
       // BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
     }
-    /*await SentryFlutter.init((options) {
-        options.dsn =
-            'https://260152b2325af41400820edd53e3a54c@o4507936224706560.ingest.de.sentry.io/4507936226541648';
-        https: //examplePublicKey@o0.ingest.sentry.io/0';
-        // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
-        // We recommend adjusting this value in production.
-        options.tracesSampleRate = 1.0;
-        // The sampling rate for profiling is relative to tracesSampleRate
-        // Setting to 1.0 will profile 100% of sampled transactions:
-        // Note: Profiling alpha is available for iOS and macOS since SDK version 7.12.0
-        options.profilesSampleRate = 1.0;
-      },
-          appRunner: () => runApp(
-                ProviderScope(
-                  observers: [
-                    LoggingObserver(),
-                  ],
-                  child: BladeNightApp(),
-                ),
-              ));
-*/
     if (kDebugMode) {
       print(
           '${DateTime.now().toIso8601String()} Finished _initializationLogic');
@@ -83,5 +68,36 @@ class AppStartNotifier extends _$AppStartNotifier {
   Future<void> retry() async {
     // use AsyncValue.guard to handle errors gracefully
     state = await AsyncValue.guard(_initializationLogic);
+  }
+
+  Future<void> initPlatformState() async {
+    // Configure BackgroundFetch.
+    int status = await BackgroundFetch.configure(
+        BackgroundFetchConfig(
+            minimumFetchInterval: 15,
+            stopOnTerminate: false,
+            enableHeadless: true,
+            requiresBatteryNotLow: false,
+            requiresCharging: false,
+            requiresStorageNotLow: false,
+            requiresDeviceIdle: false,
+            requiredNetworkType: NetworkType.NONE), (String taskId) async {
+      // <-- Event handler
+      // This is the fetch-event callback.
+      BnLog.debug(text: '[BackgroundFetch] Event received $taskId');
+      // IMPORTANT:  You must signal completion of your task or the OS can punish your app
+      // for taking too long in the background.
+      BackgroundFetch.finish(taskId);
+    }, (String taskId) async {
+      // <-- Task timeout handler.
+      // This task has exceeded its allowed running-time.  You must stop what you're doing and immediately .finish(taskId)
+      print('[BackgroundFetch] TASK TIMEOUT taskId: $taskId');
+      BackgroundFetch.finish(taskId);
+    });
+    BnLog.info(text: '[BackgroundFetch] configure success: $status');
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
   }
 }

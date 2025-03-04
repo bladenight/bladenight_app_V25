@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:go_router/go_router.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';
@@ -28,6 +29,7 @@ import '../helpers/distance_converter.dart';
 import '../helpers/double_helper.dart';
 import '../helpers/enums/tracking_type.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/home_widget_helper.dart';
 import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
 import '../helpers/logger.dart';
@@ -39,6 +41,7 @@ import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
 import '../models/event.dart';
 import '../models/geofence_point.dart' as gfp;
+import '../models/home_widget/home_widget_data_model.dart';
 import '../models/location.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
@@ -82,6 +85,7 @@ class LocationProvider with ChangeNotifier {
   static DateTime _lastSendLocationToServerRequest =
       DateTime(2022, 1, 1, 0, 0, 0);
   static DateTime _lastUITrackUpdate = DateTime(2022, 1, 1, 0, 0, 0);
+  static DateTime _lastHomeWidgetUpdate = DateTime(2022, 1, 1, 0, 0, 0);
 
   DateTime? _userReachedFinishDateTime, _startedTrackingTime;
   Timer? _updateRealtimedataIfTrackingTimer,
@@ -437,6 +441,7 @@ class LocationProvider with ChangeNotifier {
   void updateUserLocation(bg.Location location) {
     if (!isTracking) return;
     _isMoving = true;
+    HomeWidgetHelper.updateRealtimeData(location);
 
     _userPositionStreamController.add(location);
     _userLatLngStreamController
@@ -457,8 +462,8 @@ class LocationProvider with ChangeNotifier {
     _realUserSpeedKmh = _realUserSpeedKmh!.toShortenedDouble(2);
     _odometer = location.odometer / 1000;
 
-    var diff = DateTime.now().difference(_lastUITrackUpdate);
-    if (diff < const Duration(milliseconds: 5000)) {
+    var diff = DateTime.now().difference(_lastHomeWidgetUpdate);
+    if (diff < const Duration(milliseconds: 60000)) {
       //notifyListeners();
       //return;
     }

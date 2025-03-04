@@ -17,12 +17,12 @@ if (localPropertiesFile.exists()) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '2426'
+    flutterVersionCode = '2501'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.24.26'
+    flutterVersionName = '1.25.01'
 }
 
 def keystoreProperties = new Properties()
@@ -127,9 +127,6 @@ android {
     subprojects {
         project.buildDir = "${rootProject.buildDir}/${project.name}"
         project.evaluationDependsOn(":app")
-    }
-    buildFeatures {
-        viewBinding true
     }
 }
 

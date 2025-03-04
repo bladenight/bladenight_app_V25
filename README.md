@@ -147,7 +147,7 @@ Known issues
   flutter.buildMode=release
   flutter.sdk=/pathToFolder/development/flutter
   sdk.dir=/pathToFolder/Android/sdk
-  flutter.versionName=1.24.27
+  flutter.versionName=1.25.01
   ```
 
 ### Cant't run on iPhone. message:„iproxy“ kann nicht geöffnet werden, da der Entwickler nicht verifiziert werden kann.
@@ -209,3 +209,8 @@ sudo xattr -d com.apple.quarantine iproxy
 
 - fix BG - if off hide all other switches
 - mapbuttons - landscape horizontal instead vertical
+- overlay map
+- checkin bg
+- count bg onsite
+- ios deeplink closed app
+- 

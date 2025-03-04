@@ -31,7 +31,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     //add localize and delegates
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 850) {
+      if (constraints.maxWidth > 650) {
         return ScaffoldWithNavigationRail(
           navigationShell: navigationShell,
           currentIndex: navigationShell.currentIndex,
@@ -48,8 +48,8 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   }
 }
 
-class ScaffoldWithNavigationBar extends StatelessWidget {
-  const ScaffoldWithNavigationBar({
+class ScaffoldWithRailNavigationBar extends StatelessWidget {
+  const ScaffoldWithRailNavigationBar({
     super.key,
     required this.body,
     required this.currentIndex,

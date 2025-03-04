@@ -368,6 +368,9 @@ class _EventEditorState extends ConsumerState<EventEditor> {
     setState(() {
       isSaving = true;
     });
+    if (_event.duration < Duration(minutes: 1)) {
+      _event = _event.copyWith(duration: Duration(minutes: 180));
+    }
     var res = await AdminCalls.editEvent(
       EditEventOnServerMessage.authenticate(
         event: _event,

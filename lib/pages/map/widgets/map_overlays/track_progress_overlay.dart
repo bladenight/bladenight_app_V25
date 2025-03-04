@@ -138,6 +138,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Stack(children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: ConnectionWarning(),
+                      ),
                       Builder(builder: (context) {
                         return Container(
                           color: CupertinoDynamicColor.resolve(
@@ -238,7 +242,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                 showSeparator: false,
                                 eventIsRunning: eventIsActive,
                               ),
-                              Center(
+                              /*Center(
                                 child: FittedBox(
                                   child: Text(
                                     '${Localize.of(context).route}: ${rtu.routeName}  '
@@ -248,17 +252,13 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     maxLines: 1,
                                   ),
                                 ),
-                              ),
+                              ),*/
                             ],
                             const SpecialFunctionInfo(),
                             const SizedBox(
                               height: 2,
                             ),
                             const UpdateProgress(),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: ConnectionWarning(),
-                            ),
                           ]),
                         );
                       }),

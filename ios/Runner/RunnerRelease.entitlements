@@ -13,6 +13,7 @@
 	<key>com.apple.security.application-groups</key>
 	<array>
 		<string>group.app.huth.bn.onesignal</string>
+		<string>group.app.huth.bn.homewidget</string>
 	</array>
 	<key>com.apple.security.network.client</key>
 	<true/>

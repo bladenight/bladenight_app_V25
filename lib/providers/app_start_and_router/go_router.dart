@@ -401,9 +401,10 @@ GoRouter goRouter(Ref ref) {
                           name: AppRoute.adminLogin.name,
                           redirect:
                               (BuildContext context, GoRouterState state) {
-                            if (!ref.read(userIsAdminProvider)) {
-                              return AppRoute.home.name;
-                            } else if (ref.read(adminPwdSetProvider)) {
+                            /* if (!ref.read(userIsAdminProvider)) {
+                              return '/';
+                            } else */
+                            if (ref.read(adminPwdSetProvider)) {
                               return '/settings/${AppRoute.adminPage.name}';
                             } else {
                               return null;
@@ -414,7 +415,7 @@ GoRouter goRouter(Ref ref) {
                           },
                           pageBuilder: GoTransitions.bottomSheet),
                       GoRoute(
-                          path: '/adminPage',
+                          path: '/${AppRoute.adminPage.name}',
                           name: AppRoute.adminPage.name,
                           redirect:
                               (BuildContext context, GoRouterState state) {

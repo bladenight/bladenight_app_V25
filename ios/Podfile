@@ -106,6 +106,13 @@ post_install do |installer|
   end
 end
 
+target 'Bladenight HomeWidgetExtension' do
+   use_frameworks!
+   use_modular_headers!
+
+   pod 'home_widget', :path => '.symlinks/plugins/home_widget/ios'
+end
+
 target 'OneSignalNotificationServiceExtension' do
   use_frameworks!
   pod 'OneSignalXCFramework', '>= 5.2.9','< 6.0'

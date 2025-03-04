@@ -64,6 +64,7 @@ class IsTracking extends _$IsTracking {
     if (LocationProvider().trackingType == TrackingType.onlyTracking) {
       MapSettings.setOpenStreetMapEnabled(
           MapSettings.wasOpenStreetMapEnabledFlag);
+      WampV2().startWamp();
     }
     return LocationProvider().stopTracking();
   }

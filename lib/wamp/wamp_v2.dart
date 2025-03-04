@@ -31,6 +31,7 @@ enum WampConnectionState {
   failed,
   offline,
   delayed,
+  disconnected,
   stopped
 }
 
@@ -64,13 +65,16 @@ class WampV2 {
   static bool _wampStopped = false;
   static bool _startShakeHands = false;
   static int _startShakeHandsRetryCounter = 0;
-  static bool _websocketIsConnected = false; //status of a websocket
+  static WampConnectionState wampConnectionState = WampConnectionState.unknown;
+
+  //static bool _websocketIsConnected = false; //status of a websocket
   int _retryLimit = 3;
 
   bool _connectionErrorLogged = false;
   bool _lastConnectionStatus = false;
 
-  bool get webSocketIsConnected => _websocketIsConnected;
+  bool get webSocketIsConnected =>
+      wampConnectionState == WampConnectionState.connected;
 
   bool busy = false;
   final Map<int, BnWampMessage> calls = {};
@@ -95,6 +99,8 @@ class WampV2 {
   StreamSubscription? _icCheckerSubscription;
 
   bool _isConnectedToInternet = true;
+
+  StreamSubscription<BnWampMessage>? _wampCallStreamListener;
 
   void _init() {
     BnLog.info(text: 'Wamp init', methodName: '_init', className: toString());
@@ -121,8 +127,14 @@ class WampV2 {
   }
 
   Future<WampConnectionState> _initWamp({bool force = false}) async {
-    if (_wampStopped && !force) WampConnectionState.stopped;
-    if (_websocketIsConnected) return WampConnectionState.connected;
+    if (_wampStopped && !force) WampConnectionState.disconnected;
+    if (wampConnectionState == WampConnectionState.connecting) {
+      await Future.delayed(Duration(milliseconds: 500));
+    }
+    if (wampConnectionState == WampConnectionState.connected) {
+      return WampConnectionState.connected;
+    }
+
     var startResult = false;
     _retryLimit = 3;
     try {
@@ -131,13 +143,16 @@ class WampV2 {
       }, timeout: const Duration(seconds: 5));
     } on TimeoutException catch (_) {
       BnLog.trace(text: 'Timeout _startStream');
-      _lock = Lock();
     } catch (_) {
       BnLog.trace(text: 'InitWamp error $e', exception: e);
+    } finally {
+      if (wampConnectionState != WampConnectionState.connected) {
+        wampConnectionState = WampConnectionState.failed;
+      }
       _lock = Lock();
     }
     if (startResult == false) {
-      return WampConnectionState.failed;
+      return wampConnectionState;
     }
     BnLog.debug(
         text: 'Wamp start result $startResult',
@@ -165,7 +180,7 @@ class WampV2 {
 
   ///called from App and put to queue
   Future addToWamp<T>(BnWampMessage message) async {
-    if (_wampStopped) {
+    if (!_wampStopped) {
       BnLog.debug(
           text: 'Wamp stopped- startWamp',
           methodName: 'addToWamp',
@@ -192,6 +207,7 @@ class WampV2 {
   ///called by [LocationProvider] in [LocationProvider.setToBackground] method
   Future<WampConnectionState> startWamp() async {
     _wampStopped = false;
+    _wampCallStreamListener?.cancel();
     _wampCallStreamController?.close();
     _wampCallStreamController = null;
     _wampCallStreamController = StreamController<BnWampMessage>();
@@ -205,6 +221,7 @@ class WampV2 {
   ///called by [LocationProvider] in [LocationProvider.setToBackground] method
   void stopWamp() {
     _wampStopped = true;
+    _wampCallStreamListener?.cancel();
     _wampCallStreamController?.close();
     _wampCallStreamController = null;
     _closeStream();
@@ -286,7 +303,7 @@ class WampV2 {
     _liveCycleTimer?.cancel();
     _liveCycleTimer =
         Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
-      while (_websocketIsConnected == false) {
+      while (wampConnectionState != WampConnectionState.connected) {
         if (_isConnectedToInternet == false) {
           await Future.delayed(const Duration(milliseconds: 250));
           continue;
@@ -302,11 +319,16 @@ class WampV2 {
   ///loop to add messages to wamp and request results
   ///clears outdated messages
   void _runner() async {
-    _wampCallStreamController?.stream.listen((message) async {
+    if (_wampCallStreamController != null &&
+        _wampCallStreamController?.hasListener == true) {
+      return;
+    }
+    _wampCallStreamListener =
+        _wampCallStreamController?.stream.listen((message) async {
       runZonedGuarded(() async {
         queue.add(message);
 
-        while (_websocketIsConnected == false) {
+        while (wampConnectionState != WampConnectionState.connected) {
           // if (_liveCycleTimer != null && !_liveCycleTimer!.isActive) {
           var _ = await _initWamp(); //_connLoop();
           // }
@@ -353,8 +375,10 @@ class WampV2 {
   ///WampStream and WampHandler
   Future<bool> _startStream() async {
     await runZonedGuarded(() async {
-      if (_websocketIsConnected) return true; //check if already running
-
+      if (wampConnectionState == WampConnectionState.connected) {
+        return true; //check if already running
+      }
+      wampConnectionState = WampConnectionState.connecting;
       if ((localTesting || useSelfCreatedCertificate) && !kIsWeb) {
         HttpOverrides.global = MyHttpOverrides();
       }
@@ -377,7 +401,7 @@ class WampV2 {
               WampMessageTypeHelper.getMessageType(wampMessage[0]);
 
           if (wampMessageType == WampMessageType.welcome) {
-            _websocketIsConnected = true;
+            wampConnectionState = WampConnectionState.connected;
             _wampConnectedStreamController.sink
                 .add(WampConnectedState.connected);
             _lastConnectionStatus = true;
@@ -397,7 +421,7 @@ class WampV2 {
             BnLog.info(text: 'Session closed with goodbye ${wampMessage[2]}');
             return;
           } else if (wampMessageType == WampMessageType.result) {
-            _websocketIsConnected = true;
+            wampConnectionState = WampConnectionState.connected;
             // [RESULT, CALL.Request|id, Details|dict, YIELD.Arguments|list, YIELD.ArgumentsKw|dict]
             //BnLog.debug(text: 'channel result $wampMessage');
             var messageResult = wampMessage[2];
@@ -511,12 +535,13 @@ class WampV2 {
               text: 'WampStream onError ${err.toString()}',
               methodName: 'startStream',
               className: toString());
-          if (_websocketIsConnected == false && _lastConnectionStatus == true) {
+          if (wampConnectionState != WampConnectionState.connected &&
+              _lastConnectionStatus == true) {
             _wampConnectedStreamController.sink
                 .add(WampConnectedState.disconnected);
             _lastConnectionStatus == false;
           }
-          _websocketIsConnected = false;
+          wampConnectionState = WampConnectionState.disconnected;
           _hadShakeHands = false;
           if (_retryLimit > 0) {
             await Future.delayed(const Duration(milliseconds: 500));
@@ -567,7 +592,7 @@ class WampV2 {
   void _resetWampState() {
     _lastConnectionStatus = false;
     _wampConnectedStreamController.sink.add(WampConnectedState.disconnected);
-    _websocketIsConnected = false;
+    wampConnectionState = WampConnectionState.disconnected;
     _hadShakeHands = false;
     _startShakeHands = false;
     _subscriptions.clear();
