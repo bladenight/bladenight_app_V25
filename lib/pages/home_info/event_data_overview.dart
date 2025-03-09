@@ -97,8 +97,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(widget.borderRadius),
                     topRight: Radius.circular(widget.borderRadius),
-                    bottomLeft: Radius.circular(0),
-                    bottomRight: Radius.circular(0),
+                    bottomLeft: Radius.circular(widget.borderRadius),
+                    bottomRight: Radius.circular(widget.borderRadius),
                   ),
                 ),
                 child: Text.rich(
