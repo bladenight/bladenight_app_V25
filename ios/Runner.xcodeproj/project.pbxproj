@@ -49,19 +49,9 @@
 		E23FA98C2CB4084C00F26A01 /* Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */; };
 		E2584CC02A7CE09B00346A03 /* WatchEventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */; };
 		E2584CC22A7D1F3100346A03 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CC12A7D1F3100346A03 /* AboutView.swift */; };
-		E28CD8562D39A844001DA87C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E256FD652CD182BA0077E218 /* WidgetKit.framework */; };
-		E28CD8572D39A844001DA87C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E256FD672CD182BA0077E218 /* SwiftUI.framework */; };
-		E28CD8682D39A845001DA87C /* Bladenight HomeWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E28CD8552D39A844001DA87C /* Bladenight HomeWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		E28CD8A42D39AFC9001DA87C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E28CD89D2D39AFC9001DA87C /* Assets.xcassets */; };
-		E28CD8A62D39AFC9001DA87C /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28CD89C2D39AFC9001DA87C /* AppIntent.swift */; };
-		E28CD8A72D39AFC9001DA87C /* Bladenight_HomeWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28CD89E2D39AFC9001DA87C /* Bladenight_HomeWidget.swift */; };
-		E28CD8A82D39AFC9001DA87C /* Bladenight_HomeWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28CD89F2D39AFC9001DA87C /* Bladenight_HomeWidgetBundle.swift */; };
-		E28CD8A92D39AFC9001DA87C /* Bladenight_HomeWidgetControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28CD8A02D39AFC9001DA87C /* Bladenight_HomeWidgetControl.swift */; };
-		E28CD8AA2D39AFC9001DA87C /* Bladenight_HomeWidgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28CD8A12D39AFC9001DA87C /* Bladenight_HomeWidgetLiveActivity.swift */; };
 		E2A725912CBAFCF8004C7868 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A725902CBAFCEB004C7868 /* Home.swift */; };
 		E2C23F1C29D4DDF000E06959 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */; };
 		E2C23F2229D4E87C00E06959 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F2129D4E87C00E06959 /* Images.xcassets */; };
-		F1948E3461B679F4D9055EA2 /* Pods_Bladenight_HomeWidgetExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE39B793073A01E604F197CF /* Pods_Bladenight_HomeWidgetExtension.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,13 +90,6 @@
 			remoteGlobalIDString = 46CF9B9E28CDEC3900041078;
 			remoteInfo = OneSignalNotificationServiceExtension;
 		};
-		E28CD8662D39A845001DA87C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E28CD8542D39A844001DA87C;
-			remoteInfo = "Bladenight HomeWidgetExtension";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -138,7 +121,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				E28CD8682D39A845001DA87C /* Bladenight HomeWidgetExtension.appex in Embed App Extensions */,
 				46CF9BA728CDEC3900041078 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -209,7 +191,6 @@
 		46FC8A8428C5AF3600407BB5 /* DistanceConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceConverter.swift; sourceTree = "<group>"; };
 		62CD76B1A127FB8D10CCE871 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		6C27BFCD14953D546EC49A1A /* Pods-OneSignalNotificationServiceExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.profile.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.profile.xcconfig"; sourceTree = "<group>"; };
-		702921C2F544D34B5D53D1FF /* Pods-Bladenight HomeWidgetExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bladenight HomeWidgetExtension.release.xcconfig"; path = "Target Support Files/Pods-Bladenight HomeWidgetExtension/Pods-Bladenight HomeWidgetExtension.release.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7ABE64B1E44EF9077F221071 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
@@ -222,24 +203,12 @@
 		B3732E931E80489A9753F95A /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1835917C5A0EA5C4DEF3DF0 /* Pods_OneSignalNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneSignalNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D97977E4A022AD00497110AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		D98CBE8290D5E487E89B0611 /* Pods-Bladenight HomeWidgetExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bladenight HomeWidgetExtension.debug.xcconfig"; path = "Target Support Files/Pods-Bladenight HomeWidgetExtension/Pods-Bladenight HomeWidgetExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		DDFC02B1CEE00C05F0E6EF76 /* Pods-Bladenight HomeWidgetExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bladenight HomeWidgetExtension.profile.xcconfig"; path = "Target Support Files/Pods-Bladenight HomeWidgetExtension/Pods-Bladenight HomeWidgetExtension.profile.xcconfig"; sourceTree = "<group>"; };
-		DE39B793073A01E604F197CF /* Pods_Bladenight_HomeWidgetExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bladenight_HomeWidgetExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E23FA98A2CB407C600F26A01 /* Info-Profile.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Profile.plist"; sourceTree = "<group>"; };
 		E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Profile.xcconfig; sourceTree = "<group>"; };
 		E256FD652CD182BA0077E218 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E256FD672CD182BA0077E218 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEventModel.swift; sourceTree = "<group>"; };
 		E2584CC12A7D1F3100346A03 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
-		E28CD8552D39A844001DA87C /* Bladenight HomeWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Bladenight HomeWidgetExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E28CD8692D39A845001DA87C /* Bladenight HomeWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Bladenight HomeWidgetExtension.entitlements"; sourceTree = "<group>"; };
-		E28CD89C2D39AFC9001DA87C /* AppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
-		E28CD89D2D39AFC9001DA87C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E28CD89E2D39AFC9001DA87C /* Bladenight_HomeWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bladenight_HomeWidget.swift; sourceTree = "<group>"; };
-		E28CD89F2D39AFC9001DA87C /* Bladenight_HomeWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bladenight_HomeWidgetBundle.swift; sourceTree = "<group>"; };
-		E28CD8A02D39AFC9001DA87C /* Bladenight_HomeWidgetControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bladenight_HomeWidgetControl.swift; sourceTree = "<group>"; };
-		E28CD8A12D39AFC9001DA87C /* Bladenight_HomeWidgetLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bladenight_HomeWidgetLiveActivity.swift; sourceTree = "<group>"; };
-		E28CD8A22D39AFC9001DA87C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2A725902CBAFCEB004C7868 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		E2C23F2129D4E87C00E06959 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -281,16 +250,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05FF6DA7401ADE1544164371 /* Pods_Runner.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E28CD8522D39A844001DA87C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E28CD8572D39A844001DA87C /* SwiftUI.framework in Frameworks */,
-				E28CD8562D39A844001DA87C /* WidgetKit.framework in Frameworks */,
-				F1948E3461B679F4D9055EA2 /* Pods_Bladenight_HomeWidgetExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,7 +375,6 @@
 				E256FD672CD182BA0077E218 /* SwiftUI.framework */,
 				D1835917C5A0EA5C4DEF3DF0 /* Pods_OneSignalNotificationServiceExtension.framework */,
 				B3732E931E80489A9753F95A /* Pods_Runner.framework */,
-				DE39B793073A01E604F197CF /* Pods_Bladenight_HomeWidgetExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -436,14 +394,12 @@
 			isa = PBXGroup;
 			children = (
 				4668153B28A8F45500504AF6 /* Bladenight Watch WatchKit Extension */,
-				E28CD8692D39A845001DA87C /* Bladenight HomeWidgetExtension.entitlements */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				4668153028A8F45200504AF6 /* Bladenight Watch */,
 				4668155428A8F45600504AF6 /* Bladenight WatchTests */,
 				4668155E28A8F45600504AF6 /* Bladenight WatchUITests */,
 				46CF9BA028CDEC3900041078 /* OneSignalNotificationServiceExtension */,
-				E28CD8A32D39AFC9001DA87C /* Bladenight HomeWidget */,
 				97C146EF1CF9000F007C117D /* Products */,
 				CF747FC8B35BEB56F72E6AFC /* Pods */,
 				8368F15BE167CB08ED423476 /* Frameworks */,
@@ -461,7 +417,6 @@
 				4668155128A8F45600504AF6 /* Bladenight WatchTests.xctest */,
 				4668155B28A8F45600504AF6 /* Bladenight WatchUITests.xctest */,
 				46CF9B9F28CDEC3900041078 /* OneSignalNotificationServiceExtension.appex */,
-				E28CD8552D39A844001DA87C /* Bladenight HomeWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -497,25 +452,8 @@
 				62CD76B1A127FB8D10CCE871 /* Pods-Runner.debug.xcconfig */,
 				09BF2BC17B7B7E379E37928F /* Pods-Runner.release.xcconfig */,
 				7ABE64B1E44EF9077F221071 /* Pods-Runner.profile.xcconfig */,
-				D98CBE8290D5E487E89B0611 /* Pods-Bladenight HomeWidgetExtension.debug.xcconfig */,
-				702921C2F544D34B5D53D1FF /* Pods-Bladenight HomeWidgetExtension.release.xcconfig */,
-				DDFC02B1CEE00C05F0E6EF76 /* Pods-Bladenight HomeWidgetExtension.profile.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		E28CD8A32D39AFC9001DA87C /* Bladenight HomeWidget */ = {
-			isa = PBXGroup;
-			children = (
-				E28CD89C2D39AFC9001DA87C /* AppIntent.swift */,
-				E28CD89D2D39AFC9001DA87C /* Assets.xcassets */,
-				E28CD89E2D39AFC9001DA87C /* Bladenight_HomeWidget.swift */,
-				E28CD89F2D39AFC9001DA87C /* Bladenight_HomeWidgetBundle.swift */,
-				E28CD8A02D39AFC9001DA87C /* Bladenight_HomeWidgetControl.swift */,
-				E28CD8A12D39AFC9001DA87C /* Bladenight_HomeWidgetLiveActivity.swift */,
-				E28CD8A22D39AFC9001DA87C /* Info.plist */,
-			);
-			path = "Bladenight HomeWidget";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -631,30 +569,11 @@
 			dependencies = (
 				4668156428A8F45700504AF6 /* PBXTargetDependency */,
 				46CF9BA628CDEC3900041078 /* PBXTargetDependency */,
-				E28CD8672D39A845001DA87C /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
-		};
-		E28CD8542D39A844001DA87C /* Bladenight HomeWidgetExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E28CD86E2D39A845001DA87C /* Build configuration list for PBXNativeTarget "Bladenight HomeWidgetExtension" */;
-			buildPhases = (
-				96F5DC7E801C4A638856C1D1 /* [CP] Check Pods Manifest.lock */,
-				E28CD8512D39A844001DA87C /* Sources */,
-				E28CD8522D39A844001DA87C /* Frameworks */,
-				E28CD8532D39A844001DA87C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Bladenight HomeWidgetExtension";
-			productName = "Bladenight HomeWidgetExtension";
-			productReference = E28CD8552D39A844001DA87C /* Bladenight HomeWidgetExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -688,9 +607,6 @@
 						LastSwiftMigration = 1100;
 						ProvisioningStyle = Automatic;
 					};
-					E28CD8542D39A844001DA87C = {
-						CreatedOnToolsVersion = 16.2;
-					};
 				};
 			};
 			buildConfigurationList = 97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */;
@@ -712,7 +628,6 @@
 				4668155028A8F45600504AF6 /* Bladenight WatchTests */,
 				4668155A28A8F45600504AF6 /* Bladenight WatchUITests */,
 				46CF9B9E28CDEC3900041078 /* OneSignalNotificationServiceExtension */,
-				E28CD8542D39A844001DA87C /* Bladenight HomeWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -770,14 +685,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E28CD8532D39A844001DA87C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E28CD8A42D39AFC9001DA87C /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -821,7 +728,6 @@
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesSwift/Promises.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftLocation/SwiftLocation.framework",
-				"${BUILT_PRODUCTS_DIR}/Toast/Toast.framework",
 				"${BUILT_PRODUCTS_DIR}/background_fetch/background_fetch.framework",
 				"${BUILT_PRODUCTS_DIR}/connectivity_plus/connectivity_plus.framework",
 				"${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework",
@@ -831,7 +737,6 @@
 				"${BUILT_PRODUCTS_DIR}/flutter_native_splash/flutter_native_splash.framework",
 				"${BUILT_PRODUCTS_DIR}/fluttertoast/fluttertoast.framework",
 				"${BUILT_PRODUCTS_DIR}/geolocator_apple/geolocator_apple.framework",
-				"${BUILT_PRODUCTS_DIR}/home_widget/home_widget.framework",
 				"${BUILT_PRODUCTS_DIR}/location2_ios/location2_ios.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 				"${BUILT_PRODUCTS_DIR}/objectbox_flutter_libs/objectbox_flutter_libs.framework",
@@ -870,7 +775,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Promises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftLocation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/background_fetch.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/connectivity_plus.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/device_info_plus.framework",
@@ -880,7 +784,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_native_splash.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/fluttertoast.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/geolocator_apple.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/home_widget.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/location2_ios.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/objectbox_flutter_libs.framework",
@@ -989,28 +892,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		96F5DC7E801C4A638856C1D1 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Bladenight HomeWidgetExtension-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1094,18 +975,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E28CD8512D39A844001DA87C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E28CD8A62D39AFC9001DA87C /* AppIntent.swift in Sources */,
-				E28CD8A72D39AFC9001DA87C /* Bladenight_HomeWidget.swift in Sources */,
-				E28CD8A82D39AFC9001DA87C /* Bladenight_HomeWidgetBundle.swift in Sources */,
-				E28CD8A92D39AFC9001DA87C /* Bladenight_HomeWidgetControl.swift in Sources */,
-				E28CD8AA2D39AFC9001DA87C /* Bladenight_HomeWidgetLiveActivity.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1134,11 +1003,6 @@
 			isa = PBXTargetDependency;
 			target = 46CF9B9E28CDEC3900041078 /* OneSignalNotificationServiceExtension */;
 			targetProxy = 46CF9BA528CDEC3900041078 /* PBXContainerItemProxy */;
-		};
-		E28CD8672D39A845001DA87C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E28CD8542D39A844001DA87C /* Bladenight HomeWidgetExtension */;
-			targetProxy = E28CD8662D39A845001DA87C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1962,138 +1826,6 @@
 			};
 			name = Release;
 		};
-		E28CD86A2D39A845001DA87C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D98CBE8290D5E487E89B0611 /* Pods-Bladenight HomeWidgetExtension.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = "Bladenight HomeWidgetExtension.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2501;
-				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Bladenight HomeWidget/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Bladenight HomeWidget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.25.01;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.huth.bn.Bladenight-HomeWidget";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		E28CD86B2D39A845001DA87C /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 702921C2F544D34B5D53D1FF /* Pods-Bladenight HomeWidgetExtension.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = "Bladenight HomeWidgetExtension.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2501;
-				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Bladenight HomeWidget/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Bladenight HomeWidget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.25.01;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.huth.bn.Bladenight-HomeWidget";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		E28CD86C2D39A845001DA87C /* Profile */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DDFC02B1CEE00C05F0E6EF76 /* Pods-Bladenight HomeWidgetExtension.profile.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = "Bladenight HomeWidgetExtension.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2501;
-				DEVELOPMENT_TEAM = 6Y9WT2BQR9;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Bladenight HomeWidget/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Bladenight HomeWidget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.25.01;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.huth.bn.Bladenight-HomeWidget";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Profile;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2163,16 +1895,6 @@
 				97C147061CF9000F007C117D /* Debug */,
 				97C147071CF9000F007C117D /* Release */,
 				249021D4217E4FDB00AE95B9 /* Profile */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E28CD86E2D39A845001DA87C /* Build configuration list for PBXNativeTarget "Bladenight HomeWidgetExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E28CD86A2D39A845001DA87C /* Debug */,
-				E28CD86B2D39A845001DA87C /* Release */,
-				E28CD86C2D39A845001DA87C /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_widget/home_widget.dart';
+//import 'package:home_widget/home_widget.dart';
 import 'package:universal_io/io.dart';
 
 import '../models/event.dart';
@@ -31,8 +31,8 @@ class HomeWidgetHelper {
   }
 
   void _init() {
-    HomeWidget.setAppGroupId('app.huth.bn.Bladenight-HomeWidget');
-    var widgets = HomeWidget.getInstalledWidgets();
+    /* HomeWidget.setAppGroupId('app.huth.bn.Bladenight-HomeWidget');
+    var widgets = HomeWidget.getInstalledWidgets();*/
   }
 
   static updateEvent(Event event) async {
@@ -43,12 +43,12 @@ class HomeWidgetHelper {
     event = ProviderContainer().read(activeEventProvider);
     //convert to WatchEventModel included translations
     data.length = event.routeLength.toString();
-    var widgets = await HomeWidget.getInstalledWidgets();
+    /* var widgets = await HomeWidget.getInstalledWidgets();
     var sent = await HomeWidget.saveWidgetData('data', data.toJson());
     await HomeWidget.updateWidget(
       name: 'HomeWidgetExampleProvider',
       iOSName: 'HomeWidgetExample',
-    );
+    );*/
   }
 
   static updateRealtimeData(bg.Location location) {
@@ -61,7 +61,7 @@ class HomeWidgetHelper {
     data.route = 'route ${DateTime.now().toIso8601String()}';
     data.eventStatus = 'evtroute ${DateTime.now().toIso8601String()}';
 
-    HomeWidget.saveWidgetData('Bladenight HomeWidget', data.toJson());
+    // HomeWidget.saveWidgetData('Bladenight HomeWidget', data.toJson());
   }
 
   static setIsLocationTracking(bool isTracking) {

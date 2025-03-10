@@ -72,7 +72,7 @@ dependencies:
   go_transitions: ^0.7.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  home_widget: ^0.7.0
+  #home_widget: ^0.7.0
   http: any
   internet_connection_checker: ^3.0.1
   intl: any
@@ -159,7 +159,7 @@ analyzer:
     - custom_lint
 
 dependency_overrides:
-  shared_preferences_android: ^2.4.0
+  #shared_preferences_android: ^2.4.0
   wakelock_macos:
     #git:
     #  url: https://github.com/xunreal75/wakelock.git
@@ -184,7 +184,7 @@ dependency_overrides:
     #  path: wakelock_windows
     #  ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
     path: ../wakelock/wakelock_windows
-  web: ^1.0.0
+  #web: ^1.0.0
 
 
 # Remove when firebase_ui_firestore stops relying on 0.17.0.

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:go_router/go_router.dart';
-import 'package:home_widget/home_widget.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';

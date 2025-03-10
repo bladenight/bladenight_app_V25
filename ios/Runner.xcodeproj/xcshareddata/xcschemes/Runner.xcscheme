@@ -50,6 +50,7 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
+      enableGPUValidationMode = "1"
       allowLocationSimulation = "NO"
       showNonLocalizedStrings = "YES">
       <BuildableProductRunnable

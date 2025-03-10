@@ -13,7 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:home_widget/home_widget.dart';
+
+//import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_settings/app_configuration_helper.dart';
@@ -71,7 +72,7 @@ void main() async {
       }
       initializeMappers();
 
-      HomeWidget.registerInteractivityCallback(backgroundCallback);
+      //HomeWidget.registerInteractivityCallback(backgroundCallback);
       await Hive.initFlutter();
       Hive.registerAdapter(ColorAdapter());
       Hive.registerAdapter(ImageAndLinkAdapter());

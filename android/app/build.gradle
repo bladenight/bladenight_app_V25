@@ -37,12 +37,14 @@ apply from: "${background_geolocation.projectDir}/background_geolocation.gradle"
 
 
 android {
-
+    namespace 'de.bladenight.bladenight_app_flutter'
     compileSdkVersion rootProject.ext.compileSdkVersion
     ndkVersion flutter.ndkVersion
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+// Enable core library desugaring to support Java 8+ language features
+        coreLibraryDesugaringEnabled true
     }
 
 
@@ -135,6 +137,7 @@ dependencies {
     //implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.android.material:material:1.9.0'
     //implementation("androidx.work:work-runtime-ktx:2.8.1") //workaround for Onesignal 5.0.0 duplicateClass
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 }
 // ...
 flutter {
