@@ -50,7 +50,10 @@ class AppStartNotifier extends _$AppStartNotifier {
       fMTCInitialized = true;
     }
 
-    await initPlatformState();
+    if (Platform.isAndroid) {
+      ///TODO fix bgfetch
+      //await initPlatformState();
+    }
     if (Platform.isAndroid) {
       /// Register BackgroundGeolocation headless-task
       /* bg.BackgroundGeolocation.registerHeadlessTask(

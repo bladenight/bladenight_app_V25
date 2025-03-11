@@ -32,11 +32,8 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
           return Container();
         } else {*/
     return ClipRRect(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(widget.borderRadius),
-        topRight: Radius.circular(widget.borderRadius),
-        bottomLeft: Radius.circular(widget.borderRadius),
-        bottomRight: Radius.circular(widget.borderRadius),
+      borderRadius: BorderRadius.all(
+        Radius.circular(widget.borderRadius),
       ),
       child: Builder(
         builder: (context) {
@@ -45,6 +42,7 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
             MapLayerOverview(
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.pinchZoom |
+                    InteractiveFlag.pinchMove |
                     InteractiveFlag.doubleTapDragZoom,
                 enableMultiFingerGestureRace: false,
               ),

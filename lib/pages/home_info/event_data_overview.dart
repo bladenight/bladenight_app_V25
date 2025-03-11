@@ -75,180 +75,170 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
   Widget build(BuildContext context) {
     var normalFontSize =
         CupertinoTheme.of(context).textTheme.textStyle.fontSize ?? 12;
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-      ),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (!widget.nextEvent.isActive)
-              Container(
-                alignment: Alignment.topCenter,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    widget.nextEvent.statusColor.withValues(alpha: 0.8),
-                    widget.nextEvent.statusColor,
-                    widget.nextEvent.statusColor.withValues(alpha: 0.8)
-                  ]),
-                  color: widget.nextEvent.statusColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(widget.borderRadius),
-                    topRight: Radius.circular(widget.borderRadius),
-                    bottomLeft: Radius.circular(widget.borderRadius),
-                    bottomRight: Radius.circular(widget.borderRadius),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!widget.nextEvent.isActive)
+          Container(
+            alignment: Alignment.topCenter,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                widget.nextEvent.statusColor.withValues(alpha: 0.8),
+                widget.nextEvent.statusColor,
+                widget.nextEvent.statusColor.withValues(alpha: 0.8)
+              ]),
+              color: widget.nextEvent.statusColor,
+              borderRadius: BorderRadius.all(
+                Radius.circular(widget.borderRadius),
+              ),
+            ),
+            child: Text.rich(
+              textAlign: TextAlign.center,
+              TextSpan(
+                style: TextStyle(
+                    color: widget.nextEvent.statusTextColor,
+                    fontSize: CupertinoTheme.of(context)
+                                .textTheme
+                                .textStyle
+                                .fontSize !=
+                            null
+                        ? CupertinoTheme.of(context)
+                                .textTheme
+                                .textStyle
+                                .fontSize! *
+                            1.2
+                        : 14,
+                    fontWeight: FontWeight.w800),
+                children: [
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: Image.asset(
+                      widget.nextEvent.trafficLight,
+                      height: 15,
+                    ),
                   ),
-                ),
-                child: Text.rich(
-                  textAlign: TextAlign.center,
+                  WidgetSpan(
+                      child: SizedBox(
+                    width: 5,
+                  )),
                   TextSpan(
-                    style: TextStyle(
-                        color: widget.nextEvent.statusTextColor,
-                        fontSize: CupertinoTheme.of(context)
-                                    .textTheme
-                                    .textStyle
-                                    .fontSize !=
-                                null
-                            ? CupertinoTheme.of(context)
-                                    .textTheme
-                                    .textStyle
-                                    .fontSize! *
-                                1.2
-                            : 14,
-                        fontWeight: FontWeight.w800),
-                    children: [
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Image.asset(
-                          widget.nextEvent.trafficLight,
-                          height: 15,
-                        ),
-                      ),
-                      WidgetSpan(
-                          child: SizedBox(
-                        width: 5,
-                      )),
-                      TextSpan(
-                        text: widget.nextEvent.statusText,
-                      ),
-                      WidgetSpan(
-                          child: SizedBox(
-                        width: 5,
-                      )),
-                    ],
+                    text: widget.nextEvent.statusText,
                   ),
-                ),
+                  WidgetSpan(
+                      child: SizedBox(
+                    width: 5,
+                  )),
+                ],
               ),
-            if (widget.showMap)
-              GestureDetector(
-                onTap: () {},
-                child: EventMapSmall(nextEvent: widget.nextEvent),
-              ),
-            HiddenAdminButton(
-              child: SizedBox(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 2, bottom: 2),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        if (!widget.eventIsRunning)
-                          eventDetail(
-                              context: context,
-                              animation: _valueAnimation,
-                              normalFontSize: normalFontSize,
-                              dividerWidth: 110,
-                              dividerColor:
-                                  CupertinoTheme.of(context).primaryColor,
-                              text: widget.nextEvent.status ==
-                                      EventStatus.noevent
-                                  ? Localize.of(context).noEventPlanned
-                                  : DateFormatter(Localize.of(context))
-                                      .getLocalDayDateTimeRepresentation(widget
-                                          .nextEvent.getUtcIso8601DateTime),
-                              description: Localize.of(context).nextEvent,
-                              showSeparator: widget.showSeparator),
-                        if (MediaQuery.orientationOf(context) ==
-                                Orientation.landscape &&
-                            widget.nextEvent.status != EventStatus.noevent) ...[
-                          eventDetail(
-                              context: context,
-                              animation: _valueAnimation,
-                              normalFontSize: normalFontSize,
-                              dividerWidth: 70,
-                              dividerColor:
-                                  CupertinoTheme.of(context).primaryColor,
-                              text: widget.nextEvent.routeName,
-                              description: Localize.of(context).route,
-                              showSeparator: widget.showSeparator),
-                          eventDetail(
-                              context: context,
-                              animation: _valueAnimation,
-                              normalFontSize: normalFontSize,
-                              dividerWidth: 70,
-                              dividerColor:
-                                  CupertinoTheme.of(context).primaryColor,
-                              text: widget.nextEvent.formatDistance,
-                              description: Localize.of(context).length,
-                              showSeparator: widget.showSeparator)
-                        ]
-                      ]),
+            ),
+          ),
+        if (widget.showMap)
+          GestureDetector(
+            onTap: () {},
+            child: EventMapSmall(
+                nextEvent: widget.nextEvent, borderRadius: widget.borderRadius),
+          ),
+        HiddenAdminButton(
+          child: SizedBox(
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    if (!widget.eventIsRunning)
+                      eventDetail(
+                          context: context,
+                          animation: _valueAnimation,
+                          normalFontSize: normalFontSize,
+                          dividerWidth: 110,
+                          dividerColor: CupertinoTheme.of(context).primaryColor,
+                          text: widget.nextEvent.status == EventStatus.noevent
+                              ? Localize.of(context).noEventPlanned
+                              : DateFormatter(Localize.of(context))
+                                  .getLocalDayDateTimeRepresentation(
+                                      widget.nextEvent.getUtcIso8601DateTime),
+                          description: Localize.of(context).nextEvent,
+                          showSeparator: widget.showSeparator),
+                    if (MediaQuery.orientationOf(context) ==
+                            Orientation.landscape &&
+                        widget.nextEvent.status != EventStatus.noevent) ...[
+                      eventDetail(
+                          context: context,
+                          animation: _valueAnimation,
+                          normalFontSize: normalFontSize,
+                          dividerWidth: 70,
+                          dividerColor: CupertinoTheme.of(context).primaryColor,
+                          text: widget.nextEvent.routeName,
+                          description: Localize.of(context).route,
+                          showSeparator: widget.showSeparator),
+                      eventDetail(
+                          context: context,
+                          animation: _valueAnimation,
+                          normalFontSize: normalFontSize,
+                          dividerWidth: 70,
+                          dividerColor: CupertinoTheme.of(context).primaryColor,
+                          text: widget.nextEvent.formatDistance,
+                          description: Localize.of(context).length,
+                          showSeparator: widget.showSeparator)
+                    ]
+                  ]),
+            ),
+          ),
+        ),
+        if (MediaQuery.orientationOf(context) == Orientation.portrait &&
+            widget.nextEvent.status != EventStatus.noevent)
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                eventDetail(
+                    context: context,
+                    animation: _valueAnimation,
+                    normalFontSize: normalFontSize,
+                    dividerWidth: 70,
+                    dividerColor: CupertinoTheme.of(context).primaryColor,
+                    text: widget.nextEvent.routeName,
+                    description: Localize.of(context).route,
+                    showSeparator: false),
+                eventDetail(
+                    context: context,
+                    animation: _valueAnimation,
+                    normalFontSize: normalFontSize,
+                    dividerWidth: 70,
+                    dividerColor: CupertinoTheme.of(context).primaryColor,
+                    text: widget.nextEvent.formatDistance,
+                    description: Localize.of(context).length,
+                    showSeparator: false)
+              ],
+            ),
+          ),
+        if (widget.nextEvent.status != EventStatus.noevent &&
+            !widget.eventIsRunning)
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
+            child: SizedBox(
+              width: double.infinity,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${Localize.of(context).start} '
+                  '${widget.nextEvent.getStartPoint.startPoint}',
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(color: CupertinoTheme.of(context).primaryColor),
                 ),
               ),
             ),
-            if (MediaQuery.orientationOf(context) == Orientation.portrait &&
-                widget.nextEvent.status != EventStatus.noevent)
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10, right: 10, top: 2, bottom: 2),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    eventDetail(
-                        context: context,
-                        animation: _valueAnimation,
-                        normalFontSize: normalFontSize,
-                        dividerWidth: 70,
-                        dividerColor: CupertinoTheme.of(context).primaryColor,
-                        text: widget.nextEvent.routeName,
-                        description: Localize.of(context).route,
-                        showSeparator: widget.showSeparator),
-                    eventDetail(
-                        context: context,
-                        animation: _valueAnimation,
-                        normalFontSize: normalFontSize,
-                        dividerWidth: 70,
-                        dividerColor: CupertinoTheme.of(context).primaryColor,
-                        text: widget.nextEvent.formatDistance,
-                        description: Localize.of(context).length,
-                        showSeparator: widget.showSeparator)
-                  ],
-                ),
-              ),
-            if (widget.nextEvent.status != EventStatus.noevent &&
-                !widget.eventIsRunning)
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10, right: 10, top: 2, bottom: 2),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      '${Localize.of(context).start} '
-                      '${widget.nextEvent.getStartPoint.startPoint}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: CupertinoTheme.of(context).primaryColor),
-                    ),
-                  ),
-                ),
-              ),
-          ]),
+          ),
+      ],
     );
   }
 }

@@ -60,8 +60,8 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
       statusText = 'Initialisiere Eventdaten';
     });
 
-    ref.invalidate(updateImagesAndLinksProvider);
     await ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
+    ref.invalidate(updateImagesAndLinksProvider);
     setState(() {
       statusText = Localize.of(context).finished;
     });

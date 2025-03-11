@@ -573,8 +573,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   }
 
   void _showOverlay(BuildContext context, {required String text}) async {
-    var bottomOffset =
-        kIsWeb ? kBottomNavigationBarHeight : kBottomNavigationBarHeight;
+    var bottomOffset = kIsWeb ? kBottomNavigationBarHeight : 10.0;
 
     OverlayState? overlayState = Overlay.of(context);
     OverlayEntry overlayEntry;

@@ -17,7 +17,6 @@ import '../../providers/active_event_provider.dart';
 import '../../providers/active_event_route_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/map/use_open_street_map_provider.dart';
-import '../widgets/common_widgets/no_connection_warning.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/gps_info_and_map_copyright.dart';
 import 'widgets/headings_layer.dart';

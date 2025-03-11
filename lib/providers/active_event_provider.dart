@@ -7,6 +7,7 @@ import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../models/event.dart';
+import '../models/route.dart';
 import '../wamp/wamp_v2.dart';
 
 part 'active_event_provider.g.dart';
@@ -14,11 +15,22 @@ part 'active_event_provider.g.dart';
 @Riverpod(keepAlive: true)
 class ActiveEvent extends _$ActiveEvent {
   StreamSubscription<Event>? evtStream;
+
   @override
   Event build() {
     state = HiveSettingsDB.getActualEvent;
-    evtStream = WampV2().eventUpdateStreamController.stream.listen((event) {
-      state = event;
+    evtStream =
+        WampV2().eventUpdateStreamController.stream.listen((event) async {
+      if (event.nodes == [] && event.status != EventStatus.noevent) {
+        //get route points if not delivered
+        var rn =
+            await RoutePoints.getActiveRoutePointsByNameWamp(event.routeName);
+        state = event.copyWith(nodes: rn.points);
+        SendToWatch.updateEvent(event);
+      } else {
+        state = event;
+        SendToWatch.updateEvent(event);
+      }
     });
 
     ref.onDispose(() {
@@ -46,12 +58,19 @@ class ActiveEvent extends _$ActiveEvent {
           //don't update
           return;
         }
-        SendToWatch.updateEvent(rpcEvent);
+
         var oldEventInPrefs = HiveSettingsDB.getActualEvent;
-        //get route points on event update to update Map
         if (oldEventInPrefs.compareTo(rpcEvent) != 0) {
-          state = rpcEvent;
-          HiveSettingsDB.setActualEvent(rpcEvent);
+          if (rpcEvent.nodes == [] && rpcEvent.status != EventStatus.noevent) {
+            //get route points if not delivered
+            var rn = await RoutePoints.getActiveRoutePointsByNameWamp(
+                rpcEvent.routeName);
+            state = rpcEvent.copyWith(nodes: rn.points);
+          } else {
+            state = rpcEvent;
+          }
+          SendToWatch.updateEvent(state);
+          HiveSettingsDB.setActualEvent(state);
           if ((DateTime.now().difference(lastUpdate)).inSeconds > 60) {
             //avoid multiple notifications on force update
             if (!kIsWeb && state.status != EventStatus.finished) {
@@ -59,7 +78,6 @@ class ActiveEvent extends _$ActiveEvent {
             }
           }
         }
-        state = rpcEvent;
       }
     } catch (e) {
       print(e);

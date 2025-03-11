@@ -129,7 +129,7 @@ class _HomePageState extends ConsumerState<HomePage>
       ref.read(messagesLogicProvider).updateServerMessages();
     });
     super.initState();
-    _initImages();
+
     //_initURIHandler();
     //_incomingLinkHandler();
     initWatchFlutterChannel();
@@ -142,6 +142,7 @@ class _HomePageState extends ConsumerState<HomePage>
         initOneSignal();
         await _initNotifications();
       }
+      _initImages();
       await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
     });
   }

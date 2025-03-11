@@ -15,13 +15,16 @@ class TintedCupertinoButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoButton.tinted(
-        sizeStyle: CupertinoButtonSize.small,
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-        color: color ?? CupertinoTheme.of(context).primaryContrastingColor,
-        onPressed: onPressed,
-        onLongPress: onLongPress,
-        child: child);
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: CupertinoButton.tinted(
+          sizeStyle: CupertinoButtonSize.small,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          color: color ?? CupertinoTheme.of(context).primaryContrastingColor,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          child: child),
+    );
   }
 }
 

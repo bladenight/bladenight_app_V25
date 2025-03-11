@@ -24,11 +24,7 @@ class ShadowBoxWidget extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           color: CupertinoTheme.of(context).barBackgroundColor,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(borderRadius),
-              bottomLeft: Radius.circular(borderRadius),
-              bottomRight: Radius.circular(borderRadius),
-              topRight: Radius.circular(borderRadius)),
+          borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
           boxShadow: <BoxShadow>[
             BoxShadow(
                 color: boxShadowColor,
