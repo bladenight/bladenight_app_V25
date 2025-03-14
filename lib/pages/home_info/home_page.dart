@@ -137,6 +137,7 @@ class _HomePageState extends ConsumerState<HomePage>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!kIsWeb) {
         await FMTCStore(fmtcTileStoreName).manage.create();
+
         //_openIntroScreenFirstTime();
         _openBladeguardRequestFirstTime();
         initOneSignal();

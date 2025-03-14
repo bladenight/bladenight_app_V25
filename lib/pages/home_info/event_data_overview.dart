@@ -5,6 +5,7 @@ import '../../generated/l10n.dart';
 import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
 import '../widgets/buttons/hidden_admin_button.dart';
+import '../widgets/event_info/event_state_traffic_light.dart';
 import 'event_map_small.dart';
 
 ///Event overview
@@ -79,61 +80,6 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!widget.nextEvent.isActive)
-          Container(
-            alignment: Alignment.topCenter,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                widget.nextEvent.statusColor.withValues(alpha: 0.8),
-                widget.nextEvent.statusColor,
-                widget.nextEvent.statusColor.withValues(alpha: 0.8)
-              ]),
-              color: widget.nextEvent.statusColor,
-              borderRadius: BorderRadius.all(
-                Radius.circular(widget.borderRadius),
-              ),
-            ),
-            child: Text.rich(
-              textAlign: TextAlign.center,
-              TextSpan(
-                style: TextStyle(
-                    color: widget.nextEvent.statusTextColor,
-                    fontSize: CupertinoTheme.of(context)
-                                .textTheme
-                                .textStyle
-                                .fontSize !=
-                            null
-                        ? CupertinoTheme.of(context)
-                                .textTheme
-                                .textStyle
-                                .fontSize! *
-                            1.2
-                        : 14,
-                    fontWeight: FontWeight.w800),
-                children: [
-                  WidgetSpan(
-                    alignment: PlaceholderAlignment.middle,
-                    child: Image.asset(
-                      widget.nextEvent.trafficLight,
-                      height: 15,
-                    ),
-                  ),
-                  WidgetSpan(
-                      child: SizedBox(
-                    width: 5,
-                  )),
-                  TextSpan(
-                    text: widget.nextEvent.statusText,
-                  ),
-                  WidgetSpan(
-                      child: SizedBox(
-                    width: 5,
-                  )),
-                ],
-              ),
-            ),
-          ),
         if (widget.showMap)
           GestureDetector(
             onTap: () {},
@@ -184,7 +130,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                           text: widget.nextEvent.formatDistance,
                           description: Localize.of(context).length,
                           showSeparator: widget.showSeparator)
-                    ]
+                    ],
                   ]),
             ),
           ),
@@ -237,6 +183,26 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                 ),
               ),
             ),
+          ),
+        if (!widget.nextEvent.isNoEventPlanned)
+          Container(
+            alignment: Alignment.topCenter,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                widget.nextEvent.statusColor.withValues(alpha: 0.5),
+                widget.nextEvent.statusColor,
+                widget.nextEvent.statusColor.withValues(alpha: 0.5)
+              ]),
+              color: widget.nextEvent.statusColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(0),
+                topRight: Radius.circular(0),
+                bottomLeft: Radius.circular(widget.borderRadius),
+                bottomRight: Radius.circular(widget.borderRadius),
+              ),
+            ),
+            child: EventStatusTrafficLight(event: widget.nextEvent),
           ),
       ],
     );

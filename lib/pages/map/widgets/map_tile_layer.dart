@@ -5,6 +5,7 @@ import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
+import '../../../app_settings/app_constants.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/logger.dart';
 import '../../../providers/active_event_provider.dart';
@@ -100,8 +101,10 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
       tileProvider: kIsWeb
           ? CancellableNetworkTileProvider()
           : FMTCTileProvider(
-              stores: {'fmtcTileStoreName': null},
-              cachedValidDuration: Duration(days: 90)),
+              loadingStrategy: BrowseLoadingStrategy.cacheFirst,
+              stores: {fmtcTileStoreName: BrowseStoreStrategy.readUpdateCreate},
+              cachedValidDuration: Duration(days: 90),
+            ),
       /*BnCachedAssetProvider(
               context: context,
               errorListener: () {
