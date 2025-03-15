@@ -15,7 +15,7 @@ class ColorMapper extends SimpleMapper<Color> {
 
   @override
   dynamic encode(Color self) {
-    return "#${(self.value & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}";
+    return "#${(self.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}";
   }
 }
 

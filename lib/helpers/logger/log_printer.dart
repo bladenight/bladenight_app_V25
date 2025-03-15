@@ -177,9 +177,9 @@ class BnLogPrinter extends LogPrinter {
   /// Contains the parsed rules resulting from [excludeBox] and [noBoxingByDefault].
   late final Map<Level, bool> _includeBox;
 
-  String _topBorder = '';
-  String _middleBorder = '';
-  String _bottomBorder = '';
+  final String _topBorder = '';
+  final String _middleBorder = '';
+  final String _bottomBorder = '';
 
   /// Controls the colors used for the different log levels.
   ///

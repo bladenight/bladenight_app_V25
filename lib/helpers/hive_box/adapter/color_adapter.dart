@@ -9,5 +9,6 @@ class ColorAdapter extends TypeAdapter<Color> {
   Color read(BinaryReader reader) => Color(reader.readUint32());
 
   @override
-  void write(BinaryWriter writer, Color obj) => writer.writeUint32(obj.value);
+  void write(BinaryWriter writer, Color obj) =>
+      writer.writeUint32(obj.toARGB32());
 }

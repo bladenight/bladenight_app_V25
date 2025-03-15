@@ -1,20 +1,11 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-//import 'package:home_widget/home_widget.dart';
 import 'package:universal_io/io.dart';
 
 import '../models/event.dart';
 import '../models/home_widget/home_widget_data_model.dart';
-import '../models/moving_point.dart';
-import '../models/route.dart';
-import '../models/watch_event.dart';
 import '../providers/active_event_provider.dart';
-import '../providers/is_tracking_provider.dart';
-import '../providers/location_provider.dart';
-import 'enums/tracking_type.dart';
-import 'logger.dart';
 
 class HomeWidgetHelper {
   static HomeWidgetHelper? _instance;

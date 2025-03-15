@@ -90,6 +90,10 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Image.asset(
+                'assets/images/2025_Bladenight_Logo_Skm.jpg',
+                width: MediaQuery.sizeOf(context).width * 0.9,
+              ),
               Text(statusText),
               LogoAnimate(),
             ],
