@@ -28,15 +28,15 @@ String defaultStartPoint = 'München - Bavariapark';
 String startPoint = 'München - Bavariapark';
 
 const String emptySponsorPlaceholder = kIsWeb
-    ? 'assets/images/empty_sponsor_logo.png'
-    : 'assets/images/empty_sponsor_logo.png';
+    ? 'assets/images/2025_Bladenight_Logo_Skm.jpg'
+    : 'assets/images/2025_Bladenight_Logo_Skm.jpg';
 
 const String secondLogoPlaceholder = 'assets/images/skatemunich.png';
 
 const String skmLogoPlaceholder =
-    'assets/images/2024_Skate_Munich_Logo-2845x548_y.png';
+    'assets/images/2025_Skate_Munich_Logo-2845x548_y.png';
 const String bnLogoPlaceholder =
-    'assets/images/2024_Blade_Night_Logo-2845x548_y.png';
+    'assets/images/2025_Blade_Night_Logo-2845x548_y.png';
 const String specialPointImagePlaceHolder =
     'assets/images/skatemunich_child_orange_circle.png';
 
