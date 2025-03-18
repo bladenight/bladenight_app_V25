@@ -14,7 +14,7 @@ import '../generated/l10n.dart';
 import '../main.dart';
 import 'device_info_helper.dart';
 import 'hive_box/hive_settings_db.dart';
-import 'logger.dart';
+import 'logger/logger.dart';
 
 enum LocationPermissionStatus {
   unknown,

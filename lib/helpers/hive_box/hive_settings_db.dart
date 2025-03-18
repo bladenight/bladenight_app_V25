@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:talker_logger/talker_logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/app_constants.dart';
@@ -20,7 +21,7 @@ import '../../models/event.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../models/user_gpx_point.dart';
-import '../logger.dart';
+import '../logger/logger.dart';
 import '../notification/onesignal_handler.dart';
 import '../time_converter_helper.dart';
 import '../uuid_helper.dart';
@@ -142,16 +143,16 @@ class HiveSettingsDB {
     _hiveBox.put(_hasShownProminentDisclosure, val);
   }
 
-  static const String _fLogLevel = 'fLogLevelPref';
+  static const String _fLogLevel = 'talkerLogLevelPref';
 
   ///get loglevel FLog
-  static Level get flogLogLevel {
+  static LogLevel get flogLogLevel {
     var levelIndex = _hiveBox.get(_fLogLevel, defaultValue: Level.info.index);
-    return Level.values[levelIndex];
+    return LogLevel.values[levelIndex];
   }
 
   ///set loglevel
-  static void setFlogLevel(Level level) {
+  static void setFlogLevel(LogLevel level) {
     if (!kIsWeb) BnLog.info(text: 'setFlogLevel to ${level.index}');
     _hiveBox.put(_fLogLevel, level.index);
   }

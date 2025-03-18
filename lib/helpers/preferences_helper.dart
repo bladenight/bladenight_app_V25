@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/friend.dart';
 import '../models/image_and_link.dart';
 import '../models/images_and_links.dart';
-import 'logger.dart';
+import 'logger/logger.dart';
 
 class PreferencesHelper {
   static const String _friendPref = 'friendlist';

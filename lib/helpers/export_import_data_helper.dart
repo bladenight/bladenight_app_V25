@@ -25,7 +25,7 @@ import '../providers/friends_provider.dart';
 import 'device_info_helper.dart';
 import 'device_id_helper.dart';
 import 'hive_box/hive_settings_db.dart';
-import 'logger.dart';
+import 'logger/logger.dart';
 import 'notification/toast_notification.dart';
 import 'preferences_helper.dart';
 

@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../generated/l10n.dart';
 import '../main.dart';
 import 'hive_box/hive_settings_db.dart';
-import 'logger.dart';
+import 'logger/logger.dart';
 
 class Launch {
   static void launchUrlFromString(String inUrl,

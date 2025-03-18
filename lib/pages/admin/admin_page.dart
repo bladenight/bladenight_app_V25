@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/device_id_helper.dart';
-import '../../helpers/logger.dart';
+import '../../helpers/logger/logger.dart';
 import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
 import '../../models/messages/kill_server.dart';

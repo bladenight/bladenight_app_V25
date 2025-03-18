@@ -14,7 +14,7 @@ import '../../models/external_app_message.dart';
 import '../../providers/messages_provider.dart';
 import '../device_info_helper.dart';
 import '../hive_box/hive_settings_db.dart';
-import '../logger.dart';
+import '../logger/logger.dart';
 import '../url_launch_helper.dart';
 import '../uuid_helper.dart';
 

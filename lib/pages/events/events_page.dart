@@ -9,7 +9,7 @@ import 'package:sticky_headers/sticky_headers/widget.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/device_id_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/logger.dart';
+import '../../helpers/logger/logger.dart';
 import '../../models/event.dart';
 import '../../models/messages/edit_event_on_server.dart';
 import '../../providers/admin/admin_pwd_provider.dart';

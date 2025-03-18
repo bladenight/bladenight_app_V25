@@ -5,23 +5,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:hive_flutter/adapters.dart';
-import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:talker/talker.dart';
 import 'package:universal_io/io.dart';
 
-import '../app_settings/server_connections.dart';
-import '../generated/l10n.dart';
-import 'hive_box/hive_settings_db.dart';
-import 'log_filter.dart';
-import 'logger/console_output.dart';
-import 'logger/file_logger.dart';
-import 'logger/log_printer.dart';
+import '../../app_settings/server_connections.dart';
+import '../../generated/l10n.dart';
+import '../../main.dart';
+import '../hive_box/hive_settings_db.dart';
+import 'file_logger.dart';
 
 class BnLog {
-  static Logger _logger = Logger();
-  static FileLogger? _fileLogger;
-  static final List<LogOutput> _logOutputs = [];
+  static FileLogger? fileLogger;
+  static final Talker _talkerLogger = talker;
+  static LogLevel _logLevel = kDebugMode ? LogLevel.verbose : LogLevel.info;
 
   //static late LazyBox<String>? _logBox;
   static final DateTime _startTime = DateTime.now();
@@ -46,52 +43,24 @@ class BnLog {
     _logBox = null;*/
   }
 
-  static Future<bool> init({Level? logLevel, LogFilter? filter}) async {
+  static Future<bool> init({LogLevel? logLevel}) async {
     await Hive.initFlutter();
     try {
       //if (!Hive.isBoxOpen(hiveBoxLoggingDbName) || _logBox == null) {
       //_logBox = await Hive.openLazyBox<String>(hiveBoxLoggingDbName).timeout(Duration(seconds: 5));
       // if (_logBox != null) {
       //add logger
-      _logOutputs.clear();
-      //_logOutputs.add(BnLogOutput(_logBox!, _startTime));
 
-      if (HiveSettingsDB.flogLogLevel != Level.off) {
-        if (kDebugMode || kProfileMode || localTesting) {
-          _logOutputs.add(ConsoleLogOutput());
-        }
-
-        try {
-          final directory = await _getLogDir();
-          _fileLogger = FileLogger(directory);
-          _logOutputs.add(_fileLogger!);
-        } catch (e) {
-          print("Can't open logfile getLogDir_logger.txt ${e.toString()}");
-          return false;
-        }
+      if (kDebugMode || kProfileMode || localTesting) {
+        logLevel = LogLevel.verbose;
       }
-
-      //_logger.close();
-      _logger = Logger(
-        filter: BnLogFilter(), //important for logging in release version
-        output: MultiOutput(_logOutputs),
-        level: logLevel ?? HiveSettingsDB.flogLogLevel,
-        printer: BnLogPrinter(
-          startTime: _startTime,
-          methodCount: 3,
-          errorMethodCount: 8,
-          lineLength: 120,
-          colors: false,
-          printEmojis: false,
-          printTime: true,
-        ),
-      );
-      _logger.i(
-          '${DateTime.now().toIso8601String()} Started logging ${logLevel ?? HiveSettingsDB.flogLogLevel}');
-
+      logLevel = HiveSettingsDB.flogLogLevel;
+      if (!kIsWeb) {
+        fileLogger = FileLogger(await _getLogDir());
+      }
       return true;
     } catch (e) {
-      print('error open logBox $error');
+      print('error init logger $error');
       return false;
     }
     return true;
@@ -105,7 +74,10 @@ class BnLog {
     String? dataLogType,
     StackTrace? stacktrace,
   }) async {
-    _logger.d('$text\n$className\n$methodName', error: exception);
+    //critical 0 // info 3 verbose 5
+    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.debug)) return;
+
+    _talkerLogger.debug('$text\nclass:$className\nmethod:$methodName');
   }
 
   ///Print extended info
@@ -117,34 +89,32 @@ class BnLog {
     String? dataLogType,
     StackTrace? stacktrace,
   }) async {
-    _logger.i('$text\n$className\n$methodName', error: null, stackTrace: null);
+    //critical 0 // info 3 verbose 5
+    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.info)) return;
+
+    _talkerLogger.info(text);
   }
 
   static void info({
     String? className,
     String? methodName,
     required String text,
-    /*dynamic exception,
-    String? dataLogType,
-    StackTrace? stacktrace,*/
   }) async {
-    _logger.i('$text\n$className\n$methodName', error: null, stackTrace: null);
+    //critical 0 // info 3 verbose 5
+    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.info)) return;
+
+    _talkerLogger.info(text);
   }
 
   static void warning({
     String? className,
     String? methodName,
     required String text,
-    dynamic exception,
     String? dataLogType,
-    StackTrace? stacktrace,
   }) async {
-    _logger.w(
-        '$text'
+    _talkerLogger.warning('$text'
         '${className != null ? '\nc:$className' : ""}'
-        '${methodName != null ? '\nm:$methodName' : ""}',
-        error: exception,
-        stackTrace: stacktrace);
+        '${methodName != null ? '\nm:$methodName' : ""}');
   }
 
   /// trace
@@ -161,15 +131,16 @@ class BnLog {
     String? className,
     String? methodName,
     required String text,
-    dynamic exception,
-    StackTrace? stacktrace,
   }) async {
-    _logger.t(
-        '$text'
+    //critical 0 // info 3 verbose 5
+    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.verbose)) {
+      return;
+    }
+    var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
-        '${methodName != null ? '\nm:$methodName' : ""}',
-        error: exception,
-        stackTrace: stacktrace);
+        '${methodName != null ? '\nm:$methodName' : ""}';
+    _talkerLogger.verbose(logText);
+    fileLogger?.output(logText);
   }
 
   /// error
@@ -188,12 +159,15 @@ class BnLog {
     String? dataLogType,
     StackTrace? stacktrace,
   }) async {
-    _logger.e(
-        '$text'
+    //critical 0 // info 3 verbose 5
+    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.error)) return;
+    var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
-        '${methodName != null ? '\nm:$methodName' : ""}',
-        error: exception,
-        stackTrace: stacktrace);
+        '${methodName != null ? '\nm:$methodName' : ""}'
+        '${exception != null ? '\nex:${exception.toString()}' : ""}'
+        '${stacktrace != null ? '\nex:$stacktrace' : ""}';
+    _talkerLogger.error(logText);
+    fileLogger?.output(logText);
   }
 
   /// fatal
@@ -212,12 +186,14 @@ class BnLog {
     String? dataLogType,
     StackTrace? stacktrace,
   }) async {
-    _logger.f(
-        '$text'
+    //always written
+    var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
-        '${methodName != null ? '\nm:$methodName' : ""}',
-        error: exception,
-        stackTrace: stacktrace);
+        '${methodName != null ? '\nm:$methodName' : ""}'
+        '${exception != null ? '\nex:${exception.toString()}' : ""}'
+        '${stacktrace != null ? '\nex:$stacktrace' : ""}';
+    _talkerLogger.critical(logText);
+    fileLogger?.output(logText);
   }
 
   static Future<List<FileSystemEntity>> collectLogFiles() async {
@@ -261,48 +237,23 @@ class BnLog {
     if (!await init()) {
       return Future.value(true);
     }
-    for (var logger in _logOutputs) {
-      if (logger.runtimeType == FileLogger) {
-        (logger as FileLogger).clearLogs();
-      }
-    }
-    int counter = 0;
-    var leftDate =
-        DateTime.now().subtract(deleteOlderThan).millisecondsSinceEpoch;
 
-    /* for (var key in _logBox!.keys) {
-      var intVal = int.tryParse(key);
-      if (intVal != null && intVal < leftDate) {
-        await _logBox?.delete(key);
-        counter++;
-      }
-    }
-    BnLog.info(
-        text:
-            'Tidied up logs before ${DateTime.fromMillisecondsSinceEpoch(leftDate)}  - $counter entries removed');
-    */
     return Future.value(true);
   }
 
-  static Level getActiveLogLevel() {
-    return HiveSettingsDB.flogLogLevel;
+  static LogLevel getActiveLogLevel() {
+    return _logLevel;
   }
 
-  static void setActiveLogLevel(Level logLevel) async {
+  static void setActiveLogLevel(LogLevel logLevel) async {
+    _logLevel = logLevel;
+    _talkerLogger.info('Loglevel changed to ${logLevel.name}');
     HiveSettingsDB.setFlogLevel(logLevel);
-    return;
-    if (await init()) {
-      return;
-    }
-    //await _logBox?.flush();
-    //await _logBox?.close();
-    init();
-    BnLog.info(text: 'Loglevel changed to ${logLevel.name}');
   }
 
-  static Future<Level?> showLogLevelDialog(BuildContext context,
-      {Level? current}) {
-    Level? logLevel;
+  static Future<LogLevel?> showLogLevelDialog(BuildContext context,
+      {LogLevel? current}) {
+    LogLevel? logLevel;
     return showCupertinoDialog(
       context: context,
       barrierDismissible: true,
@@ -315,11 +266,11 @@ class BnLog {
               scrollController:
                   FixedExtentScrollController(initialItem: current?.index ?? 0),
               onSelectedItemChanged: (int value) {
-                logLevel = Level.values[value];
+                logLevel = LogLevel.values[value];
               },
               itemExtent: 50,
               children: [
-                for (var status in Level.values)
+                for (var status in LogLevel.values)
                   Center(child: Text(status.name)),
               ],
             ),
@@ -338,37 +289,37 @@ class BnLog {
                   BnLog.setActiveLogLevel(logLevel!);
 
                   if (!kIsWeb) {
-                    if (logLevel == Level.all || logLevel == Level.trace) {
+                    if (logLevel == LogLevel.verbose) {
                       bg.BackgroundGeolocation.setConfig(
                           bg.Config(logLevel: bg.Config.LOG_LEVEL_VERBOSE));
                       HiveSettingsDB.setBackgroundLocationLogLevel(
                           bg.Config.LOG_LEVEL_VERBOSE);
-                    } else if (logLevel == Level.debug) {
+                    } else if (logLevel == LogLevel.debug) {
                       bg.BackgroundGeolocation.setConfig(
                           bg.Config(logLevel: bg.Config.LOG_LEVEL_DEBUG));
                       HiveSettingsDB.setBackgroundLocationLogLevel(
                           bg.Config.LOG_LEVEL_DEBUG);
-                    } else if (logLevel == Level.info) {
+                    } else if (logLevel == LogLevel.info) {
                       bg.BackgroundGeolocation.setConfig(
-                          bg.Config(logLevel: bg.Config.LOG_LEVEL_OFF));
+                          bg.Config(logLevel: bg.Config.LOG_LEVEL_INFO));
                       HiveSettingsDB.setBackgroundLocationLogLevel(
                           bg.Config.LOG_LEVEL_INFO);
-                    } else if (logLevel == Level.warning) {
+                    } else if (logLevel == LogLevel.warning) {
                       bg.BackgroundGeolocation.setConfig(
                           bg.Config(logLevel: bg.Config.LOG_LEVEL_WARNING));
                       HiveSettingsDB.setBackgroundLocationLogLevel(
                           bg.Config.LOG_LEVEL_WARNING);
-                    } else if (logLevel == Level.error) {
+                    } else if (logLevel == LogLevel.error) {
                       bg.BackgroundGeolocation.setConfig(
                           bg.Config(logLevel: bg.Config.LOG_LEVEL_ERROR));
                       HiveSettingsDB.setBackgroundLocationLogLevel(
                           bg.Config.LOG_LEVEL_ERROR);
-                    } else if (logLevel == Level.off) {
+                    } /*else if (logLevel == LogLevel.info) {
                       bg.BackgroundGeolocation.setConfig(
                           bg.Config(logLevel: bg.Config.LOG_LEVEL_OFF));
                       HiveSettingsDB.setBackgroundLocationLogLevel(
                           bg.Config.LOG_LEVEL_OFF);
-                    }
+                    }*/
                   }
                 }
                 Navigator.of(context).pop(logLevel);

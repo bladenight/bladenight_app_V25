@@ -16,7 +16,7 @@ import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/file_name_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/logger.dart';
+import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/notification_helper.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/url_launch_helper.dart';
@@ -31,6 +31,7 @@ import '../../providers/active_event_provider.dart';
 import '../../providers/messages_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/route_providers.dart';
+import 'event_info_web.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -226,8 +227,8 @@ class _HomePageState extends ConsumerState<HomePage>
                                   'Warning server address is ${HiveSettingsDB.customServerAddress}'),
                             ),
                           ),
-                        EventInfo(),
-                        //kIsWeb ? EventInfoWeb() : EventInfo(),
+                        //EventInfo(),
+                        kIsWeb ? EventInfoWeb() : EventInfo(),
 
                         Builder(builder: (context) {
                           var sponsors = ref.watch(sponsorsProvider);
@@ -346,11 +347,20 @@ class _HomePageState extends ConsumerState<HomePage>
                                                     fadeInDuration:
                                                         const Duration(
                                                             milliseconds: 300),
-                                                    errorListener: (error) {
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        Center(
+                                                          child: Text(
+                                                            sponsors
+                                                                .value![index]
+                                                                .description,
+                                                          ),
+                                                        ),
+                                                    errorListener: (e) {
                                                       BnLog.warning(
-                                                          text:
-                                                              'The sponsor image error ${sponsors.value![index].imageUrl}) could not been loaded',
-                                                          exception: error);
+                                                        text:
+                                                            'The sponsor image error ${sponsors.value![index].imageUrl} ${e.toString()}) could not been loaded',
+                                                      );
                                                     }
 
                                                     /* Image.asset(

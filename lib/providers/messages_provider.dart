@@ -10,7 +10,7 @@ import '../helpers/crypt_helper.dart';
 import '../helpers/hive_box/app_server_config_db.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/hive_box/messages_db.dart';
-import '../helpers/logger.dart';
+import '../helpers/logger/logger.dart';
 import '../models/external_app_message.dart';
 import '../models/external_app_messages.dart';
 
@@ -89,6 +89,10 @@ class MessagesLogic with ChangeNotifier {
   }
 
   Future<void> updateServerMessages() async {
+    if (kIsWeb) {
+      //due  CORS issue ignore messages
+      return;
+    }
     try {
       var lastTimeStamp = await MessagesDb.getLastMessagesUpdateTimestamp;
       var isBladeGuard = HiveSettingsDB.bgSettingVisible;
@@ -117,7 +121,7 @@ class MessagesLogic with ChangeNotifier {
       if (decodedMsg == null) return;
       var msg = jsonDecode(decodedMsg);
       List<ExternalAppMessage> msgList = [];
-      for (var mess in msg){
+      for (var mess in msg) {
         var detMsg = ExternalAppMessageMapper.fromMap(mess);
         msgList.add(detMsg);
       }
@@ -137,7 +141,7 @@ final filteredMessages = Provider<List<ExternalAppMessage>>((ref) {
   final searchStringProvider = ref.watch(messageNameProvider);
 
   if (searchStringProvider.isEmpty) {
-    messages.sort((a,b)=> a.timeStamp.compareTo(b.timeStamp));
+    messages.sort((a, b) => a.timeStamp.compareTo(b.timeStamp));
     return messages;
   }
 
@@ -145,7 +149,8 @@ final filteredMessages = Provider<List<ExternalAppMessage>>((ref) {
       f.body.toLowerCase().contains(searchStringProvider.toLowerCase()) ||
       f.title.toLowerCase().contains(searchStringProvider.toLowerCase()));
 
-  var fMsgList =  filteredMessagesList.toList()..sort((a,b)=> a.timeStamp.compareTo(b.timeStamp));
+  var fMsgList = filteredMessagesList.toList()
+    ..sort((a, b) => a.timeStamp.compareTo(b.timeStamp));
   return fMsgList;
 });
 

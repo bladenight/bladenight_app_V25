@@ -12,7 +12,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/server_connections.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/logger.dart';
+import '../helpers/logger/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../models/event.dart';
 import '../models/realtime_update.dart';
@@ -143,8 +143,8 @@ class WampV2 {
       }, timeout: const Duration(seconds: 5));
     } on TimeoutException catch (_) {
       BnLog.trace(text: 'Timeout _startStream');
-    } catch (_) {
-      BnLog.trace(text: 'InitWamp error $e', exception: e);
+    } catch (ex) {
+      BnLog.trace(text: 'InitWamp error:$e ex:${ex.toString()}');
     } finally {
       if (wampConnectionState != WampConnectionState.connected) {
         wampConnectionState = WampConnectionState.failed;

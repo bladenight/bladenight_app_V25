@@ -6,7 +6,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:universal_io/io.dart';
 
 import '../helpers/debug_helper.dart';
-import '../helpers/logger.dart';
+import '../helpers/logger/logger.dart';
 import '../wamp/wamp_v2.dart';
 
 /// States to connection to internet and wamp server

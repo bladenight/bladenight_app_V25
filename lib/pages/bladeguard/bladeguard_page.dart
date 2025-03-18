@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/logger.dart';
+import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../helpers/url_launch_helper.dart';
@@ -198,7 +198,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                         ),
                       ],
                       //---------
-                      if (isBladeguard) ...[
+                      if (!kIsWeb && isBladeguard) ...[
                         if (!bladeguardSettingsVisible) ...[
                           const EmailTextField(),
                           const BirthdayDatePicker(),
@@ -283,10 +283,11 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               )
                           ],
                         ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        child: const SendMailWidget(),
-                      ),
+                      if (!kIsWeb)
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: const SendMailWidget(),
+                        ),
                       if (!kIsWeb &&
                           HiveSettingsDB.isBladeGuard &&
                           HiveSettingsDB.bgSettingVisible) ...[

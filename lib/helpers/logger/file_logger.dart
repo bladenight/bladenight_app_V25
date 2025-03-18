@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:synchronized/synchronized.dart' show Lock;
 import 'package:universal_io/io.dart';
 import 'package:path/path.dart' as path;
 
-import 'package:logger/logger.dart';
+class FileLogger {
+  final _lock = Lock();
 
-class FileLogger implements LogOutput {
   FileLogger(this.directory);
 
   File? file;
   Directory directory;
 
-  @override
   Future<void> init() async {
     try {
       final ds = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -28,27 +28,21 @@ class FileLogger implements LogOutput {
     }
   }
 
-  @override
   Future<void> destroy() {
     file = null;
     return Future.value();
   }
 
-  @override
-  void output(OutputEvent event) async {
-    var logString = '';
-    if (file != null) {
-      for (var line in event.lines) {
-        logString += '${line.toString()}\n';
+  void output(String event) {
+    _lock.synchronized(() async {
+      if (file != null) {
+        if (event.isNotEmpty) {
+          await file?.writeAsString(event, mode: FileMode.writeOnlyAppend);
+        }
+      } else {
+        print(event);
       }
-      if (logString.isNotEmpty) {
-        await file?.writeAsString(logString, mode: FileMode.writeOnlyAppend);
-      }
-    } else {
-      for (var line in event.lines) {
-        print(line);
-      }
-    }
+    });
   }
 
   Future<List<FileSystemEntity>> _collectLogFiles() async {

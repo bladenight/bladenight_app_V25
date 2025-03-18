@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:go_router/go_router.dart';
-import 'package:wakelock/wakelock.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
 import 'package:vector_math/vector_math.dart' show radians;
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/app_constants.dart';
@@ -31,8 +31,9 @@ import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/home_widget_helper.dart';
 import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
-import '../helpers/logger.dart';
+import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
+import '../helpers/notification/toast_notification.dart';
 import '../helpers/speed_to_color.dart';
 import '../helpers/uuid_helper.dart';
 import '../helpers/wamp/subscribe_message.dart';
@@ -641,8 +642,7 @@ class LocationProvider with ChangeNotifier {
       BnLog.warning(
           className: toString(),
           methodName: '_subToUpdates',
-          text: '_subUpdates Failed:',
-          exception: e);
+          text: '_subUpdates Failed: ${e.toString()}');
     }
   }
 
@@ -719,7 +719,7 @@ class LocationProvider with ChangeNotifier {
       bg.BackgroundGeolocation.stop().then((bg.State state) async {
         _trackingStopped();
         await startStopGeoFencing();
-        await Wakelock.disable();
+        await WakelockPlus.disable();
         await startRealtimeUpdateSubscriptionIfNotTracking();
       }).catchError((error) {
         BnLog.error(text: 'Stopping location error: $error');
@@ -902,7 +902,7 @@ class LocationProvider with ChangeNotifier {
     }
 
     if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
-      await Wakelock.enable();
+      await WakelockPlus.enable();
     }
 
     if (kIsWeb || HiveSettingsDB.useAlternativeLocationProvider) {
@@ -1193,15 +1193,19 @@ class LocationProvider with ChangeNotifier {
     if (HiveSettingsDB.wakeLockEnabled &&
         _wakelockDisabled == false &&
         !isCharging &&
-        batteryLevel < 0.3) {
+        batteryLevel < 0.2) {
       BnLog.trace(text: 'checkWakelock disable Wakelock');
-      await Wakelock.disable();
+      //await WakelockPlus.disable();
       _wakelockDisabled = true;
+      NotificationHelper().showString(
+          id: DateTime.now().hashCode,
+          text: Localize.current.wakelockWarnBattery);
+      //showToast(message: Localize.current.wakelockEnabled);
     }
     if (HiveSettingsDB.wakeLockEnabled &&
         _wakelockDisabled == true &&
-        (batteryLevel > 0.3 || isCharging)) {
-      await Wakelock.enable();
+        (batteryLevel > 0.2 || isCharging)) {
+      //await WakelockPlus.enable();
       _wakelockDisabled = false;
       //showToast(message: Localize.current.wakelockEnabled);
     }

@@ -8,6 +8,7 @@ import '../helpers/notification/notification_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../models/event.dart';
 import '../models/route.dart';
+import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 
 part 'active_event_provider.g.dart';
@@ -18,7 +19,8 @@ class ActiveEvent extends _$ActiveEvent {
 
   @override
   Event build() {
-    state = HiveSettingsDB.getActualEvent;
+    state = HiveSettingsDB.getActualEvent
+        .copyWith(rpcException: WampException('offline'));
     evtStream =
         WampV2().eventUpdateStreamController.stream.listen((event) async {
       if (event.nodes == [] && event.status != EventStatus.noevent) {
@@ -53,7 +55,7 @@ class ActiveEvent extends _$ActiveEvent {
         var rpcEvent = await Event.getEventWamp(forceUpdate: forceUpdate);
         if (rpcEvent.rpcException != null) {
           state.rpcException = rpcEvent.rpcException;
-          await Future.delayed(const Duration(milliseconds: 500));
+          await Future.delayed(const Duration(milliseconds: 1000));
           refresh(forceUpdate: true);
           //don't update
           return;

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-import '../../../helpers/logger.dart';
+import '../../../helpers/logger/logger.dart';
 import '../../../models/user_gpx_point.dart';
 import '../../../providers/location_provider.dart';
 import '../buttons/tinted_cupertino_button.dart';

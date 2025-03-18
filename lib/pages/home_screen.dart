@@ -12,7 +12,7 @@ import '../app_settings/app_constants.dart';
 import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/logger.dart';
+import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/watch_communication_helper.dart';

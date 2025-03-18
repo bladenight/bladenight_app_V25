@@ -1,0 +1,33 @@
+import 'package:flutter/material.dart';
+
+const defaultCardBackgroundColor = Color.fromARGB(255, 49, 49, 49);
+
+class TalkerBaseCard extends StatelessWidget {
+  const TalkerBaseCard({
+    super.key,
+    required this.child,
+    required this.color,
+    this.padding = const EdgeInsets.all(8),
+    this.backgroundColor = defaultCardBackgroundColor,
+  });
+
+  final Widget child;
+  final Color color;
+  final EdgeInsets? padding;
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: padding,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        border: Border.all(color: color),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: child,
+    );
+  }
+}

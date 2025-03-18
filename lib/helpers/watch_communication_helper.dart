@@ -10,7 +10,7 @@ import '../providers/active_event_provider.dart';
 import '../providers/is_tracking_provider.dart';
 import '../providers/location_provider.dart';
 import 'enums/tracking_type.dart';
-import 'logger.dart';
+import 'logger/logger.dart';
 
 const MethodChannel channel = MethodChannel('bladenightchannel');
 const String flutterToWatch = 'flutterToWatch';

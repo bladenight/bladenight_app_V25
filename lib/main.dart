@@ -13,9 +13,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-//import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart'
+    show TalkerRiverpodObserver;
+import 'package:talker_riverpod_logger/talker_riverpod_logger_settings.dart';
 
 import 'app_settings/app_configuration_helper.dart';
 import 'app_settings/globals.dart';
@@ -24,7 +26,7 @@ import 'firebase_options.dart';
 import 'helpers/hive_box/adapter/color_adapter.dart';
 import 'helpers/hive_box/app_server_config_db.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
-import 'helpers/logger.dart';
+import 'helpers/logger/logger.dart';
 import 'helpers/preferences_helper.dart';
 import 'main.init.dart';
 import 'models/image_and_link.dart';
@@ -34,6 +36,7 @@ import 'pages/widgets/startup_widgets/app_root_widget.dart';
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 const String openRouteMapRoute = '/eventRoute';
 const String openBladeguardOnSite = '/bgOnsite';
+late Talker talker;
 
 @pragma('vm:entry-point')
 FutureOr<void> backgroundCallback(Uri? data) async {
@@ -43,33 +46,11 @@ FutureOr<void> backgroundCallback(Uri? data) async {
 }
 
 void main() async {
-  FlutterError.onError = (FlutterErrorDetails details) {
-    print('FlutterError.onError main $details');
-  };
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      if (!kReleaseMode) {
-        FlutterError.onError = (details) {
-          FlutterError.presentError(details);
-        };
-      }
-      if (!kDebugMode && !kIsWeb) {
-        await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        );
-        FlutterError.onError = (errorDetails) {
-          FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-        };
-        // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-        PlatformDispatcher.instance.onError = (error, stack) {
-          if (Globals.logToCrashlytics) {
-            FirebaseCrashlytics.instance
-                .recordError(error, stack, fatal: false);
-          }
-          return true;
-        };
-      }
+      talker = TalkerFlutter.init();
+      initCrashLogs();
       initializeMappers();
 
       //HomeWidget.registerInteractivityCallback(backgroundCallback);
@@ -107,6 +88,18 @@ void main() async {
       runApp(
         ProviderScope(
           observers: [
+            if (riverPodDebugLog)
+              TalkerRiverpodObserver(
+                talker: talker,
+                settings: TalkerRiverpodLoggerSettings(
+                  enabled: true,
+                  printStateFullData: false,
+                  printProviderAdded: true,
+                  printProviderUpdated: true,
+                  printProviderDisposed: true,
+                  printProviderFailed: true,
+                ),
+              ),
             //LoggingObserver(),
           ],
           child: AppRootWidget(),
@@ -125,6 +118,43 @@ void main() async {
           text: '$error\n$stackTrace');
     },
   );
+}
+
+void initCrashLogs() async {
+  if (kDebugMode) {
+    FlutterError.onError = (details) {
+      talker.log(
+        details.exceptionAsString(),
+        logLevel: LogLevel.critical,
+        stackTrace: details.stack,
+      );
+      FlutterError.presentError(details);
+    };
+  } else if (!kDebugMode && !kIsWeb) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    FlutterError.onError = (details) {
+      talker.log(
+        details.exceptionAsString(),
+        logLevel: LogLevel.critical,
+        stackTrace: details.stack,
+      );
+      if (Globals.logToCrashlytics) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+      }
+    };
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      if (Globals.logToCrashlytics) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: false);
+      }
+      talker.handle(error, stack, 'PlatformDispatcher Instance Error');
+      return true;
+    };
+    talker.log('BladenightApp started');
+    talker.configure(logger: TalkerLogger());
+  }
 }
 
 Future<bool> initLogger() async {

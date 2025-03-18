@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import '../app_settings/app_constants.dart';
-import '../helpers/logger.dart';
+import '../helpers/logger/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../pages/admin/widgets/admin_password_dialog.dart';
 import 'bn_wamp_message.dart';

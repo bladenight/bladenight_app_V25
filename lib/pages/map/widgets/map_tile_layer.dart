@@ -7,7 +7,7 @@ import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_ti
 
 import '../../../app_settings/app_constants.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
-import '../../../helpers/logger.dart';
+import '../../../helpers/logger/logger.dart';
 import '../../../providers/active_event_provider.dart';
 import '../../../providers/map/use_open_street_map_provider.dart';
 import 'bn_dark_container.dart';

@@ -518,6 +518,7 @@
   "editEvent": "Event ändern",
   "deleteEvent": "Event löschen",
   "wakelockEnabled": "Display bleibt an",
+  "wakelockWarnBattery": "Display an aktiviert - Warnung, das Batterieladung niedrig.",
   "wakelockDisabled": "Display schaltet ab - Akku laden",
   "resetTrackPointsStoreTitle": "Lösche alle aufgezeichneten und gespeicherten Tracks",
   "resetTrackPointsStore": "Lösche alle Routendaten",

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../helpers/enums/tracking_type.dart';
-import '../../helpers/logger.dart';
+import '../../helpers/logger/logger.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/location_provider.dart';
@@ -53,7 +53,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    BnLog.debug(text: 'event_info - didChangeAppLifecycleState $state');
+    BnLog.info(text: 'event_info - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       initEventUpdates(forceUpdate: true);
       ref.read(locationProvider).refreshRealtimeData(forceUpdate: true);

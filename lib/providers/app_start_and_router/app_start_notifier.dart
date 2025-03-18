@@ -8,7 +8,7 @@ import 'package:universal_io/io.dart';
 import '../../app_settings/app_constants.dart';
 import '../../helpers/debug_helper.dart';
 import '../../helpers/device_id_helper.dart';
-import '../../helpers/logger.dart';
+import '../../helpers/logger/logger.dart';
 import '../../main.dart';
 
 part 'app_start_notifier.g.dart';

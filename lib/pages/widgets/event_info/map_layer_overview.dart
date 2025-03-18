@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -51,9 +52,15 @@ class MapLayerOverview extends ConsumerStatefulWidget {
 class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
   @override
   Widget build(BuildContext context) {
-    var bounds = widget.event.nodes.getBounds;
+    LatLngBounds bounds;
+    if (MediaQuery.orientationOf(context) == Orientation.portrait) {
+      bounds = widget.event.nodes.getBounds;
+    } else {
+      bounds = widget.event.nodes.getBoundsLandscape;
+    }
+    var factor = kIsWeb ? 0.6 : 0.4;
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.3,
+      height: MediaQuery.of(context).size.height * factor,
       child: FlutterMap(
           mapController: widget.controller,
           options: MapOptions(
@@ -63,7 +70,7 @@ class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
               minZoom: widget.minZoom,
               maxZoom: widget.maxZoom,
               cameraConstraint: CameraConstraint.containCenter(bounds: bounds),
-              //initialCenter: widget.startPoint,
+              initialCenter: widget.startPoint,
               /* cameraConstraint: MapSettings.openStreetMapEnabled ||
                     widget.event.hasSpecialStartPoint
                 ? const CameraConstraint

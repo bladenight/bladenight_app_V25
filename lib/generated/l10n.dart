@@ -18,17 +18,20 @@ class Localize {
   static Localize? _current;
 
   static Localize get current {
-    assert(_current != null,
-        'No instance of Localize was loaded. Try to initialize the Localize delegate before accessing Localize.current.');
+    assert(
+      _current != null,
+      'No instance of Localize was loaded. Try to initialize the Localize delegate before accessing Localize.current.',
+    );
     return _current!;
   }
 
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<Localize> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name =
+        (locale.countryCode?.isEmpty ?? false)
+            ? locale.languageCode
+            : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -41,8 +44,10 @@ class Localize {
 
   static Localize of(BuildContext context) {
     final instance = Localize.maybeOf(context);
-    assert(instance != null,
-        'No instance of Localize present in the widget tree. Did you add Localize.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of Localize present in the widget tree. Did you add Localize.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -242,12 +247,7 @@ class Localize {
 
   /// `Privacy`
   String get about_h_privacy {
-    return Intl.message(
-      'Privacy',
-      name: 'about_h_privacy',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Privacy', name: 'about_h_privacy', desc: '', args: []);
   }
 
   /// `Server application`
@@ -292,12 +292,7 @@ class Localize {
 
   /// `Lars Huth`
   String get about_lars {
-    return Intl.message(
-      'Lars Huth',
-      name: 'about_lars',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lars Huth', name: 'about_lars', desc: '', args: []);
   }
 
   /// `GNU General Public License v3.0`
@@ -392,12 +387,7 @@ class Localize {
 
   /// `ahead of me`
   String get aheadOfMe {
-    return Intl.message(
-      'ahead of me',
-      name: 'aheadOfMe',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('ahead of me', name: 'aheadOfMe', desc: '', args: []);
   }
 
   /// `Align map on direction and position`
@@ -422,12 +412,7 @@ class Localize {
 
   /// `No map align`
   String get alignNever {
-    return Intl.message(
-      'No map align',
-      name: 'alignNever',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('No map align', name: 'alignNever', desc: '', args: []);
   }
 
   /// `Align map on my position update only`
@@ -522,22 +507,12 @@ class Localize {
 
   /// `Anonymous`
   String get anonymous {
-    return Intl.message(
-      'Anonymous',
-      name: 'anonymous',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Anonymous', name: 'anonymous', desc: '', args: []);
   }
 
   /// `App-Id`
   String get appId {
-    return Intl.message(
-      'App-Id',
-      name: 'appId',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('App-Id', name: 'appId', desc: '', args: []);
   }
 
   /// `Unique application identification string`
@@ -562,12 +537,7 @@ class Localize {
 
   /// `BladeNight`
   String get appTitle {
-    return Intl.message(
-      'BladeNight',
-      name: 'appTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('BladeNight', name: 'appTitle', desc: '', args: []);
   }
 
   /// `Application support`
@@ -592,12 +562,7 @@ class Localize {
 
   /// `at`
   String get at {
-    return Intl.message(
-      'at',
-      name: 'at',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('at', name: 'at', desc: '', args: []);
   }
 
   /// `Info - please read - Stop automatic on finish`
@@ -632,12 +597,7 @@ class Localize {
 
   /// `behind me`
   String get behindMe {
-    return Intl.message(
-      'behind me',
-      name: 'behindMe',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('behind me', name: 'behindMe', desc: '', args: []);
   }
 
   /// `Background location update is active. Thank you for participating.`
@@ -662,12 +622,7 @@ class Localize {
 
   /// `Bladeguard team`
   String get bgTeam {
-    return Intl.message(
-      'Bladeguard team',
-      name: 'bgTeam',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Bladeguard team', name: 'bgTeam', desc: '', args: []);
   }
 
   /// `You're registered as Bladeguard today!`
@@ -732,22 +687,12 @@ class Localize {
 
   /// `Birthday`
   String get birthday {
-    return Intl.message(
-      'Birthday',
-      name: 'birthday',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Birthday', name: 'birthday', desc: '', args: []);
   }
 
   /// `Bladeguard`
   String get bladeGuard {
-    return Intl.message(
-      'Bladeguard',
-      name: 'bladeGuard',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Bladeguard', name: 'bladeGuard', desc: '', args: []);
   }
 
   /// `Bladeguard settings`
@@ -772,7 +717,9 @@ class Localize {
 
   /// `<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You read our Bladeguard-training module before your first trip and answers the questions.</li></ul><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="{bladeguardRegisterlink}">Online registration</a> and <a href="{ bladeguardPrivacyLink}">Data protection</a></p></h3>`
   String bladeguardInfo(
-      Object bladeguardRegisterlink, Object bladeguardPrivacyLink) {
+    Object bladeguardRegisterlink,
+    Object bladeguardPrivacyLink,
+  ) {
     return Intl.message(
       '<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You read our Bladeguard-training module before your first trip and answers the questions.</li></ul><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href="$bladeguardRegisterlink">Online registration</a> and <a href="$bladeguardPrivacyLink">Data protection</a></p></h3>',
       name: 'bladeguardInfo',
@@ -783,12 +730,7 @@ class Localize {
 
   /// `BladeNight`
   String get bladenight {
-    return Intl.message(
-      'BladeNight',
-      name: 'bladenight',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('BladeNight', name: 'bladenight', desc: '', args: []);
   }
 
   /// `BladeNight Update`
@@ -823,32 +765,17 @@ class Localize {
 
   /// `Cancel`
   String get cancel {
-    return Intl.message(
-      'Cancel',
-      name: 'cancel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
   }
 
   /// `Canceled 😞`
   String get canceled {
-    return Intl.message(
-      'Canceled 😞',
-      name: 'canceled',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Canceled 😞', name: 'canceled', desc: '', args: []);
   }
 
   /// `Change it.`
   String get change {
-    return Intl.message(
-      'Change it.',
-      name: 'change',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Change it.', name: 'change', desc: '', args: []);
   }
 
   /// `Change it to 'Allow all time'`
@@ -953,22 +880,12 @@ class Localize {
 
   /// `Confirmed`
   String get confirmed {
-    return Intl.message(
-      'Confirmed',
-      name: 'confirmed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Confirmed', name: 'confirmed', desc: '', args: []);
   }
 
   /// `Connected`
   String get connected {
-    return Intl.message(
-      'Connected',
-      name: 'connected',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Connected', name: 'connected', desc: '', args: []);
   }
 
   /// `Connecting...`
@@ -993,12 +910,7 @@ class Localize {
 
   /// `Copy code`
   String get copy {
-    return Intl.message(
-      'Copy code',
-      name: 'copy',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Copy code', name: 'copy', desc: '', args: []);
   }
 
   /// `Could not open application settings!`
@@ -1023,8 +935,10 @@ class Localize {
 
   /// `{date}`
   String dateIntl(DateTime date) {
-    final DateFormat dateDateFormat =
-        DateFormat('dd.MM.yyyy', Intl.getCurrentLocale());
+    final DateFormat dateDateFormat = DateFormat(
+      'dd.MM.yyyy',
+      Intl.getCurrentLocale(),
+    );
     final String dateString = dateDateFormat.format(date);
 
     return Intl.message(
@@ -1037,8 +951,10 @@ class Localize {
 
   /// `{date} at {time}`
   String dateTimeDayIntl(DateTime date, DateTime time) {
-    final DateFormat dateDateFormat =
-        DateFormat('E d.MMM y', Intl.getCurrentLocale());
+    final DateFormat dateDateFormat = DateFormat(
+      'E d.MMM y',
+      Intl.getCurrentLocale(),
+    );
     final String dateString = dateDateFormat.format(date);
 
     final DateFormat timeDateFormat = DateFormat.Hm(Intl.getCurrentLocale());
@@ -1054,8 +970,10 @@ class Localize {
 
   /// `{date} {time}`
   String dateTimeIntl(DateTime date, DateTime time) {
-    final DateFormat dateDateFormat =
-        DateFormat('d.M.y', Intl.getCurrentLocale());
+    final DateFormat dateDateFormat = DateFormat(
+      'd.M.y',
+      Intl.getCurrentLocale(),
+    );
     final String dateString = dateDateFormat.format(date);
 
     final DateFormat timeDateFormat = DateFormat.Hm(Intl.getCurrentLocale());
@@ -1071,8 +989,10 @@ class Localize {
 
   /// `{date} {time}Uhr`
   String dateTimeSecIntl(DateTime date, DateTime time) {
-    final DateFormat dateDateFormat =
-        DateFormat('dd.MM.yy', Intl.getCurrentLocale());
+    final DateFormat dateDateFormat = DateFormat(
+      'dd.MM.yy',
+      Intl.getCurrentLocale(),
+    );
     final String dateString = dateDateFormat.format(date);
 
     final DateFormat timeDateFormat = DateFormat.Hms(Intl.getCurrentLocale());
@@ -1088,12 +1008,7 @@ class Localize {
 
   /// `Delete`
   String get delete {
-    return Intl.message(
-      'Delete',
-      name: 'delete',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Delete', name: 'delete', desc: '', args: []);
   }
 
   /// `Delete Message`
@@ -1118,22 +1033,12 @@ class Localize {
 
   /// `Deny`
   String get deny {
-    return Intl.message(
-      'Deny',
-      name: 'deny',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Deny', name: 'deny', desc: '', args: []);
   }
 
   /// `Disconnect`
   String get disconnect {
-    return Intl.message(
-      'Disconnect',
-      name: 'disconnect',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Disconnect', name: 'disconnect', desc: '', args: []);
   }
 
   /// `Not connected`
@@ -1148,12 +1053,7 @@ class Localize {
 
   /// `distance`
   String get distance {
-    return Intl.message(
-      'distance',
-      name: 'distance',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('distance', name: 'distance', desc: '', args: []);
   }
 
   /// `Distance moved`
@@ -1228,22 +1128,12 @@ class Localize {
 
   /// `Done`
   String get done {
-    return Intl.message(
-      'Done',
-      name: 'done',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Done', name: 'done', desc: '', args: []);
   }
 
   /// `Edit friend`
   String get editfriend {
-    return Intl.message(
-      'Edit friend',
-      name: 'editfriend',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Edit friend', name: 'editfriend', desc: '', args: []);
   }
 
   /// `To use BladeNight-App also in the background (Share location with friends and increase procession accuracy) without screen on, should location settings changed to 'Allow all time'.`
@@ -1298,12 +1188,7 @@ class Localize {
 
   /// `Enter email`
   String get enterEmail {
-    return Intl.message(
-      'Enter email',
-      name: 'enterEmail',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Enter email', name: 'enterEmail', desc: '', args: []);
   }
 
   /// `Enter password`
@@ -1328,12 +1213,7 @@ class Localize {
 
   /// `Code: `
   String get entercode {
-    return Intl.message(
-      'Code: ',
-      name: 'entercode',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Code: ', name: 'entercode', desc: '', args: []);
   }
 
   /// `Enter your friends name`
@@ -1348,12 +1228,7 @@ class Localize {
 
   /// `Enter Name`
   String get entername {
-    return Intl.message(
-      'Enter Name',
-      name: 'entername',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Enter Name', name: 'entername', desc: '', args: []);
   }
 
   /// `Event not started`
@@ -1368,22 +1243,12 @@ class Localize {
 
   /// `Events`
   String get events {
-    return Intl.message(
-      'Events',
-      name: 'events',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Events', name: 'events', desc: '', args: []);
   }
 
   /// `Export`
   String get export {
-    return Intl.message(
-      'Export',
-      name: 'export',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Export', name: 'export', desc: '', args: []);
   }
 
   /// `Send logger data for support oder feature purposes`
@@ -1438,12 +1303,7 @@ class Localize {
 
   /// `Failed!`
   String get failed {
-    return Intl.message(
-      'Failed!',
-      name: 'failed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Failed!', name: 'failed', desc: '', args: []);
   }
 
   /// `Please try to establish the connection with a code. Ask your friend for the code displayed in their 'Friends' overview. You can only connect to the same friend once.`
@@ -1458,12 +1318,7 @@ class Localize {
 
   /// `Finish`
   String get finish {
-    return Intl.message(
-      'Finish',
-      name: 'finish',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Finish', name: 'finish', desc: '', args: []);
   }
 
   /// `Location sharing stopped - BladeNight finished`
@@ -1538,12 +1393,7 @@ class Localize {
 
   /// `Finished`
   String get finished {
-    return Intl.message(
-      'Finished',
-      name: 'finished',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Finished', name: 'finished', desc: '', args: []);
   }
 
   /// `Crashlytics on/off`
@@ -1618,32 +1468,17 @@ class Localize {
 
   /// `Forward`
   String get forward {
-    return Intl.message(
-      'Forward',
-      name: 'forward',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Forward', name: 'forward', desc: '', args: []);
   }
 
   /// `Friend`
   String get friend {
-    return Intl.message(
-      'Friend',
-      name: 'friend',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Friend', name: 'friend', desc: '', args: []);
   }
 
   /// `Friend is`
   String get friendIs {
-    return Intl.message(
-      'Friend is',
-      name: 'friendIs',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Friend is', name: 'friendIs', desc: '', args: []);
   }
 
   /// `Alternative can your friend scan the barcode below or manually enter the code {code} in his app`
@@ -1658,12 +1493,7 @@ class Localize {
 
   /// `Friends`
   String get friends {
-    return Intl.message(
-      'Friends',
-      name: 'friends',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Friends', name: 'friends', desc: '', args: []);
   }
 
   /// `Please support the exact presentation of BladeNight skater procession.\nYour friends will miss you!`
@@ -1678,12 +1508,7 @@ class Localize {
 
   /// `by`
   String get from {
-    return Intl.message(
-      'by',
-      name: 'from',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('by', name: 'from', desc: '', args: []);
   }
 
   /// `Loading data from server ...`
@@ -1698,22 +1523,12 @@ class Localize {
 
   /// `Head`
   String get head {
-    return Intl.message(
-      'Head',
-      name: 'head',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Head', name: 'head', desc: '', args: []);
   }
 
   /// `Home`
   String get home {
-    return Intl.message(
-      'Home',
-      name: 'home',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Home', name: 'home', desc: '', args: []);
   }
 
   /// `I am already a Bladeguard`
@@ -1738,12 +1553,7 @@ class Localize {
 
   /// `I am`
   String get iam {
-    return Intl.message(
-      'I am',
-      name: 'iam',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('I am', name: 'iam', desc: '', args: []);
   }
 
   /// `Note - some manufacturers switch off the apps due to unfavorable battery optimization or close the app. If so, please try disabling battery optimization for the app. Set to No restrictions.`
@@ -1768,12 +1578,7 @@ class Localize {
 
   /// `Import`
   String get import {
-    return Intl.message(
-      'Import',
-      name: 'import',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Import', name: 'import', desc: '', args: []);
   }
 
   /// `Attention this overwrites all friends and the ID. Export data beforehand! Be careful, delete the app on the device from which it was exported!`
@@ -1878,22 +1683,12 @@ class Localize {
 
   /// `Is ignored`
   String get isIgnoring {
-    return Intl.message(
-      'Is ignored',
-      name: 'isIgnoring',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Is ignored', name: 'isIgnoring', desc: '', args: []);
   }
 
   /// `is`
   String get ist {
-    return Intl.message(
-      'is',
-      name: 'ist',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('is', name: 'ist', desc: '', args: []);
   }
 
   /// `Show in map`
@@ -1908,32 +1703,17 @@ class Localize {
 
   /// `Last seen`
   String get lastseen {
-    return Intl.message(
-      'Last seen',
-      name: 'lastseen',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Last seen', name: 'lastseen', desc: '', args: []);
   }
 
   /// `Last update`
   String get lastupdate {
-    return Intl.message(
-      'Last update',
-      name: 'lastupdate',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Last update', name: 'lastupdate', desc: '', args: []);
   }
 
   /// `Later`
   String get later {
-    return Intl.message(
-      'Later',
-      name: 'later',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Later', name: 'later', desc: '', args: []);
   }
 
   /// `Leave settings`
@@ -1948,12 +1728,7 @@ class Localize {
 
   /// `Length`
   String get length {
-    return Intl.message(
-      'Length',
-      name: 'length',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Length', name: 'length', desc: '', args: []);
   }
 
   /// `Accept friend nearby`
@@ -2028,12 +1803,7 @@ class Localize {
 
   /// `Loading ...`
   String get loading {
-    return Intl.message(
-      'Loading ...',
-      name: 'loading',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Loading ...', name: 'loading', desc: '', args: []);
   }
 
   /// `Location is turned off in settings. Location sharing not possible. Press Play ▶️ or go to OS-Settings.`
@@ -2058,12 +1828,7 @@ class Localize {
 
   /// `login`
   String get login {
-    return Intl.message(
-      'login',
-      name: 'login',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('login', name: 'login', desc: '', args: []);
   }
 
   /// `Manufacturer`
@@ -2078,12 +1843,7 @@ class Localize {
 
   /// `Map`
   String get map {
-    return Intl.message(
-      'Map',
-      name: 'map',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Map', name: 'map', desc: '', args: []);
   }
 
   /// `Map follows my position`
@@ -2158,32 +1918,17 @@ class Localize {
 
   /// `Me`
   String get me {
-    return Intl.message(
-      'Me',
-      name: 'me',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Me', name: 'me', desc: '', args: []);
   }
 
   /// `Message`
   String get message {
-    return Intl.message(
-      'Message',
-      name: 'message',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Message', name: 'message', desc: '', args: []);
   }
 
   /// `Messages`
   String get messages {
-    return Intl.message(
-      'Messages',
-      name: 'messages',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Messages', name: 'messages', desc: '', args: []);
   }
 
   /// `Driven route`
@@ -2208,12 +1953,7 @@ class Localize {
 
   /// `Model`
   String get model {
-    return Intl.message(
-      'Model',
-      name: 'model',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Model', name: 'model', desc: '', args: []);
   }
 
   /// `You must enter a name!`
@@ -2228,12 +1968,7 @@ class Localize {
 
   /// `My name is`
   String get myName {
-    return Intl.message(
-      'My name is',
-      name: 'myName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('My name is', name: 'myName', desc: '', args: []);
   }
 
   /// `The specified name is transferred to the 2nd device when you connect to your friend. The name is only saved locally and is used for simplified linking via the local connection.`
@@ -2268,12 +2003,7 @@ class Localize {
 
   /// `never`
   String get never {
-    return Intl.message(
-      'never',
-      name: 'never',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('never', name: 'never', desc: '', args: []);
   }
 
   /// `New GPS data received`
@@ -2298,12 +2028,7 @@ class Localize {
 
   /// `No`
   String get no {
-    return Intl.message(
-      'No',
-      name: 'no',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('No', name: 'no', desc: '', args: []);
   }
 
   /// `Location 'When in use' is selected. Warning, there is no background update enabled. Your position data to show exact Bladnight train and share your position with your friends is only possible when the app is open in foreground. Please confirm it or change your settings to 'Allow all time'.\nFurthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.`
@@ -2338,12 +2063,7 @@ class Localize {
 
   /// `Nothing planned`
   String get noEvent {
-    return Intl.message(
-      'Nothing planned',
-      name: 'noEvent',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nothing planned', name: 'noEvent', desc: '', args: []);
   }
 
   /// `There are currently no further events planned`
@@ -2358,12 +2078,7 @@ class Localize {
 
   /// `No Event`
   String get noEventStarted {
-    return Intl.message(
-      'No Event',
-      name: 'noEventStarted',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('No Event', name: 'noEventStarted', desc: '', args: []);
   }
 
   /// `No Event - Autostop`
@@ -2458,12 +2173,7 @@ class Localize {
 
   /// `No GPS`
   String get nogps {
-    return Intl.message(
-      'No GPS',
-      name: 'nogps',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('No GPS', name: 'nogps', desc: '', args: []);
   }
 
   /// `Sorry, no GPS in device found or denied. Please check your privacy and location settings.`
@@ -2578,52 +2288,27 @@ class Localize {
 
   /// `Now`
   String get now {
-    return Intl.message(
-      'Now',
-      name: 'now',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Now', name: 'now', desc: '', args: []);
   }
 
   /// `Offline`
   String get offline {
-    return Intl.message(
-      'Offline',
-      name: 'offline',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Offline', name: 'offline', desc: '', args: []);
   }
 
   /// `OK`
   String get ok {
-    return Intl.message(
-      'OK',
-      name: 'ok',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('OK', name: 'ok', desc: '', args: []);
   }
 
   /// `at`
   String get on {
-    return Intl.message(
-      'at',
-      name: 'on',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('at', name: 'on', desc: '', args: []);
   }
 
   /// `on route`
   String get onRoute {
-    return Intl.message(
-      'on route',
-      name: 'onRoute',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('on route', name: 'onRoute', desc: '', args: []);
   }
 
   /// `OneSignal-Id: `
@@ -2648,12 +2333,7 @@ class Localize {
 
   /// `Online`
   String get online {
-    return Intl.message(
-      'Online',
-      name: 'online',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Online', name: 'online', desc: '', args: []);
   }
 
   /// `Location only 'Allow only while using the app' set.`
@@ -2708,62 +2388,32 @@ class Localize {
 
   /// `Own`
   String get own {
-    return Intl.message(
-      'Own',
-      name: 'own',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Own', name: 'own', desc: '', args: []);
   }
 
   /// `Participant`
   String get participant {
-    return Intl.message(
-      'Participant',
-      name: 'participant',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Participant', name: 'participant', desc: '', args: []);
   }
 
   /// `Pending`
   String get pending {
-    return Intl.message(
-      'Pending',
-      name: 'pending',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Pending', name: 'pending', desc: '', args: []);
   }
 
   /// `Mobile`
   String get phoneNumber {
-    return Intl.message(
-      'Mobile',
-      name: 'phoneNumber',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mobile', name: 'phoneNumber', desc: '', args: []);
   }
 
   /// `Pick a color.`
   String get pickcolor {
-    return Intl.message(
-      'Pick a color.',
-      name: 'pickcolor',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Pick a color.', name: 'pickcolor', desc: '', args: []);
   }
 
   /// `Position`
   String get position {
-    return Intl.message(
-      'Position',
-      name: 'position',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Position', name: 'position', desc: '', args: []);
   }
 
   /// `Positive if in front, negative if behind me.`
@@ -2778,12 +2428,7 @@ class Localize {
 
   /// `Proceed`
   String get proceed {
-    return Intl.message(
-      'Proceed',
-      name: 'proceed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Proceed', name: 'proceed', desc: '', args: []);
   }
 
   /// `The BladeNight application needs your location data to display the BladeNight procession and to share your position with your friends, while using the app. Please accept the location permission in the next step. You should select 'While using the App'. Later we will ask you again, prefered is 'Allow all time'. When you select 'When in use' you must let open the BladeNight on screen in forground, to share your location. If you deny locationaccess, only the BladeNight procession can be watched without location sharing.  So you can use other Apps in foreground.Furthermore, access to the motion activity detection (physical activity) is desirable. This increases battery efficiency by intelligently turning off location sharing when your device is detected as stationary. Therefore please activate this function.\nThe request is parted in 2 Steps.\nPlease support the accuracy of the train. Thank you so much.`
@@ -2858,12 +2503,7 @@ class Localize {
 
   /// `Read`
   String get readMessage {
-    return Intl.message(
-      'Read',
-      name: 'readMessage',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Read', name: 'readMessage', desc: '', args: []);
   }
 
   /// `Receive Bladeguard Infos`
@@ -2878,52 +2518,27 @@ class Localize {
 
   /// `received`
   String get received {
-    return Intl.message(
-      'received',
-      name: 'received',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('received', name: 'received', desc: '', args: []);
   }
 
   /// `Register`
   String get register {
-    return Intl.message(
-      'Register',
-      name: 'register',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Register', name: 'register', desc: '', args: []);
   }
 
   /// `Reload`
   String get reload {
-    return Intl.message(
-      'Reload',
-      name: 'reload',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Reload', name: 'reload', desc: '', args: []);
   }
 
   /// `rel. timediff.`
   String get reltime {
-    return Intl.message(
-      'rel. timediff.',
-      name: 'reltime',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('rel. timediff.', name: 'reltime', desc: '', args: []);
   }
 
   /// `Remove`
   String get remove {
-    return Intl.message(
-      'Remove',
-      name: 'remove',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Remove', name: 'remove', desc: '', args: []);
   }
 
   /// `Location always permissions`
@@ -3018,12 +2633,7 @@ class Localize {
 
   /// `Route`
   String get route {
-    return Intl.message(
-      'Route',
-      name: 'route',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Route', name: 'route', desc: '', args: []);
   }
 
   /// `Route overview`
@@ -3038,22 +2648,12 @@ class Localize {
 
   /// `We are on route`
   String get running {
-    return Intl.message(
-      'We are on route',
-      name: 'running',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('We are on route', name: 'running', desc: '', args: []);
   }
 
   /// `Save`
   String get save {
-    return Intl.message(
-      'Save',
-      name: 'save',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Save', name: 'save', desc: '', args: []);
   }
 
   /// `Scroll map to ...`
@@ -3088,17 +2688,15 @@ class Localize {
 
   /// `Send link`
   String get sendlink {
-    return Intl.message(
-      'Send link',
-      name: 'sendlink',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Send link', name: 'sendlink', desc: '', args: []);
   }
 
   /// `Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: {requestid} in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: bna://bladenight.app?addFriend&code={requestid} on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n{playStoreLink} and on Apple App Store \n{iosAppStoreLink}`
   String sendlinkdescription(
-      Object requestid, Object playStoreLink, Object iosAppStoreLink) {
+    Object requestid,
+    Object playStoreLink,
+    Object iosAppStoreLink,
+  ) {
     return Intl.message(
       'Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: $requestid in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: bna://bladenight.app?addFriend&code=$requestid on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n$playStoreLink and on Apple App Store \n$iosAppStoreLink',
       name: 'sendlinkdescription',
@@ -3179,12 +2777,7 @@ class Localize {
 
   /// `Icon size: `
   String get setIconSize {
-    return Intl.message(
-      'Icon size: ',
-      name: 'setIconSize',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Icon size: ', name: 'setIconSize', desc: '', args: []);
   }
 
   /// `Set size of me, friend and procession icons on the map`
@@ -3209,12 +2802,7 @@ class Localize {
 
   /// `Data logger`
   String get setLogData {
-    return Intl.message(
-      'Data logger',
-      name: 'setLogData',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Data logger', name: 'setLogData', desc: '', args: []);
   }
 
   /// `Own Color on Map`
@@ -3259,12 +2847,7 @@ class Localize {
 
   /// `Set Route`
   String get setRoute {
-    return Intl.message(
-      'Set Route',
-      name: 'setRoute',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Set Route', name: 'setRoute', desc: '', args: []);
   }
 
   /// `Start import Id und friends`
@@ -3279,22 +2862,12 @@ class Localize {
 
   /// `Set Status`
   String get setState {
-    return Intl.message(
-      'Set Status',
-      name: 'setState',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Set Status', name: 'setState', desc: '', args: []);
   }
 
   /// `System`
   String get setSystem {
-    return Intl.message(
-      'System',
-      name: 'setSystem',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('System', name: 'setSystem', desc: '', args: []);
   }
 
   /// `Choose your team!`
@@ -3309,12 +2882,7 @@ class Localize {
 
   /// `Change color`
   String get setcolor {
-    return Intl.message(
-      'Change color',
-      name: 'setcolor',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Change color', name: 'setcolor', desc: '', args: []);
   }
 
   /// `Export`
@@ -3339,12 +2907,7 @@ class Localize {
 
   /// `Settings`
   String get settings {
-    return Intl.message(
-      'Settings',
-      name: 'settings',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Settings', name: 'settings', desc: '', args: []);
   }
 
   /// `Show procession participants`
@@ -3399,22 +2962,12 @@ class Localize {
 
   /// `Show only`
   String get showonly {
-    return Intl.message(
-      'Show only',
-      name: 'showonly',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Show only', name: 'showonly', desc: '', args: []);
   }
 
   /// `since`
   String get since {
-    return Intl.message(
-      'since',
-      name: 'since',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('since', name: 'since', desc: '', args: []);
   }
 
   /// `Some settings are not available because there is no internet connection`
@@ -3439,22 +2992,12 @@ class Localize {
 
   /// `Speed`
   String get speed {
-    return Intl.message(
-      'Speed',
-      name: 'speed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Speed', name: 'speed', desc: '', args: []);
   }
 
   /// `Start`
   String get start {
-    return Intl.message(
-      'Start',
-      name: 'start',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Start', name: 'start', desc: '', args: []);
   }
 
   /// `Start location without participating`
@@ -3509,32 +3052,17 @@ class Localize {
 
   /// `Start time`
   String get startTime {
-    return Intl.message(
-      'Start time',
-      name: 'startTime',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Start time', name: 'startTime', desc: '', args: []);
   }
 
   /// `Status`
   String get status {
-    return Intl.message(
-      'Status',
-      name: 'status',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Status', name: 'status', desc: '', args: []);
   }
 
   /// `active`
   String get status_active {
-    return Intl.message(
-      'active',
-      name: 'status_active',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('active', name: 'status_active', desc: '', args: []);
   }
 
   /// `inactive`
@@ -3559,12 +3087,7 @@ class Localize {
 
   /// `pending`
   String get status_pending {
-    return Intl.message(
-      'pending',
-      name: 'status_pending',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('pending', name: 'status_pending', desc: '', args: []);
   }
 
   /// `Stop location sharing?`
@@ -3609,32 +3132,17 @@ class Localize {
 
   /// `Senden`
   String get submit {
-    return Intl.message(
-      'Senden',
-      name: 'submit',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Senden', name: 'submit', desc: '', args: []);
   }
 
   /// `Symbols`
   String get symbols {
-    return Intl.message(
-      'Symbols',
-      name: 'symbols',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Symbols', name: 'symbols', desc: '', args: []);
   }
 
   /// `Tail`
   String get tail {
-    return Intl.message(
-      'Tail',
-      name: 'tail',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tail', name: 'tail', desc: '', args: []);
   }
 
   /// `Please tell '{name}' this code \n\n{requestid}\nHe/she/it has to confirm this in his/her/it 'BladeNight-App'.\nThe Code is only 60 minutes valid!\nPlease update with ↻ button the status manually.`
@@ -3682,12 +3190,7 @@ class Localize {
 
   /// `Timestamp`
   String get timeStamp {
-    return Intl.message(
-      'Timestamp',
-      name: 'timeStamp',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Timestamp', name: 'timeStamp', desc: '', args: []);
   }
 
   /// `to finish (est.)`
@@ -3742,32 +3245,17 @@ class Localize {
 
   /// `Today`
   String get today {
-    return Intl.message(
-      'Today',
-      name: 'today',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Today', name: 'today', desc: '', args: []);
   }
 
   /// `No today`
   String get todayNo {
-    return Intl.message(
-      'No today',
-      name: 'todayNo',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('No today', name: 'todayNo', desc: '', args: []);
   }
 
   /// `Tomorrow`
   String get tomorrow {
-    return Intl.message(
-      'Tomorrow',
-      name: 'tomorrow',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tomorrow', name: 'tomorrow', desc: '', args: []);
   }
 
   /// `The following route points will be exported: `
@@ -3782,22 +3270,12 @@ class Localize {
 
   /// `Tracker`
   String get trackers {
-    return Intl.message(
-      'Tracker',
-      name: 'trackers',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tracker', name: 'trackers', desc: '', args: []);
   }
 
   /// `data ok`
   String get tracking {
-    return Intl.message(
-      'data ok',
-      name: 'tracking',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('data ok', name: 'tracking', desc: '', args: []);
   }
 
   /// `Recorded route points`
@@ -3822,22 +3300,12 @@ class Localize {
 
   /// `Train`
   String get train {
-    return Intl.message(
-      'Train',
-      name: 'train',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Train', name: 'train', desc: '', args: []);
   }
 
   /// `Trainlength`
   String get trainlength {
-    return Intl.message(
-      'Trainlength',
-      name: 'trainlength',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trainlength', name: 'trainlength', desc: '', args: []);
   }
 
   /// `This can only be changed in the system settings! Try opening system settings?`
@@ -3852,22 +3320,12 @@ class Localize {
 
   /// `Understood`
   String get understand {
-    return Intl.message(
-      'Understood',
-      name: 'understand',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Understood', name: 'understand', desc: '', args: []);
   }
 
   /// `unknown`
   String get unknown {
-    return Intl.message(
-      'unknown',
-      name: 'unknown',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('unknown', name: 'unknown', desc: '', args: []);
   }
 
   /// `unknown error`
@@ -3882,12 +3340,7 @@ class Localize {
 
   /// `Unread`
   String get unreadMessage {
-    return Intl.message(
-      'Unread',
-      name: 'unreadMessage',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Unread', name: 'unreadMessage', desc: '', args: []);
   }
 
   /// `Update Phone`
@@ -3922,12 +3375,7 @@ class Localize {
 
   /// `Version:`
   String get version {
-    return Intl.message(
-      'Version:',
-      name: 'version',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Version:', name: 'version', desc: '', args: []);
   }
 
   /// `Shown on map.`
@@ -3942,22 +3390,12 @@ class Localize {
 
   /// `Waiting...`
   String get waiting {
-    return Intl.message(
-      'Waiting...',
-      name: 'waiting',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Waiting...', name: 'waiting', desc: '', args: []);
   }
 
   /// `Waiting`
   String get waittime {
-    return Intl.message(
-      'Waiting',
-      name: 'waittime',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Waiting', name: 'waittime', desc: '', args: []);
   }
 
   /// `is canceled! Please check this on https://bladenight-muenchen.de`
@@ -3985,22 +3423,12 @@ class Localize {
 
   /// `Yes`
   String get yes {
-    return Intl.message(
-      'Yes',
-      name: 'yes',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Yes', name: 'yes', desc: '', args: []);
   }
 
   /// `was yesterday`
   String get yesterday {
-    return Intl.message(
-      'was yesterday',
-      name: 'yesterday',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('was yesterday', name: 'yesterday', desc: '', args: []);
   }
 
   /// `Procession collection stop`
@@ -4025,12 +3453,7 @@ class Localize {
 
   /// `Updating data`
   String get updating {
-    return Intl.message(
-      'Updating data',
-      name: 'updating',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Updating data', name: 'updating', desc: '', args: []);
   }
 
   /// `Open an external browser?`
@@ -4125,12 +3548,7 @@ class Localize {
 
   /// `Special`
   String get spec {
-    return Intl.message(
-      'Special',
-      name: 'spec',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Special', name: 'spec', desc: '', args: []);
   }
 
   /// `Procession start/end`
@@ -4155,12 +3573,7 @@ class Localize {
 
   /// `Administrator`
   String get admin {
-    return Intl.message(
-      'Administrator',
-      name: 'admin',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Administrator', name: 'admin', desc: '', args: []);
   }
 
   /// `BladeNight!-App - registered onsite`
@@ -4195,12 +3608,7 @@ class Localize {
 
   /// `Map alignment`
   String get mapAlign {
-    return Intl.message(
-      'Map alignment',
-      name: 'mapAlign',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Map alignment', name: 'mapAlign', desc: '', args: []);
   }
 
   /// `Start participation`
@@ -4225,12 +3633,7 @@ class Localize {
 
   /// `Menu`
   String get menu {
-    return Intl.message(
-      'Menu',
-      name: 'menu',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Menu', name: 'menu', desc: '', args: []);
   }
 
   /// `Colorize my track`
@@ -4315,22 +3718,12 @@ class Localize {
 
   /// `Add Event`
   String get addEvent {
-    return Intl.message(
-      'Add Event',
-      name: 'addEvent',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Add Event', name: 'addEvent', desc: '', args: []);
   }
 
   /// `Edit Event`
   String get editEvent {
-    return Intl.message(
-      'Edit Event',
-      name: 'editEvent',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Edit Event', name: 'editEvent', desc: '', args: []);
   }
 
   /// `Delete Event`
@@ -4348,6 +3741,16 @@ class Localize {
     return Intl.message(
       'Display remains an',
       name: 'wakelockEnabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display on activated by app settings - Warning, battery low.`
+  String get wakelockWarnBattery {
+    return Intl.message(
+      'Display on activated by app settings - Warning, battery low.',
+      name: 'wakelockWarnBattery',
       desc: '',
       args: [],
     );
@@ -4545,12 +3948,7 @@ class Localize {
 
   /// `Update`
   String get refresh {
-    return Intl.message(
-      'Update',
-      name: 'refresh',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Update', name: 'refresh', desc: '', args: []);
   }
 
   /// `Update data`
@@ -4635,22 +4033,12 @@ class Localize {
 
   /// `Our sponsors`
   String get sponsors {
-    return Intl.message(
-      'Our sponsors',
-      name: 'sponsors',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Our sponsors', name: 'sponsors', desc: '', args: []);
   }
 
   /// `Starts in`
   String get startsIn {
-    return Intl.message(
-      'Starts in',
-      name: 'startsIn',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Starts in', name: 'startsIn', desc: '', args: []);
   }
 
   /// `Tracking stopped due to low battery {level}%. To avoid turn off Autostop in settings`

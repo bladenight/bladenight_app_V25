@@ -163,6 +163,33 @@ extension LatLngBoundsExtension on List<LatLng> {
         LatLng(x0 - offset, y0 - offset), LatLng(x1 + offset, y1 + offset));
   }
 
+  LatLngBounds get getBoundsLandscape {
+    if (isEmpty) {
+      return defaultMapCamBounds;
+    }
+    double? x0, x1, y0, y1;
+    for (LatLng latLng in this) {
+      if (x0 == null) {
+        x0 = x1 = latLng.latitude;
+        y0 = y1 = latLng.longitude;
+      } else {
+        if (x1 == null || latLng.latitude > x1) x1 = latLng.latitude;
+        if (latLng.latitude < x0) x0 = latLng.latitude;
+        if (y1 == null || latLng.longitude > y1) y1 = latLng.longitude;
+        if (y0 == null || latLng.longitude < y0) y0 = latLng.longitude;
+      }
+    }
+    //return MapSettings.bayernAtlasBoundaries;
+    //const LatLng(47.248466288051446, 8.945107890491915),
+    //const LatLng(50.57987000589413, 13.90891310401004),
+    if (x0 == null || y0 == null || x1 == null || y1 == null) {
+      return defaultMapCamBounds;
+    }
+    var offset = 0.06;
+    return LatLngBounds(
+        LatLng(x0 - offset, y0 - offset), LatLng(x1 + offset, y1 + offset));
+  }
+
   LatLng get firstOrDefault {
     if (isNotEmpty) {
       return first;

@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_settings/app_configuration_helper.dart';
 import '../helpers/hive_box/app_server_config_db.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/logger.dart';
+import '../helpers/logger/logger.dart';
 import '../models/image_and_link.dart';
 import '../models/images_and_links.dart';
 import 'images_and_links/bladeguard_link_image_and_link_provider.dart';

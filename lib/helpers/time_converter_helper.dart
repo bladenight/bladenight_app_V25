@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:intl/intl.dart';
 
 import '../generated/l10n.dart';
-import 'logger.dart';
+import 'logger/logger.dart';
 
 ///Helper class to convert times from server
 class TimeConverter {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../helpers/logger.dart';
+import '../../../helpers/logger/logger.dart';
 import '../../../models/images_and_links.dart';
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/is_tracking_provider.dart';

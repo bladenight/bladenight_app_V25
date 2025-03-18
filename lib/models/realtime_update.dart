@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/logger.dart';
+import '../helpers/logger/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../providers/friends_provider.dart';
 import '../providers/location_provider.dart';

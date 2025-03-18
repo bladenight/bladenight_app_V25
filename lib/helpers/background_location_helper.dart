@@ -6,7 +6,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../generated/l10n.dart';
-import 'logger.dart';
+import 'logger/logger.dart';
 
 class BackgroundGeolocationHelper {
   static Future<bool> resetOdoMeter(BuildContext context) async {

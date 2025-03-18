@@ -13,7 +13,7 @@ import '../../helpers/hive_box/app_server_config_db.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/location_bearing_distance.dart';
 import '../../helpers/location_permission_dialogs.dart';
-import '../../helpers/logger.dart';
+import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/notification_helper.dart';
 import '../../models/event.dart';
 import '../../models/result_or_error.dart';

@@ -12,7 +12,7 @@ import 'package:universal_io/io.dart';
 
 import '../../generated/l10n.dart';
 import '../../models/event.dart';
-import '../logger.dart';
+import '../logger/logger.dart';
 import '../time_converter_helper.dart';
 import 'received_notification.dart';
 

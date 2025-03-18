@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ import '../../generated/l10n.dart';
 import '../../helpers/background_location_helper.dart';
 import '../../helpers/export_import_data_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../helpers/logger.dart';
+import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../widgets/common_widgets/app_id_widget.dart';
@@ -355,7 +355,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         CupertinoTheme.of(context).primaryColor,
                                     onChanged: (val) {
                                       HiveSettingsDB.setWakeLockEnabled(val);
-                                      Wakelock.toggle(enable: val);
+                                      WakelockPlus.toggle(enable: val);
                                       setState(() {});
                                     },
                                     value: HiveSettingsDB.wakeLockEnabled,
@@ -408,8 +408,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           setState(() {
                                             _exportLogInProgress = true;
                                           });
-                                          await exportLogFiles(
-                                              exportProgressNotifier);
+                                          context.pushNamed(
+                                              AppRoute.logMonitor.name);
+                                          /*await exportLogFiles(
+                                              exportProgressNotifier);*/
                                           setState(() {
                                             _exportLogInProgress = false;
                                           });
@@ -464,7 +466,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   ]),
                               if (!HiveSettingsDB
                                       .useAlternativeLocationProvider &&
-                                  HiveSettingsDB.flogLogLevel.value < 3000)
+                                  HiveSettingsDB.flogLogLevel.index > 3)
                                 CupertinoFormSection(
                                     header: const Text('Geolocation Log'),
                                     children: <Widget>[

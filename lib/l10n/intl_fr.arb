@@ -547,6 +547,7 @@
   "sponsors": "Our sponsors",
   "bgTodayTapToUnRegister": "Unregister as a Bladeguard today!",
   "startsIn": "Starts in",
+  "wakelockWarnBattery": "Display on activated by app settings - Warning, battery low.",
   "trackingStoppedLowBat": "Tracking stopped due to low battery {level}%. To avoid turn off Autostop in settings"
 }
 

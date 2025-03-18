@@ -24,7 +24,9 @@ class _HiddenAdminButtonState extends State<HiddenAdminButton> {
     _timeout?.cancel();
     tap++;
     if (tap >= 5 && tap <= 8) {
-      context.pushNamed(AppRoute.adminLogin.name);
+      if (!kIsWeb) {
+        context.pushNamed(AppRoute.adminLogin.name);
+      }
       tap = 0;
     } else {
       _timeout = Timer(const Duration(milliseconds: 1500), _resetTaps);

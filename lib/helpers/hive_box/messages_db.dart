@@ -6,7 +6,7 @@ import 'package:hive_flutter/adapters.dart';
 
 import '../../models/external_app_message.dart';
 import '../../models/external_app_messages.dart';
-import '../logger.dart';
+import '../logger/logger.dart';
 
 class MessagesDb {
   static final MessagesDb instance = MessagesDb._();

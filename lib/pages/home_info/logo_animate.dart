@@ -45,7 +45,7 @@ class _LogoAnimateState extends State<LogoAnimate>
   @override
   Widget build(BuildContext context) {
     return AnimatedCrossFade(
-      firstChild: Image.asset(bnLogoPlaceholder, fit: BoxFit.contain),
+      firstChild: Image.asset(emptySponsorPlaceholder, fit: BoxFit.contain),
       secondChild: Image.asset(
         skmLogoPlaceholder,
         fit: BoxFit.contain,

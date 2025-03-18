@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../../helpers/enums/tracking_type.dart';
-import '../../../../helpers/logger.dart';
+import '../../../../helpers/logger/logger.dart';
 import '../../../../helpers/time_converter_helper.dart';
 import '../../../../models/event.dart';
 import '../../../../providers/active_event_provider.dart';

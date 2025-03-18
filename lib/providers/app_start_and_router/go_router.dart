@@ -5,8 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../helpers/export_import_data_helper.dart';
+import '../../helpers/logger/logger.dart';
 import '../../main.dart';
 import '../../models/event.dart';
 import '../../models/friend.dart';
@@ -18,6 +20,7 @@ import '../../pages/events/events_page.dart';
 import '../../pages/events/widgets/event_editor.dart';
 import '../../pages/friends/widgets/nearby_widget.dart';
 import '../../pages/home_info/home_page.dart';
+import '../../pages/logger/talker_monitor.dart';
 import '../../pages/map/map_page.dart';
 import '../../pages/map/widgets/qr_create_page.dart';
 import '../../pages/settings/settings_page.dart';
@@ -70,6 +73,7 @@ enum AppRoute {
   eventEditorPage,
   friend,
   settings,
+  logMonitor,
   showRouteDetails,
   showEventRouteDetails,
   onboarding,
@@ -112,7 +116,7 @@ GoRouter goRouter(Ref ref) {
   return GoRouter(
     observers: [
       // Add your navigator observers
-      GoRouterNavigatorObserver(),
+      GoRouterNavigatorObserver(), TalkerRouteObserver(talker)
     ],
     initialLocation: '/',
     navigatorKey: rootNavigatorKey,
@@ -362,10 +366,18 @@ GoRouter goRouter(Ref ref) {
                         pageBuilder: GoTransitions.slide.withBackGesture.call,
                       ),
                       GoRoute(
-                        path: '/signIn',
+                        path: '/${AppRoute.signIn.name}',
                         name: AppRoute.signIn.name,
                         pageBuilder: (context, state) => const NoTransitionPage(
                           child: BladeGuardPage(),
+                        ),
+                      ),
+                      GoRoute(
+                        path: '/${AppRoute.logMonitor.name}',
+                        name: AppRoute.logMonitor.name,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: TalkerMonitor(
+                              theme: TalkerScreenTheme(), talker: talker),
                         ),
                       ),
                       GoRoute(

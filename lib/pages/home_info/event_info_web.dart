@@ -1,21 +1,25 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
-import '../../helpers/logger.dart';
-import '../../helpers/time_converter_helper.dart';
-import '../../helpers/url_launch_helper.dart';
-import '../../models/event.dart';
+import '../../helpers/enums/tracking_type.dart';
+import '../../helpers/logger/logger.dart';
 import '../../providers/active_event_provider.dart';
-import '../../providers/images_and_links/main_sponsor_image_and_link_provider.dart';
-import '../../providers/images_and_links/second_sponsor_image_and_link_provider.dart';
-import '../../providers/images_and_links/startpoint_image_and_link_provider.dart';
+import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/location_provider.dart';
+import '../../providers/network_connection_provider.dart';
+import '../../wamp/wamp_exception.dart';
+import '../bladeguard/bladeguard_advertise.dart';
+import '../bladeguard/bladeguard_on_site_page.dart';
+import '../loading_screen.dart';
+import '../widgets/common_widgets/app_outdated.dart';
+import '../widgets/common_widgets/no_connection_warning.dart';
+import '../widgets/common_widgets/shadow_box_widget.dart';
+import 'event_data_overview.dart';
+import 'logo_animate.dart';
 
 class EventInfoWeb extends ConsumerStatefulWidget {
   const EventInfoWeb({super.key});
@@ -25,262 +29,129 @@ class EventInfoWeb extends ConsumerStatefulWidget {
 }
 
 class _EventInfoWebState extends ConsumerState<EventInfoWeb>
-    with WidgetsBindingObserver {
-  Timer? updateTimer;
+    with WidgetsBindingObserver, TickerProviderStateMixin {
+  Timer? _updateTimer;
+  late final AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
+    _animationController =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initEventUpdates();
-      ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
+      initLocation();
+      //call on first start
     });
+    _animationController.repeat(reverse: true);
   }
 
   @override
   void dispose() {
+    _updateTimer?.cancel();
+    _animationController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    BnLog.debug(text: 'event_info - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
-      ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
+      initEventUpdates(forceUpdate: true);
       ref.read(locationProvider).refreshRealtimeData(forceUpdate: true);
+    }
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _updateTimer?.cancel();
     }
   }
 
-  void initEventUpdates() async {
+  void initEventUpdates({forceUpdate = false}) async {
     // first start
-    ref.read(activeEventProvider.notifier).refresh();
-    updateTimer?.cancel();
-    updateTimer = Timer.periodic(
-      const Duration(minutes: 5),
+    ref.invalidate(updateImagesAndLinksProvider);
+    await Future.delayed(const Duration(seconds: 2));
+    await ref
+        .read(activeEventProvider.notifier)
+        .refresh(forceUpdate: forceUpdate);
+    _updateTimer?.cancel();
+    _updateTimer = Timer.periodic(
+      const Duration(minutes: 10),
       (timer) {
-        if (!mounted) return;
+        if (LocationProvider().trackingType == TrackingType.onlyTracking) {
+          return;
+        }
         ref.read(activeEventProvider.notifier).refresh();
       },
     );
+  }
+
+  void initLocation() async {
+    await Future.delayed(const Duration(seconds: 5));
+    LocationProvider().refreshRealtimeData(forceUpdate: true);
   }
 
   @override
   Widget build(
     BuildContext context,
   ) {
-    var nextEventProvider = ref.watch(activeEventProvider);
-    //var iheight = MediaQuery.of(context).size.height * .2;
-    var iwidth = MediaQuery.of(context).size.width * .3;
-    return SizedBox(
-      height: double.infinity,
+    var nextEvent = ref.watch(activeEventProvider);
+    if (nextEvent.rpcException != null &&
+        (nextEvent.rpcException as WampException).message == 'offline') {
+      return SafeArea(
+        //height: 300,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (ref.watch(networkAwareProvider).connectivityStatus !=
+                    ConnectivityStatus.wampConnected)
+                  ConnectionWarning(animationController: _animationController),
+                ShadowBoxWidget(
+                  boxShadowColor: Colors.grey,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                            width: MediaQuery.sizeOf(context).width * 0.8,
+                            child: Center(child: LogoAnimate())),
+                        Center(child: Text(Localize.of(context).loading)),
+                        Center(child: CircularProgressIndicator()),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        const BladeGuardAdvertise(),
+                      ]),
+                ),
+              ]),
+        ),
+      );
+    }
+    return SafeArea(
+      //height: 300,
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (nextEventProvider.status == EventStatus.noevent)
-              Text(Localize.of(context).noEventPlanned,
-                  textAlign: TextAlign.center,
-                  style: CupertinoTheme.of(context).textTheme.textStyle),
-            if (nextEventProvider.status != EventStatus.noevent)
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  FittedBox(
-                    child: Text(Localize.of(context).nextEvent,
-                        textAlign: TextAlign.center,
-                        style: CupertinoTheme.of(context).textTheme.textStyle),
-                  ),
-                  const SizedBox(height: 5),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                        '${Localize.of(context).route} ${nextEventProvider.routeName}',
-                        textAlign: TextAlign.center,
-                        style: CupertinoTheme.of(context)
-                            .textTheme
-                            .navLargeTitleTextStyle),
-                  ),
-                  const SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 5, 15, 5),
-                    child: FittedBox(
-                      child: Text(
-                          DateFormatter(Localize.of(context))
-                              .getLocalDayDateTimeRepresentation(
-                                  nextEventProvider.getUtcIso8601DateTime),
-                          style: CupertinoTheme.of(context)
-                              .textTheme
-                              .navLargeTitleTextStyle),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: nextEventProvider.status == EventStatus.cancelled
-                            ? Colors.redAccent
-                            : nextEventProvider.status == EventStatus.confirmed
-                                ? Colors.green
-                                : Colors.transparent,
-                        borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
-                            topLeft: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0)),
-                      ),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(nextEventProvider.statusText,
-                            style: CupertinoTheme.of(context)
-                                .textTheme
-                                .pickerTextStyle),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 1),
-                ],
+            ShadowBoxWidget(
+              boxShadowColor: nextEvent.statusColor,
+              child: EventDataOverview(
+                nextEvent: nextEvent,
               ),
-            Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    width: iwidth,
-                    child: GestureDetector(
-                      onTap: () {
-                        if (ref.read(mainSponsorImageAndLinkProvider).link !=
-                            null) {
-                          Launch.launchUrlFromString(
-                              ref.read(mainSponsorImageAndLinkProvider).link!);
-                        }
-                      },
-                      child: Builder(builder: (context) {
-                        var ms = ref.watch(mainSponsorImageAndLinkProvider);
-                        //var nw = ref.watch(networkAwareProvider);
-                        return (ms.image != null)
-                            // && nw.connectivityStatus == ConnectivityStatus.online)
-                            ? FadeInImage.assetNetwork(
-                                placeholder: emptySponsorPlaceholder,
-                                image: ms.image!,
-                                fadeOutDuration:
-                                    const Duration(milliseconds: 150),
-                                fadeInDuration:
-                                    const Duration(milliseconds: 150),
-                                imageErrorBuilder:
-                                    (context, error, stackTrace) {
-                                  BnLog.error(
-                                      text:
-                                          'mainSponsorPlaceholder ${ms.image}) could not been loaded',
-                                      exception: error);
-                                  return Image.asset(emptySponsorPlaceholder,
-                                      fit: BoxFit.fitWidth);
-                                },
-                              )
-                            : const Image(
-                                image: AssetImage(emptySponsorPlaceholder),
-                              );
-                      }),
-                    ),
-                  ),
-                  SizedBox(
-                    width: iwidth,
-                    child: GestureDetector(
-                      onTap: () {
-                        if (ref.read(secondSponsorImageAndLinkProvider).link !=
-                            null) {
-                          Launch.launchUrlFromString(ref
-                              .read(secondSponsorImageAndLinkProvider)
-                              .link!);
-                        }
-                      },
-                      child: Builder(builder: (context) {
-                        var ssp = ref.watch(secondSponsorImageAndLinkProvider);
-                        return ssp.image != null
-                            ? FadeInImage.assetNetwork(
-                                placeholder: secondLogoPlaceholder,
-                                image: ssp.image!,
-                                fadeOutDuration:
-                                    const Duration(milliseconds: 150),
-                                fadeInDuration:
-                                    const Duration(milliseconds: 150),
-                                imageErrorBuilder:
-                                    (context, error, stackTrace) {
-                                  if (!kIsWeb) {
-                                    BnLog.error(
-                                        text:
-                                            'secondSponsorPlaceholder ${ssp.image} could not been loaded',
-                                        exception: error);
-                                  }
-                                  return Image.asset(secondLogoPlaceholder,
-                                      fit: BoxFit.fitWidth);
-                                },
-                              )
-                            : Image.asset(secondLogoPlaceholder,
-                                fit: BoxFit.fitWidth);
-                      }),
-                    ),
-                  ),
-                ]),
-            if (nextEventProvider.status != EventStatus.noevent)
-              GestureDetector(
-                onTap: () async {
-                  ProviderContainer().refresh(activeEventProvider);
-                },
-                child: Column(
-                  children: [
-                    //Don't show starting point when no event
-                    if (nextEventProvider.status != EventStatus.noevent)
-                      Builder(builder: (context) {
-                        var spp = ref.watch(startpointImageAndLinkProvider);
-                        return spp.text != null
-                            ? FittedBox(
-                                child: Text(
-                                  spp.text!,
-                                  maxLines: 10,
-                                  softWrap: true,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color:
-                                        CupertinoTheme.of(context).primaryColor,
-                                  ),
-                                ),
-                              )
-                            : Container();
-                      }),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      Localize.of(context).lastupdate,
-                      style: const TextStyle(
-                        color: CupertinoDynamicColor.withBrightness(
-                          color: CupertinoColors.systemGrey,
-                          darkColor: CupertinoColors.systemGrey,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      nextEventProvider.lastUpdate == null
-                          ? '-'
-                          : Localize.current.dateTimeIntl(
-                              nextEventProvider.lastUpdate as DateTime,
-                              nextEventProvider.lastUpdate as DateTime,
-                            ),
-                      style: const TextStyle(
-                        color: CupertinoDynamicColor.withBrightness(
-                          color: CupertinoColors.systemGrey,
-                          darkColor: CupertinoColors.systemGrey,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            const SizedBox(
+            ),
+            if (ref.watch(networkAwareProvider).connectivityStatus !=
+                ConnectivityStatus.wampConnected)
+              ConnectionWarning(animationController: _animationController),
+            SizedBox(
               height: 5,
             ),
+            const BladeGuardAdvertise(),
           ],
         ),
       ),

@@ -15,7 +15,7 @@ import '../../../app_settings/app_configuration_helper.dart';
 import '../../../app_settings/app_constants.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/keyboard_helper.dart';
-import '../../../helpers/logger.dart';
+import '../../../helpers/logger/logger.dart';
 import '../../../models/friend.dart';
 import '../../../providers/app_start_and_router/go_router.dart';
 import '../../../providers/friends_provider.dart';
