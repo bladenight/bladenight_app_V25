@@ -8,12 +8,12 @@ import 'package:go_router/go_router.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../helpers/export_import_data_helper.dart';
-import '../../helpers/logger/logger.dart';
 import '../../main.dart';
 import '../../models/event.dart';
 import '../../models/friend.dart';
 import '../../models/user_gpx_point.dart';
 import '../../observers/go_router_observer.dart';
+import '../../pages/about_page/about_page.dart';
 import '../../pages/admin/admin_page.dart';
 import '../../pages/admin/widgets/admin_password_dialog.dart';
 import '../../pages/events/events_page.dart';
@@ -30,7 +30,6 @@ import '../../pages/widgets/picker/route_name_dialog.dart';
 import '../../pages/widgets/startup_widgets/app_route_error_widget.dart';
 import '../../pages/widgets/map/user_tracking_dialog.dart';
 import '../admin/admin_pwd_provider.dart';
-import '../settings/bladeguard_provider.dart';
 import '../../navigation/scaffold_with_nested_navigation.dart';
 import '../../pages/bladeguard/bladeguard_page.dart';
 import '../../pages/friends/friends_page.dart';
@@ -125,7 +124,7 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
 
           ///qrCreatePage?infoText=24566&headerText=567&qrCodeText=132435
-          path: '/qrCreatePage',
+          path: '/${AppRoute.qrCreatePage.name}',
           name: AppRoute.qrCreatePage.name,
           pageBuilder: (context, state) {
             var pathParameters = state.uri.queryParameters;
@@ -189,7 +188,7 @@ GoRouter goRouter(Ref ref) {
             // #enddocregion configuration-branches
             StatefulShellBranch(navigatorKey: _sectionMapNavigatorKey, routes: [
               GoRoute(
-                path: '/map',
+                path: '/${AppRoute.map.name}',
                 name: AppRoute.map.name,
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: MapPage(),
@@ -200,7 +199,7 @@ GoRouter goRouter(Ref ref) {
                 navigatorKey: _sectionEventsNavigatorKey,
                 routes: [
                   GoRoute(
-                      path: '/events',
+                      path: '/${AppRoute.events.name}',
                       name: AppRoute.events.name,
                       pageBuilder: (context, state) {
                         return NoTransitionPage(
@@ -209,7 +208,7 @@ GoRouter goRouter(Ref ref) {
                       },
                       routes: [
                         GoRoute(
-                          path: '/showRoute/:name',
+                          path: '/${AppRoute.showRoute.name}/:name',
                           pageBuilder: (context, state) => NoTransitionPage(
                             child: RouteNameDialog(
                                 routeName: state.pathParameters['name']!),
@@ -223,7 +222,7 @@ GoRouter goRouter(Ref ref) {
                           ),
                         ),
                         GoRoute(
-                            path: '/eventEditorPage',
+                            path: '/${AppRoute.eventEditorPage.name}',
                             name: AppRoute.eventEditorPage.name,
                             pageBuilder: (context, state) {
                               var event = state.extra as Event;
@@ -239,7 +238,7 @@ GoRouter goRouter(Ref ref) {
                 routes: [
                   //no locale
                   GoRoute(
-                    path: '/friend',
+                    path: '/${AppRoute.friend.name}',
                     name: AppRoute.friend.name,
                     pageBuilder: (context, state) {
                       return NoTransitionPage(child: FriendsPage());
@@ -257,7 +256,7 @@ GoRouter goRouter(Ref ref) {
                         //
                         // adb devices with -s "xxxxx"
                         //adb -s "R3CT50CK8FP" shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app/friend/addFriend?code=123456&name=tom"'
-                        path: '/addFriend',
+                        path: '/${AppRoute.addFriend.name}',
                         name: AppRoute.addFriend.name,
                         parentNavigatorKey: _friendsNavigatorKey,
                         pageBuilder: GoTransitions.fullscreenDialog,
@@ -298,7 +297,7 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     // const LinkFriendDevicePage(deviceType: DeviceType.advertiser,
                     //                            friendsAction: FriendsAction.addNearby,
-                    path: '/linkFriendDevicePage',
+                    path: '/${AppRoute.linkFriendDevicePage.name}',
                     name: AppRoute.linkFriendDevicePage.name,
                     pageBuilder: (context, state) {
                       var parameters = state.uri.queryParameters;
@@ -314,7 +313,7 @@ GoRouter goRouter(Ref ref) {
                     },
                   ),
                   GoRoute(
-                    path: '/editFriendDialog',
+                    path: '/${AppRoute.editFriendDialog.name}',
                     name: AppRoute.editFriendDialog.name,
                     redirect: (BuildContext context, GoRouterState state) {
                       var parameters = state.uri.queryParameters;
@@ -353,7 +352,7 @@ GoRouter goRouter(Ref ref) {
                 navigatorKey: _sectionSettingsNavigatorKey,
                 routes: [
                   GoRoute(
-                    path: '/settings',
+                    path: '/${AppRoute.settings.name}',
                     name: AppRoute.settings.name,
                     pageBuilder: (context, state) => const NoTransitionPage(
                       child: SettingsPage(),
@@ -364,6 +363,13 @@ GoRouter goRouter(Ref ref) {
                         name: AppRoute.bladeguard.name,
                         builder: (context, state) => BladeGuardPage(),
                         pageBuilder: GoTransitions.slide.withBackGesture.call,
+                      ),
+                      GoRoute(
+                        path: '/${AppRoute.aboutPage.name}',
+                        name: AppRoute.aboutPage.name,
+                        pageBuilder: (context, state) => const NoTransitionPage(
+                          child: AboutPage(),
+                        ),
                       ),
                       GoRoute(
                         path: '/${AppRoute.signIn.name}',

@@ -27,19 +27,19 @@ class ExternalAppMessageMapper extends ClassMapperBase<ExternalAppMessage> {
       Field('title', _$title);
   static String _$body(ExternalAppMessage v) => v.body;
   static const Field<ExternalAppMessage, String> _f$body =
-      Field('body', _$body, key: 'bod');
+      Field('body', _$body, key: r'bod');
   static int _$timeStamp(ExternalAppMessage v) => v.timeStamp;
   static const Field<ExternalAppMessage, int> _f$timeStamp =
-      Field('timeStamp', _$timeStamp, key: 'tim');
+      Field('timeStamp', _$timeStamp, key: r'tim');
   static int _$lastChange(ExternalAppMessage v) => v.lastChange;
   static const Field<ExternalAppMessage, int> _f$lastChange =
-      Field('lastChange', _$lastChange, key: 'lch');
+      Field('lastChange', _$lastChange, key: r'lch');
   static bool _$deleted(ExternalAppMessage v) => v.deleted;
   static const Field<ExternalAppMessage, bool> _f$deleted =
-      Field('deleted', _$deleted, key: 'del', opt: true, def: false);
+      Field('deleted', _$deleted, key: r'del', opt: true, def: false);
   static bool _$read(ExternalAppMessage v) => v.read;
   static const Field<ExternalAppMessage, bool> _f$read =
-      Field('read', _$read, key: 'msgRead', opt: true, def: false);
+      Field('read', _$read, key: r'msgRead', opt: true, def: false);
   static String? _$url(ExternalAppMessage v) => v.url;
   static const Field<ExternalAppMessage, String> _f$url =
       Field('url', _$url, opt: true);
@@ -47,31 +47,31 @@ class ExternalAppMessageMapper extends ClassMapperBase<ExternalAppMessage> {
       v.additionalData;
   static const Field<ExternalAppMessage, Map<String, dynamic>>
       _f$additionalData =
-      Field('additionalData', _$additionalData, key: 'add', opt: true);
+      Field('additionalData', _$additionalData, key: r'add', opt: true);
   static String? _$button1Text(ExternalAppMessage v) => v.button1Text;
   static const Field<ExternalAppMessage, String> _f$button1Text =
-      Field('button1Text', _$button1Text, key: 'bt1', opt: true);
+      Field('button1Text', _$button1Text, key: r'bt1', opt: true);
   static String? _$button2Text(ExternalAppMessage v) => v.button2Text;
   static const Field<ExternalAppMessage, String> _f$button2Text =
-      Field('button2Text', _$button2Text, key: 'bt2', opt: true);
+      Field('button2Text', _$button2Text, key: r'bt2', opt: true);
   static String? _$button3Text(ExternalAppMessage v) => v.button3Text;
   static const Field<ExternalAppMessage, String> _f$button3Text =
-      Field('button3Text', _$button3Text, key: 'bt3', opt: true);
+      Field('button3Text', _$button3Text, key: r'bt3', opt: true);
   static String? _$button1Link(ExternalAppMessage v) => v.button1Link;
   static const Field<ExternalAppMessage, String> _f$button1Link =
-      Field('button1Link', _$button1Link, key: 'btl1', opt: true);
+      Field('button1Link', _$button1Link, key: r'btl1', opt: true);
   static String? _$button2Link(ExternalAppMessage v) => v.button2Link;
   static const Field<ExternalAppMessage, String> _f$button2Link =
-      Field('button2Link', _$button2Link, key: 'btl2', opt: true);
+      Field('button2Link', _$button2Link, key: r'btl2', opt: true);
   static String? _$button3Link(ExternalAppMessage v) => v.button3Link;
   static const Field<ExternalAppMessage, String> _f$button3Link =
-      Field('button3Link', _$button3Link, key: 'btl3', opt: true);
+      Field('button3Link', _$button3Link, key: r'btl3', opt: true);
   static String? _$groupId(ExternalAppMessage v) => v.groupId;
   static const Field<ExternalAppMessage, String> _f$groupId =
-      Field('groupId', _$groupId, key: 'gid', opt: true);
+      Field('groupId', _$groupId, key: r'gid', opt: true);
   static int? _$validToTimeStamp(ExternalAppMessage v) => v.validToTimeStamp;
   static const Field<ExternalAppMessage, int> _f$validToTimeStamp =
-      Field('validToTimeStamp', _$validToTimeStamp, key: 'validTo', opt: true);
+      Field('validToTimeStamp', _$validToTimeStamp, key: r'validTo', opt: true);
 
   @override
   final MappableFields<ExternalAppMessage> fields = const {

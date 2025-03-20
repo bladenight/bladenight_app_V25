@@ -651,6 +651,18 @@ class HiveSettingsDB {
     _hiveBox.put(appOutDatedKey, val);
   }
 
+  static const String serverVersionKey = 'serverVersionKey';
+
+  ///get current serverversion
+  static String get getServerVersion {
+    return _hiveBox.get(serverVersionKey, defaultValue: '-----');
+  }
+
+  ///set if  serverversion on shakehand
+  static void setServerVersion(String? val) {
+    _hiveBox.put(serverVersionKey, val);
+  }
+
   static const String _useCustomServerKey = 'useCustomServerKey';
 
   static bool get useCustomServer {

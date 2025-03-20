@@ -551,5 +551,6 @@
   "startsIn": "Starts in",
   "trackingStoppedLowBat": "Tracking stopped due to low battery {level}%. To avoid turn off Autostop in settings",
   "setLogLevel": "Set log level",
-  "showLogData": "Show log data"
+  "showLogData": "Show log data",
+  "serverVersion": "Server version"
 }

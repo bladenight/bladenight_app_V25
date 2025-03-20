@@ -263,6 +263,7 @@ class WampV2 {
         _hadShakeHands = true;
         shakeHandAppOutdatedResult = shkRes;
         HiveSettingsDB.setAppOutDated(!shkRes.status);
+        HiveSettingsDB.setServerVersion(shkRes.serverVersion);
       }
     }
   }

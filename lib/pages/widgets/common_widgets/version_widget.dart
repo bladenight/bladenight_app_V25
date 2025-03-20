@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
 
 import '../../../generated/l10n.dart';
+import '../../../providers/server_version_provider.dart';
 import '../../../providers/version_provider.dart';
 
 class VersionWidget extends ConsumerWidget {
@@ -13,6 +14,7 @@ class VersionWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var appInfo = ref.watch(versionProvider);
+    var serverVersion = ref.watch(serverVersionProvider);
     return appInfo.when(
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => Container(),
@@ -35,6 +37,16 @@ class VersionWidget extends ConsumerWidget {
                       style: CupertinoTheme.of(context)
                           .textTheme
                           .navTitleTextStyle),
+            ),
+            SizedBox(
+              height: 3,
+            ),
+            Text(Localize.of(context).serverVersion,
+                style: CupertinoTheme.of(context).textTheme.navActionTextStyle),
+            Text(serverVersion,
+                style: CupertinoTheme.of(context).textTheme.navTitleTextStyle),
+            Divider(
+              height: 1,
             ),
           ],
         );
