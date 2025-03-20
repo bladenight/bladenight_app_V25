@@ -388,15 +388,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           header: Text(Localize.of(context).exportLogData),
                           children: <Widget>[
                             _exportLogInProgress
-                                ? /*ValueListenableBuilder<double>(
+                                ? ValueListenableBuilder<double>(
                                     valueListenable: exportProgressNotifier,
                                     builder: (BuildContext context,
                                         double progress, child) {
                                       return CircularProgressIndicator(
                                         value: progress,
                                       );
-                                    })*/
-                                CircularProgressIndicator()
+                                    })
+                                //CircularProgressIndicator()
                                 : SizedBox(
                                     width:
                                         MediaQuery.sizeOf(context).width * 0.9,
@@ -408,15 +408,61 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           setState(() {
                                             _exportLogInProgress = true;
                                           });
-                                          context.pushNamed(
-                                              AppRoute.logMonitor.name);
-                                          /*await exportLogFiles(
-                                              exportProgressNotifier);*/
+                                          await exportLogFiles(
+                                              exportProgressNotifier);
                                           setState(() {
                                             _exportLogInProgress = false;
                                           });
                                         }),
                                   ),
+                            _exportLogInProgress
+                                ? LinearProgressIndicator()
+                                : SizedBox(
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 0.9,
+                                    child: SizedTintedCupertinoButton(
+                                        child: Text(
+                                            Localize.of(context).showLogData),
+                                        onPressed: () async {
+                                          if (_exportLogInProgress) return;
+                                          setState(() {
+                                            _exportLogInProgress = true;
+                                          });
+                                          await context.pushNamed(
+                                              AppRoute.logMonitor.name);
+                                          setState(() {
+                                            _exportLogInProgress = false;
+                                          });
+                                        }),
+                                  ),
+                            _exportLogInProgress
+                                ? Container()
+                                : SizedTintedCupertinoButton(
+                                    color: Colors.orange,
+                                    child:
+                                        Text(Localize.of(context).setClearLogs),
+                                    onPressed: () async {
+                                      await QuickAlert.show(
+                                          context: context,
+                                          showCancelBtn: true,
+                                          type: QuickAlertType.warning,
+                                          title:
+                                              Localize.current.clearLogsTitle,
+                                          text: Localize
+                                              .current.clearLogsQuestion,
+                                          confirmBtnText: Localize.current.yes,
+                                          cancelBtnText:
+                                              Localize.current.cancel,
+                                          onConfirmBtnTap: () async {
+                                            context.pop();
+                                            await BnLog.clearLogs();
+                                            await bg.Logger.destroyLog();
+                                            showToast(
+                                                message:
+                                                    Localize.current.finished);
+                                            if (!context.mounted) return;
+                                          });
+                                    }),
                           ],
                         ),
                         const SizedBox(
@@ -436,32 +482,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           await BnLog.showLogLevelDialog(
                                               context);
                                           setState(() {});
-                                        }),
-                                    SizedTintedCupertinoButton(
-                                        child: Text(
-                                            Localize.of(context).setClearLogs),
-                                        onPressed: () async {
-                                          await QuickAlert.show(
-                                              context: context,
-                                              showCancelBtn: true,
-                                              type: QuickAlertType.warning,
-                                              title: Localize
-                                                  .current.clearLogsTitle,
-                                              text: Localize
-                                                  .current.clearLogsQuestion,
-                                              confirmBtnText:
-                                                  Localize.current.yes,
-                                              cancelBtnText:
-                                                  Localize.current.cancel,
-                                              onConfirmBtnTap: () async {
-                                                context.pop();
-                                                await BnLog.clearLogs();
-                                                await bg.Logger.destroyLog();
-                                                showToast(
-                                                    message: Localize
-                                                        .current.finished);
-                                                if (!context.mounted) return;
-                                              });
                                         }),
                                   ]),
                               if (!HiveSettingsDB

@@ -20,11 +20,22 @@ class BnLog {
   static final Talker _talkerLogger = talker;
   static LogLevel _logLevel = kDebugMode ? LogLevel.verbose : LogLevel.info;
 
-  //static late LazyBox<String>? _logBox;
   static final DateTime _startTime = DateTime.now();
 
   BnLog._() {
     init();
+  }
+
+  static Timer? _timer;
+
+  static Future<bool?> clearLogs() async {
+    talker.cleanHistory();
+    return fileLogger?.clearLogs();
+  }
+
+  static Future<bool?> clearOlderLogs() async {
+    return fileLogger
+        ?.wantsDeleteFromDateTime(DateTime.now().subtract(Duration(days: 15)));
   }
 
   static Future<Directory> _getLogDir() async {
@@ -33,24 +44,14 @@ class BnLog {
     return await Directory(logDir).create();
   }
 
-  static void flush() {
-    //if (_logBox != null && _logBox!.isOpen) _logBox?.flush();
-  }
-
   static void close() {
-    /* if (_logBox != null && _logBox!.isOpen) _logBox?.flush();
-    _logBox?.close();
-    _logBox = null;*/
+    fileLogger?.output('${DateTime.now().toIso8601String()}AppClosed');
+    _timer?.cancel();
   }
 
   static Future<bool> init({LogLevel? logLevel}) async {
     await Hive.initFlutter();
     try {
-      //if (!Hive.isBoxOpen(hiveBoxLoggingDbName) || _logBox == null) {
-      //_logBox = await Hive.openLazyBox<String>(hiveBoxLoggingDbName).timeout(Duration(seconds: 5));
-      // if (_logBox != null) {
-      //add logger
-
       if (kDebugMode || kProfileMode || localTesting) {
         logLevel = LogLevel.verbose;
       }
@@ -58,12 +59,12 @@ class BnLog {
       if (!kIsWeb) {
         fileLogger = FileLogger(await _getLogDir());
       }
+      _timer = Timer(Duration(minutes: 5000), clearOlderLogs);
       return true;
     } catch (e) {
       print('error init logger $error');
       return false;
     }
-    return true;
   }
 
   static void debug({
@@ -76,7 +77,6 @@ class BnLog {
   }) async {
     //critical 0 // info 3 verbose 5
     if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.debug)) return;
-
     _talkerLogger.debug('$text\nclass:$className\nmethod:$methodName');
   }
 
@@ -91,7 +91,6 @@ class BnLog {
   }) async {
     //critical 0 // info 3 verbose 5
     if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.info)) return;
-
     _talkerLogger.info(text);
   }
 
@@ -102,7 +101,6 @@ class BnLog {
   }) async {
     //critical 0 // info 3 verbose 5
     if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.info)) return;
-
     _talkerLogger.info(text);
   }
 
@@ -219,18 +217,6 @@ class BnLog {
     }
   }
 
-  static Future<bool> clearLogs() async {
-    if (await init() == true) {
-      return Future.value(false);
-    }
-    var dir = _getLogDir();
-    /* for (var key in _logBox!.keys) {
-      await _logBox?.delete(key);
-    }
-    BnLog.info(text: 'Cleared logs');*/
-    return Future.value(true);
-  }
-
   ///
   /// endTimeInMillis
   static Future<bool> cleanUpLogsByFilter(Duration deleteOlderThan) async {
@@ -259,7 +245,7 @@ class BnLog {
       barrierDismissible: true,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: const Text('Set LogLevel'),
+          title: Text(Localize.of(context).setLogLevel),
           content: SizedBox(
             height: 100,
             child: CupertinoPicker(

@@ -217,7 +217,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "apptrackingtransparancy": MessageLookupByLibrary.simpleMessage(
       "We care about your privacy and data security.\nTo help us improve the BladeNight experience, we transfer your location to our server. This information includes a unique ID created when you first start the app to enable friends to be assigned. This data is never passed on to third parties or used for advertising purposes.",
     ),
-    "at": MessageLookupByLibrary.simpleMessage("at"),
+    "at": MessageLookupByLibrary.simpleMessage("on"),
     "autoStartTracking": MessageLookupByLibrary.simpleMessage(
       "Location sharing started automatically. To disable behaviour go to settings and switch Auto-Start/Stop location sharing off",
     ),
@@ -843,6 +843,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Insert dataset incl. bna:",
     ),
     "setLogData": MessageLookupByLibrary.simpleMessage("Data logger"),
+    "setLogLevel": MessageLookupByLibrary.simpleMessage("Set log level"),
     "setMeColor": MessageLookupByLibrary.simpleMessage("Own Color on Map"),
     "setOpenSystemSettings": MessageLookupByLibrary.simpleMessage(
       "Open Operatingsystem settings",
@@ -876,6 +877,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(
       "Show procession participants (limited to 100 in procession) on map. Works only when your location is shared.",
     ),
+    "showLogData": MessageLookupByLibrary.simpleMessage("Show log data"),
     "showOwnColoredTrack": MessageLookupByLibrary.simpleMessage(
       "Colorize my track",
     ),

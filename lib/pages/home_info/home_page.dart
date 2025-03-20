@@ -51,8 +51,7 @@ class _HomePageState extends ConsumerState<HomePage>
   @override
   Future<AppExitResponse> didRequestAppExit() async {
     print('App exit requested');
-    BnLog.info(text: 'App exit requested');
-    BnLog.flush();
+    BnLog.close();
     return AppExitResponse.cancel;
   }
 

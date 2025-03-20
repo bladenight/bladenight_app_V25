@@ -873,6 +873,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hier Datensatz einfügen incl. bna:",
     ),
     "setLogData": MessageLookupByLibrary.simpleMessage("Datenlogger"),
+    "setLogLevel": MessageLookupByLibrary.simpleMessage("Loglevel einstellen"),
     "setMeColor": MessageLookupByLibrary.simpleMessage("Eigene Farbe in Karte"),
     "setOpenSystemSettings": MessageLookupByLibrary.simpleMessage(
       "Öffne Systemeinstellungen",
@@ -906,6 +907,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(
       "Zeige Teilnehmer (auf 100 aus dem Zug limitiert) in der Karte. Funktioniert nur bei eigener Standortfreigabe.",
     ),
+    "showLogData": MessageLookupByLibrary.simpleMessage("Zeige Log Monitor"),
     "showOwnColoredTrack": MessageLookupByLibrary.simpleMessage(
       "Coloriere Route",
     ),

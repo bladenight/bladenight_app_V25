@@ -560,9 +560,9 @@ class Localize {
     );
   }
 
-  /// `at`
+  /// `on`
   String get at {
-    return Intl.message('at', name: 'at', desc: '', args: []);
+    return Intl.message('on', name: 'at', desc: '', args: []);
   }
 
   /// `Info - please read - Stop automatic on finish`
@@ -4048,6 +4048,26 @@ class Localize {
       name: 'trackingStoppedLowBat',
       desc: '',
       args: [level],
+    );
+  }
+
+  /// `Set log level`
+  String get setLogLevel {
+    return Intl.message(
+      'Set log level',
+      name: 'setLogLevel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show log data`
+  String get showLogData {
+    return Intl.message(
+      'Show log data',
+      name: 'showLogData',
+      desc: '',
+      args: [],
     );
   }
 }

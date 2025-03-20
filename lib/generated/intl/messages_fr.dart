@@ -902,6 +902,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "setLogData": MessageLookupByLibrary.simpleMessage(
       "Enregistreur de données",
     ),
+    "setLogLevel": MessageLookupByLibrary.simpleMessage("Set log level"),
     "setMeColor": MessageLookupByLibrary.simpleMessage(
       "Propre couleur sur la carte",
     ),

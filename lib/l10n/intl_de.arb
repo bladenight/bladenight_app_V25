@@ -549,5 +549,7 @@
   "enterBgPassword": "Sicherheits-Passwort Bladeguard eingeben",
   "sponsors": "Unsere Sponsoren",
   "startsIn": "Startet in",
-  "trackingStoppedLowBat": "Tracking gestoppt wegen niedriger Batterie {level}%. Um dies zu vermeiden, deaktivieren Sie Autostop in den Einstellungen"
+  "trackingStoppedLowBat": "Tracking gestoppt wegen niedriger Batterie {level}%. Um dies zu vermeiden, deaktivieren Sie Autostop in den Einstellungen",
+  "setLogLevel": "Loglevel einstellen",
+  "showLogData": "Zeige Log Monitor"
 }

@@ -182,7 +182,7 @@ class WampV2 {
   Future addToWamp<T>(BnWampMessage message) async {
     if (!_wampStopped) {
       BnLog.debug(
-          text: 'Wamp stopped- startWamp',
+          text: 'Wamp stopped - startWamp',
           methodName: 'addToWamp',
           className: toString());
       var connStatus = await startWamp();
