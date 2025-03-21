@@ -22,31 +22,31 @@ class MovingPointMapper extends ClassMapperBase<MovingPoint> {
 
   static int _$position(MovingPoint v) => v.position;
   static const Field<MovingPoint, int> _f$position =
-      Field('position', _$position, key: 'pos');
+      Field('position', _$position, key: r'pos');
   static int _$speed(MovingPoint v) => v.speed;
   static const Field<MovingPoint, int> _f$speed =
-      Field('speed', _$speed, key: 'spd');
+      Field('speed', _$speed, key: r'spd');
   static double? _$realSpeed(MovingPoint v) => v.realSpeed;
   static const Field<MovingPoint, double> _f$realSpeed =
-      Field('realSpeed', _$realSpeed, key: 'rsp', opt: true);
+      Field('realSpeed', _$realSpeed, key: r'rsp', opt: true);
   static int? _$eta(MovingPoint v) => v.eta;
   static const Field<MovingPoint, int> _f$eta = Field('eta', _$eta, opt: true);
   static bool _$isOnRoute(MovingPoint v) => v.isOnRoute;
   static const Field<MovingPoint, bool> _f$isOnRoute =
-      Field('isOnRoute', _$isOnRoute, key: 'ior', opt: true, def: true);
+      Field('isOnRoute', _$isOnRoute, key: r'ior', opt: true, def: true);
   static bool _$isInProcession(MovingPoint v) => v.isInProcession;
   static const Field<MovingPoint, bool> _f$isInProcession = Field(
       'isInProcession', _$isInProcession,
-      key: 'iip', opt: true, def: true);
+      key: r'iip', opt: true, def: true);
   static double? _$latitude(MovingPoint v) => v.latitude;
   static const Field<MovingPoint, double> _f$latitude =
-      Field('latitude', _$latitude, key: 'lat', opt: true);
+      Field('latitude', _$latitude, key: r'lat', opt: true);
   static double? _$longitude(MovingPoint v) => v.longitude;
   static const Field<MovingPoint, double> _f$longitude =
-      Field('longitude', _$longitude, key: 'lon', opt: true);
+      Field('longitude', _$longitude, key: r'lon', opt: true);
   static int? _$accuracy(MovingPoint v) => v.accuracy;
   static const Field<MovingPoint, int> _f$accuracy =
-      Field('accuracy', _$accuracy, key: 'acc', opt: true);
+      Field('accuracy', _$accuracy, key: r'acc', opt: true);
 
   @override
   final MappableFields<MovingPoint> fields = const {

@@ -25,40 +25,41 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
 
   static MovingPoint _$head(RealtimeUpdate v) => v.head;
   static const Field<RealtimeUpdate, MovingPoint> _f$head =
-      Field('head', _$head, key: 'hea');
+      Field('head', _$head, key: r'hea');
   static MovingPoint _$tail(RealtimeUpdate v) => v.tail;
   static const Field<RealtimeUpdate, MovingPoint> _f$tail =
-      Field('tail', _$tail, key: 'tai');
+      Field('tail', _$tail, key: r'tai');
   static MovingPoint _$user(RealtimeUpdate v) => v.user;
   static const Field<RealtimeUpdate, MovingPoint> _f$user =
-      Field('user', _$user, key: 'up');
+      Field('user', _$user, key: r'up');
   static double _$runningLength(RealtimeUpdate v) => v.runningLength;
   static const Field<RealtimeUpdate, double> _f$runningLength =
-      Field('runningLength', _$runningLength, key: 'rle');
+      Field('runningLength', _$runningLength, key: r'rle');
   static String _$routeName(RealtimeUpdate v) => v.routeName;
   static const Field<RealtimeUpdate, String> _f$routeName =
-      Field('routeName', _$routeName, key: 'rna');
+      Field('routeName', _$routeName, key: r'rna');
   static String _$usersTracking(RealtimeUpdate v) => v.usersTracking;
   static const Field<RealtimeUpdate, String> _f$usersTracking =
-      Field('usersTracking', _$usersTracking, key: 'ust');
+      Field('usersTracking', _$usersTracking, key: r'ust');
   static String _$users(RealtimeUpdate v) => v.users;
   static const Field<RealtimeUpdate, String> _f$users =
-      Field('users', _$users, key: 'usr');
+      Field('users', _$users, key: r'usr');
   static FriendsMessage _$friends(RealtimeUpdate v) => v.friends;
   static const Field<RealtimeUpdate, FriendsMessage> _f$friends =
-      Field('friends', _$friends, key: 'fri');
+      Field('friends', _$friends, key: r'fri');
   static int? _$specialFunction(RealtimeUpdate v) => v.specialFunction;
   static const Field<RealtimeUpdate, int> _f$specialFunction =
-      Field('specialFunction', _$specialFunction, key: 'spf', opt: true);
+      Field('specialFunction', _$specialFunction, key: r'spf', opt: true);
   static Exception? _$rpcException(RealtimeUpdate v) => v.rpcException;
   static const Field<RealtimeUpdate, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);
   static EventStatus? _$eventState(RealtimeUpdate v) => v.eventState;
   static const Field<RealtimeUpdate, EventStatus> _f$eventState =
-      Field('eventState', _$eventState, key: 'sts', opt: true);
+      Field('eventState', _$eventState, key: r'sts', opt: true);
   static bool _$eventIsActive(RealtimeUpdate v) => v.eventIsActive;
-  static const Field<RealtimeUpdate, bool> _f$eventIsActive =
-      Field('eventIsActive', _$eventIsActive, key: 'isa', opt: true, def: true);
+  static const Field<RealtimeUpdate, bool> _f$eventIsActive = Field(
+      'eventIsActive', _$eventIsActive,
+      key: r'isa', opt: true, def: true);
   static DateTime _$timeStamp(RealtimeUpdate v) => v.timeStamp;
   static const Field<RealtimeUpdate, DateTime> _f$timeStamp =
       Field('timeStamp', _$timeStamp, mode: FieldMode.member);

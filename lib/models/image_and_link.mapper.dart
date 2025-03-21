@@ -22,13 +22,13 @@ class ImageAndLinkMapper extends ClassMapperBase<ImageAndLink> {
 
   static String? _$image(ImageAndLink v) => v.image;
   static const Field<ImageAndLink, String> _f$image =
-      Field('image', _$image, key: 'img');
+      Field('image', _$image, key: r'img');
   static String? _$link(ImageAndLink v) => v.link;
   static const Field<ImageAndLink, String> _f$link =
-      Field('link', _$link, key: 'lnk');
+      Field('link', _$link, key: r'lnk');
   static String? _$text(ImageAndLink v) => v.text;
   static const Field<ImageAndLink, String> _f$text =
-      Field('text', _$text, key: 'txt');
+      Field('text', _$text, key: r'txt');
   static String? _$key(ImageAndLink v) => v.key;
   static const Field<ImageAndLink, String> _f$key = Field('key', _$key);
 

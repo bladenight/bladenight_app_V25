@@ -54,7 +54,7 @@ class PreferencesHelper {
   }
 
   static Future<ImageAndLinkList> getImagesAndLinksPref() async {
-    if (!kIsWeb) BnLog.trace(text: 'Prefs get images and links');
+    if (!kIsWeb) BnLog.verbose(text: 'Prefs get images and links');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       var val = prefs.getString(_imagesAndLinksPref);

@@ -76,19 +76,19 @@ class SetProcessionModeMessageMapper
 
   static AdminProcessionMode _$mode(SetProcessionModeMessage v) => v.mode;
   static const Field<SetProcessionModeMessage, AdminProcessionMode> _f$mode =
-      Field('mode', _$mode, key: 'pmo');
+      Field('mode', _$mode, key: r'pmo');
   static int _$timestamp(SetProcessionModeMessage v) => v.timestamp;
   static const Field<SetProcessionModeMessage, int> _f$timestamp =
-      Field('timestamp', _$timestamp, key: 'tim');
+      Field('timestamp', _$timestamp, key: r'tim');
   static String _$checksum(SetProcessionModeMessage v) => v.checksum;
   static const Field<SetProcessionModeMessage, String> _f$checksum =
-      Field('checksum', _$checksum, key: 'chk');
+      Field('checksum', _$checksum, key: r'chk');
   static int _$noise(SetProcessionModeMessage v) => v.noise;
   static const Field<SetProcessionModeMessage, int> _f$noise =
-      Field('noise', _$noise, key: 'noi');
+      Field('noise', _$noise, key: r'noi');
   static String _$deviceId(SetProcessionModeMessage v) => v.deviceId;
   static const Field<SetProcessionModeMessage, String> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did');
+      Field('deviceId', _$deviceId, key: r'did');
 
   @override
   final MappableFields<SetProcessionModeMessage> fields = const {

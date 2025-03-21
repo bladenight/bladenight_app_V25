@@ -40,12 +40,13 @@ class BnLog {
 
   static Future<Directory> _getLogDir() async {
     final appDirectory = await getApplicationDocumentsDirectory();
-    var logDir = '${appDirectory.path}/log/';
+    var logDir = '${appDirectory.path}/log';
     return await Directory(logDir).create();
   }
 
   static void close() {
-    fileLogger?.output('${DateTime.now().toIso8601String()}AppClosed');
+    fileLogger?.output(
+        '${DateTime.now().toIso8601String()}AppClosed', LogLevel.info.name);
     _timer?.cancel();
   }
 
@@ -62,7 +63,7 @@ class BnLog {
       _timer = Timer(Duration(minutes: 5000), clearOlderLogs);
       return true;
     } catch (e) {
-      print('error init logger $error');
+      print('Error init logger $error');
       return false;
     }
   }
@@ -77,7 +78,9 @@ class BnLog {
   }) async {
     //critical 0 // info 3 verbose 5
     if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.debug)) return;
-    _talkerLogger.debug('$text\nclass:$className\nmethod:$methodName');
+    var logText = '$text\nclass:$className\nmethod:$methodName';
+    _talkerLogger.debug(logText);
+    fileLogger?.output(logText, LogLevel.debug.name);
   }
 
   ///Print extended info
@@ -92,6 +95,7 @@ class BnLog {
     //critical 0 // info 3 verbose 5
     if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.info)) return;
     _talkerLogger.info(text);
+    fileLogger?.output(text, LogLevel.info.name);
   }
 
   static void info({
@@ -102,6 +106,7 @@ class BnLog {
     //critical 0 // info 3 verbose 5
     if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.info)) return;
     _talkerLogger.info(text);
+    fileLogger?.output(text, LogLevel.info.name);
   }
 
   static void warning({
@@ -110,9 +115,11 @@ class BnLog {
     required String text,
     String? dataLogType,
   }) async {
-    _talkerLogger.warning('$text'
+    var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
-        '${methodName != null ? '\nm:$methodName' : ""}');
+        '${methodName != null ? '\nm:$methodName' : ""}';
+    _talkerLogger.warning(logText);
+    fileLogger?.output(logText, LogLevel.warning.name);
   }
 
   /// trace
@@ -125,7 +132,7 @@ class BnLog {
   /// @param text         the text
   /// @param exception  the exception if thrown
   /// @param stacktrace  the stacktrace if wanted
-  static void trace({
+  static void verbose({
     String? className,
     String? methodName,
     required String text,
@@ -138,7 +145,7 @@ class BnLog {
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}';
     _talkerLogger.verbose(logText);
-    fileLogger?.output(logText);
+    fileLogger?.output(logText, LogLevel.verbose.name);
   }
 
   /// error
@@ -165,7 +172,7 @@ class BnLog {
         '${exception != null ? '\nex:${exception.toString()}' : ""}'
         '${stacktrace != null ? '\nex:$stacktrace' : ""}';
     _talkerLogger.error(logText);
-    fileLogger?.output(logText);
+    fileLogger?.output(logText, LogLevel.error.name);
   }
 
   /// fatal
@@ -191,7 +198,7 @@ class BnLog {
         '${exception != null ? '\nex:${exception.toString()}' : ""}'
         '${stacktrace != null ? '\nex:$stacktrace' : ""}';
     _talkerLogger.critical(logText);
-    fileLogger?.output(logText);
+    fileLogger?.output(logText, LogLevel.critical.name);
   }
 
   static Future<List<FileSystemEntity>> collectLogFiles() async {

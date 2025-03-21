@@ -72,7 +72,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m19(level) =>
       "Tracking stopped due to low battery ${level}%. To avoid turn off Autostop in settings";
 
-  static String m20(date) => "${date}";
+  static String m20(level) =>
+      "Display on activated by app settings - Warning, battery low ${level} %.";
+
+  static String m21(date) => "${date}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -205,6 +208,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "appIdTitle": MessageLookupByLibrary.simpleMessage(
       "Unique application identification string",
     ),
+    "appInfo": MessageLookupByLibrary.simpleMessage("App info"),
     "appInitialisationError": MessageLookupByLibrary.simpleMessage(
       "App initialisation failed",
     ),
@@ -824,6 +828,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "serverNotReachable": MessageLookupByLibrary.simpleMessage(
       "Connecting to server ...",
     ),
+    "serverVersion": MessageLookupByLibrary.simpleMessage("Server version"),
     "sessionConnectionError": MessageLookupByLibrary.simpleMessage(
       "Error negotiate session connection",
     ),
@@ -1007,13 +1012,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "wakelockEnabled": MessageLookupByLibrary.simpleMessage(
       "Display remains an",
     ),
-    "wakelockWarnBattery": MessageLookupByLibrary.simpleMessage(
-      "Display on activated by app settings - Warning, battery low.",
-    ),
+    "wakelockWarnBattery": m20,
     "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
       "is canceled! Please check this on https://bladenight-muenchen.de",
     ),
-    "weekdayIntl": m20,
+    "weekdayIntl": m21,
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
     "yesterday": MessageLookupByLibrary.simpleMessage("was yesterday"),
   };

@@ -54,7 +54,7 @@ extension LocationStore on HiveSettingsDB {
   static Future<bool> saveUserTrackPointList(
       List<UserGpxPoint> val, DateTime dateTime) async {
     try {
-      BnLog.trace(
+      BnLog.verbose(
           text:
               'Will save user track points list with an amount of ${val.length}');
 

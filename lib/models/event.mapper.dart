@@ -95,45 +95,45 @@ class EventMapper extends ClassMapperBase<Event> {
 
   static DateTime _$startDate(Event v) => v.startDate;
   static const Field<Event, DateTime> _f$startDate =
-      Field('startDate', _$startDate, key: 'sta');
+      Field('startDate', _$startDate, key: r'sta');
   static String _$routeName(Event v) => v.routeName;
   static const Field<Event, String> _f$routeName =
-      Field('routeName', _$routeName, key: 'rou');
+      Field('routeName', _$routeName, key: r'rou');
   static Duration _$duration(Event v) => v.duration;
   static const Field<Event, Duration> _f$duration = Field(
       'duration', _$duration,
-      key: 'dur', opt: true, def: const Duration(days: 240));
+      key: r'dur', opt: true, def: const Duration(days: 240));
   static int _$participants(Event v) => v.participants;
   static const Field<Event, int> _f$participants =
-      Field('participants', _$participants, key: 'par', opt: true, def: 0);
+      Field('participants', _$participants, key: r'par', opt: true, def: 0);
   static int _$routeLength(Event v) => v.routeLength;
   static const Field<Event, int> _f$routeLength =
-      Field('routeLength', _$routeLength, key: 'len', opt: true, def: 0);
+      Field('routeLength', _$routeLength, key: r'len', opt: true, def: 0);
   static EventStatus _$status(Event v) => v.status;
   static const Field<Event, EventStatus> _f$status = Field('status', _$status,
-      key: 'sts', opt: true, def: EventStatus.pending);
+      key: r'sts', opt: true, def: EventStatus.pending);
   static List<LatLng> _$nodes(Event v) => v.nodes;
   static const Field<Event, List<LatLng>> _f$nodes =
-      Field('nodes', _$nodes, key: 'nod', opt: true, def: const <LatLng>[]);
+      Field('nodes', _$nodes, key: r'nod', opt: true, def: const <LatLng>[]);
   static DateTime? _$lastUpdate(Event v) => v.lastUpdate;
   static const Field<Event, DateTime> _f$lastUpdate =
-      Field('lastUpdate', _$lastUpdate, key: 'lastupdate', opt: true);
+      Field('lastUpdate', _$lastUpdate, key: r'lastupdate', opt: true);
   static Exception? _$rpcException(Event v) => v.rpcException;
   static const Field<Event, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);
   static double? _$startPointLatitude(Event v) => v.startPointLatitude;
   static const Field<Event, double> _f$startPointLatitude =
-      Field('startPointLatitude', _$startPointLatitude, key: 'sla', opt: true);
+      Field('startPointLatitude', _$startPointLatitude, key: r'sla', opt: true);
   static double? _$startPointLongitude(Event v) => v.startPointLongitude;
   static const Field<Event, double> _f$startPointLongitude = Field(
       'startPointLongitude', _$startPointLongitude,
-      key: 'slo', opt: true);
+      key: r'slo', opt: true);
   static String? _$startPoint(Event v) => v.startPoint;
   static const Field<Event, String> _f$startPoint =
-      Field('startPoint', _$startPoint, key: 'stp', opt: true);
+      Field('startPoint', _$startPoint, key: r'stp', opt: true);
   static bool _$isActive(Event v) => v.isActive;
   static const Field<Event, bool> _f$isActive =
-      Field('isActive', _$isActive, key: 'isa', opt: true, def: true);
+      Field('isActive', _$isActive, key: r'isa', opt: true, def: true);
 
   @override
   final MappableFields<Event> fields = const {
@@ -315,7 +315,7 @@ class EventsMapper extends ClassMapperBase<Events> {
 
   static List<Event> _$events(Events v) => v.events;
   static const Field<Events, List<Event>> _f$events =
-      Field('events', _$events, key: 'evt');
+      Field('events', _$events, key: r'evt');
   static Exception? _$rpcException(Events v) => v.rpcException;
   static const Field<Events, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);

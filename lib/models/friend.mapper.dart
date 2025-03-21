@@ -25,7 +25,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
   static const Field<Friend, String> _f$name = Field('name', _$name);
   static int _$friendId(Friend v) => v.friendId;
   static const Field<Friend, int> _f$friendId =
-      Field('friendId', _$friendId, key: 'friendid');
+      Field('friendId', _$friendId, key: r'friendid');
   static Color _$color(Friend v) => v.color;
   static const Field<Friend, Color> _f$color =
       Field('color', _$color, opt: true, def: Colors.white24);
@@ -61,7 +61,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
       Field('distanceToUser', _$distanceToUser, opt: true, def: 0);
   static int _$specialValue(Friend v) => v.specialValue;
   static const Field<Friend, int> _f$specialValue =
-      Field('specialValue', _$specialValue, key: 'spv', opt: true, def: 0);
+      Field('specialValue', _$specialValue, key: r'spv', opt: true, def: 0);
   static int? _$timeToUser(Friend v) => v.timeToUser;
   static const Field<Friend, int> _f$timeToUser =
       Field('timeToUser', _$timeToUser, opt: true, def: 0);
@@ -76,7 +76,7 @@ class FriendMapper extends ClassMapperBase<Friend> {
       Field('hasServerEntry', _$hasServerEntry, opt: true, def: true);
   static double _$realSpeed(Friend v) => v.realSpeed;
   static const Field<Friend, double> _f$realSpeed =
-      Field('realSpeed', _$realSpeed, key: 'rsp');
+      Field('realSpeed', _$realSpeed, key: r'rsp');
 
   @override
   final MappableFields<Friend> fields = const {

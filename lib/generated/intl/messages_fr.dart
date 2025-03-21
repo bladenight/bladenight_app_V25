@@ -71,9 +71,12 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m18(time) => "${time}";
 
   static String m19(level) =>
-      "Tracking stopped due to low battery ${level}%. To avoid turn off Autostop in settings";
+      "Le suivi s\'est arrêté en raison d\'une batterie faible ${level}%. Pour éviter cela, désactivez l\'arrêt automatique dans les paramètres";
 
-  static String m20(date) => "${date}";
+  static String m20(level) =>
+      "Affichage activé par les paramètres de l\'application - Avertissement, batterie faible ${level} %";
+
+  static String m21(date) => "${date}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -216,8 +219,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "appIdTitle": MessageLookupByLibrary.simpleMessage(
       "Chaîne d\'identification unique de l\'application",
     ),
+    "appInfo": MessageLookupByLibrary.simpleMessage("App Info"),
     "appInitialisationError": MessageLookupByLibrary.simpleMessage(
-      "App initialisation failed",
+      "L\'initialisation de l\'application a échoué",
     ),
     "appName": MessageLookupByLibrary.simpleMessage("BladeNight Munich"),
     "appOutDated": MessageLookupByLibrary.simpleMessage(
@@ -279,7 +283,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Etes-vous sur place aujourd\'hui en tant que protège-lame!",
     ),
     "bgTodayTapToUnRegister": MessageLookupByLibrary.simpleMessage(
-      "Unregister as a Bladeguard today!",
+      "Désinscrivez-vous en tant que Bladeguard aujourd\'hui !",
     ),
     "bgUpdatePhone": MessageLookupByLibrary.simpleMessage("Mettre à jour"),
     "birthday": MessageLookupByLibrary.simpleMessage("Birthday"),
@@ -308,12 +312,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "canceled": MessageLookupByLibrary.simpleMessage("😞 Annulé 😞"),
     "change": MessageLookupByLibrary.simpleMessage("Le modifier."),
     "changeDarkColor": MessageLookupByLibrary.simpleMessage(
-      "Change dark mode color",
+      "Changer la couleur du mode sombre",
     ),
     "changeLightColor": MessageLookupByLibrary.simpleMessage(
-      "Change light mode color",
+      "Changer la couleur du mode d\'éclairage",
     ),
-    "changeMeColor": MessageLookupByLibrary.simpleMessage("Change me color"),
+    "changeMeColor": MessageLookupByLibrary.simpleMessage(
+      "Change-moi de couleur",
+    ),
     "changetoalways": MessageLookupByLibrary.simpleMessage(
       "Changer pour \'Autoriser tout le temps\'",
     ),
@@ -419,7 +425,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Vous devez entrer un code à 6 chiffres",
     ),
     "enterBgPassword": MessageLookupByLibrary.simpleMessage(
-      "Please enter Bladeguard security password",
+      "Veuillez saisir le mot de passe de sécurité Bladeguard",
     ),
     "enterBirthday": MessageLookupByLibrary.simpleMessage("Your Birthday"),
     "enterEmail": MessageLookupByLibrary.simpleMessage(
@@ -838,7 +844,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "resetTrackPointsStore": MessageLookupByLibrary.simpleMessage("Clear all"),
     "resetTrackPointsStoreTitle": MessageLookupByLibrary.simpleMessage(
-      "Clear location-store for all tracked events.",
+      "Effacez location-store pour tous les événements suivis.",
     ),
     "restartRequired": MessageLookupByLibrary.simpleMessage(
       "Redémarrage requis ! Veuillez fermer l\'application et la rouvrir !!!",
@@ -858,7 +864,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "seemsoffline": MessageLookupByLibrary.simpleMessage(
       "Attente de la connexion internet ...",
     ),
-    "selectDate": MessageLookupByLibrary.simpleMessage("Select Date"),
+    "selectDate": MessageLookupByLibrary.simpleMessage("Sélectionner une date"),
     "selectTrackingType": MessageLookupByLibrary.simpleMessage(
       "Sélectionner le type de suivi",
     ),
@@ -873,10 +879,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendlinksubject": MessageLookupByLibrary.simpleMessage(
       "Envoyer un lien à BladeNight-App. Vous pouvez vous voir",
     ),
-    "serverConnected": MessageLookupByLibrary.simpleMessage("Server connected"),
+    "serverConnected": MessageLookupByLibrary.simpleMessage("Serveur connecté"),
     "serverNotReachable": MessageLookupByLibrary.simpleMessage(
       "Connecting to server ...",
     ),
+    "serverVersion": MessageLookupByLibrary.simpleMessage("Serverversion"),
     "sessionConnectionError": MessageLookupByLibrary.simpleMessage(
       "Erreur de négociation de la connexion à la session",
     ),
@@ -902,7 +909,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "setLogData": MessageLookupByLibrary.simpleMessage(
       "Enregistreur de données",
     ),
-    "setLogLevel": MessageLookupByLibrary.simpleMessage("Set log level"),
+    "setLogLevel": MessageLookupByLibrary.simpleMessage(
+      "Définir le niveau de journalisation",
+    ),
     "setMeColor": MessageLookupByLibrary.simpleMessage(
       "Propre couleur sur la carte",
     ),
@@ -940,6 +949,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "showFullProcessionTitle": MessageLookupByLibrary.simpleMessage(
       "Afficher les participants au cortège (limité à 100 dans le cortège) sur la carte. Ne fonctionne qu\'en cas d\'autopistage",
     ),
+    "showLogData": MessageLookupByLibrary.simpleMessage(
+      "Afficher les données de journal",
+    ),
     "showOwnColoredTrack": MessageLookupByLibrary.simpleMessage(
       "Coloriser ma trace",
     ),
@@ -965,7 +977,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Fonctions spéciales - ne changez que si vous savez ce que vous faites !",
     ),
     "speed": MessageLookupByLibrary.simpleMessage("vitesse"),
-    "sponsors": MessageLookupByLibrary.simpleMessage("Our sponsors"),
+    "sponsors": MessageLookupByLibrary.simpleMessage("Nos sponsors"),
     "start": MessageLookupByLibrary.simpleMessage("Commence le"),
     "startLocationWithoutParticipating": MessageLookupByLibrary.simpleMessage(
       "Lieu de départ sans participation",
@@ -998,7 +1010,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "startTrackingOnlyTitle": MessageLookupByLibrary.simpleMessage(
       "Démarre le journal de trajet sans envoyer de données au serveur",
     ),
-    "startsIn": MessageLookupByLibrary.simpleMessage("Starts in"),
+    "startsIn": MessageLookupByLibrary.simpleMessage("Commence en"),
     "status": MessageLookupByLibrary.simpleMessage("Statut"),
     "status_active": MessageLookupByLibrary.simpleMessage("actif"),
     "status_inactive": MessageLookupByLibrary.simpleMessage("inactif"),
@@ -1074,13 +1086,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "wakelockEnabled": MessageLookupByLibrary.simpleMessage(
       "L\'écran reste allumé",
     ),
-    "wakelockWarnBattery": MessageLookupByLibrary.simpleMessage(
-      "Display on activated by app settings - Warning, battery low.",
-    ),
+    "wakelockWarnBattery": m20,
     "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
       "Est annulé ! Veuillez le vérifier sur https://bladenight-muenchen.de",
     ),
-    "weekdayIntl": m20,
+    "weekdayIntl": m21,
     "yes": MessageLookupByLibrary.simpleMessage("Oui"),
     "yesterday": MessageLookupByLibrary.simpleMessage("était hier"),
   };

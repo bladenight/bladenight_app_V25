@@ -22,43 +22,43 @@ class FriendMessageMapper extends ClassMapperBase<FriendMessage> {
 
   static int _$requestId(FriendMessage v) => v.requestId;
   static const Field<FriendMessage, int> _f$requestId =
-      Field('requestId', _$requestId, key: 'req');
+      Field('requestId', _$requestId, key: r'req');
   static bool _$online(FriendMessage v) => v.online;
   static const Field<FriendMessage, bool> _f$online =
-      Field('online', _$online, key: 'onl');
+      Field('online', _$online, key: r'onl');
   static int _$specialValue(FriendMessage v) => v.specialValue;
   static const Field<FriendMessage, int> _f$specialValue =
-      Field('specialValue', _$specialValue, key: 'spv');
+      Field('specialValue', _$specialValue, key: r'spv');
   static int? _$eta(FriendMessage v) => v.eta;
   static const Field<FriendMessage, int> _f$eta =
       Field('eta', _$eta, opt: true);
   static bool _$isOnRoute(FriendMessage v) => v.isOnRoute;
   static const Field<FriendMessage, bool> _f$isOnRoute =
-      Field('isOnRoute', _$isOnRoute, key: 'ior');
+      Field('isOnRoute', _$isOnRoute, key: r'ior');
   static bool _$isInProcession(FriendMessage v) => v.isInProcession;
   static const Field<FriendMessage, bool> _f$isInProcession =
-      Field('isInProcession', _$isInProcession, key: 'iip');
+      Field('isInProcession', _$isInProcession, key: r'iip');
   static double? _$latitude(FriendMessage v) => v.latitude;
   static const Field<FriendMessage, double> _f$latitude =
-      Field('latitude', _$latitude, key: 'lat', opt: true);
+      Field('latitude', _$latitude, key: r'lat', opt: true);
   static double? _$longitude(FriendMessage v) => v.longitude;
   static const Field<FriendMessage, double> _f$longitude =
-      Field('longitude', _$longitude, key: 'lon', opt: true);
+      Field('longitude', _$longitude, key: r'lon', opt: true);
   static int? _$accuracy(FriendMessage v) => v.accuracy;
   static const Field<FriendMessage, int> _f$accuracy =
-      Field('accuracy', _$accuracy, key: 'acc', opt: true);
+      Field('accuracy', _$accuracy, key: r'acc', opt: true);
   static double? _$realSpeed(FriendMessage v) => v.realSpeed;
   static const Field<FriendMessage, double> _f$realSpeed =
-      Field('realSpeed', _$realSpeed, key: 'rsp', opt: true);
+      Field('realSpeed', _$realSpeed, key: r'rsp', opt: true);
   static int _$position(FriendMessage v) => v.position;
   static const Field<FriendMessage, int> _f$position =
-      Field('position', _$position, key: 'pos');
+      Field('position', _$position, key: r'pos');
   static double _$speed(FriendMessage v) => v.speed;
   static const Field<FriendMessage, double> _f$speed =
-      Field('speed', _$speed, key: 'spd');
+      Field('speed', _$speed, key: r'spd');
   static int _$friendId(FriendMessage v) => v.friendId;
   static const Field<FriendMessage, int> _f$friendId =
-      Field('friendId', _$friendId, key: 'fid');
+      Field('friendId', _$friendId, key: r'fid');
 
   @override
   final MappableFields<FriendMessage> fields = const {

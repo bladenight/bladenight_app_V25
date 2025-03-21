@@ -24,7 +24,7 @@ class ImageAndLinkListMapper extends ClassMapperBase<ImageAndLinkList> {
   static List<ImageAndLink>? _$imagesAndLinks(ImageAndLinkList v) =>
       v.imagesAndLinks;
   static const Field<ImageAndLinkList, List<ImageAndLink>> _f$imagesAndLinks =
-      Field('imagesAndLinks', _$imagesAndLinks, key: 'ial');
+      Field('imagesAndLinks', _$imagesAndLinks, key: r'ial');
   static Exception? _$rpcException(ImageAndLinkList v) => v.rpcException;
   static const Field<ImageAndLinkList, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);

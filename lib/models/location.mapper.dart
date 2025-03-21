@@ -23,28 +23,28 @@ class LocationInfoMapper extends ClassMapperBase<LocationInfo> {
 
   static LatLng _$coords(LocationInfo v) => v.coords;
   static const Field<LocationInfo, LatLng> _f$coords =
-      Field('coords', _$coords, key: 'coo');
+      Field('coords', _$coords, key: r'coo');
   static bool _$isParticipating(LocationInfo v) => v.isParticipating;
   static const Field<LocationInfo, bool> _f$isParticipating =
-      Field('isParticipating', _$isParticipating, key: 'par');
+      Field('isParticipating', _$isParticipating, key: r'par');
   static String _$deviceId(LocationInfo v) => v.deviceId;
   static const Field<LocationInfo, String> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did');
+      Field('deviceId', _$deviceId, key: r'did');
   static int _$locationTimeStamp(LocationInfo v) => v.locationTimeStamp;
   static const Field<LocationInfo, int> _f$locationTimeStamp =
-      Field('locationTimeStamp', _$locationTimeStamp, key: 'lts');
+      Field('locationTimeStamp', _$locationTimeStamp, key: r'lts');
   static int? _$specialFunction(LocationInfo v) => v.specialFunction;
   static const Field<LocationInfo, int> _f$specialFunction =
-      Field('specialFunction', _$specialFunction, key: 'spf', opt: true);
+      Field('specialFunction', _$specialFunction, key: r'spf', opt: true);
   static double? _$userSpeed(LocationInfo v) => v.userSpeed;
   static const Field<LocationInfo, double> _f$userSpeed =
-      Field('userSpeed', _$userSpeed, key: 'spd', opt: true);
+      Field('userSpeed', _$userSpeed, key: r'spd', opt: true);
   static double? _$realSpeed(LocationInfo v) => v.realSpeed;
   static const Field<LocationInfo, double> _f$realSpeed =
-      Field('realSpeed', _$realSpeed, key: 'rsp', opt: true);
+      Field('realSpeed', _$realSpeed, key: r'rsp', opt: true);
   static double? _$accuracy(LocationInfo v) => v.accuracy;
   static const Field<LocationInfo, double> _f$accuracy =
-      Field('accuracy', _$accuracy, key: 'acc', opt: true);
+      Field('accuracy', _$accuracy, key: r'acc', opt: true);
 
   @override
   final MappableFields<LocationInfo> fields = const {

@@ -73,7 +73,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m19(level) =>
       "Tracking gestoppt wegen niedriger Batterie ${level}%. Um dies zu vermeiden, deaktivieren Sie Autostop in den Einstellungen";
 
-  static String m20(date) => "${date}";
+  static String m20(level) =>
+      "Display bleibt ist aktiviert - Warnung, das Batterieladung niedrig ${level}%.";
+
+  static String m21(date) => "${date}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -209,6 +212,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "anonymous": MessageLookupByLibrary.simpleMessage("Anonym"),
     "appId": MessageLookupByLibrary.simpleMessage("App-Id "),
     "appIdTitle": MessageLookupByLibrary.simpleMessage("App-Id "),
+    "appInfo": MessageLookupByLibrary.simpleMessage("App info"),
     "appInitialisationError": MessageLookupByLibrary.simpleMessage(
       "Ladefehler der App.",
     ),
@@ -852,6 +856,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "serverNotReachable": MessageLookupByLibrary.simpleMessage(
       "Verbinde mit Server ..",
     ),
+    "serverVersion": MessageLookupByLibrary.simpleMessage("Serverversion"),
     "sessionConnectionError": MessageLookupByLibrary.simpleMessage(
       "Fehler beim Verbinden",
     ),
@@ -1048,13 +1053,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "wakelockEnabled": MessageLookupByLibrary.simpleMessage(
       "Display bleibt an",
     ),
-    "wakelockWarnBattery": MessageLookupByLibrary.simpleMessage(
-      "Display an aktiviert - Warnung, das Batterieladung niedrig.",
-    ),
+    "wakelockWarnBattery": m20,
     "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
       "wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de",
     ),
-    "weekdayIntl": m20,
+    "weekdayIntl": m21,
     "yes": MessageLookupByLibrary.simpleMessage("Ja"),
     "yesterday": MessageLookupByLibrary.simpleMessage("war gestern"),
   };

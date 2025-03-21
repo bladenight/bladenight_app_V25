@@ -62,7 +62,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     _internetConnection = WampV2().internetConnChecker;
     _icCheckerSubscription = _internetConnection!.onStatusChange
         .listen((InternetConnectionStatus status) {
-      BnLog.trace(
+      BnLog.verbose(
           text:
               '${DateTime.now().toIso8601String()} Internet connection status change: {$status}',
           methodName: 'Internet connection listener',
@@ -162,7 +162,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
 
   void setStateIfChanged(ConnectivityStatus connectivityStatus) {
     if (state.connectivityStatus != connectivityStatus) {
-      BnLog.trace(
+      BnLog.verbose(
           text: 'Network state changed from $state to $connectivityStatus',
           methodName: 'setStateIfChanged',
           className: toString());

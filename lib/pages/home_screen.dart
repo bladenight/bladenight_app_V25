@@ -60,7 +60,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         LocationProvider().setToBackground(false);
         break;
       case AppLifecycleState.paused:
-        BnLog.trace(
+        BnLog.verbose(
             className: toString(),
             methodName: 'didChangeAppLifecycleState',
             text: 'App paused - LocProvider instance pause updates calling');
@@ -68,19 +68,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         LocationProvider().setToBackground(true);
         break;
       case AppLifecycleState.hidden:
-        BnLog.trace(
+        BnLog.verbose(
             className: toString(),
             methodName: 'didChangeAppLifecycleState',
             text: 'App hidden - ');
         break;
       case AppLifecycleState.detached:
-        BnLog.trace(
+        BnLog.verbose(
             className: toString(),
             methodName: 'didChangeAppLifecycleState',
             text: 'App detached - ');
         break;
       case AppLifecycleState.inactive:
-        BnLog.trace(
+        BnLog.verbose(
             className: toString(),
             methodName: 'didChangeAppLifecycleState',
             text: 'App inactive - ');
@@ -99,7 +99,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void resumeUpdates({bool force = false}) async {
-    BnLog.trace(
+    BnLog.verbose(
         className: toString(),
         methodName: 'pauseUpdates',
         text: 'update resumed');
@@ -112,7 +112,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   void pauseUpdates() async {
     LocationProvider().stopRealtimedataSubscription;
-    BnLog.trace(
+    BnLog.verbose(
         className: toString(),
         methodName: 'pauseUpdates',
         text: 'update paused');

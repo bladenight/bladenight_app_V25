@@ -333,8 +333,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
       child: Row(
         children: [
           Container(
-            color: CupertinoDynamicColor.resolve(
-                CupertinoColors.systemBackground, context),
+            color: CupertinoDynamicColor.resolve(Colors.transparent, context),
             width: 40,
             padding: const EdgeInsets.all(5),
             child: FittedBox(

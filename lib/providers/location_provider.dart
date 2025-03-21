@@ -288,7 +288,7 @@ class LocationProvider with ChangeNotifier {
 
     notifyListeners();
     _autoStartTrackingUpdateTimer();
-    BnLog.trace(
+    BnLog.verbose(
         className: 'locationProvider',
         methodName: 'init',
         text: 'init finished');
@@ -430,11 +430,13 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onLocation(bg.Location location) {
-    BnLog.trace(
+    BnLog.verbose(
         text:
             '_onLocation ${location.coords} battery: ${location.battery.level}%');
     updateUserLocation(location);
-    checkWakeLock(location.battery.level, location.battery.isCharging);
+    if (location.battery.level != -1) {
+      checkWakeLock(location.battery.level, location.battery.isCharging);
+    }
   }
 
   ///Update user location and track points list
@@ -596,14 +598,14 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onLocationError(bg.LocationError error) {
-    if (!kIsWeb) BnLog.trace(text: 'Location error reason: $error');
+    if (!kIsWeb) BnLog.verbose(text: 'Location error reason: $error');
     if (_lastKnownPoint != null) {
       //sendLocation(_lastKnownPoint!);
     }
   }
 
   void _onMotionChange(bg.Location location) {
-    BnLog.trace(
+    BnLog.verbose(
         text: '_onMotionChange ${location.coords} ${location.battery.level}% ');
     _isMoving = location.isMoving;
     if (!_isInBackground) {
@@ -613,23 +615,23 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onActivityChange(bg.ActivityChangeEvent event) {
-    BnLog.trace(text: '_onActivityChangeEvent ${event.activity}');
+    BnLog.verbose(text: '_onActivityChangeEvent ${event.activity}');
     //_subToUpdates();
   }
 
   void _onHeartBeat(bg.HeartbeatEvent event) {
-    BnLog.trace(text: '_onHeartbeatEvent  ${event.location}');
+    BnLog.verbose(text: '_onHeartbeatEvent  ${event.location}');
     _getHeartBeatLocation();
   }
 
   _onConnectivityChange(bg.ConnectivityChangeEvent event) {
-    BnLog.trace(text: '_onConnectivityChange  $event');
+    BnLog.verbose(text: '_onConnectivityChange  $event');
     //_networkConnected = event.connected;
   }
 
   void _getHeartBeatLocation() async {
     if (!isTracking) return;
-    BnLog.trace(text: '_getHeartBeatLocation');
+    BnLog.verbose(text: '_getHeartBeatLocation');
     try {
       await bg.BackgroundGeolocation.getCurrentPosition(
         timeout: 2,
@@ -1006,7 +1008,7 @@ class LocationProvider with ChangeNotifier {
 
   ///set [enabled] = true  or reset [enabled] = false location updates if tracking is enabled
   void startSaveLocationsUpdateTimer(bool enabled) {
-    BnLog.trace(text: 'init startSaveLocationsUpdateTimer to $enabled');
+    BnLog.verbose(text: 'init startSaveLocationsUpdateTimer to $enabled');
     _saveLocationsTimer?.cancel();
     if (enabled) {
       _saveLocationsTimer = Timer.periodic(
@@ -1068,7 +1070,7 @@ class LocationProvider with ChangeNotifier {
   ///[enabled] = true
   ///[enabled] = false stop timer
   void setRealtimedataUpdateTimerIfTracking(bool enabled) {
-    BnLog.trace(text: 'init setLocationTimer to $enabled');
+    BnLog.verbose(text: 'init setLocationTimer to $enabled');
     _updateRealtimedataIfTrackingTimer?.cancel();
     _saveLocationsTimer?.cancel();
     if (enabled) {
@@ -1090,7 +1092,7 @@ class LocationProvider with ChangeNotifier {
 
   ///Start timer to autostart tracking on event start every minute
   void _autoStartTrackingUpdateTimer() {
-    BnLog.trace(text: 'init startTrackingUpdateTimer');
+    BnLog.verbose(text: 'init startTrackingUpdateTimer');
     _startTrackingCheckTimer?.cancel();
     _startTrackingCheckTimer = Timer.periodic(
       const Duration(minutes: 1),
@@ -1117,7 +1119,8 @@ class LocationProvider with ChangeNotifier {
     if (_eventIsActive) {
       startTracking(TrackingType.userParticipating);
       _autoTrackingStarted = true;
-      BnLog.trace(text: '_autoStartTimerCallBack autostart tracking via timer');
+      BnLog.verbose(
+          text: '_autoStartTimerCallBack autostart tracking via timer');
       if (_isInBackground) {
         NotificationHelper().showString(
             id: DateTime.now().hashCode,
@@ -1189,17 +1192,18 @@ class LocationProvider with ChangeNotifier {
 
   void checkWakeLock(double batteryLevel, bool isCharging) async {
     if (_isInBackground) return;
-    BnLog.trace(text: 'checkWakelock');
+    BnLog.verbose(text: 'checkWakelock');
     if (HiveSettingsDB.wakeLockEnabled &&
         _wakelockDisabled == false &&
         !isCharging &&
+        batteryLevel != -1 &&
         batteryLevel < 0.2) {
-      BnLog.trace(text: 'checkWakelock disable Wakelock');
+      BnLog.verbose(text: 'checkWakelock disable Wakelock');
       //await WakelockPlus.disable();
       _wakelockDisabled = true;
       NotificationHelper().showString(
           id: DateTime.now().hashCode,
-          text: Localize.current.wakelockWarnBattery);
+          text: Localize.current.wakelockWarnBattery(batteryLevel * 100));
       //showToast(message: Localize.current.wakelockEnabled);
     }
     if (HiveSettingsDB.wakeLockEnabled &&
@@ -1243,7 +1247,7 @@ class LocationProvider with ChangeNotifier {
     }
     if (!WampV2().webSocketIsConnected &&
         timeDiff < const Duration(seconds: 60)) {
-      BnLog.trace(
+      BnLog.verbose(
           text:
               '${timeDiff.inSeconds} s not online. Last update : $lastRealtimedataUpdate',
           methodName: 'refresh',
@@ -1252,7 +1256,7 @@ class LocationProvider with ChangeNotifier {
           rpcException: WampException('Not online more than 60 s.'));
       // notifyListeners();
     } else if (!WampV2().webSocketIsConnected) {
-      BnLog.trace(
+      BnLog.verbose(
           text:
               '${timeDiff.inSeconds}s not connected. Last refresh: $lastRealtimedataUpdate',
           methodName: 'noTrackingRealtimedataRefresh',
@@ -1652,7 +1656,7 @@ class LocationProvider with ChangeNotifier {
   int rtUpdateFails = 0;
 
   void _setRealtimeUpdate(RealtimeUpdate rtu, {required bool notify}) {
-    BnLog.trace(text: '_setRealtimeUpdate $rtu');
+    BnLog.verbose(text: '_setRealtimeUpdate $rtu');
     _realtimeUpdate = rtu;
     if (rtu.rpcException == null) {
       rtUpdateFails = 0;

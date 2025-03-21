@@ -22,13 +22,13 @@ class ShakeHandResultMapper extends ClassMapperBase<ShakeHandResult> {
 
   static bool _$status(ShakeHandResult v) => v.status;
   static const Field<ShakeHandResult, bool> _f$status =
-      Field('status', _$status, key: 'sta');
+      Field('status', _$status, key: r'sta');
   static int _$minBuild(ShakeHandResult v) => v.minBuild;
   static const Field<ShakeHandResult, int> _f$minBuild =
-      Field('minBuild', _$minBuild, key: 'mbu');
+      Field('minBuild', _$minBuild, key: r'mbu');
   static String? _$serverVersion(ShakeHandResult v) => v.serverVersion;
   static const Field<ShakeHandResult, String> _f$serverVersion =
-      Field('serverVersion', _$serverVersion, key: 'ver', opt: true);
+      Field('serverVersion', _$serverVersion, key: r'ver', opt: true);
   static Exception? _$rpcException(ShakeHandResult v) => v.rpcException;
   static const Field<ShakeHandResult, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);

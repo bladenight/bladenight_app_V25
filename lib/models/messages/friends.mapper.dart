@@ -23,7 +23,7 @@ class FriendsMessageMapper extends ClassMapperBase<FriendsMessage> {
 
   static Map<String, FriendMessage> _$friends(FriendsMessage v) => v.friends;
   static const Field<FriendsMessage, Map<String, FriendMessage>> _f$friends =
-      Field('friends', _$friends, key: 'fri');
+      Field('friends', _$friends, key: r'fri');
   static Exception? _$exception(FriendsMessage v) => v.exception;
   static const Field<FriendsMessage, Exception> _f$exception =
       Field('exception', _$exception, opt: true);

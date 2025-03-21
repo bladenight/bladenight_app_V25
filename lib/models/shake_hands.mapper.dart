@@ -22,20 +22,20 @@ class ShakeHandMapper extends ClassMapperBase<ShakeHand> {
 
   static int _$build(ShakeHand v) => v.build;
   static const Field<ShakeHand, int> _f$build =
-      Field('build', _$build, key: 'bui');
+      Field('build', _$build, key: r'bui');
   static String _$deviceId(ShakeHand v) => v.deviceId;
   static const Field<ShakeHand, String> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did');
+      Field('deviceId', _$deviceId, key: r'did');
   static String _$manufacturer(ShakeHand v) => v.manufacturer;
   static const Field<ShakeHand, String> _f$manufacturer = Field(
       'manufacturer', _$manufacturer,
-      key: 'man', opt: true, def: 'unknown');
+      key: r'man', opt: true, def: 'unknown');
   static String _$model(ShakeHand v) => v.model;
   static const Field<ShakeHand, String> _f$model =
-      Field('model', _$model, key: 'mod', opt: true, def: 'unknown');
+      Field('model', _$model, key: r'mod', opt: true, def: 'unknown');
   static String _$osversion(ShakeHand v) => v.osversion;
   static const Field<ShakeHand, String> _f$osversion =
-      Field('osversion', _$osversion, key: 'rel', opt: true, def: 'unknown');
+      Field('osversion', _$osversion, key: r'rel', opt: true, def: 'unknown');
 
   @override
   final MappableFields<ShakeHand> fields = const {

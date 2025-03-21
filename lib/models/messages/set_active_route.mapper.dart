@@ -24,19 +24,19 @@ class SetActiveRouteMessageMapper
 
   static String _$route(SetActiveRouteMessage v) => v.route;
   static const Field<SetActiveRouteMessage, String> _f$route =
-      Field('route', _$route, key: 'rou');
+      Field('route', _$route, key: r'rou');
   static int _$timestamp(SetActiveRouteMessage v) => v.timestamp;
   static const Field<SetActiveRouteMessage, int> _f$timestamp =
-      Field('timestamp', _$timestamp, key: 'tim');
+      Field('timestamp', _$timestamp, key: r'tim');
   static String _$checksum(SetActiveRouteMessage v) => v.checksum;
   static const Field<SetActiveRouteMessage, String> _f$checksum =
-      Field('checksum', _$checksum, key: 'chk');
+      Field('checksum', _$checksum, key: r'chk');
   static int _$noise(SetActiveRouteMessage v) => v.noise;
   static const Field<SetActiveRouteMessage, int> _f$noise =
-      Field('noise', _$noise, key: 'noi');
+      Field('noise', _$noise, key: r'noi');
   static String _$deviceId(SetActiveRouteMessage v) => v.deviceId;
   static const Field<SetActiveRouteMessage, String> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did');
+      Field('deviceId', _$deviceId, key: r'did');
 
   @override
   final MappableFields<SetActiveRouteMessage> fields = const {

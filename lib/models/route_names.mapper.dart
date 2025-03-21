@@ -22,7 +22,7 @@ class RouteNamesMapper extends ClassMapperBase<RouteNames> {
 
   static List<String>? _$routeNames(RouteNames v) => v.routeNames;
   static const Field<RouteNames, List<String>> _f$routeNames =
-      Field('routeNames', _$routeNames, key: 'rna');
+      Field('routeNames', _$routeNames, key: r'rna');
   static Exception? _$exception(RouteNames v) => v.exception;
   static const Field<RouteNames, Exception> _f$exception =
       Field('exception', _$exception, opt: true);

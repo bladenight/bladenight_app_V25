@@ -22,7 +22,7 @@ class AppStartNotifier extends _$AppStartNotifier {
   Future<void> build() async {
     await _initializationLogic();
     ref.onDispose(() {
-      BnLog.trace(text: 'start notifier was disposed');
+      BnLog.verbose(text: 'start notifier was disposed');
     });
   }
 

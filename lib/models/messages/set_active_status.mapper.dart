@@ -25,19 +25,19 @@ class SetActiveStatusMessageMapper
 
   static EventStatus _$status(SetActiveStatusMessage v) => v.status;
   static const Field<SetActiveStatusMessage, EventStatus> _f$status =
-      Field('status', _$status, key: 'sta');
+      Field('status', _$status, key: r'sta');
   static int _$timestamp(SetActiveStatusMessage v) => v.timestamp;
   static const Field<SetActiveStatusMessage, int> _f$timestamp =
-      Field('timestamp', _$timestamp, key: 'tim');
+      Field('timestamp', _$timestamp, key: r'tim');
   static String _$checksum(SetActiveStatusMessage v) => v.checksum;
   static const Field<SetActiveStatusMessage, String> _f$checksum =
-      Field('checksum', _$checksum, key: 'chk');
+      Field('checksum', _$checksum, key: r'chk');
   static int _$noise(SetActiveStatusMessage v) => v.noise;
   static const Field<SetActiveStatusMessage, int> _f$noise =
-      Field('noise', _$noise, key: 'noi');
+      Field('noise', _$noise, key: r'noi');
   static String _$deviceId(SetActiveStatusMessage v) => v.deviceId;
   static const Field<SetActiveStatusMessage, String> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did');
+      Field('deviceId', _$deviceId, key: r'did');
 
   @override
   final MappableFields<SetActiveStatusMessage> fields = const {

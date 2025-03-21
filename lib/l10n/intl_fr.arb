@@ -547,10 +547,11 @@
   "sponsors": "Nos sponsors",
   "bgTodayTapToUnRegister": "Désinscrivez-vous en tant que Bladeguard aujourd'hui !",
   "startsIn": "Commence en",
-  "wakelockWarnBattery": "Affichage activé par les paramètres de l'application - Avertissement, batterie faible",
-  "trackingStoppedLowBat": "Le suivi s'est arrêté en raison d'une batterie faible {niveau}%. Pour éviter cela, désactivez l'arrêt automatique dans les paramètres",
+  "wakelockWarnBattery": "Affichage activé par les paramètres de l'application - Avertissement, batterie faible {level} %",
+  "trackingStoppedLowBat": "Le suivi s'est arrêté en raison d'une batterie faible {level}%. Pour éviter cela, désactivez l'arrêt automatique dans les paramètres",
   "setLogLevel": "Définir le niveau de journalisation",
   "showLogData": "Afficher les données de journal",
-  "serverVersion": "Serverversion"
+  "serverVersion": "Serverversion",
+  "appInfo": "App Info"
 }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:synchronized/synchronized.dart' show Lock;
@@ -14,14 +16,7 @@ class FileLogger {
 
   Future<void> init() async {
     try {
-      final ds = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      var path = '${directory.path}/${ds}_logger.txt';
-      if (file != null) {
-        return;
-      }
-      file = File(path);
-      await file
-          ?.writeAsString('${DateTime.now().toIso8601String()} file init');
+      //file = await getFile();
     } catch (e) {
       print("Can't open logfile getLogDir_logger.txt ${e.toString()}");
       return;
@@ -29,19 +24,36 @@ class FileLogger {
   }
 
   Future<void> destroy() {
+    try {
+      _lock.synchronized(timeout: Duration(milliseconds: 500), () async {
+        file = null;
+      });
+    } catch (_) {}
     file = null;
     return Future.value();
   }
 
-  void output(String event) {
-    _lock.synchronized(() async {
-      if (file != null) {
-        if (event.isNotEmpty) {
-          await file?.writeAsString(event, mode: FileMode.writeOnlyAppend);
-        }
-      } else {
-        print(event);
+  void output(String event, String level) async {
+    runZonedGuarded(() {
+      final ds = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      final logfilePath = '${directory.path}/${ds}_logger.txt';
+      try {
+        _lock.synchronized(timeout: Duration(milliseconds: 1000), () async {
+          var logFile = File(logfilePath);
+          if (event.isNotEmpty) {
+            await logFile.writeAsString(
+                '# [${DateTime.now().toIso8601String()}] ### [$level]##########\n$event\n###################',
+                mode: FileMode.writeOnlyAppend);
+          } else {
+            print(event);
+          }
+        });
+      } catch (e) {
+        print(
+            '[${DateTime.now().toIso8601String()}] error write logfile $logfilePath');
       }
+    }, (error, stack) {
+      print('[${DateTime.now().toIso8601String()}] error write logfile');
     });
   }
 
@@ -70,17 +82,21 @@ class FileLogger {
   }
 
   Future<bool> clearLogs() async {
-    var logFiles = await _collectLogFiles();
-    for (var logFile in logFiles) {
-      var file = File(logFile.path);
-      if (wantDeleteFile(file)) {
-        try {
-          await file.delete();
-        } catch (e) {
-          print('Logfile rotation ${file.path} could not been delete');
+    try {
+      _lock.synchronized(timeout: Duration(milliseconds: 2000), () async {
+        var logFiles = await _collectLogFiles();
+        for (var logFile in logFiles) {
+          var file = File(logFile.path);
+          if (wantDeleteFile(file)) {
+            try {
+              await file.delete();
+            } catch (e) {
+              print('Logfile rotation ${file.path} could not been delete');
+            }
+          }
         }
-      }
-    }
+      });
+    } catch (_) {}
     return Future.value(true);
   }
 

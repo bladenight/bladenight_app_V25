@@ -142,9 +142,9 @@ class WampV2 {
         return await _startStream();
       }, timeout: const Duration(seconds: 5));
     } on TimeoutException catch (_) {
-      BnLog.trace(text: 'Timeout _startStream');
+      BnLog.verbose(text: 'Timeout _startStream');
     } catch (ex) {
-      BnLog.trace(text: 'InitWamp error:$e ex:${ex.toString()}');
+      BnLog.verbose(text: 'InitWamp error:$e ex:${ex.toString()}');
     } finally {
       if (wampConnectionState != WampConnectionState.connected) {
         wampConnectionState = WampConnectionState.failed;
@@ -525,14 +525,14 @@ class WampV2 {
           }
         },
         onDone: () {
-          BnLog.trace(
+          BnLog.verbose(
               text: 'WampStream onDone',
               methodName: 'startStream',
               className: toString());
           _resetWampState();
         },
         onError: (err) async {
-          BnLog.trace(
+          BnLog.verbose(
               text: 'WampStream onError ${err.toString()}',
               methodName: 'startStream',
               className: toString());
@@ -547,13 +547,13 @@ class WampV2 {
           if (_retryLimit > 0) {
             await Future.delayed(const Duration(milliseconds: 500));
             _retryLimit--;
-            BnLog.trace(
+            BnLog.verbose(
                 text: 'WampStream error ${err.toString()} restart Stream',
                 methodName: 'startStream',
                 className: toString());
             _startStream();
           } else {
-            BnLog.trace(
+            BnLog.verbose(
                 text: 'WampStream error ${err.toString()} too many fails',
                 methodName: 'startStream',
                 className: toString());
@@ -621,7 +621,7 @@ class WampV2 {
     var actualServerHost =
         'http$hostAppend://${linkUri.host}:${linkUri.port}/www/';
 
-    BnLog.trace(
+    BnLog.verbose(
         className: 'Wamp_V2',
         text: 'Will open new Session http$hostAppend://${linkUri.host}',
         methodName: 'getSession');

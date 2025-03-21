@@ -518,7 +518,7 @@
   "editEvent": "Event ändern",
   "deleteEvent": "Event löschen",
   "wakelockEnabled": "Display bleibt an",
-  "wakelockWarnBattery": "Display an aktiviert - Warnung, das Batterieladung niedrig.",
+  "wakelockWarnBattery": "Display bleibt ist aktiviert - Warnung, das Batterieladung niedrig {level}%.",
   "wakelockDisabled": "Display schaltet ab - Akku laden",
   "resetTrackPointsStoreTitle": "Lösche alle aufgezeichneten und gespeicherten Tracks",
   "resetTrackPointsStore": "Lösche alle Routendaten",
@@ -552,5 +552,6 @@
   "trackingStoppedLowBat": "Tracking gestoppt wegen niedriger Batterie {level}%. Um dies zu vermeiden, deaktivieren Sie Autostop in den Einstellungen",
   "setLogLevel": "Loglevel einstellen",
   "showLogData": "Zeige Log Monitor",
-  "serverVersion": "Serverversion"
+  "serverVersion": "Serverversion",
+  "appInfo": "App info"
 }

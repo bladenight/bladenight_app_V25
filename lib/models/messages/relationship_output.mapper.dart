@@ -24,10 +24,10 @@ class RelationshipOutputMessageMapper
 
   static int _$friendId(RelationshipOutputMessage v) => v.friendId;
   static const Field<RelationshipOutputMessage, int> _f$friendId =
-      Field('friendId', _$friendId, key: 'fid');
+      Field('friendId', _$friendId, key: r'fid');
   static int _$requestId(RelationshipOutputMessage v) => v.requestId;
   static const Field<RelationshipOutputMessage, int> _f$requestId =
-      Field('requestId', _$requestId, key: 'rid');
+      Field('requestId', _$requestId, key: r'rid');
   static Exception? _$rpcException(RelationshipOutputMessage v) =>
       v.rpcException;
   static const Field<RelationshipOutputMessage, Exception> _f$rpcException =

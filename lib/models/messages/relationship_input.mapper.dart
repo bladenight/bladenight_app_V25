@@ -25,13 +25,13 @@ class RelationshipInputMessageMapper
 
   static String _$deviceId(RelationshipInputMessage v) => v.deviceId;
   static const Field<RelationshipInputMessage, String> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did');
+      Field('deviceId', _$deviceId, key: r'did');
   static int _$friendId(RelationshipInputMessage v) => v.friendId;
   static const Field<RelationshipInputMessage, int> _f$friendId =
-      Field('friendId', _$friendId, key: 'fid');
+      Field('friendId', _$friendId, key: r'fid');
   static int _$requestId(RelationshipInputMessage v) => v.requestId;
   static const Field<RelationshipInputMessage, int> _f$requestId =
-      Field('requestId', _$requestId, key: 'req');
+      Field('requestId', _$requestId, key: r'req');
 
   @override
   final MappableFields<RelationshipInputMessage> fields = const {
@@ -155,13 +155,13 @@ class GetFriendsListMessageMapper
 
   static String _$deviceId(GetFriendsListMessage v) => v.deviceId;
   static const Field<GetFriendsListMessage, String> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did');
+      Field('deviceId', _$deviceId, key: r'did');
   static int _$friendId(GetFriendsListMessage v) => v.friendId;
   static const Field<GetFriendsListMessage, int> _f$friendId =
-      Field('friendId', _$friendId, key: 'fid');
+      Field('friendId', _$friendId, key: r'fid');
   static int _$requestId(GetFriendsListMessage v) => v.requestId;
   static const Field<GetFriendsListMessage, int> _f$requestId =
-      Field('requestId', _$requestId, key: 'req');
+      Field('requestId', _$requestId, key: r'req');
 
   @override
   final MappableFields<GetFriendsListMessage> fields = const {

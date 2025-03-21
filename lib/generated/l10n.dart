@@ -3746,13 +3746,13 @@ class Localize {
     );
   }
 
-  /// `Display on activated by app settings - Warning, battery low.`
-  String get wakelockWarnBattery {
+  /// `Display on activated by app settings - Warning, battery low {level} %.`
+  String wakelockWarnBattery(Object level) {
     return Intl.message(
-      'Display on activated by app settings - Warning, battery low.',
+      'Display on activated by app settings - Warning, battery low $level %.',
       name: 'wakelockWarnBattery',
       desc: '',
-      args: [],
+      args: [level],
     );
   }
 
@@ -4069,6 +4069,21 @@ class Localize {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Server version`
+  String get serverVersion {
+    return Intl.message(
+      'Server version',
+      name: 'serverVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `App info`
+  String get appInfo {
+    return Intl.message('App info', name: 'appInfo', desc: '', args: []);
   }
 }
 

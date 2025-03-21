@@ -23,10 +23,10 @@ class RoutePointsMapper extends ClassMapperBase<RoutePoints> {
 
   static String _$name(RoutePoints v) => v.name;
   static const Field<RoutePoints, String> _f$name =
-      Field('name', _$name, key: 'nam');
+      Field('name', _$name, key: r'nam');
   static List<LatLng> _$points(RoutePoints v) => v.points;
   static const Field<RoutePoints, List<LatLng>> _f$points =
-      Field('points', _$points, key: 'nod');
+      Field('points', _$points, key: r'nod');
   static Exception? _$rpcException(RoutePoints v) => v.rpcException;
   static const Field<RoutePoints, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);

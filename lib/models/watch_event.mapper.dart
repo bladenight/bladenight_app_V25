@@ -22,25 +22,25 @@ class WatchEventMapper extends ClassMapperBase<WatchEvent> {
 
   static String _$title(WatchEvent v) => v.title;
   static const Field<WatchEvent, String> _f$title =
-      Field('title', _$title, key: 'tit');
+      Field('title', _$title, key: r'tit');
   static String _$startDate(WatchEvent v) => v.startDate;
   static const Field<WatchEvent, String> _f$startDate =
-      Field('startDate', _$startDate, key: 'sta');
+      Field('startDate', _$startDate, key: r'sta');
   static String _$routeName(WatchEvent v) => v.routeName;
   static const Field<WatchEvent, String> _f$routeName =
-      Field('routeName', _$routeName, key: 'rou');
+      Field('routeName', _$routeName, key: r'rou');
   static int _$duration(WatchEvent v) => v.duration;
   static const Field<WatchEvent, int> _f$duration =
-      Field('duration', _$duration, key: 'dur', opt: true, def: 240);
+      Field('duration', _$duration, key: r'dur', opt: true, def: 240);
   static int _$participants(WatchEvent v) => v.participants;
   static const Field<WatchEvent, int> _f$participants =
-      Field('participants', _$participants, key: 'par', opt: true, def: 0);
+      Field('participants', _$participants, key: r'par', opt: true, def: 0);
   static String _$routeLength(WatchEvent v) => v.routeLength;
   static const Field<WatchEvent, String> _f$routeLength =
-      Field('routeLength', _$routeLength, key: 'len', opt: true, def: '0 m');
+      Field('routeLength', _$routeLength, key: r'len', opt: true, def: '0 m');
   static String _$status(WatchEvent v) => v.status;
   static const Field<WatchEvent, String> _f$status =
-      Field('status', _$status, key: 'sts', opt: true, def: '-');
+      Field('status', _$status, key: r'sts', opt: true, def: '-');
   static String? _$lastupdate(WatchEvent v) => v.lastupdate;
   static const Field<WatchEvent, String> _f$lastupdate =
       Field('lastupdate', _$lastupdate, opt: true);
@@ -49,14 +49,14 @@ class WatchEventMapper extends ClassMapperBase<WatchEvent> {
       Field('rpcException', _$rpcException, opt: true);
   static double? _$startPointLatitude(WatchEvent v) => v.startPointLatitude;
   static const Field<WatchEvent, double> _f$startPointLatitude =
-      Field('startPointLatitude', _$startPointLatitude, key: 'sla', opt: true);
+      Field('startPointLatitude', _$startPointLatitude, key: r'sla', opt: true);
   static double? _$startPointLongitude(WatchEvent v) => v.startPointLongitude;
   static const Field<WatchEvent, double> _f$startPointLongitude = Field(
       'startPointLongitude', _$startPointLongitude,
-      key: 'slo', opt: true);
+      key: r'slo', opt: true);
   static String? _$startPoint(WatchEvent v) => v.startPoint;
   static const Field<WatchEvent, String> _f$startPoint =
-      Field('startPoint', _$startPoint, key: 'stp', opt: true);
+      Field('startPoint', _$startPoint, key: r'stp', opt: true);
 
   @override
   final MappableFields<WatchEvent> fields = const {
@@ -235,7 +235,7 @@ class WatchEventsMapper extends ClassMapperBase<WatchEvents> {
 
   static List<WatchEvent> _$events(WatchEvents v) => v.events;
   static const Field<WatchEvents, List<WatchEvent>> _f$events =
-      Field('events', _$events, key: 'evt');
+      Field('events', _$events, key: r'evt');
   static Exception? _$rpcException(WatchEvents v) => v.rpcException;
   static const Field<WatchEvents, Exception> _f$rpcException =
       Field('rpcException', _$rpcException, opt: true);

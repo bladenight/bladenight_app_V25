@@ -23,19 +23,19 @@ class KillServerMessageMapper extends ClassMapperBase<KillServerMessage> {
 
   static bool _$killValue(KillServerMessage v) => v.killValue;
   static const Field<KillServerMessage, bool> _f$killValue =
-      Field('killValue', _$killValue, key: 'cmd');
+      Field('killValue', _$killValue, key: r'cmd');
   static int _$timestamp(KillServerMessage v) => v.timestamp;
   static const Field<KillServerMessage, int> _f$timestamp =
-      Field('timestamp', _$timestamp, key: 'tim');
+      Field('timestamp', _$timestamp, key: r'tim');
   static String _$checksum(KillServerMessage v) => v.checksum;
   static const Field<KillServerMessage, String> _f$checksum =
-      Field('checksum', _$checksum, key: 'chk');
+      Field('checksum', _$checksum, key: r'chk');
   static int _$noise(KillServerMessage v) => v.noise;
   static const Field<KillServerMessage, int> _f$noise =
-      Field('noise', _$noise, key: 'noi');
+      Field('noise', _$noise, key: r'noi');
   static String _$deviceId(KillServerMessage v) => v.deviceId;
   static const Field<KillServerMessage, String> _f$deviceId =
-      Field('deviceId', _$deviceId, key: 'did');
+      Field('deviceId', _$deviceId, key: r'did');
 
   @override
   final MappableFields<KillServerMessage> fields = const {
