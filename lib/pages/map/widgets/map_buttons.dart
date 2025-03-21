@@ -341,10 +341,8 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
         //#######################################################################
         //Left side buttons
         //#######################################################################
-
-        if (ResponsiveBreakpoints.of(context).orientation ==
-                Orientation.portrait &&
-            ResponsiveBreakpoints.of(context).smallerThan(TABLET)) ...[
+        //if (ResponsiveBreakpoints.of(context).smallerThan(PHONE))
+        ...[
           if (!kIsWeb)
             Positioned(
               left: 80,

@@ -165,47 +165,50 @@ class _EventsPageState extends ConsumerState<EventsPage>
                 });
               }
               var pages = _buildPages(context, events);
-              return Column(
-                children: <Widget>[
-                  ConnectionWarning(),
-                  Expanded(
-                    child: PageView.builder(
-                      controller: _pageController,
-                      onPageChanged: (idx) {
-                        /*setState(() {
+              return Container(
+                color: CupertinoTheme.of(context).barBackgroundColor,
+                child: Column(
+                  children: <Widget>[
+                    ConnectionWarning(),
+                    Expanded(
+                      child: PageView.builder(
+                        controller: _pageController,
+                        onPageChanged: (idx) {
+                          /*setState(() {
                            var groupedEvents = events.groupByYear();
                           _header =
                               '${Localize.of(context).events} ${groupedEvents.keys.elementAt(idx)}';
                         });*/
-                      },
-                      itemCount: pages.length,
-                      padEnds: false,
-                      clipBehavior: Clip.hardEdge,
-                      itemBuilder: (_, index) {
-                        return pages[index % pages.length];
-                      },
+                        },
+                        itemCount: pages.length,
+                        padEnds: false,
+                        clipBehavior: Clip.hardEdge,
+                        itemBuilder: (_, index) {
+                          return pages[index % pages.length];
+                        },
+                      ),
                     ),
-                  ),
-                  SmoothPageIndicator(
-                    controller: _pageController,
-                    count: pages.length,
-                    onDotClicked: (idx) => _pageController.animateToPage(idx,
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.linear),
-                    effect: JumpingDotEffect(
-                      dotHeight: 16,
-                      dotWidth: 16,
-                      dotColor: CupertinoTheme.of(context).brightness ==
-                              Brightness.dark
-                          ? Colors.grey
-                          : Colors.black,
-                      activeDotColor: CupertinoTheme.of(context).primaryColor,
+                    SmoothPageIndicator(
+                      controller: _pageController,
+                      count: pages.length,
+                      onDotClicked: (idx) => _pageController.animateToPage(idx,
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.linear),
+                      effect: JumpingDotEffect(
+                        dotHeight: 16,
+                        dotWidth: 16,
+                        dotColor: CupertinoTheme.of(context).brightness ==
+                                Brightness.dark
+                            ? Colors.grey
+                            : Colors.black,
+                        activeDotColor: CupertinoTheme.of(context).primaryColor,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  )
-                ],
+                    const SizedBox(
+                      height: 5,
+                    )
+                  ],
+                ),
               );
             },
             loading: () {

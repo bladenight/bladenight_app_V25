@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/route.dart';
 import '../models/shake_hand_result.dart';
 
-const Color systemPrimaryDefaultColor = Color(0xFF4097EA);
-const Color systemPrimaryDarkDefaultColor = Color(0xFFFCF250);
+const Color systemPrimaryDefaultColor = Color(0xFF0028FF);
+const Color systemPrimaryDarkDefaultColor = Color(0xFFFFD700);
 const Color meDefaultColor = Color(0xDD29BE1A);
 
 //Start and finish of Munich Bladenight 48.13175057596983, 11.543880569191229

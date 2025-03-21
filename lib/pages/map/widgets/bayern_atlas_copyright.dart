@@ -8,22 +8,9 @@ class BayernAtlasCopyright extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return !kIsWeb
+    var fontSize = CupertinoTheme.of(context).textTheme.textStyle.fontSize;
+    return kIsWeb
         ? Padding(
-            padding: const EdgeInsets.only(left: 0, right: 5),
-            child: GestureDetector(
-              onTap: () {
-                Launch.launchUrlFromString(
-                    'https://www.bkg.bund.de/DE/Home/home.html');
-              },
-              child: const Text(
-                '© Datenquellen: Bayerische Vermessungsverwaltung, GeoBasis-DE / BKG 2023 – Daten verändert',
-                style: TextStyle(fontSize: 10),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          )
-        : Padding(
             padding: const EdgeInsets.all(10),
             child: GestureDetector(
               onTap: () {
@@ -34,9 +21,24 @@ class BayernAtlasCopyright extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: Text(
                   '© Datenquellen: Bayerische Vermessungsverwaltung, GeoBasis-DE / BKG 2023 – Daten verändert',
-                  style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
-                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: fontSize == null ? 12 : fontSize * 0.8),
+                  textAlign: TextAlign.right,
                 ),
+              ),
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(left: 0, right: 5),
+            child: GestureDetector(
+              onTap: () {
+                Launch.launchUrlFromString(
+                    'https://www.bkg.bund.de/DE/Home/home.html');
+              },
+              child: const Text(
+                '© Datenquellen: Bayerische Vermessungsverwaltung, GeoBasis-DE / BKG 2023 – Daten verändert',
+                style: TextStyle(fontSize: 10),
+                textAlign: TextAlign.center,
               ),
             ),
           );

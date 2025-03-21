@@ -151,7 +151,7 @@ class Event with EventMappable implements Comparable {
   Color get statusColor {
     switch (status) {
       case EventStatus.pending:
-        return Colors.yellowAccent;
+        return Color(0xFFFFD700);
       case EventStatus.confirmed:
         return Colors.green;
       case EventStatus.cancelled:

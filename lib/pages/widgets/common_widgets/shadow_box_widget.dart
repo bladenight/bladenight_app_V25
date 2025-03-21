@@ -6,7 +6,7 @@ class ShadowBoxWidget extends ConsumerWidget {
       {super.key,
       required this.child,
       this.borderRadius = 15,
-      this.boxShadowColor = const Color(0xFFFCF250),
+      this.boxShadowColor = const Color(0xFFFFD700),
       this.offset = const Offset(1.1, 1.1),
       this.edgeInset =
           const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5)});

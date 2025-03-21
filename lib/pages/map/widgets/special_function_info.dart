@@ -26,7 +26,7 @@ class SpecialFunctionInfo extends ConsumerWidget {
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
                   child: ColoredBox(
-                    color: Colors.yellowAccent,
+                    color: Color(0xFFFFD700),
                     child: FittedBox(
                       child: Text(
                         Localize.of(context).head,

@@ -2,9 +2,9 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:location2/location2.dart' as loc2;
 import 'package:permission_handler/permission_handler.dart'
     hide PermissionStatus;
 import 'package:quickalert/models/quickalert_type.dart';
@@ -43,20 +43,15 @@ class LocationPermissions {
 }
 
 class LocationPermissionDialog {
-  ///Request and returns [LocationPermissionStatus]
+  ///Request location permission from user
+  ///returns [LocationPermission] status
   Future<LocationPermissionStatus> getLocationPermissions(
       BuildContext context) async {
     //get android version, on V11 you need 'always' permissions to use location, when app is not in Foreground
-
     var isAndroidPlatformGreater09BuildQ =
         await DeviceHelper.isAndroidGreaterVNine();
-
-    if (kIsWeb) {
-      return LocationPermissionStatus.locationNotEnabled;
-    }
-    final locationPermission = await loc2.getLocationPermissionStatus();
-    if (locationPermission.locationPermissionId ==
-        loc2.LocationPermission.denied.index) {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
       var denied = false;
       await QuickAlert.show(
           context: rootNavigatorKey.currentContext!,
@@ -95,9 +90,8 @@ class LocationPermissionDialog {
         platformVersion != null &&
         platformVersion >= 10;
 
-    final locationPermission = await loc2.getLocationPermissionStatus();
-    if (locationPermission.locationPermissionId ==
-        loc2.LocationPermission.denied.index) {
+    final locationPermission = await Geolocator.checkPermission();
+    if (locationPermission == LocationPermission.deniedForever) {
       var acceptLocation = await QuickAlert.show(
           context: rootNavigatorKey.currentContext!,
           showCancelBtn: true,
@@ -148,17 +142,8 @@ class LocationPermissionDialog {
     if (cancelPressed) {
       return getPermissionsStatus();
     } else {
-      final res = await loc2
-          .requestLocationPermission(loc2.LocationPermission.authorizedAlways);
-      if (res == loc2.LocationPermission.authorizedAlways) {
-        return LocationPermissionStatus.always;
-      }
-      if (res == loc2.LocationPermission.denied) {
-        if (!kIsWeb) {
-          BnLog.warning(
-              text: 'requestAlwaysOnAndroid permissions permanentlyDenied');
-        }
-
+      final res = await Geolocator.openLocationSettings();
+      if (!res) {
         await QuickAlert.show(
             context: rootNavigatorKey.currentContext!,
             showCancelBtn: true,
@@ -168,7 +153,7 @@ class LocationPermissionDialog {
             confirmBtnText: Localize.current.openOperatingSystemSettings,
             cancelBtnText: Localize.current.leavewheninuse,
             onConfirmBtnTap: () async {
-              var res = await openAppSettings();
+              var res = await Geolocator.openAppSettings();
               if (res == false) {
                 Fluttertoast.showToast(
                     msg: Localize.current.couldNotOpenAppSettings);
@@ -223,9 +208,8 @@ class LocationPermissionDialog {
   Future<LocationPermissionStatus> getPermissionsStatus() async {
     Stopwatch sw = Stopwatch();
     sw.start();
-    final permissionStatus = await loc2.getLocationPermissionStatus();
-    //hangs for 9 sec on app start
-    //var isAlways = await Permission.locationAlways.status;
+    LocationPermission permission = await Geolocator.checkPermission();
+
     if (!kIsWeb) {
       BnLog.info(
           className: 'locationProvider',
@@ -237,12 +221,10 @@ class LocationPermissionDialog {
           'init get permissions status ${sw.elapsedMicroseconds} micros /${sw.elapsedMilliseconds}ms');
     }
     sw.stop();
-    if (permissionStatus.locationPermissionId ==
-        loc2.PermissionStatus.authorizedAlways.index) {
+    if (permission == LocationPermission.always) {
       return LocationPermissionStatus.always;
     }
-    if (permissionStatus.locationPermissionId ==
-        loc2.PermissionStatus.authorizedWhenInUse.index) {
+    if (permission == LocationPermission.whileInUse) {
       return LocationPermissionStatus.whenInUse;
     }
     return LocationPermissionStatus.denied;

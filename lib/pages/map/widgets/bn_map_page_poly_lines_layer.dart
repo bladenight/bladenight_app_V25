@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app_settings/app_configuration_helper.dart';
 import '../../../helpers/logger/logger.dart';
 import '../../../models/images_and_links.dart';
 import '../../../providers/active_event_route_provider.dart';
@@ -56,8 +57,8 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
           strokeWidth: ref.watch(isTrackingProvider) ? 5 : 3,
           borderColor: CupertinoAdaptiveTheme.of(context).theme.brightness ==
                   Brightness.light
-              ? Colors.blue
-              : Colors.yellow,
+              ? systemPrimaryDefaultColor
+              : systemPrimaryDarkDefaultColor,
           color: ref.watch(isTrackingProvider)
               ? CupertinoAdaptiveTheme.of(context).theme.brightness ==
                       Brightness.light

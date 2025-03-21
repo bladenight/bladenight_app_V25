@@ -136,10 +136,6 @@ void importData(BuildContext context, String dataString) async {
   }
 }
 
-Future<bool> _checkFileExists(String path) {
-  return File(path).exists();
-}
-
 Future<void> _deleteFile(String path) async {
   try {
     await File(path).delete();

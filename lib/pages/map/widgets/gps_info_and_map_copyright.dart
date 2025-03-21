@@ -48,7 +48,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
   }
 
   void _initListeners() {
-    print('init_gps_info_listeners');
+    if (kIsWeb) return;
     _locationStreamListener =
         LocationProvider().userBgLocationStream.listen((location) {
       setState(() {

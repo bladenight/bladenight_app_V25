@@ -1,16 +1,15 @@
 import 'dart:async';
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:go_router/go_router.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:location2/location2.dart' hide PermissionStatus;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
@@ -33,7 +32,6 @@ import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
 import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
-import '../helpers/notification/toast_notification.dart';
 import '../helpers/speed_to_color.dart';
 import '../helpers/uuid_helper.dart';
 import '../helpers/wamp/subscribe_message.dart';
@@ -41,7 +39,6 @@ import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
 import '../models/event.dart';
 import '../models/geofence_point.dart' as gfp;
-import '../models/home_widget/home_widget_data_model.dart';
 import '../models/location.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
@@ -74,7 +71,8 @@ class LocationProvider with ChangeNotifier {
   AverageList<double> realtimeSpeedAvgList = AverageList(maxLength: 5);
 
   bg.State? _state;
-  StreamSubscription? _locationSubscription;
+  StreamSubscription<geolocator.Position>? _locationSubscription;
+  StreamSubscription<geolocator.ServiceStatus>? _geolocatorServiceStatusStream;
   bool locationRequested = false;
   bool _isInBackground = false;
   bool _wakelockDisabled = false;
@@ -940,6 +938,13 @@ class LocationProvider with ChangeNotifier {
                   : LocationPermissionStatus.whenInUse;
         }
       }
+
+      _geolocatorServiceStatusStream =
+          geolocator.Geolocator.getServiceStatusStream()
+              .listen((geolocator.ServiceStatus status) {
+        _onProviderChange(status.convertToBgProviderChangeEvent());
+      });
+
       _listenLocationWithAlternativePackage();
       _trackingType = trackingType;
       stopRealtimedataSubscription();
@@ -955,7 +960,12 @@ class LocationProvider with ChangeNotifier {
       }
       SendToWatch.setIsLocationTracking(isTracking);
       HiveSettingsDB.setTrackingActive(isTracking);
-    } else {
+    }
+    //####################################################
+    //# use Transistorsoft geolocator for Android and iOS
+    //####################################################
+    else {
+      _geolocatorServiceStatusStream?.cancel();
       await bg.BackgroundGeolocation.start()
           .then((bg.State bgGeoLocState) async {
         BnLog.info(
@@ -1139,7 +1149,19 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<void> _listenLocationWithAlternativePackage() async {
-    setLocationSettings(
+    final geolocator.LocationSettings locationSettings =
+        geolocator.LocationSettings(
+      accuracy: geolocator.LocationAccuracy.high,
+      distanceFilter: 100,
+    );
+    _locationSubscription = geolocator.Geolocator.getPositionStream(
+            locationSettings: locationSettings)
+        .listen((geolocator.Position? position) async {
+      if (position == null) return;
+      var newLoc = position.convertToBGLocation();
+      _onLocation(newLoc);
+    });
+    /*setLocationSettings(
         rationaleMessageForGPSRequest:
             Localize.current.requestAlwaysPermissionTitle,
         rationaleMessageForPermissionRequest:
@@ -1171,7 +1193,7 @@ class LocationProvider with ChangeNotifier {
         subtitle: Localize.current.bgNotificationText,
         onTapBringToFront: true,
       );
-    });
+    });*/
   }
 
   Future<bg.Location?> getLocation() async {

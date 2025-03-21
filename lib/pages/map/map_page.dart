@@ -120,8 +120,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
             children: [
               const MapTileLayer(),
               Builder(builder: (context) {
-                print(
-                    '${DateTime.now().toIso8601String()} Build flutter map children');
                 return Stack(
                   children: [
                     MouseRegion(
@@ -153,6 +151,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     accuracy: 1.0
                 ),
               ),*/
+                    const GPSInfoAndMapCopyright(),
                     const HeadingsLayer(),
                     //SpecialPointsLayer(_popupController), //crashes with global key multi usage on open Popup
                     CustomLocationLayer(_hasGesture),
@@ -160,14 +159,13 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     MarkersLayer(_popupController),
 
                     TrackProgressOverlay(_mapController),
-                    const MapButtonsLayer(),
+                    const SafeArea(child: MapButtonsLayer()),
                   ],
                 );
               }),
               //CurrentLocationLayer(),
             ],
           ),
-          const GPSInfoAndMapCopyright(),
         ]),
       ),
     );

@@ -97,6 +97,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                   children: <Widget>[
                     if (!widget.eventIsRunning)
                       eventDetail(
+                          textCrossedOut:
+                              widget.nextEvent.status == EventStatus.cancelled,
                           context: context,
                           animation: _valueAnimation,
                           normalFontSize: normalFontSize,
@@ -113,6 +115,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                             Orientation.landscape &&
                         widget.nextEvent.status != EventStatus.noevent) ...[
                       eventDetail(
+                          textCrossedOut:
+                              widget.nextEvent.status == EventStatus.cancelled,
                           context: context,
                           animation: _valueAnimation,
                           normalFontSize: normalFontSize,
@@ -122,6 +126,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                           description: Localize.of(context).route,
                           showSeparator: widget.showSeparator),
                       eventDetail(
+                          textCrossedOut:
+                              widget.nextEvent.status == EventStatus.cancelled,
                           context: context,
                           animation: _valueAnimation,
                           normalFontSize: normalFontSize,
@@ -145,6 +151,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 eventDetail(
+                    textCrossedOut:
+                        widget.nextEvent.status == EventStatus.cancelled,
                     context: context,
                     animation: _valueAnimation,
                     normalFontSize: normalFontSize,
@@ -154,6 +162,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                     description: Localize.of(context).route,
                     showSeparator: false),
                 eventDetail(
+                    textCrossedOut:
+                        widget.nextEvent.status == EventStatus.cancelled,
                     context: context,
                     animation: _valueAnimation,
                     normalFontSize: normalFontSize,
@@ -166,7 +176,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
             ),
           ),
         if (widget.nextEvent.status != EventStatus.noevent &&
-            !widget.eventIsRunning)
+            !widget.eventIsRunning &&
+            widget.nextEvent.status != EventStatus.cancelled)
           Padding(
             padding:
                 const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
@@ -218,7 +229,8 @@ Widget eventDetail(
     required Color dividerColor,
     required String text,
     required String description,
-    showSeparator = true}) {
+    bool textCrossedOut = false,
+    bool showSeparator = true}) {
   return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -283,6 +295,8 @@ Widget eventDetail(
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: TextStyle(
+                        decoration:
+                            textCrossedOut ? TextDecoration.lineThrough : null,
                         fontWeight: FontWeight.w900,
                         color: CupertinoTheme.of(context).primaryColor),
                   ),

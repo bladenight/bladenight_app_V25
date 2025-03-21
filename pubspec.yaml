@@ -67,6 +67,7 @@ dependencies:
     sdk: flutter
   flutter_widget_from_html_core: ^0.15.1
   fluttertoast: ^8.0.9
+  geolocator: ^13.0.3
   get: ^4.6.5
   go_router: ^14.6.2
   go_transitions: ^0.7.1
@@ -91,7 +92,7 @@ dependencies:
   #path: ../flutter-geolocator/geolocator
   #location: ^4.4.0
 
-  location2: ^6.0.4
+  #location2: ^6.0.4
   lottie: ^3.1.0
   maps_toolkit: ^3.0.0
   modal_bottom_sheet: ^3.0.0
@@ -137,8 +138,8 @@ dependencies:
   vector_math: ^2.1.4
   vm_service: ^14.2.5
   wakelock_plus: ^1.2.10
-    #wakelock:
-    #  git:
+  #wakelock:
+  #  git:
   #    url: https://github.com/xunreal75/wakelock.git
   #    path: wakelock/
   #    ref: 7221e0c8ba4feee2625f00eb44b4f2824b4b0913
