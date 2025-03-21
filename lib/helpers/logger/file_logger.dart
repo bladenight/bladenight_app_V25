@@ -8,6 +8,7 @@ import 'package:path/path.dart' as path;
 
 class FileLogger {
   final _lock = Lock();
+  final _startTime = DateTime.now();
 
   FileLogger(this.directory);
 
@@ -37,12 +38,13 @@ class FileLogger {
     runZonedGuarded(() {
       final ds = DateFormat('yyyy-MM-dd').format(DateTime.now());
       final logfilePath = '${directory.path}/${ds}_logger.txt';
+      final diff = DateTime.now().difference(_startTime).toString();
       try {
         _lock.synchronized(timeout: Duration(milliseconds: 1000), () async {
           var logFile = File(logfilePath);
           if (event.isNotEmpty) {
             await logFile.writeAsString(
-                '# [${DateTime.now().toIso8601String()}] ### [$level]##########\n$event\n###################',
+                '# [${DateTime.now().toIso8601String()}] ## Runtime:$diff # [$level]##########\n$event\n###################',
                 mode: FileMode.writeOnlyAppend);
           } else {
             print(event);
