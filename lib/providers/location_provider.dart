@@ -186,6 +186,10 @@ class LocationProvider with ChangeNotifier {
 
   UserSpeedPoints get userSpeedPoints => _userSpeedPoints;
 
+  bool _locationIsPrecise = true;
+
+  bool get locationIsPrecise => _locationIsPrecise;
+
   final _userGpxPoints = <UserGpxPoint>[];
 
   List<UserGpxPoint> get userGpxPoints => _userGpxPoints;
@@ -228,6 +232,8 @@ class LocationProvider with ChangeNotifier {
       _userLocationMarkerHeadingStreamController.stream;
 
   StreamSubscription<bool>? _wampConnectedSubscription;
+
+  late geolocator.LocationSettings locationSettings;
 
   @override
   void dispose() {
@@ -323,7 +329,6 @@ class LocationProvider with ChangeNotifier {
       bg.BackgroundGeolocation.onGeofence(_onGeoFence);
 
       var isMotionDetectionDisabled = HiveSettingsDB.isMotionDetectionDisabled;
-      var bgLogLevel = HiveSettingsDB.getBackgroundLocationLogLevel;
 
       if (Platform.isAndroid) {
         return bg.BackgroundGeolocation.ready(bg.Config(
@@ -735,6 +740,7 @@ class LocationProvider with ChangeNotifier {
         className: 'location_provider',
         methodName: '_stopTracking');
     _locationSubscription?.cancel();
+    _geolocatorServiceStatusStream?.cancel();
     _locationSubscription = null;
     _lastKnownPoint = null;
     _realUserSpeedKmh = null;
@@ -851,6 +857,11 @@ class LocationProvider with ChangeNotifier {
       return false;
     }
 
+    //Check precise Location once
+    _locationIsPrecise =
+        await LocationPermissionDialog().requestPreciseLocation() ==
+            geolocator.LocationAccuracyStatus.precise;
+
     if (HiveSettingsDB.trackingFirstStart &&
         HiveSettingsDB.autoStartTrackingEnabled &&
         context.mounted) {
@@ -937,14 +948,11 @@ class LocationProvider with ChangeNotifier {
                   ? LocationPermissionStatus.always
                   : LocationPermissionStatus.whenInUse;
         }
+        if (_gpsLocationPermissionsStatus ==
+            LocationPermissionStatus.whenInUse) {
+          await LocationPermissionDialog().requestAlwaysLocationPermissions();
+        }
       }
-
-      _geolocatorServiceStatusStream =
-          geolocator.Geolocator.getServiceStatusStream()
-              .listen((geolocator.ServiceStatus status) {
-        _onProviderChange(status.convertToBgProviderChangeEvent());
-      });
-
       _listenLocationWithAlternativePackage();
       _trackingType = trackingType;
       stopRealtimedataSubscription();
@@ -1149,11 +1157,43 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<void> _listenLocationWithAlternativePackage() async {
-    final geolocator.LocationSettings locationSettings =
-        geolocator.LocationSettings(
-      accuracy: geolocator.LocationAccuracy.high,
-      distanceFilter: 100,
-    );
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      locationSettings = geolocator.AndroidSettings(
+          accuracy: geolocator.LocationAccuracy.high,
+          distanceFilter: 10,
+          forceLocationManager: true,
+          intervalDuration: const Duration(seconds: 5),
+          timeLimit: Duration(seconds: 2),
+          //(Optional) Set foreground notification config to keep the app alive
+          //when going to the background
+          foregroundNotificationConfig: geolocator.ForegroundNotificationConfig(
+            notificationText: Localize.current.bgNotificationText,
+            notificationTitle: Localize.current.bgNotificationTitle,
+            enableWakeLock: true,
+          ));
+    } else if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      locationSettings = geolocator.AppleSettings(
+          accuracy: geolocator.LocationAccuracy.high,
+          activityType: geolocator.ActivityType.fitness,
+          distanceFilter: 10,
+          pauseLocationUpdatesAutomatically: true,
+          // Only set to true if our app will be started up in the background.
+          showBackgroundLocationIndicator: true,
+          timeLimit: Duration(seconds: 2));
+    } else if (kIsWeb) {
+      locationSettings = geolocator.WebSettings(
+          accuracy: geolocator.LocationAccuracy.high,
+          distanceFilter: 20,
+          maximumAge: Duration(minutes: 1),
+          timeLimit: Duration(seconds: 2));
+    } else {
+      locationSettings = geolocator.LocationSettings(
+          accuracy: geolocator.LocationAccuracy.high,
+          distanceFilter: 20,
+          timeLimit: Duration(seconds: 2));
+    }
+
     _locationSubscription = geolocator.Geolocator.getPositionStream(
             locationSettings: locationSettings)
         .listen((geolocator.Position? position) async {
@@ -1161,39 +1201,12 @@ class LocationProvider with ChangeNotifier {
       var newLoc = position.convertToBGLocation();
       _onLocation(newLoc);
     });
-    /*setLocationSettings(
-        rationaleMessageForGPSRequest:
-            Localize.current.requestAlwaysPermissionTitle,
-        rationaleMessageForPermissionRequest:
-            Localize.current.enableAlwaysLocationInfotext,
-        askForPermission: true);
-    _locationSubscription =
-        onLocationChanged(inBackground: true).handleError((dynamic err) {
-      if (err is PlatformException) {
-        //_onLocationError(bg.LocationError(err));
-        if (_lastKnownPoint != null) {
-          _getRealtimeDataWithLocation(_lastKnownPoint!);
-        }
-      }
-      _locationSubscription?.cancel();
-      _locationSubscription = null;
-      _trackingType = TrackingType.noTracking;
-      notifyListeners();
-    }).listen((LocationData currentLocation) async {
-      if (currentLocation.longitude == null ||
-          currentLocation.latitude == null) {
-        return;
-      }
 
-      var newLoc = currentLocation.convertToBGLocation();
-      _onLocation(newLoc);
-
-      await updateBackgroundNotification(
-        title: Localize.current.bgNotificationTitle,
-        subtitle: Localize.current.bgNotificationText,
-        onTapBringToFront: true,
-      );
-    });*/
+    _geolocatorServiceStatusStream =
+        geolocator.Geolocator.getServiceStatusStream()
+            .listen((geolocator.ServiceStatus status) {
+      _onProviderChange(status.convertToBgProviderChangeEvent());
+    });
   }
 
   Future<bg.Location?> getLocation() async {
@@ -1272,7 +1285,7 @@ class LocationProvider with ChangeNotifier {
       BnLog.verbose(
           text:
               '${timeDiff.inSeconds} s not online. Last update : $lastRealtimedataUpdate',
-          methodName: 'refresh',
+          methodName: 'refreshRealtimeData',
           className: toString());
       _realtimeUpdate = _realtimeUpdate?.copyWith(
           rpcException: WampException('Not online more than 60 s.'));
@@ -1385,9 +1398,14 @@ class LocationProvider with ChangeNotifier {
           maximumAge: 30000,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         );
+      } else {
+        geolocator.Position position =
+            await geolocator.Geolocator.getCurrentPosition(
+                locationSettings: locationSettings);
+        _onLocation(position.convertToBGLocation());
       }
     } catch (e) {
-      BnLog.error(
+      BnLog.verbose(
           text: 'getNewLocation failed',
           methodName: 'getNewLocation',
           className: toString());
@@ -1854,8 +1872,12 @@ final updateIntervalProvider = Provider.autoDispose((ref) {
 });
 
 final realtimeDataProvider = Provider.autoDispose((ref) {
-  print('${DateTime.now().toIso8601String()} realtimeDataProvider');
+  //print('${DateTime.now().toIso8601String()} realtimeDataProvider');
   return ref.watch(locationProvider.select((l) => l.realtimeUpdate));
+});
+
+final preciseLocationProvider = Provider.autoDispose((ref) {
+  return ref.watch(locationProvider.select((l) => l.locationIsPrecise));
 });
 
 ///true when moving

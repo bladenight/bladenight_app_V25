@@ -261,6 +261,19 @@ class HiveSettingsDB {
     _hiveBox.put(_hasAskedAlwaysAllowLocationPermissionKey, val);
   }
 
+  static const String _hasAskedPreciseLocationKey =
+      'hasAskedPreciseLocationPref';
+
+  ///get hasAskedAlwaysAllowLocationPermission - see https://github.com/transistorsoft/flutter_background_geolocation/issues/925
+  static bool get hasAskedPreciseLocation {
+    return _hiveBox.get(_hasAskedPreciseLocationKey, defaultValue: false);
+  }
+
+  ///set if  setHasAskedAlwaysAllowLocationPermissionPath were requested
+  static void setHasPreciseLocationAsked(bool val) {
+    _hiveBox.put(_hasAskedPreciseLocationKey, val);
+  }
+
   static const String _firstStartKey = '2404firstStartPref';
 
   ///get firstStart

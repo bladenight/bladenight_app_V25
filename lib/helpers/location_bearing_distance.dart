@@ -68,7 +68,7 @@ class GeoLocationHelper {
         pow(sin(dLat / 2), 2) + pow(sin(dLon / 2), 2) * cos(lat1) * cos(lat2);
     double rad = 6371;
     double c = 2 * asin(sqrt(a));
-    return rad * c*1000;
+    return rad * c * 1000;
   }
 
   static LatLng getMidPointBetweenTwoPoints(
@@ -108,24 +108,24 @@ class GeoLocationHelper {
     return degrees(atan2(y, x));
   }
 
-   static LatLng getLatLongForLinearPos(double linearPosition, double lat1, double long1, double lat2, double long2){
-    final double bearing  = bearingBetween(lat1, long1, lat2, long2);
+  static LatLng getLatLongForLinearPos(double linearPosition, double lat1,
+      double long1, double lat2, double long2) {
+    final double bearing = bearingBetween(lat1, long1, lat2, long2);
     return moveLatLng(LatLng(lat1, long1), linearPosition, bearing);
   }
 
-   static LatLng moveLatLng(LatLng latLng, double range, double bearing) {
-   const double earthRadius = 6378137.0;
-   const degreesToRadians = pi / 180.0;
-   const radiansToDegrees = 180.0 / pi;
+  static LatLng moveLatLng(LatLng latLng, double range, double bearing) {
+    const double earthRadius = 6378137.0;
+    const degreesToRadians = pi / 180.0;
+    const radiansToDegrees = 180.0 / pi;
 
     final double latA = latLng.latitude * degreesToRadians;
     final double lonA = latLng.longitude * degreesToRadians;
     final double angularDistance = range / earthRadius;
     final double trueCourse = bearing * degreesToRadians;
 
-    final double lat = asin(
-        sin(latA) * cos(angularDistance) +
-            cos(latA) * sin(angularDistance) * cos(trueCourse));
+    final double lat = asin(sin(latA) * cos(angularDistance) +
+        cos(latA) * sin(angularDistance) * cos(trueCourse));
 
     final double dLon = atan2(
         sin(trueCourse) * sin(angularDistance) * cos(latA),
@@ -137,7 +137,6 @@ class GeoLocationHelper {
   }
 }
 
-
 class HeadingPoint {
   HeadingPoint(this.latLng, this.heading, this.bearing, this.segmentLength);
 
@@ -146,5 +145,3 @@ class HeadingPoint {
   final double bearing;
   final double segmentLength;
 }
-
-

@@ -15,3 +15,5 @@ class WampException extends TimeoutException implements Exception {
     return result;
   }
 }
+
+enum WampExceptionMessageType { wampStopped, timeout10sec, connectionError }

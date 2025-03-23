@@ -55,5 +55,22 @@
     <true/>
     <key>NSBluetoothAlwaysUsageDescription</key>
     <string>Um Freunde zu direkt zu koppeln wird Bluetooth benötigt</string>
+    <key>WKCompanionAppBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Empfehlung &quot;Beim Verwenden&quot; erlauben</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>procession</key>
+		<string>Um den Zug genau darzustellen und die Position deiner Freunde zu sehen ist eine genaue Position notwendig!</string>
+	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Teile deinen Standort um den Bladenight-Skaterzug  und die Länge genauer zu ermitteln und finde Freunde. Empfehlung &quot;Beim Verwenden&quot; erlauben</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Teile deinen Standort um den Bladenight-Skaterzug  und die Länge genauer zu ermitteln und finde Freunde. Empfehlung &quot;Beim Verwenden&quot; erlauben</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Um Akku zu sparen wird die Bewegung des Telefones genutzt und der Standort nur bei Bewegung aktiviert </string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Das Mikrofon wird won dieser App nicht benutzt - die Anfrage kann verneint werden.</string>
 </dict>
 </plist>

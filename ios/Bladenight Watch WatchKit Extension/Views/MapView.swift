@@ -16,40 +16,84 @@ import MapKit
 struct MapView: View {
     @EnvironmentObject var viewModel: CommunicationHandler
     @Binding var tabSelection: Int
+     //var _tabSelection: Binding<Int>;
+    
     
     @State var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: defaultLatitude, longitude: defaultLongitude),
         span: MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5)
     )
-    
+   
 
     
     
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
     
+    @State var lineCoordinates = [CLLocationCoordinate2D]();
     
+    init (tabSelection: Binding<Int>) {
+        _tabSelection = tabSelection;
+    
+    }
     var body: some View {
+    
         let _ = MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: viewModel.activeEvent.startPointLatitude ?? defaultLatitude, longitude: viewModel.activeEvent.startPointLongitude ?? defaultLongitude),
             span: MKCoordinateSpan(latitudeDelta: 5, longitudeDelta: 5)
         )
         Map(position: $position){
-            Marker("Start",coordinate: viewModel.startpoint)
+            MapPolyline(
+                coordinates: viewModel.activeEvent.toCLLocationCoordinate2D()
+            ).stroke(Color(hex: 0xFFD700), lineWidth: 2)
+            MapPolyline(
+                coordinates: viewModel.runningRoute
+            ).stroke(Color(hex: 0xFFD700), lineWidth: 2)
+            Annotation(
+                "Start",
+                coordinate: CLLocationCoordinate2D(
+                    latitude: viewModel.startpoint.latitude,
+                    longitude: viewModel.startpoint.longitude
+                )
+            ) {
+                Image("start_marker")
+                    .resizable()
+                    .frame(width: 30, height: 20)
+            
+                
+            }
+            if (viewModel.userlocation != nil ){
+                Annotation(
+                    "Position",
+                    coordinate: CLLocationCoordinate2D(
+                        latitude: viewModel.userlocation!.locCoordinate.latitude,
+                        longitude: viewModel.userlocation!.locCoordinate.longitude
+                    )
+                ) {
+                    Image("skater_icon_256_circle")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
+            }
+            
+        
         }
-        .navigationTitle("BladeNight")
-        .onAppear(){}
+        //.navigationTitle("Karte")
+        .onAppear(){
+            
+        }
         .mapStyle(.standard(elevation: .realistic))
-        Rectangle()
-            .fill(Color.black.opacity(0.1))
-            .frame(width: 10, height: 40)
+        .padding(EdgeInsets(top: 1.0, leading: 1.0, bottom: 10.0, trailing: 1.0))
+    
         
         
     }
     
+  
     
     
-    //let userTrackingMode: MapUserTrackingMode = .follow
-    //var route =  MapKit(polyline:viewModel.routePoints?.routePoints)
+    let userTrackingMode: MapUserTrackingMode = .follow
+    //var route = MapKit();
+    // MapKit(polyline:viewModel.routePoints?.routePoints)
     
 }
 
@@ -72,7 +116,7 @@ struct MapView_Previews: PreviewProvider {
             }.navigationTitle("BladeNight")
                 .onAppear(){
                     
-                }.mapStyle(.standard(elevation: .realistic))
+                }.mapStyle(.standard(elevation: .realistic)).padding(EdgeInsets(top: 0.0, leading: 0.0, bottom: 10.0, trailing: 0.0))
             
         } else {
             // Fallback on earlier versions

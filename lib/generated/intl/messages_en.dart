@@ -705,6 +705,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages.",
     ),
     "online": MessageLookupByLibrary.simpleMessage("Online"),
+    "onlyReducedLocationAccuracyText": MessageLookupByLibrary.simpleMessage(
+      "Only approximate location is shared. This may influence the tracking of your position in procession",
+    ),
+    "onlyReducedLocationAccuracyTitle": MessageLookupByLibrary.simpleMessage(
+      "Only approximate location",
+    ),
     "onlyTracking": MessageLookupByLibrary.simpleMessage(
       "Location record only active",
     ),

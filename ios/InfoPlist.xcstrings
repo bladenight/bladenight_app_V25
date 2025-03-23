@@ -1,0 +1,174 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BladeNight!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "BladeNight!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BladeNight!"
+          }
+        }
+      }
+    },
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bladenight_app_flutter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "bladenight_app_flutter"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bladenight_app_flutter"
+          }
+        }
+      }
+    },
+    "NSLocationAlwaysAndWhenInUseUsageDescription" : {
+      "comment" : "Privacy - Location Always and When In Use Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Empfehlung \"Beim Verwenden\" erlauben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Share your location to find out more about the Bladenight skater train and length and make friends. Allow “When using” recommendation."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partagez votre emplacement pour en savoir plus sur le train de patineurs de Bladenight et la longueur et faites-vous des amis. Autoriser la recommandation Lors de l'utilisation."
+          }
+        }
+      }
+    },
+    "NSLocationAlwaysUsageDescription" : {
+      "comment" : "Privacy - Location Always Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teile deinen Standort um den Bladenight-Skaterzug  und die Länge genauer zu ermitteln und finde Freunde. Empfehlung \"Beim Verwenden\" erlauben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partagez votre position pour en savoir plus sur le défilé de patineurs de Bladenight et sa longueur et faites-vous des amis. Autoriser la recommandation Lors de l'utilisation"
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Privacy - Location When In Use Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teile deinen Standort um den Bladenight-Skaterzug  und die Länge genauer zu ermitteln und finde Freunde. Empfehlung \"Beim Verwenden\" erlauben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partagez votre position pour en savoir plus sur le défilé de patineurs de Bladenight et sa longueur et faites-vous des amis. Autoriser la recommandation Lors de l'utilisation"
+          }
+        }
+      }
+    },
+    "NSMicrophoneUsageDescription" : {
+      "comment" : "Privacy - Microphone Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Mikrofon wird won dieser App nicht benutzt - die Anfrage kann verneint werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The microphone is not used by this app - the request can be denied."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le microphone n'est pas utilisé par cette application - la demande peut être refusée."
+          }
+        }
+      }
+    },
+    "NSMotionUsageDescription" : {
+      "comment" : "Privacy - Motion Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um Akku zu sparen wird die Bewegung des Telefons genutzt und der Standort nur bei Bewegung aktiviert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "To save battery, the movement of the phone is used and the location is only activated when it is moving."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour économiser la batterie, le mouvement du téléphone est utilisé et la localisation n'est activée que lorsqu'il est en mouvement."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

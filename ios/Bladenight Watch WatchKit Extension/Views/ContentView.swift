@@ -23,9 +23,9 @@ struct ContentView: View {
                 .tag(0)
             if(viewModel.phoneReachable){
                 EventDetailView(tabSelection: $tabSelection).environmentObject(viewModel)
-                    .tag(2)
+                    .tag(1)
                 if #available(watchOSApplicationExtension 10.0, *) {
-                    MapView(tabSelection: $tabSelection).environmentObject(viewModel).tag(4)
+                    MapView(tabSelection: $tabSelection).environmentObject(viewModel).tag(2)
                 } else {
                     // Fallback on earlier versions
                 }
@@ -34,12 +34,6 @@ struct ContentView: View {
             }
             AboutView(tabSelection: $tabSelection).environmentObject(viewModel).tag(5)
             LogView(tabSelection: $tabSelection).environmentObject(viewModel).tag(4)
-            if #available(watchOSApplicationExtension 10.0, *) {
-                MapView(tabSelection: $tabSelection).environmentObject(viewModel).tag(6)
-            } else {
-                // Fallback on earlier versions
-            }
-            
         }.tabViewStyle(.automatic).indexViewStyle(.page(backgroundDisplayMode: .never))
         /*.onReceive(timer) {
          _ in

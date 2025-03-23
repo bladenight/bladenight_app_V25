@@ -11,7 +11,19 @@ import MapKit
 
 class CommunicationHandler: NSObject, ObservableObject {
     private let session:WCSession
-    @Published var activeEvent:WatchEvent = WatchEvent(title:"Nächste BladeNight", startDate: "-", duration: 240, routeName: "-", status: "-", routeLength: "0 m", startPointLatitude: nil, startPointLongitude: nil, startPoint: nil, lastUpdate: nil)
+    @Published var activeEvent:WatchEvent = WatchEvent(
+        title:"Nächste BladeNight",
+        startDate: "-",
+        duration: 240,
+        routeName: "-",
+        status: "-",
+        routeLength: "0 m",
+        startPointLatitude: nil,
+        startPointLongitude: nil,
+        startPoint: nil,
+        lastUpdate: nil,
+        routePoints: nil
+    )
     @Published var updateEventDataLastUpdate = "-"
     @Published var activeEventRouteName = ""
     @Published var activeEventRouteStatusText = ""
@@ -38,6 +50,7 @@ class CommunicationHandler: NSObject, ObservableObject {
         latitude: 48.13250913196827,
         longitude: 11.543837661522703
     )
+    @Published var runningRoute:[CLLocationCoordinate2D]=[CLLocationCoordinate2D]()
 
 
     //Receive Methods from flutter flutterToWatch method aka -> sendmessage
@@ -56,6 +69,7 @@ class CommunicationHandler: NSObject, ObservableObject {
         case updateFriends
         case phoneAppWillTerminate
         case setRoutePoints
+        case updateRunningRoute
     }
 
 
@@ -195,3 +209,4 @@ extension CommunicationHandler: WCSessionDelegate {
            print("CommunicationHandler: ", "didReceive file")
        }
 }
+

@@ -108,7 +108,7 @@ void main() async {
     },
     (dynamic error, StackTrace stackTrace) {
       print(
-          '${DateTime.now().toIso8601String()} Application error 94: \n$error\n$stackTrace');
+          '${DateTime.now().toIso8601String()} Application error 111: \n$error\n$stackTrace');
       if (!kDebugMode && !kIsWeb && !localTesting) {
         FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }

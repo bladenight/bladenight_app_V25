@@ -79,9 +79,6 @@ class ActiveEventProviderOld extends ChangeNotifier {
       print(e);
       _event = HiveSettingsDB.getActualEvent;
       _providerLastUpdate = DateTime.now();
-      if (kDebugMode) {
-        print('SendToWatch aep94  update Event $event');
-      }
       SendToWatch.updateEvent(event);
     }
     notifyListeners();

@@ -112,12 +112,11 @@ class LocationPermissionDialog {
           });
       return acceptLocation ?? false;
     }
-    //permanently denied or unknown
     return true;
   }
 
-  Future<LocationPermissionStatus> requestAlwaysLocationPermissions(
-      BuildContext context) async {
+  Future<LocationPermissionStatus> requestAlwaysLocationPermissions() async {
+    var context = rootNavigatorKey.currentContext!;
     BnLog.info(
         text: 'requesting always permissions',
         className: toString(),
@@ -170,7 +169,54 @@ class LocationPermissionDialog {
     return getPermissionsStatus();
   }
 
-  ///Returns Fitnessactivity state
+  ///Returns Location accuracy state
+  Future<LocationAccuracyStatus> getLocationAccuracy() async {
+    return Geolocator.getLocationAccuracy();
+  }
+
+  ///Check on Android/Ios  >14 low locationPrecision
+  Future<bool> getLocationAccuracyIsPrecise() async {
+    var precision = await getLocationAccuracy();
+    return precision == LocationAccuracyStatus.precise;
+  }
+
+  Future<LocationAccuracyStatus> requestPreciseLocation() async {
+    var context = rootNavigatorKey.currentContext!;
+    BnLog.info(
+        text: 'requesting precise location',
+        className: toString(),
+        methodName: 'requestPreciseLocation');
+    if (await getLocationAccuracyIsPrecise()) {
+      return LocationAccuracyStatus.precise;
+    }
+    if (HiveSettingsDB.hasAskedPreciseLocation) {
+      return LocationAccuracyStatus.reduced;
+    }
+    HiveSettingsDB.setHasPreciseLocationAsked(true);
+    var cancelPressed = false;
+    if (!context.mounted) {
+      return LocationAccuracyStatus.reduced;
+    }
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.confirm,
+        title: Localize.current.onlyReducedLocationAccuracyTitle,
+        text: Localize.current.onlyReducedLocationAccuracyText,
+        confirmBtnText: Localize.current.openOperatingSystemSettings,
+        cancelBtnText: Localize.current.cancel,
+        onCancelBtnTap: () {
+          cancelPressed = true;
+        });
+    if (cancelPressed) {
+      return LocationAccuracyStatus.reduced;
+    } else {
+      return await Geolocator.requestTemporaryFullAccuracy(
+          purposeKey: 'procession');
+    }
+  }
+
+  ///Returns fitness activity state
   Future<bool> getMotionSensorStatus() async {
     var activityRecognitionStatus = await Permission.activityRecognition.status;
     if (activityRecognitionStatus.isDenied ||

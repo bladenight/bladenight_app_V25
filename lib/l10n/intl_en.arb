@@ -553,5 +553,7 @@
   "setLogLevel": "Set log level",
   "showLogData": "Show log data",
   "serverVersion": "Server version",
-  "appInfo": "App info"
+  "appInfo": "App info",
+  "onlyReducedLocationAccuracyTitle": "Only approximate location",
+  "onlyReducedLocationAccuracyText": "Only approximate location is shared. This may influence the tracking of your position in procession"
 }

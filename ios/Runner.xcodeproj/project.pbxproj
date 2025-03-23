@@ -50,6 +50,8 @@
 		E2584CC02A7CE09B00346A03 /* WatchEventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */; };
 		E2584CC22A7D1F3100346A03 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2584CC12A7D1F3100346A03 /* AboutView.swift */; };
 		E2A725912CBAFCF8004C7868 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A725902CBAFCEB004C7868 /* Home.swift */; };
+		E2C0C38B2D8F3EC2006D62BC /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E2C0C38A2D8F3EC2006D62BC /* InfoPlist.xcstrings */; };
+		E2C0C38D2D900786006D62BC /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C0C38C2D900786006D62BC /* ColorHelper.swift */; };
 		E2C23F1C29D4DDF000E06959 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */; };
 		E2C23F2229D4E87C00E06959 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F2129D4E87C00E06959 /* Images.xcassets */; };
 /* End PBXBuildFile section */
@@ -210,6 +212,8 @@
 		E2584CBF2A7CE09B00346A03 /* WatchEventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEventModel.swift; sourceTree = "<group>"; };
 		E2584CC12A7D1F3100346A03 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		E2A725902CBAFCEB004C7868 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		E2C0C38A2D8F3EC2006D62BC /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
+		E2C0C38C2D900786006D62BC /* ColorHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorHelper.swift; sourceTree = "<group>"; };
 		E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		E2C23F2129D4E87C00E06959 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E2EEFEA12BC7F022005205C4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -328,6 +332,7 @@
 			children = (
 				46742C0028C3A9700024CCDA /* DateTimeFormatter.swift */,
 				46FC8A8428C5AF3600407BB5 /* DistanceConverter.swift */,
+				E2C0C38C2D900786006D62BC /* ColorHelper.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -393,6 +398,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				E2C0C38A2D8F3EC2006D62BC /* InfoPlist.xcstrings */,
 				4668153B28A8F45500504AF6 /* Bladenight Watch WatchKit Extension */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
@@ -616,6 +622,8 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				fr,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
@@ -681,6 +689,7 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				E2C23F1C29D4DDF000E06959 /* Launch Screen.storyboard in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				E2C0C38B2D8F3EC2006D62BC /* InfoPlist.xcstrings in Resources */,
 				4B403649F0AB60C43221112A /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -929,6 +938,7 @@
 				4668153D28A8F45500504AF6 /* RunnerApp.swift in Sources */,
 				46FC8A8328C3C94700407BB5 /* LogView.swift in Sources */,
 				4668154328A8F45500504AF6 /* NotificationView.swift in Sources */,
+				E2C0C38D2D900786006D62BC /* ColorHelper.swift in Sources */,
 				46015A4928B3E84500B1C8D0 /* EventDetailView.swift in Sources */,
 				4618B21528C010E2006D3F6A /* FriendsView.swift in Sources */,
 				46015A4028B2C83100B1C8D0 /* LocationModel.swift in Sources */,
@@ -1060,6 +1070,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1680,6 +1691,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				WATCHOS_DEPLOYMENT_TARGET = 7.0;
@@ -1733,6 +1745,7 @@
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

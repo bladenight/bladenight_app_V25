@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location_bearing_distance.dart';
 import '../helpers/logger/logger.dart';
+import '../helpers/watch_communication_helper.dart';
 import '../models/event.dart';
 import '../models/route.dart';
 import '../models/special_point.dart';
@@ -87,6 +88,7 @@ class ProcessionRoutePoints extends _$ProcessionRoutePoints {
       failCounter = 0;
       rtData = runningRoute(activeRoute.points, realtimeData.head.position,
           realtimeData.tail.position);
+      SendToWatch.updateRunningRoute(rtData);
       state = AsyncValue.data(rtData);
       return Future(() => rtData);
     }

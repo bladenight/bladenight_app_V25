@@ -5,6 +5,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../generated/l10n.dart';
 import '../helpers/time_converter_helper.dart';
 import 'event.dart';
+import 'route.dart';
 
 part 'watch_event.mapper.dart';
 
@@ -38,6 +39,9 @@ class WatchEvent with WatchEventMappable {
   @MappableField(key: 'lastupdate')
   late String? lastupdate;
 
+  @MappableField(key: 'nod')
+  late List<LatLng>? routePoints;
+
   Exception? rpcException;
 
   WatchEvent(
@@ -52,7 +56,8 @@ class WatchEvent with WatchEventMappable {
       this.rpcException,
       this.startPointLatitude,
       this.startPointLongitude,
-      this.startPoint});
+      this.startPoint,
+      this.routePoints});
 
   @override
   String toString() {
@@ -66,6 +71,7 @@ class WatchEvent with WatchEventMappable {
     WatchEvent watchEvent = WatchEvent(
         title: Localize.current.nextEvent,
         startDate: date,
+        routePoints: event.nodes,
         routeName: event.routeName)
       ..lastupdate = event.lastUpdate == null
           ? '-'

@@ -88,7 +88,7 @@ extension CommunicationHandler{
                     }
                 }
                 catch {
-                    NSLog("\(Date()) fatalerror updateFriends \(error)")
+                    NSLog("\(Date()) fatal error updateEvent \(error)")
                     //self.message += error.localizedDescription
                 }
                 break
@@ -159,13 +159,11 @@ extension CommunicationHandler{
                 break
             case .updateFriends:
                 do{
-                    
                     let jsonString = (message["data"] as? String);
-                    //jsonString = "[{\"name\":\"Lars Note 10\",\"friendid\":36,\"color\":\"#d29046\",\"isActive\":true,\"requestId\":0,\"isOnline\":true,\"speed\":0,\"longitude\":11.5285279,\"latitude\":48.16475,\"relativeTime\":0,\"relativeDistance\":0,\"absolutePosition\":0,\"distanceToUser\":0,\"timeToUser\":0,\"timestamp\":1662228522255,\"hasServerEntry\":true}]"
-                    let decoder=JSONDecoder();
+                 
                     if jsonString == nil {break;}
-                    
                     else{
+                        let decoder=JSONDecoder();
                         self.message += (jsonString ?? "--")
                         let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: false) ?? Data()
                         let  data = try decoder.decode([Friend].self, from: bytes)
@@ -184,6 +182,36 @@ extension CommunicationHandler{
                 resetData()
                 self.infoText = "App was terminated";
                 break
+            case .updateRunningRoute:
+                let jsonString = (message["data"] as? String);
+                do{
+                    let decoder=JSONDecoder();
+                    if jsonString == nil {break;}
+                    else{
+                        self.message += (jsonString ?? "--")
+                        let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: false) ?? Data()
+                        let  rPoints = try decoder.decode([LatLng].self, from: bytes)
+                        var lineCoordinates: [CLLocationCoordinate2D] = [];
+                        for i in 0..<((rPoints.count)) {
+                                let points = rPoints;
+                                let lat = points[i].latitude;
+                                let lon = points[i].longitude;
+                                lineCoordinates
+                                    .append(
+                                        CLLocationCoordinate2D(
+                                            latitude: lat,
+                                            longitude: lon
+                                        ));
+                            
+                        }
+                        self.runningRoute = lineCoordinates
+                    }
+                } catch {
+                    NSLog("\(Date()) fatalerror handle updateRunningRoute \(error)")
+                    //self.message += error.localizedDescription
+                }
+                break ;
+                break ;
             }
         }
         

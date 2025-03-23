@@ -4085,6 +4085,26 @@ class Localize {
   String get appInfo {
     return Intl.message('App info', name: 'appInfo', desc: '', args: []);
   }
+
+  /// `Only approximate location`
+  String get onlyReducedLocationAccuracyTitle {
+    return Intl.message(
+      'Only approximate location',
+      name: 'onlyReducedLocationAccuracyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only approximate location is shared. This may influence the tracking of your position in procession`
+  String get onlyReducedLocationAccuracyText {
+    return Intl.message(
+      'Only approximate location is shared. This may influence the tracking of your position in procession',
+      name: 'onlyReducedLocationAccuracyText',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

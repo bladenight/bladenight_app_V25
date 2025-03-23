@@ -306,6 +306,7 @@ class Event with EventMappable implements Comparable {
     var wampResult = await WampV2()
         .addToWamp<Event>(bnWampMessage)
         .timeout(wampTimeout)
+        //.onError(handleError)
         .catchError((error, stackTrace) =>
             Event.rpcError(WampException(error.toString())));
     bnWampMessage = null;
@@ -329,6 +330,10 @@ class Event with EventMappable implements Comparable {
       return wampResult;
     }
     return Event.rpcError(WampException('unknown'));
+  }
+
+  static FutureOr handleError(Object error, StackTrace stackTrace) {
+    print('event on error handler');
   }
 }
 

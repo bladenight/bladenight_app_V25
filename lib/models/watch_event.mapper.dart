@@ -57,6 +57,9 @@ class WatchEventMapper extends ClassMapperBase<WatchEvent> {
   static String? _$startPoint(WatchEvent v) => v.startPoint;
   static const Field<WatchEvent, String> _f$startPoint =
       Field('startPoint', _$startPoint, key: r'stp', opt: true);
+  static List<LatLng>? _$routePoints(WatchEvent v) => v.routePoints;
+  static const Field<WatchEvent, List<LatLng>> _f$routePoints =
+      Field('routePoints', _$routePoints, key: r'nod', opt: true);
 
   @override
   final MappableFields<WatchEvent> fields = const {
@@ -72,6 +75,7 @@ class WatchEventMapper extends ClassMapperBase<WatchEvent> {
     #startPointLatitude: _f$startPointLatitude,
     #startPointLongitude: _f$startPointLongitude,
     #startPoint: _f$startPoint,
+    #routePoints: _f$routePoints,
   };
 
   static WatchEvent _instantiate(DecodingData data) {
@@ -87,7 +91,8 @@ class WatchEventMapper extends ClassMapperBase<WatchEvent> {
         rpcException: data.dec(_f$rpcException),
         startPointLatitude: data.dec(_f$startPointLatitude),
         startPointLongitude: data.dec(_f$startPointLongitude),
-        startPoint: data.dec(_f$startPoint));
+        startPoint: data.dec(_f$startPoint),
+        routePoints: data.dec(_f$routePoints));
   }
 
   @override
@@ -141,6 +146,7 @@ extension WatchEventValueCopy<$R, $Out>
 
 abstract class WatchEventCopyWith<$R, $In extends WatchEvent, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, LatLng, ObjectCopyWith<$R, LatLng, LatLng>>? get routePoints;
   $R call(
       {String? title,
       String? startDate,
@@ -153,7 +159,8 @@ abstract class WatchEventCopyWith<$R, $In extends WatchEvent, $Out>
       Exception? rpcException,
       double? startPointLatitude,
       double? startPointLongitude,
-      String? startPoint});
+      String? startPoint,
+      List<LatLng>? routePoints});
   WatchEventCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -165,6 +172,14 @@ class _WatchEventCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<WatchEvent> $mapper =
       WatchEventMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, LatLng, ObjectCopyWith<$R, LatLng, LatLng>>?
+      get routePoints => $value.routePoints != null
+          ? ListCopyWith(
+              $value.routePoints!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(routePoints: v))
+          : null;
   @override
   $R call(
           {String? title,
@@ -178,7 +193,8 @@ class _WatchEventCopyWithImpl<$R, $Out>
           Object? rpcException = $none,
           Object? startPointLatitude = $none,
           Object? startPointLongitude = $none,
-          Object? startPoint = $none}) =>
+          Object? startPoint = $none,
+          Object? routePoints = $none}) =>
       $apply(FieldCopyWithData({
         if (title != null) #title: title,
         if (startDate != null) #startDate: startDate,
@@ -193,7 +209,8 @@ class _WatchEventCopyWithImpl<$R, $Out>
           #startPointLatitude: startPointLatitude,
         if (startPointLongitude != $none)
           #startPointLongitude: startPointLongitude,
-        if (startPoint != $none) #startPoint: startPoint
+        if (startPoint != $none) #startPoint: startPoint,
+        if (routePoints != $none) #routePoints: routePoints
       }));
   @override
   WatchEvent $make(CopyWithData data) => WatchEvent(
@@ -210,7 +227,8 @@ class _WatchEventCopyWithImpl<$R, $Out>
           data.get(#startPointLatitude, or: $value.startPointLatitude),
       startPointLongitude:
           data.get(#startPointLongitude, or: $value.startPointLongitude),
-      startPoint: data.get(#startPoint, or: $value.startPoint));
+      startPoint: data.get(#startPoint, or: $value.startPoint),
+      routePoints: data.get(#routePoints, or: $value.routePoints));
 
   @override
   WatchEventCopyWith<$R2, WatchEvent, $Out2> $chain<$R2, $Out2>(
