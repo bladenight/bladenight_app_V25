@@ -105,7 +105,7 @@ class _IsOnsiteRegisteredState extends ConsumerState<IsOnsiteRegistered>
                               color: CupertinoTheme.brightnessOf(context) ==
                                       Brightness.light
                                   ? Colors.black
-                                  : Color(0xC8C8C8FF),
+                                  : Colors.black,
                             ),
                             textAlign: TextAlign.center,
                           ),

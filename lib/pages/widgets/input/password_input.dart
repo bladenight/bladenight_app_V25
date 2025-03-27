@@ -69,7 +69,7 @@ class _InputPasswordDialogState extends State<InputPasswordDialog> {
           isDefaultAction: true,
           onPressed: password.isNotEmpty
               ? () {
-                  Navigator.of(context).pop(password);
+                  Navigator.of(context, rootNavigator: true).pop(password);
                 }
               : null,
           child: Text(Localize.of(context).submit),

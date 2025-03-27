@@ -22,10 +22,13 @@ class BaseAppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var themeMode = HiveSettingsDB.adaptiveThemeMode;
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvokedWithResult: (bool didPop, dynamic obj) async {
-        context.replaceNamed(AppRoute.map.name);
+        if (didPop) {
+          context.replaceNamed(AppRoute.map.name);
+        }
       },
       child: Builder(
         builder: (builder) => ResponsiveBreakpoints.builder(
@@ -50,7 +53,7 @@ class BaseAppScaffold extends StatelessWidget {
                 primaryContrastingColor: HiveSettingsDB.themePrimaryDarkColor
                     .withValues(alpha: primaryContrastingAlpha),
               ),
-              initial: HiveSettingsDB.adaptiveThemeMode,
+              initial: themeMode,
               builder: (theme) => CupertinoApp(
                   localizationsDelegates: const [
                     //AppLocalizations.delegate,

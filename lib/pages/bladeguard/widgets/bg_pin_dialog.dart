@@ -37,21 +37,21 @@ class _PinDialogState extends State<PinDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          Navigator.of(context, rootNavigator: true).pop(value);
         },
       ),
       actions: [
         CupertinoDialogAction(
           child: Text(Localize.of(context).cancel),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context, rootNavigator: true).pop();
           },
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: password.isNotEmpty
               ? () {
-                  Navigator.of(context).pop(password);
+                  Navigator.of(context, rootNavigator: true).pop(password);
                 }
               : null,
           child: Text(Localize.of(context).submit),

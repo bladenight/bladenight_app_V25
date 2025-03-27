@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 
@@ -14,12 +15,16 @@ class SendMailWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: SizedTintedCupertinoButton(
-          color: Colors.orange.shade500,
+          color: Colors.orange,
           child: FittedBox(
             fit: BoxFit.fitWidth,
             child: Text(
               Localize.of(context).sendMail,
-              style: const TextStyle(color: Colors.black),
+              style: TextStyle(
+                color: CupertinoTheme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+              ),
             ),
           ),
           onPressed: () async {

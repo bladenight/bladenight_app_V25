@@ -197,19 +197,25 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     Completer? completer = Completer();
     BnWampMessage? bnWampMessage = BnWampMessage(WampMessageType.call,
         completer, WampEndpoint.getrealtimeupdate, message);
-    var wampResult = await WampV2()
-        .addToWamp<RealtimeUpdate>(bnWampMessage)
-        .timeout(wampTimeout)
-        .catchError((error, stackTrace) => RealtimeUpdate.rpcError(error));
-    if (wampResult is Map<String, dynamic>) {
-      var update = MapperContainer.globals.fromMap<RealtimeUpdate>(wampResult);
-      return update;
+    try {
+      var wampResult = await WampV2()
+          .addToWamp<RealtimeUpdate>(bnWampMessage)
+          .timeout(wampTimeout)
+          .catchError((error, stackTrace) => RealtimeUpdate.rpcError(error));
+      if (wampResult is Map<String, dynamic>) {
+        var update =
+            MapperContainer.globals.fromMap<RealtimeUpdate>(wampResult);
+        return update;
+      }
+      bnWampMessage = null;
+      completer = null;
+      if (wampResult is RealtimeUpdate) {
+        return wampResult;
+      }
+    } catch (e) {
+      BnLog.verbose(text: 'error realtimeDataUpdate ${e.toString()}');
     }
-    bnWampMessage = null;
-    completer = null;
-    if (wampResult is RealtimeUpdate) {
-      return wampResult;
-    }
+
     return RealtimeUpdate.rpcError(WampException('unknown'));
   }
 }

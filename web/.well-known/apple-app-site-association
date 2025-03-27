@@ -4,7 +4,7 @@
     "details": [
       {
         "appIDs": ["6Y9WT2BQR9.app.huth.bn"],
-        "components": [ "/", "/addFriend", "/messages", "/dl/*" ],
+        "components": [ "/", "/friend/*", "/messages", "/map", /events/* , "/dl/*" ],
         "paths": ["*","/"]
       }
     ]

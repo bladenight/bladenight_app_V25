@@ -7,17 +7,17 @@ import '../models/event.dart';
 import '../models/home_widget/home_widget_data_model.dart';
 import '../providers/active_event_provider.dart';
 
-class HomeWidgetHelper {
-  static HomeWidgetHelper? _instance;
+class HomeWidgetHelper_ {
+  static HomeWidgetHelper_? _instance;
   static const widgetGroup = 'app.huth.bn.Bladenight-HomeWidget';
 
-  HomeWidgetHelper._privateConstructor() {
+  HomeWidgetHelper_._privateConstructor() {
     _init();
   }
 
   //instance factory
-  factory HomeWidgetHelper() {
-    _instance ??= HomeWidgetHelper._privateConstructor();
+  factory HomeWidgetHelper_() {
+    _instance ??= HomeWidgetHelper_._privateConstructor();
     return _instance!;
   }
 

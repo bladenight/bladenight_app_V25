@@ -287,7 +287,7 @@
   "liveMapInBrowser": "Verfolgt die Bladnight ohne App im Browser",
   "liveMapInBrowserInfoHeader": "Livekarte im Browser",
   "loading": "Lade ...",
-  "locationServiceOff": "Bitte Start ▶️ drücken! Standortübertragung ist in den Einstellungen deaktiviert oder noch nie gestartet! Tracking nicht möglich.",
+  "locationServiceOff": "Standortübertragung ist in den Einstellungen deaktiviert oder noch nie gestartet! Tracking nicht möglich.",
   "locationServiceRunning": "Standortübertragung gestartet und aktiv.",
   "login": "Anmelden",
   "manufacturer": "Hersteller",
@@ -325,7 +325,7 @@
   "noGpsAllowed": "GPS nicht aktiviert",
   "noLocationAvailable": "Kein Standort",
   "noLocationPermissionGrantedAlertAndroid": "Bitte System-Einstellungen (Einstellungen -> Standort -> Standortzugriff von Apps -> BladeNight) prüfen, da keine Standortfreigabe.",
-  "noLocationPermissionGrantedAlertTitle": "Info Standortfreigabe",
+  "noLocationPermissionGrantedAlertTitle": "Achtung fehlende Standortfreigabe",
   "noLocationPermissionGrantedAlertiOS": "Bitte iOS Einstellunge prüfen, da keine Standortfreigabe. Diese müsste in den Telefon-Einstellungen unter Datenschutz - Ortungsdienste - BladnightApp freigegeben werden.",
   "noLocationPermitted": "Keine Standortfreigabe, Bitte Einstellungen des Gerätes prüfen",
   "nodatareceived": "Keine Daten empfangen!",
@@ -440,7 +440,7 @@
   "status_inactive": "Inaktiv",
   "status_obsolete": "Veraltet",
   "status_pending": "Ausstehend",
-  "stopLocationTracking": "Stoppe Standort wirklich?",
+  "stopLocationTracking": "Stoppe Tracking wirklich?",
   "stopLocationWithoutParticipating": "Stoppe Position ohne Teilnahme",
   "stopParticipationTracking": "Stoppe Teilnahme/ Tracking",
   "stopTrackingTimeOut": "Eventzeit ({timeout} min) überzogen. Tracking abschalten nicht vergessen!",
@@ -553,5 +553,9 @@
   "setLogLevel": "Loglevel einstellen",
   "showLogData": "Zeige Log Monitor",
   "serverVersion": "Serverversion",
-  "appInfo": "App info"
+  "appInfo": "App info",
+  "onlyReducedLocationAccuracyTitle": "Nur ungefährer Standort",
+  "onlyReducedLocationAccuracyText": "Nur ungefährer Standort ist freigegeben. Dies kann zur Fehldarstellung der Veranstaltung führen und ist nicht erlaubt. Du kannst die Standortfunktion nicht nutzen!",
+  "warning": "Achtung!",
+  "enableAlwaysLocationGeofenceText": "Für das automatische vor Ort einloggen sollte die Standortfreigabe auf immer stehen. Sollen die Systemeinstellungen geöffnet werden?"
 }

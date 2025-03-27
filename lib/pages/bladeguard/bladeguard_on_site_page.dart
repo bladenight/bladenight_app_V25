@@ -72,7 +72,7 @@ class _BladeGuardOnsiteState extends ConsumerState<BladeGuardOnsite>
     final isOnSiteAsync = ref.watch(bgIsOnSiteProvider);
     var networkConnected = ref.watch(networkAwareProvider);
     return isOnSiteAsync.when(error: (e, st) {
-      return IsOnsiteError(error: e);
+      return IsOnsiteError(error: e.toString());
       /*Column(mainAxisSize: MainAxisSize.max, children: [
         Padding(
             padding: const EdgeInsets.fromLTRB(15.0, 1, 15.0, 1),

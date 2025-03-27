@@ -28,9 +28,10 @@ class BnLog {
 
   static Timer? _timer;
 
+  ///clean Log folder
   static Future<bool?> clearLogs() async {
     talker.cleanHistory();
-    return fileLogger?.clearLogs();
+    return fileLogger?.emptyLogs();
   }
 
   static Future<bool?> clearOlderLogs() async {
@@ -315,7 +316,7 @@ class BnLog {
                     }*/
                   }
                 }
-                Navigator.of(context).pop(logLevel);
+                Navigator.of(context, rootNavigator: true).pop(logLevel);
               },
             ),
           ],

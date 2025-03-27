@@ -50,7 +50,7 @@ Future<EventStatus?> showEventStatusDialog(BuildContext context,
           CupertinoDialogAction(
             child: Text(Localize.of(context).save),
             onPressed: () {
-              Navigator.of(context).pop(status);
+              Navigator.of(context, rootNavigator: true).pop(status);
             },
           ),
         ],

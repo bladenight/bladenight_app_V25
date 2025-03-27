@@ -56,7 +56,7 @@ class _InputDoubleDialogState extends State<InputDoubleDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          Navigator.of(context, rootNavigator: true).pop(value);
         },
       ),
       actions: [
@@ -68,8 +68,9 @@ class _InputDoubleDialogState extends State<InputDoubleDialog> {
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
-          onPressed:
-              value != null ? () => Navigator.of(context).pop(value) : null,
+          onPressed: value != null
+              ? () => Navigator.of(context, rootNavigator: true).pop(value)
+              : null,
           child: Text(Localize.of(context).ok),
         ),
       ],

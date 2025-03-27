@@ -331,10 +331,6 @@ class Event with EventMappable implements Comparable {
     }
     return Event.rpcError(WampException('unknown'));
   }
-
-  static FutureOr handleError(Object error, StackTrace stackTrace) {
-    print('event on error handler');
-  }
 }
 
 @MappableClass()

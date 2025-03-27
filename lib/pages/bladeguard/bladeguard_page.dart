@@ -41,6 +41,8 @@ class BladeGuardPage extends ConsumerStatefulWidget {
 }
 
 class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
+  bool isChecking = false;
+
   @override
   void initState() {
     super.initState();
@@ -222,23 +224,30 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                             ref.watch(isValidBladeGuardEmailProvider))
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.9,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 5, bottom: 5),
-                              child: SizedTintedCupertinoButton(
-                                  color: Colors.yellowAccent,
-                                  child: FittedBox(
-                                    fit: BoxFit.fitWidth,
-                                    child: Text(
-                                      Localize.of(context).checkBgRegistration,
-                                      style:
-                                          const TextStyle(color: Colors.black),
-                                    ),
+                            child: isChecking
+                                ? CupertinoActivityIndicator(
+                                    color:
+                                        CupertinoTheme.of(context).primaryColor,
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 5, bottom: 5),
+                                    child: SizedTintedCupertinoButton(
+                                        color: Colors.yellowAccent,
+                                        child: FittedBox(
+                                          fit: BoxFit.fitWidth,
+                                          child: Text(
+                                            Localize.of(context)
+                                                .checkBgRegistration,
+                                            style: const TextStyle(
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          await checkOrUpdateBladeGuardData();
+                                        }),
                                   ),
-                                  onPressed: () async {
-                                    await checkOrUpdateBladeGuardData();
-                                  }),
-                            ),
-                          ),
+                          )
                       ],
                       if (!kIsWeb)
                         Column(
@@ -275,8 +284,13 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                               .bgUpdatePhone),
                                         ),
                                         onPressed: () async {
+                                          setState(() {
+                                            isChecking = true;
+                                          });
                                           await checkOrUpdateBladeGuardData();
-                                          setState(() {});
+                                          setState(() {
+                                            isChecking = false;
+                                          });
                                         }),
                                   ),
                                 ),
@@ -538,13 +552,13 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
             CupertinoDialogAction(
               child: Text(Localize.of(context).cancel),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context, rootNavigator: true).pop();
               },
             ),
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                Navigator.of(context).pop(selected);
+                Navigator.of(context, rootNavigator: true).pop(selected);
               },
             ),
           ],

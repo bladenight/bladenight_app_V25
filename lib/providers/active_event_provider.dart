@@ -10,18 +10,20 @@ import '../models/event.dart';
 import '../models/route.dart';
 import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
+import 'app_start_and_router/go_router.dart';
 
 part 'active_event_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class ActiveEvent extends _$ActiveEvent {
-  StreamSubscription<Event>? evtStream;
+  StreamSubscription<Event>? _evtStream;
+  bool _hasPushed = false;
 
   @override
   Event build() {
     state = HiveSettingsDB.getActualEvent
         .copyWith(rpcException: WampException('offline'));
-    evtStream =
+    _evtStream =
         WampV2().eventUpdateStreamController.stream.listen((event) async {
       if (event.nodes == [] && event.status != EventStatus.noevent) {
         //get route points if not delivered
@@ -33,10 +35,14 @@ class ActiveEvent extends _$ActiveEvent {
         state = event;
         SendToWatch.updateEvent(event);
       }
+      if (event.isActive && !_hasPushed) {
+        _hasPushed = true;
+        ref.read(goRouterProvider).goNamed(AppRoute.map.name);
+      }
     });
 
     ref.onDispose(() {
-      evtStream?.cancel();
+      _evtStream?.cancel();
     });
     return state;
   }
@@ -71,6 +77,7 @@ class ActiveEvent extends _$ActiveEvent {
           } else {
             state = rpcEvent;
           }
+
           SendToWatch.updateEvent(state);
           HiveSettingsDB.setActualEvent(state);
           if ((DateTime.now().difference(lastUpdate)).inSeconds > 60) {

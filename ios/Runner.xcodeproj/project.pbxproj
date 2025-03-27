@@ -52,6 +52,7 @@
 		E2A725912CBAFCF8004C7868 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A725902CBAFCEB004C7868 /* Home.swift */; };
 		E2C0C38B2D8F3EC2006D62BC /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E2C0C38A2D8F3EC2006D62BC /* InfoPlist.xcstrings */; };
 		E2C0C38D2D900786006D62BC /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C0C38C2D900786006D62BC /* ColorHelper.swift */; };
+		E2C0C38F2D9207A6006D62BC /* Info-Release.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E2C0C38E2D9207A6006D62BC /* Info-Release.xcstrings */; };
 		E2C23F1C29D4DDF000E06959 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */; };
 		E2C23F2229D4E87C00E06959 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F2129D4E87C00E06959 /* Images.xcassets */; };
 /* End PBXBuildFile section */
@@ -214,6 +215,7 @@
 		E2A725902CBAFCEB004C7868 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		E2C0C38A2D8F3EC2006D62BC /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		E2C0C38C2D900786006D62BC /* ColorHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorHelper.swift; sourceTree = "<group>"; };
+		E2C0C38E2D9207A6006D62BC /* Info-Release.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = "Info-Release.xcstrings"; sourceTree = "<group>"; };
 		E2C23F1B29D4DDF000E06959 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		E2C23F2129D4E87C00E06959 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E2EEFEA12BC7F022005205C4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -433,6 +435,7 @@
 				468B3A5B28B95B9C006A50F8 /* RunnerRelease.entitlements */,
 				4670E339286AFBA100D24851 /* Info-Debug.plist */,
 				4670E337286AFB9900D24851 /* Info-Release.plist */,
+				E2C0C38E2D9207A6006D62BC /* Info-Release.xcstrings */,
 				E23FA98A2CB407C600F26A01 /* Info-Profile.plist */,
 				46E3B2C72867833000FBC3DB /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -688,6 +691,7 @@
 				E23FA98C2CB4084C00F26A01 /* Profile.xcconfig in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				E2C23F1C29D4DDF000E06959 /* Launch Screen.storyboard in Resources */,
+				E2C0C38F2D9207A6006D62BC /* Info-Release.xcstrings in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				E2C0C38B2D8F3EC2006D62BC /* InfoPlist.xcstrings in Resources */,
 				4B403649F0AB60C43221112A /* GoogleService-Info.plist in Resources */,

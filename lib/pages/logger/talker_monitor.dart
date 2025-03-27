@@ -220,7 +220,7 @@ class TalkerMonitor extends StatelessWidget {
     List<TalkerData> logs,
     String typeName,
   ) {
-    Navigator.of(context).push(
+    Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) => TalkerMonitorTypedLogsScreen(
           exceptions: logs,

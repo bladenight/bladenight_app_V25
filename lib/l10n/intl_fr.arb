@@ -323,7 +323,7 @@
   "noGpsAllowed": "GPS non actif",
   "noLocationAvailable": "Pas de localisation connue",
   "noLocationPermissionGrantedAlertAndroid": "Veuillez vérifier les autorisations de localisation dans les paramètres",
-  "noLocationPermissionGrantedAlertTitle": "Info location permissions",
+  "noLocationPermissionGrantedAlertTitle": "Info no location permissions",
   "noLocationPermissionGrantedAlertiOS": "Veuillez vérifier les autorisations de localisation dans les paramètres d'iOS. Regardez dans Confidentialité - Localisation - BladnightApp. Réglez-la sur toujours ou lorsqu'elle est utilisée !",
   "noLocationPermitted": "No location permission, please check device settings",
   "nodatareceived": "No Data received !",
@@ -552,6 +552,10 @@
   "setLogLevel": "Définir le niveau de journalisation",
   "showLogData": "Afficher les données de journal",
   "serverVersion": "Serverversion",
-  "appInfo": "App Info"
+  "appInfo": "App Info",
+  "onlyReducedLocationAccuracyTitle": "Only approximate location",
+  "onlyReducedLocationAccuracyText": "Only approximate location is shared. This may influence the tracking of your position in procession",
+  "warning": "Warning!",
+  "enableAlwaysLocationGeofenceText": "Pour la connexion automatique sur place, le partage de site devrait être réglé sur toujours. Faut-il ouvrir les paramètres système ?"
 }
 

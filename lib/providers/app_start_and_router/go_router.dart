@@ -12,7 +12,6 @@ import '../../main.dart';
 import '../../models/event.dart';
 import '../../models/friend.dart';
 import '../../models/user_gpx_point.dart';
-import '../../observers/go_router_observer.dart';
 import '../../pages/about_page/about_page.dart';
 import '../../pages/admin/admin_page.dart';
 import '../../pages/admin/widgets/admin_password_dialog.dart';
@@ -29,12 +28,14 @@ import '../../pages/widgets/route/route_dialog.dart';
 import '../../pages/widgets/picker/route_name_dialog.dart';
 import '../../pages/widgets/startup_widgets/app_route_error_widget.dart';
 import '../../pages/widgets/map/user_tracking_dialog.dart';
+import '../active_event_provider.dart';
 import '../admin/admin_pwd_provider.dart';
 import '../../navigation/scaffold_with_nested_navigation.dart';
 import '../../pages/bladeguard/bladeguard_page.dart';
 import '../../pages/friends/friends_page.dart';
 import '../../pages/friends/widgets/edit_friend_dialog.dart';
 import '../../pages/messages/messages_page.dart';
+import '../isActiveEventChangeProvider.dart';
 
 part 'go_router.g.dart';
 
@@ -115,11 +116,22 @@ GoRouter goRouter(Ref ref) {
   return GoRouter(
     observers: [
       // Add your navigator observers
-      GoRouterNavigatorObserver(), TalkerRouteObserver(talker)
+      //GoRouterNavigatorObserver(),
+      TalkerRouteObserver(talker)
     ],
-    initialLocation: '/',
+    //initialLocation: '/',
     navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
+    /*refreshListenable: ref.watch(isActiveEventChangeNotifierProvider),
+    redirect: (context, state) {
+      final isActive =
+          ref.read(isActiveEventChangeNotifierProvider).eventIsActive;
+      if (isActive) {
+        return '/${AppRoute.map.name}';
+      } else {
+        return null;
+      }
+    },*/
     routes: [
       GoRoute(
 
@@ -318,12 +330,12 @@ GoRouter goRouter(Ref ref) {
                     redirect: (BuildContext context, GoRouterState state) {
                       var parameters = state.uri.queryParameters;
                       if (!parameters.containsKey('action')) {
-                        return '/friends';
+                        return 'friends';
                       } else if (parameters.containsKey('action')) {
                         var action = FriendsAction.values.firstWhereOrNull(
                             (x) => parameters['action'] == x.name);
                         if (action == null) {
-                          return '/friends';
+                          return 'friends';
                         }
                       }
                       return null;

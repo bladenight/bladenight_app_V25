@@ -12,7 +12,7 @@ import MapKit
 extension CommunicationHandler{
     func handleIncomingMessages(message: [String : Any]){
         DispatchQueue.main.async {
-            print("handleIncomingMessages: \(message)")
+            debugPrint("handleIncomingMessages: \(message)")
             guard let method = message["method"] as? String, let enumMethod = WatchReceiveMessageMethod(rawValue: method) else {
                 return
             }
@@ -190,13 +190,17 @@ extension CommunicationHandler{
                     else{
                         self.message += (jsonString ?? "--")
                         let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: false) ?? Data()
-                        let  rPoints = try decoder.decode([LatLng].self, from: bytes)
-                        var lineCoordinates: [CLLocationCoordinate2D] = [];
-                        for i in 0..<((rPoints.count)) {
-                                let points = rPoints;
-                                let lat = points[i].latitude;
-                                let lon = points[i].longitude;
-                                lineCoordinates
+                        let  rPoints = try decoder.decode(
+                            RoutePoints.self,
+                            from: bytes
+                        )
+                        let routePoints = rPoints.routePoints;
+                        var processionCoordinates: [CLLocationCoordinate2D] = [];
+                        for i in 0..<((routePoints.count)) {
+                            let point = routePoints[i];
+                                let lat = point.latitude;
+                                let lon = point.longitude;
+                                processionCoordinates
                                     .append(
                                         CLLocationCoordinate2D(
                                             latitude: lat,
@@ -204,7 +208,7 @@ extension CommunicationHandler{
                                         ));
                             
                         }
-                        self.runningRoute = lineCoordinates
+                        self.runningRoute = processionCoordinates;
                     }
                 } catch {
                     NSLog("\(Date()) fatalerror handle updateRunningRoute \(error)")

@@ -1,3 +1,5 @@
+import 'package:vm_service/vm_service.dart';
+
 ///type of locationtracking
 enum TrackingType {
   ///tracking inactive
@@ -10,5 +12,7 @@ enum TrackingType {
   userNotParticipating,
 
   ///Record only location data without sending to server
-  onlyTracking
+  onlyTracking,
 }
+
+enum TrackWaitStatus { none, starting, started, stopping, stopped, denied }

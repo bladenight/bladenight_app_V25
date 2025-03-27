@@ -2131,10 +2131,10 @@ class Localize {
     );
   }
 
-  /// `Info location permissions`
+  /// `Info no location permissions`
   String get noLocationPermissionGrantedAlertTitle {
     return Intl.message(
-      'Info location permissions',
+      'Info no location permissions',
       name: 'noLocationPermissionGrantedAlertTitle',
       desc: '',
       args: [],
@@ -4101,6 +4101,21 @@ class Localize {
     return Intl.message(
       'Only approximate location is shared. This may influence the tracking of your position in procession',
       name: 'onlyReducedLocationAccuracyText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Warning!`
+  String get warning {
+    return Intl.message('Warning!', name: 'warning', desc: '', args: []);
+  }
+
+  /// `For automatic on-site login, the location release should be set to always. Should the system settings be opened?`
+  String get enableAlwaysLocationGeofenceText {
+    return Intl.message(
+      'For automatic on-site login, the location release should be set to always. Should the system settings be opened?',
+      name: 'enableAlwaysLocationGeofenceText',
       desc: '',
       args: [],
     );

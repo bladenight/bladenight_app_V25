@@ -114,7 +114,8 @@ void importData(BuildContext context, String dataString) async {
             title:
                 '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
           );
-          if (!context.mounted || !Navigator.of(context).canPop()) return;
+          if (!context.mounted ||
+              !Navigator.of(context, rootNavigator: true).canPop()) return;
           Navigator.pop(context);
         });
     if (res == false) {

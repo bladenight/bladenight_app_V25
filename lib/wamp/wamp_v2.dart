@@ -51,14 +51,19 @@ class WampV2 {
     return _instance!;
   }
 
-  final internetConnChecker = InternetConnectionChecker.createInstance(
+  static InternetConnectionChecker get internetConnChecker =>
+      _internetConnChecker;
+  static final _internetConnChecker = InternetConnectionChecker.createInstance(
       /*customCheckOptions: [
       InternetCheckOption(uri: WampV2.getServerUri()),
     ],*/
       );
+  static bool get isConnectedToInternet => _isConnectedToInternet;
+  static bool _isConnectedToInternet = true;
+
   var _busyTimeStamp = DateTime.now();
   var _lock = Lock();
-  WebSocketChannel? channel; //initialize a websocket channel
+  WebSocketChannel? _channel; //initialize a websocket channel
   static bool _hadShakeHands = false;
 
   /// Stop wamp if only tracking
@@ -97,8 +102,6 @@ class WampV2 {
   HashSet<int> get subscriptions => _subscriptions;
   final HashSet<int> _subscriptions = HashSet();
   StreamSubscription? _icCheckerSubscription;
-
-  bool _isConnectedToInternet = true;
 
   StreamSubscription<BnWampMessage>? _wampCallStreamListener;
 
@@ -181,10 +184,6 @@ class WampV2 {
   ///called from App and put to queue
   Future addToWamp<T>(BnWampMessage message) async {
     if (!_wampStopped) {
-      BnLog.debug(
-          text: 'Wamp stopped - startWamp',
-          methodName: 'addToWamp',
-          className: toString());
       var connStatus = await startWamp();
       if (connStatus != WampConnectionState.connected) {
         BnLog.debug(
@@ -192,9 +191,12 @@ class WampV2 {
             methodName: 'addToWamp',
             className: toString());
       }
+      _put(message);
+      return message.completer.future;
+    } else {
+      return message.completer.completeError(
+          WampException(WampExceptionMessageType.connectionError.toString()));
     }
-    _put(message);
-    return message.completer.future;
   }
 
   void closeAndReconnect() async {
@@ -269,8 +271,8 @@ class WampV2 {
   }
 
   ///Put messages to queue
-  ///removing double
-  ///remove calls older 60 secs
+  ///removing double requests
+  ///remove calls older than 60 secs
   void _put(BnWampMessage message) {
     var outdatedCalls = <int, BnWampMessage>{};
     for (var call in calls.entries) {
@@ -358,7 +360,7 @@ class WampV2 {
               busy = true;
               continue;
             }
-            channel?.sink.add(message.getMessageAsJson);
+            _channel?.sink.add(message.getMessageAsJson);
 
             if (queue.isEmpty) {
               busy = false;
@@ -384,12 +386,12 @@ class WampV2 {
         HttpOverrides.global = MyHttpOverrides();
       }
       final url = _getLink();
-      channel = WebSocketChannel.connect(
+      _channel = WebSocketChannel.connect(
         Uri.parse(url), //connect to a websocket
       );
       //await channel?.ready.timeout(const Duration(seconds: 1));
       var welcomeCompleter = Completer();
-      channel!.stream.listen(
+      _channel!.stream.listen(
         (event) async {
           var wampMessage = json.decode(event) as List;
           var requestId = 0;
@@ -583,9 +585,9 @@ class WampV2 {
 
   void _closeStream() {
     //disposes of the stream
-    if (channel != null) {
-      channel!.sink.close();
-      channel = null;
+    if (_channel != null) {
+      _channel!.sink.close();
+      _channel = null;
     }
     _resetWampState();
   }
@@ -603,14 +605,18 @@ class WampV2 {
     String link = '';
     if (HiveSettingsDB.useCustomServer) {
       link = HiveSettingsDB.customServerAddress;
-    } else if ((kDebugMode && localTesting) && !kIsWeb) {
+    } else if ((localTesting || remoteTesting) && !kIsWeb) {
       link = Platform.isAndroid
-          ? defaultTestWampAdressAndroid
-          : defaultTestWampAdressOther; //defaultTestWampAddressOther;
-    } else if ((kDebugMode && localTesting) && !kIsWeb) {
-      link = localTestServerAddress;
+          ? remoteTesting
+              ? remoteTestWampAddressAndroid
+              : localTestWampAddress
+          : remoteTesting
+              ? remoteTestWampAddressOther
+              : localTestWampAddress;
+    } else if ((localTesting || remoteTesting) && kIsWeb) {
+      link = remoteTesting ? remoteTestWampAddressAux : localTestWampAddressAux;
     } else if (kIsWeb) {
-      link = defaultWampClientAux;
+      link = defaultWampAddressAux;
     } else {
       link = defaultWampAddress;
     }
@@ -630,30 +636,8 @@ class WampV2 {
     return link;
   }
 
-  _getInitialRealTimeData() async {
-    var callList = calls.entries.toList();
-    for (var item in callList) {
-      if (item.value.endpoint == WampEndpoint.getrealtimeupdate) {
-        try {
-          calls.remove(item.key);
-        } catch (_) {}
-      }
-    }
-  }
-
-  static Uri getServerUri() {
-    String link = '';
-    if (HiveSettingsDB.useCustomServer) {
-      link = HiveSettingsDB.customServerAddress;
-    } else if ((kDebugMode && localTesting) && !kIsWeb) {
-      link = Platform.isAndroid
-          ? defaultTestWampAdressAndroid
-          : defaultTestWampAdressOther; //defaultTestWampAddressOther;
-    } else if (kIsWeb) {
-      link = defaultWampClientAux;
-    } else {
-      link = defaultWampAddress;
-    }
+  Uri getServerUri() {
+    String link = _getLink();
     Uri linkUri = Uri.parse(link);
     return linkUri;
   }

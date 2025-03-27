@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
 import 'package:vector_math/vector_math.dart' show radians;
@@ -78,13 +78,9 @@ class LocationProvider with ChangeNotifier {
   bool _wakelockDisabled = false;
 
   static DateTime _lastRealtimedataUpdate = DateTime(2022, 1, 1, 0, 0, 0);
-  static DateTime _lastRealtimedataSendToServer = DateTime(2022, 1, 1, 0, 0, 0);
   static DateTime _lastForceStop = DateTime(2022, 1, 1, 0, 0, 0);
   static DateTime _lastSendLocationToServerRequest =
       DateTime(2022, 1, 1, 0, 0, 0);
-  static DateTime _lastUITrackUpdate = DateTime(2022, 1, 1, 0, 0, 0);
-  static DateTime _lastHomeWidgetUpdate = DateTime(2022, 1, 1, 0, 0, 0);
-
   DateTime? _userReachedFinishDateTime, _startedTrackingTime;
   Timer? _updateRealtimedataIfTrackingTimer,
       _saveLocationsTimer,
@@ -112,13 +108,14 @@ class LocationProvider with ChangeNotifier {
   TrackingType _trackingType = TrackingType.noTracking;
 
   TrackingType get trackingType => _trackingType;
-  bool _hasLocationPermissions = false;
 
-  bool get hasLocationPermissions => _hasLocationPermissions;
+  TrackWaitStatus _trackWaitStatus = TrackWaitStatus.none;
 
-  bool _gpsGranted = false;
+  TrackWaitStatus get trackWaitStatus => _trackWaitStatus;
 
-  bool get gpsGranted => _gpsGranted;
+  bool get hasLocationPermissions =>
+      _gpsLocationPermissionsStatus == LocationPermissionStatus.always ||
+      _gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse;
 
   LocationPermissionStatus _gpsLocationPermissionsStatus =
       LocationPermissionStatus.unknown;
@@ -248,11 +245,19 @@ class LocationProvider with ChangeNotifier {
     _startTrackingCheckTimer?.cancel();
     _saveLocationsTimer?.cancel();
     _updateRealtimedataIfTrackingTimer?.cancel();
+    _geolocatorServiceStatusStream?.cancel();
     super.dispose();
   }
 
   void _init() async {
     startRealtimeUpdateSubscriptionIfNotTracking();
+
+    _geolocatorServiceStatusStream =
+        geolocator.Geolocator.getServiceStatusStream()
+            .listen((geolocator.ServiceStatus status) {
+      _onLocationPermissionChange(status == geolocator.ServiceStatus.enabled);
+    });
+
     if (kIsWeb) {
       HiveSettingsDB.useAlternativeLocationProvider;
       notifyListeners();
@@ -262,8 +267,6 @@ class LocationProvider with ChangeNotifier {
     if (!HiveSettingsDB.useAlternativeLocationProvider) {
       _state = await _startBackgroundGeolocation();
       if (_state == null) {
-        BnLog.error(text: 'bg-locationState is null');
-        _gpsGranted = false;
         notifyListeners();
         return;
       }
@@ -276,16 +279,11 @@ class LocationProvider with ChangeNotifier {
     _gpsLocationPermissionsStatus =
         await LocationPermissionDialog().getPermissionsStatus();
 
-    _hasLocationPermissions =
-        _gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse ||
-            _gpsLocationPermissionsStatus == LocationPermissionStatus.always;
-    if (!_hasLocationPermissions) {
-      _gpsGranted = false;
+    if (!hasLocationPermissions) {
       notifyListeners();
       return;
     }
 
-    _gpsGranted = true;
     _trackingWasActive = HiveSettingsDB.trackingActive;
     _userIsParticipant = HiveSettingsDB.userIsParticipant;
     _odometer = HiveSettingsDB.odometerValue;
@@ -326,13 +324,13 @@ class LocationProvider with ChangeNotifier {
       bg.BackgroundGeolocation.onHeartbeat(_onHeartBeat);
       bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
       bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
-      bg.BackgroundGeolocation.onGeofence(_onGeoFence);
+      bg.BackgroundGeolocation.onGeofence(_onGeoFenceEvent);
 
       var isMotionDetectionDisabled = HiveSettingsDB.isMotionDetectionDisabled;
 
       if (Platform.isAndroid) {
         return bg.BackgroundGeolocation.ready(bg.Config(
-          locationAuthorizationRequest: 'Any',
+          //locationAuthorizationRequest: 'Any',
           fastestLocationUpdateInterval: 1000,
           reset: true,
           debug: false,
@@ -357,11 +355,11 @@ class LocationProvider with ChangeNotifier {
           //disableStopDetection: true,
           // <-- Don't interrupt location updates when Motion API says "still"
 
-          backgroundPermissionRationale: bg.PermissionRationale(
+          /*backgroundPermissionRationale: bg.PermissionRationale(
               title: Localize.current.requestAlwaysPermissionTitle,
               message: Localize.current.noBackgroundlocationLeaveAppOpen,
               positiveAction: Localize.current.openOperatingSystemSettings,
-              negativeAction: Localize.current.cancel),
+              negativeAction: Localize.current.cancel),*/
         )).then((bg.State state) {
           _isMoving = state.isMoving ?? false;
           notifyListeners();
@@ -396,7 +394,7 @@ class LocationProvider with ChangeNotifier {
           // <-- Don't interrupt location updates when Motion API says "still"
 
           //request Always permissions
-          backgroundPermissionRationale: bg.PermissionRationale(
+          /* backgroundPermissionRationale: bg.PermissionRationale(
               title: Localize.current.requestAlwaysPermissionTitle,
               message: Localize.current.noBackgroundlocationLeaveAppOpen,
               positiveAction: Localize.current.openOperatingSystemSettings,
@@ -409,7 +407,7 @@ class LocationProvider with ChangeNotifier {
             'instructions': Localize.current.enableAlwaysLocationInfotext,
             'cancelButton': Localize.current.cancel,
             'settingsButton': Localize.current.setOpenSystemSettings
-          },
+          },*/
           notification: bg.Notification(
               title: Localize.current.bgNotificationTitle,
               text: Localize.current.bgNotificationText,
@@ -446,8 +444,6 @@ class LocationProvider with ChangeNotifier {
   void updateUserLocation(bg.Location location) {
     if (!isTracking) return;
     _isMoving = true;
-    HomeWidgetHelper.updateRealtimeData(location);
-
     _userPositionStreamController.add(location);
     _userLatLngStreamController
         .add(LatLng(location.coords.latitude, location.coords.longitude));
@@ -467,12 +463,6 @@ class LocationProvider with ChangeNotifier {
     _realUserSpeedKmh = _realUserSpeedKmh!.toShortenedDouble(2);
     _odometer = location.odometer / 1000;
 
-    var diff = DateTime.now().difference(_lastHomeWidgetUpdate);
-    if (diff < const Duration(milliseconds: 60000)) {
-      //notifyListeners();
-      //return;
-    }
-
     if (_lastKnownPoint != null) {
       var headingDiff =
           (_lastKnownPoint!.coords.heading - location.coords.heading).abs();
@@ -487,7 +477,6 @@ class LocationProvider with ChangeNotifier {
       }
     }
     _lastKnownPoint = location;
-    _lastUITrackUpdate = DateTime.now();
     //update ui tracked lines only every 4 secs
     // if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
     _userLatLngList
@@ -676,8 +665,15 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  _onGeoFence(bg.GeofenceEvent event) {
-    _onGeoFenceEvent(event);
+  //called by geolocator and bg id gps disabled / enabled
+  void _onLocationPermissionChange(bool gpsIsEnabled) {
+    if (gpsIsEnabled) {
+      _gpsLocationPermissionsStatus = LocationPermissionStatus.notDetermined;
+    } else {
+      _gpsLocationPermissionsStatus = LocationPermissionStatus.denied;
+      stopTracking();
+    }
+    notifyListeners();
   }
 
   void _onGeoFenceEvent(bg.GeofenceEvent event) async {
@@ -730,7 +726,6 @@ class LocationProvider with ChangeNotifier {
         BnLog.error(text: 'Stopping location error: $error');
       });
     }
-
     return isTracking;
   }
 
@@ -777,7 +772,9 @@ class LocationProvider with ChangeNotifier {
     try {
       var gpsLocationPermissionsStatus =
           await LocationPermissionDialog().getPermissionsStatus();
-      if (gpsLocationPermissionsStatus != LocationPermissionStatus.always) {
+      if (gpsLocationPermissionsStatus != LocationPermissionStatus.always &&
+          navigator!.context.mounted) {
+        await LocationPermissionDialog().getGeofenceAlways(navigator!.context);
         BnLog.warning(
             text:
                 'startGeoFencing not possible - LocationPermission is $gpsLocationPermissionsStatus');
@@ -807,184 +804,195 @@ class LocationProvider with ChangeNotifier {
     });
   }
 
-  /// Starts location tracking with set values
-  ///
-  /// Returns false if no location-permissions given or fails
-  Future<bool> startTracking(TrackingType trackingType) async {
-    var context = rootNavigatorKey.currentContext!;
-    //if (kIsWeb) return false;
-    _trackingType = trackingType;
-    _userIsParticipant = trackingType == TrackingType.userParticipating;
-    _isHead = HiveSettingsDB.specialCodeValue == 1 ||
-        HiveSettingsDB.specialCodeValue == 5;
-    _isTail = HiveSettingsDB.specialCodeValue == 2 ||
-        HiveSettingsDB.specialCodeValue == 6;
+  ///Check and request necessary location permissions
+  Future<bool> _collectLocationPermissions(BuildContext context) async {
+    var serviceEnabled = await geolocator.Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      HiveSettingsDB.setHasShownProminentDisclosure(false);
+      HiveSettingsDB.setHasAskedAlwaysAllowLocationPermission(false);
+      if (context.mounted) {
+        await LocationPermissionDialog().requestAndOpenAppSettings(context);
+      }
+      return false;
+    }
+    var locationPermission = await geolocator.Geolocator.checkPermission();
+    if (locationPermission == geolocator.LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      HiveSettingsDB.setHasShownProminentDisclosure(false);
+      HiveSettingsDB.setHasAskedAlwaysAllowLocationPermission(false);
+      _gpsLocationPermissionsStatus =
+          LocationPermissionStatus.locationNotEnabled;
+      Fluttertoast.showToast(
+          msg: Localize.current.noLocationPermitted,
+          backgroundColor: Colors.redAccent);
 
-    var permissionWithService = Permission.location;
-    var locationPermission = await permissionWithService.status;
+      BnLog.warning(
+          text: 'location permanentlyDenied by OS',
+          className: 'location_provider',
+          methodName: '_startTracking');
+      if (context.mounted) {
+        await LocationPermissionDialog().requestAndOpenAppSettings(context);
+      }
+      //no tracking start
+      return false;
+    }
+
     if (HiveSettingsDB.hasShownProminentDisclosure == false ||
-        locationPermission.isPermanentlyDenied ||
-        locationPermission.isDenied) {
+        locationPermission == geolocator.LocationPermission.denied) {
       var acceptLocation =
           await LocationPermissionDialog().showProminentAndroidDisclosure();
-
       if (!acceptLocation) {
         BnLog.warning(
             text: 'No positive prominent disclosure or always denied');
         return false;
       }
-      if (Platform.isAndroid &&
-          await DeviceHelper.isAndroidGreaterVNine() &&
-          context.mounted) {
-        await LocationPermissionDialog()
-            .showMotionSensorProminentDisclosure(context);
-      }
       HiveSettingsDB.setHasShownProminentDisclosure(true);
-    }
 
-    if (locationPermission == PermissionStatus.permanentlyDenied) {
-      Fluttertoast.showToast(
-          msg: Localize.current.noLocationPermitted,
-          backgroundColor: Colors.orange);
-
-      BnLog.warning(
-          text: 'location permanentlyDenied by os',
-          className: 'location_provider',
-          methodName: '_startTracking');
-      if (context.mounted) {
-        return LocationPermissionDialog().requestAndOpenAppSettings(context);
-      }
-      return false;
-    }
-
-    //Check precise Location once
-    _locationIsPrecise =
-        await LocationPermissionDialog().requestPreciseLocation() ==
-            geolocator.LocationAccuracyStatus.precise;
-
-    if (HiveSettingsDB.trackingFirstStart &&
-        HiveSettingsDB.autoStartTrackingEnabled &&
-        context.mounted) {
-      await QuickAlert.show(
-          context: context,
-          type: QuickAlertType.confirm,
-          showCancelBtn: true,
-          confirmBtnColor: Colors.orange,
-          title: Localize.current.autoStartTrackingInfo,
-          text: Localize.current.autoStartTrackingInfoTitle,
-          onConfirmBtnTap: () {
-            HiveSettingsDB.setAutoStartTrackingEnabled(true);
-            rootNavigatorKey.currentState?.pop();
-          },
-          onCancelBtnTap: () {
-            HiveSettingsDB.setAutoStartTrackingEnabled(false);
-            rootNavigatorKey.currentState?.pop();
-          },
-          confirmBtnText: 'Auto-Start',
-          cancelBtnText: Localize.current.no);
-      HiveSettingsDB.setTrackingFirstStart(false);
-    }
-
-    _userReachedFinishDateTime == null;
-    if (_userGpxPoints.length <= 1 &&
-        MapSettings.showOwnTrack &&
-        LocationStore.dataTodayAvailable) {
-      //reload data
-      _userGpxPoints.clear();
-      _userGpxPoints.addAll(LocationStore.userTrackPointsList);
-      _userSpeedPoints.clear();
-      for (int i = 0; i < _userGpxPoints.length - 1; i++) {
-        if (i == 0) {
-          _userSpeedPoints.add(
-            _userGpxPoints[0].latitude,
-            _userGpxPoints[0].longitude,
-            _userGpxPoints[0].realSpeedKmh,
-            _userGpxPoints[0].latLng,
-          );
-        } else {
-          _userSpeedPoints.add(
-            _userGpxPoints[i].latitude,
-            _userGpxPoints[i].longitude,
-            _userGpxPoints[i].realSpeedKmh,
-            _userGpxPoints[i - 1].latLng,
-          );
-        }
-      }
-    }
-
-    if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
-      await WakelockPlus.enable();
-    }
-
-    if (kIsWeb || HiveSettingsDB.useAlternativeLocationProvider) {
-      BnLog.info(
-          text: 'alternative location tracking started',
-          className: 'location_provider',
-          methodName: '_startTracking');
-      if (kIsWeb) {
-        HiveSettingsDB.setUseAlternativeLocationProvider(true);
-        var permissionWithService = Permission.location;
-        var locationPermission = await permissionWithService.request();
-
-        if (locationPermission == PermissionStatus.granted ||
-            locationPermission == PermissionStatus.limited) {
-          _gpsLocationPermissionsStatus = LocationPermissionStatus.always;
-          _hasLocationPermissions = true;
-        } else {
-          _gpsLocationPermissionsStatus = LocationPermissionStatus.denied;
-          _hasLocationPermissions = false;
-        }
-      } else {
+      var permission = await geolocator.Geolocator.requestPermission();
+      if (permission == geolocator.LocationPermission.deniedForever) {
+        // Permissions are denied forever, handle appropriately.
+        HiveSettingsDB.setHasShownProminentDisclosure(false);
+        HiveSettingsDB.setHasAskedAlwaysAllowLocationPermission(false);
         _gpsLocationPermissionsStatus =
-            await LocationPermissionDialog().getPermissionsStatus();
+            LocationPermissionStatus.locationNotEnabled;
+        Fluttertoast.showToast(
+            msg: Localize.current.noLocationPermitted,
+            backgroundColor: Colors.redAccent);
 
-        _hasLocationPermissions = _gpsLocationPermissionsStatus ==
-                LocationPermissionStatus.whenInUse ||
-            _gpsLocationPermissionsStatus == LocationPermissionStatus.always;
-        if (HiveSettingsDB.useAlternativeLocationProvider &&
-            _hasLocationPermissions) {
-          _gpsLocationPermissionsStatus =
-              _gpsLocationPermissionsStatus == LocationPermissionStatus.always
-                  ? LocationPermissionStatus.always
-                  : LocationPermissionStatus.whenInUse;
-        }
-        if (_gpsLocationPermissionsStatus ==
-            LocationPermissionStatus.whenInUse) {
-          await LocationPermissionDialog().requestAlwaysLocationPermissions();
-        }
-      }
-      _listenLocationWithAlternativePackage();
-      _trackingType = trackingType;
-      stopRealtimedataSubscription();
-      setRealtimedataUpdateTimerIfTracking(true);
-      _startedTrackingTime = DateTime.now();
-      ProviderContainer()
-          .read(activeEventProvider.notifier)
-          .refresh(forceUpdate: true);
-      notifyListeners();
-      var loc = await _updateLocation();
-      if (loc != null) {
-        _getRealtimeDataWithLocation(loc);
-      }
-      SendToWatch.setIsLocationTracking(isTracking);
-      HiveSettingsDB.setTrackingActive(isTracking);
-    }
-    //####################################################
-    //# use Transistorsoft geolocator for Android and iOS
-    //####################################################
-    else {
-      _geolocatorServiceStatusStream?.cancel();
-      await bg.BackgroundGeolocation.start()
-          .then((bg.State bgGeoLocState) async {
-        BnLog.info(
-            text: 'location tracking started',
+        BnLog.warning(
+            text: 'location permanentlyDenied by OS',
             className: 'location_provider',
             methodName: '_startTracking');
-        _startedTrackingTime = DateTime.now();
-        _trackingType =
-            bgGeoLocState.enabled ? trackingType : TrackingType.noTracking;
+        if (context.mounted) {
+          await LocationPermissionDialog().requestAndOpenAppSettings(context);
+        }
+        //no tracking start
+        return false;
+      }
+
+      if (permission == geolocator.LocationPermission.denied) {
+        HiveSettingsDB.setHasShownProminentDisclosure(false);
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return true;
+      }
+    }
+
+    if (Platform.isAndroid &&
+        await DeviceHelper.isAndroidGreaterVNine() &&
+        context.mounted) {
+      await LocationPermissionDialog()
+          .showMotionSensorProminentDisclosure(context);
+    }
+
+    if (locationPermission == geolocator.LocationPermission.denied) {
+      _gpsLocationPermissionsStatus = LocationPermissionStatus.denied;
+      var res = await LocationPermissionDialog()
+          .requestWhileInUseLocationPermissions();
+      _gpsLocationPermissionsStatus = res;
+      if (res == LocationPermissionStatus.always) {
+        locationPermission = geolocator.LocationPermission.always;
+      }
+      if (res == LocationPermissionStatus.whenInUse) {
+        locationPermission = geolocator.LocationPermission.whileInUse;
+      }
+    }
+
+    if (locationPermission == geolocator.LocationPermission.whileInUse) {
+      _gpsLocationPermissionsStatus = LocationPermissionStatus.whenInUse;
+      var res =
+          await LocationPermissionDialog().requestAlwaysLocationPermissions();
+      _gpsLocationPermissionsStatus = res;
+      if (res == LocationPermissionStatus.always) {
+        locationPermission = geolocator.LocationPermission.always;
+      }
+    }
+
+    if (locationPermission == geolocator.LocationPermission.always) {
+      _gpsLocationPermissionsStatus = LocationPermissionStatus.always;
+      var locationIsPrecise =
+          await LocationPermissionDialog().checkOrRequestPreciseLocation();
+      return locationIsPrecise == geolocator.LocationAccuracyStatus.precise
+          ? true
+          : false;
+    }
+    //Check precise location
+    _locationIsPrecise =
+        await LocationPermissionDialog().checkOrRequestPreciseLocation() ==
+            geolocator.LocationAccuracyStatus.precise;
+    return !locationIsPrecise ? false : true;
+    return false;
+  }
+
+  /// Starts location tracking with set values
+  ///
+  /// Returns false if no location-permissions given or fails
+  Future<bool> startTracking(TrackingType trackingType) async {
+    try {
+      var context = rootNavigatorKey.currentContext!;
+      _trackWaitStatus = TrackWaitStatus.starting;
+      notifyListeners();
+
+      var permissionOk = await _collectLocationPermissions(context);
+      if (!permissionOk) {
+        return false;
+      }
+      //if (kIsWeb) return false;
+      _trackingType = trackingType;
+      _userIsParticipant = trackingType == TrackingType.userParticipating;
+      _isHead = HiveSettingsDB.specialCodeValue == 1 ||
+          HiveSettingsDB.specialCodeValue == 5;
+      _isTail = HiveSettingsDB.specialCodeValue == 2 ||
+          HiveSettingsDB.specialCodeValue == 6;
+
+      if (HiveSettingsDB.trackingFirstStart &&
+          HiveSettingsDB.autoStartTrackingEnabled &&
+          context.mounted) {
+        await QuickAlert.show(
+            context: context,
+            type: QuickAlertType.confirm,
+            showCancelBtn: true,
+            confirmBtnColor: Colors.orange,
+            title: Localize.current.autoStartTrackingInfo,
+            text: Localize.current.autoStartTrackingInfoTitle,
+            onConfirmBtnTap: () {
+              HiveSettingsDB.setAutoStartTrackingEnabled(true);
+              rootNavigatorKey.currentState?.pop();
+            },
+            onCancelBtnTap: () {
+              HiveSettingsDB.setAutoStartTrackingEnabled(false);
+              rootNavigatorKey.currentState?.pop();
+            },
+            confirmBtnText: 'Auto-Start',
+            cancelBtnText: Localize.current.no);
+        HiveSettingsDB.setTrackingFirstStart(false);
+      }
+      //set user track points
+      _initUserTrackStore();
+
+      if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
+        await WakelockPlus.enable();
+      }
+
+      if (kIsWeb || HiveSettingsDB.useAlternativeLocationProvider) {
+        BnLog.info(
+            text: 'alternative location tracking started',
+            className: 'location_provider',
+            methodName: '_startTracking');
+        if (kIsWeb) {
+          HiveSettingsDB.setUseAlternativeLocationProvider(true);
+        }
+        _listenLocationWithAlternativePackage();
+        _trackingType = trackingType;
         stopRealtimedataSubscription();
         setRealtimedataUpdateTimerIfTracking(true);
+        _startedTrackingTime = DateTime.now();
         ProviderContainer()
             .read(activeEventProvider.notifier)
             .refresh(forceUpdate: true);
@@ -993,30 +1001,60 @@ class LocationProvider with ChangeNotifier {
         if (loc != null) {
           _getRealtimeDataWithLocation(loc);
         }
-        HiveSettingsDB.setTrackingActive(isTracking);
         SendToWatch.setIsLocationTracking(isTracking);
-      }).catchError((error) {
-        BnLog.error(text: 'LocStarting ERROR: $error');
-        HiveSettingsDB.setTrackingActive(false);
-        trackingType = TrackingType.noTracking;
-        setRealtimedataUpdateTimerIfTracking(false);
-        startRealtimeUpdateSubscriptionIfNotTracking();
-        SendToWatch.setIsLocationTracking(false);
-        notifyListeners();
-        //re-update on error
-
-        return null;
-      });
-      await bg.BackgroundGeolocation.setConfig(bg.Config(
-          distanceFilter: 0,
-          locationUpdateInterval: 1000,
-          stopTimeout: 1000, // <-- a very long stopTimeout
-          disableStopDetection:
-              true // <-- Don't interrupt location updates when Motion API says "still"
-          ));
-      await bg.BackgroundGeolocation.changePace(true);
+        HiveSettingsDB.setTrackingActive(isTracking);
+      }
+      //####################################################
+      //# use Transistorsoft geolocator for Android and iOS
+      //####################################################
+      else {
+        _geolocatorServiceStatusStream?.cancel();
+        await bg.BackgroundGeolocation.start()
+            .then((bg.State bgGeoLocState) async {
+          BnLog.info(
+              text: 'location tracking started',
+              className: 'location_provider',
+              methodName: '_startTracking');
+          _startedTrackingTime = DateTime.now();
+          _trackingType =
+              bgGeoLocState.enabled ? trackingType : TrackingType.noTracking;
+          stopRealtimedataSubscription();
+          setRealtimedataUpdateTimerIfTracking(true);
+          ProviderContainer()
+              .read(activeEventProvider.notifier)
+              .refresh(forceUpdate: true);
+          notifyListeners();
+          var loc = await _updateLocation();
+          if (loc != null) {
+            _getRealtimeDataWithLocation(loc);
+          }
+          HiveSettingsDB.setTrackingActive(isTracking);
+          SendToWatch.setIsLocationTracking(isTracking);
+        }).catchError((error) {
+          BnLog.error(text: 'LocStarting ERROR: $error');
+          HiveSettingsDB.setTrackingActive(false);
+          trackingType = TrackingType.noTracking;
+          setRealtimedataUpdateTimerIfTracking(false);
+          startRealtimeUpdateSubscriptionIfNotTracking();
+          SendToWatch.setIsLocationTracking(false);
+          notifyListeners();
+          //re-update on error
+          return null;
+        });
+        await bg.BackgroundGeolocation.setConfig(bg.Config(
+            distanceFilter: 0,
+            locationUpdateInterval: 1000,
+            stopTimeout: 1000, // <-- a very long stopTimeout
+            disableStopDetection:
+                true // <-- Don't interrupt location updates when Motion API says "still"
+            ));
+        await bg.BackgroundGeolocation.changePace(true);
+      }
+      return isTracking;
+    } finally {
+      _trackWaitStatus = TrackWaitStatus.none;
+      notifyListeners();
     }
-    return isTracking;
   }
 
   Future<bool> saveLocationToDB() async {
@@ -1073,7 +1111,6 @@ class LocationProvider with ChangeNotifier {
     if (update.rpcException != null) {
       return;
     }
-    _lastRealtimedataSendToServer = DateTime.now();
     HiveSettingsDB.setOdometerValue(odometer);
     //rt update by stream
     var friendList = update.updateMapPointFriends(update.friends);
@@ -1200,12 +1237,6 @@ class LocationProvider with ChangeNotifier {
       if (position == null) return;
       var newLoc = position.convertToBGLocation();
       _onLocation(newLoc);
-    });
-
-    _geolocatorServiceStatusStream =
-        geolocator.Geolocator.getServiceStatusStream()
-            .listen((geolocator.ServiceStatus status) {
-      _onProviderChange(status.convertToBgProviderChangeEvent());
     });
   }
 
@@ -1347,7 +1378,6 @@ class LocationProvider with ChangeNotifier {
       var update = await RealtimeUpdate.realtimeDataUpdate();
 
       if (update.rpcException != null && update.rpcException is WampException) {
-        var type = (update.rpcException).runtimeType;
         BnLog.error(
             className: 'locationProvider',
             methodName: 'refresh',
@@ -1545,9 +1575,7 @@ class LocationProvider with ChangeNotifier {
         SendToWatch.updateRealtimeData(_realtimeUpdate?.toJson());
       }
     } catch (e) {
-      if (!kIsWeb) {
-        BnLog.error(text: 'Error on _updateWatchData ${e.toString()}');
-      }
+      BnLog.error(text: 'Error on _updateWatchData ${e.toString()}');
     }
   }
 
@@ -1617,7 +1645,7 @@ class LocationProvider with ChangeNotifier {
               '${Localize.current.distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${odometer.toStringAsFixed(1)} km'} \n '
               '${Localize.current.resetOdoMeter}'
               '${alwaysPermissionGranted ? "" : "\n${Localize.of(context).onlyWhileInUse}"} \n',
-          confirmBtnText: Localize.current.yes,
+          confirmBtnText: Localize.current.ok,
           cancelBtnText: Localize.current.cancel,
           onConfirmBtnTap: () {
             resetTrackPoints();
@@ -1644,7 +1672,7 @@ class LocationProvider with ChangeNotifier {
               '${Localize.current.userSpeed}  ${realUserSpeedKmh == null ? '- km/h' : realUserSpeedKmh?.formatSpeedKmH()}\n'
               '${Localize.current.distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${odometer.toStringAsFixed(1)} km'} \n '
               '${Localize.current.resetOdoMeter}',
-          confirmBtnText: Localize.current.yes,
+          confirmBtnText: Localize.current.ok,
           cancelBtnText: Localize.current.cancel,
           onConfirmBtnTap: () {
             resetTrackPoints();
@@ -1841,6 +1869,35 @@ class LocationProvider with ChangeNotifier {
     }
     return true;
   }
+
+  void _initUserTrackStore() {
+    _userReachedFinishDateTime == null;
+    if (_userGpxPoints.length <= 1 &&
+        MapSettings.showOwnTrack &&
+        LocationStore.dataTodayAvailable) {
+      //reload data
+      _userGpxPoints.clear();
+      _userGpxPoints.addAll(LocationStore.userTrackPointsList);
+      _userSpeedPoints.clear();
+      for (int i = 0; i < _userGpxPoints.length - 1; i++) {
+        if (i == 0) {
+          _userSpeedPoints.add(
+            _userGpxPoints[0].latitude,
+            _userGpxPoints[0].longitude,
+            _userGpxPoints[0].realSpeedKmh,
+            _userGpxPoints[0].latLng,
+          );
+        } else {
+          _userSpeedPoints.add(
+            _userGpxPoints[i].latitude,
+            _userGpxPoints[i].longitude,
+            _userGpxPoints[i].realSpeedKmh,
+            _userGpxPoints[i - 1].latLng,
+          );
+        }
+      }
+    }
+  }
 }
 
 //Providers
@@ -1855,7 +1912,7 @@ final locationLastUpdateProvider = Provider.autoDispose((ref) {
 var _lastSpeedColorIdx = ColorConstants.colorsGradient.iterator;
 
 final colorTimerProvider = Provider.autoDispose((ref) {
-  print('${DateTime.now().toIso8601String()} colorTimerProvider');
+  //print('${DateTime.now().toIso8601String()} colorTimerProvider');
   var _ = ref.watch(locationProvider.select((l) => l.realtimeUpdate));
   if (_lastSpeedColorIdx.moveNext()) {
     return _lastSpeedColorIdx.current;
@@ -1889,6 +1946,11 @@ final trackingTypeProvider = Provider.autoDispose((ref) {
   return ref.watch(locationProvider.select((l) => l.trackingType));
 });
 
+///Provide to signal start or stop tracking
+final trackingWaitStatusProvider = Provider.autoDispose((ref) {
+  return ref.watch(locationProvider.select((l) => l.trackWaitStatus));
+});
+
 final odometerProvider = Provider.autoDispose((ref) {
   return ref.watch(locationProvider.select((l) => l.odometer));
 });
@@ -1902,7 +1964,7 @@ final userLatLongProvider = Provider.autoDispose((ref) {
 });
 
 final isGPSGrantedProvider = Provider.autoDispose((ref) {
-  return ref.watch(locationProvider.select((l) => l.gpsGranted));
+  return ref.watch(locationProvider.select((l) => l.hasLocationPermissions));
 });
 
 final gpsLocationPermissionsStatusProvider = Provider.autoDispose((ref) {

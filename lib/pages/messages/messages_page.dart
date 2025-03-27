@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/url_launch_helper.dart';
+import '../../main.dart';
 import '../../models/external_app_message.dart';
 import '../widgets/common_widgets/data_widget_left_right_small_text.dart';
 import '../widgets/common_widgets/no_connection_warning.dart';
@@ -160,7 +161,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.endToStart) {
                           await QuickAlert.show(
-                              context: context,
+                              context: rootNavigatorKey.currentContext!,
                               showCancelBtn: true,
                               type: QuickAlertType.warning,
                               title: Localize.of(context).deleteMessage,
@@ -168,12 +169,24 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                                   '${Localize.of(context).delete}: ${message.body}',
                               confirmBtnText: Localize.current.delete,
                               cancelBtnText: Localize.current.cancel,
-                              onConfirmBtnTap: () {
-                                ref
+                              onConfirmBtnTap: () async {
+                                await ref
                                     .read(messagesLogicProvider)
                                     .deleteMessage(message);
-                                if (!context.mounted) return;
-                                context.pop();
+                                if (rootNavigatorKey.currentContext!.mounted &&
+                                    rootNavigatorKey.currentContext!.canPop()) {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(true);
+                                }
+                              },
+                              onCancelBtnTap: () {
+                                if (Navigator.of(context, rootNavigator: true)
+                                        .mounted &&
+                                    Navigator.of(context, rootNavigator: true)
+                                        .canPop()) {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(true);
+                                }
                               });
                         }
                         if (direction == DismissDirection.startToEnd) {

@@ -37,8 +37,8 @@ class CommunicationHandler: NSObject, ObservableObject {
     @Published var elapsedDistanceLength = "-"
     @Published var runningLength = "-"
     @Published var userSpeed=""
-    @Published var isCompanionAppInstalled=false;
-    @Published var realTimeData = RealtimeUpdate(head: nil, tail: nil, user: nil, runningLength: 0.0, routeName: "-", usr: nil);
+    @Published var isCompanionAppInstalled=false
+    @Published var realTimeData = RealtimeUpdate(head: nil, tail: nil, user: nil, runningLength: 0.0, routeName: "-", usr: nil)
     @Published var realTimeDataLastUpdate = "-"
     @Published var locations:[Location]=[Location]()
     @Published var friends:[Friend]=[Friend]()
@@ -117,7 +117,7 @@ extension CommunicationHandler: WCSessionDelegate {
     }
 
     func sessionReachabilityDidChange(_ session: WCSession) {
-        print("WCSession sessionReachabilityDidChange sessionReachability:\(session.isReachable)")
+        debugPrint("WCSession sessionReachabilityDidChange sessionReachability:\(session.isReachable)")
         self.phoneReachable=session.isReachable && session.isCompanionAppInstalled
         if (!session.isReachable){
             self.isLocationTracking=false;
@@ -139,7 +139,7 @@ extension CommunicationHandler: WCSessionDelegate {
 
     public func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         DispatchQueue.main.async {
-            print("didReceiveMessage with replyHandler \(message)")
+            debugPrint("didReceiveMessage with replyHandler \(message)")
             self.handleIncomingMessages(message:message);
         }
     }
@@ -167,7 +167,7 @@ extension CommunicationHandler: WCSessionDelegate {
         }
         DispatchQueue.main.async { self.phoneReachable=true}
         let messageData: [String: Any] = ["method": method, "data": data]
-        print("sendMessage: \(messageData)")
+        debugPrint("sendMessage: \(messageData)")
         session.sendMessage(messageData, replyHandler: nil, errorHandler: nil)
     }
     

@@ -111,10 +111,9 @@ class SendToWatch {
       return;
     }
     try {
-      channel.invokeMethod(flutterToWatch, {
-        'method': 'updateRunningRoute',
-        'data': jsonEncode(rtData.map((e) => e.toJson()).toList())
-      });
+      var routePoints = RoutePoints('procession', rtData);
+      channel.invokeMethod(flutterToWatch,
+          {'method': 'updateRunningRoute', 'data': routePoints.toJson()});
     } catch (e) {
       BnLog.error(text: 'Failed to send update running route $e');
     }
@@ -139,7 +138,7 @@ Future<void> initWatchFlutterChannel() async {
         }
         break;
       case 'getEventDataFromFlutter':
-        print('getEventDataFromFlutter received');
+        //print('getEventDataFromFlutter received');
         try {
           ProviderContainer()
               .read(activeEventProvider.notifier)
@@ -155,7 +154,7 @@ Future<void> initWatchFlutterChannel() async {
         }
         break;
       case 'getLocationIsTracking':
-        print('getLocationIsTrackingFromFlutter received');
+        //print('getLocationIsTrackingFromFlutter received');
         try {
           SendToWatch.setIsLocationTracking(
               ProviderContainer().read(isTrackingProvider));
@@ -167,7 +166,7 @@ Future<void> initWatchFlutterChannel() async {
         }
         break;
       case 'getFriendsDataFromFlutter':
-        print('getFriendsDataFromFlutter received');
+        //print('getFriendsDataFromFlutter received');
         try {
           LocationProvider().refreshRealtimeData(forceUpdate: true);
         } catch (e) {
@@ -178,7 +177,7 @@ Future<void> initWatchFlutterChannel() async {
         }
         break;
       case 'getRealtimeDataFromFlutter':
-        print('getRealtimeDataFromFlutter received');
+        //print('getRealtimeDataFromFlutter received');
         try {
           var rtData = ProviderContainer().read(realtimeDataProvider);
           if (rtData != null) {

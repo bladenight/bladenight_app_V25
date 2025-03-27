@@ -57,7 +57,7 @@ class _InputTextDialogState extends State<InputTextDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          Navigator.of(context, rootNavigator: true).pop(value);
         },
       ),
       actions: [
@@ -69,7 +69,8 @@ class _InputTextDialogState extends State<InputTextDialog> {
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
-          onPressed: () => Navigator.of(context).pop(value),
+          onPressed: () =>
+              Navigator.of(context, rootNavigator: true).pop(value),
           child: Text(Localize.of(context).ok),
         ),
       ],

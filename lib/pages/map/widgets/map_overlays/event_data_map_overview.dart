@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../generated/l10n.dart';
-import '../../helpers/time_converter_helper.dart';
-import '../../models/event.dart';
-import '../widgets/buttons/hidden_admin_button.dart';
-import '../widgets/event_info/event_state_traffic_light.dart';
-import 'event_map_small.dart';
+import '../../../../generated/l10n.dart' show Localize;
+import '../../../../helpers/time_converter_helper.dart';
+import '../../../../models/event.dart' show Event, EventStatus;
+import '../../../../providers/location_provider.dart';
+import '../../../widgets/event_info/event_state_traffic_light.dart';
 
 ///Event overview
 ///
@@ -19,8 +17,8 @@ import 'event_map_small.dart';
 ///    default false set to false to hide map
 /// - [showSeparator] hide animated separator
 /// - [eventIsRunning] hide parts if event is running
-class EventDataOverview extends ConsumerStatefulWidget {
-  const EventDataOverview({
+class EventDataMapOverview extends ConsumerStatefulWidget {
+  const EventDataMapOverview({
     super.key,
     required this.nextEvent,
     this.borderRadius = 15.0,
@@ -36,10 +34,11 @@ class EventDataOverview extends ConsumerStatefulWidget {
   final bool eventIsRunning;
 
   @override
-  ConsumerState<EventDataOverview> createState() => _EventDataOverviewState();
+  ConsumerState<EventDataMapOverview> createState() =>
+      _EventDataMapOverviewState();
 }
 
-class _EventDataOverviewState extends ConsumerState<EventDataOverview>
+class _EventDataMapOverviewState extends ConsumerState<EventDataMapOverview>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Animation<Color?> _colorAnimation;
@@ -81,14 +80,6 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.showMap)
-          GestureDetector(
-            onTap: () {
-              context.goNamed('map');
-            },
-            child: EventMapSmall(
-                nextEvent: widget.nextEvent, borderRadius: widget.borderRadius),
-          ),
         SizedBox(
           child: Padding(
             padding:
@@ -172,7 +163,21 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                     dividerColor: CupertinoTheme.of(context).primaryColor,
                     text: widget.nextEvent.formatDistance,
                     description: Localize.of(context).length,
-                    showSeparator: false)
+                    showSeparator: false),
+                if (widget.nextEvent.status == EventStatus.confirmed ||
+                    widget.eventIsRunning)
+                  eventDetail(
+                      textCrossedOut:
+                          widget.nextEvent.status == EventStatus.cancelled,
+                      context: context,
+                      animation: _valueAnimation,
+                      normalFontSize: normalFontSize,
+                      dividerWidth: 70,
+                      dividerColor: CupertinoTheme.of(context).primaryColor,
+                      text:
+                          ref.watch(realtimeDataProvider)?.usersTracking ?? '-',
+                      description: Localize.of(context).trackers,
+                      showSeparator: false)
               ],
             ),
           ),
@@ -196,7 +201,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               ),
             ),
           ),
-        if (!widget.nextEvent.isNoEventPlanned)
+        if (!widget.nextEvent.isActive)
           Container(
             alignment: Alignment.topCenter,
             width: double.infinity,
@@ -298,7 +303,7 @@ Widget eventDetail(
                     style: TextStyle(
                         decoration:
                             textCrossedOut ? TextDecoration.lineThrough : null,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                         color: CupertinoTheme.of(context).primaryColor),
                   ),
                 ),

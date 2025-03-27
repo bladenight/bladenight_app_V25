@@ -16,6 +16,8 @@ class EventActiveNoTrackingNotOnRouteWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var normalFontSize =
+        CupertinoTheme.of(context).textTheme.textStyle.fontSize ?? 12;
     var isTracking = ref.watch(isTrackingProvider);
     var rtu = ref.watch(realtimeDataProvider);
     var actualOrNextEvent = ref.watch(activeEventProvider);
@@ -33,7 +35,14 @@ class EventActiveNoTrackingNotOnRouteWidget extends ConsumerWidget {
               child: (!rtu.user.isOnRoute && !isTracking)
                   ? (eventIsActive)
                       ? FittedBox(
-                          child: Text(Localize.of(context).bladenighttracking),
+                          child: Text(
+                            Localize.of(context).bladenighttracking,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: normalFontSize * 0.7,
+                              color: CupertinoTheme.of(context).primaryColor,
+                            ),
+                          ),
                         ) //Text when Event confirmed
                       : Container()
                   /*FittedBox(
@@ -50,7 +59,13 @@ class EventActiveNoTrackingNotOnRouteWidget extends ConsumerWidget {
                                   actualOrNextEvent.status ==
                                       EventStatus.running)
                               ? eventIsActive
-                                  ? Text(Localize.of(context).notOnRoute)
+                                  ? Text(
+                                      Localize.of(context).notOnRoute,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: CupertinoTheme.of(context)
+                                              .primaryColor),
+                                    )
                                   : Shimmer(
                                       gradient: LinearGradient(colors: [
                                         actualOrNextEvent.statusColor
@@ -67,7 +82,13 @@ class EventActiveNoTrackingNotOnRouteWidget extends ConsumerWidget {
                                                               '${Localize.of(context).start} ${DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(actualOrNextEvent.getUtcIso8601DateTime)}',
                                                             )*/
                               : Container()
-                          : Text(Localize.of(context).bladenightViewerTracking),
+                          : Text(
+                              Localize.of(context).bladenightViewerTracking,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  color:
+                                      CupertinoTheme.of(context).primaryColor),
+                            ),
             ),
           ),
         if (kIsWeb) ...[

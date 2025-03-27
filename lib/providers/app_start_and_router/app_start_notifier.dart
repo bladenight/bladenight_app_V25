@@ -49,6 +49,7 @@ class AppStartNotifier extends _$AppStartNotifier {
       await FMTCObjectBoxBackend().initialise();
       fMTCInitialized = true;
     }
+    await FMTCStore(fmtcTileStoreName).manage.create();
 
     if (Platform.isAndroid) {
       ///TODO fix bgfetch

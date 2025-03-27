@@ -397,6 +397,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "editEvent": MessageLookupByLibrary.simpleMessage("Event ändern"),
     "editFriendHeader": m6,
     "editfriend": MessageLookupByLibrary.simpleMessage("Freund:in ändern"),
+    "enableAlwaysLocationGeofenceText": MessageLookupByLibrary.simpleMessage(
+      "Für das automatische vor Ort einloggen sollte die Standortfreigabe auf immer stehen. Sollen die Systemeinstellungen geöffnet werden?",
+    ),
     "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
       "Um die BladeNight-App auch im Hintergrund (Standort mit Freunden teilen und Zuggenauigkeit zu erhöhen) ohne das der Bildschirm an ist, sollte die Standortfunktion \'Immer zulassen\' aktiviert werden.\nWeiterhin ist ein Zugriff auf die Bewegungsaktivitätserkennung (Körperliche Aktivität) wünschenswert. Dies erhöht die Akkueffizienz, indem die Standortverfolgung intelligent ausgeschaltet wird, wenn dein Gerät als stationär erkannt wird. Daher bitte diese Funktion aktivieren.",
     ),
@@ -575,7 +578,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "loading": MessageLookupByLibrary.simpleMessage("Lade ..."),
     "locationServiceOff": MessageLookupByLibrary.simpleMessage(
-      "Bitte Start ▶️ drücken! Standortübertragung ist in den Einstellungen deaktiviert oder noch nie gestartet! Tracking nicht möglich.",
+      "Standortübertragung ist in den Einstellungen deaktiviert oder noch nie gestartet! Tracking nicht möglich.",
     ),
     "locationServiceRunning": MessageLookupByLibrary.simpleMessage(
       "Standortübertragung gestartet und aktiv.",
@@ -669,7 +672,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Bitte System-Einstellungen (Einstellungen -> Standort -> Standortzugriff von Apps -> BladeNight) prüfen, da keine Standortfreigabe.",
     ),
     "noLocationPermissionGrantedAlertTitle":
-        MessageLookupByLibrary.simpleMessage("Info Standortfreigabe"),
+        MessageLookupByLibrary.simpleMessage(
+          "Achtung fehlende Standortfreigabe",
+        ),
     "noLocationPermissionGrantedAlertiOS": MessageLookupByLibrary.simpleMessage(
       "Bitte iOS Einstellunge prüfen, da keine Standortfreigabe. Diese müsste in den Telefon-Einstellungen unter Datenschutz - Ortungsdienste - BladnightApp freigegeben werden.",
     ),
@@ -728,6 +733,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Du Probleme beim Empfang von Push-Nachrichten hast.",
     ),
     "online": MessageLookupByLibrary.simpleMessage("Online"),
+    "onlyReducedLocationAccuracyText": MessageLookupByLibrary.simpleMessage(
+      "Nur ungefährer Standort ist freigegeben. Dies kann zur Fehldarstellung der Veranstaltung führen und ist nicht erlaubt. Du kannst die Standortfunktion nicht nutzen!",
+    ),
+    "onlyReducedLocationAccuracyTitle": MessageLookupByLibrary.simpleMessage(
+      "Nur ungefährer Standort",
+    ),
     "onlyTracking": MessageLookupByLibrary.simpleMessage(
       "Nur Routenaufzeichnung aktiv",
     ),
@@ -976,7 +987,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "status_obsolete": MessageLookupByLibrary.simpleMessage("Veraltet"),
     "status_pending": MessageLookupByLibrary.simpleMessage("Ausstehend"),
     "stopLocationTracking": MessageLookupByLibrary.simpleMessage(
-      "Stoppe Standort wirklich?",
+      "Stoppe Tracking wirklich?",
     ),
     "stopLocationWithoutParticipating": MessageLookupByLibrary.simpleMessage(
       "Stoppe Position ohne Teilnahme",
@@ -1054,6 +1065,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Display bleibt an",
     ),
     "wakelockWarnBattery": m20,
+    "warning": MessageLookupByLibrary.simpleMessage("Achtung!"),
     "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
       "wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de",
     ),

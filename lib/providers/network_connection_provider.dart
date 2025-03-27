@@ -59,7 +59,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   final bool printDebug = true && kDebugMode;
 
   _init() async {
-    _internetConnection = WampV2().internetConnChecker;
+    _internetConnection = WampV2.internetConnChecker;
     _icCheckerSubscription = _internetConnection!.onStatusChange
         .listen((InternetConnectionStatus status) {
       BnLog.verbose(

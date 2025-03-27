@@ -61,7 +61,7 @@ class _InputNumberDialogState extends State<InputNumberDialog> {
           });
         },
         onSubmitted: (value) {
-          Navigator.of(context).pop(value);
+          Navigator.of(context, rootNavigator: true).pop(value);
         },
       ),
       actions: [
@@ -74,7 +74,7 @@ class _InputNumberDialogState extends State<InputNumberDialog> {
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: value != null && value! >= widget.minValue
-              ? () => Navigator.of(context).pop(value)
+              ? () => Navigator.of(context, rootNavigator: true).pop(value)
               : null,
           child: Text(Localize.of(context).ok),
         ),

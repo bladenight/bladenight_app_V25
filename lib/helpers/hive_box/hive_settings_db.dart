@@ -98,18 +98,18 @@ class HiveSettingsDB {
     _hiveBox.put(_sessionShortUUIDKey, val);
   }
 
-  static const String _disableMotionDetection = 'disableMotionDetectionPref';
+  static const String _disableMotionDetectionKey = 'disableMotionDetectionPref';
 
   ///get if motion detection is disabled
   static bool get isMotionDetectionDisabled {
-    var val = _hiveBox.get(_disableMotionDetection, defaultValue: false);
+    var val = _hiveBox.get(_disableMotionDetectionKey, defaultValue: false);
     return val;
   }
 
   ///set if motion detection is disabled
   static void setIsMotionDetectionDisabled(bool val) {
     if (!kIsWeb) BnLog.info(text: 'setisMotionDetectionDisabled to $val');
-    _hiveBox.put(_disableMotionDetection, val);
+    _hiveBox.put(_disableMotionDetectionKey, val);
   }
 
   static const String _useAlternativeLocationProvider =
@@ -141,6 +141,22 @@ class HiveSettingsDB {
   static void setHasShownProminentDisclosure(bool val) {
     BnLog.info(text: 'set hasShownProminentDisclosure to $val');
     _hiveBox.put(_hasShownProminentDisclosure, val);
+  }
+
+  static const String _hasShownMotionProminentDisclosureKey =
+      'hasShownMotionProminentDisclosurePref';
+
+  ///get if motion detection is disabled
+  static bool get hasShownMotionProminentDisclosure {
+    var val = _hiveBox.get(_hasShownMotionProminentDisclosureKey,
+        defaultValue: false);
+    return val;
+  }
+
+  ///set if motion detection is disabled
+  static void setHasShownMotionProminentDisclosure(bool val) {
+    BnLog.info(text: 'set hasShownMotionProminentDisclosure to $val');
+    _hiveBox.put(_hasShownMotionProminentDisclosureKey, val);
   }
 
   static const String _fLogLevel = 'talkerLogLevelPref';

@@ -67,7 +67,10 @@ class LocationPermissionDialog {
           cancelBtnText: Localize.current.deny,
           onCancelBtnTap: () {
             denied = true;
-            return rootNavigatorKey.currentState?.pop();
+            if (rootNavigatorKey.currentState != null &&
+                rootNavigatorKey.currentState!.canPop()) {
+              return rootNavigatorKey.currentState?.pop();
+            }
           });
       if (denied) {
         //user denies request
@@ -91,7 +94,7 @@ class LocationPermissionDialog {
         platformVersion >= 10;
 
     final locationPermission = await Geolocator.checkPermission();
-    if (locationPermission == LocationPermission.deniedForever) {
+    if (locationPermission == LocationPermission.denied) {
       var acceptLocation = await QuickAlert.show(
           context: rootNavigatorKey.currentContext!,
           showCancelBtn: true,
@@ -105,14 +108,36 @@ class LocationPermissionDialog {
           confirmBtnText: Localize.current.change,
           cancelBtnText: Localize.current.deny,
           onCancelBtnTap: () {
-            return rootNavigatorKey.currentState?.pop(false);
+            if (rootNavigatorKey.currentState != null &&
+                rootNavigatorKey.currentState!.canPop()) {
+              return rootNavigatorKey.currentState?.pop(false);
+            }
           },
           onConfirmBtnTap: () {
-            return rootNavigatorKey.currentState?.pop(true);
+            if (rootNavigatorKey.currentState != null &&
+                rootNavigatorKey.currentState!.canPop()) {
+              return rootNavigatorKey.currentState?.pop(true);
+            }
           });
       return acceptLocation ?? false;
     }
     return true;
+  }
+
+  Future<LocationPermissionStatus>
+      requestWhileInUseLocationPermissions() async {
+    var context = rootNavigatorKey.currentContext!;
+    BnLog.info(
+        text: 'requesting WhileInUse permissions',
+        className: toString(),
+        methodName: 'requestWhileInUseLocationPermissions');
+    try {
+      await Geolocator.requestPermission();
+    } catch (e) {
+      BnLog.error(
+          text: 'requestWhileInUseLocationPermissions failed ${e.toString()}');
+    }
+    return getPermissionsStatus();
   }
 
   Future<LocationPermissionStatus> requestAlwaysLocationPermissions() async {
@@ -161,12 +186,32 @@ class LocationPermissionDialog {
                         'App settings could not opened while always location permissions are permanentlyDenied');
               }
               if (context.mounted) {
-                return context.pop();
+                return Navigator.of(context, rootNavigator: true).pop();
               }
             });
       }
     }
     return getPermissionsStatus();
+  }
+
+  Future<bool> getGeofenceAlways(BuildContext context) async {
+    var cancelPressed = false;
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.info,
+        title: Localize.current.onlyWhenInUseEnabled,
+        text: Localize.current.enableAlwaysLocationGeofenceText,
+        confirmBtnText: Localize.current.changetoalways,
+        cancelBtnText: Localize.current.leavewheninuse,
+        onCancelBtnTap: () {
+          cancelPressed = true;
+        });
+    if (cancelPressed) {
+      return false;
+    } else {
+      return await Geolocator.openLocationSettings();
+    }
   }
 
   ///Returns Location accuracy state
@@ -180,7 +225,7 @@ class LocationPermissionDialog {
     return precision == LocationAccuracyStatus.precise;
   }
 
-  Future<LocationAccuracyStatus> requestPreciseLocation() async {
+  Future<LocationAccuracyStatus> checkOrRequestPreciseLocation() async {
     var context = rootNavigatorKey.currentContext!;
     BnLog.info(
         text: 'requesting precise location',
@@ -189,15 +234,14 @@ class LocationPermissionDialog {
     if (await getLocationAccuracyIsPrecise()) {
       return LocationAccuracyStatus.precise;
     }
-    if (HiveSettingsDB.hasAskedPreciseLocation) {
+    /*if (HiveSettingsDB.hasAskedPreciseLocation) {
       return LocationAccuracyStatus.reduced;
     }
-    HiveSettingsDB.setHasPreciseLocationAsked(true);
-    var cancelPressed = false;
+    HiveSettingsDB.setHasPreciseLocationAsked(true);*/
     if (!context.mounted) {
       return LocationAccuracyStatus.reduced;
     }
-    await QuickAlert.show(
+    var res = await QuickAlert.show(
         context: context,
         showCancelBtn: true,
         type: QuickAlertType.confirm,
@@ -206,9 +250,13 @@ class LocationPermissionDialog {
         confirmBtnText: Localize.current.openOperatingSystemSettings,
         cancelBtnText: Localize.current.cancel,
         onCancelBtnTap: () {
-          cancelPressed = true;
+          return context.pop(false);
+        },
+        onConfirmBtnTap: () {
+          return context.pop(true);
         });
-    if (cancelPressed) {
+
+    if (!res) {
       return LocationAccuracyStatus.reduced;
     } else {
       return await Geolocator.requestTemporaryFullAccuracy(
@@ -227,6 +275,11 @@ class LocationPermissionDialog {
   }
 
   Future<bool> showMotionSensorProminentDisclosure(BuildContext context) async {
+    if (HiveSettingsDB.hasShownMotionProminentDisclosure) {
+      return HiveSettingsDB.isMotionDetectionDisabled;
+    }
+
+    HiveSettingsDB.setHasShownMotionProminentDisclosure(true);
     var prominentMotionDisclosureResult = true;
     await QuickAlert.show(
         context: context,
@@ -239,13 +292,19 @@ class LocationPermissionDialog {
         onConfirmBtnTap: () {
           HiveSettingsDB.setIsMotionDetectionDisabled(false);
           prominentMotionDisclosureResult = false;
-          return rootNavigatorKey.currentState?.pop();
+          if (rootNavigatorKey.currentState != null &&
+              rootNavigatorKey.currentState!.canPop()) {
+            return rootNavigatorKey.currentState?.pop();
+          }
         },
         onCancelBtnTap: () {
           HiveSettingsDB.setIsMotionDetectionDisabled(true);
           prominentMotionDisclosureResult = true;
           //if (!mounted) return;
-          return rootNavigatorKey.currentState?.pop();
+          if (rootNavigatorKey.currentState != null &&
+              rootNavigatorKey.currentState!.canPop()) {
+            return rootNavigatorKey.currentState?.pop();
+          }
         });
     return prominentMotionDisclosureResult;
   }
@@ -277,21 +336,28 @@ class LocationPermissionDialog {
   }
 
   Future<bool> requestAndOpenAppSettings(BuildContext context) async {
-    var permanentDeniedResult = true;
-
-    await QuickAlert.show(
+    var res = await QuickAlert.show(
         context: context,
         showCancelBtn: true,
-        type: QuickAlertType.info,
+        type: QuickAlertType.warning,
         title: Localize.current.noLocationPermissionGrantedAlertTitle,
         text: Localize.current.tryOpenAppSettings,
         confirmBtnText: Localize.current.yes,
         cancelBtnText: Localize.current.no,
         onConfirmBtnTap: () {
-          permanentDeniedResult = true;
-          return rootNavigatorKey.currentState?.pop();
+          if (rootNavigatorKey.currentState != null &&
+              rootNavigatorKey.currentState!.canPop()) {
+            return rootNavigatorKey.currentState?.pop(true);
+          }
+        },
+        onCancelBtnTap: () {
+          if (rootNavigatorKey.currentState != null &&
+              rootNavigatorKey.currentState!.canPop()) {
+            return rootNavigatorKey.currentState?.pop(false);
+          }
         });
-    if (permanentDeniedResult) {
+
+    if (res) {
       return await openAppSettings();
     }
     return false;

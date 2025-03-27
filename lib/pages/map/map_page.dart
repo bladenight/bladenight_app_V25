@@ -21,6 +21,7 @@ import 'widgets/custom_location_layer.dart';
 import 'widgets/gps_info_and_map_copyright.dart';
 import 'widgets/headings_layer.dart';
 import 'widgets/map_buttons.dart';
+import 'widgets/map_buttons_landscape.dart';
 import 'widgets/map_tile_layer.dart';
 import 'widgets/markers_layer.dart';
 import 'widgets/bn_map_page_poly_lines_layer.dart';
@@ -76,7 +77,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print('${DateTime.now().toIso8601String()} Build Fluttermap (map_page)');
+    //print('${DateTime.now().toIso8601String()} Build Fluttermap (map_page)');
     var route = ref.watch(activeEventRouteProvider);
 
     var bounds = route.hasValue ? route.value!.points.getBounds : null;
@@ -159,7 +160,12 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     MarkersLayer(_popupController),
 
                     TrackProgressOverlay(_mapController),
-                    const SafeArea(child: MapButtonsLayer()),
+                    if (MediaQuery.orientationOf(context) ==
+                        Orientation.portrait)
+                      MapButtonsLayer(),
+                    if (MediaQuery.orientationOf(context) ==
+                        Orientation.landscape)
+                      MapButtonsLandscapeLayer(),
                   ],
                 );
               }),

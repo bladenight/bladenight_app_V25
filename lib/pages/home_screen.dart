@@ -16,6 +16,7 @@ import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/watch_communication_helper.dart';
+import '../providers/active_event_provider.dart';
 import '../providers/app_start_and_router/go_router.dart';
 import '../providers/get_images_and_links_provider.dart';
 import '../providers/location_provider.dart';
@@ -38,6 +39,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver {
   //added deep links bna.bladenight.app
   bool _firstRefresh = true;
+  bool _pushedMapPage = false;
 
   StreamSubscription? _uniLinkStreamSubscription;
   StreamSubscription? _oneSignalOSNotificationOpenedResultSubSubscription;
@@ -178,13 +180,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   void _initImages() async {
     var imagesLoaded = false;
-    if (mounted) {
-      imagesLoaded = await ref.refresh(updateImagesAndLinksProvider.future);
-    }
-    if (!imagesLoaded) {
-      await Future.delayed(const Duration(seconds: 5));
-      _initImages();
-    }
+    var imgFailCounter = 0;
+    do {
+      await Future.delayed(const Duration(seconds: 10));
+      if (mounted) {
+        imagesLoaded = await ref.refresh(updateImagesAndLinksProvider.future);
+        imgFailCounter++;
+      }
+    } while (!imagesLoaded && imgFailCounter < 5);
   }
 
   void _openIntroScreenFirstTime() async {

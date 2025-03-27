@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,9 +29,9 @@ class IsTracking extends _$IsTracking {
   ///  if only in viewer-mode
   Future<bool> toggleTracking(TrackingType trackingType) async {
     if (LocationProvider().isTracking) {
-      stopTracking();
+      state = !await _stopTracking();
     } else {
-      _startTracking(trackingType);
+      state = await _startTracking(trackingType) != TrackingType.noTracking;
     }
     return state;
   }
@@ -40,7 +42,7 @@ class IsTracking extends _$IsTracking {
   ///  if participant
   ///- set [trackingType] to [TrackingType.userNotParticipating]
   ///  if only in viewer-mode
-  Future<bool> _startTracking(TrackingType trackingType) async {
+  Future<TrackingType> _startTracking(TrackingType trackingType) async {
     if (trackingType == TrackingType.onlyTracking) {
       WampV2().stopWamp();
       MapSettings.setShowOwnTrack(true);
@@ -52,7 +54,12 @@ class IsTracking extends _$IsTracking {
     }
     HiveSettingsDB.setUserIsParticipant(
         trackingType == TrackingType.userParticipating);
-    return LocationProvider().startTracking(trackingType);
+    var res = await LocationProvider().startTracking(trackingType);
+    if (res) {
+      return trackingType;
+    } else {
+      return TrackingType.noTracking;
+    }
   }
 
   Future<bool> stopTracking() async {
@@ -66,7 +73,7 @@ class IsTracking extends _$IsTracking {
           MapSettings.wasOpenStreetMapEnabledFlag);
       WampV2().startWamp();
     }
-    return LocationProvider().stopTracking();
+    return await LocationProvider().stopTracking();
   }
 }
 

@@ -35,7 +35,6 @@ extension StringColor on String? {
     try {
       return MapperContainer.globals.fromValue(this);
     } catch (e) {
-      print('Error toColor  ->$e,$this');
       return Colors.limeAccent;
     }
   }

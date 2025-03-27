@@ -43,6 +43,7 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   bool _firstRefresh = true;
+  bool _activeEventPushRouter = true;
 
   StreamSubscription? _uniLinkStreamSubscription;
   StreamSubscription? _oneSignalOSNotificationOpenedResultSubSubscription;
@@ -152,29 +153,27 @@ class _HomePageState extends ConsumerState<HomePage>
   Widget build(BuildContext context) {
     var messageProvider = ref.watch(messagesLogicProvider);
     return Scaffold(
-      floatingActionButton: messageProvider.messages.isEmpty
-          ? null
-          : FloatingActionButton(
-              backgroundColor: (messageProvider.messages.isNotEmpty &&
-                      messageProvider.readMessages > 0)
-                  ? Colors.green
-                  : null,
-              foregroundColor: (messageProvider.messages.isNotEmpty &&
-                      messageProvider.readMessages > 0)
-                  ? Colors.black
-                  : null,
-              heroTag: 'msgActionBtn',
-              onPressed: () async {
-                context.pushNamed(AppRoute.messagesPage.name);
-              },
-              child: messageProvider.messages.isNotEmpty &&
-                      messageProvider.readMessages > 0
-                  ? Badge(
-                      label: Text(messageProvider.readMessages.toString()),
-                      child: const Icon(Icons.mark_email_unread),
-                    )
-                  : const Icon(CupertinoIcons.envelope),
-            ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: (messageProvider.messages.isNotEmpty &&
+                messageProvider.readMessagesCount > 0)
+            ? Colors.green
+            : null,
+        foregroundColor: (messageProvider.messages.isNotEmpty &&
+                messageProvider.readMessagesCount > 0)
+            ? Colors.black
+            : null,
+        heroTag: 'msgActionBtn',
+        onPressed: () async {
+          context.pushNamed(AppRoute.messagesPage.name);
+        },
+        child: messageProvider.messages.isNotEmpty &&
+                messageProvider.readMessagesCount > 0
+            ? Badge(
+                label: Text(messageProvider.readMessagesCount.toString()),
+                child: const Icon(Icons.mark_email_unread),
+              )
+            : const Icon(CupertinoIcons.envelope),
+      ),
       body: CupertinoPageScaffold(
         child: SafeArea(
           child: CustomScrollView(

@@ -78,10 +78,17 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
             heroTag: 'addFABTag',
             labelText: Localize.of(context).addnewfriend,
             onPressed: () async {
-              var _ = await EditFriendDialog.show(
+              Map<String, dynamic> queryParams = {
+                'action': {FriendsAction.addNew.name},
+              };
+              var _ = await ref.read(goRouterProvider).pushNamed(
+                  AppRoute.editFriendDialog.name,
+                  queryParameters: queryParams);
+
+              /*var _ = await EditFriendDialog.show(
                 context,
                 friendDialogAction: FriendsAction.addNew,
-              );
+              );*/
             },
             icon: const Icon(Icons.add)),
         MultiButton(

@@ -412,6 +412,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "editEvent": MessageLookupByLibrary.simpleMessage("Editer un événement"),
     "editFriendHeader": m6,
     "editfriend": MessageLookupByLibrary.simpleMessage("Modifier l\'ami"),
+    "enableAlwaysLocationGeofenceText": MessageLookupByLibrary.simpleMessage(
+      "Pour la connexion automatique sur place, le partage de site devrait être réglé sur toujours. Faut-il ouvrir les paramètres système ?",
+    ),
     "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
       "Pour utiliser BladeNight-App également en arrière-plan (partager la position avec des amis et augmenter la précision des processions) sans que l\'écran soit allumé, les paramètres de localisation doivent être réglés sur Autoriser tout le temps",
     ),
@@ -693,7 +696,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Veuillez vérifier les autorisations de localisation dans les paramètres",
     ),
     "noLocationPermissionGrantedAlertTitle":
-        MessageLookupByLibrary.simpleMessage("Info location permissions"),
+        MessageLookupByLibrary.simpleMessage("Info no location permissions"),
     "noLocationPermissionGrantedAlertiOS": MessageLookupByLibrary.simpleMessage(
       "Veuillez vérifier les autorisations de localisation dans les paramètres d\'iOS. Regardez dans Confidentialité - Localisation - BladnightApp. Réglez-la sur toujours ou lorsqu\'elle est utilisée !",
     ),
@@ -750,6 +753,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Il s\'agit de l\'identifiant attribué pour la réception des messages push. Communiquez-nous cet identifiant si vous avez des problèmes pour recevoir des messages push.",
     ),
     "online": MessageLookupByLibrary.simpleMessage("en ligne"),
+    "onlyReducedLocationAccuracyText": MessageLookupByLibrary.simpleMessage(
+      "Only approximate location is shared. This may influence the tracking of your position in procession",
+    ),
+    "onlyReducedLocationAccuracyTitle": MessageLookupByLibrary.simpleMessage(
+      "Only approximate location",
+    ),
     "onlyTracking": MessageLookupByLibrary.simpleMessage(
       "Enregistrement de localisation uniquement actif!",
     ),
@@ -1087,6 +1096,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "L\'écran reste allumé",
     ),
     "wakelockWarnBattery": m20,
+    "warning": MessageLookupByLibrary.simpleMessage("Warning!"),
     "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
       "Est annulé ! Veuillez le vérifier sur https://bladenight-muenchen.de",
     ),

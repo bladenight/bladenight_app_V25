@@ -2,6 +2,7 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
     as bg;
 import 'package:geolocator/geolocator.dart';
 
+import '../wamp/wamp_v2.dart';
 import 'uuid_helper.dart';
 
 extension Location2Mapper on Position {
@@ -34,13 +35,5 @@ extension Location2Mapper on Position {
       'odometer': 0.0
     };
     return bg.Location(bgLocation);
-  }
-}
-
-//enabled disabled Status
-extension ProviderChangeEventMapper on ServiceStatus {
-  bg.ProviderChangeEvent convertToBgProviderChangeEvent() {
-    Map<String, dynamic> eventMap = {'enabled': this};
-    return bg.ProviderChangeEvent(eventMap);
   }
 }

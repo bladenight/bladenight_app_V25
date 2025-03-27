@@ -274,7 +274,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
         isLoading = true;
       });
       if (widget.action == FriendsAction.edit) {
-        Navigator.of(context)
+        Navigator.of(context, rootNavigator: true)
             .pop(EditFriendResult(name, color!, code, isActive));
         return;
       }

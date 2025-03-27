@@ -325,7 +325,7 @@
   "noGpsAllowed": "GPS not active",
   "noLocationAvailable": "No location known",
   "noLocationPermissionGrantedAlertAndroid": "Please check location-permissions in Settings.",
-  "noLocationPermissionGrantedAlertTitle": "Info location permissions",
+  "noLocationPermissionGrantedAlertTitle": "Info no location permissions",
   "noLocationPermissionGrantedAlertiOS": "Please check location-permissions in iOS Settings. Look at Privacy - Location - BladnightApp. Set it to always or when in use!",
   "noLocationPermitted": "No location permission, please check device settings",
   "nodatareceived": "No Data received !",
@@ -555,5 +555,7 @@
   "serverVersion": "Server version",
   "appInfo": "App info",
   "onlyReducedLocationAccuracyTitle": "Only approximate location",
-  "onlyReducedLocationAccuracyText": "Only approximate location is shared. This may influence the tracking of your position in procession"
+  "onlyReducedLocationAccuracyText": "Only approximate location is shared. This may influence the tracking of your position in procession",
+  "warning": "Warning!",
+  "enableAlwaysLocationGeofenceText": "For automatic on-site login, the location release should be set to always. Should the system settings be opened?"
 }

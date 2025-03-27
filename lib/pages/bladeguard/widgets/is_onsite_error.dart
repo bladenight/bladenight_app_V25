@@ -13,7 +13,7 @@ class IsOnsiteError extends ConsumerStatefulWidget {
       {super.key, required this.error, this.animationController});
 
   final AnimationController? animationController;
-  final Object error;
+  final String error;
 
   @override
   ConsumerState<IsOnsiteError> createState() => _IsOnsiteErrorState();
@@ -79,11 +79,11 @@ class _IsOnsiteErrorState extends ConsumerState<IsOnsiteError>
                       child: Column(
                         children: [
                           Text(
-                            Localize.of(context).nodatareceived,
+                            Localize.of(context).warning,
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(
-                            height: 5,
+                            height: 3,
                           ),
                           SizedTintedCupertinoButton(
                             color: Colors.red,
@@ -91,12 +91,12 @@ class _IsOnsiteErrorState extends ConsumerState<IsOnsiteError>
                               ref.invalidate(bgIsOnSiteProvider);
                             },
                             child: Text(
-                              Localize.of(context).networkerror,
+                              widget.error,
                               style: TextStyle(
                                 color: CupertinoTheme.brightnessOf(context) ==
                                         Brightness.light
                                     ? Colors.black
-                                    : Color(0xC8C8C8FF),
+                                    : Colors.black,
                               ),
                               textAlign: TextAlign.center,
                             ),

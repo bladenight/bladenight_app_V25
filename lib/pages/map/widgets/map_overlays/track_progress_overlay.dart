@@ -23,6 +23,7 @@ import '../special_function_info.dart';
 import '../update_progress.dart';
 import 'event_active_no_tracking_not_onRoute_widget.dart';
 import 'event_active_tracking_user_on_route_widget.dart';
+import 'event_data_map_overview.dart';
 import 'no_event_overlay.dart';
 import 'track_only_overlay_widget.dart';
 import 'updating_overlay_widget.dart';
@@ -136,10 +137,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Stack(children: [
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: ConnectionWarning(),
-                      ),
                       Builder(builder: (context) {
                         return Container(
                           color: CupertinoDynamicColor.resolve(
@@ -167,6 +164,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         maxLines: 1,
                                         overflow: TextOverflow.clip,
                                         softWrap: false,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: CupertinoTheme.of(context)
+                                                .primaryColor),
                                       ),
                                     ),
 
@@ -181,6 +182,11 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                           maxLines: 1,
                                           softWrap: false,
                                           overflow: TextOverflow.fade,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            color: CupertinoTheme.of(context)
+                                                .primaryColor,
+                                          ),
                                         ),
                                       ),
                                     const SizedBox(
@@ -194,6 +200,11 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.end,
                                         softWrap: false,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          color: CupertinoTheme.of(context)
+                                              .primaryColor,
+                                        ),
                                       ),
                                     )
                                   ]),
@@ -234,7 +245,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               ]),
                             ),*/
                             if (rtu.rpcException == null) ...[
-                              EventDataOverview(
+                              EventDataMapOverview(
                                 nextEvent: actualOrNextEvent,
                                 showMap: false,
                                 showSeparator: false,
@@ -260,6 +271,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                           ]),
                         );
                       }),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: ConnectionWarning(),
+                      ),
                     ]),
                   ),
                 ),

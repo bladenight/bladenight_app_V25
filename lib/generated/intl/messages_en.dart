@@ -385,6 +385,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "editEvent": MessageLookupByLibrary.simpleMessage("Edit Event"),
     "editFriendHeader": m6,
     "editfriend": MessageLookupByLibrary.simpleMessage("Edit friend"),
+    "enableAlwaysLocationGeofenceText": MessageLookupByLibrary.simpleMessage(
+      "For automatic on-site login, the location release should be set to always. Should the system settings be opened?",
+    ),
     "enableAlwaysLocationInfotext": MessageLookupByLibrary.simpleMessage(
       "To use BladeNight-App also in the background (Share location with friends and increase procession accuracy) without screen on, should location settings changed to \'Allow all time\'.",
     ),
@@ -648,7 +651,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Please check location-permissions in Settings.",
         ),
     "noLocationPermissionGrantedAlertTitle":
-        MessageLookupByLibrary.simpleMessage("Info location permissions"),
+        MessageLookupByLibrary.simpleMessage("Info no location permissions"),
     "noLocationPermissionGrantedAlertiOS": MessageLookupByLibrary.simpleMessage(
       "Please check location-permissions in iOS Settings. Look at Privacy - Location - BladnightApp. Set it to always or when in use!",
     ),
@@ -1019,6 +1022,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Display remains an",
     ),
     "wakelockWarnBattery": m20,
+    "warning": MessageLookupByLibrary.simpleMessage("Warning!"),
     "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
       "is canceled! Please check this on https://bladenight-muenchen.de",
     ),

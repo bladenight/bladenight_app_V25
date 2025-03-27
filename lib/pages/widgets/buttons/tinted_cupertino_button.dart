@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TintedCupertinoButton extends StatelessWidget {
+import '../../../providers/settings/dark_color_provider.dart';
+import '../../../providers/settings/light_color_provider.dart';
+
+class TintedCupertinoButton extends ConsumerWidget {
   const TintedCupertinoButton(
       {super.key,
       required this.child,
@@ -14,13 +18,18 @@ class TintedCupertinoButton extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var darkCol = ref.watch(themePrimaryDarkColorProvider);
+    var lightCol = ref.watch(themePrimaryLightColorProvider);
+    var btnCol = CupertinoTheme.of(context).brightness == Brightness.dark
+        ? lightCol
+        : darkCol;
     return Padding(
       padding: EdgeInsets.all(10),
-      child: CupertinoButton.tinted(
+      child: CupertinoButton(
           sizeStyle: CupertinoButtonSize.small,
           borderRadius: BorderRadius.all(Radius.circular(15)),
-          color: color ?? CupertinoTheme.of(context).primaryContrastingColor,
+          color: color ?? btnCol,
           onPressed: onPressed,
           onLongPress: onLongPress,
           child: child),
@@ -47,10 +56,10 @@ class SizedTintedCupertinoButton extends TintedCupertinoButton {
   final double? height;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
         height: height,
         width: width ?? MediaQuery.sizeOf(context).width * 0.9,
-        child: super.build(context));
+        child: super.build(context, ref));
   }
 }

@@ -31,9 +31,15 @@ class EventActiveTrackingActiveUserOnRoute extends ConsumerWidget {
         SizedBox(
           child: Align(
             alignment: Alignment.center,
-            child: Text(
-              '↦${((rtu.user.position) / 1000).toStringAsFixed(1)} km   ${((rtu.user.position) / rtu.runningLength * 100).toStringAsFixed(1)} %  ⇥${((rtu.runningLength - rtu.user.position) / 1000).toStringAsFixed(1)} km',
-              textAlign: TextAlign.center,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                '↦${((rtu.user.position) / 1000).toStringAsFixed(1)} km   ${((rtu.user.position) / rtu.runningLength * 100).toStringAsFixed(1)} %  ⇥${((rtu.runningLength - rtu.user.position) / 1000).toStringAsFixed(1)} km',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: CupertinoTheme.of(context).primaryColor),
+              ),
             ),
           ),
         ),

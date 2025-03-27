@@ -39,7 +39,7 @@ class MessagesLogic with ChangeNotifier {
       receiveTimeout: const Duration(seconds: 10),
       sendTimeout: const Duration(seconds: 10),
       contentType: 'application/json');
-  int readMessages = 0;
+  int readMessagesCount = 0;
 
   Future<void> _loadMessages() async {
     var messagesList = await MessagesDb.messagesList;
@@ -64,8 +64,14 @@ class MessagesLogic with ChangeNotifier {
         count++;
       }
     }
-    readMessages = count;
+    readMessagesCount = count;
     return count;
+  }
+
+  Future<int> messagesCount() async {
+    var messagesList = await MessagesDb.messagesList;
+
+    return messagesList.length;
   }
 
   Future<void> addMessage(ExternalAppMessage message) async {
@@ -79,9 +85,14 @@ class MessagesLogic with ChangeNotifier {
   }
 
   Future<void> deleteMessage(ExternalAppMessage message) async {
-    MessagesDb.deleteMessage(message);
-    messages.remove(message.uid);
-    _loadMessages();
+    //reset store if 1 item left
+    if (await messagesCount() == 1) {
+      await clearMessages();
+      await updateServerMessages();
+    } else {
+      MessagesDb.deleteMessage(message);
+      _loadMessages();
+    }
   }
 
   Future<void> reloadMessages() async {

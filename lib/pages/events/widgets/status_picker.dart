@@ -61,7 +61,7 @@ class EventStatusPicker extends ConsumerStatefulWidget {
               child: Text(Localize.of(context).save),
               onPressed: () {
                 if (context.canPop()) {
-                  Navigator.of(context).pop(status);
+                  Navigator.of(context, rootNavigator: true).pop(status);
                 }
               },
             ),

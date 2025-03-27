@@ -15,7 +15,7 @@ class HeadingMarkerSize extends _$HeadingMarkerSize {
   }
 
   double setSize(double value) {
-    print('headingmarker zoom size= $value');
+    //print('heading marker zoom size= $value');
     if (value > 18) {
       state = value * 1.5;
     } else if (value > 15) {
@@ -26,7 +26,7 @@ class HeadingMarkerSize extends _$HeadingMarkerSize {
       state = value * 1.0;
     }
     //print('heading_marker_size_provider size $value $state');
-    print('headingmarker zoom result size= $state');
+    //print('headingmarker zoom result size= $state');
     return state * 2;
   }
 }

@@ -35,8 +35,9 @@ class TrackingTypeWidget extends ConsumerWidget {
                                 .startParticipationTracking),
                           ),
                         ]),
-                        onPressed: () => Navigator.of(context)
-                            .pop(TrackingType.userParticipating)),
+                        onPressed: () =>
+                            Navigator.of(context, rootNavigator: true)
+                                .pop(TrackingType.userParticipating)),
                   ],
                 ),
                 CupertinoFormSection(
@@ -44,7 +45,6 @@ class TrackingTypeWidget extends ConsumerWidget {
                       .startLocationWithoutParticipatingInfo),
                   children: [
                     SizedTintedCupertinoButton(
-                        color: CupertinoTheme.of(context).primaryColor,
                         child: Row(children: [
                           const Icon(CupertinoIcons.play_arrow_solid),
                           const SizedBox(
@@ -63,7 +63,6 @@ class TrackingTypeWidget extends ConsumerWidget {
                   header: Text(Localize.of(context).startTrackingOnlyTitle),
                   children: [
                     SizedTintedCupertinoButton(
-                        color: CupertinoTheme.of(context).primaryColor,
                         child: Row(children: [
                           const Icon(CupertinoIcons.play_arrow_solid),
                           const SizedBox(
@@ -73,8 +72,9 @@ class TrackingTypeWidget extends ConsumerWidget {
                             child: Text(Localize.of(context).startTrackingOnly),
                           ),
                         ]),
-                        onPressed: () => Navigator.of(context)
-                            .pop(TrackingType.onlyTracking)),
+                        onPressed: () =>
+                            Navigator.of(context, rootNavigator: true)
+                                .pop(TrackingType.onlyTracking)),
                   ],
                 ),
               ],

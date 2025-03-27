@@ -44,7 +44,7 @@ class RouteNameSelector extends ConsumerStatefulWidget {
                 child: Text(Localize.of(context).ok),
                 onPressed: () {
                   //important go_router issue - context pop not working
-                  Navigator.of(context).pop(newValue);
+                  Navigator.of(context, rootNavigator: true).pop(newValue);
                 },
               ),
             ],

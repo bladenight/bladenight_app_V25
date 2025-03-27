@@ -13,6 +13,7 @@ import 'package:universal_io/io.dart';
 
 import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
+import '../widgets/buttons/hidden_admin_button.dart';
 import '../widgets/buttons/tinted_cupertino_button.dart';
 import '../widgets/map/tracking_export_widget.dart';
 import '../../generated/l10n.dart';
@@ -82,6 +83,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   )
                 : SliverToBoxAdapter(
                     child: CupertinoNavigationBar(
+                      leading: Icon(Icons.settings),
                       middle: Text(Localize.of(context).settings),
                       trailing: Align(
                         alignment: Alignment.centerRight,
@@ -95,7 +97,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ),
             SliverToBoxAdapter(
               child: CupertinoFormSection(
-                  header: Text(Localize.of(context).bladeGuardSettingsTitle),
+                  header: HiddenAdminButton(
+                    child: Text(Localize.of(context).bladeGuardSettingsTitle),
+                  ),
                   children: <Widget>[
                     SizedTintedCupertinoButton(
                       child: Text(Localize.of(context).bladeGuardSettings),

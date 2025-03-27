@@ -354,7 +354,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                Navigator.of(context).pop(status);
+                Navigator.of(context, rootNavigator: true).pop(status);
               },
             ),
           ],
@@ -399,7 +399,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).save),
               onPressed: () {
-                Navigator.of(context).pop(status);
+                Navigator.of(context, rootNavigator: true).pop(status);
               },
             ),
           ],
@@ -440,7 +440,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             CupertinoDialogAction(
               child: Text(Localize.of(context).ok),
               onPressed: () {
-                Navigator.of(context).pop(status);
+                Navigator.of(context, rootNavigator: true).pop(status);
               },
             ),
           ],
