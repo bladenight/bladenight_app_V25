@@ -593,7 +593,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
         // SafeArea(
         //child:
         Positioned(
-          top: 20,
+          top: 15,
           right: kIsWeb ? 10 : 10,
           height: 30,
           child: Builder(builder: (context) {
@@ -632,12 +632,12 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
           children: [
             Positioned(
               left: 0,
-              top: kIsWeb ? 0 : 0,
+              top: kIsWeb ? 0 : 15,
               child: Column(
                 children: <Widget>[
                   SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 180.0,
+                    height: MediaQuery.sizeOf(context).height * 0.3,
+                    width: MediaQuery.sizeOf(context).width * 0.9,
                     child: Center(
                       child: Container(
                         decoration: BoxDecoration(
@@ -665,27 +665,28 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
             ),
             if (!kIsWeb)
               Positioned(
-                left: 70,
-                bottom: ref.watch(mapMenuVisibleProvider)
-                    ? 340 + bottomOffset
-                    : 120 + bottomOffset,
+                left: leftOffset,
+                bottom: 150 + bottomOffset,
                 height: 40,
                 child: Builder(builder: (context) {
                   var isTracking = ref.watch(isTrackingProvider);
                   if (!isTracking) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: FadeTransition(
-                        opacity: animation!,
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: Text(
-                            Localize.of(context).selectTrackingType,
-                            style: TextStyle(
-                              color:
-                                  CupertinoTheme.of(context).barBackgroundColor,
-                              backgroundColor:
-                                  CupertinoTheme.of(context).primaryColor,
+                    return Transform.rotate(
+                      angle: -45,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(2),
+                        child: FadeTransition(
+                          opacity: animation!,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              Localize.of(context).selectTrackingType,
+                              style: TextStyle(
+                                color: CupertinoTheme.of(context)
+                                    .barBackgroundColor,
+                                backgroundColor:
+                                    CupertinoTheme.of(context).primaryColor,
+                              ),
                             ),
                           ),
                         ),
@@ -698,15 +699,13 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
               ),
             if (!kIsWeb)
               Positioned(
-                left: 70,
-                bottom: ref.watch(mapMenuVisibleProvider)
-                    ? 290 + bottomOffset
-                    : 80 + bottomOffset,
+                left: leftOffset + 70,
+                bottom: 130 + bottomOffset,
                 height: 40,
                 child: Builder(builder: (context) {
-                  var isTracking = ref.watch(isTrackingProvider);
-                  if (!isTracking) {
-                    return ClipRRect(
+                  return Transform.rotate(
+                    angle: -45,
+                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(2),
                       child: FadeTransition(
                         opacity: animation!,
@@ -723,16 +722,41 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                           ),
                         ),
                       ),
-                    );
-                  } else {
-                    return Container();
-                  }
+                    ),
+                  );
                 }),
               ),
             if (!kIsWeb)
               Positioned(
-                left: 70,
-                bottom: 250 + bottomOffset,
+                left: 250,
+                bottom: 90 + bottomOffset,
+                child: Transform.rotate(
+                  angle: -45,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: FadeTransition(
+                      opacity: animation!,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Reset Tacho',
+                          style: TextStyle(
+                            color:
+                                CupertinoTheme.of(context).barBackgroundColor,
+                            backgroundColor:
+                                CupertinoTheme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            Positioned(
+              left: 200,
+              bottom: 80 + bottomOffset,
+              child: Transform.rotate(
+                angle: -45,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(2),
                   child: FadeTransition(
@@ -740,7 +764,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                     child: Container(
                       alignment: Alignment.center,
                       child: Text(
-                        'Reset Tacho',
+                        'Zoom -',
                         style: TextStyle(
                           color: CupertinoTheme.of(context).barBackgroundColor,
                           backgroundColor:
@@ -751,21 +775,25 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                   ),
                 ),
               ),
+            ),
             Positioned(
-              left: 70,
-              bottom: 190 + bottomOffset,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(2),
-                child: FadeTransition(
-                  opacity: animation!,
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Zoom -',
-                      style: TextStyle(
-                        color: CupertinoTheme.of(context).barBackgroundColor,
-                        backgroundColor:
-                            CupertinoTheme.of(context).primaryColor,
+              left: 140,
+              bottom: 80 + bottomOffset,
+              child: Transform.rotate(
+                angle: -45,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: FadeTransition(
+                    opacity: animation!,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Zoom +',
+                        style: TextStyle(
+                          color: CupertinoTheme.of(context).barBackgroundColor,
+                          backgroundColor:
+                              CupertinoTheme.of(context).primaryColor,
+                        ),
                       ),
                     ),
                   ),
@@ -774,40 +802,22 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
             ),
             Positioned(
               left: 70,
-              bottom: 140 + bottomOffset,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(2),
-                child: FadeTransition(
-                  opacity: animation!,
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Zoom +',
-                      style: TextStyle(
-                        color: CupertinoTheme.of(context).barBackgroundColor,
-                        backgroundColor:
-                            CupertinoTheme.of(context).primaryColor,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 70,
-              bottom: 90 + bottomOffset,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(2),
-                child: FadeTransition(
-                  opacity: animation!,
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      Localize.of(context).setDarkMode,
-                      style: TextStyle(
-                        color: CupertinoTheme.of(context).barBackgroundColor,
-                        backgroundColor:
-                            CupertinoTheme.of(context).primaryColor,
+              bottom: 110 + bottomOffset,
+              child: Transform.rotate(
+                angle: -45,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: FadeTransition(
+                    opacity: animation!,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        Localize.of(context).setDarkMode,
+                        style: TextStyle(
+                          color: CupertinoTheme.of(context).barBackgroundColor,
+                          backgroundColor:
+                              CupertinoTheme.of(context).primaryColor,
+                        ),
                       ),
                     ),
                   ),
@@ -887,10 +897,11 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                 ),
               ),
             ),
-            if (kIsWeb)
-              Positioned(
-                left: 70,
-                bottom: 45 + bottomOffset,
+            Positioned(
+              left: 30,
+              bottom: 70 + bottomOffset,
+              child: Transform.rotate(
+                angle: -45,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(2),
                   child: FadeTransition(
@@ -909,6 +920,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                   ),
                 ),
               ),
+            ),
           ],
         ),
       );

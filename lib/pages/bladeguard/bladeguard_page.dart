@@ -98,422 +98,430 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
             },
           ),
           SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const ConnectionWarning(),
-                if (networkConnected.connectivityStatus ==
-                    ConnectivityStatus.internetOffline) ...[
-                  const SettingsInvisibleOfflineWidget(),
-                ],
-                //online wamp not necessary
-                if (networkConnected.connectivityStatus ==
-                        ConnectivityStatus.wampConnected ||
-                    networkConnected.connectivityStatus ==
-                        ConnectivityStatus.wampNotConnected) ...[
-                  const BladeGuardOnsite(),
-                  CupertinoFormSection(
-                    header: HtmlWidget(
-                        textStyle: TextStyle(
-                            fontSize:
-                                MediaQuery.textScalerOf(context).scale(14),
-                            color: CupertinoTheme.of(context).primaryColor),
-                        onTapUrl: (url) async {
-                      var uri = Uri.parse(url);
-                      Launch.launchUrlFromUri(uri);
-                      return Future(true as FutureOr<bool> Function());
-                    },
-                        Localize.of(context)
-                            .iAmBladeGuardTitle(bladeguardPrivacyLink)),
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: DataLeftRightContent(
-                          descriptionLeft: bladeguardSettingsVisible
-                              ? Localize.of(context).registeredAs
-                              : Localize.of(context).iAmBladeGuard,
-                          descriptionRight: '',
-                          rightWidget: CupertinoSwitch(
-                            activeTrackColor:
-                                CupertinoTheme.of(context).primaryColor,
-                            onChanged: (val) {
-                              ref
-                                  .read(userIsBladeguardProvider.notifier)
-                                  .setValue(val);
-                            },
-                            value: isBladeguard,
-                          ),
-                        ),
-                      ),
-                      if (!isBladeguard) ...[
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: HtmlWidget(
-                              textStyle: TextStyle(
-                                  fontSize: MediaQuery.textScalerOf(context)
-                                      .scale(14),
-                                  color: CupertinoTheme.of(context)
-                                      .primaryColor), onTapUrl: (url) async {
-                            Launch.launchUrlFromString(url);
-                            return Future(true as FutureOr<bool> Function());
-                          },
-                              Localize.of(context).bladeguardInfo(
-                                  bladeguardRegisterLink,
-                                  bladeguardPrivacyLink)),
-                        ),
-                        //--------- Register
-
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: CupertinoButton(
-                                onPressed: () async {
-                                  var uri = Uri.parse(bladeguardRegisterLink);
-                                  Launch.launchUrlFromUri(uri);
-                                },
-                                color: Colors.lightGreen,
-                                child: Text(Localize.of(context).register),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: CupertinoButton(
-                                onPressed: () {
-                                  context.pop();
-                                },
-                                color: Colors.redAccent,
-                                child: Text(Localize.of(context).later),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                      //---------
-                      if (!kIsWeb && isBladeguard) ...[
-                        if (!bladeguardSettingsVisible) ...[
-                          const EmailTextField(),
-                          const BirthdayDatePicker(),
-                        ],
-                        if (bladeguardSettingsVisible)
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 5, top: 1, bottom: 1),
-                              child: Text(
-                                  'E-Mail: ${HiveSettingsDB.bladeguardEmail}'),
-                            ),
-                          ),
-                        const PhoneNumberInput(),
-                        if ((networkConnected.connectivityStatus ==
-                                    ConnectivityStatus.wampConnected ||
-                                networkConnected.connectivityStatus ==
-                                    ConnectivityStatus.wampNotConnected) &&
-                            !bladeguardSettingsVisible &&
-                            ref.watch(isValidBladeGuardEmailProvider))
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: isChecking
-                                ? CupertinoActivityIndicator(
-                                    color:
-                                        CupertinoTheme.of(context).primaryColor,
-                                  )
-                                : Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 5, bottom: 5),
-                                    child: SizedTintedCupertinoButton(
-                                        color: Colors.yellowAccent,
-                                        child: FittedBox(
-                                          fit: BoxFit.fitWidth,
-                                          child: Text(
-                                            Localize.of(context)
-                                                .checkBgRegistration,
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                        onPressed: () async {
-                                          await checkOrUpdateBladeGuardData();
-                                        }),
-                                  ),
-                          )
-                      ],
-                      if (!kIsWeb)
-                        Column(
-                          children: [
-                            if (HiveSettingsDB.isBladeGuard &&
-                                ref.watch(isValidBladeGuardEmailProvider) &&
-                                bladeguardSettingsVisible)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 15, right: 15),
-                                child: DataLeftWidgetRightTextContent(
-                                  descriptionRight: HiveSettingsDB.bgTeam,
-                                  leftWidget: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 5, bottom: 5, right: 10),
-                                    child: SizedTintedCupertinoButton(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                .33,
-                                        height: CupertinoTheme.of(context)
-                                                    .textTheme
-                                                    .textStyle
-                                                    .height !=
-                                                null
-                                            ? CupertinoTheme.of(context)
-                                                    .textTheme
-                                                    .textStyle
-                                                    .height! *
-                                                2
-                                            : null,
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(Localize.of(context)
-                                              .bgUpdatePhone),
-                                        ),
-                                        onPressed: () async {
-                                          setState(() {
-                                            isChecking = true;
-                                          });
-                                          await checkOrUpdateBladeGuardData();
-                                          setState(() {
-                                            isChecking = false;
-                                          });
-                                        }),
-                                  ),
-                                ),
-                              )
-                          ],
-                        ),
-                      if (!kIsWeb)
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: const SendMailWidget(),
-                        ),
-                      if (!kIsWeb &&
-                          HiveSettingsDB.isBladeGuard &&
-                          HiveSettingsDB.bgSettingVisible) ...[
-                        CupertinoFormSection(
-                          header: Text(Localize.of(context).geoFencingTitle),
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).geoFencing,
-                                rightWidget: CupertinoSwitch(
-                                  activeTrackColor:
-                                      CupertinoTheme.of(context).primaryColor,
-                                  onChanged: (val) async {
-                                    await HiveSettingsDB
-                                        .setSetOnsiteGeoFencingActiveAsync(val);
-                                    await LocationProvider()
-                                        .startStopGeoFencing();
-                                    setState(() {});
-                                  },
-                                  value: HiveSettingsDB.onsiteGeoFencingActive,
-                                ),
-                                descriptionRight: '',
-                              ),
-                            ),
-                          ],
-                        ),
-                        CupertinoFormSection(
-                          header: Text(Localize.of(context)
-                              .pushMessageParticipateAsBladeGuardTitle),
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: DataLeftRightContent(
-                                descriptionLeft: Localize.of(context)
-                                    .pushMessageParticipateAsBladeGuard,
-                                rightWidget: CupertinoSwitch(
-                                  activeTrackColor:
-                                      CupertinoTheme.of(context).primaryColor,
-                                  onChanged: (val) async {
-                                    setState(() {
-                                      HiveSettingsDB
-                                          .setOneSignalRegisterBladeGuardPush(
-                                              val);
-                                    });
-                                    await OnesignalHandler
-                                        .registerPushAsBladeGuard(
-                                            val, HiveSettingsDB.bgTeam);
-                                  },
-                                  value: HiveSettingsDB
-                                      .oneSignalRegisterBladeGuardPush,
-                                ),
-                                descriptionRight: '',
-                              ),
-                            ),
-                          ],
-                        ),
-                        CupertinoFormSection(
-                          header: Text(Localize.of(context)
-                              .pushMessageSkateMunichInfosTitle),
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: DataLeftRightContent(
-                                descriptionLeft: Localize.of(context)
-                                    .pushMessageSkateMunichInfos,
-                                descriptionRight: '',
-                                rightWidget: CupertinoSwitch(
-                                  activeTrackColor:
-                                      CupertinoTheme.of(context).primaryColor,
-                                  onChanged: (val) async {
-                                    setState(() {
-                                      HiveSettingsDB.setRcvSkatemunichInfos(
-                                          val);
-                                    });
-                                    HiveSettingsDB.setRcvSkatemunichInfos(val);
-                                    OnesignalHandler.registerSkateMunichInfo(
-                                        val);
-                                  },
-                                  value: HiveSettingsDB.rcvSkatemunichInfos,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                      if (!kIsWeb &&
-                          (HiveSettingsDB.bgLeaderSettingVisible ||
-                              HiveSettingsDB.serverPassword != null ||
-                              HiveSettingsDB.bgIsAdmin))
-                        CupertinoFormSection(
-                          header: Text(Localize.of(context).markMeAsHead),
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: DataLeftRightContent(
-                                descriptionLeft: Localize.of(context).head,
-                                descriptionRight: '',
-                                rightWidget: CupertinoSwitch(
-                                  activeTrackColor:
-                                      CupertinoTheme.of(context).primaryColor,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      HiveSettingsDB.setIsSpecialHead(val);
-                                      if (val) {
-                                        HiveSettingsDB.setIsSpecialTail(false);
-                                      }
-                                    });
-                                  },
-                                  value: HiveSettingsDB.isHeadOfProcession,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      if (!kIsWeb &&
-                          (HiveSettingsDB.bgLeaderSettingVisible ||
-                              HiveSettingsDB.serverPassword != null ||
-                              HiveSettingsDB.bgIsAdmin))
-                        CupertinoFormSection(
-                          header: Text(Localize.of(context).markMeAsTail),
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: DataLeftRightContent(
-                                descriptionLeft: Localize.of(context).tail,
-                                descriptionRight: '',
-                                rightWidget: CupertinoSwitch(
-                                  activeTrackColor:
-                                      CupertinoTheme.of(context).primaryColor,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      HiveSettingsDB.setIsSpecialTail(val);
-                                      if (val) {
-                                        HiveSettingsDB.setIsSpecialHead(false);
-                                      }
-                                    });
-                                  },
-                                  value: HiveSettingsDB.isTailOfProcession,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                  if (!kIsWeb &&
-                      (HiveSettingsDB.serverPassword != null ||
-                          HiveSettingsDB.hasSpecialRights ||
-                          HiveSettingsDB.bgIsAdmin))
+            child: SafeArea(
+              child: Column(
+                children: [
+                  const ConnectionWarning(),
+                  if (networkConnected.connectivityStatus ==
+                      ConnectivityStatus.internetOffline) ...[
+                    const SettingsInvisibleOfflineWidget(),
+                  ],
+                  //online wamp not necessary
+                  if (networkConnected.connectivityStatus ==
+                          ConnectivityStatus.wampConnected ||
+                      networkConnected.connectivityStatus ==
+                          ConnectivityStatus.wampNotConnected) ...[
+                    const BladeGuardOnsite(),
                     CupertinoFormSection(
-                      header:
-                          Text(Localize.of(context).showFullProcessionTitle),
+                      header: HtmlWidget(
+                          textStyle: TextStyle(
+                              fontSize:
+                                  MediaQuery.textScalerOf(context).scale(14),
+                              color: CupertinoTheme.of(context).primaryColor),
+                          onTapUrl: (url) async {
+                        var uri = Uri.parse(url);
+                        Launch.launchUrlFromUri(uri);
+                        return Future(true as FutureOr<bool> Function());
+                      },
+                          Localize.of(context)
+                              .iAmBladeGuardTitle(bladeguardPrivacyLink)),
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: DataLeftRightContent(
-                            descriptionLeft:
-                                Localize.of(context).showFullProcession,
+                            descriptionLeft: bladeguardSettingsVisible
+                                ? Localize.of(context).registeredAs
+                                : Localize.of(context).iAmBladeGuard,
                             descriptionRight: '',
                             rightWidget: CupertinoSwitch(
-                                onChanged: (val) {
-                                  setState(() {
-                                    HiveSettingsDB.setWantSeeFullOfProcession(
-                                        val);
-                                  });
-                                },
-                                value: HiveSettingsDB.wantSeeFullOfProcession),
+                              activeTrackColor:
+                                  CupertinoTheme.of(context).primaryColor,
+                              onChanged: (val) {
+                                ref
+                                    .read(userIsBladeguardProvider.notifier)
+                                    .setValue(val);
+                              },
+                              value: isBladeguard,
+                            ),
                           ),
                         ),
+                        if (!isBladeguard) ...[
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: HtmlWidget(
+                                textStyle: TextStyle(
+                                    fontSize: MediaQuery.textScalerOf(context)
+                                        .scale(14),
+                                    color: CupertinoTheme.of(context)
+                                        .primaryColor), onTapUrl: (url) async {
+                              Launch.launchUrlFromString(url);
+                              return Future(true as FutureOr<bool> Function());
+                            },
+                                Localize.of(context).bladeguardInfo(
+                                    bladeguardRegisterLink,
+                                    bladeguardPrivacyLink)),
+                          ),
+                          //--------- Register
+
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                child: CupertinoButton(
+                                  onPressed: () async {
+                                    var uri = Uri.parse(bladeguardRegisterLink);
+                                    Launch.launchUrlFromUri(uri);
+                                  },
+                                  color: Colors.lightGreen,
+                                  child: Text(Localize.of(context).register),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                child: CupertinoButton(
+                                  onPressed: () {
+                                    context.pop();
+                                  },
+                                  color: Colors.redAccent,
+                                  child: Text(Localize.of(context).later),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                        //---------
+                        if (!kIsWeb && isBladeguard) ...[
+                          if (!bladeguardSettingsVisible) ...[
+                            const EmailTextField(),
+                            const BirthdayDatePicker(),
+                          ],
+                          if (bladeguardSettingsVisible)
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 5, top: 1, bottom: 1),
+                                child: Text(
+                                    'E-Mail: ${HiveSettingsDB.bladeguardEmail}'),
+                              ),
+                            ),
+                          const PhoneNumberInput(),
+                          if ((networkConnected.connectivityStatus ==
+                                      ConnectivityStatus.wampConnected ||
+                                  networkConnected.connectivityStatus ==
+                                      ConnectivityStatus.wampNotConnected) &&
+                              !bladeguardSettingsVisible &&
+                              ref.watch(isValidBladeGuardEmailProvider))
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: isChecking
+                                  ? CupertinoActivityIndicator(
+                                      color: CupertinoTheme.of(context)
+                                          .primaryColor,
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 5, bottom: 5),
+                                      child: SizedTintedCupertinoButton(
+                                          color: Colors.yellowAccent,
+                                          child: FittedBox(
+                                            fit: BoxFit.fitWidth,
+                                            child: Text(
+                                              Localize.of(context)
+                                                  .checkBgRegistration,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            await checkOrUpdateBladeGuardData();
+                                          }),
+                                    ),
+                            )
+                        ],
+                        if (!kIsWeb)
+                          Column(
+                            children: [
+                              if (HiveSettingsDB.isBladeGuard &&
+                                  ref.watch(isValidBladeGuardEmailProvider) &&
+                                  bladeguardSettingsVisible)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15, right: 15),
+                                  child: DataLeftWidgetRightTextContent(
+                                    descriptionRight: HiveSettingsDB.bgTeam,
+                                    leftWidget: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 5, bottom: 5, right: 10),
+                                      child: SizedTintedCupertinoButton(
+                                          width:
+                                              MediaQuery.sizeOf(context).width *
+                                                  .33,
+                                          height: CupertinoTheme.of(context)
+                                                      .textTheme
+                                                      .textStyle
+                                                      .height !=
+                                                  null
+                                              ? CupertinoTheme.of(context)
+                                                      .textTheme
+                                                      .textStyle
+                                                      .height! *
+                                                  2
+                                              : null,
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(Localize.of(context)
+                                                .bgUpdatePhone),
+                                          ),
+                                          onPressed: () async {
+                                            setState(() {
+                                              isChecking = true;
+                                            });
+                                            await checkOrUpdateBladeGuardData();
+                                            setState(() {
+                                              isChecking = false;
+                                            });
+                                          }),
+                                    ),
+                                  ),
+                                )
+                            ],
+                          ),
+                        if (!kIsWeb)
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: const SendMailWidget(),
+                          ),
+                        if (!kIsWeb &&
+                            HiveSettingsDB.isBladeGuard &&
+                            HiveSettingsDB.bgSettingVisible) ...[
+                          CupertinoFormSection(
+                            header: Text(Localize.of(context).geoFencingTitle),
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: DataLeftRightContent(
+                                  descriptionLeft:
+                                      Localize.of(context).geoFencing,
+                                  rightWidget: CupertinoSwitch(
+                                    activeTrackColor:
+                                        CupertinoTheme.of(context).primaryColor,
+                                    onChanged: (val) async {
+                                      await HiveSettingsDB
+                                          .setSetOnsiteGeoFencingActiveAsync(
+                                              val);
+                                      await LocationProvider()
+                                          .startStopGeoFencing();
+                                      setState(() {});
+                                    },
+                                    value:
+                                        HiveSettingsDB.onsiteGeoFencingActive,
+                                  ),
+                                  descriptionRight: '',
+                                ),
+                              ),
+                            ],
+                          ),
+                          CupertinoFormSection(
+                            header: Text(Localize.of(context)
+                                .pushMessageParticipateAsBladeGuardTitle),
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: DataLeftRightContent(
+                                  descriptionLeft: Localize.of(context)
+                                      .pushMessageParticipateAsBladeGuard,
+                                  rightWidget: CupertinoSwitch(
+                                    activeTrackColor:
+                                        CupertinoTheme.of(context).primaryColor,
+                                    onChanged: (val) async {
+                                      setState(() {
+                                        HiveSettingsDB
+                                            .setOneSignalRegisterBladeGuardPush(
+                                                val);
+                                      });
+                                      await OnesignalHandler
+                                          .registerPushAsBladeGuard(
+                                              val, HiveSettingsDB.bgTeam);
+                                    },
+                                    value: HiveSettingsDB
+                                        .oneSignalRegisterBladeGuardPush,
+                                  ),
+                                  descriptionRight: '',
+                                ),
+                              ),
+                            ],
+                          ),
+                          CupertinoFormSection(
+                            header: Text(Localize.of(context)
+                                .pushMessageSkateMunichInfosTitle),
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: DataLeftRightContent(
+                                  descriptionLeft: Localize.of(context)
+                                      .pushMessageSkateMunichInfos,
+                                  descriptionRight: '',
+                                  rightWidget: CupertinoSwitch(
+                                    activeTrackColor:
+                                        CupertinoTheme.of(context).primaryColor,
+                                    onChanged: (val) async {
+                                      setState(() {
+                                        HiveSettingsDB.setRcvSkatemunichInfos(
+                                            val);
+                                      });
+                                      HiveSettingsDB.setRcvSkatemunichInfos(
+                                          val);
+                                      OnesignalHandler.registerSkateMunichInfo(
+                                          val);
+                                    },
+                                    value: HiveSettingsDB.rcvSkatemunichInfos,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                        if (!kIsWeb &&
+                            (HiveSettingsDB.bgLeaderSettingVisible ||
+                                HiveSettingsDB.serverPassword != null ||
+                                HiveSettingsDB.bgIsAdmin))
+                          CupertinoFormSection(
+                            header: Text(Localize.of(context).markMeAsHead),
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: DataLeftRightContent(
+                                  descriptionLeft: Localize.of(context).head,
+                                  descriptionRight: '',
+                                  rightWidget: CupertinoSwitch(
+                                    activeTrackColor:
+                                        CupertinoTheme.of(context).primaryColor,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        HiveSettingsDB.setIsSpecialHead(val);
+                                        if (val) {
+                                          HiveSettingsDB.setIsSpecialTail(
+                                              false);
+                                        }
+                                      });
+                                    },
+                                    value: HiveSettingsDB.isHeadOfProcession,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (!kIsWeb &&
+                            (HiveSettingsDB.bgLeaderSettingVisible ||
+                                HiveSettingsDB.serverPassword != null ||
+                                HiveSettingsDB.bgIsAdmin))
+                          CupertinoFormSection(
+                            header: Text(Localize.of(context).markMeAsTail),
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: DataLeftRightContent(
+                                  descriptionLeft: Localize.of(context).tail,
+                                  descriptionRight: '',
+                                  rightWidget: CupertinoSwitch(
+                                    activeTrackColor:
+                                        CupertinoTheme.of(context).primaryColor,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        HiveSettingsDB.setIsSpecialTail(val);
+                                        if (val) {
+                                          HiveSettingsDB.setIsSpecialHead(
+                                              false);
+                                        }
+                                      });
+                                    },
+                                    value: HiveSettingsDB.isTailOfProcession,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  if (!kIsWeb && HiveSettingsDB.bgIsAdmin) ...[
-                    CupertinoFormSection(
-                      header: const Text('Server-Admin'),
-                      children: <Widget>[
-                        SizedTintedCupertinoButton(
-                            child: const Text('Öffne Serveradmin'),
-                            onPressed: () async {
-                              context.pushNamed(AppRoute.adminLogin.name);
-                            }),
-                      ],
-                    ),
+                    if (!kIsWeb &&
+                        (HiveSettingsDB.serverPassword != null ||
+                            HiveSettingsDB.hasSpecialRights ||
+                            HiveSettingsDB.bgIsAdmin))
+                      CupertinoFormSection(
+                        header:
+                            Text(Localize.of(context).showFullProcessionTitle),
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: DataLeftRightContent(
+                              descriptionLeft:
+                                  Localize.of(context).showFullProcession,
+                              descriptionRight: '',
+                              rightWidget: CupertinoSwitch(
+                                  onChanged: (val) {
+                                    setState(() {
+                                      HiveSettingsDB.setWantSeeFullOfProcession(
+                                          val);
+                                    });
+                                  },
+                                  value:
+                                      HiveSettingsDB.wantSeeFullOfProcession),
+                            ),
+                          ),
+                        ],
+                      ),
                     const SizedBox(
                       height: 10,
                     ),
-                    if (ref.watch(adminPwdSetProvider))
+                    if (!kIsWeb && HiveSettingsDB.bgIsAdmin) ...[
                       CupertinoFormSection(
-                        header: const Text('Server-Admin-Logout'),
+                        header: const Text('Server-Admin'),
                         children: <Widget>[
                           SizedTintedCupertinoButton(
-                              child: const Text('Logout'),
+                              child: const Text('Öffne Serveradmin'),
                               onPressed: () async {
-                                HiveSettingsDB.setServerPassword(null);
+                                context.pushNamed(AppRoute.adminLogin.name);
                               }),
                         ],
                       ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (ref.watch(adminPwdSetProvider))
+                        CupertinoFormSection(
+                          header: const Text('Server-Admin-Logout'),
+                          children: <Widget>[
+                            SizedTintedCupertinoButton(
+                                child: const Text('Logout'),
+                                onPressed: () async {
+                                  HiveSettingsDB.setServerPassword(null);
+                                }),
+                          ],
+                        ),
+                    ],
+                    const SizedBox(
+                      height: 50,
+                    ),
                   ],
-                  const SizedBox(
-                    height: 50,
-                  ),
                 ],
-              ],
+              ),
             ),
           ),
         ],

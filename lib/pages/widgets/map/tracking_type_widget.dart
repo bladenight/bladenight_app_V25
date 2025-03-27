@@ -36,8 +36,7 @@ class TrackingTypeWidget extends ConsumerWidget {
                           ),
                         ]),
                         onPressed: () =>
-                            Navigator.of(context, rootNavigator: true)
-                                .pop(TrackingType.userParticipating)),
+                            context.pop(TrackingType.userParticipating)),
                   ],
                 ),
                 CupertinoFormSection(
@@ -73,8 +72,7 @@ class TrackingTypeWidget extends ConsumerWidget {
                           ),
                         ]),
                         onPressed: () =>
-                            Navigator.of(context, rootNavigator: true)
-                                .pop(TrackingType.onlyTracking)),
+                            context.pop(TrackingType.onlyTracking)),
                   ],
                 ),
               ],

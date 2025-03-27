@@ -61,7 +61,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
         if (constraints.maxHeight > 180.0) {
           return _buttonsVertical();
         } else {
-          return Container();
+          return _buttonsHorizontal();
         }
       },
     );
@@ -132,6 +132,104 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
       ),
       Positioned(
         left: 10,
+        bottom: widget.bottomMargin,
+        height: 40,
+        child: Builder(builder: (context) {
+          return FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                MapSettings.setMapMenuVisible(!MapSettings.mapMenuVisible);
+              });
+            },
+            tooltip: 'Menu',
+            heroTag: 'showMenuTag',
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              child: ref.watch(mapMenuVisibleProvider)
+                  ? const Icon(
+                      Icons.menu_open,
+                      key: ValueKey<int>(1),
+                    )
+                  : const Icon(
+                      Icons.menu,
+                      key: ValueKey<int>(2),
+                    ),
+            ),
+          );
+        }),
+      ),
+    ]);
+  }
+
+  Widget _buttonsHorizontal() {
+    final double bottomOffset = 40;
+    final double rowDistOffset = 55;
+    final double distanceOffset = 60;
+    final double leftOffset = 10;
+    return Stack(fit: StackFit.passthrough, children: [
+      //#######################################################################
+      //Left side buttons
+      //#######################################################################
+      PositionedVisibilityOpacity(
+        left: leftOffset + distanceOffset * 3,
+        bottom: widget.bottomMargin,
+        height: 40,
+        heroTag: 'zoomOutTag',
+        onPressed: () {
+          final controller = MapController.maybeOf(context);
+          final camera = MapCamera.maybeOf(context);
+          if (controller == null || camera == null) {
+            return;
+          }
+          controller.move(controller.camera.center, camera.zoom - 0.5);
+          ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+        },
+        visibility: ref.watch(mapMenuVisibleProvider),
+        child: Icon(
+          CupertinoIcons.zoom_out,
+          semanticLabel: MapController.of(context).camera.zoom.toString(),
+        ),
+      ),
+      PositionedVisibilityOpacity(
+        heroTag: 'zoomInTag',
+        left: leftOffset + distanceOffset * 2,
+        bottom: widget.bottomMargin,
+        height: 40,
+        visibility: ref.watch(mapMenuVisibleProvider),
+        onPressed: () {
+          final controller = MapController.of(context);
+          final camera = MapCamera.of(context);
+          controller.move(controller.camera.center, camera.zoom + 0.5);
+          ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+        },
+        child: Icon(
+          CupertinoIcons.zoom_in,
+          semanticLabel: MapController.of(context).camera.zoom.toString(),
+        ),
+      ),
+      PositionedVisibilityOpacity(
+        left: leftOffset + distanceOffset,
+        bottom: widget.bottomMargin,
+        height: 40,
+        visibility: ref.watch(mapMenuVisibleProvider),
+        onPressed: () {
+          var theme = CupertinoAdaptiveTheme.of(context).theme;
+          if (theme.brightness == Brightness.light) {
+            CupertinoAdaptiveTheme.of(context).setDark();
+            HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.dark);
+          } else {
+            CupertinoAdaptiveTheme.of(context).setLight();
+            HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.light);
+          }
+        },
+        heroTag: 'darkLightTag',
+        child: CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                Brightness.light
+            ? const Icon(CupertinoIcons.moon)
+            : const Icon(CupertinoIcons.sun_min),
+      ),
+      Positioned(
+        left: leftOffset,
         bottom: widget.bottomMargin,
         height: 40,
         child: Builder(builder: (context) {

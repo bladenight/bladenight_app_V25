@@ -85,14 +85,19 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     child: CupertinoNavigationBar(
                       leading: Icon(Icons.settings),
                       middle: Text(Localize.of(context).settings),
-                      trailing: Align(
-                        alignment: Alignment.centerRight,
-                        child: CupertinoButton(
-                          onPressed: () =>
-                              context.goNamed(AppRoute.aboutPage.name),
-                          child: Text(Localize.of(context).appInfo),
-                        ),
-                      ),
+                      trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: CupertinoButton(
+                                onPressed: () =>
+                                    context.goNamed(AppRoute.aboutPage.name),
+                                child: Icon(CupertinoIcons.info),
+                              ),
+                            ),
+                          ]),
                     ),
                   ),
             SliverToBoxAdapter(

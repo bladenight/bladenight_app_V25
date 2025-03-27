@@ -44,13 +44,13 @@ Future<EventStatus?> showEventStatusDialog(BuildContext context,
           CupertinoDialogAction(
             child: Text(Localize.of(context).cancel),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context).pop();
             },
           ),
           CupertinoDialogAction(
             child: Text(Localize.of(context).save),
             onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop(status);
+              Navigator.of(context).pop(status);
             },
           ),
         ],

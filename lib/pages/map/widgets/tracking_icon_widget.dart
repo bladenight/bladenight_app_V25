@@ -32,10 +32,13 @@ class TrackingIconWidget extends ConsumerWidget {
 
         switch (trackingType) {
           case TrackingType.userParticipating:
-            return ImageIcon(
-              size: innerIconSize,
-              const AssetImage('assets/images/skater_icon_256_bearer.png'),
-              color: ref.watch(meColorProvider),
+            return Transform.rotate(
+              angle: 90,
+              child: ImageIcon(
+                size: innerIconSize,
+                const AssetImage('assets/images/skater_icon_256_bearer.png'),
+                color: ref.watch(meColorProvider),
+              ),
             );
           case TrackingType.noTracking:
             return Icon(
