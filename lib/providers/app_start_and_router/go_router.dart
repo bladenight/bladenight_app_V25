@@ -28,14 +28,12 @@ import '../../pages/widgets/route/route_dialog.dart';
 import '../../pages/widgets/picker/route_name_dialog.dart';
 import '../../pages/widgets/startup_widgets/app_route_error_widget.dart';
 import '../../pages/widgets/map/user_tracking_dialog.dart';
-import '../active_event_provider.dart';
 import '../admin/admin_pwd_provider.dart';
 import '../../navigation/scaffold_with_nested_navigation.dart';
 import '../../pages/bladeguard/bladeguard_page.dart';
 import '../../pages/friends/friends_page.dart';
 import '../../pages/friends/widgets/edit_friend_dialog.dart';
 import '../../pages/messages/messages_page.dart';
-import '../isActiveEventChangeProvider.dart';
 
 part 'go_router.g.dart';
 
@@ -50,10 +48,6 @@ final GlobalKey<NavigatorState> _sectionSettingsNavigatorKey =
 final _friendsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'friend');
 final _messageLinkNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'appLink');
-final _bladeguardNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'bladeguard');
-final _showRouteNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'showRoute');
 
 enum AppRoute {
   aboutPage,
@@ -121,7 +115,7 @@ GoRouter goRouter(Ref ref) {
     ],
     //initialLocation: '/',
     navigatorKey: rootNavigatorKey,
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: kDebugMode,
     /*refreshListenable: ref.watch(isActiveEventChangeNotifierProvider),
     redirect: (context, state) {
       final isActive =

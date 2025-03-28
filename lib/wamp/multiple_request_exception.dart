@@ -1,3 +1,5 @@
+// ignore_for_file: overridden_fields
+
 import 'dart:async';
 
 class MultipleRequestException extends TimeoutException implements Exception {

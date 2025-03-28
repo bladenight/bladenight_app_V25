@@ -18,12 +18,11 @@ class MultiValueListenableBuilder extends StatelessWidget {
 
   // The const constructor.
   const MultiValueListenableBuilder({
-    Key? key,
+    super.key,
     required this.valueListenables,
     required this.builder,
     this.child,
-  })  : assert(valueListenables.length != 0),
-        super(key: key);
+  }) : assert(valueListenables.length != 0);
 
   @override
   Widget build(BuildContext context) {

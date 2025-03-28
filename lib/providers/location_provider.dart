@@ -27,7 +27,6 @@ import '../helpers/distance_converter.dart';
 import '../helpers/double_helper.dart';
 import '../helpers/enums/tracking_type.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/home_widget_helper.dart';
 import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
 import '../helpers/logger/logger.dart';
@@ -48,6 +47,7 @@ import '../wamp/multiple_request_exception.dart';
 import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 import 'active_event_provider.dart';
+import 'app_start_and_router/go_router.dart';
 import 'images_and_links/geofence_image_and_link_provider.dart';
 import 'rest_api/onsite_state_provider.dart';
 
@@ -67,6 +67,7 @@ class LocationProvider with ChangeNotifier {
     return _instance!;
   }
 
+  bool _mapPushed = false;
   int _maxFails = 3;
   AverageList<double> realtimeSpeedAvgList = AverageList(maxLength: 5);
 
@@ -467,11 +468,12 @@ class LocationProvider with ChangeNotifier {
       var headingDiff =
           (_lastKnownPoint!.coords.heading - location.coords.heading).abs();
 
-      if (headingDiff < 2) {
+      if (headingDiff < 1) {
         //update last track point
         userLatLngList.removeLast();
-        _userLatLngList
-            .add(LatLng(location.coords.latitude, location.coords.longitude));
+        _userLatLngList.add(LatLng(
+            location.coords.latitude..toShortenedDouble(6),
+            location.coords.longitude.toShortenedDouble(6)));
         notifyListeners();
         return;
       }
@@ -534,10 +536,11 @@ class LocationProvider with ChangeNotifier {
       if (_userSpeedPoints.latLngList.isEmpty) {
         //first point
         UserSpeedPoint userSpeedPoint = UserSpeedPoint(
-          location.coords.latitude,
-          location.coords.longitude,
+          location.coords.latitude.toShortenedDouble(6),
+          location.coords.longitude.toShortenedDouble(6),
           _realUserSpeedKmh!,
-          LatLng(location.coords.latitude, location.coords.longitude),
+          LatLng(location.coords.latitude.toShortenedDouble(6),
+              location.coords.longitude.toShortenedDouble(6)),
         );
         _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
       } else if (_userGpxPoints.length > maxSize) {
@@ -927,7 +930,6 @@ class LocationProvider with ChangeNotifier {
         await LocationPermissionDialog().checkOrRequestPreciseLocation() ==
             geolocator.LocationAccuracyStatus.precise;
     return !locationIsPrecise ? false : true;
-    return false;
   }
 
   /// Starts location tracking with set values
@@ -1152,30 +1154,37 @@ class LocationProvider with ChangeNotifier {
     _startTrackingCheckTimer = Timer.periodic(
       const Duration(minutes: 1),
       (timer) async {
-        await _autoStartTimerCallBack();
+        await _showMapAndAutoStartTimerCallBack();
       },
     );
-    _autoStartTimerCallBack();
+    _showMapAndAutoStartTimerCallBack();
   }
 
-  ///Autostart tracking
-  Future<void> _autoStartTimerCallBack() async {
-    if (isTracking ||
-        !HiveSettingsDB.autoStartTrackingEnabled ||
-        _autoTrackingStarted) {
-      return;
-    }
+  ///Autostart tracking and show map page if event is active
+  Future<void> _showMapAndAutoStartTimerCallBack() async {
     await ProviderContainer()
         .read(activeEventProvider.notifier)
         .refresh(forceUpdate: true);
     _eventIsActive = ProviderContainer().read(activeEventProvider).status ==
             EventStatus.running ||
         (_realtimeUpdate != null && _realtimeUpdate!.eventIsActive);
+
+    if (_eventIsActive && !_mapPushed) {
+      _mapPushed = true;
+      BnLog.info(text: 'goNamed Map due event is active');
+      rootNavigatorKey.currentContext?.goNamed(AppRoute.map.name);
+    }
+
+    if (isTracking ||
+        !HiveSettingsDB.autoStartTrackingEnabled ||
+        _autoTrackingStarted) {
+      return;
+    }
+
     if (_eventIsActive) {
       startTracking(TrackingType.userParticipating);
       _autoTrackingStarted = true;
-      BnLog.verbose(
-          text: '_autoStartTimerCallBack autostart tracking via timer');
+      BnLog.info(text: 'Autostart tracking due event is active');
       if (_isInBackground) {
         NotificationHelper().showString(
             id: DateTime.now().hashCode,

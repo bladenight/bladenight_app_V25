@@ -10,7 +10,6 @@ import '../models/event.dart';
 import '../models/route.dart';
 import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
-import 'active_event_route_provider.dart';
 import 'app_start_and_router/go_router.dart';
 
 part 'active_event_provider.g.dart';

@@ -2,7 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../helpers/logger/logger.dart';
 import '../models/sponsors.dart';
-import 'get_images_and_links_provider.dart';
 import 'images_and_links/sponsors_image_and_link_provider.dart';
 
 part 'sponsors_provider.g.dart';

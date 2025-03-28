@@ -1,5 +1,3 @@
-import 'package:vm_service/vm_service.dart';
-
 ///type of locationtracking
 enum TrackingType {
   ///tracking inactive

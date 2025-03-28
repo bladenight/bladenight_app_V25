@@ -162,8 +162,6 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
   }
 
   Widget _buttonsHorizontal() {
-    final double bottomOffset = 40;
-    final double rowDistOffset = 55;
     final double distanceOffset = 60;
     final double leftOffset = 10;
     return Stack(fit: StackFit.passthrough, children: [

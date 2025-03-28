@@ -20,7 +20,6 @@ import '../models/shake_hand_result.dart';
 import 'bn_wamp_message.dart';
 import 'http_overrides.dart';
 import 'multiple_request_exception.dart';
-import 'wamp_endpoints.dart';
 import 'wamp_exception.dart';
 
 ///TODO add keepalive with on error reopen
@@ -101,31 +100,12 @@ class WampV2 {
 
   HashSet<int> get subscriptions => _subscriptions;
   final HashSet<int> _subscriptions = HashSet();
-  StreamSubscription? _icCheckerSubscription;
 
   StreamSubscription<BnWampMessage>? _wampCallStreamListener;
 
   void _init() {
     BnLog.info(text: 'Wamp init', methodName: '_init', className: toString());
-    if (!kIsWeb) {
-      _icCheckerSubscription = internetConnChecker.onStatusChange
-          .listen((InternetConnectionStatus result) {
-        if (result == InternetConnectionStatus.connected) {
-          _isConnectedToInternet = true;
-          BnLog.debug(
-              text: 'Wamp internet online',
-              methodName: '_init',
-              className: toString());
-        } else {
-          _isConnectedToInternet = false;
-          BnLog.debug(
-              text: 'Wamp internet offline',
-              methodName: '_init',
-              className: toString());
-          _closeStream();
-        }
-      });
-    }
+    if (!kIsWeb) {}
     startWamp();
   }
 

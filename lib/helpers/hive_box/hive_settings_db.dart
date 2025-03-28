@@ -11,7 +11,6 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_logger/talker_logger.dart';
 
@@ -163,7 +162,8 @@ class HiveSettingsDB {
 
   ///get loglevel FLog
   static LogLevel get flogLogLevel {
-    var levelIndex = _hiveBox.get(_fLogLevel, defaultValue: Level.info.index);
+    var levelIndex =
+        _hiveBox.get(_fLogLevel, defaultValue: LogLevel.info.index);
     return LogLevel.values[levelIndex];
   }
 

@@ -18,7 +18,7 @@ class Sponsor with SponsorMappable {
   final int index;
 
   Sponsor(this.remark, this.imageName, this.imageUrl, this.description,
-      this.url, this.index) {}
+      this.url, this.index);
 }
 
 @MappableClass()

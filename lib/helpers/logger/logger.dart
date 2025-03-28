@@ -20,8 +20,6 @@ class BnLog {
   static final Talker _talkerLogger = talker;
   static LogLevel _logLevel = kDebugMode ? LogLevel.verbose : LogLevel.info;
 
-  static final DateTime _startTime = DateTime.now();
-
   BnLog._() {
     init();
   }
@@ -47,7 +45,7 @@ class BnLog {
 
   static void close() {
     fileLogger?.output(
-        '${DateTime.now().toIso8601String()}AppClosed', LogLevel.info.name);
+        '${DateTime.now().toIso8601String()} AppClosed', LogLevel.info.name);
     _timer?.cancel();
   }
 
@@ -79,7 +77,9 @@ class BnLog {
   }) async {
     //critical 0 // info 3 verbose 5
     if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.debug)) return;
-    var logText = '$text\nclass:$className\nmethod:$methodName';
+    var logText = '$text\n'
+        '${className != null ? '\nc:$className' : ""}'
+        '${methodName != null ? '\nm:$methodName' : ""}';
     _talkerLogger.debug(logText);
     fileLogger?.output(logText, LogLevel.debug.name);
   }

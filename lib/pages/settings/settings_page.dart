@@ -442,30 +442,30 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           });
                                         }),
                                   ),
-                            _exportLogInProgress
-                                ? LinearProgressIndicator()
-                                : SizedBox(
-                                    width:
-                                        MediaQuery.sizeOf(context).width * 0.9,
-                                    child: SizedTintedCupertinoButton(
-                                        child: Text(
-                                            Localize.of(context).showLogData),
-                                        onPressed: () async {
-                                          if (_exportLogInProgress) return;
-                                          setState(() {
-                                            _exportLogInProgress = true;
-                                          });
-                                          await context.pushNamed(
-                                              AppRoute.logMonitor.name);
-                                          setState(() {
-                                            _exportLogInProgress = false;
-                                          });
-                                        }),
-                                  ),
+                            if (HiveSettingsDB.flogLogLevel.index > 2)
+                              _exportLogInProgress
+                                  ? LinearProgressIndicator()
+                                  : SizedBox(
+                                      width: MediaQuery.sizeOf(context).width *
+                                          0.9,
+                                      child: SizedTintedCupertinoButton(
+                                          child: Text(
+                                              Localize.of(context).showLogData),
+                                          onPressed: () async {
+                                            if (_exportLogInProgress) return;
+                                            setState(() {
+                                              _exportLogInProgress = true;
+                                            });
+                                            await context.pushNamed(
+                                                AppRoute.logMonitor.name);
+                                            setState(() {
+                                              _exportLogInProgress = false;
+                                            });
+                                          }),
+                                    ),
                             _exportLogInProgress
                                 ? Container()
                                 : SizedTintedCupertinoButton(
-                                    color: Colors.orange,
                                     child:
                                         Text(Localize.of(context).setClearLogs),
                                     onPressed: () async {

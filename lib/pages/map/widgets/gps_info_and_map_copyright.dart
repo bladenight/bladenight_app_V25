@@ -18,7 +18,6 @@ import '../../../helpers/location_permission_dialogs.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
-import '../../widgets/animated/shimmer_widget.dart';
 import '../../widgets/common_widgets/shadow_box_widget.dart';
 import 'map_tiles_copyright.dart';
 import 'tracking_icon_widget.dart';
