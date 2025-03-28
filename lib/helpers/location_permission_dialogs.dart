@@ -126,7 +126,6 @@ class LocationPermissionDialog {
 
   Future<LocationPermissionStatus>
       requestWhileInUseLocationPermissions() async {
-    var context = rootNavigatorKey.currentContext!;
     BnLog.info(
         text: 'requesting WhileInUse permissions',
         className: toString(),

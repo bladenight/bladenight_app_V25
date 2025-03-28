@@ -689,7 +689,7 @@ class HiveSettingsDB {
 
   ///set if  serverversion on shakehand
   static void setServerVersion(String? val) {
-    _hiveBox.put(serverVersionKey, val);
+    _hiveBox.put(serverVersionKey, val ?? '-----');
   }
 
   static const String _useCustomServerKey = 'useCustomServerKey';

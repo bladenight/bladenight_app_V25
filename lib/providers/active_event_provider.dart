@@ -10,6 +10,7 @@ import '../models/event.dart';
 import '../models/route.dart';
 import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
+import 'active_event_route_provider.dart';
 import 'app_start_and_router/go_router.dart';
 
 part 'active_event_provider.g.dart';
@@ -30,11 +31,10 @@ class ActiveEvent extends _$ActiveEvent {
         var rn =
             await RoutePoints.getActiveRoutePointsByNameWamp(event.routeName);
         state = event.copyWith(nodes: rn.points);
-        SendToWatch.updateEvent(event);
       } else {
         state = event;
-        SendToWatch.updateEvent(event);
       }
+      SendToWatch.updateEvent(event);
       if (event.isActive && !_hasPushed) {
         _hasPushed = true;
         ref.read(goRouterProvider).goNamed(AppRoute.map.name);

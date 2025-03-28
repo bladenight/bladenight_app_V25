@@ -21,9 +21,11 @@ import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
 
 class MarkersLayer extends ConsumerStatefulWidget {
-  const MarkersLayer(this.popupController, {super.key});
+  const MarkersLayer(this.popupController, this.activeEventRoutePoints,
+      {super.key});
 
   final PopupController popupController;
+  final List<LatLng> activeEventRoutePoints;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MarkersLayerState();
@@ -46,12 +48,6 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
 
   @override
   Widget build(BuildContext context) {
-    var activeEventRoutePoints = RoutePoints('', <LatLng>[]);
-    var activeEventRouteP = ref.watch(activeEventRouteProvider);
-    activeEventRouteP.hasValue
-        ? activeEventRoutePoints = activeEventRouteP.value!
-        : activeEventRoutePoints = RoutePoints('', <LatLng>[]);
-
     var processionRoutePointsP = ref.watch(processionRoutePointsProvider);
     var processionRoutePoints = <LatLng>[];
     processionRoutePointsP.hasValue
@@ -104,52 +100,54 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
           ],
           //begin finish marker
           ...[
-            BnMapMarker(
-              buildContext: context,
-              headerText: Localize.of(context).finish,
-              color: Colors.red,
-              width: 35.0,
-              height: 35.0,
-              point: activeEventRoutePoints.finishLatLngOrDefault,
-              child: Builder(
-                builder: (context) => const Stack(
-                  children: [
-                    Image(
-                      image: AssetImage(
-                        'assets/images/finishMarker.png',
+            if (widget.activeEventRoutePoints.isNotEmpty)
+              BnMapMarker(
+                buildContext: context,
+                headerText: Localize.of(context).finish,
+                color: Colors.red,
+                width: 35.0,
+                height: 35.0,
+                point: widget.activeEventRoutePoints.last,
+                child: Builder(
+                  builder: (context) => const Stack(
+                    children: [
+                      Image(
+                        image: AssetImage(
+                          'assets/images/finishMarker.png',
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
           //end finish marker
 
           //begin start marker
           ...[
-            BnMapMarker(
-              buildContext: context,
-              headerText: Localize.of(context).start,
-              //anchorPosition: AnchorPos.align(AnchorAlign.top),
-              color: Colors.transparent,
-              width: 35.0,
-              height: 35.0,
-              point: activeEventRoutePoints.startLatLngOrDefault,
-              child: Builder(
-                builder: (context) => const Stack(
-                  children: [
-                    Image(
-                      image: AssetImage(
-                        'assets/images/start_marker.png',
+            if (widget.activeEventRoutePoints.isNotEmpty)
+              BnMapMarker(
+                buildContext: context,
+                headerText: Localize.of(context).start,
+                //anchorPosition: AnchorPos.align(AnchorAlign.top),
+                color: Colors.transparent,
+                width: 35.0,
+                height: 35.0,
+                point: widget.activeEventRoutePoints.first,
+                child: Builder(
+                  builder: (context) => const Stack(
+                    children: [
+                      Image(
+                        image: AssetImage(
+                          'assets/images/start_marker.png',
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
           //end start marker
 

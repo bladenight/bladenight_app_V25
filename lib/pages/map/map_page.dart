@@ -14,7 +14,6 @@ import '../../helpers/notification/toast_notification.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../providers/active_event_provider.dart';
-import '../../providers/active_event_route_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/map/use_open_street_map_provider.dart';
 import 'widgets/custom_location_layer.dart';
@@ -78,11 +77,11 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     //print('${DateTime.now().toIso8601String()} Build Fluttermap (map_page)');
-    var route = ref.watch(activeEventRouteProvider);
+    var event = ref.watch(activeEventProvider);
 
-    var bounds = route.hasValue ? route.value!.points.getBounds : null;
+    var bounds = event.nodes.isNotEmpty ? event.nodes.getBounds : null;
     var osmEnabled = ref.watch(useOpenStreetMapProvider);
-    var startPoint = route.hasValue ? route.value!.startLatLng : defaultLatLng;
+    var startPoint = event.nodes.isNotEmpty ? event.nodes.first : defaultLatLng;
     return ScaffoldMessenger(
       key: scaffoldMessengerKey,
       child: CupertinoPageScaffold(
@@ -157,7 +156,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     //SpecialPointsLayer(_popupController), //crashes with global key multi usage on open Popup
                     CustomLocationLayer(_hasGesture),
                     //needs map controller
-                    MarkersLayer(_popupController),
+                    MarkersLayer(_popupController, event.nodes),
 
                     TrackProgressOverlay(_mapController),
                     if (MediaQuery.orientationOf(context) ==

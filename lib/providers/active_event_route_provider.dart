@@ -51,8 +51,8 @@ class ActiveEventRoute extends _$ActiveEventRoute {
 class HeadingPoints extends _$HeadingPoints {
   @override
   Future<List<HeadingPoint>> build() async {
-    var activeRoute = await ref.watch(activeEventRouteProvider.future);
-    return GeoLocationHelper.calculateHeadings(activeRoute.points);
+    var activeRoute = ref.watch(activeEventProvider);
+    return GeoLocationHelper.calculateHeadings(activeRoute.nodes);
   }
 }
 

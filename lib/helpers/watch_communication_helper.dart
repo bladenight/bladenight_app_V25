@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
@@ -12,7 +10,6 @@ import '../providers/active_event_provider.dart';
 import '../providers/is_tracking_provider.dart';
 import '../providers/location_provider.dart';
 import 'enums/tracking_type.dart';
-import 'location_bearing_distance.dart';
 import 'logger/logger.dart';
 
 const MethodChannel channel = MethodChannel('bladenightchannel');

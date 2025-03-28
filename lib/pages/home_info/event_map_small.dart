@@ -54,7 +54,7 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
                       : 11,
               startPoint: widget.nextEvent.nodes.firstOrDefault,
               finishPoint: widget.nextEvent.nodes.lastOrDefault,
-              polylines: [
+              polyLineList: [
                 Polyline(
                   //current and active route points
                   points: widget.nextEvent.nodes,
@@ -63,7 +63,7 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
                   strokeWidth: 4,
                 ),
               ],
-              markers: [
+              markerList: [
                 //finishMarker
                 ...[
                   if (widget.nextEvent.nodes.isNotEmpty)

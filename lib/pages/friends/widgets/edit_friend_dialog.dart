@@ -21,6 +21,7 @@ import '../../../providers/app_start_and_router/go_router.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../providers/network_connection_provider.dart';
 import '../../../wamp/wamp_exception.dart';
+import '../../widgets/common_widgets.dart';
 import '../../widgets/common_widgets/data_widget_left_right.dart';
 import '../../widgets/common_widgets/no_connection_warning.dart';
 import '../../widgets/input/number_input_widget.dart';
@@ -34,6 +35,8 @@ class EditFriendResult {
 
   const EditFriendResult(this.name, this.color, this.code, this.active);
 }
+
+enum ValidationStatus { nameOk, codeOk }
 
 class EditFriendDialog extends ConsumerStatefulWidget {
   const EditFriendDialog(
@@ -63,19 +66,23 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
     with WidgetsBindingObserver {
   String? errorText;
   String name = '';
-  bool nameOk = false;
-  bool codeIsValid = false;
   String? code;
   Color? color;
   bool isActive = true;
   bool isLoading = false;
 
-  bool get isCodeValid =>
+  final List<ValueNotifier<bool>> _validationState = [
+    ValueNotifier(false), //name
+    ValueNotifier(false), //code
+  ];
+
+  bool get validateCode =>
       code != null && code!.length == 6 && int.tryParse(code!) != null;
 
   bool get isValid =>
-      name.isNotEmpty &&
-      (widget.action != FriendsAction.addWithCode || codeIsValid);
+      _validationState.elementAt(ValidationStatus.nameOk.index).value &&
+      (widget.action != FriendsAction.addWithCode ||
+          _validationState.elementAt(ValidationStatus.codeOk.index).value);
 
   @override
   void initState() {
@@ -98,7 +105,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
 
   @override
   Widget build(BuildContext context) {
-    nameOk = name.isNotEmpty;
+    _validationState[0].value = name.isNotEmpty;
     return CupertinoPageScaffold(
       child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -106,35 +113,41 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
           ),
           slivers: [
             CupertinoSliverNavigationBar(
-              leading: CupertinoButton(
-                padding: EdgeInsets.zero,
-                minSize: 0,
-                onPressed: () async {
-                  context.pop();
-                },
-                child: const Icon(CupertinoIcons.back),
-              ),
-              largeTitle: Text(widget.action == FriendsAction.addWithCode
-                  ? Localize.of(context).addfriendwithcode
-                  : widget.friend != null && widget.friend?.friendId != -1
-                      ? Localize.of(context).editfriend
-                      : Localize.of(context).addnewfriend),
-              trailing: !isLoading &&
-                      ((nameOk && widget.action != FriendsAction.addWithCode) ||
-                          (nameOk &&
-                              widget.action == FriendsAction.addWithCode &&
-                              codeIsValid))
-                  ? Row(mainAxisSize: MainAxisSize.min, children: [
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () async {
-                          _saveData();
-                        },
-                        child: const Icon(Icons.save_alt_outlined),
-                      ),
-                    ])
-                  : Container(),
-            ),
+                leading: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  minSize: 0,
+                  onPressed: () async {
+                    context.pop();
+                  },
+                  child: const Icon(CupertinoIcons.back),
+                ),
+                largeTitle: Text(widget.action == FriendsAction.addWithCode
+                    ? Localize.of(context).addfriendwithcode
+                    : widget.friend != null && widget.friend?.friendId != -1
+                        ? Localize.of(context).editfriend
+                        : Localize.of(context).addnewfriend),
+                trailing: MultiValueListenableBuilder(
+                    valueListenables: _validationState,
+                    builder: (context, values, child) {
+                      if (!isLoading &&
+                          ((values[ValidationStatus.nameOk.index] &&
+                                  widget.action != FriendsAction.addWithCode) ||
+                              (values[ValidationStatus.nameOk.index] &&
+                                  widget.action == FriendsAction.addWithCode &&
+                                  values[ValidationStatus.codeOk.index]))) {
+                        return Row(mainAxisSize: MainAxisSize.min, children: [
+                          CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () async {
+                              _saveData();
+                            },
+                            child: const Icon(Icons.save_alt_outlined),
+                          ),
+                        ]);
+                      } else {
+                        return Container();
+                      }
+                    })),
             if (ref.watch(networkAwareProvider).connectivityStatus !=
                 ConnectivityStatus.wampConnected)
               const SliverToBoxAdapter(
@@ -154,9 +167,10 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                       minLength: 1,
                       onChanged: (value) {
                         name = value;
-                        setState(() {
-                          nameOk = value.isNotEmpty;
-                        });
+                        //setState(() {
+                        _validationState[ValidationStatus.nameOk.index].value =
+                            value.isNotEmpty;
+                        // });
                       },
                     ),
                     if (widget.action == FriendsAction.addWithCode) ...[
@@ -166,9 +180,8 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                         code: code ?? '',
                         onChanged: (value) {
                           code = value;
-                          setState(() {
-                            codeIsValid = isCodeValid;
-                          });
+                          _validationState[ValidationStatus.codeOk.index]
+                              .value = validateCode;
                         },
                       )
                     ],
@@ -202,47 +215,75 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                       });
                     }),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child: CupertinoButton(
-                        color: Colors.greenAccent,
-                        onPressed: !isLoading &&
-                                    (nameOk &&
-                                        widget.action !=
-                                            FriendsAction.addWithCode) ||
-                                (nameOk &&
-                                    widget.action ==
-                                        FriendsAction.addWithCode &&
-                                    codeIsValid)
-                            ? () {
-                                _saveData();
-                              }
-                            : null,
-                        child: isLoading
-                            ? const CircularProgressIndicator()
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                    Expanded(
-                                      child: Row(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: MultiValueListenableBuilder(
+                            valueListenables: _validationState,
+                            builder: (context, values, child) {
+                              if (!isLoading &&
+                                  ((values[ValidationStatus.nameOk.index] &&
+                                          widget.action !=
+                                              FriendsAction.addWithCode) ||
+                                      (values.elementAt(
+                                              ValidationStatus.nameOk.index) &&
+                                          widget.action ==
+                                              FriendsAction.addWithCode &&
+                                          values.elementAt(ValidationStatus
+                                              .codeOk.index)))) {
+                                return CupertinoButton(
+                                  color: Colors.greenAccent,
+                                  onPressed: !isLoading &&
+                                              (_validationState
+                                                      .elementAt(
+                                                          ValidationStatus
+                                                              .nameOk.index)
+                                                      .value &&
+                                                  widget.action !=
+                                                      FriendsAction
+                                                          .addWithCode) ||
+                                          (values.elementAt(ValidationStatus
+                                                  .nameOk.index) &&
+                                              widget.action ==
+                                                  FriendsAction.addWithCode &&
+                                              values.elementAt(ValidationStatus
+                                                  .codeOk.index))
+                                      ? () {
+                                          _saveData();
+                                        }
+                                      : null,
+                                  child: isLoading
+                                      ? const CircularProgressIndicator()
+                                      : Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.max,
                                           children: [
-                                            Icon(
-                                              Icons.save_alt,
-                                            ),
-                                            FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: Text(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  Localize.of(context).save),
-                                            ),
-                                          ]),
-                                    ),
-                                  ]),
-                      ),
-                    ),
+                                              Expanded(
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.save_alt,
+                                                      ),
+                                                      FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            Localize.of(context)
+                                                                .save),
+                                                      ),
+                                                    ]),
+                                              ),
+                                            ]),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            })),
                     const SizedBox(
                       height: 15,
                     ),
@@ -274,7 +315,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
         isLoading = true;
       });
       if (widget.action == FriendsAction.edit) {
-        Navigator.of(context, rootNavigator: true)
+        Navigator.of(context)
             .pop(EditFriendResult(name, color!, code, isActive));
         return;
       }
@@ -303,20 +344,29 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
             confirmBtnText: Localize.current.sendlink,
             cancelBtnText: Localize.current.copy,
             onConfirmBtnTap: () {
+              if (Navigator.of(context, rootNavigator: true).canPop()) {
+                Navigator.of(context, rootNavigator: true).pop();
+              }
               Share.share(
                   Localize.current.sendlinkdescription(
                       friend.requestId, playStoreLink, iOSAppStoreLink),
                   subject: Localize.current.sendlink);
-              context.pop();
             },
             onCancelBtnTap: () async {
+              if (!mounted ||
+                  !Navigator.of(context, rootNavigator: true).canPop()) {
+                return;
+              }
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context, rootNavigator: true).pop();
+              }
               await Clipboard.setData(
                   ClipboardData(text: friend.requestId.toString()));
-              if (!mounted) return;
-              context.pop();
             });
-        if (!mounted) return;
-        context.pop(); //go back
+        if (!mounted || !context.canPop()) {
+          return;
+        }
+        context.goNamed(AppRoute.friend.name);
       } else if (widget.action == FriendsAction.addWithCode) //validate code
       {
         var result = await ref

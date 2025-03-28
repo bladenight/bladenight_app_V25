@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
-import '../widgets/buttons/hidden_admin_button.dart';
 import '../widgets/event_info/event_state_traffic_light.dart';
 import 'event_map_small.dart';
 

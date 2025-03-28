@@ -359,7 +359,8 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                 CircleAvatar(
                   radius: 25,
                   backgroundColor: friend.color,
-                  child: Text(friend.name.substring(0, 1)),
+                  child: Text(
+                      friend.name.isEmpty ? '' : friend.name.substring(0, 1)),
                 ),
                 const SizedBox(
                   height: 5,

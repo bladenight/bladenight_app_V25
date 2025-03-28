@@ -2,7 +2,6 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
     as bg;
 import 'package:geolocator/geolocator.dart';
 
-import '../wamp/wamp_v2.dart';
 import 'uuid_helper.dart';
 
 extension Location2Mapper on Position {

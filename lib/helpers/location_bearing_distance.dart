@@ -7,6 +7,9 @@ import '../models/route.dart';
 
 class GeoLocationHelper {
   static List<HeadingPoint> calculateHeadings(List<LatLng> routePoints) {
+    if (routePoints.isEmpty) {
+      return [];
+    }
     List<HeadingPoint> headingPoints = <HeadingPoint>[];
     int count = routePoints.length;
     for (var i = 0; i < count - 2; i++) {

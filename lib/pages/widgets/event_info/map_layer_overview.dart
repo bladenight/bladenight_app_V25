@@ -19,8 +19,8 @@ class MapLayerOverview extends ConsumerStatefulWidget {
     required this.finishPoint,
     required this.showSpeed,
     this.location,
-    this.markers = const [],
-    this.polylines = const [],
+    this.markerList = const [],
+    this.polyLineList = const [],
     this.controller,
     this.initialZoom = 13,
     this.minZoom = 5,
@@ -37,8 +37,8 @@ class MapLayerOverview extends ConsumerStatefulWidget {
   final LatLng startPoint;
   final LatLng finishPoint;
   final bool showSpeed;
-  final List<Marker> markers;
-  final List<Polyline> polylines;
+  final List<Marker> markerList;
+  final List<Polyline> polyLineList;
   final MapController? controller;
   final double initialZoom;
   final double minZoom;
@@ -87,9 +87,9 @@ class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
             ),
             PolylineLayer(
               polylines: widget
-                  .polylines, // ref.watch(polyLinesProvider),// widget.polyLines,
+                  .polyLineList, // ref.watch(polyLinesProvider),// widget.polyLines,
             ),
-            MarkerLayer(markers: widget.markers),
+            MarkerLayer(markers: widget.markerList),
             const SafeArea(
                 child: MapButtonsLayerLight(
               bottomMargin: 25,

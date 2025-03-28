@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../helpers/logger/logger.dart';
 import '../../../models/images_and_links.dart';
+import '../../../providers/active_event_provider.dart' show activeEventProvider;
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
@@ -30,11 +31,11 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
   @override
   Widget build(BuildContext context) {
     var locationUpdate = ref.watch(locationProvider);
-    var activeEventRouteP = ref.watch(activeEventRouteProvider);
+    var activeEventRouteP = ref.watch(activeEventProvider);
 
     var activeEventRoutePoints = <LatLng>[];
-    activeEventRouteP.hasValue
-        ? activeEventRoutePoints = activeEventRouteP.value!.points
+    activeEventRouteP.nodes.isNotEmpty
+        ? activeEventRoutePoints = activeEventRouteP.nodes
         : <LatLng>[];
 
     var processionRoutePoints = <LatLng>[];
@@ -65,10 +66,11 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
                   ? CupertinoColors.white
                   : CupertinoColors.darkBackgroundGray
               : Colors.transparent,
-          useStrokeWidthInMeter: false,
+          useStrokeWidthInMeter: true,
           borderStrokeWidth: ref.watch(isTrackingProvider) ? 4 : 5,
           //ref.watch(isTrackingProvider),
         ),
+
       //user‘s track points
       if (locationUpdate.userSpeedPoints.userSpeedPoints.isNotEmpty &&
           ref.watch(showOwnTrackProvider) &&

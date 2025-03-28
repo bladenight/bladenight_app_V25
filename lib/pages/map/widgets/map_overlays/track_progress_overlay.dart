@@ -15,7 +15,6 @@ import '../../../../providers/active_event_provider.dart';
 import '../../../../providers/is_tracking_provider.dart';
 import '../../../../providers/location_provider.dart';
 import '../../../../providers/refresh_timer_provider.dart';
-import '../../../home_info/event_data_overview.dart';
 import '../../../widgets/common_widgets/no_connection_warning.dart';
 import '../../../widgets/common_widgets/shadow_clipper.dart';
 import '../map_event_informations.dart';

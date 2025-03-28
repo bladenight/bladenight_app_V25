@@ -16,7 +16,6 @@ import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/onesignal_handler.dart';
 import '../helpers/watch_communication_helper.dart';
-import '../providers/active_event_provider.dart';
 import '../providers/app_start_and_router/go_router.dart';
 import '../providers/get_images_and_links_provider.dart';
 import '../providers/location_provider.dart';
