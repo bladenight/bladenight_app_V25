@@ -120,7 +120,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               color: CupertinoTheme.of(context).primaryColor),
                           onTapUrl: (url) async {
                         var uri = Uri.parse(url);
-                        Launch.launchUrlFromUri(uri);
+                        Launch.launchUrlFromUri(uri, 'ext. Link');
                         return Future(true as FutureOr<bool> Function());
                       },
                           Localize.of(context)
@@ -157,7 +157,7 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                         .scale(14),
                                     color: CupertinoTheme.of(context)
                                         .primaryColor), onTapUrl: (url) async {
-                              Launch.launchUrlFromString(url);
+                              Launch.launchUrlFromString(url, 'ext. Link');
                               return Future(true as FutureOr<bool> Function());
                             },
                                 Localize.of(context).bladeguardInfo(
@@ -178,7 +178,8 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                 child: CupertinoButton(
                                   onPressed: () async {
                                     var uri = Uri.parse(bladeguardRegisterLink);
-                                    Launch.launchUrlFromUri(uri);
+                                    Launch.launchUrlFromUri(
+                                        uri, 'Bladeguard-Registrierung');
                                   },
                                   color: Colors.lightGreen,
                                   child: Text(Localize.of(context).register),

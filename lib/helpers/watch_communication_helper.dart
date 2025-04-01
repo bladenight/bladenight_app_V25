@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
 
 import '../models/event.dart';
-import '../models/moving_point.dart';
 import '../models/route.dart';
 import '../models/user_location_point.dart';
 import '../models/watch_event.dart';
@@ -80,6 +79,7 @@ class SendToWatch {
 
   static UserLocationPoint _lastPoint =
       UserLocationPoint.userLocationPointEmpty();
+
   static void updateUserLocationData(UserLocationPoint userLocationPoint) {
     if (!Platform.isIOS) {
       return;

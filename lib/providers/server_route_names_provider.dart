@@ -12,7 +12,6 @@ class ServerRouteNames extends _$ServerRouteNames {
     var rn = await RouteNames.getAllRouteNamesWamp();
     if (rn.routeNames != null && rn.exception == null) {
       rn.routeNames!.sort();
-      RouteNames rn2 = RouteNames(routeNames: rn.routeNames);
     }
     return rn;
   }

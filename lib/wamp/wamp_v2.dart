@@ -57,8 +57,9 @@ class WampV2 {
       InternetCheckOption(uri: WampV2.getServerUri()),
     ],*/
       );
-  static bool get isConnectedToInternet => _isConnectedToInternet;
-  static bool _isConnectedToInternet = true;
+
+  //static bool get isConnectedToInternet => _isConnectedToInternet;
+  // static bool _isConnectedToInternet = true;
 
   var _busyTimeStamp = DateTime.now();
   var _lock = Lock();
@@ -161,8 +162,12 @@ class WampV2 {
     return _initWamp();
   }
 
+  var addLock = Lock();
+
   ///called from App and put to queue
   Future addToWamp<T>(BnWampMessage message) async {
+    //addLock.synchronized(() async
+    //{
     if (!_wampStopped) {
       var connStatus = await startWamp();
       if (connStatus != WampConnectionState.connected) {
@@ -174,9 +179,10 @@ class WampV2 {
       _put(message);
       return message.completer.future;
     } else {
-      return message.completer.completeError(
+      return message.completer.complete(
           WampException(WampExceptionMessageType.connectionError.toString()));
     }
+    //});
   }
 
   void closeAndReconnect() async {
@@ -266,7 +272,7 @@ class WampV2 {
     }
     for (var call in outdatedCalls.entries) {
       if (!call.value.completer.isCompleted) {
-        call.value.completer.completeError(MultipleRequestException(
+        call.value.completer.complete(MultipleRequestException(
             'multiple request for ${call.value.endpoint}'));
         calls.remove(call.key);
       }
@@ -282,7 +288,7 @@ class WampV2 {
     _wampCallStreamController?.sink.add(message);
   }
 
-  void _connLoop() async {
+  /*void _connLoop() async {
     _liveCycleTimer?.cancel();
     _liveCycleTimer =
         Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
@@ -297,7 +303,7 @@ class WampV2 {
         }
       }
     });
-  }
+  }*/
 
   ///loop to add messages to wamp and request results
   ///clears outdated messages
@@ -333,8 +339,8 @@ class WampV2 {
             var timeDiff = DateTime.now().difference(nextMessage.dateTime);
             if (timeDiff > const Duration(seconds: 10)) {
               if (!message.completer.isCompleted) {
-                message.completer.completeError(
-                    WampException('WampV2_runner not started within 10 secs'));
+                message.completer.completeError(WampException(
+                    'WampV2 message completed sent within 10 secs'));
               }
               calls.remove(message.requestId);
               busy = true;
@@ -348,9 +354,7 @@ class WampV2 {
           }
         }
       }, (error, stack) {
-        if (!kIsWeb) {
-          BnLog.error(text: 'Error in WampV2 Stream', exception: error);
-        }
+        BnLog.error(text: 'Error in WampV2 Stream', exception: error);
       });
     });
   }

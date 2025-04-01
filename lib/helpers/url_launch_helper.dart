@@ -13,7 +13,7 @@ import 'hive_box/hive_settings_db.dart';
 import 'logger/logger.dart';
 
 class Launch {
-  static void launchUrlFromString(String inUrl,
+  static void launchUrlFromString(String inUrl, String linkDescription,
       {LaunchMode mode = LaunchMode.externalApplication, addData = false}) {
     return runZonedGuarded(() async {
       var callUrl = inUrl.toString();
@@ -34,7 +34,7 @@ class Launch {
               cancelBtnText: Localize.current.cancel,
               context: rootNavigatorKey.currentContext!,
               title: Localize.current.leaveAppWarningTitle,
-              text: '${Localize.current.leaveAppWarning}\n$inUrl',
+              text: Localize.current.leaveAppWarning(linkDescription, inUrl),
               type: QuickAlertType.info,
               onConfirmBtnTap: () {
                 rootNavigatorKey.currentState?.pop(true);
@@ -56,7 +56,7 @@ class Launch {
     });
   }
 
-  static void launchUrlFromUri(Uri uri,
+  static void launchUrlFromUri(Uri uri, String linkDescription,
       {LaunchMode mode = LaunchMode.externalApplication, addData = false}) {
     return runZonedGuarded(() async {
       if (await canLaunchUrl(uri)) {
@@ -69,7 +69,8 @@ class Launch {
               cancelBtnText: Localize.current.cancel,
               context: rootNavigatorKey.currentContext!,
               title: Localize.current.leaveAppWarningTitle,
-              text: '${Localize.current.leaveAppWarning}\n${uri.toString()}',
+              text: Localize.current
+                  .leaveAppWarning(linkDescription, uri.toString()),
               type: QuickAlertType.confirm,
               onConfirmBtnTap: () {
                 rootNavigatorKey.currentState?.pop(true);

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 import 'talker_typed_monitor_log_screen.dart';
-import 'widgets/talker_monitor_data_card.dart';
 
 class TalkerMonitor extends StatelessWidget {
   const TalkerMonitor({

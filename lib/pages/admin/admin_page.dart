@@ -28,7 +28,7 @@ class AdminPage extends ConsumerStatefulWidget {
 
 class _AdminPageState extends ConsumerState<AdminPage> {
   bool _activityVisible = false;
-  bool _resultTextVisibility = false;
+  final bool _resultTextVisibility = false;
   String _resultText = '';
 
   @override

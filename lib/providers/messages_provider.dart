@@ -53,6 +53,7 @@ class MessagesLogic with ChangeNotifier {
 
   Future<void> clearMessages() async {
     await MessagesDb.clearMessagesStore();
+    await updateServerMessages();
     _loadMessages();
   }
 
@@ -88,7 +89,6 @@ class MessagesLogic with ChangeNotifier {
     //reset store if 1 item left
     if (await messagesCount() == 1) {
       await clearMessages();
-      await updateServerMessages();
     } else {
       MessagesDb.deleteMessage(message);
       _loadMessages();

@@ -14,7 +14,7 @@ class OpenStreetMapCopyright extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Launch.launchUrlFromString(
-                    'https://www.openstreetmap.org/copyright');
+                    'https://www.openstreetmap.org/copyright', 'OpenStreetMap');
               },
               child: const Text(
                 '© OpenStreetMap',
@@ -28,7 +28,7 @@ class OpenStreetMapCopyright extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Launch.launchUrlFromString(
-                    'https://www.openstreetmap.org/copyright');
+                    'https://www.openstreetmap.org/copyright', 'OpenStreetMap');
               },
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),

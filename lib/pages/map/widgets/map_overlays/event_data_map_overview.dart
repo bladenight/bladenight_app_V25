@@ -202,7 +202,15 @@ class _EventDataMapOverviewState extends ConsumerState<EventDataMapOverview>
               ),
             ),
           ),
-        if (!widget.nextEvent.isActive) ...[
+        if (!widget.nextEvent.isRunning) ...[
+          LayoutBuilder(builder: (context, constraints) {
+            if (constraints.maxHeight > 500) {
+              return SponsorCarousel(
+                  height: MediaQuery.sizeOf(context).height * 0.05);
+            } else {
+              return Container();
+            }
+          }),
           Container(
             alignment: Alignment.topCenter,
             width: double.infinity,
@@ -222,14 +230,6 @@ class _EventDataMapOverviewState extends ConsumerState<EventDataMapOverview>
             ),
             child: EventStatusTrafficLight(event: widget.nextEvent),
           ),
-          LayoutBuilder(builder: (context, constraints) {
-            if (constraints.maxWidth > 650) {
-              return SponsorCarousel(
-                  height: MediaQuery.sizeOf(context).height * 0.1);
-            } else {
-              return Container();
-            }
-          }),
         ]
       ],
     );

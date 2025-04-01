@@ -259,7 +259,7 @@ struct MapView_Previews: PreviewProvider {
                     
                     if (userlocation.latitude != 0.0 && userlocation.longitude != 0.0 ){
                         Annotation(
-                            "Me",
+                            "Ich",
                             coordinate: CLLocationCoordinate2D(
                                 latitude: userlocation.latitude,
                                 longitude: userlocation.longitude

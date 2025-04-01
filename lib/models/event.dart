@@ -247,6 +247,20 @@ class Event with EventMappable implements Comparable {
     return eventDifference.isNegative;
   }
 
+  bool get isRunning {
+    if (status == EventStatus.running) return true;
+    if (status == EventStatus.cancelled) return false;
+    if (duration.inMinutes == 0) return false;
+
+    var isStarted = !(DateTime.now()
+            .toUtc()
+            .subtract(Duration(minutes: 5))
+            .difference(startDate.toUtc()))
+        .isNegative;
+
+    return isStarted && !isOver;
+  }
+
   @override
   int compareTo(other) {
     if (other.runtimeType != Event) return 999;

@@ -92,7 +92,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                                 .read(messagesLogicProvider)
                                 .clearMessages();
                             if (!context.mounted) return;
-                            context.pop();
+                            Navigator.of(context, rootNavigator: true).pop();
                           });
                     }),
                 const SizedBox(
@@ -300,7 +300,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                       color: CupertinoTheme.of(context).primaryColor),
                   onTapUrl: (url) async {
                     var uri = Uri.parse(url);
-                    Launch.launchUrlFromUri(uri,
+                    Launch.launchUrlFromUri(uri, 'ext. Link',
                         mode: LaunchMode.platformDefault);
                     return true;
                   },
@@ -318,7 +318,8 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                               .setReadMessage(message, true);
                           if (message.button1Link != null &&
                               message.button1Link != '') {
-                            Launch.launchUrlFromString(message.button1Link!);
+                            Launch.launchUrlFromString(
+                                message.button1Link!, message.title);
                           }
                         },
                         child: Text(message.button1Text!),
@@ -337,7 +338,8 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                               .setReadMessage(message, true);
                           if (message.button2Link != null &&
                               message.button2Link != '') {
-                            Launch.launchUrlFromString(message.button2Link!);
+                            Launch.launchUrlFromString(
+                                message.button2Link!, message.title);
                           }
                         },
                         child: Text(message.button2Text!),
@@ -356,7 +358,8 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                               .setReadMessage(message, true);
                           if (message.button3Link != null &&
                               message.button3Link != '') {
-                            Launch.launchUrlFromString(message.button3Link!,
+                            Launch.launchUrlFromString(
+                                message.button3Link!, message.title,
                                 mode: LaunchMode.inAppWebView, addData: true);
                           }
                         },
@@ -376,7 +379,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                     .read(messagesLogicProvider)
                     .setReadMessage(message, true);
                 if (message.url != null) {
-                  Launch.launchUrlFromString(message.url!);
+                  Launch.launchUrlFromString(message.url!, message.title);
                 }
               },
             ),

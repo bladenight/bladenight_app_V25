@@ -50,7 +50,8 @@ class _SponsorCarouselState extends ConsumerState<SponsorCarousel> {
                       onTap: () {
                         if (sponsors.value![index].url != null) {
                           Launch.launchUrlFromString(
-                              sponsors.value![index].url!);
+                              sponsors.value![index].url!,
+                              sponsors.value![index].description);
                         }
                       },
                       child: Builder(builder: (context) {

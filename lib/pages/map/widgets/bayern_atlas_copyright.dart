@@ -15,7 +15,8 @@ class BayernAtlasCopyright extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Launch.launchUrlFromString(
-                    'https://www.bkg.bund.de/DE/Home/home.html');
+                    'https://www.bkg.bund.de/DE/Home/home.html',
+                    'Bundesamt für Kartographie und Geodäsie');
               },
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
@@ -33,7 +34,8 @@ class BayernAtlasCopyright extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Launch.launchUrlFromString(
-                    'https://www.bkg.bund.de/DE/Home/home.html');
+                    'https://www.bkg.bund.de/DE/Home/home.html',
+                    'Bundesamt für Kartographie und Geodäsie ');
               },
               child: const Text(
                 '© Datenquellen: Bayerische Vermessungsverwaltung, GeoBasis-DE / BKG 2023 – Daten verändert',

@@ -148,7 +148,7 @@ class OnesignalHandler {
             clickURL != null &&
             clickURL != '') {
           try {
-            Launch.launchUrlFromString(clickURL);
+            Launch.launchUrlFromString(clickURL, 'ext. Link');
           } catch (error) {
             BnLog.error(
                 text:
@@ -263,7 +263,7 @@ class OnesignalHandler {
           onConfirmBtnTap: () {
             if (data != null) {
               if (data.keys.contains('url')) {
-                Launch.launchUrlFromString(data['url']);
+                Launch.launchUrlFromString(data['url'], title ?? 'ext. Link');
               }
             }
             ProviderContainer().read(messagesLogicProvider).addMessage(message);
@@ -286,7 +286,7 @@ class OnesignalHandler {
           onConfirmBtnTap: () {
             if (data != null) {
               if (data.keys.contains('url')) {
-                Launch.launchUrlFromString(data['url']);
+                Launch.launchUrlFromString(data['url'], title ?? 'ext. Link');
               }
             }
             ProviderContainer().read(messagesLogicProvider).addMessage(message);

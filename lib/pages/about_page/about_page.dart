@@ -127,7 +127,7 @@ Widget _homePageWidget(BuildContext context) {
         Column(children: [
           GestureDetector(
             onTap: () {
-              Launch.launchUrlFromString(url);
+              Launch.launchUrlFromString(url, 'Skatemunich e.V.');
             },
             child: (Text(url,
                 style: CupertinoTheme.of(context).textTheme.navTitleTextStyle)),
@@ -161,9 +161,7 @@ Widget _feedBackWidget(BuildContext context) {
                       CupertinoTheme.of(context).textTheme.navTitleTextStyle),
               GestureDetector(
                 onTap: () async {
-                  Launch.launchUrlFromUri(
-                    serviceurl,
-                  );
+                  Launch.launchUrlFromUri(serviceurl, 'Service');
                 },
                 child: (Text(serviceurl.path,
                     style: CupertinoTheme.of(context)
@@ -183,7 +181,7 @@ Widget _feedBackWidget(BuildContext context) {
                       CupertinoTheme.of(context).textTheme.navActionTextStyle),
               GestureDetector(
                 onTap: () async {
-                  Launch.launchUrlFromUri(supporturl);
+                  Launch.launchUrlFromUri(supporturl, 'Support');
                 },
                 child: (Text(supporturl.path,
                     style: CupertinoTheme.of(context)

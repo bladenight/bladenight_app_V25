@@ -30,11 +30,11 @@ class _AppOutdatedState extends ConsumerState<AppOutdated> {
       return GestureDetector(
         onTap: () {
           if (Platform.isAndroid) {
-            Launch.launchUrlFromString(playStoreLink,
+            Launch.launchUrlFromString(playStoreLink, 'Play Store',
                 mode: LaunchMode.platformDefault);
           }
           if (Platform.isIOS) {
-            Launch.launchUrlFromString(iOSAppStoreLink,
+            Launch.launchUrlFromString(iOSAppStoreLink, 'App Store',
                 mode: LaunchMode.platformDefault);
           }
         },

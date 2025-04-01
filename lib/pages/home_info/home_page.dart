@@ -2,11 +2,10 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
-    show Icons, Colors, Scaffold, Badge, FloatingActionButton, Card;
+    show Icons, Colors, Scaffold, Badge, FloatingActionButton;
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,13 +13,10 @@ import 'package:go_router/go_router.dart';
 import '../../app_settings/app_constants.dart';
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
-import '../../helpers/file_name_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/notification_helper.dart';
 import '../../helpers/notification/onesignal_handler.dart';
-import '../../helpers/url_launch_helper.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import '../../helpers/watch_communication_helper.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/get_images_and_links_provider.dart';
@@ -44,9 +40,6 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   bool _firstRefresh = true;
-
-  StreamSubscription? _uniLinkStreamSubscription;
-  StreamSubscription? _oneSignalOSNotificationOpenedResultSubSubscription;
 
   @override
   Future<AppExitResponse> didRequestAppExit() async {

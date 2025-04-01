@@ -38,7 +38,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver {
   //added deep links bna.bladenight.app
   bool _firstRefresh = true;
-  bool _pushedMapPage = false;
 
   StreamSubscription? _uniLinkStreamSubscription;
   StreamSubscription? _oneSignalOSNotificationOpenedResultSubSubscription;

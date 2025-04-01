@@ -56,7 +56,8 @@ class QRCreatePageState extends State<QRCreatePage> {
               const SizedBox(height: 5),
               GestureDetector(
                 onTap: () async {
-                  Launch.launchUrlFromString(widget.qrCodeText);
+                  Launch.launchUrlFromString(
+                      widget.qrCodeText, widget.qrCodeText);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(24),
@@ -76,7 +77,8 @@ class QRCreatePageState extends State<QRCreatePage> {
                 child: FittedBox(
                   child: GestureDetector(
                     onTap: () async {
-                      Launch.launchUrlFromString(widget.qrCodeText);
+                      Launch.launchUrlFromString(
+                          widget.qrCodeText, widget.qrCodeText);
                     },
                     child: Text(widget.infoText,
                         style: CupertinoTheme.of(context)

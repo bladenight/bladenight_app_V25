@@ -3466,13 +3466,13 @@ class Localize {
     );
   }
 
-  /// `You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: `
-  String get leaveAppWarning {
+  /// `You clicked \n{linkDescription} ({link}) and you will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background.`
+  String leaveAppWarning(Object linkDescription, Object link) {
     return Intl.message(
-      'You will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background. \nOpen: ',
+      'You clicked \n$linkDescription ($link) and you will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background.',
       name: 'leaveAppWarning',
       desc: '',
-      args: [],
+      args: [linkDescription, link],
     );
   }
 
