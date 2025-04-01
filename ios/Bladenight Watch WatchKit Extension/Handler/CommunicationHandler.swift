@@ -117,10 +117,12 @@ extension CommunicationHandler: WCSessionDelegate {
     }
 
     func sessionReachabilityDidChange(_ session: WCSession) {
-        debugPrint("WCSession sessionReachabilityDidChange sessionReachability:\(session.isReachable)")
-        self.phoneReachable=session.isReachable && session.isCompanionAppInstalled
-        if (!session.isReachable){
-            self.isLocationTracking=false;
+        DispatchQueue.main.async {
+            debugPrint("WCSession sessionReachabilityDidChange sessionReachability:\(session.isReachable)")
+            self.phoneReachable=session.isReachable && session.isCompanionAppInstalled
+            if (!session.isReachable){
+                self.isLocationTracking=false;
+            }
         }
     }
 

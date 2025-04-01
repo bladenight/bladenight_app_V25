@@ -116,8 +116,6 @@ class NotificationHelper {
     var tzTime = tz.TZDateTime.now(tz.UTC).add(Duration(minutes: timeDiff));
     await flutterLocalNotificationsPlugin.zonedSchedule(
         id, title, body, tzTime, _getPlatformSpecifics(),
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         androidScheduleMode: AndroidScheduleMode.exact);
     BnLog.info(
         className: 'flutterLocalNotificationsPlugin',

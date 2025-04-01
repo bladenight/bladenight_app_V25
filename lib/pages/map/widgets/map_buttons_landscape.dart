@@ -500,7 +500,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
           left: 3 * distanceOffset + leftOffset,
           bottom: bottomOffset,
           height: 40,
-          heroTag: 'zoomOutTag',
+          heroTag: 'zoomOutTagLandscape',
           onPressed: () {
             final controller = MapController.maybeOf(context);
             final camera = MapCamera.maybeOf(context);
@@ -517,7 +517,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
           ),
         ),
         PositionedVisibilityOpacity(
-          heroTag: 'zoomInTag',
+          heroTag: 'zoomInTagLandscape',
           left: 2 * distanceOffset + leftOffset,
           bottom: bottomOffset,
           height: 40,
@@ -556,7 +556,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
               : const Icon(CupertinoIcons.sun_min),
         ),
         //######################
-        //# Menubutton #########
+        //# Menu button #########
         //######################
         Positioned(
           left: 10,

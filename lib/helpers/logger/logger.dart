@@ -54,8 +54,9 @@ class BnLog {
     try {
       if (kDebugMode || kProfileMode || localTesting) {
         logLevel = LogLevel.verbose;
+      } else {
+        logLevel = HiveSettingsDB.flogLogLevel;
       }
-      logLevel = HiveSettingsDB.flogLogLevel;
       if (!kIsWeb) {
         fileLogger = FileLogger(await _getLogDir());
       }
@@ -173,7 +174,7 @@ class BnLog {
         '${exception != null ? '\nex:${exception.toString()}' : ""}'
         '${stacktrace != null ? '\nex:$stacktrace' : ""}';
     _talkerLogger.error(logText);
-    fileLogger?.output(logText, LogLevel.error.name);
+    fileLogger?.output(logText, LogLevel.error.name, flush: true);
   }
 
   /// fatal

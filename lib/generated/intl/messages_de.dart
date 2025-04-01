@@ -743,10 +743,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Nur Routenaufzeichnung aktiv",
     ),
     "onlyWhenInUseEnabled": MessageLookupByLibrary.simpleMessage(
-      "Standortfreigabe nur \'Zugriff nur während der Nutzung der App zulassen\'",
+      "Standortfreigabe \'Während Nutzung der App\' freigegeben",
     ),
     "onlyWhileInUse": MessageLookupByLibrary.simpleMessage(
-      "Standortfreigabe wenn App in Benutzung erteilt.",
+      "Standortfreigabe \'Während App in Benutzung\' erteilt.",
     ),
     "openOperatingSystemSettings": MessageLookupByLibrary.simpleMessage(
       "Öffne Systemeinstellungen",
@@ -762,6 +762,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "pending": MessageLookupByLibrary.simpleMessage("Geplant"),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Tel:"),
     "pickcolor": MessageLookupByLibrary.simpleMessage("Farbe wählen"),
+    "polyLinesAmount": MessageLookupByLibrary.simpleMessage(
+      "Auf manchen Geräten führt eine hohe Anzahl an Routenpunkten dazu das die Karte seh langsam wird. Empfehlung 200-2000 Einzellinien der Route. Die Fahrlinie wird bei Punkten mehr reduziert.",
+    ),
+    "polyLinesAmountHeader": MessageLookupByLibrary.simpleMessage(
+      "Anzahl Teil-Linien der Route",
+    ),
     "position": MessageLookupByLibrary.simpleMessage("Position"),
     "positiveInFront": MessageLookupByLibrary.simpleMessage(
       "Positiv vor mir, Negativ hinter mir.",

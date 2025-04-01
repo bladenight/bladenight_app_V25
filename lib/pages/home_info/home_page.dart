@@ -26,6 +26,7 @@ import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/sponsors_provider.dart';
+import '../widgets/sponsors.dart';
 import 'event_info.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/messages_provider.dart';
@@ -43,16 +44,14 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   bool _firstRefresh = true;
-  bool _activeEventPushRouter = true;
 
   StreamSubscription? _uniLinkStreamSubscription;
   StreamSubscription? _oneSignalOSNotificationOpenedResultSubSubscription;
-  late CupertinoTabController tabController;
 
   @override
   Future<AppExitResponse> didRequestAppExit() async {
     print('App exit requested');
-    BnLog.close();
+    BnLog.error(text: 'App exit requested');
     return AppExitResponse.cancel;
   }
 
@@ -96,10 +95,7 @@ class _HomePageState extends ConsumerState<HomePage>
   @override
   void dispose() {
     pauseUpdates();
-    _uniLinkStreamSubscription?.cancel();
-    _oneSignalOSNotificationOpenedResultSubSubscription?.cancel();
     WidgetsBinding.instance.removeObserver(this);
-    tabController.dispose();
     super.dispose();
   }
 
@@ -139,7 +135,7 @@ class _HomePageState extends ConsumerState<HomePage>
       if (!kIsWeb) {
         await FMTCStore(fmtcTileStoreName).manage.create();
 
-        //_openIntroScreenFirstTime();
+        _openIntroScreenFirstTime();
         _openBladeguardRequestFirstTime();
         initOneSignal();
         await _initNotifications();
@@ -240,141 +236,7 @@ class _HomePageState extends ConsumerState<HomePage>
                           }
                           return Container();
                         }),
-
-                        Builder(builder: (context) {
-                          var sponsors = ref.watch(sponsorsProvider);
-                          if (sponsors.hasValue && sponsors.value!.isNotEmpty) {
-                            return SizedBox(
-                              height: 60.0,
-                              width: MediaQuery.of(context).size.width,
-                              child: /*CarouselSlider(
-                                      options: CarouselOptions(
-                                        aspectRatio: 2.0,
-                                        scrollDirection: Axis.horizontal,
-                                        autoPlay: true,
-                                        enlargeCenterPage: false,
-                                        viewportFraction: 1,
-                                      ),
-                                      items: [
-                                        for (var sponsor in sponsors.value!)
-                                          FadeInImage.assetNetwork(
-                                            height: 50,
-                                            width: 100,
-                                            fit: BoxFit.fitWidth,
-                                            placeholder:
-                                                emptySponsorPlaceholder,
-                                            image: sponsor.imageUrl,
-                                            fadeOutDuration: const Duration(
-                                                milliseconds: 150),
-                                            fadeInDuration: const Duration(
-                                                milliseconds: 150),
-                                            imageErrorBuilder:
-                                                (context, error, stackTrace) {
-                                              BnLog.error(
-                                                  text:
-                                                      'sponsor image error ${sponsor.imageUrl}) could not been loaded',
-                                                  exception: error);
-                                              return Image.asset(
-                                                  emptySponsorPlaceholder,
-                                                  fit: BoxFit.fitWidth);
-                                            },
-                                          ),
-                                      ]),*/
-
-                                  CarouselSlider.builder(
-                                      options: CarouselOptions(
-                                        aspectRatio: 2.0,
-                                        scrollDirection: Axis.horizontal,
-                                        autoPlay:
-                                            (sponsors.value!.length).round() > 1
-                                                ? true
-                                                : false,
-                                        enlargeCenterPage: true,
-                                        enlargeStrategy:
-                                            CenterPageEnlargeStrategy.zoom,
-                                        enlargeFactor: 0.4,
-                                        viewportFraction: 1,
-                                      ),
-                                      //controller: _sponsorScrollController,
-                                      //physics: ClampingScrollPhysics(),
-                                      itemCount:
-                                          (sponsors.value!.length).round(),
-                                      itemBuilder: (context, index, realIdx) {
-                                        return Card(
-                                          color: CupertinoTheme.of(context)
-                                              .barBackgroundColor,
-                                          //bg color for card
-                                          child: Center(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                if (sponsors
-                                                        .value![index].url !=
-                                                    null) {
-                                                  Launch.launchUrlFromString(
-                                                      sponsors
-                                                          .value![index].url!);
-                                                }
-                                              },
-                                              child:
-                                                  Builder(builder: (context) {
-                                                var imageName = sponsors
-                                                    .value![index].imageUrl;
-                                                if (CupertinoTheme.brightnessOf(
-                                                        context) ==
-                                                    Brightness.light) {
-                                                  imageName =
-                                                      getDarkName(imageName);
-                                                }
-                                                return CachedNetworkImage(
-                                                    //height: 80,
-                                                    width: MediaQuery.sizeOf(
-                                                                context)
-                                                            .width *
-                                                        0.66,
-                                                    fit: BoxFit.contain,
-                                                    placeholder: (c, s) {
-                                                      return Text(
-                                                        sponsors.value![index]
-                                                            .description,
-                                                      );
-                                                    },
-                                                    imageUrl: imageName,
-                                                    fadeOutDuration:
-                                                        const Duration(
-                                                            milliseconds: 300),
-                                                    fadeInDuration:
-                                                        const Duration(
-                                                            milliseconds: 300),
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        Center(
-                                                          child: Text(
-                                                            sponsors
-                                                                .value![index]
-                                                                .description,
-                                                          ),
-                                                        ),
-                                                    errorListener: (e) {
-                                                      BnLog.warning(
-                                                        text:
-                                                            'The sponsor image error ${sponsors.value![index].imageUrl} ${e.toString()}) could not been loaded',
-                                                      );
-                                                    }
-
-                                                    /* Image.asset(
-                                                        emptySponsorPlaceholder,
-                                                        fit: BoxFit.fill);*/
-
-                                                    );
-                                              }),
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                            );
-                          }
-                          return Container();
-                        }),
+                        SponsorCarousel(),
                       ],
                     ),
                   ),
@@ -387,14 +249,20 @@ class _HomePageState extends ConsumerState<HomePage>
     );
   }
 
+  static int _initimgCount = 0;
+
   void _initImages() async {
     var imagesLoaded = false;
     if (mounted) {
       imagesLoaded = await ref.refresh(updateImagesAndLinksProvider.future);
     }
-    if (!imagesLoaded) {
+    _initimgCount++;
+    if (!imagesLoaded && _initimgCount < 5) {
       await Future.delayed(const Duration(seconds: 5));
       _initImages();
+    } else {
+      _initimgCount = 0;
+      return;
     }
   }
 

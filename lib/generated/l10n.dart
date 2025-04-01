@@ -4120,6 +4120,26 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Amount of polylines before simplifying`
+  String get polyLinesAmountHeader {
+    return Intl.message(
+      'Amount of polylines before simplifying',
+      name: 'polyLinesAmountHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying.`
+  String get polyLinesAmount {
+    return Intl.message(
+      'To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying.',
+      name: 'polyLinesAmount',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

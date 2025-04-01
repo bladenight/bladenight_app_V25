@@ -40,15 +40,19 @@ class FileLogger {
     return Future.value();
   }
 
-  void output(String event, String level) async {
+  void output(String event, String level, {bool flush = false}) async {
     runZonedGuarded(() {
       final diff = DateTime.now().difference(_startTime).toString();
       _lock.synchronized(timeout: Duration(milliseconds: 1000), () async {
         _logText +=
             '[${DateTime.now().toIso8601String()}] # Runtime :$diff # [$level] # \n$event\n##';
       });
+      if (flush) {
+        _writeLog();
+      }
     }, (error, stack) {
-      print('[${DateTime.now().toIso8601String()}] error write string');
+      print(
+          '[${DateTime.now().toIso8601String()}] error write log string $error');
     });
   }
 

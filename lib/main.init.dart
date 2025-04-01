@@ -32,8 +32,9 @@ import 'models/shake_hands.dart' as p25;
 import 'models/special_point.dart' as p26;
 import 'models/sponsors.dart' as p27;
 import 'models/user_gpx_point.dart' as p28;
-import 'models/user_speed_point.dart' as p29;
-import 'models/watch_event.dart' as p30;
+import 'models/user_location_point.dart' as p29;
+import 'models/user_speed_point.dart' as p30;
+import 'models/watch_event.dart' as p31;
 
 void initializeMappers() {
   p0.EventMapper.ensureInitialized();
@@ -73,8 +74,9 @@ void initializeMappers() {
   p27.SponsorsMapper.ensureInitialized();
   p28.UserGpxPointMapper.ensureInitialized();
   p28.UserGPXPointsMapper.ensureInitialized();
-  p29.UserSpeedPointMapper.ensureInitialized();
-  p29.UserSpeedPointsMapper.ensureInitialized();
-  p30.WatchEventMapper.ensureInitialized();
-  p30.WatchEventsMapper.ensureInitialized();
+  p29.UserLocationPointMapper.ensureInitialized();
+  p30.UserSpeedPointMapper.ensureInitialized();
+  p30.UserSpeedPointsMapper.ensureInitialized();
+  p31.WatchEventMapper.ensureInitialized();
+  p31.WatchEventsMapper.ensureInitialized();
 }

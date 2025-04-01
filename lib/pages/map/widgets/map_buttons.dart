@@ -730,7 +730,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       left: 10,
       bottom: 190,
       height: 40,
-      heroTag: 'zoomOutTag',
+      heroTag: 'zoomOutTag2',
       onPressed: () {
       final controller = MapController.maybeOf(context);
       final camera = MapCamera.maybeOf(context);
@@ -747,7 +747,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       ),
       ),
       PositionedVisibilityOpacity(
-      heroTag: 'zoomInTag',
+      heroTag: 'zoomInTagT2',
       left: 10,
       bottom: 140,
       height: 40,

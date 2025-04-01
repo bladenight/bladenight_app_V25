@@ -5,6 +5,7 @@ import 'package:universal_io/io.dart';
 import '../models/event.dart';
 import '../models/moving_point.dart';
 import '../models/route.dart';
+import '../models/user_location_point.dart';
 import '../models/watch_event.dart';
 import '../providers/active_event_provider.dart';
 import '../providers/is_tracking_provider.dart';
@@ -69,20 +70,28 @@ class SendToWatch {
         flutterToWatch, {'method': 'setRunningLength', 'data': rlength});
   }
 
-  static setUserSpeed(String uSpeed) {
+  /*static setUserSpeed(String uSpeed) {
     if (!Platform.isIOS) {
       return;
     }
     channel.invokeMethod(
         flutterToWatch, {'method': 'setUserSpeed', 'data': uSpeed});
-  }
+  }*/
 
-  static void updateUserLocationData(MovingPoint userMovingPoint) {
+  static UserLocationPoint _lastPoint =
+      UserLocationPoint.userLocationPointEmpty();
+  static void updateUserLocationData(UserLocationPoint userLocationPoint) {
     if (!Platform.isIOS) {
       return;
     }
-    channel.invokeMethod(flutterToWatch,
-        {'method': 'updateUserLocationData', 'data': userMovingPoint.toJson()});
+    if (_lastPoint.hashCode == userLocationPoint.hashCode) {
+      return;
+    }
+    _lastPoint = userLocationPoint;
+    channel.invokeMethod(flutterToWatch, {
+      'method': 'updateUserLocationData',
+      'data': userLocationPoint.toJson()
+    });
   }
 
   static void phoneAppWillTerminate() {

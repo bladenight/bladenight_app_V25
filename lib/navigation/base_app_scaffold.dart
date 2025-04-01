@@ -69,7 +69,8 @@ class BaseAppScaffold extends StatelessWidget {
                   title: 'BladeNight',
                   debugShowCheckedModeBanner: false,
                   theme: theme,
-                  home: Stack(
+                  home:
+                      child /* Stack(
                     children: [
                       child,
                       localTesting
@@ -78,7 +79,8 @@ class BaseAppScaffold extends StatelessWidget {
                                   'Size w:${round(MediaQuery.sizeOf(context).width, decimals: 0)} h:${round(MediaQuery.sizeOf(context).height, decimals: 0)}'))
                           : Container(),
                     ],
-                  )),
+                  ),*/
+                  ),
             ),
           ),
         ),

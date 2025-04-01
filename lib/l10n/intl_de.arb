@@ -349,8 +349,8 @@
   "oneSignalId": "OneSignal-Id: ",
   "oneSignalIdTitle": "Dies ist die zugewiesene Id für den Empfang von Push-Nachrichten. Teilen Sie uns die ID mit, wenn Du Probleme beim Empfang von Push-Nachrichten hast.",
   "online": "Online",
-  "onlyWhenInUseEnabled": "Standortfreigabe nur 'Zugriff nur während der Nutzung der App zulassen'",
-  "onlyWhileInUse": "Standortfreigabe wenn App in Benutzung erteilt.",
+  "onlyWhenInUseEnabled": "Standortfreigabe 'Während Nutzung der App' freigegeben",
+  "onlyWhileInUse": "Standortfreigabe 'Während App in Benutzung' erteilt.",
   "openOperatingSystemSettings": "Öffne Systemeinstellungen",
   "openStreetMap": "Openstreetmap Kartenteile laden / Neustart erforderlich",
   "openStreetMapText": "Nutze Openstreetmap",
@@ -557,5 +557,7 @@
   "onlyReducedLocationAccuracyTitle": "Nur ungefährer Standort",
   "onlyReducedLocationAccuracyText": "Nur ungefährer Standort ist freigegeben. Dies kann zur Fehldarstellung der Veranstaltung führen und ist nicht erlaubt. Du kannst die Standortfunktion nicht nutzen!",
   "warning": "Achtung!",
-  "enableAlwaysLocationGeofenceText": "Für das automatische vor Ort einloggen sollte die Standortfreigabe auf immer stehen. Sollen die Systemeinstellungen geöffnet werden?"
+  "enableAlwaysLocationGeofenceText": "Für das automatische vor Ort einloggen sollte die Standortfreigabe auf immer stehen. Sollen die Systemeinstellungen geöffnet werden?",
+  "polyLinesAmountHeader": "Anzahl Teil-Linien der Route",
+  "polyLinesAmount": "Auf manchen Geräten führt eine hohe Anzahl an Routenpunkten dazu das die Karte seh langsam wird. Empfehlung 200-2000 Einzellinien der Route. Die Fahrlinie wird bei Punkten mehr reduziert."
 }

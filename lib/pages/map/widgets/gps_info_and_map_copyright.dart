@@ -15,6 +15,7 @@ import '../../../helpers/background_location_helper.dart';
 import '../../../helpers/distance_converter.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/location_permission_dialogs.dart';
+import '../../../helpers/logger/logger.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';
@@ -84,7 +85,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('GPS-info didChangeAppLifecycleState');
+    BnLog.info(text: 'GPS-info didChangeAppLifecycleState $state');
     switch (state) {
       case AppLifecycleState.resumed:
         _initListeners();

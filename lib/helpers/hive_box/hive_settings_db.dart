@@ -648,7 +648,7 @@ class HiveSettingsDB {
 
   ///get Tracking is Active means locations updating is active
   static bool get wakeLockEnabled {
-    return _hiveBox.get(_wakeLockEnabledKey, defaultValue: true);
+    return _hiveBox.get(_wakeLockEnabledKey, defaultValue: false);
   }
 
   ///set if  setTrackingActive were requested

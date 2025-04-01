@@ -107,7 +107,9 @@ struct MapView: View {
                     }
                 }
                 
-                if (viewModel.userlocation != nil ){
+                if (
+                    viewModel.userlocation != nil && viewModel.userlocation?.locCoordinate.latitude != 0.0
+                ){
                     Annotation(
                         "Position",
                         coordinate: CLLocationCoordinate2D(
@@ -130,22 +132,29 @@ struct MapView: View {
             .mapStyle(.standard(elevation: .realistic))
             .padding(EdgeInsets(top: 1.0, leading: 0.0, bottom: 10.0, trailing: 1.0))
             VStack{
+                
+                HStack{
+                    Text("Zug") .font(.system(size: 12))
+                        .fontWeight(.medium)
+                        .frame(alignment: .leading)
+                    Text("\(DistanceConverter.ConvertMetersToString(distance:(viewModel.realTimeData.distanceOfTrainComplete())))|\(DateTimeformatter.formatDuration(d: viewModel.realTimeData.timeOfTrainComplete ()))").font(.system(size: 14))
+                        .fontWeight(.bold).frame(alignment: .leading)
+                
+                }
+                if (viewModel.isLocationTracking &&
+                        viewModel.userlocation != nil && viewModel.userlocation?.locCoordinate.latitude != 0.0
+                    )
+                {
                 HStack(alignment: .top) {
-                    Text("Info")
+                    Text("Ges.")
                         .font(.system(size: 12))
                         .fontWeight(.medium)
                         .frame(alignment: .leading)
-                    if (viewModel.isLocationTracking){
-                        Text(viewModel.userSpeed )
+                   
+                    Text(viewModel.userlocation?.speed ?? "- kmh")
                             .font(.system(size: 14))
-                            .fontWeight(.regular).frame(alignment: .leading)
+                            .fontWeight(.bold).frame(alignment: .leading)
                     }
-                }
-                HStack{
-                    Text("Zuglänge").frame(alignment: .leading)
-                    Text("\(DistanceConverter.ConvertMetersToString(distance:(viewModel.realTimeData.distanceOfTrainComplete())))|\(DateTimeformatter.formatDuration(d: viewModel.realTimeData.timeOfTrainComplete ()))").frame(
-                        alignment: .trailing
-                    )
                 }
             }
         }
@@ -248,9 +257,9 @@ struct MapView_Previews: PreviewProvider {
                         }
                     }
                     
-                    if (userlocation != nil ){
+                    if (userlocation.latitude != 0.0 && userlocation.longitude != 0.0 ){
                         Annotation(
-                            "Position",
+                            "Me",
                             coordinate: CLLocationCoordinate2D(
                                 latitude: userlocation.latitude,
                                 longitude: userlocation.longitude

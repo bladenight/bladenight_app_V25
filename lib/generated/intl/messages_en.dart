@@ -737,6 +737,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Mobile"),
     "pickcolor": MessageLookupByLibrary.simpleMessage("Pick a color."),
+    "polyLinesAmount": MessageLookupByLibrary.simpleMessage(
+      "To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying.",
+    ),
+    "polyLinesAmountHeader": MessageLookupByLibrary.simpleMessage(
+      "Amount of polylines before simplifying",
+    ),
     "position": MessageLookupByLibrary.simpleMessage("Position"),
     "positiveInFront": MessageLookupByLibrary.simpleMessage(
       "Positive if in front, negative if behind me.",

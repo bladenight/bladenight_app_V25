@@ -14,6 +14,7 @@ struct Location: Identifiable {
     let locName: String
     let locCoordinate: CLLocationCoordinate2D
     let color: Color?
+    let speed: String?
 }
 
 struct Locations: Identifiable {

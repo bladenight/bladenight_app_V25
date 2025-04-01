@@ -41,6 +41,7 @@ import '../models/geofence_point.dart' as gfp;
 import '../models/location.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
+import '../models/user_location_point.dart';
 import '../models/user_speed_point.dart';
 import '../models/user_gpx_point.dart';
 import '../wamp/multiple_request_exception.dart';
@@ -305,6 +306,9 @@ class LocationProvider with ChangeNotifier {
           _trackingType == TrackingType.onlyTracking) {
         WampV2().stopWamp();
       }
+      if (HiveSettingsDB.wakeLockEnabled) {
+        WakelockPlus.disable();
+      }
     } else {
       if (_trackingType == TrackingType.noTracking ||
           _trackingType == TrackingType.onlyTracking) {
@@ -312,6 +316,9 @@ class LocationProvider with ChangeNotifier {
       }
       if (_trackingType == TrackingType.noTracking) {
         _reStartRealtimeUpdateTimer();
+      }
+      if (HiveSettingsDB.wakeLockEnabled) {
+        WakelockPlus.enable();
       }
     }
   }
@@ -505,10 +512,14 @@ class LocationProvider with ChangeNotifier {
       }
     }
 
-    SendToWatch.setUserSpeed('${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
+    var userLoc = UserLocationPoint(
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        speed: '${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
+    SendToWatch.updateUserLocationData(userLoc);
 
     //Create poly lines for user tracking
-    int maxSize = 300;
+    int maxSize = MapSettings.polylineTrackPointsAmount;
     if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
       if (_userGpxPoints.length > maxSize) {
         var smallTrackPointList = <LatLng>[];
@@ -775,16 +786,22 @@ class LocationProvider with ChangeNotifier {
     try {
       var gpsLocationPermissionsStatus =
           await LocationPermissionDialog().getPermissionsStatus();
-      if (gpsLocationPermissionsStatus != LocationPermissionStatus.always &&
-          navigator!.context.mounted) {
-        await LocationPermissionDialog().getGeofenceAlways(navigator!.context);
-        BnLog.warning(
-            text:
-                'startGeoFencing not possible - LocationPermission is $gpsLocationPermissionsStatus');
+      if (gpsLocationPermissionsStatus == LocationPermissionStatus.denied) {
+        return;
+      }
+      if (!HiveSettingsDB.hasAskedAlwaysAllowLocationPermission) {
+        if (gpsLocationPermissionsStatus != LocationPermissionStatus.always &&
+            rootNavigatorKey.currentContext!.mounted) {
+          await LocationPermissionDialog()
+              .getGeofenceAlways(rootNavigatorKey.currentContext!);
+          BnLog.warning(
+              text:
+                  'startGeoFencing not possible - LocationPermission is $gpsLocationPermissionsStatus');
+        }
       }
       setGeoFence();
       bg.BackgroundGeolocation.startGeofences().catchError((error) {
-        BnLog.error(text: 'start Geofence error: $error');
+        BnLog.error(text: 'Starting Geofence error: $error');
         return bg.State({'err': error});
       });
     } catch (e) {
@@ -1389,10 +1406,11 @@ class LocationProvider with ChangeNotifier {
       if (update.rpcException != null && update.rpcException is WampException) {
         BnLog.error(
             className: 'locationProvider',
-            methodName: 'refresh',
+            methodName: 'refresh realtimedata',
             text: update.rpcException.toString());
         _realUserSpeedKmh = null;
-        SendToWatch.setUserSpeed('- km/h');
+        SendToWatch.updateUserLocationData(
+            UserLocationPoint.userLocationPointEmpty());
         _updateWatchData();
         _maxFails--;
         if (_maxFails <= 0) {
@@ -1415,7 +1433,8 @@ class LocationProvider with ChangeNotifier {
 
       if (_lastKnownPoint == null) {
         _realUserSpeedKmh = null;
-        SendToWatch.setUserSpeed('- km/h');
+        SendToWatch.updateUserLocationData(
+            UserLocationPoint.userLocationPointEmpty());
         if (!kIsWeb) _updateWatchData();
       }
       if (!_isInBackground) {

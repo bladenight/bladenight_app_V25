@@ -70,7 +70,7 @@ extension CommunicationHandler{
             case .setRunningLength:
                 self.runningLength = (message["data"] as? String) ?? "-"
                 break
-            case .setUserSpeed:
+            case .setUserSpeed: //not used
                 self.userSpeed = (message["data"] as? String) ?? "- km/h"
                 break
             case .updateEvent:
@@ -95,17 +95,33 @@ extension CommunicationHandler{
             case .updateUserLocationData:
                 let jsonString = (message["data"] as? String);
                 do{
-                    debugPrint ("updateUserLocationData received \(String(describing: jsonString))")
+                    print ("updateUserLocationData received \(String(describing: jsonString))")
                     let decoder=JSONDecoder();
                     if jsonString == nil {break;}
                     else{
                         let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: false) ?? Data()
-                        let  usrData = try decoder.decode(MovingPoint.self, from: bytes)
+                        let  usrData = try decoder.decode(
+                            UserLocationPoint.self,
+                            from: bytes
+                        )
                         
-                        let userlat: Double = Double(usrData.lat ?? defaultLatitude);
-                        let userlon: Double = Double(usrData.lon ?? defaultLongitude);
-                        
-                        self.userlocation=Location(locName: "Ich", locCoordinate: CLLocationCoordinate2D(latitude: userlat, longitude: userlon),color: .yellow)
+                        let userlat: Double = Double(usrData.lat );
+                        let userlon: Double = Double(usrData.lon );
+                        let speed: String = String(
+                            usrData.spd
+                        );
+                        debugPrint(
+                            "updateUserLocationData received \(userlat),\(userlon),\(speed)"
+                        )
+                        self.userlocation=Location(
+                            locName: "Ich",
+                            locCoordinate: CLLocationCoordinate2D(
+                                latitude: userlat,
+                                longitude: userlon
+                            ),
+                            color: .yellow,
+                            speed: speed
+                        )
                         if self.locations.isEmpty{
                             self.locations.append(self.userlocation!)
                         }
@@ -127,6 +143,7 @@ extension CommunicationHandler{
                     let decoder=JSONDecoder();
                     if jsonString == nil {break;}
                     else{
+                        self.message += (jsonString ?? "--")
                         let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: true) ?? Data()
                         let  rtData = try decoder.decode(RealtimeUpdate.self, from: bytes)
                         self.realTimeData = rtData
@@ -137,11 +154,22 @@ extension CommunicationHandler{
                         
                         if self.locations.count<3{
                             if self.locations.isEmpty{
-                                self.locations.append(self.userlocation ?? Location(locName: "User", locCoordinate: CLLocationCoordinate2DMake(defaultLongitude, defaultLatitude),color: .yellow))
+                                self.locations.append(self.userlocation ?? Location(locName: "User", locCoordinate: CLLocationCoordinate2DMake(defaultLongitude, defaultLatitude),color: .yellow, speed: ""))
                                 
                             }
-                            self.locations.append(self.userlocation ?? Location(locName: "Head", locCoordinate: CLLocationCoordinate2DMake(defaultLongitude, defaultLatitude),color: .green))
-                            self.locations.append(self.userlocation ?? Location(locName: "Tail", locCoordinate: CLLocationCoordinate2DMake(defaultLongitude, defaultLatitude),color: .orange))
+                            self.locations.append(self.userlocation ?? Location(locName: "Head", locCoordinate: CLLocationCoordinate2DMake(defaultLongitude, defaultLatitude),color: .green, speed: ""))
+                            self.locations
+                                .append(
+                                    self.userlocation ?? Location(
+                                        locName: "Tail",
+                                        locCoordinate: CLLocationCoordinate2DMake(
+                                            defaultLongitude,
+                                            defaultLatitude
+                                        ),
+                                        color: .orange,
+                                        speed: ""
+                                    )
+                                )
                         }
                         let headAndTailLoc = self.realTimeData.getLocations();
                         self.locations[1] = headAndTailLoc[0];
@@ -214,7 +242,6 @@ extension CommunicationHandler{
                     NSLog("\(Date()) fatalerror handle updateRunningRoute \(error)")
                     //self.message += error.localizedDescription
                 }
-                break ;
                 break ;
             }
         }

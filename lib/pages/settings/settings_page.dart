@@ -15,6 +15,8 @@ import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../widgets/buttons/hidden_admin_button.dart';
 import '../widgets/buttons/tinted_cupertino_button.dart';
+import '../widgets/input/input_int_dialog.dart';
+import '../widgets/input/number_input_widget.dart';
 import '../widgets/map/tracking_export_widget.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/background_location_helper.dart';
@@ -388,6 +390,40 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                     value: HiveSettingsDB.wakeLockEnabled,
                                   ),
                                 ),
+                              ),
+                            ]),
+                        CupertinoFormSection(
+                            header: Text(
+                                Localize.of(context).polyLinesAmountHeader),
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: DataLeftRightContent(
+                                    descriptionLeft:
+                                        Localize.of(context).polyLinesAmount,
+                                    descriptionRight: '',
+                                    rightWidget: GestureDetector(
+                                      onTap: () async {
+                                        var result =
+                                            await InputNumberDialog.show(
+                                                context,
+                                                Localize.of(context)
+                                                    .polyLinesAmountHeader,
+                                                initialValue: MapSettings
+                                                    .polylineTrackPointsAmount,
+                                                minValue: 100);
+                                        if (result != null) {
+                                          MapSettings
+                                              .setPolylineTrackPointsAmount(
+                                                  result);
+                                          setState(() {});
+                                        }
+                                      },
+                                      child: Text(MapSettings
+                                          .polylineTrackPointsAmount
+                                          .toString()),
+                                    )),
                               ),
                             ]),
                         if (Platform.isAndroid)

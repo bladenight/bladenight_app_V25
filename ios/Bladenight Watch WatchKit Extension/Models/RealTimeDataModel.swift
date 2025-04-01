@@ -53,8 +53,18 @@ struct RealtimeUpdate: Codable {
         
         
         return [
-            Location(locName: "Zugkopf", locCoordinate: headLatLng,color: .green),
-            Location(locName: "Zugende", locCoordinate:tailLatLng,color: .orange),
+            Location(
+                locName: "Zugkopf",
+                locCoordinate: headLatLng,
+                color: .green,
+                speed: ""
+            ),
+            Location(
+                locName: "Zugende",
+                locCoordinate:tailLatLng,
+                color: .orange,
+                speed: ""
+            ),
             
             
         ]
@@ -137,6 +147,14 @@ struct MovingPoint: Codable {
     
     
 }
+
+struct UserLocationPoint: Codable {
+    let lat: Double
+    let lon: Double
+    let spd: String
+   }
+
+
 
 /*  @MappableField(key: 'fri')
  final FriendsMessage friends;

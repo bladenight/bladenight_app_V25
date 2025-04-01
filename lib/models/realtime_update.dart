@@ -213,7 +213,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
         return wampResult;
       }
     } catch (e) {
-      BnLog.verbose(text: 'error realtimeDataUpdate ${e.toString()}');
+      BnLog.verbose(text: 'Error realtimeDataUpdate ${e.toString()}');
     }
 
     return RealtimeUpdate.rpcError(WampException('unknown'));

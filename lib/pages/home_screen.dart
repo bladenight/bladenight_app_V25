@@ -54,7 +54,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    BnLog.debug(text: 'home_screen - didChangeAppLifecycleState $state');
+    BnLog.info(text: 'home_screen - didChangeAppLifecycleState $state');
     switch (state) {
       case AppLifecycleState.resumed:
         resumeUpdates(force: true);

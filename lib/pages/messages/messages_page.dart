@@ -10,6 +10,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../generated/l10n.dart';
+import '../../helpers/logger/logger.dart';
 import '../../helpers/url_launch_helper.dart';
 import '../../main.dart';
 import '../../models/external_app_message.dart';
@@ -44,6 +45,7 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    BnLog.info(text: 'Message page - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       ref.read(messagesLogicProvider.notifier).reloadMessages();
     }

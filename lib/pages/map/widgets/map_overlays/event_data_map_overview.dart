@@ -6,6 +6,7 @@ import '../../../../helpers/time_converter_helper.dart';
 import '../../../../models/event.dart' show Event, EventStatus;
 import '../../../../providers/location_provider.dart';
 import '../../../widgets/event_info/event_state_traffic_light.dart';
+import '../../../widgets/sponsors.dart' show SponsorCarousel;
 
 ///Event overview
 ///
@@ -201,7 +202,7 @@ class _EventDataMapOverviewState extends ConsumerState<EventDataMapOverview>
               ),
             ),
           ),
-        if (!widget.nextEvent.isActive)
+        if (!widget.nextEvent.isActive) ...[
           Container(
             alignment: Alignment.topCenter,
             width: double.infinity,
@@ -221,6 +222,15 @@ class _EventDataMapOverviewState extends ConsumerState<EventDataMapOverview>
             ),
             child: EventStatusTrafficLight(event: widget.nextEvent),
           ),
+          LayoutBuilder(builder: (context, constraints) {
+            if (constraints.maxWidth > 650) {
+              return SponsorCarousel(
+                  height: MediaQuery.sizeOf(context).height * 0.1);
+            } else {
+              return Container();
+            }
+          }),
+        ]
       ],
     );
   }

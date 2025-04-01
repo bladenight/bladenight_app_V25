@@ -281,4 +281,18 @@ extension MapSettings on HiveSettingsDB {
   static void setWasOpenStreetMapEnabledFlag(bool val) {
     HiveSettingsDB._hiveBox.put(wasOpenStreetMapEnabledFlagKey, val);
   }
+
+  static const String _polylineTrackPointsAmountKey =
+      'polylineTrackPointsAmountPref_1Key';
+
+  ///get polylineTrackPointsAmount level for online map
+  static int get polylineTrackPointsAmount {
+    return HiveSettingsDB._hiveBox
+        .get(_polylineTrackPointsAmountKey, defaultValue: 1000);
+  }
+
+  ///set polylineTrackPointsAmount for online for drawn poly lines while tracking
+  static void setPolylineTrackPointsAmount(int val) {
+    HiveSettingsDB._hiveBox.put(_polylineTrackPointsAmountKey, val);
+  }
 }

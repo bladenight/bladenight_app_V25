@@ -113,7 +113,7 @@ GoRouter goRouter(Ref ref) {
       //GoRouterNavigatorObserver(),
       TalkerRouteObserver(talker)
     ],
-    //initialLocation: '/',
+    initialLocation: '/',
     navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: kDebugMode,
     /*refreshListenable: ref.watch(isActiveEventChangeNotifierProvider),
@@ -257,7 +257,7 @@ GoRouter goRouter(Ref ref) {
                         // oder 'https://bladenight.app?code=148318
                         //
                         //test:
-                        ///usr/bin/xcrun simctl openurl booted "bna://bladenight.app/friend/addFriend?code=123456&name=tom"
+                        // /usr/bin/xcrun simctl openurl booted "bna://bladenight.app/friend/addFriend?code=123456&name=tom"
                         //adb shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app/friend/addFriend?code=123456&name=tom"'
                         //
                         // adb devices with -s "xxxxx"

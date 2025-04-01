@@ -76,7 +76,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
         left: 10,
         bottom: widget.bottomMargin + 150,
         height: 40,
-        heroTag: 'zoomOutTag',
+        heroTag: 'zoomOutTagLight',
         onPressed: () {
           final controller = MapController.maybeOf(context);
           final camera = MapCamera.maybeOf(context);
@@ -93,7 +93,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
         ),
       ),
       PositionedVisibilityOpacity(
-        heroTag: 'zoomInTag',
+        heroTag: 'zoomInTagLight',
         left: 10,
         bottom: widget.bottomMargin + 100,
         height: 40,
@@ -172,7 +172,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
         left: leftOffset + distanceOffset * 3,
         bottom: widget.bottomMargin,
         height: 40,
-        heroTag: 'zoomOutTag',
+        heroTag: 'zoomOutTagLight2',
         onPressed: () {
           final controller = MapController.maybeOf(context);
           final camera = MapCamera.maybeOf(context);
@@ -189,7 +189,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
         ),
       ),
       PositionedVisibilityOpacity(
-        heroTag: 'zoomInTag',
+        heroTag: 'zoomInTagLight2',
         left: leftOffset + distanceOffset * 2,
         bottom: widget.bottomMargin,
         height: 40,

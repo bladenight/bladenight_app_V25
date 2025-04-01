@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../generated/l10n.dart';
 import '../../../providers/admin/admin_pwd_provider.dart';
 import '../../../providers/app_start_and_router/go_router.dart';
+import '../../../providers/network_connection_provider.dart';
+import '../../widgets/common_widgets/no_connection_warning.dart';
 
 const kInvalidPassword = 'http://app.bladenight/invalidPassword';
 
@@ -29,6 +31,20 @@ class _AdminPasswordDialogState extends ConsumerState<AdminPasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var network = ref.watch(networkAwareProvider);
+    if (network.connectivityStatus != ConnectivityStatus.wampConnected) {
+      return GestureDetector(
+        onTap: () {
+          if (context.canPop()) {
+            context.pop();
+          }
+        },
+        child: SizedBox(
+          height: 30,
+          child: ConnectionWarning(),
+        ),
+      );
+    }
     return CupertinoAlertDialog(
       title: Padding(
         padding: const EdgeInsets.only(bottom: 10),
