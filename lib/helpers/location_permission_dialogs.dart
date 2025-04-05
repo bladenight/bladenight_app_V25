@@ -161,6 +161,9 @@ class LocationPermissionDialog {
         cancelBtnText: Localize.current.leavewheninuse,
         onCancelBtnTap: () {
           cancelPressed = true;
+          if (context.mounted) {
+            return Navigator.of(context, rootNavigator: true).pop();
+          }
         });
     if (cancelPressed) {
       return getPermissionsStatus();

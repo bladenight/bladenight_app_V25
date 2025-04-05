@@ -117,7 +117,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                   padding: EdgeInsets.zero,
                   minSize: 0,
                   onPressed: () async {
-                    context.pop();
+                    if (context.canPop()) context.pop();
                   },
                   child: const Icon(CupertinoIcons.back),
                 ),

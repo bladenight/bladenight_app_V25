@@ -91,10 +91,11 @@ class _MapLayerState extends State<MapLayer> {
                 color: CupertinoTheme.of(context).primaryColor,
                 strokeWidth: 4)
           ]),
-        PolylineLayer(
-          polylines: widget
-              .polyLines, // ref.watch(polyLinesProvider),// widget.polyLines,
-        ),
+        if (widget.polyLines.isNotEmpty)
+          PolylineLayer(
+            polylines: widget
+                .polyLines, // ref.watch(polyLinesProvider),// widget.polyLines,
+          ),
         PopupMarkerLayer(
           options: PopupMarkerLayerOptions(
             popupDisplayOptions: PopupDisplayOptions(

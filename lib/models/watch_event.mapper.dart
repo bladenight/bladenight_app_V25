@@ -119,7 +119,8 @@ mixin WatchEventMappable {
   }
 
   WatchEventCopyWith<WatchEvent, WatchEvent, WatchEvent> get copyWith =>
-      _WatchEventCopyWithImpl(this as WatchEvent, $identity, $identity);
+      _WatchEventCopyWithImpl<WatchEvent, WatchEvent>(
+          this as WatchEvent, $identity, $identity);
   @override
   String toString() {
     return WatchEventMapper.ensureInitialized()
@@ -141,7 +142,7 @@ mixin WatchEventMappable {
 extension WatchEventValueCopy<$R, $Out>
     on ObjectCopyWith<$R, WatchEvent, $Out> {
   WatchEventCopyWith<$R, WatchEvent, $Out> get $asWatchEvent =>
-      $base.as((v, t, t2) => _WatchEventCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _WatchEventCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class WatchEventCopyWith<$R, $In extends WatchEvent, $Out>
@@ -233,7 +234,7 @@ class _WatchEventCopyWithImpl<$R, $Out>
   @override
   WatchEventCopyWith<$R2, WatchEvent, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _WatchEventCopyWithImpl($value, $cast, t);
+      _WatchEventCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class WatchEventsMapper extends ClassMapperBase<WatchEvents> {
@@ -292,7 +293,8 @@ mixin WatchEventsMappable {
   }
 
   WatchEventsCopyWith<WatchEvents, WatchEvents, WatchEvents> get copyWith =>
-      _WatchEventsCopyWithImpl(this as WatchEvents, $identity, $identity);
+      _WatchEventsCopyWithImpl<WatchEvents, WatchEvents>(
+          this as WatchEvents, $identity, $identity);
   @override
   String toString() {
     return WatchEventsMapper.ensureInitialized()
@@ -314,7 +316,7 @@ mixin WatchEventsMappable {
 extension WatchEventsValueCopy<$R, $Out>
     on ObjectCopyWith<$R, WatchEvents, $Out> {
   WatchEventsCopyWith<$R, WatchEvents, $Out> get $asWatchEvents =>
-      $base.as((v, t, t2) => _WatchEventsCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _WatchEventsCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class WatchEventsCopyWith<$R, $In extends WatchEvents, $Out>
@@ -351,5 +353,5 @@ class _WatchEventsCopyWithImpl<$R, $Out>
   @override
   WatchEventsCopyWith<$R2, WatchEvents, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _WatchEventsCopyWithImpl($value, $cast, t);
+      _WatchEventsCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

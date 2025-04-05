@@ -18,9 +18,6 @@ const int defaultLocationUpdateInterval = 5000;
 
 const Duration wampTimeout = Duration(seconds: 10);
 
-///Defaulttime to send new [RealtimeUpdate] with location when tracking in seconds
-//const int defaultSendNewLocationDelay = 5;
-
 ///Default minimum running interval in minutes before auto stop.
 ///Issue can occur when user goes around finish on startup and tracking is switched on
 const int defaultMinimumDurationBeforeAutoStopInMin = 60;

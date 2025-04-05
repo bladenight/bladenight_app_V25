@@ -104,7 +104,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "about_h_androidapplicationflutter_23":
         MessageLookupByLibrary.simpleMessage(
-          "BladeNight-App iOS/Android (2023-2024)",
+          "BladeNight-App iOS/Android (2023-2025)",
         ),
     "about_h_androidapplicationv1": MessageLookupByLibrary.simpleMessage(
       "Application Android V1 (2013)",
@@ -113,7 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Android App V2 (2014-2022)",
     ),
     "about_h_androidapplicationv3": MessageLookupByLibrary.simpleMessage(
-      "Android App V3 (2023-2024)",
+      "Android App V3 (2023-2025)",
     ),
     "about_h_bnapp": MessageLookupByLibrary.simpleMessage(
       "À quoi sert l\'application",

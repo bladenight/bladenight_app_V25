@@ -81,6 +81,16 @@ class _EventDataMapOverviewState extends ConsumerState<EventDataMapOverview>
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (!widget.nextEvent.isRunning) ...[
+          LayoutBuilder(builder: (context, constraints) {
+            if (constraints.maxHeight > 500) {
+              return SponsorCarousel(
+                  height: MediaQuery.sizeOf(context).height * 0.05);
+            } else {
+              return Container();
+            }
+          }),
+        ],
         SizedBox(
           child: Padding(
             padding:
@@ -203,14 +213,6 @@ class _EventDataMapOverviewState extends ConsumerState<EventDataMapOverview>
             ),
           ),
         if (!widget.nextEvent.isRunning) ...[
-          LayoutBuilder(builder: (context, constraints) {
-            if (constraints.maxHeight > 500) {
-              return SponsorCarousel(
-                  height: MediaQuery.sizeOf(context).height * 0.05);
-            } else {
-              return Container();
-            }
-          }),
           Container(
             alignment: Alignment.topCenter,
             width: double.infinity,

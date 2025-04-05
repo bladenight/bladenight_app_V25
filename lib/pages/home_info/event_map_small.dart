@@ -55,13 +55,14 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
               startPoint: widget.nextEvent.nodes.firstOrDefault,
               finishPoint: widget.nextEvent.nodes.lastOrDefault,
               polyLineList: [
-                Polyline(
-                  //current and active route points
-                  points: widget.nextEvent.nodes,
-                  color: CupertinoTheme.of(context).primaryColor,
-                  // CupertinoTheme.of(context).primaryColor,
-                  strokeWidth: 4,
-                ),
+                if (widget.nextEvent.nodes.isNotEmpty)
+                  Polyline(
+                    //current and active route points
+                    points: widget.nextEvent.nodes,
+                    color: CupertinoTheme.of(context).primaryColor,
+                    // CupertinoTheme.of(context).primaryColor,
+                    strokeWidth: 4,
+                  ),
               ],
               markerList: [
                 //finishMarker

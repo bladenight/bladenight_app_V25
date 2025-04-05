@@ -46,6 +46,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       BnLog.verbose(text: 'Track_progress_overlay - initState');
       ref
@@ -58,6 +59,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -142,6 +144,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                               CupertinoColors.transparent, context),
                           padding: const EdgeInsets.all(10),
                           child: Column(children: [
+                            const SpecialFunctionInfo(),
                             if (eventIsActive &&
                                 ref.watch(isTrackingProvider) &&
                                 rtu.user.isOnRoute)
@@ -159,7 +162,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                     Flexible(
                                       fit: FlexFit.tight,
                                       child: Text(
-                                        '⏱ Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 30 * 60 * 1000)}',
+                                        '⏱Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 30 * 60 * 1000)}',
                                         maxLines: 1,
                                         overflow: TextOverflow.clip,
                                         softWrap: false,
@@ -207,42 +210,6 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                       ),
                                     )
                                   ]),
-                            /*    if (!actualOrNextEvent.isActive ||
-                              actualOrNextEvent.status ==
-                                  EventStatus.cancelled ||
-                              actualOrNextEvent.status == EventStatus.pending)
-                            EventDataOverview(
-                              nextEvent: actualOrNextEvent,
-                              showMap: false,
-                              showSeparator: false,
-                            ),
-
-                          Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: ([
-                                Expanded(
-                                  child: SizedBox(
-                                    height: MediaQuery.textScalerOf(context)
-                                        .scale(25),
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5)),
-                                      child: ColoredBox(
-                                        color: actualOrNextEvent.status ==
-                                                EventStatus.cancelled
-                                            ? Colors.redAccent
-                                            : Colors.blueGrey,
-                                        child: FittedBox(
-                                          child: Text(
-                                            '${Localize.of(context).status} ${actualOrNextEvent.status == EventStatus.cancelled ? Localize.of(context).canceled : Localize.of(context).pending}',
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ]),
-                            ),*/
                             if (rtu.rpcException == null) ...[
                               EventDataMapOverview(
                                 nextEvent: actualOrNextEvent,
@@ -250,22 +217,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                 showSeparator: false,
                                 eventIsRunning: eventIsActive,
                               ),
-                              /*Center(
-                                child: FittedBox(
-                                  child: Text(
-                                    '${Localize.of(context).route}: ${rtu.routeName}  '
-                                    '${Localize.of(context).length}: ${((rtu.runningLength) / 1000).toStringAsFixed(1)} km  '
-                                    '${actualOrNextEvent.status == EventStatus.confirmed || actualOrNextEvent.status == EventStatus.running ? "${rtu.usersTracking.toString()} ${Localize.of(context).trackers}" : ""}',
-                                    overflow: TextOverflow.fade,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ),*/
                             ],
-                            const SpecialFunctionInfo(),
-                            const SizedBox(
-                              height: 2,
-                            ),
                             const UpdateProgress(),
                           ]),
                         );

@@ -251,10 +251,9 @@ class Event with EventMappable implements Comparable {
     if (status == EventStatus.running) return true;
     if (status == EventStatus.cancelled) return false;
     if (duration.inMinutes == 0) return false;
-
     var isStarted = !(DateTime.now()
             .toUtc()
-            .subtract(Duration(minutes: 5))
+            .add(Duration(minutes: 5))
             .difference(startDate.toUtc()))
         .isNegative;
 
@@ -320,11 +319,7 @@ class Event with EventMappable implements Comparable {
     var wampResult = await WampV2()
         .addToWamp<Event>(bnWampMessage)
         .timeout(wampTimeout)
-        //.onError(handleError)
-        .catchError((error, stackTrace) =>
-            Event.rpcError(WampException(error.toString())));
-    bnWampMessage = null;
-    completer = null;
+        .catchError((error, stackTrace) => error);
     if (wampResult is Map<String, dynamic>) {
       var event = MapperContainer.globals.fromMap<Event>(wampResult);
       event.lastUpdate = DateTime.now();
@@ -343,7 +338,10 @@ class Event with EventMappable implements Comparable {
       }
       return wampResult;
     }
-    return Event.rpcError(WampException('unknown'));
+    if (wampResult is WampException) {
+      return Event.rpcError(wampResult);
+    }
+    return Event.rpcError(WampException(WampExceptionReason.unknown));
   }
 }
 
@@ -367,8 +365,7 @@ class Events with EventsMappable {
     var wampResult = await WampV2()
         .addToWamp<Events>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) =>
-            Events.rpcError(WampException(error.toString())));
+        .catchError((error, stackTrace) => error);
     if (wampResult is Map<String, dynamic>) {
       var rp = MapperContainer.globals.fromMap<Events>(wampResult);
       HiveSettingsDB.setEventsJson(rp.toJson());
@@ -381,7 +378,10 @@ class Events with EventsMappable {
       }
       return wampResult;
     }
-    return Events.rpcError(WampException('unknown'));
+    if (wampResult is WampException) {
+      return Events.rpcError(wampResult);
+    }
+    return Events.rpcError(WampException(WampExceptionReason.unknown));
   }
 
   Map<String, Events> groupByYear() {

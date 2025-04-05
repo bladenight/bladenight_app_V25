@@ -62,8 +62,9 @@ mixin FriendsMessageMappable {
   }
 
   FriendsMessageCopyWith<FriendsMessage, FriendsMessage, FriendsMessage>
-      get copyWith => _FriendsMessageCopyWithImpl(
-          this as FriendsMessage, $identity, $identity);
+      get copyWith =>
+          _FriendsMessageCopyWithImpl<FriendsMessage, FriendsMessage>(
+              this as FriendsMessage, $identity, $identity);
   @override
   String toString() {
     return FriendsMessageMapper.ensureInitialized()
@@ -86,7 +87,7 @@ mixin FriendsMessageMappable {
 extension FriendsMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, FriendsMessage, $Out> {
   FriendsMessageCopyWith<$R, FriendsMessage, $Out> get $asFriendsMessage =>
-      $base.as((v, t, t2) => _FriendsMessageCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _FriendsMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class FriendsMessageCopyWith<$R, $In extends FriendsMessage, $Out>
@@ -125,5 +126,5 @@ class _FriendsMessageCopyWithImpl<$R, $Out>
   @override
   FriendsMessageCopyWith<$R2, FriendsMessage, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _FriendsMessageCopyWithImpl($value, $cast, t);
+      _FriendsMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

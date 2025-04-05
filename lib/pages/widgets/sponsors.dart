@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart'
     show CachedNetworkImage;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Card;
+import 'package:flutter/material.dart' show Card, Colors;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../helpers/file_name_helper.dart';
@@ -43,7 +43,9 @@ class _SponsorCarouselState extends ConsumerState<SponsorCarousel> {
               itemCount: (sponsors.value!.length).round(),
               itemBuilder: (context, index, realIdx) {
                 return Card(
-                  color: CupertinoTheme.of(context).barBackgroundColor,
+                  color: Colors.transparent,
+                  surfaceTintColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
                   //bg color for card
                   child: Center(
                     child: GestureDetector(

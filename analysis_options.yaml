@@ -6,3 +6,4 @@ linter:
     prefer_relative_imports: true
     prefer_single_quotes: true
     avoid_print: false
+    curly_braces_in_flow_control_structures: true

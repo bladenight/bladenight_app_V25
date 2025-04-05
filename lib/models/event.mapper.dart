@@ -191,7 +191,7 @@ mixin EventMappable {
   }
 
   EventCopyWith<Event, Event, Event> get copyWith =>
-      _EventCopyWithImpl(this as Event, $identity, $identity);
+      _EventCopyWithImpl<Event, Event>(this as Event, $identity, $identity);
   @override
   String toString() {
     return EventMapper.ensureInitialized().stringifyValue(this as Event);
@@ -210,7 +210,7 @@ mixin EventMappable {
 
 extension EventValueCopy<$R, $Out> on ObjectCopyWith<$R, Event, $Out> {
   EventCopyWith<$R, Event, $Out> get $asEvent =>
-      $base.as((v, t, t2) => _EventCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _EventCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class EventCopyWith<$R, $In extends Event, $Out>
@@ -295,7 +295,7 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
 
   @override
   EventCopyWith<$R2, Event, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _EventCopyWithImpl($value, $cast, t);
+      _EventCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class EventsMapper extends ClassMapperBase<Events> {
@@ -352,7 +352,7 @@ mixin EventsMappable {
   }
 
   EventsCopyWith<Events, Events, Events> get copyWith =>
-      _EventsCopyWithImpl(this as Events, $identity, $identity);
+      _EventsCopyWithImpl<Events, Events>(this as Events, $identity, $identity);
   @override
   String toString() {
     return EventsMapper.ensureInitialized().stringifyValue(this as Events);
@@ -371,7 +371,7 @@ mixin EventsMappable {
 
 extension EventsValueCopy<$R, $Out> on ObjectCopyWith<$R, Events, $Out> {
   EventsCopyWith<$R, Events, $Out> get $asEvents =>
-      $base.as((v, t, t2) => _EventsCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _EventsCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class EventsCopyWith<$R, $In extends Events, $Out>
@@ -404,5 +404,5 @@ class _EventsCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Events, $Out>
 
   @override
   EventsCopyWith<$R2, Events, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _EventsCopyWithImpl($value, $cast, t);
+      _EventsCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

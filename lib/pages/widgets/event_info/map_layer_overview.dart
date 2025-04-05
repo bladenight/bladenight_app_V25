@@ -89,7 +89,8 @@ class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
               polylines: widget
                   .polyLineList, // ref.watch(polyLinesProvider),// widget.polyLines,
             ),
-            MarkerLayer(markers: widget.markerList),
+            if (widget.markerList.isNotEmpty)
+              MarkerLayer(markers: widget.markerList),
             const SafeArea(
                 child: MapButtonsLayerLight(
               bottomMargin: 25,

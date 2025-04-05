@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import '../wamp/wamp_endpoints.dart';
-import 'shake_hands.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../app_settings/app_constants.dart';
@@ -49,10 +48,9 @@ class ShakeHandResult with ShakeHandResultMappable {
       },
     );
     var wampResult = await WampV2()
-        .addToWamp<ShakeHand>(bnWampMessage)
+        .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) =>
-            ShakeHandResult(status: true, minBuild: 1, rpcException: error));
+        .catchError((error, stackTrace) => error);
     bnWampMessage = null;
     completer = null;
     if (wampResult is Map<String, dynamic>) {
@@ -62,7 +60,13 @@ class ShakeHandResult with ShakeHandResultMappable {
     if (wampResult is ShakeHandResult) {
       return wampResult;
     }
+    if (wampResult is WampException) {
+      return ShakeHandResult(
+          status: true, minBuild: 1, rpcException: wampResult);
+    }
     return ShakeHandResult(
-        status: true, minBuild: 1, rpcException: WampException('unknown'));
+        status: true,
+        minBuild: 1,
+        rpcException: WampException(WampExceptionReason.unknown));
   }
 }

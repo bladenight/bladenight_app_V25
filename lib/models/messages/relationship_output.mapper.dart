@@ -74,7 +74,8 @@ mixin RelationshipOutputMessageMappable {
 
   RelationshipOutputMessageCopyWith<RelationshipOutputMessage,
           RelationshipOutputMessage, RelationshipOutputMessage>
-      get copyWith => _RelationshipOutputMessageCopyWithImpl(
+      get copyWith => _RelationshipOutputMessageCopyWithImpl<
+              RelationshipOutputMessage, RelationshipOutputMessage>(
           this as RelationshipOutputMessage, $identity, $identity);
   @override
   String toString() {
@@ -98,8 +99,8 @@ mixin RelationshipOutputMessageMappable {
 extension RelationshipOutputMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, RelationshipOutputMessage, $Out> {
   RelationshipOutputMessageCopyWith<$R, RelationshipOutputMessage, $Out>
-      get $asRelationshipOutputMessage => $base
-          .as((v, t, t2) => _RelationshipOutputMessageCopyWithImpl(v, t, t2));
+      get $asRelationshipOutputMessage => $base.as((v, t, t2) =>
+          _RelationshipOutputMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class RelationshipOutputMessageCopyWith<
@@ -137,5 +138,5 @@ class _RelationshipOutputMessageCopyWithImpl<$R, $Out>
   @override
   RelationshipOutputMessageCopyWith<$R2, RelationshipOutputMessage, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _RelationshipOutputMessageCopyWithImpl($value, $cast, t);
+          _RelationshipOutputMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

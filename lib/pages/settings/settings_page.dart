@@ -69,6 +69,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ResponsiveBreakpoints.of(context).orientation ==
                     Orientation.portrait
                 ? CupertinoSliverNavigationBar(
+                    leading: Icon(CupertinoIcons.settings),
                     largeTitle: Text(Localize.of(context).settings),
                     backgroundColor:
                         CupertinoTheme.of(context).barBackgroundColor,
@@ -78,8 +79,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         children: [
                           CupertinoButton(
                             onPressed: () =>
+                                context.pushNamed(AppRoute.introScreen.name),
+                            child: Icon(CupertinoIcons.book_circle),
+                          ),
+                          CupertinoButton(
+                            onPressed: () =>
                                 context.pushNamed(AppRoute.aboutPage.name),
-                            child: Icon(Icons.info),
+                            child: Icon(CupertinoIcons.info_circle),
                           ),
                         ]),
                   )
@@ -91,13 +97,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: CupertinoButton(
-                                onPressed: () =>
-                                    context.goNamed(AppRoute.aboutPage.name),
-                                child: Icon(CupertinoIcons.info),
-                              ),
+                            CupertinoButton(
+                              onPressed: () =>
+                                  context.pushNamed(AppRoute.introScreen.name),
+                              child: Icon(CupertinoIcons.book_circle),
+                            ),
+                            CupertinoButton(
+                              onPressed: () =>
+                                  context.pushNamed(AppRoute.aboutPage.name),
+                              child: Icon(CupertinoIcons.info_circle),
                             ),
                           ]),
                     ),
@@ -393,15 +401,14 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               ),
                             ]),
                         CupertinoFormSection(
-                            header: Text(
-                                Localize.of(context).polyLinesAmountHeader),
+                            header: Text(Localize.of(context).polyLinesAmount),
                             children: <Widget>[
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 20, right: 20),
                                 child: DataLeftRightContent(
-                                    descriptionLeft:
-                                        Localize.of(context).polyLinesAmount,
+                                    descriptionLeft: Localize.of(context)
+                                        .polyLinesAmountHeader,
                                     descriptionRight: '',
                                     rightWidget: GestureDetector(
                                       onTap: () async {
@@ -472,7 +479,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                             _exportLogInProgress = true;
                                           });
                                           await exportLogFiles(
-                                              exportProgressNotifier);
+                                                  exportProgressNotifier)
+                                              .timeout(Duration(seconds: 60))
+                                              .catchError((error) {
+                                            return Future.value(false);
+                                          });
                                           setState(() {
                                             _exportLogInProgress = false;
                                           });
@@ -667,7 +678,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         descriptionRight: '',
                                         rightWidget: CupertinoSwitch(
                                           onChanged: (val) {
-                                            WampV2().closeAndReconnect();
+                                            WampV2().closeWamp();
                                             HiveSettingsDB.setUseCustomServer(
                                                 val);
                                             setState(() {});

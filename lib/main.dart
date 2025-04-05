@@ -24,12 +24,12 @@ import 'app_settings/globals.dart';
 import 'app_settings/server_connections.dart';
 import 'firebase_options.dart';
 import 'helpers/hive_box/adapter/color_adapter.dart';
+import 'helpers/hive_box/adapter/images_and_links_adapter.dart';
 import 'helpers/hive_box/app_server_config_db.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
 import 'helpers/logger/logger.dart';
 import 'helpers/preferences_helper.dart';
 import 'main.init.dart';
-import 'models/image_and_link.dart';
 
 import 'pages/widgets/startup_widgets/app_root_widget.dart';
 
@@ -56,10 +56,9 @@ void main() async {
       //HomeWidget.registerInteractivityCallback(backgroundCallback);
       await Hive.initFlutter();
       Hive.registerAdapter(ColorAdapter());
+      //needed for old stuff HiveBinaryReader ID 87 (55+32)
       Hive.registerAdapter(ImageAndLinkAdapter());
-      /*await Hive.openBox(hiveBoxSettingDbName);
-      await Hive.openBox(hiveBoxLocationDbName);
-      await Hive.openBox(hiveBoxServerConfigDBName);*/
+      //open hive boxes in app_start
 
       // turn off the # in the URLs on the web
       usePathUrlStrategy();

@@ -277,7 +277,7 @@
   "lastseen": "Zuletzt gesehen",
   "lastupdate": "Letztes Update",
   "later": "Später",
-  "leavewheninuse": "Lasse Einstellung",
+  "leavewheninuse": "Lasse 'Standortfreigabe während Nutzung'",
   "length": "Länge",
   "linkNearBy": "Freund:in neben Dir annehmen",
   "linkOnOtherDevice": "<h3>Wichtige Hinweise!</h3><ul><li>Dein Freund kann via Freund:in mit Code hinzufügen den <br>Code <b>{code}</b> eingeben oder den Barcode mit der Kamera scannen</li><li>Alternativ: Dein Freund muss den gleichen Telefontyp verwenden. Apple zu Android funktioniert nicht.</li><li>Dein Freund muss in max. 2 m Entfernung von Dir sein!</li><li>Bitte bei deinem Freund in der BladeNight!-App den Tab Freunde öffnen lassen.</li><li>Dort Plus oben rechts wählen<span class=\"icon\">plus</span></li><li>Freund:in neben Dir annehmen wählen</li><li>Nun mit diesem Gerät <b><em>{deviceName}</em></b> koppeln.</li></ul>Du kannst deinen übermittelten Namen im Textfeld ändern. Dieser ist nur ausschließlich zum übertragen per Direktverbindung / Scan.",

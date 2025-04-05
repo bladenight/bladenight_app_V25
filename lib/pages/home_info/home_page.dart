@@ -216,19 +216,6 @@ class _HomePageState extends ConsumerState<HomePage>
                           ),
                         //EventInfo(),
                         kIsWeb ? EventInfoWeb() : EventInfo(),
-
-                        Builder(builder: (context) {
-                          var sponsors = ref.watch(sponsorsProvider);
-                          if (sponsors.hasValue && sponsors.value!.isNotEmpty) {
-                            return Center(
-                              child: Text(
-                                Localize.of(context).sponsors,
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            );
-                          }
-                          return Container();
-                        }),
                         SponsorCarousel(),
                       ],
                     ),

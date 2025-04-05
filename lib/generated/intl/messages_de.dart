@@ -558,7 +558,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "leaveAppWarningTitle": MessageLookupByLibrary.simpleMessage(
       "Externen Link öffnen?",
     ),
-    "leavewheninuse": MessageLookupByLibrary.simpleMessage("Lasse Einstellung"),
+    "leavewheninuse": MessageLookupByLibrary.simpleMessage(
+      "Lasse \'Standortfreigabe während Nutzung\'",
+    ),
     "length": MessageLookupByLibrary.simpleMessage("Länge"),
     "linkAsBrowserDevice": m12,
     "linkNearBy": MessageLookupByLibrary.simpleMessage(

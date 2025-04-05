@@ -50,6 +50,7 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
           text: 'ProcessionRoutePointsCount = ${processionRoutePoints.length}');
     }
     //print('${DateTime.now().toIso8601String()} Build Polylines Layer');
+    //Polyline can't be empty
     return PolylineLayer(hitNotifier: hitNotifier, polylines: [
       if (activeEventRoutePoints.isNotEmpty)
         Polyline(
@@ -88,7 +89,8 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
                           Brightness.light
                       ? CupertinoColors.black
                       : part.color),
-      if (ref.watch(showOwnTrackProvider) &&
+      if (locationUpdate.userLatLngList.isNotEmpty &&
+          ref.watch(showOwnTrackProvider) &&
           !ref.watch(showOwnColoredTrackProvider))
         Polyline(
           points: locationUpdate.userLatLngList,

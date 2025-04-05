@@ -35,8 +35,7 @@ class ImageAndLinkList with ImageAndLinkListMappable {
     var wampResult = await WampV2()
         .addToWamp<ImageAndLinkList>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) =>
-            ImageAndLinkList.rpcError(WampException(error.toString())));
+        .catchError((error, stackTrace) => error);
     if (wampResult is Map<String, dynamic>) {
       var ialList =
           MapperContainer.globals.fromMap<ImageAndLinkList>(wampResult);
@@ -50,7 +49,11 @@ class ImageAndLinkList with ImageAndLinkListMappable {
       }
       return wampResult;
     }
-    return ImageAndLinkList.rpcError(WampException('unknown'));
+    if (wampResult is WampException) {
+      return ImageAndLinkList.rpcError(wampResult);
+    }
+    return ImageAndLinkList.rpcError(
+        WampException(WampExceptionReason.unknown));
   }
 
   @override

@@ -80,8 +80,9 @@ mixin KillServerMessageMappable {
 
   KillServerMessageCopyWith<KillServerMessage, KillServerMessage,
           KillServerMessage>
-      get copyWith => _KillServerMessageCopyWithImpl(
-          this as KillServerMessage, $identity, $identity);
+      get copyWith =>
+          _KillServerMessageCopyWithImpl<KillServerMessage, KillServerMessage>(
+              this as KillServerMessage, $identity, $identity);
   @override
   String toString() {
     return KillServerMessageMapper.ensureInitialized()
@@ -104,8 +105,8 @@ mixin KillServerMessageMappable {
 extension KillServerMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, KillServerMessage, $Out> {
   KillServerMessageCopyWith<$R, KillServerMessage, $Out>
-      get $asKillServerMessage =>
-          $base.as((v, t, t2) => _KillServerMessageCopyWithImpl(v, t, t2));
+      get $asKillServerMessage => $base
+          .as((v, t, t2) => _KillServerMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class KillServerMessageCopyWith<$R, $In extends KillServerMessage,
@@ -154,5 +155,5 @@ class _KillServerMessageCopyWithImpl<$R, $Out>
   @override
   KillServerMessageCopyWith<$R2, KillServerMessage, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _KillServerMessageCopyWithImpl($value, $cast, t);
+      _KillServerMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

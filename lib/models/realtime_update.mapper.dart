@@ -121,8 +121,9 @@ mixin RealtimeUpdateMappable {
   }
 
   RealtimeUpdateCopyWith<RealtimeUpdate, RealtimeUpdate, RealtimeUpdate>
-      get copyWith => _RealtimeUpdateCopyWithImpl(
-          this as RealtimeUpdate, $identity, $identity);
+      get copyWith =>
+          _RealtimeUpdateCopyWithImpl<RealtimeUpdate, RealtimeUpdate>(
+              this as RealtimeUpdate, $identity, $identity);
   @override
   String toString() {
     return RealtimeUpdateMapper.ensureInitialized()
@@ -145,7 +146,7 @@ mixin RealtimeUpdateMappable {
 extension RealtimeUpdateValueCopy<$R, $Out>
     on ObjectCopyWith<$R, RealtimeUpdate, $Out> {
   RealtimeUpdateCopyWith<$R, RealtimeUpdate, $Out> get $asRealtimeUpdate =>
-      $base.as((v, t, t2) => _RealtimeUpdateCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _RealtimeUpdateCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class RealtimeUpdateCopyWith<$R, $In extends RealtimeUpdate, $Out>
@@ -237,5 +238,5 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
   @override
   RealtimeUpdateCopyWith<$R2, RealtimeUpdate, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _RealtimeUpdateCopyWithImpl($value, $cast, t);
+      _RealtimeUpdateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

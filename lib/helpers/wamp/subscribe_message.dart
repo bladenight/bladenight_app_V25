@@ -12,7 +12,7 @@ Future<int> subscribeMessage(String topic) async {
   var wampResult = await WampV2()
       .addToWamp<int>(bnWampMessage)
       .timeout(wampTimeout)
-      .catchError((error, stackTrace) => WampException(error.toString()));
+      .catchError((error, stackTrace) => error);
   if (wampResult is WampException) {
     return 0;
   }
@@ -30,7 +30,7 @@ Future<bool> unSubscribeMessage(int subscriptionId) async {
   var wampResult = await WampV2()
       .addToWamp(bnWampMessage)
       .timeout(wampTimeout)
-      .catchError((error, stackTrace) => WampException(error.toString()));
+      .catchError((error, stackTrace) => error);
   if (wampResult is WampException) {
     return false;
   }

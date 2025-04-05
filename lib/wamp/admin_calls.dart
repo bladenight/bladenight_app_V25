@@ -18,7 +18,7 @@ class AdminCalls {
     var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampException(error.toString()));
+        .catchError((error, stackTrace) => error);
     bnWampMessage = null;
     completer = null;
     if (wampResult is WampException || wampResult is TimeoutException) {
@@ -35,7 +35,7 @@ class AdminCalls {
     var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampException(error.toString()));
+        .catchError((error, stackTrace) => error);
     bnWampMessage = null;
     completer = null;
     if (wampResult is WampException || wampResult is TimeoutException) {
@@ -52,9 +52,7 @@ class AdminCalls {
     var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampException(error.toString()));
-    bnWampMessage = null;
-    completer = null;
+        .catchError((error, stackTrace) => error);
     if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
@@ -69,7 +67,7 @@ class AdminCalls {
     var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampException(error.toString()));
+        .catchError((error, stackTrace) => error);
     if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
@@ -84,7 +82,7 @@ class AdminCalls {
     var wampResult = await WampV2()
         .addToWamp(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => WampException(error.toString()));
+        .catchError((error, stackTrace) => error);
     if (wampResult is WampException || wampResult is TimeoutException) {
       return false;
     }
@@ -105,7 +103,7 @@ class AdminCalls {
       var wampResult = await WampV2()
           .addToWamp(bnWampMessage)
           .timeout(wampTimeout)
-          .catchError((error, stackTrace) => {WampException(error.toString())});
+          .catchError((error, stackTrace) => error);
       if (wampResult is String) {
         return wampResult;
       }

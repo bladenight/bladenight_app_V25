@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../app_settings/app_constants.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../models/follow_location_state.dart';
 
@@ -11,7 +12,7 @@ class AlignFlutterMap extends _$AlignFlutterMap {
   @override
   AlignFlutterMapState build() {
     //this makes provider global
-    Hive.box('settings')
+    Hive.box(hiveBoxSettingDbName)
         .watch(key: MapSettings.alignFlutterMap)
         .listen((event) => state = event.value);
     return MapSettings.alignFlutterMap;

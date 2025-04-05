@@ -22,7 +22,7 @@ class ActiveEvent extends _$ActiveEvent {
   @override
   Event build() {
     state = HiveSettingsDB.getActualEvent
-        .copyWith(rpcException: WampException('offline'));
+        .copyWith(rpcException: WampException(WampExceptionReason.offline));
     _evtStream =
         WampV2().eventUpdateStreamController.stream.listen((event) async {
       if (event.nodes == [] && event.status != EventStatus.noevent) {

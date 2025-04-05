@@ -13,7 +13,6 @@ class SpecialFunctionInfo extends ConsumerWidget {
     var isTracking = ref.watch(isTrackingProvider);
     var isProcessionHead = ref.watch(isProcessionHeadProvider);
     var isProcessionTail = ref.watch(isProcessionTailProvider);
-    var wantSeeFullProcession = ref.watch(wantSeeFullProcessionProvider);
 
     return Column(children: [
       if (isTracking && isProcessionHead)
@@ -22,7 +21,7 @@ class SpecialFunctionInfo extends ConsumerWidget {
           children: ([
             Expanded(
               child: SizedBox(
-                height: MediaQuery.textScalerOf(context).scale(25),
+                height: MediaQuery.textScalerOf(context).scale(15),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
                   child: ColoredBox(

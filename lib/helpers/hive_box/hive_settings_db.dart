@@ -62,7 +62,7 @@ class HiveSettingsDB {
     setSessionShortUUID(UUID.createShortUuid());
     //not working here
     //await Hive.initFlutter();
-    //await Hive.openBox('settings');
+    //await Hive.openBox(hiveBoxSettingDbName);
   }
 
   static const String _hasSpecialRightsPref = 'hasSpecialRightsPref';

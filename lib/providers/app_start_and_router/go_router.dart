@@ -417,9 +417,8 @@ GoRouter goRouter(Ref ref) {
                       GoRoute(
                           path: '/intro',
                           name: AppRoute.introScreen.name,
-                          pageBuilder: (context, state) {
-                            return NoTransitionPage(child: IntroScreen());
-                          }),
+                          pageBuilder: (context, state) =>
+                              NoTransitionPage(child: IntroScreen())),
                       GoRoute(
                           path: '/${AppRoute.adminLogin.name}',
                           name: AppRoute.adminLogin.name,

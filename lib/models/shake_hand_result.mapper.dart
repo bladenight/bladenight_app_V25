@@ -73,8 +73,9 @@ mixin ShakeHandResultMappable {
   }
 
   ShakeHandResultCopyWith<ShakeHandResult, ShakeHandResult, ShakeHandResult>
-      get copyWith => _ShakeHandResultCopyWithImpl(
-          this as ShakeHandResult, $identity, $identity);
+      get copyWith =>
+          _ShakeHandResultCopyWithImpl<ShakeHandResult, ShakeHandResult>(
+              this as ShakeHandResult, $identity, $identity);
   @override
   String toString() {
     return ShakeHandResultMapper.ensureInitialized()
@@ -97,7 +98,7 @@ mixin ShakeHandResultMappable {
 extension ShakeHandResultValueCopy<$R, $Out>
     on ObjectCopyWith<$R, ShakeHandResult, $Out> {
   ShakeHandResultCopyWith<$R, ShakeHandResult, $Out> get $asShakeHandResult =>
-      $base.as((v, t, t2) => _ShakeHandResultCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ShakeHandResultCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ShakeHandResultCopyWith<$R, $In extends ShakeHandResult, $Out>
@@ -141,5 +142,5 @@ class _ShakeHandResultCopyWithImpl<$R, $Out>
   @override
   ShakeHandResultCopyWith<$R2, ShakeHandResult, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ShakeHandResultCopyWithImpl($value, $cast, t);
+      _ShakeHandResultCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

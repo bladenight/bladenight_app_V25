@@ -133,7 +133,8 @@ mixin SetProcessionModeMessageMappable {
 
   SetProcessionModeMessageCopyWith<SetProcessionModeMessage,
           SetProcessionModeMessage, SetProcessionModeMessage>
-      get copyWith => _SetProcessionModeMessageCopyWithImpl(
+      get copyWith => _SetProcessionModeMessageCopyWithImpl<
+              SetProcessionModeMessage, SetProcessionModeMessage>(
           this as SetProcessionModeMessage, $identity, $identity);
   @override
   String toString() {
@@ -157,8 +158,8 @@ mixin SetProcessionModeMessageMappable {
 extension SetProcessionModeMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, SetProcessionModeMessage, $Out> {
   SetProcessionModeMessageCopyWith<$R, SetProcessionModeMessage, $Out>
-      get $asSetProcessionModeMessage => $base
-          .as((v, t, t2) => _SetProcessionModeMessageCopyWithImpl(v, t, t2));
+      get $asSetProcessionModeMessage => $base.as((v, t, t2) =>
+          _SetProcessionModeMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class SetProcessionModeMessageCopyWith<
@@ -210,5 +211,5 @@ class _SetProcessionModeMessageCopyWithImpl<$R, $Out>
   @override
   SetProcessionModeMessageCopyWith<$R2, SetProcessionModeMessage, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _SetProcessionModeMessageCopyWithImpl($value, $cast, t);
+          _SetProcessionModeMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

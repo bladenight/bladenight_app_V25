@@ -73,7 +73,8 @@ mixin AdminMessageMappable {
   }
 
   AdminMessageCopyWith<AdminMessage, AdminMessage, AdminMessage> get copyWith =>
-      _AdminMessageCopyWithImpl(this as AdminMessage, $identity, $identity);
+      _AdminMessageCopyWithImpl<AdminMessage, AdminMessage>(
+          this as AdminMessage, $identity, $identity);
   @override
   String toString() {
     return AdminMessageMapper.ensureInitialized()
@@ -96,7 +97,7 @@ mixin AdminMessageMappable {
 extension AdminMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, AdminMessage, $Out> {
   AdminMessageCopyWith<$R, AdminMessage, $Out> get $asAdminMessage =>
-      $base.as((v, t, t2) => _AdminMessageCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _AdminMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class AdminMessageCopyWith<$R, $In extends AdminMessage, $Out>
@@ -131,5 +132,5 @@ class _AdminMessageCopyWithImpl<$R, $Out>
   @override
   AdminMessageCopyWith<$R2, AdminMessage, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _AdminMessageCopyWithImpl($value, $cast, t);
+      _AdminMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

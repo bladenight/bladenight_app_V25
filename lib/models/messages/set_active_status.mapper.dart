@@ -82,7 +82,8 @@ mixin SetActiveStatusMessageMappable {
 
   SetActiveStatusMessageCopyWith<SetActiveStatusMessage, SetActiveStatusMessage,
           SetActiveStatusMessage>
-      get copyWith => _SetActiveStatusMessageCopyWithImpl(
+      get copyWith => _SetActiveStatusMessageCopyWithImpl<
+              SetActiveStatusMessage, SetActiveStatusMessage>(
           this as SetActiveStatusMessage, $identity, $identity);
   @override
   String toString() {
@@ -106,8 +107,8 @@ mixin SetActiveStatusMessageMappable {
 extension SetActiveStatusMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, SetActiveStatusMessage, $Out> {
   SetActiveStatusMessageCopyWith<$R, SetActiveStatusMessage, $Out>
-      get $asSetActiveStatusMessage =>
-          $base.as((v, t, t2) => _SetActiveStatusMessageCopyWithImpl(v, t, t2));
+      get $asSetActiveStatusMessage => $base.as((v, t, t2) =>
+          _SetActiveStatusMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class SetActiveStatusMessageCopyWith<
@@ -159,5 +160,5 @@ class _SetActiveStatusMessageCopyWithImpl<$R, $Out>
   @override
   SetActiveStatusMessageCopyWith<$R2, SetActiveStatusMessage, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _SetActiveStatusMessageCopyWithImpl($value, $cast, t);
+          _SetActiveStatusMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

@@ -40,6 +40,7 @@ struct MapView: View {
         )
         
         let currentRoutePoints = viewModel.activeEvent.toCLLocationCoordinate2D();
+        
         ZStack(alignment: .topLeading){
             
             
@@ -49,12 +50,12 @@ struct MapView: View {
                 ).stroke(Color(hex: 0xFFD700), lineWidth: 2)
                 
                 if(!viewModel.runningRoute.isEmpty){
-                    let first = viewModel.runningRoute.first!;
-                    let last = viewModel.runningRoute.last!;
-                }
+                   
                 MapPolyline(
                     coordinates: viewModel.runningRoute
                 ).stroke(Color(hex: 0x0028FF), lineWidth: 3)
+                }
+                
                 
                 if (currentRoutePoints.isEmpty){
                     Annotation(
@@ -107,11 +108,17 @@ struct MapView: View {
                     }
                 }
                 
+                if (!viewModel.userRoute.isEmpty){
+                    MapPolyline(
+                        coordinates: viewModel.userRoute
+                    ).stroke(Color(hex: 0xFF00FF), lineWidth: 2)
+                }
+                
                 if (
                     viewModel.userlocation != nil && viewModel.userlocation?.locCoordinate.latitude != 0.0
                 ){
                     Annotation(
-                        "Position",
+                        "Me",
                         coordinate: CLLocationCoordinate2D(
                             latitude: viewModel.userlocation!.locCoordinate.latitude,
                             longitude: viewModel.userlocation!.locCoordinate.longitude

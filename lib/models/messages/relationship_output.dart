@@ -37,8 +37,8 @@ class RelationshipOutputMessage with RelationshipOutputMessageMappable {
     var wampResult = await WampV2()
         .addToWamp<RelationshipOutputMessage>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => RelationshipOutputMessage.rpcError(
-            WampException(error.toString())));
+        .catchError(
+            (error, stackTrace) => RelationshipOutputMessage.rpcError(error));
     if (wampResult is Map<String, dynamic>) {
       var update = MapperContainer.globals
           .fromMap<RelationshipOutputMessage>(wampResult);
@@ -50,7 +50,8 @@ class RelationshipOutputMessage with RelationshipOutputMessageMappable {
     if (wampResult is WampException) {
       return RelationshipOutputMessage.rpcError(wampResult);
     }
-    return RelationshipOutputMessage.rpcError(WampException('unknown'));
+    return RelationshipOutputMessage.rpcError(
+        WampException(WampExceptionReason.unknown));
   }
 
   ///Get RelationshipOutputMessage (include RelationshipOutputMessage.rpcError)
@@ -62,8 +63,7 @@ class RelationshipOutputMessage with RelationshipOutputMessageMappable {
     var wampResult = await WampV2()
         .addToWamp<RelationshipOutputMessage>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => RelationshipOutputMessage.rpcError(
-            WampException(error.toString())));
+        .catchError((error, stackTrace) => error);
     if (wampResult is Map<String, dynamic>) {
       var update = MapperContainer.globals
           .fromMap<RelationshipOutputMessage>(wampResult);
@@ -72,6 +72,10 @@ class RelationshipOutputMessage with RelationshipOutputMessageMappable {
     if (wampResult is RelationshipOutputMessage) {
       return wampResult;
     }
-    return RelationshipOutputMessage.rpcError(WampException('unknown'));
+    if (wampResult is WampException) {
+      return RelationshipOutputMessage.rpcError(wampResult);
+    }
+    return RelationshipOutputMessage.rpcError(
+        WampException(WampExceptionReason.unknown));
   }
 }

@@ -62,7 +62,8 @@ mixin RouteNamesMappable {
   }
 
   RouteNamesCopyWith<RouteNames, RouteNames, RouteNames> get copyWith =>
-      _RouteNamesCopyWithImpl(this as RouteNames, $identity, $identity);
+      _RouteNamesCopyWithImpl<RouteNames, RouteNames>(
+          this as RouteNames, $identity, $identity);
   @override
   String toString() {
     return RouteNamesMapper.ensureInitialized()
@@ -84,7 +85,7 @@ mixin RouteNamesMappable {
 extension RouteNamesValueCopy<$R, $Out>
     on ObjectCopyWith<$R, RouteNames, $Out> {
   RouteNamesCopyWith<$R, RouteNames, $Out> get $asRouteNames =>
-      $base.as((v, t, t2) => _RouteNamesCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _RouteNamesCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class RouteNamesCopyWith<$R, $In extends RouteNames, $Out>
@@ -124,5 +125,5 @@ class _RouteNamesCopyWithImpl<$R, $Out>
   @override
   RouteNamesCopyWith<$R2, RouteNames, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _RouteNamesCopyWithImpl($value, $cast, t);
+      _RouteNamesCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

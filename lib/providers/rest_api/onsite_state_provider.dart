@@ -168,13 +168,15 @@ class BladeGuardApiRepository {
             methodName: 'checkBladeguardOnSite');
       }
     } on DioException catch (e) {
-      BnLog.warning(text: e.toString(), methodName: 'checkBladeguardOnSite $e');
+      BnLog.warning(
+          text: 'DioException $e', methodName: 'checkBladeguardOnSite $e');
       if (e.response == null) {
         return ResultBoolOrError(null, e.toString());
       }
       return ResultBoolOrError(null, e.response!.statusCode.toString());
     } catch (e) {
-      BnLog.warning(text: e.toString(), methodName: 'checkBladeguardOnSite');
+      BnLog.warning(
+          text: 'CommonError $e', methodName: 'checkBladeguardOnSite');
     }
     return ResultBoolOrError(null, Localize.current.unknownerror);
   }

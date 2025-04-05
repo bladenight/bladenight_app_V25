@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../app_settings/app_constants.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../models/follow_location_state.dart';
 
@@ -10,7 +11,7 @@ part 'camera_follow_location_provider.g.dart';
 class CameraFollowLocation extends _$CameraFollowLocation {
   @override
   CameraFollow build() {
-    Hive.box('settings')
+    Hive.box(hiveBoxSettingDbName)
         .watch(key: MapSettings.cameraFollowKey)
         .listen((event) => state = CameraFollow.values.firstWhere((element) {
               return event.value == element.index;

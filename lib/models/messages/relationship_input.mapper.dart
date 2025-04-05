@@ -72,7 +72,8 @@ mixin RelationshipInputMessageMappable {
 
   RelationshipInputMessageCopyWith<RelationshipInputMessage,
           RelationshipInputMessage, RelationshipInputMessage>
-      get copyWith => _RelationshipInputMessageCopyWithImpl(
+      get copyWith => _RelationshipInputMessageCopyWithImpl<
+              RelationshipInputMessage, RelationshipInputMessage>(
           this as RelationshipInputMessage, $identity, $identity);
   @override
   String toString() {
@@ -96,8 +97,8 @@ mixin RelationshipInputMessageMappable {
 extension RelationshipInputMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, RelationshipInputMessage, $Out> {
   RelationshipInputMessageCopyWith<$R, RelationshipInputMessage, $Out>
-      get $asRelationshipInputMessage => $base
-          .as((v, t, t2) => _RelationshipInputMessageCopyWithImpl(v, t, t2));
+      get $asRelationshipInputMessage => $base.as((v, t, t2) =>
+          _RelationshipInputMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class RelationshipInputMessageCopyWith<
@@ -134,7 +135,7 @@ class _RelationshipInputMessageCopyWithImpl<$R, $Out>
   @override
   RelationshipInputMessageCopyWith<$R2, RelationshipInputMessage, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _RelationshipInputMessageCopyWithImpl($value, $cast, t);
+          _RelationshipInputMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class GetFriendsListMessageMapper
@@ -201,9 +202,9 @@ mixin GetFriendsListMessageMappable {
   }
 
   GetFriendsListMessageCopyWith<GetFriendsListMessage, GetFriendsListMessage,
-          GetFriendsListMessage>
-      get copyWith => _GetFriendsListMessageCopyWithImpl(
-          this as GetFriendsListMessage, $identity, $identity);
+      GetFriendsListMessage> get copyWith => _GetFriendsListMessageCopyWithImpl<
+          GetFriendsListMessage, GetFriendsListMessage>(
+      this as GetFriendsListMessage, $identity, $identity);
   @override
   String toString() {
     return GetFriendsListMessageMapper.ensureInitialized()
@@ -226,8 +227,8 @@ mixin GetFriendsListMessageMappable {
 extension GetFriendsListMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, GetFriendsListMessage, $Out> {
   GetFriendsListMessageCopyWith<$R, GetFriendsListMessage, $Out>
-      get $asGetFriendsListMessage =>
-          $base.as((v, t, t2) => _GetFriendsListMessageCopyWithImpl(v, t, t2));
+      get $asGetFriendsListMessage => $base.as(
+          (v, t, t2) => _GetFriendsListMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class GetFriendsListMessageCopyWith<
@@ -264,5 +265,5 @@ class _GetFriendsListMessageCopyWithImpl<$R, $Out>
   @override
   GetFriendsListMessageCopyWith<$R2, GetFriendsListMessage, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _GetFriendsListMessageCopyWithImpl($value, $cast, t);
+          _GetFriendsListMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

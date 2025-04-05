@@ -29,8 +29,7 @@ class RouteNames with RouteNamesMappable {
     var wampResult = await WampV2()
         .addToWamp<RouteNames>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => RouteNames(
-            routeNames: [], exception: WampException(error.toString())));
+        .catchError((error, stackTrace) => error);
     if (wampResult is Map<String, dynamic>) {
       var rp = MapperContainer.globals.fromMap<RouteNames>(wampResult);
       return rp;
@@ -38,7 +37,11 @@ class RouteNames with RouteNamesMappable {
     if (wampResult is RouteNames) {
       return wampResult;
     }
-    return RouteNames(routeNames: [], exception: WampException('unknown'));
+    if (wampResult is WampException) {
+      return RouteNames(routeNames: [], exception: wampResult);
+    }
+    return RouteNames(
+        routeNames: [], exception: WampException(WampExceptionReason.unknown));
   }
 
   @override

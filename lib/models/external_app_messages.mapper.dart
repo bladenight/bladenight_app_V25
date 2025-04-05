@@ -59,9 +59,9 @@ mixin ExternalAppMessagesMappable {
   }
 
   ExternalAppMessagesCopyWith<ExternalAppMessages, ExternalAppMessages,
-          ExternalAppMessages>
-      get copyWith => _ExternalAppMessagesCopyWithImpl(
-          this as ExternalAppMessages, $identity, $identity);
+      ExternalAppMessages> get copyWith => _ExternalAppMessagesCopyWithImpl<
+          ExternalAppMessages, ExternalAppMessages>(
+      this as ExternalAppMessages, $identity, $identity);
   @override
   String toString() {
     return ExternalAppMessagesMapper.ensureInitialized()
@@ -84,8 +84,8 @@ mixin ExternalAppMessagesMappable {
 extension ExternalAppMessagesValueCopy<$R, $Out>
     on ObjectCopyWith<$R, ExternalAppMessages, $Out> {
   ExternalAppMessagesCopyWith<$R, ExternalAppMessages, $Out>
-      get $asExternalAppMessages =>
-          $base.as((v, t, t2) => _ExternalAppMessagesCopyWithImpl(v, t, t2));
+      get $asExternalAppMessages => $base.as(
+          (v, t, t2) => _ExternalAppMessagesCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ExternalAppMessagesCopyWith<$R, $In extends ExternalAppMessages,
@@ -125,5 +125,5 @@ class _ExternalAppMessagesCopyWithImpl<$R, $Out>
   @override
   ExternalAppMessagesCopyWith<$R2, ExternalAppMessages, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _ExternalAppMessagesCopyWithImpl($value, $cast, t);
+          _ExternalAppMessagesCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

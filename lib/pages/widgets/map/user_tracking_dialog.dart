@@ -78,43 +78,44 @@ class UserTrackDialog extends ConsumerWidget {
             ),
             children: [
               MapTileLayer(hasSpecialStartPoint: true),
-              GestureDetector(
-                onTap: () {
-                  final LayerHitResult? hitResult = hitNotifier.value;
-                  if (hitResult == null) return;
-                  // If running frequently (such as on a hover handler),
-                  // and heavy work or state changes are performed here,
-                  // store each result so it can be compared to the newest
-                  // result, then avoid work if they are equal
-                  for (final hitValue in hitResult.hitValues) {
-                    if (kDebugMode) {
-                      print(hitValue);
-                    }
-                    showToast(
-                        message: '${Localize.current.speed} $hitValue km/h');
+              if (userGPXPoints.userSpeedPoints.userSpeedPoints.isNotEmpty)
+                GestureDetector(
+                  onTap: () {
+                    final LayerHitResult? hitResult = hitNotifier.value;
+                    if (hitResult == null) return;
+                    // If running frequently (such as on a hover handler),
+                    // and heavy work or state changes are performed here,
+                    // store each result so it can be compared to the newest
+                    // result, then avoid work if they are equal
+                    for (final hitValue in hitResult.hitValues) {
+                      if (kDebugMode) {
+                        print(hitValue);
+                      }
+                      showToast(
+                          message: '${Localize.current.speed} $hitValue km/h');
 
-                    break;
-                  }
-                },
-                child: PolylineLayer(polylines: [
-                  for (var part
-                      in userGPXPoints.userSpeedPoints.userSpeedPoints)
-                    Polyline(
-                        points: part.latLngList,
-                        color: part.color,
-                        strokeWidth: 6,
-                        borderStrokeWidth: 1.0,
-                        useStrokeWidthInMeter: false,
-                        //hitValue: part.realSpeedKmh,
-                        borderColor: CupertinoAdaptiveTheme.of(context)
-                                    .theme
-                                    .brightness ==
-                                Brightness.light
-                            ? CupertinoColors.black
-                            : part.color),
-                  // ref.watch(polyLinesProvider),// widget.polyLines,
-                ]),
-              ),
+                      break;
+                    }
+                  },
+                  child: PolylineLayer(polylines: [
+                    for (var part
+                        in userGPXPoints.userSpeedPoints.userSpeedPoints)
+                      Polyline(
+                          points: part.latLngList,
+                          color: part.color,
+                          strokeWidth: 6,
+                          borderStrokeWidth: 1.0,
+                          useStrokeWidthInMeter: false,
+                          //hitValue: part.realSpeedKmh,
+                          borderColor: CupertinoAdaptiveTheme.of(context)
+                                      .theme
+                                      .brightness ==
+                                  Brightness.light
+                              ? CupertinoColors.black
+                              : part.color),
+                    // ref.watch(polyLinesProvider),// widget.polyLines,
+                  ]),
+                ),
               const Positioned(
                   left: 5,
                   bottom: 5,

@@ -171,13 +171,14 @@ class _TrackingExportState extends ConsumerState<TrackingExportWidget> {
         text: Localize.current.resetTrackPointsStore,
         confirmBtnText: Localize.current.yes,
         cancelBtnText: Localize.current.cancel,
-        onConfirmBtnTap: () {
-          LocationStore.clearTrackPointStore();
+        onConfirmBtnTap: () async {
+          await LocationStore.clearTrackPointStore();
           dateString = '';
           _updateDates();
           setState(() {});
-          if (!context.mounted) return;
-          context.pop();
+          if (mounted && context.canPop()) {
+            context.pop();
+          }
         });
   }
 

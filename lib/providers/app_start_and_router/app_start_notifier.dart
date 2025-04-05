@@ -8,6 +8,7 @@ import 'package:universal_io/io.dart';
 import '../../app_settings/app_constants.dart';
 import '../../helpers/debug_helper.dart';
 import '../../helpers/device_id_helper.dart';
+import '../../helpers/hive_box/adapter/images_and_links_adapter.dart';
 import '../../helpers/logger/logger.dart';
 import '../../main.dart';
 
@@ -33,9 +34,6 @@ class AppStartNotifier extends _$AppStartNotifier {
       await Future.delayed(Duration(seconds: 1));
     }
     //mappers and Hive Adapters must be initialized in main.app
-    //initializeMappers();
-    //Hive.registerAdapter(ColorAdapter());
-    //Hive.registerAdapter(ImageAndLinkAdapter());
     await Hive.openBox(hiveBoxSettingDbName);
     await Hive.openBox(hiveBoxLocationDbName);
     await Hive.openBox(hiveBoxServerConfigDBName);

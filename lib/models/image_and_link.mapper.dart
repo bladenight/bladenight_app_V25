@@ -69,7 +69,8 @@ mixin ImageAndLinkMappable {
   }
 
   ImageAndLinkCopyWith<ImageAndLink, ImageAndLink, ImageAndLink> get copyWith =>
-      _ImageAndLinkCopyWithImpl(this as ImageAndLink, $identity, $identity);
+      _ImageAndLinkCopyWithImpl<ImageAndLink, ImageAndLink>(
+          this as ImageAndLink, $identity, $identity);
   @override
   String toString() {
     return ImageAndLinkMapper.ensureInitialized()
@@ -92,7 +93,7 @@ mixin ImageAndLinkMappable {
 extension ImageAndLinkValueCopy<$R, $Out>
     on ObjectCopyWith<$R, ImageAndLink, $Out> {
   ImageAndLinkCopyWith<$R, ImageAndLink, $Out> get $asImageAndLink =>
-      $base.as((v, t, t2) => _ImageAndLinkCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ImageAndLinkCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ImageAndLinkCopyWith<$R, $In extends ImageAndLink, $Out>
@@ -131,5 +132,5 @@ class _ImageAndLinkCopyWithImpl<$R, $Out>
   @override
   ImageAndLinkCopyWith<$R2, ImageAndLink, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ImageAndLinkCopyWithImpl($value, $cast, t);
+      _ImageAndLinkCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

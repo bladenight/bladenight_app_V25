@@ -80,9 +80,9 @@ mixin SetActiveRouteMessageMappable {
   }
 
   SetActiveRouteMessageCopyWith<SetActiveRouteMessage, SetActiveRouteMessage,
-          SetActiveRouteMessage>
-      get copyWith => _SetActiveRouteMessageCopyWithImpl(
-          this as SetActiveRouteMessage, $identity, $identity);
+      SetActiveRouteMessage> get copyWith => _SetActiveRouteMessageCopyWithImpl<
+          SetActiveRouteMessage, SetActiveRouteMessage>(
+      this as SetActiveRouteMessage, $identity, $identity);
   @override
   String toString() {
     return SetActiveRouteMessageMapper.ensureInitialized()
@@ -105,8 +105,8 @@ mixin SetActiveRouteMessageMappable {
 extension SetActiveRouteMessageValueCopy<$R, $Out>
     on ObjectCopyWith<$R, SetActiveRouteMessage, $Out> {
   SetActiveRouteMessageCopyWith<$R, SetActiveRouteMessage, $Out>
-      get $asSetActiveRouteMessage =>
-          $base.as((v, t, t2) => _SetActiveRouteMessageCopyWithImpl(v, t, t2));
+      get $asSetActiveRouteMessage => $base.as(
+          (v, t, t2) => _SetActiveRouteMessageCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class SetActiveRouteMessageCopyWith<
@@ -157,5 +157,5 @@ class _SetActiveRouteMessageCopyWithImpl<$R, $Out>
   @override
   SetActiveRouteMessageCopyWith<$R2, SetActiveRouteMessage, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _SetActiveRouteMessageCopyWithImpl($value, $cast, t);
+          _SetActiveRouteMessageCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

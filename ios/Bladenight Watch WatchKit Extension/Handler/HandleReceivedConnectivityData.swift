@@ -80,7 +80,7 @@ extension CommunicationHandler{
                     if jsonString == nil {break;}
                     
                     else{
-                        self.message += (jsonString ?? "--")
+                        //self.message += (jsonString ?? "--")
                         let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: false) ?? Data()
                         let  data = try decoder.decode(WatchEvent.self, from: bytes)
                         self.activeEvent = data
@@ -128,6 +128,7 @@ extension CommunicationHandler{
                         else{
                             self.locations[0] = self.userlocation!
                         }
+                        self.userRoute.append(self.userlocation!.locCoordinate)
                         NSLog ("updateUserLocationData locations received \(self.locations)")
                         
                     }
@@ -143,7 +144,7 @@ extension CommunicationHandler{
                     let decoder=JSONDecoder();
                     if jsonString == nil {break;}
                     else{
-                        self.message += (jsonString ?? "--")
+                        //self.message += (jsonString ?? "--")
                         let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: true) ?? Data()
                         let  rtData = try decoder.decode(RealtimeUpdate.self, from: bytes)
                         self.realTimeData = rtData
@@ -182,7 +183,7 @@ extension CommunicationHandler{
                 }
                 catch {
                     NSLog("fatalerror updateRealtimeData \(error)")
-                    self.message+="error rtup"+error.localizedDescription
+                    self.message+="error rtup:"+error.localizedDescription
                 }
                 break
             case .updateFriends:
@@ -192,7 +193,7 @@ extension CommunicationHandler{
                     if jsonString == nil {break;}
                     else{
                         let decoder=JSONDecoder();
-                        self.message += (jsonString ?? "--")
+                        //self.message += (jsonString ?? "--")
                         let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: false) ?? Data()
                         let  data = try decoder.decode([Friend].self, from: bytes)
                         //self.message += "\nfriends decoded"
@@ -216,7 +217,7 @@ extension CommunicationHandler{
                     let decoder=JSONDecoder();
                     if jsonString == nil {break;}
                     else{
-                        self.message += (jsonString ?? "--")
+                        //self.message += (jsonString ?? "--")
                         let bytes: Data = jsonString?.data(using: .utf8, allowLossyConversion: false) ?? Data()
                         let  rPoints = try decoder.decode(
                             RoutePoints.self,

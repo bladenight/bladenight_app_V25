@@ -94,7 +94,8 @@ mixin LocationInfoMappable {
   }
 
   LocationInfoCopyWith<LocationInfo, LocationInfo, LocationInfo> get copyWith =>
-      _LocationInfoCopyWithImpl(this as LocationInfo, $identity, $identity);
+      _LocationInfoCopyWithImpl<LocationInfo, LocationInfo>(
+          this as LocationInfo, $identity, $identity);
   @override
   String toString() {
     return LocationInfoMapper.ensureInitialized()
@@ -117,7 +118,7 @@ mixin LocationInfoMappable {
 extension LocationInfoValueCopy<$R, $Out>
     on ObjectCopyWith<$R, LocationInfo, $Out> {
   LocationInfoCopyWith<$R, LocationInfo, $Out> get $asLocationInfo =>
-      $base.as((v, t, t2) => _LocationInfoCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _LocationInfoCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class LocationInfoCopyWith<$R, $In extends LocationInfo, $Out>
@@ -177,5 +178,5 @@ class _LocationInfoCopyWithImpl<$R, $Out>
   @override
   LocationInfoCopyWith<$R2, LocationInfo, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _LocationInfoCopyWithImpl($value, $cast, t);
+      _LocationInfoCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

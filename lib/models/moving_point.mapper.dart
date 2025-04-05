@@ -98,7 +98,8 @@ mixin MovingPointMappable {
   }
 
   MovingPointCopyWith<MovingPoint, MovingPoint, MovingPoint> get copyWith =>
-      _MovingPointCopyWithImpl(this as MovingPoint, $identity, $identity);
+      _MovingPointCopyWithImpl<MovingPoint, MovingPoint>(
+          this as MovingPoint, $identity, $identity);
   @override
   String toString() {
     return MovingPointMapper.ensureInitialized()
@@ -120,7 +121,7 @@ mixin MovingPointMappable {
 extension MovingPointValueCopy<$R, $Out>
     on ObjectCopyWith<$R, MovingPoint, $Out> {
   MovingPointCopyWith<$R, MovingPoint, $Out> get $asMovingPoint =>
-      $base.as((v, t, t2) => _MovingPointCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _MovingPointCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class MovingPointCopyWith<$R, $In extends MovingPoint, $Out>
@@ -183,5 +184,5 @@ class _MovingPointCopyWithImpl<$R, $Out>
   @override
   MovingPointCopyWith<$R2, MovingPoint, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _MovingPointCopyWithImpl($value, $cast, t);
+      _MovingPointCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

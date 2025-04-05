@@ -66,8 +66,7 @@ class RoutePoints with RoutePointsMappable {
     var wampResult = await WampV2()
         .addToWamp<RoutePoints>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) =>
-            RoutePoints('error', [], WampException(error.toString())));
+        .catchError((error, stackTrace) => error);
     if (wampResult is Map<String, dynamic>) {
       var rp = MapperContainer.globals.fromMap<RoutePoints>(wampResult);
       HiveSettingsDB.setRoutePointsString(MapperContainer.globals.toJson(rp));
@@ -76,7 +75,10 @@ class RoutePoints with RoutePointsMappable {
     if (wampResult is RoutePoints) {
       return wampResult;
     }
-    return RoutePoints.rpcError(WampException('unknown'));
+    if (wampResult is WampException) {
+      return RoutePoints.rpcError(wampResult);
+    }
+    return RoutePoints.rpcError(WampException(WampExceptionReason.unknown));
   }
 
   static Future<RoutePoints> getActiveRoutePointsByNameWamp(String name) async {
@@ -86,8 +88,7 @@ class RoutePoints with RoutePointsMappable {
     var wampResult = await WampV2()
         .addToWamp<RoutePoints>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) =>
-            RoutePoints(name, [], WampException(error.toString())));
+        .catchError((error, stackTrace) => error);
     if (wampResult is Map<String, dynamic>) {
       var rp = MapperContainer.globals.fromMap<RoutePoints>(wampResult);
       return rp;
@@ -95,7 +96,10 @@ class RoutePoints with RoutePointsMappable {
     if (wampResult is RoutePoints) {
       return wampResult;
     }
-    return RoutePoints.rpcError(WampException('unknown'));
+    if (wampResult is WampException) {
+      return RoutePoints.rpcError(wampResult);
+    }
+    return RoutePoints.rpcError(WampException(WampExceptionReason.unknown));
   }
 
   @override

@@ -106,7 +106,12 @@ void importData(BuildContext context, String dataString) async {
           await PreferencesHelper.saveFriendsToPrefsAsync(friends);
           ProviderContainer().refresh(friendsProvider);
           ProviderContainer().read(friendsLogicProvider).reloadFriends();
-          if (!context.mounted) return;
+          if (context.mounted &&
+              Navigator.of(context, rootNavigator: true).canPop()) {
+            Navigator.of(context, rootNavigator: true);
+          } else {
+            return;
+          }
           await QuickAlert.show(
             context: context,
             showCancelBtn: false,
@@ -114,13 +119,17 @@ void importData(BuildContext context, String dataString) async {
             title:
                 '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
           );
-          if (!context.mounted ||
-              !Navigator.of(context, rootNavigator: true).canPop()) {
+          if (context.mounted &&
+              Navigator.of(context, rootNavigator: true).canPop()) {
+            Navigator.of(context, rootNavigator: true);
             return;
           }
-          Navigator.pop(context);
         });
     if (res == false) {
+      if (context.mounted &&
+          Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true);
+      }
       return;
     }
   } catch (e) {

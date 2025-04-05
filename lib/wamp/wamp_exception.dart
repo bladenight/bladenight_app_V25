@@ -1,21 +1,25 @@
-// ignore_for_file: overridden_fields
+enum WampExceptionReason {
+  unknown,
+  timeout,
+  timeout10sec,
+  timeout60sec,
+  outdated,
+  wampStopped,
+  connectionError,
+  offline,
+  wampMessageError
+}
 
-import 'dart:async';
+class WampException implements Exception {
+  /// Description of the cause.
 
-class WampException extends TimeoutException implements Exception {
-  /// Description of the cause .
-  @override
-  final String? message;
+  final String message;
+  final WampExceptionReason reason;
 
-  WampException(this.message) : super('');
+  WampException(this.reason, {this.message = ''});
 
   @override
   String toString() {
-    String result = '';
-    if (duration != null) result = 'TimeoutException after $duration';
-    if (message != null) result = message!;
-    return result;
+    return 'WampException Reason: ${reason.name} Message: $message';
   }
 }
-
-enum WampExceptionMessageType { wampStopped, timeout10sec, connectionError }

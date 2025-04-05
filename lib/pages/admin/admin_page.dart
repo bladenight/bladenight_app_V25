@@ -121,36 +121,6 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                 height: 1,
               ),
               const ConnectionWarning(),
-              /* SizedTintedCupertinoButton(
-                child: Text(Localize.of(context).setState),
-                onPressed: () async {
-                  var status = await showEventStatusDialog(
-                    context,
-                    current: ref.read(activeEventProvider).status,
-                  );
-
-                  if (status != null) {
-                    try {
-                      setState(() => _activityVisible = true);
-                      await AdminCalls.setActiveStatus(
-                        SetActiveStatusMessage.authenticate(
-                          status: status,
-                          deviceId: DeviceId.appId,
-                          password: password,
-                        ).toMap(),
-                      );
-                    } catch (e) {
-                      BnLog.error(
-                          text: 'SetActiveStatusMessage failed', exception: e);
-                    }
-                    setState(() => _activityVisible = false);
-                    Future.delayed(const Duration(seconds: 1), () {
-                      ref.read(activeEventProvider.notifier).refresh();
-                      ref.read(currentRouteProvider);
-                    });
-                  }
-                },
-              ),*/
               const SizedBox(height: 15),
               Visibility(
                 visible: _resultTextVisibility,
@@ -165,70 +135,6 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                     var _ = await EventEditor.show(context, event);
                   }),
               const SizedBox(height: 15),
-              /*SizedTintedCupertinoButton(
-                child: Text(Localize.of(context).setRoute),
-                onPressed: () async {
-                  var route = await RouteNameSelector.showRouteNameDialog(
-                    context,
-                    ref.read(currentRouteProvider).value?.name ?? '',
-                  );
-
-                  if (route != null && route.isNotEmpty) {
-                    try {
-                      setState(() => _activityVisible = true);
-                      await AdminCalls.setActiveStatus(
-                        SetActiveStatusMessage.authenticate(
-                          status: EventStatus.cancelled,
-                          deviceId: DeviceId.appId,
-                          password: password,
-                        ).toMap(),
-                      );
-                      await Future.delayed(const Duration(milliseconds: 500));
-                      await AdminCalls.setActiveRoute(
-                        SetActiveRouteMessage.authenticate(
-                          route: route,
-                          deviceId: DeviceId.appId,
-                          password: password,
-                        ).toMap(),
-                      );
-                      await Future.delayed(const Duration(milliseconds: 1000));
-                      await AdminCalls.setActiveStatus(
-                        SetActiveStatusMessage.authenticate(
-                          status: EventStatus.confirmed,
-                          deviceId: DeviceId.appId,
-                          password: password,
-                        ).toMap(),
-                      );
-                    } catch (e) {
-                      if (!kIsWeb) {
-                        BnLog.error(
-                            text: 'Error set route',
-                            className: toString(),
-                            methodName: 'Admin page setRoute');
-                      }
-                    }
-                    setState(() => _activityVisible = false);
-                    setState(
-                        () => _resultText = Localize.of(context).sendData30sec);
-                    setState(() => _resultTextVisibility = true);
-                    await Future.delayed(const Duration(seconds: 2));
-                    setState(() => _resultTextVisibility = false);
-                    var routeRes = ref.read(currentRouteProvider);
-                    var eventRes = ref.read(activeEventProvider);
-                    if (!kIsWeb) {
-                      BnLog.info(
-                          text: 'Admin set route $routeRes,event $eventRes');
-                    }
-                  } else {
-                    setState(() =>
-                        _resultText = Localize.of(context).noChoiceNoAction);
-                    setState(() => _resultTextVisibility = true);
-                    await Future.delayed(const Duration(seconds: 2));
-                    setState(() => _resultTextVisibility = false);
-                  }
-                },
-              ),
-              const SizedBox(height: 15),*/ //
               SizedTintedCupertinoButton(
                 child: const Text('ProcessionMode'),
                 onPressed: () async {
@@ -301,6 +207,15 @@ class _AdminPageState extends ConsumerState<AdminPage> {
                 },
               ),
               SizedBox(height: 15 + MediaQuery.of(context).padding.bottom),
+              SizedTintedCupertinoButton(
+                child: Text('Ausloggen'),
+                onPressed: () async {
+                  ref.read(adminPwdProvider.notifier).removePassword();
+                  if (context.canPop()) {
+                    context.pop();
+                  }
+                },
+              ),
             ],
           ),
         ),

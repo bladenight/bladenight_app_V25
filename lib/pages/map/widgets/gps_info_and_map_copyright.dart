@@ -47,6 +47,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initListeners();
   }
 
@@ -101,6 +102,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
   @override
   void dispose() {
     _stopListeners();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 

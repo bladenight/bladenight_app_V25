@@ -28,14 +28,16 @@ class FriendsMessage with FriendsMessageMappable {
     var wampResult = await WampV2()
         .addToWamp<FriendsMessage>(bnWampMessage)
         .timeout(wampTimeout)
-        .catchError((error, stackTrace) => FriendsMessage(
-            <String, FriendMessage>{}, WampException(error.toString())));
+        .catchError((error, stackTrace) => error);
     if (wampResult is Map<String, dynamic>) {
       var value = MapperContainer.globals.fromMap<FriendsMessage>(wampResult);
       return value;
     }
     if (wampResult is FriendsMessage) {
       return wampResult;
+    }
+    if (wampResult is WampException) {
+      return FriendsMessage(<String, FriendMessage>{});
     }
     return FriendsMessage(<String, FriendMessage>{});
   }

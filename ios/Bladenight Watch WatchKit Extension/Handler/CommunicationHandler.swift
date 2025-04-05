@@ -51,6 +51,7 @@ class CommunicationHandler: NSObject, ObservableObject {
         longitude: 11.543837661522703
     )
     @Published var runningRoute:[CLLocationCoordinate2D]=[CLLocationCoordinate2D]()
+    @Published var userRoute:[CLLocationCoordinate2D]=[CLLocationCoordinate2D]()
 
 
     //Receive Methods from flutter flutterToWatch method aka -> sendmessage

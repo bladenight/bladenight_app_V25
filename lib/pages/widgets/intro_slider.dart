@@ -9,8 +9,6 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 
 class IntroScreen extends StatefulWidget {
-  static const String introScreenRouteName = '/intro';
-
   const IntroScreen({super.key});
 
   @override
@@ -181,15 +179,20 @@ class IntroScreenState extends State<IntroScreen> {
 
   void _onDonePress() {
     HiveSettingsDB.setHasShownIntro(true);
-    context.goNamed(AppRoute.home.name);
-    //context.pushNamed(HomeScreen.routeName);
+    if (context.canPop()) {
+      context.pop();
+    }
+
+    if (Navigator.of(context, rootNavigator: true).canPop()) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+    //context.goNamed(AppRoute.home.name);
   }
 
   void _onTabChangeCompleted(index) {
     //will called when next tab changed
     if (slides.length == index + 1) {
-      HiveSettingsDB.setHasShownIntro(true);
-      context.goNamed(AppRoute.home.name);
+      _onDonePress();
     }
   }
 
@@ -199,7 +202,7 @@ class IntroScreenState extends State<IntroScreen> {
   }
 
   Widget _renderDoneBtn() {
-    return Text(Localize.current.start);
+    return Text(Localize.current.ok);
   }
 
   Widget _renderSkipBtn() {
@@ -217,28 +220,31 @@ class IntroScreenState extends State<IntroScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return IntroSlider(
-      listContentConfig: slides,
-      indicatorConfig: const IndicatorConfig(isShowIndicator: false),
-      renderSkipBtn: _renderSkipBtn(),
-      renderNextBtn: _renderNextBtn(),
-      renderDoneBtn: _renderDoneBtn(),
-      isPauseAutoPlayOnTouch: true,
-      navigationBarConfig: NavigationBarConfig(
-          padding: const EdgeInsets.all(30),
-          navPosition:
-              Platform.isAndroid ? NavPosition.bottom : NavPosition.bottom,
-          backgroundColor:
-              CupertinoTheme.of(context).scaffoldBackgroundColor.withAlpha(20)),
-      autoScrollInterval: const Duration(seconds: 8),
-      onDonePress: _onDonePress,
-      backgroundColorAllTabs:
-          CupertinoTheme.of(context).scaffoldBackgroundColor,
-      refFuncGoToTab: (refFunc) {
-        goToTab = refFunc;
-      },
-      onTabChangeCompleted: _onTabChangeCompleted,
-      onSkipPress: _onDonePress,
+    return CupertinoPageScaffold(
+      child: IntroSlider(
+        listContentConfig: slides,
+        indicatorConfig: const IndicatorConfig(isShowIndicator: false),
+        renderSkipBtn: _renderSkipBtn(),
+        renderNextBtn: _renderNextBtn(),
+        renderDoneBtn: _renderDoneBtn(),
+        isPauseAutoPlayOnTouch: true,
+        navigationBarConfig: NavigationBarConfig(
+            padding: const EdgeInsets.all(30),
+            navPosition:
+                Platform.isAndroid ? NavPosition.bottom : NavPosition.bottom,
+            backgroundColor: CupertinoTheme.of(context)
+                .scaffoldBackgroundColor
+                .withAlpha(20)),
+        autoScrollInterval: const Duration(seconds: 8),
+        onDonePress: _onDonePress,
+        backgroundColorAllTabs:
+            CupertinoTheme.of(context).scaffoldBackgroundColor,
+        refFuncGoToTab: (refFunc) {
+          goToTab = refFunc;
+        },
+        onTabChangeCompleted: _onTabChangeCompleted,
+        onSkipPress: _onDonePress,
+      ),
     );
   }
 }

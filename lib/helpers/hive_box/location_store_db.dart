@@ -83,8 +83,8 @@ extension LocationStore on HiveSettingsDB {
   }
 
   ///helper to clear tp store
-  static void clearTrackPointStore() {
-    HiveSettingsDB._locationHiveBox.clear();
+  static Future clearTrackPointStore() async {
+    await HiveSettingsDB._locationHiveBox.clear();
     setUserTrackPointsLastUpdate(DateTime.now());
   }
 
