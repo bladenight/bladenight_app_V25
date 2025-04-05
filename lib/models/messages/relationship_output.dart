@@ -50,6 +50,9 @@ class RelationshipOutputMessage with RelationshipOutputMessageMappable {
     if (wampResult is WampException) {
       return RelationshipOutputMessage.rpcError(wampResult);
     }
+    if (wampResult is TimeoutException) {
+      return RelationshipOutputMessage.rpcError(wampResult);
+    }
     return RelationshipOutputMessage.rpcError(
         WampException(WampExceptionReason.unknown));
   }
@@ -73,6 +76,9 @@ class RelationshipOutputMessage with RelationshipOutputMessageMappable {
       return wampResult;
     }
     if (wampResult is WampException) {
+      return RelationshipOutputMessage.rpcError(wampResult);
+    }
+    if (wampResult is TimeoutException) {
       return RelationshipOutputMessage.rpcError(wampResult);
     }
     return RelationshipOutputMessage.rpcError(

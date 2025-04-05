@@ -22,7 +22,7 @@ class BayernAtlasCopyright extends StatelessWidget {
                 child: Text(
                   '© Datenquellen: Bayerische Vermessungsverwaltung, GeoBasis-DE / BKG 2023 – Daten verändert',
                   style: TextStyle(
-                      fontSize: fontSize == null ? 12 : fontSize * 0.8),
+                      fontSize: fontSize == null ? 10 : fontSize * 0.8),
                   textAlign: TextAlign.right,
                 ),
               ),
@@ -33,12 +33,16 @@ class BayernAtlasCopyright extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Launch.launchUrlFromString(
-                    'https://www.bkg.bund.de/DE/Home/home.html',
-                    'Bundesamt für Kartographie und Geodäsie ');
+                    'https://www.ldbv.bayern.de',
+                    '© Datenquellen: Bayerische Vermessungsverwaltung,'
+                        ' GeoBasis-DE / BKG 2023 – Daten verändert - '
+                        'Bayernatlas Landesamt für Digitalisierung, '
+                        'Breitband und Vermessung');
               },
               child: const Text(
-                '© Datenquellen: Bayerische Vermessungsverwaltung, GeoBasis-DE / BKG 2023 – Daten verändert',
-                style: TextStyle(fontSize: 10),
+                '© Datenquellen: Bayerische Vermessungsverwaltung, '
+                'GeoBasis-DE / BKG 2023 – Daten verändert',
+                style: TextStyle(fontSize: 8),
                 textAlign: TextAlign.center,
               ),
             ),

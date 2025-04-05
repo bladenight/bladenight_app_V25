@@ -162,12 +162,12 @@ class HiveSettingsDB {
 
   ///get loglevel FLog
   static LogLevel get loggerLogLevel {
-    var levelIndex =
-        _hiveBox.get(_loggerLogLevelKey, defaultValue: LogLevel.info.index);
-    return LogLevel.values[levelIndex];
+    var levelIndex = _hiveBox.get(_loggerLogLevelKey,
+        defaultValue: logLevelPriorityList.indexOf(LogLevel.info));
+    return logLevelPriorityList[levelIndex];
   }
 
-  ///set loglevel
+  ///set loglevel from [logLevelPriorityList]
   static void setLoggerLogLevel(LogLevel level) {
     if (!kIsWeb) BnLog.info(text: 'setFlogLevel to ${level.index}');
     _hiveBox.put(_loggerLogLevelKey, level.index);

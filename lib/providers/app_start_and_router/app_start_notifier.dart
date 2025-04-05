@@ -41,12 +41,12 @@ class AppStartNotifier extends _$AppStartNotifier {
     debugPrintTime('initLogger');
     await initLogger();
     initSettings();
-    debugPrintTime('init FMTC');
+
     if (!kIsWeb && !fMTCInitialized) {
       await FMTCObjectBoxBackend().initialise();
       fMTCInitialized = true;
+      await FMTCStore(fmtcTileStoreName).manage.create();
     }
-    await FMTCStore(fmtcTileStoreName).manage.create();
 
     if (Platform.isAndroid) {
       ///TODO fix bgfetch

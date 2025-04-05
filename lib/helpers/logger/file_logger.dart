@@ -99,13 +99,13 @@ class FileLogger {
     return Future.value(true);
   }
 
-  Future<bool> clearLogs() async {
+  Future<bool> clearLogsOlderDuration(int days) async {
     try {
       _lock.synchronized(timeout: Duration(milliseconds: 2000), () async {
         var logFiles = await _collectLogFiles();
         for (var logFile in logFiles) {
           var file = File(logFile.path);
-          if (wantDeleteFile(file)) {
+          if (wantDeleteFile(file, days)) {
             try {
               await file.delete();
             } catch (e) {
@@ -118,20 +118,20 @@ class FileLogger {
     return Future.value(true);
   }
 
-  bool wantDeleteFile(File file) {
+  bool wantDeleteFile(File file, int days) {
     try {
       final filename = path.basenameWithoutExtension(file.path);
       var date = DateTime.tryParse((filename.split('_'))[0]);
       if (date != null) {
-        return wantsDeleteFromDateTime(date);
+        return wantsDeleteFromDateTime(date, days);
       }
     } catch (_) {}
     return true;
   }
 
-  bool wantsDeleteFromDateTime(DateTime created) {
+  bool wantsDeleteFromDateTime(DateTime created, int days) {
     final diff = DateTime.now().difference(created);
-    return diff.inDays > 8;
+    return diff.inDays > days;
   }
 
   @visibleForTesting

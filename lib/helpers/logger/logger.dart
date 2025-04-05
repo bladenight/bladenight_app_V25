@@ -33,8 +33,7 @@ class BnLog {
   }
 
   static Future<bool?> clearOlderLogs() async {
-    return fileLogger
-        ?.wantsDeleteFromDateTime(DateTime.now().subtract(Duration(days: 15)));
+    return fileLogger?.wantsDeleteFromDateTime(DateTime.now(), 8);
   }
 
   static Future<Directory> _getLogDir() async {
@@ -120,8 +119,9 @@ class BnLog {
     required String text,
     String? dataLogType,
   }) async {
-    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.warning))
+    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.warning)) {
       return;
+    }
     var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}';
@@ -171,7 +171,6 @@ class BnLog {
     String? dataLogType,
     StackTrace? stacktrace,
   }) async {
-    //critical 0 // info 3 verbose 5
     if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.error)) return;
     var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
@@ -182,15 +181,15 @@ class BnLog {
     fileLogger?.output(logText, LogLevel.error.name, flush: true);
   }
 
-  /// fatal
+  /// critical
   ///
-  /// Logs 'String' data along with class & function name to hourly based file
+  /// Logs 'String' data along with class & function name to file
   /// with formatted timestamps.
   ///
   /// @param className    the class name
-  /// @param methodName the method name
+  /// @param methodName   the method name
   /// @param text         the text
-  static void fatal({
+  static void critical({
     String? className,
     String? methodName,
     required String text,
@@ -205,7 +204,7 @@ class BnLog {
         '${exception != null ? '\nex:${exception.toString()}' : ""}'
         '${stacktrace != null ? '\nex:$stacktrace' : ""}';
     _talkerLogger.critical(logText);
-    fileLogger?.output(logText, LogLevel.critical.name);
+    fileLogger?.output(logText, LogLevel.critical.name, flush: true);
   }
 
   static Future<List<FileSystemEntity>> collectLogFiles() async {
@@ -225,19 +224,18 @@ class BnLog {
   ///Clean up log file and delete data's older than a week
   void cleanupLog() async {
     try {
-      await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
+      await BnLog.cleanUpLogsByFilter(8);
     } catch (e) {
       BnLog.warning(text: 'Error clearing logs');
     }
   }
 
-  ///
-  /// endTimeInMillis
-  static Future<bool> cleanUpLogsByFilter(Duration deleteOlderThan) async {
-    if (!await init()) {
+  /// clear logfiles
+  static Future<bool> cleanUpLogsByFilter(int deleteOlderThanDays) async {
+    if (!await init() || fileLogger == null) {
       return Future.value(true);
     }
-
+    fileLogger?.clearLogsOlderDuration(deleteOlderThanDays);
     return Future.value(true);
   }
 
@@ -245,6 +243,7 @@ class BnLog {
     return HiveSettingsDB.loggerLogLevel;
   }
 
+  //store Loglevel in database
   static void setActiveLogLevel(LogLevel logLevel) async {
     _logLevel = logLevel;
     _talkerLogger.info('Loglevel changed to ${logLevel.name}');

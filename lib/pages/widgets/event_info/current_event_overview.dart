@@ -18,18 +18,11 @@ class _CurrentEventOverview extends ConsumerState<CurrentEventOverview>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   final double _borderRadius = 15;
   late final AnimationController _animationController;
-  late final Animation<double> _animation;
 
   @override
   void initState() {
     _animationController = AnimationController(
         duration: const Duration(milliseconds: 10000), vsync: this);
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0, 1.0, curve: Curves.fastOutSlowIn),
-      ),
-    );
     _animationController.repeat();
     super.initState();
   }

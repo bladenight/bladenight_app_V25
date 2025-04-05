@@ -1,5 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -41,9 +42,11 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
           return Stack(children: [
             MapLayerOverview(
               interactionOptions: const InteractionOptions(
-                flags: InteractiveFlag.pinchZoom |
-                    InteractiveFlag.pinchMove |
-                    InteractiveFlag.doubleTapDragZoom,
+                flags: kIsWeb
+                    ? InteractiveFlag.all
+                    : InteractiveFlag.pinchZoom |
+                        InteractiveFlag.pinchMove |
+                        InteractiveFlag.doubleTapDragZoom,
                 enableMultiFingerGestureRace: false,
               ),
               event: widget.nextEvent,

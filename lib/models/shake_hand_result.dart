@@ -64,6 +64,10 @@ class ShakeHandResult with ShakeHandResultMappable {
       return ShakeHandResult(
           status: true, minBuild: 1, rpcException: wampResult);
     }
+    if (wampResult is TimeoutException) {
+      return ShakeHandResult(
+          status: true, minBuild: 1, rpcException: wampResult);
+    }
     return ShakeHandResult(
         status: true,
         minBuild: 1,

@@ -39,6 +39,9 @@ class FriendsMessage with FriendsMessageMappable {
     if (wampResult is WampException) {
       return FriendsMessage(<String, FriendMessage>{});
     }
+    if (wampResult is TimeoutException) {
+      return FriendsMessage(<String, FriendMessage>{});
+    }
     return FriendsMessage(<String, FriendMessage>{});
   }
 }

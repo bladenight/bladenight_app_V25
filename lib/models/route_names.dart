@@ -40,6 +40,9 @@ class RouteNames with RouteNamesMappable {
     if (wampResult is WampException) {
       return RouteNames(routeNames: [], exception: wampResult);
     }
+    if (wampResult is TimeoutException) {
+      return RouteNames(routeNames: [], exception: wampResult);
+    }
     return RouteNames(
         routeNames: [], exception: WampException(WampExceptionReason.unknown));
   }

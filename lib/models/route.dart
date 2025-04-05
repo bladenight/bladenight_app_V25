@@ -78,6 +78,9 @@ class RoutePoints with RoutePointsMappable {
     if (wampResult is WampException) {
       return RoutePoints.rpcError(wampResult);
     }
+    if (wampResult is TimeoutException) {
+      return RoutePoints.rpcError(wampResult);
+    }
     return RoutePoints.rpcError(WampException(WampExceptionReason.unknown));
   }
 
@@ -97,6 +100,9 @@ class RoutePoints with RoutePointsMappable {
       return wampResult;
     }
     if (wampResult is WampException) {
+      return RoutePoints.rpcError(wampResult);
+    }
+    if (wampResult is TimeoutException) {
       return RoutePoints.rpcError(wampResult);
     }
     return RoutePoints.rpcError(WampException(WampExceptionReason.unknown));

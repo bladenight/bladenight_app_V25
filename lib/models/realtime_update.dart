@@ -219,6 +219,9 @@ class RealtimeUpdate with RealtimeUpdateMappable {
       if (wampResult is WampException) {
         return RealtimeUpdate.rpcError(wampResult);
       }
+      if (wampResult is TimeoutException) {
+        return RealtimeUpdate.rpcError(wampResult);
+      }
       return RealtimeUpdate.rpcError(
           WampException(WampExceptionReason.unknown));
     } catch (e) {

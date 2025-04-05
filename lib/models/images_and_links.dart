@@ -52,6 +52,9 @@ class ImageAndLinkList with ImageAndLinkListMappable {
     if (wampResult is WampException) {
       return ImageAndLinkList.rpcError(wampResult);
     }
+    if (wampResult is TimeoutException) {
+      return ImageAndLinkList.rpcError(wampResult);
+    }
     return ImageAndLinkList.rpcError(
         WampException(WampExceptionReason.unknown));
   }

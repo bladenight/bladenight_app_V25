@@ -341,6 +341,9 @@ class Event with EventMappable implements Comparable {
     if (wampResult is WampException) {
       return Event.rpcError(wampResult);
     }
+    if (wampResult is TimeoutException) {
+      return Event.rpcError(wampResult);
+    }
     return Event.rpcError(WampException(WampExceptionReason.unknown));
   }
 }
@@ -379,6 +382,9 @@ class Events with EventsMappable {
       return wampResult;
     }
     if (wampResult is WampException) {
+      return Events.rpcError(wampResult);
+    }
+    if (wampResult is TimeoutException) {
       return Events.rpcError(wampResult);
     }
     return Events.rpcError(WampException(WampExceptionReason.unknown));

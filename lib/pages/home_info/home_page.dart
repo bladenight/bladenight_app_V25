@@ -28,6 +28,7 @@ import '../widgets/sponsors.dart';
 import 'event_info.dart';
 import 'event_info_web.dart';
 
+///Opened by home_screen
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -93,7 +94,7 @@ class _HomePageState extends ConsumerState<HomePage>
   void resumeUpdates({bool force = false}) async {
     BnLog.verbose(
         className: toString(),
-        methodName: 'pauseUpdates',
+        methodName: 'resumeUpdates',
         text: 'update resumed');
     if (force || _firstRefresh) {
       LocationProvider().refreshRealtimeData(forceUpdate: force);
@@ -112,27 +113,23 @@ class _HomePageState extends ConsumerState<HomePage>
 
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(messagesLogicProvider).updateServerMessages();
-    });
     super.initState();
-
-    //_initURIHandler();
-    //_incomingLinkHandler();
+    WidgetsBinding.instance.addObserver(this);
     initWatchFlutterChannel();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!kIsWeb) {
         await FMTCStore(fmtcTileStoreName).manage.create();
-
-        _openIntroScreenFirstTime();
-        _openBladeguardRequestFirstTime();
-        initOneSignal();
-        await _initNotifications();
+        Future.microtask(() async {
+          initOneSignal();
+          await _initNotifications();
+          ref.read(messagesLogicProvider).updateServerMessages();
+          await BnLog.cleanUpLogsByFilter(8);
+        });
+        await _openIntroScreenFirstTime();
+        await _openBladeguardRequestFirstTime();
       }
       _initImages();
-      await BnLog.cleanUpLogsByFilter(const Duration(days: 8));
     });
   }
 
@@ -227,24 +224,24 @@ class _HomePageState extends ConsumerState<HomePage>
     );
   }
 
-  static int _initimgCount = 0;
+  static int _initImgCount = 0;
 
   void _initImages() async {
     var imagesLoaded = false;
     if (mounted) {
       imagesLoaded = await ref.refresh(updateImagesAndLinksProvider.future);
     }
-    _initimgCount++;
-    if (!imagesLoaded && _initimgCount < 5) {
+    _initImgCount++;
+    if (!imagesLoaded && _initImgCount < 5) {
       await Future.delayed(const Duration(seconds: 5));
       _initImages();
     } else {
-      _initimgCount = 0;
+      _initImgCount = 0;
       return;
     }
   }
 
-  void _openIntroScreenFirstTime() async {
+  Future _openIntroScreenFirstTime() async {
     if (!kIsWeb && !HiveSettingsDB.hasShownIntro) {
       BnLog.info(
           className: 'home_screen',
@@ -256,7 +253,7 @@ class _HomePageState extends ConsumerState<HomePage>
     }
   }
 
-  void _openBladeguardRequestFirstTime() async {
+  Future _openBladeguardRequestFirstTime() async {
     if (!kIsWeb && !HiveSettingsDB.hasShownBladeGuard) {
       BnLog.info(
           className: 'home_screen',
