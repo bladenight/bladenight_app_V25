@@ -26,6 +26,7 @@ import 'widgets/markers_layer.dart';
 import 'widgets/bn_map_page_poly_lines_layer.dart';
 import 'widgets/map_overlays/track_progress_overlay.dart';
 
+///Page Widget Map
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
 

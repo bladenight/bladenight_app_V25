@@ -19,10 +19,8 @@ import '../models/realtime_update.dart';
 import '../models/shake_hand_result.dart';
 import 'bn_wamp_message.dart';
 import 'http_overrides.dart';
-import 'multiple_request_exception.dart';
 import 'wamp_exception.dart';
 
-///TODO add keepalive with on error reopen
 enum WampConnectionState {
   unknown,
   connecting,
@@ -104,6 +102,9 @@ class WampV2 {
 
   StreamSubscription<BnWampMessage>? _wampCallStreamListener;
 
+  DateTime _lastPutMessage = DateTime.now();
+  DateTime _lastWampStreamLifeSign = DateTime.now();
+
   void _init() {
     BnLog.info(text: 'Wamp init', methodName: '_init', className: toString());
     if (!kIsWeb) {}
@@ -111,6 +112,10 @@ class WampV2 {
   }
 
   Future<WampConnectionState> _initWamp({bool force = false}) async {
+    BnLog.verbose(
+        text: '_initWamp state $wampConnectionState',
+        methodName: 'startWamp',
+        className: toString());
     if (_wampStopped && !force) WampConnectionState.disconnected;
     if (wampConnectionState == WampConnectionState.connecting) {
       await Future.delayed(Duration(milliseconds: 500));
@@ -138,7 +143,7 @@ class WampV2 {
     if (startResult == false) {
       return wampConnectionState;
     }
-    BnLog.debug(
+    BnLog.verbose(
         text: 'Wamp start result $startResult',
         methodName: '_initWamp',
         className: toString());
@@ -155,105 +160,121 @@ class WampV2 {
   }
 
   Future<WampConnectionState> refresh() async {
-    BnLog.info(
-        text: 'Wamp refresh after offline - will initWamp',
+    BnLog.debug(
+        text: 'Wamp refresh called state $wampConnectionState - will _initWamp',
         methodName: 'refresh',
         className: toString());
     return _initWamp();
   }
 
-  var addLock = Lock();
-
-  ///called from App and put to queue
-  Future addToWamp<T>(BnWampMessage message) async {
-    //addLock.synchronized(() async
-    //{
-    if (!_wampStopped) {
-      var connStatus = await startWamp();
-      if (connStatus != WampConnectionState.connected) {
-        BnLog.debug(
-            text: 'Wamp not online after startWamp()',
-            methodName: 'addToWamp',
-            className: toString());
-      }
-      _put(message);
-      return message.completer.future;
-    } else {
-      return message.completer.complete(
-          WampException(WampExceptionMessageType.connectionError.toString()));
-    }
-    //});
-  }
-
-  void closeAndReconnect() async {
+  void closeWamp() async {
     _closeStream();
-    /*await _lock.synchronized(() async {
-      await _initWamp();
-    });*/
+    _resetWampState();
   }
 
   ///called by [LocationProvider] in [LocationProvider.setToBackground] method
   Future<WampConnectionState> startWamp() async {
+    BnLog.verbose(
+        text: 'startWamp', methodName: 'startWamp', className: toString());
     _wampStopped = false;
     _wampCallStreamListener?.cancel();
     _wampCallStreamController?.close();
     _wampCallStreamController = null;
     _wampCallStreamController = StreamController<BnWampMessage>();
-    var connState = await _initWamp();
-    if (connState == WampConnectionState.connected) {
-      _runner();
-    }
-    return connState;
+    return _connLoop();
   }
 
   ///called by [LocationProvider] in [LocationProvider.setToBackground] method
   void stopWamp() {
+    BnLog.verbose(
+        text: 'stopWamp', methodName: 'stopWamp', className: toString());
+
     _wampStopped = true;
     _wampCallStreamListener?.cancel();
     _wampCallStreamController?.close();
     _wampCallStreamController = null;
     _closeStream();
-    _liveCycleTimer?.cancel();
-    _liveCycleTimer = null;
+    _resetWampState();
+    /*_liveCycleTimer?.cancel();
+    _liveCycleTimer = null;*/
   }
+
+  var shakeHandsLock = Lock();
 
   Future<void> _shakeHands() async {
     if (_startShakeHands == true) {
       return;
     }
-    if (_hadShakeHands == false) {
-      _startShakeHands = true;
-      var shkRes = await ShakeHandResult.shakeHandsWamp();
-      _startShakeHands = false;
+    shakeHandsLock
+        .synchronized(() async {
+          if (_hadShakeHands == false) {
+            _startShakeHands = true;
+            var shkRes = await ShakeHandResult.shakeHandsWamp();
+            _startShakeHands = false;
 
-      if (shkRes.rpcException != null) {
-        _startShakeHandsRetryCounter++;
-        BnLog.warning(
-            text: 'shakeHands failed',
-            methodName: '_shakeHands',
-            className: toString());
-        if (_startShakeHandsRetryCounter <= 3) {
-          await Future.delayed(const Duration(seconds: 20));
-          _shakeHands();
-        } else {
-          BnLog.warning(
-              text: 'shakeHands failed after 3 attempts ${shkRes.rpcException}',
-              methodName: '_shakeHands',
-              className: toString());
-        }
-        return;
-      } else {
-        BnLog.info(
-            text: 'shakeHands = ${shkRes.status}, minBuild:${shkRes.minBuild}',
-            methodName: '_shakeHands',
-            className: toString());
-        _startShakeHandsRetryCounter = 0;
-        _hadShakeHands = true;
-        shakeHandAppOutdatedResult = shkRes;
-        HiveSettingsDB.setAppOutDated(!shkRes.status);
-        HiveSettingsDB.setServerVersion(shkRes.serverVersion);
-      }
+            if (shkRes.rpcException != null) {
+              _startShakeHandsRetryCounter++;
+              BnLog.verbose(
+                  text: 'shakeHands failed retry$_startShakeHandsRetryCounter',
+                  methodName: '_shakeHands',
+                  className: toString());
+              if (_startShakeHandsRetryCounter <= 3) {
+                await Future.delayed(const Duration(seconds: 3));
+                BnLog.verbose(
+                    text:
+                        'shakeHands failed retry$_startShakeHandsRetryCounter',
+                    methodName: '_shakeHands',
+                    className: toString());
+
+                _shakeHands();
+              } else {
+                BnLog.warning(
+                    text:
+                        'shakeHands failed after 3 attempts ${shkRes.rpcException}  wait 15 secs',
+                    methodName: '_shakeHands',
+                    className: toString());
+                _startShakeHandsRetryCounter = 0;
+              }
+              return;
+            } else {
+              BnLog.info(
+                  text:
+                      'shakeHands = ${shkRes.status}, minBuild:${shkRes.minBuild}',
+                  methodName: '_shakeHands',
+                  className: toString());
+              _startShakeHandsRetryCounter = 0;
+              _hadShakeHands = true;
+              shakeHandAppOutdatedResult = shkRes;
+              HiveSettingsDB.setAppOutDated(!shkRes.status);
+              HiveSettingsDB.setServerVersion(shkRes.serverVersion);
+            }
+          }
+        })
+        .timeout(Duration(seconds: 5))
+        .catchError((error) {
+          BnLog.warning(text: 'Shakehands not successfully $error');
+        });
+  }
+
+  ///called from App and put to queue
+  Future addToWamp<T>(BnWampMessage message) async {
+    //addLock.synchronized(() async
+    //{
+    //if (!_wampStopped){ //removed wamp stop TODO avoid wamp traffic if not necessary
+    var connStatus = await startWamp();
+    if (connStatus != WampConnectionState.connected) {
+      BnLog.debug(
+          text: 'Wamp not online after startWamp()',
+          methodName: 'addToWamp',
+          className: toString());
     }
+    _put(message);
+    return message.completer.future;
+    /*} else {
+      return message.completer
+          .complete(WampException(WampExceptionReason.wampStopped));
+    }*/
+    //});
   }
 
   ///Put messages to queue
@@ -272,8 +293,8 @@ class WampV2 {
     }
     for (var call in outdatedCalls.entries) {
       if (!call.value.completer.isCompleted) {
-        call.value.completer.complete(MultipleRequestException(
-            'multiple request for ${call.value.endpoint}'));
+        call.value.completer
+            .completeError(WampException(WampExceptionReason.outdated));
         calls.remove(call.key);
       }
     }
@@ -286,24 +307,52 @@ class WampV2 {
           className: toString());
     }
     _wampCallStreamController?.sink.add(message);
+    _lastPutMessage = DateTime.now();
   }
 
-  /*void _connLoop() async {
+  Future<WampConnectionState> _connLoop() async {
     _liveCycleTimer?.cancel();
     _liveCycleTimer =
-        Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
-      while (wampConnectionState != WampConnectionState.connected) {
-        if (_isConnectedToInternet == false) {
-          await Future.delayed(const Duration(milliseconds: 250));
-          continue;
-        }
-        if (!_wampStopped) {
-          BnLog.debug(text: 'initWamp by _connLoop');
-          var _ = await _initWamp();
-        }
+        Timer.periodic(const Duration(milliseconds: 10000), (timer) async {
+      var diffLastPutMessage = DateTime.now().difference(_lastPutMessage);
+      if (diffLastPutMessage.inMinutes > 3) {
+        BnLog.info(
+            text:
+                'no new Messages since ${_lastPutMessage.toIso8601String()} / ${diffLastPutMessage.inSeconds}  stop wamp by _connLoop');
+        stopWamp();
+        return;
+      }
+
+      var diffWampLastLifeSign =
+          DateTime.now().difference(_lastWampStreamLifeSign);
+      if (diffWampLastLifeSign.inMinutes > 2) {
+        BnLog.info(
+            text:
+                'Close wamp by _connLoop. LastLifeSign = ${_lastWampStreamLifeSign.toIso8601String()} ');
+        closeWamp();
+      }
+
+      while (wampConnectionState != WampConnectionState.connected &&
+          !_wampStopped) {
+        BnLog.debug(text: 'initWamp by _connLoop');
+        _connectToWamp();
       }
     });
-  }*/
+
+    return _connectToWamp();
+  }
+
+  Future<WampConnectionState> _connectToWamp() async {
+    var connState = await _initWamp();
+    BnLog.verbose(
+        text: 'startWamp connState = $connState',
+        methodName: 'startWamp',
+        className: toString());
+    if (connState == WampConnectionState.connected) {
+      _runner();
+    }
+    return connState;
+  }
 
   ///loop to add messages to wamp and request results
   ///clears outdated messages
@@ -317,12 +366,6 @@ class WampV2 {
       runZonedGuarded(() async {
         queue.add(message);
 
-        while (wampConnectionState != WampConnectionState.connected) {
-          // if (_liveCycleTimer != null && !_liveCycleTimer!.isActive) {
-          var _ = await _initWamp(); //_connLoop();
-          // }
-          await Future.delayed(const Duration(milliseconds: 500));
-        }
         if (DateTime.now().difference(_busyTimeStamp) >
             const Duration(milliseconds: 1000)) {
           busy = false;
@@ -339,8 +382,8 @@ class WampV2 {
             var timeDiff = DateTime.now().difference(nextMessage.dateTime);
             if (timeDiff > const Duration(seconds: 10)) {
               if (!message.completer.isCompleted) {
-                message.completer.completeError(WampException(
-                    'WampV2 message completed sent within 10 secs'));
+                message.completer.completeError(
+                    WampException(WampExceptionReason.timeout10sec));
               }
               calls.remove(message.requestId);
               busy = true;
@@ -373,10 +416,10 @@ class WampV2 {
       _channel = WebSocketChannel.connect(
         Uri.parse(url), //connect to a websocket
       );
-      //await channel?.ready.timeout(const Duration(seconds: 1));
       var welcomeCompleter = Completer();
       _channel!.stream.listen(
         (event) async {
+          _lastWampStreamLifeSign = DateTime.now();
           var wampMessage = json.decode(event) as List;
           var requestId = 0;
           if (wampMessage.length >= 2) {
@@ -430,7 +473,9 @@ class WampV2 {
             requestId = int.parse(strId);
             var cpl = calls[requestId]?.completer;
             if (cpl != null && !cpl.isCompleted) {
-              cpl.completeError(WampException(wampMessage[3]));
+              cpl.completeError(WampException(
+                  WampExceptionReason.wampMessageError,
+                  message: wampMessage[3]));
             }
             calls.remove(wampMessage[2]);
             strId = '';
@@ -573,11 +618,12 @@ class WampV2 {
       _channel!.sink.close();
       _channel = null;
     }
-    _resetWampState();
   }
 
+  ///Reset wamp so it can reconnect - close stream before
   void _resetWampState() {
     _lastConnectionStatus = false;
+    _wampStopped = false;
     _wampConnectedStreamController.sink.add(WampConnectedState.disconnected);
     wampConnectionState = WampConnectionState.disconnected;
     _hadShakeHands = false;

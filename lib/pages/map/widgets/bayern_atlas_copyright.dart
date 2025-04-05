@@ -14,9 +14,8 @@ class BayernAtlasCopyright extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: GestureDetector(
               onTap: () {
-                Launch.launchUrlFromString(
-                    'https://www.bkg.bund.de/DE/Home/home.html',
-                    'Bundesamt für Kartographie und Geodäsie');
+                Launch.launchUrlFromString('https://www.ldbv.bayern.de',
+                    '© Datenquellen: Bayerische Vermessungsverwaltung, GeoBasis-DE / BKG 2023 – Daten verändert - Bayernatlas Landesamt für Digitalisierung, Breitband und Vermessung');
               },
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),

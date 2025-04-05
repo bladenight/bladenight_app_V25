@@ -17,7 +17,7 @@ import 'map_marker_popup.dart';
 import 'map_tile_layer.dart';
 import 'special_points_layer.dart';
 
-//map layer class for routes
+///Map layer widget for route details
 class MapLayer extends StatefulWidget {
   const MapLayer({
     required this.event,

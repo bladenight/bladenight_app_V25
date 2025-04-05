@@ -1658,17 +1658,14 @@ class LocationProvider with ChangeNotifier {
       _userGpxPoints.clear();
       _userSpeedPoints.clear();
       _userLatLngList.clear();
-
       //Triggers start location service
       var odoResetResult =
           await bg.BackgroundGeolocation.setOdometer(0.0).then((value) {
         _odometer = value.odometer;
+        LocationStore.clearTrackPointStoreForDate(DateTime.now());
         notifyListeners();
-        //LocationStore.clearTrackPointStoreForDate(DateTime.now());
       }).catchError((error) {
-        if (!kIsWeb) {
-          BnLog.error(text: 'Reset trackPoint] ERROR: $error');
-        }
+        BnLog.error(text: 'Reset trackPoint] ERROR: $error');
         return null;
       });
 
@@ -1679,18 +1676,12 @@ class LocationProvider with ChangeNotifier {
             bgGeoLocState.enabled ? trackingType : TrackingType.noTracking;
         notifyListeners();
       }
-
       return odoResetResult == null ? false : true;
     } catch (e) {
       BnLog.error(
           text: 'Error on resetTrackPoints ${e.toString()}', exception: e);
-
       return false;
     }
-  }
-
-  Future<void> resetTrackPointsStore() async {
-    LocationStore.clearTrackPointStore();
   }
 
   Future resetOdoMeterAndRoutePoints(BuildContext context) async {
@@ -1714,11 +1705,11 @@ class LocationProvider with ChangeNotifier {
           confirmBtnText: Localize.current.ok,
           cancelBtnText: Localize.current.cancel,
           onConfirmBtnTap: () async {
+            await resetTrackPoints();
+            notifyListeners();
             if (context.mounted && context.canPop()) {
               context.pop();
             }
-            await resetTrackPoints();
-            notifyListeners();
           });
     }
   }
