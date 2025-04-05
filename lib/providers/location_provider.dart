@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:geolocator/geolocator.dart' as geolocator;
-import 'package:go_router/go_router.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +8,8 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:go_router/go_router.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:universal_io/io.dart';
 import 'package:vector_math/vector_math.dart' show radians;
@@ -20,8 +20,8 @@ import '../app_settings/app_constants.dart';
 import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/average_list.dart';
-import '../helpers/device_info_helper.dart';
 import '../helpers/device_id_helper.dart';
+import '../helpers/device_info_helper.dart';
 import '../helpers/distance_converter.dart';
 import '../helpers/double_helper.dart';
 import '../helpers/enums/tracking_type.dart';
@@ -31,7 +31,7 @@ import '../helpers/location_permission_dialogs.dart';
 import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/speed_to_color.dart';
-import '../helpers/uuid_helper.dart';
+import '../helpers/time_converter_helper.dart';
 import '../helpers/wamp/subscribe_message.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
@@ -40,10 +40,9 @@ import '../models/geofence_point.dart' as gfp;
 import '../models/location.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
+import '../models/user_gpx_point.dart';
 import '../models/user_location_point.dart';
 import '../models/user_speed_point.dart';
-import '../models/user_gpx_point.dart';
-import '../wamp/multiple_request_exception.dart';
 import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 import 'active_event_provider.dart';
@@ -89,7 +88,10 @@ class LocationProvider with ChangeNotifier {
   DateTime? _userReachedFinishDateTime, _startedTrackingTime;
   Timer? _updateRealtimedataIfTrackingTimer,
       _saveLocationsTimer,
-      _startTrackingCheckTimer;
+      _startTrackingCheckTimer,
+
+      ///Timer to reset speed and user location if no new data
+      _noLocationCheckTimer;
 
   bool _autoTrackingStarted = false;
   String _lastRouteName = '';
@@ -237,6 +239,8 @@ class LocationProvider with ChangeNotifier {
 
   late geolocator.LocationSettings locationSettings;
 
+  DateTime? _lastLocationTimeStamp;
+
   static bool _showOwnTrack = false;
   static bool _showOwnColoredTrack = false;
   static int _polylineTrackPointsAmount = 300;
@@ -251,6 +255,7 @@ class LocationProvider with ChangeNotifier {
     _wampConnectedSubscription?.cancel();
     _userLocationMarkerPositionStreamController.close();
     _userLocationMarkerHeadingStreamController.close();
+    _noLocationCheckTimer?.cancel();
     _startTrackingCheckTimer?.cancel();
     _saveLocationsTimer?.cancel();
     _updateRealtimedataIfTrackingTimer?.cancel();
@@ -452,6 +457,7 @@ class LocationProvider with ChangeNotifier {
     BnLog.verbose(
         text:
             '_onLocation ${location.coords} battery: ${location.battery.level}%');
+    _lastLocationTimeStamp = DateTime.now();
     updateUserLocation(location);
     if (location.battery.level != -1) {
       checkWakeLock(location.battery.level, location.battery.isCharging);
@@ -536,88 +542,90 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<bool> updateUserLocationTrack(bg.Location location) {
-    int maxSize = _polylineTrackPointsAmount;
-    if (_showOwnTrack && !_showOwnColoredTrack) {
-      if (_userGpxPoints.length > maxSize) {
-        var smallTrackPointList = <LatLng>[];
-        var divider = _userGpxPoints.length ~/ maxSize;
+    return Future.microtask(() {
+      int maxSize = _polylineTrackPointsAmount;
+      if (_showOwnTrack && !_showOwnColoredTrack) {
+        if (_userGpxPoints.length > maxSize) {
+          var smallTrackPointList = <LatLng>[];
+          var divider = _userGpxPoints.length ~/ maxSize;
 
-        for (var counter = 0; counter < _userGpxPoints.length - divider;) {
-          smallTrackPointList.add(LatLng(_userGpxPoints[counter].latitude,
-              _userGpxPoints[counter].longitude));
-          counter = counter + divider.toInt();
-        }
-        //avoid jumping of tracking if list is large
-        //var lastUserGpxPoints = _userGpxPoints.last;
-        var last5 = _userGpxPoints.reversed.take(5).toList();
-        for (var i = last5.length - 1; i < 0; i--) {
-          smallTrackPointList
-              .add(LatLng(last5[i].latitude, last5[i].longitude));
-        }
-        _userLatLngList.clear();
-        _userLatLngList.addAll(smallTrackPointList);
-        last5.clear();
-      } else {
-        _userLatLngList
-            .add(LatLng(location.coords.latitude, location.coords.longitude));
-      }
-    } else if (_showOwnTrack && _showOwnColoredTrack) {
-      if (_userSpeedPoints.latLngList.isEmpty) {
-        //first point
-        UserSpeedPoint userSpeedPoint = UserSpeedPoint(
-          location.coords.latitude.toShortenedDouble(6),
-          location.coords.longitude.toShortenedDouble(6),
-          _realUserSpeedKmh!,
-          LatLng(location.coords.latitude.toShortenedDouble(6),
-              location.coords.longitude.toShortenedDouble(6)),
-        );
-        _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
-      } else if (_userGpxPoints.length > maxSize) {
-        //decrease numbers of poly lines
-        var smallTrackPointList = UserSpeedPoints([]);
-        var divider = _userGpxPoints.length ~/ maxSize;
-        LatLng? lastLatLng;
-        for (var counter = 0; counter < _userGpxPoints.length - divider;) {
-          if (counter == 0) {
-            //no followed polylinePoint first line has same endpoint
-            smallTrackPointList.add(
-                _userGpxPoints[counter].latitude,
-                _userGpxPoints[counter].longitude,
-                _userGpxPoints[counter].realSpeedKmh,
-                _userGpxPoints[counter].latLng);
-            lastLatLng = _userGpxPoints[counter].latLng;
-          } else {
-            smallTrackPointList.add(
-                _userGpxPoints[counter].latitude,
-                _userGpxPoints[counter].longitude,
-                _userGpxPoints[counter].realSpeedKmh,
-                lastLatLng!);
-            lastLatLng = _userGpxPoints[counter].latLng;
+          for (var counter = 0; counter < _userGpxPoints.length - divider;) {
+            smallTrackPointList.add(LatLng(_userGpxPoints[counter].latitude,
+                _userGpxPoints[counter].longitude));
+            counter = counter + divider.toInt();
           }
-          counter = counter + divider.toInt();
+          //avoid jumping of tracking if list is large
+          //var lastUserGpxPoints = _userGpxPoints.last;
+          var last5 = _userGpxPoints.reversed.take(5).toList();
+          for (var i = last5.length - 1; i < 0; i--) {
+            smallTrackPointList
+                .add(LatLng(last5[i].latitude, last5[i].longitude));
+          }
+          _userLatLngList.clear();
+          _userLatLngList.addAll(smallTrackPointList);
+          last5.clear();
+        } else {
+          _userLatLngList
+              .add(LatLng(location.coords.latitude, location.coords.longitude));
         }
-        //avoid jumping of tracking if list is large
-        //changed to add only last single point to list
-        var last5 = _userGpxPoints.reversed.take(6).toList();
-        for (var i = last5.length - 2; i < 0; i--) {
-          smallTrackPointList.add(last5[i].latitude, last5[i].longitude,
-              last5[i].realSpeedKmh, last5[i + 1].latLng);
+      } else if (_showOwnTrack && _showOwnColoredTrack) {
+        if (_userSpeedPoints.latLngList.isEmpty) {
+          //first point
+          UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+            location.coords.latitude.toShortenedDouble(6),
+            location.coords.longitude.toShortenedDouble(6),
+            _realUserSpeedKmh!,
+            LatLng(location.coords.latitude.toShortenedDouble(6),
+                location.coords.longitude.toShortenedDouble(6)),
+          );
+          _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+        } else if (_userGpxPoints.length > maxSize) {
+          //decrease numbers of poly lines
+          var smallTrackPointList = UserSpeedPoints([]);
+          var divider = _userGpxPoints.length ~/ maxSize;
+          LatLng? lastLatLng;
+          for (var counter = 0; counter < _userGpxPoints.length - divider;) {
+            if (counter == 0) {
+              //no followed polylinePoint first line has same endpoint
+              smallTrackPointList.add(
+                  _userGpxPoints[counter].latitude,
+                  _userGpxPoints[counter].longitude,
+                  _userGpxPoints[counter].realSpeedKmh,
+                  _userGpxPoints[counter].latLng);
+              lastLatLng = _userGpxPoints[counter].latLng;
+            } else {
+              smallTrackPointList.add(
+                  _userGpxPoints[counter].latitude,
+                  _userGpxPoints[counter].longitude,
+                  _userGpxPoints[counter].realSpeedKmh,
+                  lastLatLng!);
+              lastLatLng = _userGpxPoints[counter].latLng;
+            }
+            counter = counter + divider.toInt();
+          }
+          //avoid jumping of tracking if list is large
+          //changed to add only last single point to list
+          var last5 = _userGpxPoints.reversed.take(6).toList();
+          for (var i = last5.length - 2; i < 0; i--) {
+            smallTrackPointList.add(last5[i].latitude, last5[i].longitude,
+                last5[i].realSpeedKmh, last5[i + 1].latLng);
+          }
+          _userSpeedPoints.clear();
+          _userSpeedPoints.userSpeedPoints
+              .addAll(smallTrackPointList.userSpeedPoints);
+          last5.clear();
+        } else {
+          UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+            location.coords.latitude,
+            location.coords.longitude,
+            _realUserSpeedKmh!,
+            _userSpeedPoints.lastSpeedPointLatLng,
+          );
+          _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
         }
-        _userSpeedPoints.clear();
-        _userSpeedPoints.userSpeedPoints
-            .addAll(smallTrackPointList.userSpeedPoints);
-        last5.clear();
-      } else {
-        UserSpeedPoint userSpeedPoint = UserSpeedPoint(
-          location.coords.latitude,
-          location.coords.longitude,
-          _realUserSpeedKmh!,
-          _userSpeedPoints.lastSpeedPointLatLng,
-        );
-        _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
       }
-    }
-    return Future.value(true);
+      return Future.value(true);
+    });
   }
 
   void _onLocationError(bg.LocationError error) {
@@ -772,6 +780,7 @@ class LocationProvider with ChangeNotifier {
     _realUserSpeedKmh = null;
     _userLatLng = null;
     _trackingType = TrackingType.noTracking;
+    _stopNoLocationUpdateTimer();
     //reset autostart
     //avoid second autostart on an event , reset after end
     var activeEventData = ProviderContainer().read(activeEventProvider);
@@ -1012,7 +1021,7 @@ class LocationProvider with ChangeNotifier {
       }
       //set user track points
       _initUserTrackStore();
-
+      _startNoLocationUpdateTimer();
       if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
         await WakelockPlus.enable();
       }
@@ -1187,6 +1196,37 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
+  void _stopNoLocationUpdateTimer() {
+    _noLocationCheckTimer?.cancel();
+  }
+
+  ///Start timer to autostart tracking on event start every minute
+  void _startNoLocationUpdateTimer() {
+    BnLog.verbose(text: 'init checkLocationUpdateTimer');
+    _noLocationCheckTimer?.cancel();
+    _noLocationCheckTimer = Timer.periodic(
+      const Duration(seconds: 60),
+      (timer) async {
+        if (_lastKnownPoint == null || _lastLocationTimeStamp == null) {
+          _resetLocation();
+        } else {
+          var lastLocationTimeStampDiff =
+              DateTime.now().difference(_lastLocationTimeStamp!);
+          if (lastLocationTimeStampDiff > Duration(seconds: 60)) {
+            _resetLocation();
+          }
+        }
+      },
+    );
+  }
+
+  void _resetLocation() {
+    SendToWatch.updateUserLocationData(
+        UserLocationPoint.userLocationPointEmpty());
+    _realUserSpeedKmh = 0.0;
+    _lastKnownPoint = null;
+  }
+
   ///Start timer to autostart tracking on event start every minute
   void _autoStartTrackingUpdateTimer() {
     BnLog.verbose(text: 'init startTrackingUpdateTimer');
@@ -1358,23 +1398,7 @@ class LocationProvider with ChangeNotifier {
       //print('${DateTime.now().toIso8601String()} lower $defaultRealtimeUpdateInterval ms rt update');
       return;
     }
-    if (!WampV2().webSocketIsConnected &&
-        timeDiff < const Duration(seconds: 60)) {
-      BnLog.verbose(
-          text:
-              '${timeDiff.inSeconds} s not online. Last update : $lastRealtimedataUpdate',
-          methodName: 'refreshRealtimeData',
-          className: toString());
-      _realtimeUpdate = _realtimeUpdate?.copyWith(
-          rpcException: WampException(WampExceptionReason.timeout60sec));
-      // notifyListeners();
-    } else if (!WampV2().webSocketIsConnected) {
-      BnLog.verbose(
-          text:
-              '${timeDiff.inSeconds}s not connected. Last refresh: $lastRealtimedataUpdate',
-          methodName: 'noTrackingRealtimedataRefresh',
-          className: toString());
-    }
+
     bg.Location? locData;
 
     if (_trackingType == TrackingType.userNotParticipating ||
@@ -1387,18 +1411,7 @@ class LocationProvider with ChangeNotifier {
       _lastSendLocationToServerRequest = dtNow;
       _getRealtimeDataWithLocation(locData);
     } else {
-      var id = UUID.createShortUuid();
-      if (kDebugMode) {
-        BnLog.verbose(
-            text:
-                '${DateTime.now().toIso8601String()} lprov_1219_getrealtimedata $id');
-      }
       await _getRealtimeData();
-      if (kDebugMode) {
-        BnLog.verbose(
-            text:
-                '${DateTime.now().toIso8601String()} lprov_1219_getrealtimedata fin $id');
-      }
     }
   }
 
@@ -1421,6 +1434,7 @@ class LocationProvider with ChangeNotifier {
     return _lastKnownPoint;
   }
 
+  ///only called if no subscription
   Future<void> _getRealtimeData() async {
     try {
       //update procession when no location data were sent
@@ -1446,19 +1460,15 @@ class LocationProvider with ChangeNotifier {
         }
         return;
       }
-      if (update.rpcException != null &&
-          update.rpcException is MultipleRequestException) {
-        return;
-      }
 
       _setRealtimeUpdate(update, notify: !_isInBackground);
       _maxFails = 3;
 
       if (_lastKnownPoint == null) {
         _realUserSpeedKmh = null;
-        SendToWatch.updateUserLocationData(
-            UserLocationPoint.userLocationPointEmpty());
-        if (!kIsWeb) _updateWatchData();
+        if (!kIsWeb) {
+          _updateWatchData();
+        }
       }
       if (!_isInBackground) {
         notifyListeners();
@@ -1621,6 +1631,16 @@ class LocationProvider with ChangeNotifier {
   void _updateWatchData() {
     try {
       if (kIsWeb) return;
+      if (_lastKnownPoint == null) {
+        SendToWatch.updateUserLocationData(
+            UserLocationPoint.userLocationPointEmpty());
+      } else {
+        var userLoc = UserLocationPoint(
+            latitude: _lastKnownPoint!.coords.latitude.toShortenedDouble(6),
+            longitude: _lastKnownPoint!.coords.longitude.toShortenedDouble(6),
+            speed: '${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
+        SendToWatch.updateUserLocationData(userLoc);
+      }
       SendToWatch.setIsLocationTracking(isTracking);
       if (_realtimeUpdate != null && _realtimeUpdate!.rpcException == null) {
         SendToWatch.updateRealtimeData(_realtimeUpdate?.toJson());
@@ -1690,7 +1710,7 @@ class LocationProvider with ChangeNotifier {
               '${Localize.current.userSpeed}  ${realUserSpeedKmh == null ? '- km/h' : realUserSpeedKmh?.formatSpeedKmH()}\n'
               '${Localize.current.distanceDrivenOdo} ${HiveSettingsDB.useAlternativeLocationProvider ? '' : '${odometer.toStringAsFixed(1)} km'} \n '
               '${Localize.current.resetOdoMeter}'
-              '${alwaysPermissionGranted ? "" : "\n${Localize.of(context).onlyWhileInUse}"} \n',
+              '${alwaysPermissionGranted ? "" : "\n${Localize.current.onlyWhileInUse}"} \n',
           confirmBtnText: Localize.current.ok,
           cancelBtnText: Localize.current.cancel,
           onConfirmBtnTap: () async {
@@ -1725,7 +1745,9 @@ class LocationProvider with ChangeNotifier {
             await resetTrackPoints();
             notifyListeners();
             if (!rootNavigatorKey.currentContext!.mounted &&
-                rootNavigatorKey.currentContext!.canPop()) return;
+                rootNavigatorKey.currentContext!.canPop()) {
+              return;
+            }
             rootNavigatorKey.currentContext!.pop();
           });
     }
@@ -1744,7 +1766,7 @@ class LocationProvider with ChangeNotifier {
     _wampConnectedListener = null;
     _realTimeDataStreamListener = null;
     BnLog.info(
-        text: 'started startRealtimeUpdateSubscription',
+        text: 'started startRealtimeUpdateSubscriptionIfNotTracking',
         className: 'location_provider');
     _wampConnectedListener =
         WampV2().wampConnectedStreamController.stream.listen((connected) async {
@@ -1918,33 +1940,44 @@ class LocationProvider with ChangeNotifier {
     return true;
   }
 
+  ///load UserTrack from database for current day
   void _initUserTrackStore() {
-    _userReachedFinishDateTime == null;
-    if (_userGpxPoints.length <= 1 &&
-        MapSettings.showOwnTrack &&
-        LocationStore.dataTodayAvailable) {
-      //reload data
-      _userGpxPoints.clear();
-      _userGpxPoints.addAll(LocationStore.userTrackPointsList);
-      _userSpeedPoints.clear();
-      for (int i = 0; i < _userGpxPoints.length - 1; i++) {
-        if (i == 0) {
-          _userSpeedPoints.add(
-            _userGpxPoints[0].latitude,
-            _userGpxPoints[0].longitude,
-            _userGpxPoints[0].realSpeedKmh,
-            _userGpxPoints[0].latLng,
-          );
-        } else {
-          _userSpeedPoints.add(
-            _userGpxPoints[i].latitude,
-            _userGpxPoints[i].longitude,
-            _userGpxPoints[i].realSpeedKmh,
-            _userGpxPoints[i - 1].latLng,
-          );
+    Future.microtask(() {
+      //clear _userGpxPoints on a new day
+      if (_userGpxPoints.isNotEmpty &&
+          DateTime.now().toDateOnly() !=
+              _userGpxPoints.last.timeStamp.toDateOnly() &&
+          _userGpxPoints.length > 1) {
+        _userGpxPoints.clear();
+        BnLog.info(text: '_userGpxPoints cleared due a new day');
+      }
+      _userReachedFinishDateTime == null;
+      if (_userGpxPoints.length <= 1 &&
+          MapSettings.showOwnTrack &&
+          LocationStore.dataTodayAvailable) {
+        //reload data
+        _userGpxPoints.addAll(LocationStore.userTrackPointsList);
+        _userSpeedPoints.clear();
+        for (int i = 0; i < _userGpxPoints.length - 1; i++) {
+          if (i == 0) {
+            _userSpeedPoints.add(
+              _userGpxPoints[0].latitude,
+              _userGpxPoints[0].longitude,
+              _userGpxPoints[0].realSpeedKmh,
+              _userGpxPoints[0].latLng,
+            );
+          } else {
+            _userSpeedPoints.add(
+              _userGpxPoints[i].latitude,
+              _userGpxPoints[i].longitude,
+              _userGpxPoints[i].realSpeedKmh,
+              _userGpxPoints[i - 1].latLng,
+            );
+          }
         }
       }
-    }
+      notifyListeners();
+    });
   }
 }
 

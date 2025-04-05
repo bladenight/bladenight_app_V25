@@ -557,7 +557,7 @@
   "onlyReducedLocationAccuracyText": "Only approximate location is shared. This may influence the tracking of your position in procession",
   "warning": "Warning!",
   "enableAlwaysLocationGeofenceText": "Pour la connexion automatique sur place, le partage de site devrait être réglé sur toujours. Faut-il ouvrir les paramètres système ?",
-  "polyLinesAmountHeader": "Amount of polylines before simplifying",
+  "polyLinesAmountHeader": "Amount",
   "polyLinesAmount": "To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying."
 }
 

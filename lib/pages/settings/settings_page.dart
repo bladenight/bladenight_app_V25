@@ -1,23 +1,16 @@
-import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:universal_io/io.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
-import '../../providers/admin/admin_pwd_provider.dart';
-import '../../providers/app_start_and_router/go_router.dart';
-import '../widgets/buttons/hidden_admin_button.dart';
-import '../widgets/buttons/tinted_cupertino_button.dart';
-import '../widgets/input/input_int_dialog.dart';
-import '../widgets/input/number_input_widget.dart';
-import '../widgets/map/tracking_export_widget.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/background_location_helper.dart';
 import '../../helpers/export_import_data_helper.dart';
@@ -25,14 +18,20 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
-import '../widgets/common_widgets/app_id_widget.dart';
-import '../widgets/common_widgets/data_widget_left_right.dart';
+import '../../providers/admin/admin_pwd_provider.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/is_tracking_provider.dart';
 import '../../providers/map/map_settings_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../wamp/wamp_v2.dart';
-import '../widgets/common_widgets/one_signal_id_widget.dart';
 import '../widgets/animated/settings_invisible_offline.dart';
+import '../widgets/buttons/hidden_admin_button.dart';
+import '../widgets/buttons/tinted_cupertino_button.dart';
+import '../widgets/common_widgets/app_id_widget.dart';
+import '../widgets/common_widgets/data_widget_left_right.dart';
+import '../widgets/common_widgets/one_signal_id_widget.dart';
+import '../widgets/input/input_int_dialog.dart';
+import '../widgets/map/tracking_export_widget.dart';
 import 'color_settings_widget.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -489,7 +488,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           });
                                         }),
                                   ),
-                            if (HiveSettingsDB.flogLogLevel.index > 2)
+                            if (HiveSettingsDB.loggerLogLevel.index > 2)
                               _exportLogInProgress
                                   ? LinearProgressIndicator()
                                   : SizedBox(
@@ -554,13 +553,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                             'Loglevel ${BnLog.getActiveLogLevel().name}'),
                                         onPressed: () async {
                                           await BnLog.showLogLevelDialog(
-                                              context);
+                                              context,
+                                              current: HiveSettingsDB
+                                                  .loggerLogLevel);
                                           setState(() {});
                                         }),
                                   ]),
                               if (!HiveSettingsDB
                                       .useAlternativeLocationProvider &&
-                                  HiveSettingsDB.flogLogLevel.index > 3)
+                                  HiveSettingsDB.loggerLogLevel.index > 3)
                                 CupertinoFormSection(
                                     header: const Text('Geolocation Log'),
                                     children: <Widget>[

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart' show Key, Listenable, ValueListenable;
+import 'package:flutter/foundation.dart' show Listenable, ValueListenable;
 import 'package:flutter/material.dart'
     show AnimatedBuilder, BuildContext, StatelessWidget, Widget;
 

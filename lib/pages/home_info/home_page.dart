@@ -12,22 +12,20 @@ import 'package:go_router/go_router.dart';
 
 import '../../app_settings/app_constants.dart';
 import '../../app_settings/server_connections.dart';
-import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/notification_helper.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/watch_communication_helper.dart';
+import '../../providers/active_event_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/location_provider.dart';
-import '../../providers/sponsors_provider.dart';
-import '../widgets/sponsors.dart';
-import 'event_info.dart';
-import '../../providers/active_event_provider.dart';
 import '../../providers/messages_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/route_providers.dart';
+import '../widgets/sponsors.dart';
+import 'event_info.dart';
 import 'event_info_web.dart';
 
 class HomePage extends ConsumerStatefulWidget {

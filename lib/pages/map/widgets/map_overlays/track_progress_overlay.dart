@@ -20,7 +20,7 @@ import '../../../widgets/common_widgets/shadow_clipper.dart';
 import '../map_event_informations.dart';
 import '../special_function_info.dart';
 import '../update_progress.dart';
-import 'event_active_no_tracking_not_onRoute_widget.dart';
+import 'event_active_no_tracking_not_on_route_widget.dart';
 import 'event_active_tracking_user_on_route_widget.dart';
 import 'event_data_map_overview.dart';
 import 'no_event_overlay.dart';

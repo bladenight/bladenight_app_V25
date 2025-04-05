@@ -52,10 +52,13 @@ class BnLog {
   static Future<bool> init({LogLevel? logLevel}) async {
     await Hive.initFlutter();
     try {
-      if (kDebugMode || kProfileMode || localTesting) {
-        logLevel = LogLevel.verbose;
+      if (logLevel != null) {
+        _logLevel = logLevel;
+      } else if (kDebugMode || kProfileMode || localTesting) {
+        _logLevel = LogLevel.verbose;
+        HiveSettingsDB.setLoggerLogLevel(LogLevel.verbose);
       } else {
-        logLevel = HiveSettingsDB.flogLogLevel;
+        _logLevel = HiveSettingsDB.loggerLogLevel;
       }
       if (!kIsWeb) {
         fileLogger = FileLogger(await _getLogDir());
@@ -117,6 +120,8 @@ class BnLog {
     required String text,
     String? dataLogType,
   }) async {
+    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.warning))
+      return;
     var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}';
@@ -237,13 +242,13 @@ class BnLog {
   }
 
   static LogLevel getActiveLogLevel() {
-    return _logLevel;
+    return HiveSettingsDB.loggerLogLevel;
   }
 
   static void setActiveLogLevel(LogLevel logLevel) async {
     _logLevel = logLevel;
     _talkerLogger.info('Loglevel changed to ${logLevel.name}');
-    HiveSettingsDB.setFlogLevel(logLevel);
+    HiveSettingsDB.setLoggerLogLevel(logLevel);
   }
 
   static Future<LogLevel?> showLogLevelDialog(BuildContext context,
@@ -261,11 +266,11 @@ class BnLog {
               scrollController:
                   FixedExtentScrollController(initialItem: current?.index ?? 0),
               onSelectedItemChanged: (int value) {
-                logLevel = LogLevel.values[value];
+                logLevel = logLevelPriorityList[value];
               },
               itemExtent: 50,
               children: [
-                for (var status in LogLevel.values)
+                for (var status in logLevelPriorityList)
                   Center(child: Text(status.name)),
               ],
             ),

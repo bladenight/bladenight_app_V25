@@ -8,7 +8,6 @@ import 'package:universal_io/io.dart';
 import '../../app_settings/app_constants.dart';
 import '../../helpers/debug_helper.dart';
 import '../../helpers/device_id_helper.dart';
-import '../../helpers/hive_box/adapter/images_and_links_adapter.dart';
 import '../../helpers/logger/logger.dart';
 import '../../main.dart';
 

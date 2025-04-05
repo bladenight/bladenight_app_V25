@@ -6,7 +6,6 @@ import 'package:universal_io/io.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
-import '../../providers/app_start_and_router/go_router.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});

@@ -219,14 +219,14 @@ class FriendsLogic with ChangeNotifier {
     if (getFriendRelationshipResult == null ||
         getFriendRelationshipResult.rpcException != null) {
       var ex = getFriendRelationshipResult?.rpcException;
-      if (ex is WampException && ex.message != null) {
-        if (ex.message!.startsWith('Not a valid pending relationship id')) {
+      if (ex is WampException) {
+        if (ex.message.startsWith('Not a valid pending relationship id')) {
           return Localize.current.noValidPendingRelationShip;
         }
-        if (ex.message!.startsWith('Relationship with self is not allowed')) {
+        if (ex.message.startsWith('Relationship with self is not allowed')) {
           return Localize.current.noSelfRelationAllowed;
         }
-        if (ex.message!.startsWith('Devices are already connected')) {
+        if (ex.message.startsWith('Devices are already connected')) {
           return Localize.current.devicesAlreadyConnected;
         }
       }

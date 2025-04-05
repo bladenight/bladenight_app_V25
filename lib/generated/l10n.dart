@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -28,10 +29,9 @@ class Localize {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<Localize> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -4121,10 +4121,10 @@ class Localize {
     );
   }
 
-  /// `Amount of polylines before simplifying`
+  /// `Amount`
   String get polyLinesAmountHeader {
     return Intl.message(
-      'Amount of polylines before simplifying',
+      'Amount',
       name: 'polyLinesAmountHeader',
       desc: '',
       args: [],

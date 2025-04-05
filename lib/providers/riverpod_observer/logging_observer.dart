@@ -34,7 +34,7 @@ class LoggingObserver extends ProviderObserver {
       var previous = previousValue;
       var newVal = newValue as NetworkStateModel;
       print(
-          '${DateTime.now().toIso8601String()} Provider NetworkStateModel updated from ${previous.connectivityStatus} to ${newValue.connectivityStatus}');
+          '${DateTime.now().toIso8601String()} Provider NetworkStateModel updated from ${previous.connectivityStatus} to ${newVal.connectivityStatus}');
     } else {
       print(
           '${DateTime.now().toIso8601String()} Provider $provider updated from ${previousValue.toString()} to $newValue');

@@ -85,7 +85,7 @@ class SendToWatch {
       return;
     }
     if (_lastPoint.hashCode == userLocationPoint.hashCode) {
-      return;
+      return; //no update if equal locations
     }
     _lastPoint = userLocationPoint;
     channel.invokeMethod(flutterToWatch, {

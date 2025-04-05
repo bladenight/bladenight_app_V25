@@ -3,11 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../app_settings/app_constants.dart';
-import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../providers/app_start_and_router/go_router.dart';

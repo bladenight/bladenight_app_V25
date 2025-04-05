@@ -558,6 +558,6 @@
   "onlyReducedLocationAccuracyText": "Nur ungefährer Standort ist freigegeben. Dies kann zur Fehldarstellung der Veranstaltung führen und ist nicht erlaubt. Du kannst die Standortfunktion nicht nutzen!",
   "warning": "Achtung!",
   "enableAlwaysLocationGeofenceText": "Für das automatische vor Ort einloggen sollte die Standortfreigabe auf immer stehen. Sollen die Systemeinstellungen geöffnet werden?",
-  "polyLinesAmountHeader": "Anzahl Teil-Linien der Route",
-  "polyLinesAmount": "Auf manchen Geräten führt eine hohe Anzahl an Routenpunkten dazu das die Karte seh langsam wird. Empfehlung 200-2000 Einzellinien der Route. Die Fahrlinie wird bei Punkten mehr reduziert."
+  "polyLinesAmountHeader": "Anzahl",
+  "polyLinesAmount": "Auf manchen Geräten führt eine hohe Anzahl an eigenen Routenpunkten dazu das die Karte sehr langsam wird. Empfehlung 200-2000 Einzellinien der Route. Die Fahrlinie wird bei überschreiten der Anzahl Punkte reduziert."
 }

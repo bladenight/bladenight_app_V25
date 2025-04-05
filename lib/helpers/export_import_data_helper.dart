@@ -18,12 +18,13 @@ import 'package:share_plus/share_plus.dart';
 import 'package:universal_io/io.dart';
 
 import '../generated/l10n.dart';
+import '../main.dart';
 import '../models/friend.dart';
 import '../models/user_gpx_point.dart';
 import '../pages/friends/widgets/edit_friend_dialog.dart';
 import '../providers/friends_provider.dart';
-import 'device_info_helper.dart';
 import 'device_id_helper.dart';
+import 'device_info_helper.dart';
 import 'hive_box/hive_settings_db.dart';
 import 'logger/logger.dart';
 import 'notification/toast_notification.dart';
@@ -365,8 +366,8 @@ Future<bool> addFriendWithCodeFromUrl(
 
   EditFriendResult? result;
 
-  if (!context.mounted) return false;
-  result = await EditFriendDialog.show(context,
+  if (rootNavigatorKey.currentContext == null) return false;
+  result = await EditFriendDialog.show(rootNavigatorKey.currentContext!,
       friend: Friend(
           name: name,
           friendId: await PreferencesHelper.getNewFriendId(),

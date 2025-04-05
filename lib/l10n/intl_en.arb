@@ -558,6 +558,6 @@
   "onlyReducedLocationAccuracyText": "Only approximate location is shared. This may influence the tracking of your position in procession",
   "warning": "Warning!",
   "enableAlwaysLocationGeofenceText": "For automatic on-site login, the location release should be set to always. Should the system settings be opened?",
-  "polyLinesAmountHeader": "Amount of polylines before simplifying",
+  "polyLinesAmountHeader": "Amount",
   "polyLinesAmount": "To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying."
 }

@@ -114,7 +114,7 @@ struct MapView: View {
                     ).stroke(Color(hex: 0xFF00FF), lineWidth: 2)
                 }
                 
-                if (
+                if (viewModel.isLocationTracking == true &&
                     viewModel.userlocation != nil && viewModel.userlocation?.locCoordinate.latitude != 0.0
                 ){
                     Annotation(

@@ -158,19 +158,19 @@ class HiveSettingsDB {
     _hiveBox.put(_hasShownMotionProminentDisclosureKey, val);
   }
 
-  static const String _fLogLevel = 'talkerLogLevelPref';
+  static const String _loggerLogLevelKey = 'talkerLogLevelPref';
 
   ///get loglevel FLog
-  static LogLevel get flogLogLevel {
+  static LogLevel get loggerLogLevel {
     var levelIndex =
-        _hiveBox.get(_fLogLevel, defaultValue: LogLevel.info.index);
+        _hiveBox.get(_loggerLogLevelKey, defaultValue: LogLevel.info.index);
     return LogLevel.values[levelIndex];
   }
 
   ///set loglevel
-  static void setFlogLevel(LogLevel level) {
+  static void setLoggerLogLevel(LogLevel level) {
     if (!kIsWeb) BnLog.info(text: 'setFlogLevel to ${level.index}');
-    _hiveBox.put(_fLogLevel, level.index);
+    _hiveBox.put(_loggerLogLevelKey, level.index);
   }
 
   static const String _odometerKey = 'odometerKeyPref';

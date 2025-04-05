@@ -191,7 +191,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     BnLog.debug(
       className: 'Future<RealtimeUpdate>  wampUpdate',
       methodName: 'sendLocation',
-      text: 'will send:$message',
+      text: 'will realtimeDataUpdate send:$message',
     );
 
     Completer? completer = Completer();

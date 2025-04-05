@@ -42,19 +42,13 @@ class EventDataMapOverview extends ConsumerStatefulWidget {
 class _EventDataMapOverviewState extends ConsumerState<EventDataMapOverview>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   late final AnimationController _animationController;
-  late final Animation<Color?> _colorAnimation;
   late final Animation<double> _valueAnimation;
-  late final Animation<double> _timerAnimation;
 
   @override
   void initState() {
     super.initState();
     _animationController =
         AnimationController(duration: const Duration(seconds: 10), vsync: this);
-    _colorAnimation = ColorTween(
-      begin: CupertinoColors.systemRed, //(0x00ffffff),
-      end: CupertinoColors.systemGrey, // ,Color(0x00ffff00),
-    ).animate(_animationController);
     _valueAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
