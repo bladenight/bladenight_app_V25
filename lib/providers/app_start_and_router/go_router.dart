@@ -12,6 +12,7 @@ import '../../main.dart';
 import '../../models/event.dart';
 import '../../models/friend.dart';
 import '../../models/user_gpx_point.dart';
+import '../../observers/go_router_observer.dart';
 import '../../pages/about_page/about_page.dart';
 import '../../pages/admin/admin_page.dart';
 import '../../pages/admin/widgets/admin_password_dialog.dart';
@@ -110,7 +111,7 @@ GoRouter goRouter(Ref ref) {
   return GoRouter(
     observers: [
       // Add your navigator observers
-      //GoRouterNavigatorObserver(),
+      GoRouterNavigatorObserver(),
       TalkerRouteObserver(talker)
     ],
     initialLocation: '/',

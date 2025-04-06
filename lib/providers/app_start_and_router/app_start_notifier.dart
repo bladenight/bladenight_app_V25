@@ -9,7 +9,11 @@ import '../../app_settings/app_constants.dart';
 import '../../helpers/debug_helper.dart';
 import '../../helpers/device_id_helper.dart';
 import '../../helpers/logger/logger.dart';
+import '../../helpers/notification/notification_helper.dart';
+import '../../helpers/notification/onesignal_handler.dart';
 import '../../main.dart';
+import '../get_images_and_links_provider.dart';
+import '../messages_provider.dart';
 
 part 'app_start_notifier.g.dart';
 
@@ -48,6 +52,15 @@ class AppStartNotifier extends _$AppStartNotifier {
       await FMTCStore(fmtcTileStoreName).manage.create();
     }
 
+    if (!kIsWeb) {
+      await FMTCStore(fmtcTileStoreName).manage.create();
+      Future.microtask(() async {
+        initOneSignal();
+        await _initNotifications();
+        ref.read(messagesLogicProvider).updateServerMessages();
+      });
+    }
+
     if (Platform.isAndroid) {
       ///TODO fix bgfetch
       //await initPlatformState();
@@ -64,6 +77,16 @@ class AppStartNotifier extends _$AppStartNotifier {
       print(
           '${DateTime.now().toIso8601String()} Finished _initializationLogic');
     }
+  }
+
+  Future<bool> _initNotifications() async {
+    try {
+      await NotificationHelper().initialiseNotifications();
+    } catch (e) {
+      print('initNotifications failed + $e');
+      return false;
+    }
+    return true;
   }
 
   Future<void> retry() async {

@@ -815,7 +815,7 @@ class LocationProvider with ChangeNotifier {
       if (gpsLocationPermissionsStatus == LocationPermissionStatus.denied) {
         return;
       }
-      if (!HiveSettingsDB.hasAskedAlwaysAllowLocationPermission) {
+      if (!kIsWeb && !HiveSettingsDB.hasAskedAlwaysAllowLocationPermission) {
         if (gpsLocationPermissionsStatus != LocationPermissionStatus.always &&
             rootNavigatorKey.currentContext!.mounted) {
           await LocationPermissionDialog()
@@ -825,11 +825,13 @@ class LocationProvider with ChangeNotifier {
                   'startGeoFencing not possible - LocationPermission is $gpsLocationPermissionsStatus');
         }
       }
-      setGeoFence();
-      bg.BackgroundGeolocation.startGeofences().catchError((error) {
-        BnLog.error(text: 'Starting Geofence error: $error');
-        return bg.State({'err': error});
-      });
+      if (!kIsWeb && !HiveSettingsDB.useAlternativeLocationProvider) {
+        setGeoFence();
+        bg.BackgroundGeolocation.startGeofences().catchError((error) {
+          BnLog.error(text: 'Starting Geofence error: $error');
+          return bg.State({'err': error});
+        });
+      }
     } catch (e) {
       BnLog.error(text: 'startGeoFencing failed: $e');
     }

@@ -24,6 +24,7 @@ import '../../providers/location_provider.dart';
 import '../../providers/messages_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/route_providers.dart';
+import '../map/map_page.dart';
 import '../widgets/sponsors.dart';
 import 'event_info.dart';
 import 'event_info_web.dart';
@@ -121,43 +122,60 @@ class _HomePageState extends ConsumerState<HomePage>
       if (!kIsWeb) {
         await FMTCStore(fmtcTileStoreName).manage.create();
         Future.microtask(() async {
-          initOneSignal();
-          await _initNotifications();
           ref.read(messagesLogicProvider).updateServerMessages();
           await BnLog.cleanUpLogsByFilter(8);
         });
-        await _openIntroScreenFirstTime();
+        await openIntroScreenFirstTime();
         await _openBladeguardRequestFirstTime();
       }
       _initImages();
     });
   }
 
+  static int _initImgCount = 0;
+
+  void _initImages() async {
+    var imagesLoaded = false;
+    if (mounted) {
+      imagesLoaded = await ref.refresh(updateImagesAndLinksProvider.future);
+    }
+    _initImgCount++;
+    if (!imagesLoaded && _initImgCount < 5) {
+      await Future.delayed(const Duration(seconds: 5));
+      _initImages();
+    } else {
+      _initImgCount = 0;
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var messageProvider = ref.watch(messagesLogicProvider);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: (messageProvider.messages.isNotEmpty &&
-                messageProvider.readMessagesCount > 0)
-            ? Colors.green
-            : null,
-        foregroundColor: (messageProvider.messages.isNotEmpty &&
-                messageProvider.readMessagesCount > 0)
-            ? Colors.black
-            : null,
-        heroTag: 'msgActionBtn',
-        onPressed: () async {
-          context.pushNamed(AppRoute.messagesPage.name);
-        },
-        child: messageProvider.messages.isNotEmpty &&
-                messageProvider.readMessagesCount > 0
-            ? Badge(
-                label: Text(messageProvider.readMessagesCount.toString()),
-                child: const Icon(Icons.mark_email_unread),
-              )
-            : const Icon(CupertinoIcons.envelope),
-      ),
+      floatingActionButton: kIsWeb
+          ? null
+          : FloatingActionButton(
+              backgroundColor: (messageProvider.messages.isNotEmpty &&
+                      messageProvider.readMessagesCount > 0)
+                  ? Colors.green
+                  : null,
+              foregroundColor: (messageProvider.messages.isNotEmpty &&
+                      messageProvider.readMessagesCount > 0)
+                  ? Colors.black
+                  : null,
+              heroTag: 'msgActionBtn',
+              onPressed: () async {
+                context.pushNamed(AppRoute.messagesPage.name);
+              },
+              child: messageProvider.messages.isNotEmpty &&
+                      messageProvider.readMessagesCount > 0
+                  ? Badge(
+                      label: Text(messageProvider.readMessagesCount.toString()),
+                      child: const Icon(Icons.mark_email_unread),
+                    )
+                  : const Icon(CupertinoIcons.envelope),
+            ),
       body: CupertinoPageScaffold(
         child: SafeArea(
           child: CustomScrollView(
@@ -202,7 +220,7 @@ class _HomePageState extends ConsumerState<HomePage>
                           Center(
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: CupertinoColors.systemOrange,
+                                  color: CupertinoColors.systemGreen,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15))),
                               child: Text(
@@ -210,8 +228,13 @@ class _HomePageState extends ConsumerState<HomePage>
                             ),
                           ),
                         //EventInfo(),
-                        kIsWeb ? EventInfoWeb() : EventInfo(),
-                        SponsorCarousel(),
+                        kIsWeb
+                            ? SizedBox(
+                                width: MediaQuery.sizeOf(context).width,
+                                height: MediaQuery.sizeOf(context).height,
+                                child: MapPage())
+                            : EventInfo(),
+                        kIsWeb ? Container() : SponsorCarousel(),
                       ],
                     ),
                   ),
@@ -224,24 +247,7 @@ class _HomePageState extends ConsumerState<HomePage>
     );
   }
 
-  static int _initImgCount = 0;
-
-  void _initImages() async {
-    var imagesLoaded = false;
-    if (mounted) {
-      imagesLoaded = await ref.refresh(updateImagesAndLinksProvider.future);
-    }
-    _initImgCount++;
-    if (!imagesLoaded && _initImgCount < 5) {
-      await Future.delayed(const Duration(seconds: 5));
-      _initImages();
-    } else {
-      _initImgCount = 0;
-      return;
-    }
-  }
-
-  Future _openIntroScreenFirstTime() async {
+  Future openIntroScreenFirstTime() async {
     if (!kIsWeb && !HiveSettingsDB.hasShownIntro) {
       BnLog.info(
           className: 'home_screen',
@@ -263,15 +269,5 @@ class _HomePageState extends ConsumerState<HomePage>
       await context.pushNamed(AppRoute.bladeguard.name);
       HiveSettingsDB.setHasShownBladeGuard(true);
     }
-  }
-
-  Future<bool> _initNotifications() async {
-    try {
-      await NotificationHelper().initialiseNotifications();
-    } catch (e) {
-      print('initNotifications failed + $e');
-      return false;
-    }
-    return true;
   }
 }

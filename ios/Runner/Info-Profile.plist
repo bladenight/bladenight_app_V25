@@ -65,15 +65,20 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Teile deinen Standort um den Bladenight-Skaterzug und die Länge genauer zu ermitteln und finde Freunde. Empfehlung &quot;Beim Verwenden&quot; erlauben</string>
+	<string>Share your location to find out more about the Bladenight skater train and length and make friends. Allow “When using” recommendation.</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>procession</key>
+		<string>In order to display the procession accurately and to see the position of your friends, an exact position is necessary!</string>
+	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Teile deinen Standort um den Bladenight-Skaterzug  und die Länge genauer zu ermitteln und finde Freunde. Empfehlung &quot;Beim Verwenden&quot; erlauben</string>
+	<string>Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Teile deinen Standort um den Bladenight-Skaterzug  und die Länge genauer zu ermitteln und finde Freunde. Empfehlung &quot;Beim Verwenden&quot; erlauben</string>
+	<string>Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Um Akku zu sparen wird die Bewegung des Telefones genutzt und der Standort nur bei Bewegung aktiviert </string>
+	<string>To save battery, the movement of the phone is used and the location is only activated when it is moving.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Das Mikrofon wird won dieser App nicht benutzt - die Anfrage kann verneint werden.</string>
+	<string>The microphone is not used by this app - the request can be denied.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
