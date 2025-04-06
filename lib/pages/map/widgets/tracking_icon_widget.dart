@@ -33,7 +33,7 @@ class TrackingIconWidget extends ConsumerWidget {
         switch (trackingType) {
           case TrackingType.userParticipating:
             return Transform.rotate(
-              angle: 00,
+              angle: 45,
               child: ImageIcon(
                 size: innerIconSize,
                 const AssetImage('assets/images/skater_icon_256_bearer.png'),

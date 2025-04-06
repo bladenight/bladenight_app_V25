@@ -11,6 +11,7 @@ import '../../app_settings/app_constants.dart';
 import '../../headleass_task.dart';
 import '../../helpers/debug_helper.dart';
 import '../../helpers/device_id_helper.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/notification_helper.dart';
 import '../../helpers/notification/onesignal_handler.dart';
@@ -62,21 +63,11 @@ class AppStartNotifier extends _$AppStartNotifier {
       });
     }
 
-    if (Platform.isAndroid) {
-      ///TODO fix bgfetch
-      //await initPlatformState();
-    }
-    if (Platform.isAndroid) {
-      /// Register BackgroundGeolocation headless-task
-      /* bg.BackgroundGeolocation.registerHeadlessTask(
-          backgroundGeolocationHeadlessTask);*/
+    if (Platform.isAndroid && HiveSettingsDB.onsiteGeoFencingActive) {
+      await initPlatformState();
 
-      /// Register BackgroundFetch headless-task.
-      // BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
-    }
-    if (kDebugMode) {
-      print(
-          '${DateTime.now().toIso8601String()} Finished _initializationLogic');
+      /// Register BackgroundGeolocation headless-task
+      BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
     }
   }
 
@@ -106,7 +97,7 @@ class AppStartNotifier extends _$AppStartNotifier {
             requiresCharging: false,
             requiresStorageNotLow: false,
             requiresDeviceIdle: false,
-            requiredNetworkType: NetworkType.NONE), (String taskId) async {
+            requiredNetworkType: NetworkType.ANY), (String taskId) async {
       // <-- Event handler
       // This is the fetch-event callback.
       BnLog.debug(text: '[BackgroundFetch] Event received $taskId');
