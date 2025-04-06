@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 
 class GoRouterNavigatorObserver extends NavigatorObserver {
   @override

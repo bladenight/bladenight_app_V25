@@ -22,10 +22,14 @@ class BaseAppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     var themeMode = HiveSettingsDB.adaptiveThemeMode;
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvokedWithResult: (bool didPop, dynamic obj) async {
-        if (didPop) {
-          context.replaceNamed(AppRoute.map.name);
+        if (context.canPop()) {
+          context.pop();
+          return;
+        }
+        if (!didPop) {
+          context.goNamed(AppRoute.map.name);
         }
       },
       child: Builder(

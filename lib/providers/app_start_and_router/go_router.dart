@@ -111,7 +111,7 @@ GoRouter goRouter(Ref ref) {
   return GoRouter(
     observers: [
       // Add your navigator observers
-      GoRouterNavigatorObserver(),
+      // GoRouterNavigatorObserver(),
       TalkerRouteObserver(talker)
     ],
     initialLocation: '/',
