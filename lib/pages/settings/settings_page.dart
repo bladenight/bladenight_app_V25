@@ -665,11 +665,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       autocorrect: false,
                                       onChanged: (value) {
                                         HiveSettingsDB.setCustomServerAddress(
-                                            value);
+                                            value.trim());
                                       },
                                       onSaved: (inputText) =>
                                           HiveSettingsDB.setCustomServerAddress(
-                                              inputText),
+                                              inputText?.trim()),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(

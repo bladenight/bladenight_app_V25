@@ -93,11 +93,12 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             var trackingWaitStatus = ref.watch(trackingWaitStatusProvider);
             var autoStop = ref.watch(autoStopTrackingProvider);
             //for future implementations - if (isActive == EventStatus.confirmed) {
-
             switch (trackingWaitStatus) {
               case TrackWaitStatus.starting:
                 return FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    LocationProvider().stopTracking();
+                  },
                   child: CupertinoActivityIndicator(
                       color: CupertinoTheme.of(context).brightness ==
                               Brightness.dark

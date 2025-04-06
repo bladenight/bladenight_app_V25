@@ -176,6 +176,10 @@ extension DateExtension on DateTime {
     return '$formattedDate$offsetString';
   }
 
+  String get toEventLastUpdateDateTime {
+    return DateFormat('dd-MM-yyyy HH:mm:ss').format(this);
+  }
+
   String toEventMessageDateTime() {
     return DateFormat('yyyy-MM-ddTHH:mm').format(this);
   }

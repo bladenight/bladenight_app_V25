@@ -16,7 +16,6 @@ import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/notification_helper.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../main.dart';
-import '../get_images_and_links_provider.dart';
 import '../messages_provider.dart';
 
 part 'app_start_notifier.g.dart';

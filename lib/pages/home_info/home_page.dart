@@ -12,8 +12,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../app_settings/app_constants.dart';
 import '../../app_settings/server_connections.dart';
+import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
+import '../../helpers/time_converter_helper.dart';
 import '../../helpers/watch_communication_helper.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
@@ -117,15 +119,15 @@ class _HomePageState extends ConsumerState<HomePage>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!kIsWeb) {
-        await FMTCStore(fmtcTileStoreName).manage.create();
         Future.microtask(() async {
+          _initImages();
+          ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
           ref.read(messagesLogicProvider).updateServerMessages();
           await BnLog.cleanUpLogsByFilter(8);
         });
         await openIntroScreenFirstTime();
         await _openBladeguardRequestFirstTime();
       }
-      _initImages();
     });
   }
 
@@ -174,71 +176,101 @@ class _HomePageState extends ConsumerState<HomePage>
                   : const Icon(CupertinoIcons.envelope),
             ),
       body: CupertinoPageScaffold(
-        child: SafeArea(
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
-            slivers: [
-              CupertinoSliverRefreshControl(
-                onRefresh: () async {
-                  ref.read(messagesLogicProvider).updateServerMessages();
-                  var _ = ref.refresh(currentRouteProvider);
-                  ref
-                      .read(activeEventProvider.notifier)
-                      .refresh(forceUpdate: true);
-                  ref.invalidate(bgIsOnSiteProvider);
-                },
-              ),
-              SliverFillRemaining(
-                hasScrollBody: true,
-                fillOverscroll: true,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 5, right: 5),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        if (localTesting)
-                          Center(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: CupertinoColors.systemOrange,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))),
-                              child: Text(
-                                'Warning ${kDebugMode ? 'DEBUG Mode on and' : ''} local testing is set',
-                                textAlign: TextAlign.center,
-                              ),
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: true,
+              fillOverscroll: true,
+              child: Padding(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      if (localTesting)
+                        Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: CupertinoColors.systemOrange,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            child: Text(
+                              'Warning ${kDebugMode ? 'DEBUG Mode on and' : ''} local testing is set',
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                        if (HiveSettingsDB.useCustomServer)
-                          Center(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: CupertinoColors.systemGreen,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))),
-                              child: Text(
-                                  'Warning server address is ${HiveSettingsDB.customServerAddress}'),
-                            ),
+                        ),
+                      if (HiveSettingsDB.useCustomServer)
+                        Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: CupertinoColors.systemGreen,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            child: Text(
+                                'Warning server address is ${HiveSettingsDB.customServerAddress}'),
                           ),
-                        //EventInfo(),
-                        kIsWeb
-                            ? SizedBox(
-                                width: MediaQuery.sizeOf(context).width,
-                                height: MediaQuery.sizeOf(context).height,
-                                child: MapPage())
-                            : EventInfo(),
-                        kIsWeb ? Container() : SponsorCarousel(),
-                      ],
-                    ),
+                        ),
+                      //EventInfo(),
+                      kIsWeb
+                          ? SizedBox(
+                              width: MediaQuery.sizeOf(context).width,
+                              height: MediaQuery.sizeOf(context).height,
+                              child: MapPage())
+                          : GestureDetector(
+                              onTap: () {
+                                ref
+                                    .read(activeEventProvider.notifier)
+                                    .refresh(forceUpdate: true);
+                              },
+                              child: EventInfo(),
+                            ),
+                      kIsWeb ? Container() : SponsorCarousel(),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.5),
+                      Builder(builder: (context) {
+                        var activeEvent = ref.watch(activeEventProvider);
+                        return activeEvent.lastUpdate == null
+                            ? Container()
+                            : GestureDetector(
+                                onTap: () {
+                                  ref
+                                      .read(activeEventProvider.notifier)
+                                      .refresh(forceUpdate: true);
+                                },
+                                child: Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Text(Localize.of(context).lastupdate),
+                                      Text(activeEvent.lastUpdate!
+                                          .toEventLastUpdateDateTime)
+                                    ],
+                                  ),
+                                ),
+                              );
+                      }),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            CupertinoSliverRefreshControl(
+              refreshTriggerPullDistance: 40,
+              refreshIndicatorExtent: 30,
+              onRefresh: () async {
+                ref.read(messagesLogicProvider).updateServerMessages();
+                var _ = ref.refresh(currentRouteProvider);
+                ref
+                    .read(activeEventProvider.notifier)
+                    .refresh(forceUpdate: true);
+                ref.invalidate(bgIsOnSiteProvider);
+              },
+            ),
+          ],
         ),
       ),
     );

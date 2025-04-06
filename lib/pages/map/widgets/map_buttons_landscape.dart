@@ -100,7 +100,9 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
             switch (trackingWaitStatus) {
               case TrackWaitStatus.starting:
                 return FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    LocationProvider().stopTracking();
+                  },
                   child: CupertinoActivityIndicator(
                       color: CupertinoTheme.of(context).brightness ==
                               Brightness.dark
@@ -109,7 +111,9 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                 );
               case TrackWaitStatus.stopping:
                 return FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    LocationProvider().stopTracking();
+                  },
                   child: CupertinoActivityIndicator(
                       color: CupertinoTheme.of(context).brightness ==
                               Brightness.dark

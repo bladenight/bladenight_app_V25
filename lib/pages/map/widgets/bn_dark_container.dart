@@ -24,10 +24,26 @@ The matrix is in row-major order and the translation column is specified in unno
        */
 
       colorFilter: const ColorFilter.matrix(<double>[
-        0.2126, 0.7152, 0.0722, 0, 0,
-        0.2126, 0.7152, 0.0722, 0, 0,
-        0.2126, 0.7152, 0.0722, 0, 0,
-        0,      0,      0,      1, 0,
+        0.2126,
+        0.7152,
+        0.0722,
+        0,
+        0,
+        0.2126,
+        0.7152,
+        0.0722,
+        0,
+        0,
+        0.2126,
+        0.7152,
+        0.0722,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
       ]),
       child: tilesContainer,
     );
@@ -35,26 +51,11 @@ The matrix is in row-major order and the translation column is specified in unno
 
   return ColorFiltered(
     colorFilter: const ColorFilter.matrix(<double>[
-      -1,
-      0,
-      0,
-      0,
-      255,
-      0,
-      -1,
-      0,
-      0,
-      255,
-      0,
-      0,
-      -1,
-      0,
-      255,
-      0,
-      0,
-      0,
-      1,
-      0,
+      //Colors get Inverted and then Hue Rotated by 180 degrees
+      0.5740000009536743, -1.4299999475479126, -0.14399999380111694, 0, 255, //R
+      -0.4259999990463257, -0.429999977350235, -0.14399999380111694, 0, 255, //G
+      -0.4259999990463257, -1.4299999475479126, 0.8559999465942383, 0, 255, //B
+      0, 0, 0, 1, 0, //A
     ]),
     child: tilesContainer,
   );

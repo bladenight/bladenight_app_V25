@@ -42,11 +42,7 @@ class _EventMapSmallState extends ConsumerState<EventMapSmall> {
           return Stack(children: [
             MapLayerOverview(
               interactionOptions: const InteractionOptions(
-                flags: kIsWeb
-                    ? InteractiveFlag.all
-                    : InteractiveFlag.pinchZoom |
-                        InteractiveFlag.pinchMove |
-                        InteractiveFlag.doubleTapDragZoom,
+                flags: InteractiveFlag.all,
                 enableMultiFingerGestureRace: false,
               ),
               event: widget.nextEvent,

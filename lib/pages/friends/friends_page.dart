@@ -170,7 +170,9 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           if (GetPlatform.isAndroid &&
                               !await DeviceHelper
                                   .isAndroidGreaterOrEqualVersion(7)) {
-                            showToast(message: 'No support Android < 7');
+                            showToast(
+                                message:
+                                    'No support Android < 7 use bottom button ');
                             return;
                           }
                           if (!context.mounted) {

@@ -377,11 +377,11 @@ class LocationProvider with ChangeNotifier {
           // <-- a very long stopTimeout
           //disableStopDetection: true,
           // <-- Don't interrupt location updates when Motion API says "still"
-          /*backgroundPermissionRationale: bg.PermissionRationale(
+          backgroundPermissionRationale: bg.PermissionRationale(
               title: Localize.current.requestAlwaysPermissionTitle,
               message: Localize.current.noBackgroundlocationLeaveAppOpen,
               positiveAction: Localize.current.openOperatingSystemSettings,
-              negativeAction: Localize.current.cancel),*/
+              negativeAction: Localize.current.cancel),
         )).then((bg.State state) {
           _isMoving = state.isMoving ?? false;
           notifyListeners();
@@ -417,7 +417,7 @@ class LocationProvider with ChangeNotifier {
           // <-- Don't interrupt location updates when Motion API says "still"
 
           //request Always permissions
-          /* backgroundPermissionRationale: bg.PermissionRationale(
+          backgroundPermissionRationale: bg.PermissionRationale(
               title: Localize.current.requestAlwaysPermissionTitle,
               message: Localize.current.noBackgroundlocationLeaveAppOpen,
               positiveAction: Localize.current.openOperatingSystemSettings,
@@ -430,7 +430,7 @@ class LocationProvider with ChangeNotifier {
             'instructions': Localize.current.enableAlwaysLocationInfotext,
             'cancelButton': Localize.current.cancel,
             'settingsButton': Localize.current.setOpenSystemSettings
-          },*/
+          },
           notification: bg.Notification(
               title: Localize.current.bgNotificationTitle,
               text: Localize.current.bgNotificationText,
@@ -1044,6 +1044,7 @@ class LocationProvider with ChangeNotifier {
         ProviderContainer()
             .read(activeEventProvider.notifier)
             .refresh(forceUpdate: true);
+        _trackWaitStatus = TrackWaitStatus.none;
         notifyListeners();
         var loc = await _updateLocation();
         if (loc != null) {
@@ -1071,6 +1072,7 @@ class LocationProvider with ChangeNotifier {
           ProviderContainer()
               .read(activeEventProvider.notifier)
               .refresh(forceUpdate: true);
+          _trackWaitStatus = TrackWaitStatus.none;
           notifyListeners();
           var loc = await _updateLocation();
           if (loc != null) {
