@@ -1,11 +1,14 @@
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
 import '../../app_settings/app_constants.dart';
+import '../../headleass_task.dart';
 import '../../helpers/debug_helper.dart';
 import '../../helpers/device_id_helper.dart';
 import '../../helpers/logger/logger.dart';
@@ -40,7 +43,6 @@ class AppStartNotifier extends _$AppStartNotifier {
     await Hive.openBox(hiveBoxSettingDbName);
     await Hive.openBox(hiveBoxLocationDbName);
     await Hive.openBox(hiveBoxServerConfigDBName);
-    //await Hive.openBox(hiveBoxLoggingDbName);
     await DeviceId.initAppId();
     debugPrintTime('initLogger');
     await initLogger();
@@ -49,14 +51,13 @@ class AppStartNotifier extends _$AppStartNotifier {
     if (!kIsWeb && !fMTCInitialized) {
       await FMTCObjectBoxBackend().initialise();
       fMTCInitialized = true;
-      await FMTCStore(fmtcTileStoreName).manage.create();
     }
 
     if (!kIsWeb) {
       await FMTCStore(fmtcTileStoreName).manage.create();
       Future.microtask(() async {
-        initOneSignal();
         await _initNotifications();
+        await initOneSignal();
         ref.read(messagesLogicProvider).updateServerMessages();
       });
     }

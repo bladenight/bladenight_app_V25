@@ -315,7 +315,7 @@ class WampV2 {
     _liveCycleTimer =
         Timer.periodic(const Duration(milliseconds: 10000), (timer) async {
       var diffLastPutMessage = DateTime.now().difference(_lastPutMessage);
-      if (diffLastPutMessage.inMinutes > 3) {
+      if (subscriptions.isEmpty && diffLastPutMessage.inMinutes > 3) {
         BnLog.info(
             text:
                 'no new Messages since ${_lastPutMessage.toIso8601String()} / ${diffLastPutMessage.inSeconds}  stop wamp by _connLoop');
