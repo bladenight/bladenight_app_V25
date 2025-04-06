@@ -332,10 +332,10 @@ class WampV2 {
         closeWamp();
       }
 
-      while (wampConnectionState != WampConnectionState.connected &&
+      if (wampConnectionState != WampConnectionState.connected &&
           !_wampStopped) {
         BnLog.debug(text: 'initWamp by _connLoop');
-        _connectToWamp();
+        await _connectToWamp();
       }
     });
 
