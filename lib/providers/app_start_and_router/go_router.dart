@@ -12,7 +12,6 @@ import '../../main.dart';
 import '../../models/event.dart';
 import '../../models/friend.dart';
 import '../../models/user_gpx_point.dart';
-import '../../observers/go_router_observer.dart';
 import '../../pages/about_page/about_page.dart';
 import '../../pages/admin/admin_page.dart';
 import '../../pages/admin/widgets/admin_password_dialog.dart';
@@ -117,6 +116,7 @@ GoRouter goRouter(Ref ref) {
     initialLocation: '/',
     navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: kDebugMode,
+    //onException: onGoRouterException,
     /*refreshListenable: ref.watch(isActiveEventChangeNotifierProvider),
     redirect: (context, state) {
       final isActive =
@@ -497,3 +497,6 @@ GoRouter goRouter(Ref ref) {
     },
   );
 });*/
+
+void onGoRouterException(
+    BuildContext context, GoRouterState state, GoRouter router) {}

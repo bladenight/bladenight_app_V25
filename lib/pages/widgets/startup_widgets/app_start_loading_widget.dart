@@ -19,14 +19,14 @@ class AppStartLoadingWidget extends StatelessWidget {
           ),
           ColoredBox(
             color: CupertinoTheme.brightnessOf(context) == Brightness.light
-                ? systemPrimaryDefaultColor
-                : systemPrimaryDarkDefaultColor,
+                ? systemPrimaryDarkDefaultColor
+                : systemPrimaryDefaultColor,
             child: Text(
               Localize.of(context).loading,
               style: TextStyle(
                 color: CupertinoTheme.brightnessOf(context) == Brightness.light
-                    ? systemPrimaryDarkDefaultColor
-                    : systemPrimaryDefaultColor,
+                    ? systemPrimaryDefaultColor
+                    : systemPrimaryDarkDefaultColor,
               ),
             ),
           ),

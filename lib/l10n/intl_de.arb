@@ -60,9 +60,11 @@
     "type": "text"
   },
   "@sendlinkdescription": {
-    "description": "Sende den Code {requestid} an deine(n) Freund:in",
+    "description": "Sende den Code {requestId} an deine(n) Freund:in",
     "placeholders": {
-      "requestid": {}
+      "requestId": {},
+      "bnaLink": {},
+      "myName": {}
     },
     "type": "text"
   },
@@ -393,7 +395,7 @@
   "seemsoffline": "Warte auf Internetverbindung ...",
   "sendData30sec": "Anfrage gesendet - Dauert ca. 30s.",
   "sendlink": "Link senden",
-  "sendlinkdescription": "Dies ist die Einladung um deine(n) Freund:in (Absender der Nachricht) in der BladeNightApp zu sehen und euch im Skaterzug wiederzufinden. Wenn du das möchtest lade Dir die Baldenigthapp und gib den Code: {requestid} ein.\nWenn die App schon installiert ist benutze den link  'bna://bladenight.app?addFriend&code={requestid}' oder 'https://bladenight.app?code={requestid}'auf dem Telefon. \nViel Spass beim skaten.\nDie App ist verfügbar im Playstore \n{playStoreLink} und im Apple App Store \n{iosAppStoreLink}",
+  "sendlinkdescription": "Dies ist die Einladung um deine(n) Freund:in (Absender der Nachricht) in der BladeNightApp zu sehen und euch im Skaterzug wiederzufinden. Wenn du das möchtest lade Dir die Baldenigthapp und gib den Code: {requestId} ein.\nWenn die App schon installiert ist benutze den link {bnaLink} auf dem Telefon. \nViel Spass beim skaten.\nDie App ist verfügbar im Playstore \n{playStoreLink} und im Apple App Store \n{iosAppStoreLink}",
   "sendlinksubject": "Sende link an BladeNight-App. Ihr könnt euch gegenseitig sehen.",
   "serverNotReachable": "Verbinde mit Server ..",
   "sessionConnectionError": "Fehler beim Verbinden",

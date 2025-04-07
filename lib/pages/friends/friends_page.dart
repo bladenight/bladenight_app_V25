@@ -11,6 +11,7 @@ import 'package:quickalert/quickalert.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/device_info_helper.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/keyboard_helper.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../helpers/time_converter_helper.dart';
@@ -36,6 +37,7 @@ class FriendsPage extends ConsumerStatefulWidget {
 
 class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
   final TextEditingController _searchTextController = TextEditingController();
+  final TextEditingController _nameTextController = TextEditingController();
 
   @override
   void initState() {
@@ -244,6 +246,28 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
               child: ClipRect(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 5),
+                  child: CupertinoTextFormFieldRow(
+                    prefix: Text(
+                      Localize.of(context).myName,
+                      style: TextStyle(
+                          color: CupertinoTheme.of(context).primaryColor),
+                    ),
+                    placeholder: 'Anonym',
+                    controller: _nameTextController,
+                    onChanged: (value) {
+                      HiveSettingsDB.setMyName(value);
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: FractionallySizedBox(
+              widthFactor: 0.9,
+              child: ClipRect(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5),
                   child: CupertinoSearchTextField(
                     controller: _searchTextController,
                     onChanged: (value) {
@@ -399,13 +423,18 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                       descriptionLeft: Localize.of(context).status,
                       rightWidget: Container()),
                 if (friend.requestId > 0 && !friend.codeExpired)
-                  Text(
-                    Localize.of(context)
-                        .tellcode(friend.name, friend.requestId),
-                    style: TextStyle(
-                        fontSize: MediaQuery.textScalerOf(context).scale(14),
-                        fontWeight: FontWeight.bold,
-                        color: CupertinoTheme.of(context).primaryColor),
+                  GestureDetector(
+                    onTap: () async {
+                      await showFriendLink(context, friend);
+                    },
+                    child: Text(
+                      Localize.of(context)
+                          .tellcode(friend.name, friend.requestId),
+                      style: TextStyle(
+                          fontSize: MediaQuery.textScalerOf(context).scale(14),
+                          fontWeight: FontWeight.bold,
+                          color: CupertinoTheme.of(context).primaryColor),
+                    ),
                   ),
                 if (friend.requestId > 0 && friend.codeExpired)
                   Text(

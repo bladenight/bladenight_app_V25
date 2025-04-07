@@ -1,19 +1,21 @@
 import 'dart:math';
 
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_io/io.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
 import '../../../app_settings/app_constants.dart';
 import '../../../generated/l10n.dart';
+import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/keyboard_helper.dart';
 import '../../../helpers/logger/logger.dart';
 import '../../../models/friend.dart';
@@ -21,11 +23,13 @@ import '../../../providers/app_start_and_router/go_router.dart';
 import '../../../providers/friends_provider.dart';
 import '../../../providers/network_connection_provider.dart';
 import '../../../wamp/wamp_exception.dart';
+import '../../widgets/buttons/tinted_cupertino_button.dart';
 import '../../widgets/common_widgets.dart';
 import '../../widgets/common_widgets/data_widget_left_right.dart';
 import '../../widgets/common_widgets/no_connection_warning.dart';
 import '../../widgets/input/number_input_widget.dart';
 import '../../widgets/input/text_input_widget.dart';
+import '../../widgets/sheets/base_bottom_sheet_widget.dart';
 
 class EditFriendResult {
   final String name;
@@ -106,6 +110,7 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
   @override
   Widget build(BuildContext context) {
     _validationState[0].value = name.isNotEmpty;
+    _validationState[1].value = validateCode;
     return CupertinoPageScaffold(
       child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -333,40 +338,11 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
         }
         if (friend == null) return;
         if (!mounted) return;
-        await QuickAlert.show(
-            context: context,
-            showCancelBtn: true,
-            type: QuickAlertType.warning,
-            barrierDismissible: true,
-            title:
-                '${Localize.current.invitebyname(friend.name)}  Code:${friend.requestId}',
-            text: Localize.current.tellcode(friend.name, friend.requestId),
-            confirmBtnText: Localize.current.sendlink,
-            cancelBtnText: Localize.current.copy,
-            onConfirmBtnTap: () {
-              if (Navigator.of(context, rootNavigator: true).canPop()) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
-              Share.share(
-                  Localize.current.sendlinkdescription(
-                      friend.requestId, playStoreLink, iOSAppStoreLink),
-                  subject: Localize.current.sendlink);
-            },
-            onCancelBtnTap: () async {
-              if (!mounted ||
-                  !Navigator.of(context, rootNavigator: true).canPop()) {
-                return;
-              }
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
-              await Clipboard.setData(
-                  ClipboardData(text: friend.requestId.toString()));
-            });
-        if (!mounted || !context.canPop()) {
-          return;
+        dismissKeyboard(context);
+        if (mounted && context.canPop()) {
+          context.pop();
         }
-        context.goNamed(AppRoute.friend.name);
+        await showFriendLink(context, friend);
       } else if (widget.action == FriendsAction.addWithCode) //validate code
       {
         var result = await ref
@@ -380,15 +356,9 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
           });
           return;
         }
-        if (!mounted) {
-          return;
-        } else {
+        if (mounted && context.canPop()) {
           dismissKeyboard(context);
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            context.pushNamed(AppRoute.friend.name);
-          }
+          context.pop();
         }
       }
     } on SocketException {
@@ -412,4 +382,98 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
       });
     }
   }
+}
+
+Future showFriendLink(BuildContext context, Friend friend) {
+  return showCupertinoModalBottomSheet(
+      backgroundColor: CupertinoDynamicColor.resolve(
+          CupertinoColors.systemBackground, context),
+      context: context,
+      builder: (context) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: kIsWeb
+                ? MediaQuery.of(context).size.height * 0.5
+                : MediaQuery.of(context).size.height * 0.7,
+          ),
+          child: BaseBottomSheetWidget(children: [
+            Center(
+              child: Text(
+                Localize.current.tellcode(friend.name, friend.requestId),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            CupertinoFormSection(
+                header: Text(Localize.of(context).sendlink),
+                children: [
+                  SizedTintedCupertinoButton(
+                    child: Row(children: [
+                      const Icon(Icons.send),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Text(Localize.of(context).sendlink),
+                      ),
+                    ]),
+                    onPressed: () {
+                      if (context.canPop()) {
+                        context.pop();
+                      }
+                      Share.share(
+                          Localize.current.sendlinkdescription(
+                              friend.requestId,
+                              'bna://bladenight.app/friend/addfriend?action=addFriend&code=${friend.requestId}&name=${HiveSettingsDB.myName}',
+                              HiveSettingsDB.myName,
+                              playStoreLink,
+                              iOSAppStoreLink),
+                          subject: Localize.current.sendlink);
+                    },
+                  ),
+                ]),
+            CupertinoFormSection(
+                header: Text(Localize.of(context).copy),
+                children: [
+                  SizedTintedCupertinoButton(
+                    child: Row(children: [
+                      const Icon(Icons.copy),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Text(Localize.of(context).copy),
+                      ),
+                    ]),
+                    onPressed: () async {
+                      await Clipboard.setData(
+                          ClipboardData(text: friend.requestId.toString()));
+                      if (context.mounted && context.canPop()) {
+                        context.pop();
+                      }
+                    },
+                  ),
+                ]),
+            CupertinoFormSection(
+                header: Text(
+                  '${Localize.current.invitebyname(friend.name)}  '
+                  'Code:${friend.requestId}',
+                  textAlign: TextAlign.center,
+                ),
+                children: [
+                  BarcodeWidget(
+                    barcode: Barcode.qrCode(),
+                    color: Colors.white,
+                    backgroundColor: Colors.black,
+                    data: 'bna://bladenight.app/friend/addfriend?action='
+                        'addFriend&code=${friend.requestId}&name=${HiveSettingsDB.myName}',
+                    width: MediaQuery.sizeOf(context).shortestSide / 2,
+                    height: MediaQuery.sizeOf(context).shortestSide / 2,
+                  ),
+                ]),
+            SizedBox(
+              height: MediaQuery.sizeOf(context).shortestSide,
+            )
+          ]),
+        );
+      });
 }

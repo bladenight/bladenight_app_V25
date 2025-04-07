@@ -60,9 +60,11 @@
     "type": "text"
   },
   "@sendlinkdescription": {
-    "description": "Please send code {requestid} to your friend",
+    "description": "Please send link {bnaLink} to your friend",
     "placeholders": {
-      "requestid": {}
+      "requestId": {},
+      "bnaLink": {},
+      "myName": {}
     },
     "type": "text"
   },
@@ -393,7 +395,7 @@
   "seemsoffline": " Waiting for internet connection ...",
   "sendData30sec": "Request sent - change need about 30 secs.",
   "sendlink": "Send link",
-  "sendlinkdescription": "Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: {requestid} in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: bna://bladenight.app?addFriend&code={requestid} on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n{playStoreLink} and on Apple App Store \n{iosAppStoreLink}",
+  "sendlinkdescription": "Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: {requestId} in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: {bnaLink} on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n{playStoreLink} and on Apple App Store \n{iosAppStoreLink}",
   "sendlinksubject": "Send link to BladeNight-App. You can see each other.",
   "serverNotReachable": "Connecting to server ...",
   "sessionConnectionError": "Error negotiate session connection",

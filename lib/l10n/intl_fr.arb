@@ -60,9 +60,11 @@
     "type": "texte"
   },
   "@sendlinkdescription": {
-    "description": "Veuillez envoyer le code {requestid} à votre ami",
+    "description": "Veuillez envoyer le code {requestId} à votre ami",
     "placeholders": {
-      "requestid": {}
+      "requestId": {},
+      "bnaLink": {},
+      "myName": {}
     },
     "type": "text"
   },
@@ -392,7 +394,7 @@
   "seemsoffline": "Attente de la connexion internet ...",
   "sendData30sec": "Demande envoyée - le changement prend environ 30 secondes.",
   "sendlink": "Envoyer un lien",
-  "sendlinkdescription": "Hi, this is my invitation to share your skating position in BladeNight App, and find me. Si vous aimez cela, obtenez l'application BladeNight sur l'AppStore et entrez le code : {requestid} dans Amis après avoir appuyé sur + ajouter un ami par code.\nLorsque l'application BladeNight est installée, utilisez le lien suivant : bna://bladenight.app?addFriend&code={requestid} sur votre mobile. \nAmusez-vous et nous trouverons ensemble.\nL'application BladeNight est disponible sur Playstore \n{playStoreLink} et sur Apple App Store \n{iosAppStoreLink}",
+  "sendlinkdescription": "Hi, this is my invitation to share your skating position in BladeNight App, and find me. Si vous aimez cela, obtenez l'application BladeNight sur l'AppStore et entrez le code : {requestId} dans Amis après avoir appuyé sur + ajouter un ami par code.\nLorsque l'application BladeNight est installée, utilisez le lien suivant: {bnaLink} sur votre mobile. \nAmusez-vous et nous trouverons ensemble.\nL'application BladeNight est disponible sur Playstore \n{playStoreLink} et sur Apple App Store \n{iosAppStoreLink}",
   "sendlinksubject": "Envoyer un lien à BladeNight-App. Vous pouvez vous voir",
   "serverNotReachable": "Connecting to server ...",
   "sessionConnectionError": "Erreur de négociation de la connexion à la session",

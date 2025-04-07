@@ -1,7 +1,5 @@
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

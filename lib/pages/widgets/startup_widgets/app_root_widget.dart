@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,16 +10,50 @@ import '../../../generated/l10n.dart';
 import '../../../providers/app_start_and_router/go_router.dart';
 import 'app_start_widget.dart';
 
-class AppRootWidget extends ConsumerWidget {
+class AppRootWidget extends ConsumerStatefulWidget {
   const AppRootWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AppRootWidget> createState() => _AppRootWidget();
+}
+
+class _AppRootWidget extends ConsumerState<AppRootWidget> {
+  StreamSubscription<Uri>? _linkSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    initDeepLinks();
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+
+    super.dispose();
+  }
+
+  Future<void> initDeepLinks() async {
+    // Handle links
+    _linkSubscription = AppLinks().uriLinkStream.listen((uri) {
+      debugPrint('onAppLink: $uri');
+      openAppLink(uri);
+    });
+  }
+
+  void openAppLink(Uri uri) {
+    ref.read(goRouterProvider).push(uri.path, extra: uri.queryParameters);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     //no localize if routerProvider deep linked
     final goRouter = ref.watch(goRouterProvider);
     return CupertinoApp.router(
       routerConfig: goRouter,
       supportedLocales: Localize.delegate.supportedLocales,
+      title: 'BladeNightApp',
       localizationsDelegates: const [
         Localize.delegate,
         GlobalWidgetsLocalizations.delegate,

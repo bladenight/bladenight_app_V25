@@ -6,11 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
     show Icons, Colors, Scaffold, Badge, FloatingActionButton;
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app_settings/app_constants.dart';
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';

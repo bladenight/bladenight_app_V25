@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -29,9 +28,10 @@ class Localize {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<Localize> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name =
+        (locale.countryCode?.isEmpty ?? false)
+            ? locale.languageCode
+            : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -2691,17 +2691,19 @@ class Localize {
     return Intl.message('Send link', name: 'sendlink', desc: '', args: []);
   }
 
-  /// `Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: {requestid} in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: bna://bladenight.app?addFriend&code={requestid} on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n{playStoreLink} and on Apple App Store \n{iosAppStoreLink}`
+  /// `Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: {requestId} in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: {bnaLink} on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n{playStoreLink} and on Apple App Store \n{iosAppStoreLink}`
   String sendlinkdescription(
-    Object requestid,
+    Object requestId,
+    Object bnaLink,
+    Object myName,
     Object playStoreLink,
     Object iosAppStoreLink,
   ) {
     return Intl.message(
-      'Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: $requestid in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: bna://bladenight.app?addFriend&code=$requestid on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n$playStoreLink and on Apple App Store \n$iosAppStoreLink',
+      'Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: $requestId in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: $bnaLink on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n$playStoreLink and on Apple App Store \n$iosAppStoreLink',
       name: 'sendlinkdescription',
-      desc: 'Please send code {requestid} to your friend',
-      args: [requestid, playStoreLink, iosAppStoreLink],
+      desc: 'Please send link {bnaLink} to your friend',
+      args: [requestId, bnaLink, myName, playStoreLink, iosAppStoreLink],
     );
   }
 
