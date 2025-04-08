@@ -4142,6 +4142,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Your friend ({friendName}) can also take a photo of this barcode and add your name:{myName} and code:{code} to his BladeNightApp if the app is installed.`
+  String scanCodeForFriend(Object friendName, Object myName, Object code) {
+    return Intl.message(
+      'Your friend ($friendName) can also take a photo of this barcode and add your name:$myName and code:$code to his BladeNightApp if the app is installed.',
+      name: 'scanCodeForFriend',
+      desc: '',
+      args: [friendName, myName, code],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

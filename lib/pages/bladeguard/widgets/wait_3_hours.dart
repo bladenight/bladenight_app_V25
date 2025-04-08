@@ -67,27 +67,25 @@ class _Wait3HoursState extends ConsumerState<Wait3Hours>
               ),
               child: Row(children: [
                 Expanded(
-                  child: Expanded(
-                    child: Column(children: [
-                      Text(
-                        Localize.of(context).loginThreeHoursBefore,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      if (!widget.event.isActive &&
-                          widget.event.status == EventStatus.confirmed)
-                        AnimatedBuilder(
-                            animation: _colorAnimationYellow,
-                            builder: (context, child) {
-                              return Text(
-                                '${Localize.of(context).start} in ${TimeConverter.millisecondsToDateTimeString(value: widget.event.startDate.difference(DateTime.now()).inMilliseconds)}',
-                                textAlign: TextAlign.center,
-                              );
-                            }),
-                    ]),
-                  ),
+                  child: Column(children: [
+                    Text(
+                      Localize.of(context).loginThreeHoursBefore,
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    if (!widget.event.isActive &&
+                        widget.event.status == EventStatus.confirmed)
+                      AnimatedBuilder(
+                          animation: _colorAnimationYellow,
+                          builder: (context, child) {
+                            return Text(
+                              '${Localize.of(context).start} in ${TimeConverter.millisecondsToDateTimeString(value: widget.event.startDate.difference(DateTime.now()).inMilliseconds)}',
+                              textAlign: TextAlign.center,
+                            );
+                          }),
+                  ]),
                 ),
                 Image.asset(
                   CupertinoTheme.brightnessOf(context) == Brightness.light

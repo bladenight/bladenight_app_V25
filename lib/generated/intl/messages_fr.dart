@@ -62,7 +62,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m15(timeout) =>
       "Aucun événement n\'est actif depuis plus de ${timeout} min - le suivi s\'est arrêté automatiquement";
 
-  static String m16(
+  static String m16(friendName, myName, code) =>
+      "Votre ami (${friendName}) peut également prendre une photo de ce code-barres et ajouter le nom ${myName} et ${code} à BladeNightApp si l\'application est installée.";
+
+  static String m17(
     requestId,
     bnaLink,
     myName,
@@ -71,21 +74,21 @@ class MessageLookup extends MessageLookupByLibrary {
   ) =>
       "Hi, this is my invitation to share your skating position in BladeNight App, and find me. Si vous aimez cela, obtenez l\'application BladeNight sur l\'AppStore et entrez le code : ${requestId} dans Amis après avoir appuyé sur + ajouter un ami par code.\nLorsque l\'application BladeNight est installée, utilisez le lien suivant: ${bnaLink} sur votre mobile. \nAmusez-vous et nous trouverons ensemble.\nL\'application BladeNight est disponible sur Playstore \n${playStoreLink} et sur Apple App Store \n${iosAppStoreLink}";
 
-  static String m17(timeout) =>
+  static String m18(timeout) =>
       "L\'événement s\'est terminé (${timeout} min). N\'oubliez pas d\'arrêter le suivi";
 
-  static String m18(name, requestid) =>
+  static String m19(name, requestid) =>
       "Veuillez indiquer ce code à \'${name}\' \n${requestid}\nIl/elle doit le confirmer dans son \'BladeNight-App\'.\nLe code n\'est valable que 60 minutes ! \nVeuillez mettre à jour le statut manuellement avec le bouton ↻.";
 
-  static String m19(time) => "${time}";
-
-  static String m20(level) =>
-      "Le suivi s\'est arrêté en raison d\'une batterie faible ${level}%. Pour éviter cela, désactivez l\'arrêt automatique dans les paramètres";
+  static String m20(time) => "${time}";
 
   static String m21(level) =>
+      "Le suivi s\'est arrêté en raison d\'une batterie faible ${level}%. Pour éviter cela, désactivez l\'arrêt automatique dans les paramètres";
+
+  static String m22(level) =>
       "Affichage activé par les paramètres de l\'application - Avertissement, batterie faible ${level} %";
 
-  static String m22(date) => "${date}";
+  static String m23(date) => "${date}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -761,10 +764,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "online": MessageLookupByLibrary.simpleMessage("en ligne"),
     "onlyReducedLocationAccuracyText": MessageLookupByLibrary.simpleMessage(
-      "Only approximate location is shared. This may influence the tracking of your position in procession",
+      "Seule une position approximative est communiquée. Cela peut influencer le suivi de votre position dans le cortège.",
     ),
     "onlyReducedLocationAccuracyTitle": MessageLookupByLibrary.simpleMessage(
-      "Only approximate location",
+      "Emplacement approximatif seulement",
     ),
     "onlyTracking": MessageLookupByLibrary.simpleMessage(
       "Enregistrement de localisation uniquement actif!",
@@ -790,9 +793,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneNumber": MessageLookupByLibrary.simpleMessage("Mobile"),
     "pickcolor": MessageLookupByLibrary.simpleMessage("Choisissez une couleur"),
     "polyLinesAmount": MessageLookupByLibrary.simpleMessage(
-      "To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying.",
+      "Pour augmenter la vitesse de rendu sur les appareils lents, vous pouvez augmenter/diminuer la quantité de polylignes dessinées (points d\'itinéraire) sur la carte avant de simplifier.",
     ),
-    "polyLinesAmountHeader": MessageLookupByLibrary.simpleMessage("Amount"),
+    "polyLinesAmountHeader": MessageLookupByLibrary.simpleMessage("Nombre"),
     "position": MessageLookupByLibrary.simpleMessage("Position"),
     "positiveInFront": MessageLookupByLibrary.simpleMessage(
       "Positif si je suis devant, négatif si je suis derrière",
@@ -875,6 +878,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "running": MessageLookupByLibrary.simpleMessage("Nous sommes en route"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
+    "scanCodeForFriend": m16,
     "scrollMapTo": MessageLookupByLibrary.simpleMessage(
       "Faire défiler la carte pour ...",
     ),
@@ -895,7 +899,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Envoyer un email (E-Mail support)",
     ),
     "sendlink": MessageLookupByLibrary.simpleMessage("Envoyer un lien"),
-    "sendlinkdescription": m16,
+    "sendlinkdescription": m17,
     "sendlinksubject": MessageLookupByLibrary.simpleMessage(
       "Envoyer un lien à BladeNight-App. Vous pouvez vous voir",
     ),
@@ -1045,15 +1049,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopParticipationTracking": MessageLookupByLibrary.simpleMessage(
       "Arrêter le suivi de la participation",
     ),
-    "stopTrackingTimeOut": m17,
+    "stopTrackingTimeOut": m18,
     "submit": MessageLookupByLibrary.simpleMessage("Senden"),
     "symbols": MessageLookupByLibrary.simpleMessage("Symboles"),
     "tail": MessageLookupByLibrary.simpleMessage("Fin du procession"),
-    "tellcode": m18,
+    "tellcode": m19,
     "thanksForParticipating": MessageLookupByLibrary.simpleMessage(
       "Merci d\'avoir participé",
     ),
-    "timeIntl": m19,
+    "timeIntl": m20,
     "timeOutDurationExceedTitle": MessageLookupByLibrary.simpleMessage(
       "Timeout - duration of BladeNight exceed",
     ),
@@ -1081,7 +1085,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingRestarted": MessageLookupByLibrary.simpleMessage(
       "Suivi du redémarrage",
     ),
-    "trackingStoppedLowBat": m20,
+    "trackingStoppedLowBat": m21,
     "train": MessageLookupByLibrary.simpleMessage("procession"),
     "trainlength": MessageLookupByLibrary.simpleMessage(
       "longueur du procession",
@@ -1106,12 +1110,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "wakelockEnabled": MessageLookupByLibrary.simpleMessage(
       "L\'écran reste allumé",
     ),
-    "wakelockWarnBattery": m21,
-    "warning": MessageLookupByLibrary.simpleMessage("Warning!"),
+    "wakelockWarnBattery": m22,
+    "warning": MessageLookupByLibrary.simpleMessage("Avertissement!"),
     "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
       "Est annulé ! Veuillez le vérifier sur https://bladenight-muenchen.de",
     ),
-    "weekdayIntl": m22,
+    "weekdayIntl": m23,
     "yes": MessageLookupByLibrary.simpleMessage("Oui"),
     "yesterday": MessageLookupByLibrary.simpleMessage("était hier"),
   };

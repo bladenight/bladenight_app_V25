@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app_settings/app_configuration_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/special_procession_function_provider.dart';
@@ -25,7 +26,7 @@ class SpecialFunctionInfo extends ConsumerWidget {
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
                   child: ColoredBox(
-                    color: Color(0xFFFFD700),
+                    color: systemPrimaryDarkDefaultColor,
                     child: FittedBox(
                       child: Text(
                         Localize.of(context).head,
@@ -50,6 +51,7 @@ class SpecialFunctionInfo extends ConsumerWidget {
                     color: Colors.redAccent,
                     child: FittedBox(
                       child: Text(
+                        style: TextStyle(color: Colors.black),
                         Localize.of(context).tail,
                       ),
                     ),

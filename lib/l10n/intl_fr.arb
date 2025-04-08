@@ -555,11 +555,12 @@
   "showLogData": "Afficher les données de journal",
   "serverVersion": "Serverversion",
   "appInfo": "App Info",
-  "onlyReducedLocationAccuracyTitle": "Only approximate location",
-  "onlyReducedLocationAccuracyText": "Only approximate location is shared. This may influence the tracking of your position in procession",
-  "warning": "Warning!",
+  "onlyReducedLocationAccuracyTitle": "Emplacement approximatif seulement",
+  "onlyReducedLocationAccuracyText": "Seule une position approximative est communiquée. Cela peut influencer le suivi de votre position dans le cortège.",
+  "warning": "Avertissement!",
   "enableAlwaysLocationGeofenceText": "Pour la connexion automatique sur place, le partage de site devrait être réglé sur toujours. Faut-il ouvrir les paramètres système ?",
-  "polyLinesAmountHeader": "Amount",
-  "polyLinesAmount": "To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying."
+  "polyLinesAmountHeader": "Nombre",
+  "polyLinesAmount": "Pour augmenter la vitesse de rendu sur les appareils lents, vous pouvez augmenter/diminuer la quantité de polylignes dessinées (points d'itinéraire) sur la carte avant de simplifier.",
+  "scanCodeForFriend": "Votre ami ({friendName}) peut également prendre une photo de ce code-barres et ajouter le nom {myName} et {code} à BladeNightApp si l'application est installée."
 }
 

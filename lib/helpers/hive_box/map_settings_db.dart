@@ -199,6 +199,20 @@ extension MapSettings on HiveSettingsDB {
     HiveSettingsDB._hiveBox.put(compassVisibleKey, val);
   }
 
+  static const String eventDetailsVisibleKey = 'eventDetailsVisiblePref';
+
+  /// get eventDetailsVisible
+  /// show details of event in map overlay if event is running
+  static bool get eventDetailsVisible {
+    return HiveSettingsDB._hiveBox
+        .get(eventDetailsVisibleKey, defaultValue: true);
+  }
+
+  ///set eventDetailsVisibleString
+  static void setEventDetailsVisible(bool val) {
+    HiveSettingsDB._hiveBox.put(eventDetailsVisibleKey, val);
+  }
+
   static const String showOwnTrackKey = 'showOwnTrackPref';
 
   /// Get value

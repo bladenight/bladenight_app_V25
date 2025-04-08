@@ -62,7 +62,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m15(timeout) =>
       "Keine Veranstaltung seit mindestens ${timeout} min. aktiv - Tracking automatisch beendet";
 
-  static String m16(
+  static String m16(friendName, myName, code) =>
+      "Dein Freund (${friendName}) kann auch diesen Barcode fotografieren und erhält die Daten automatisch in seiner App. Dies ist dein oben eingetragener Name: ${myName} und Code: ${code}, wenn die BladeNightApp auf seinem Handy installiert ist.";
+
+  static String m17(
     requestId,
     bnaLink,
     myName,
@@ -71,21 +74,21 @@ class MessageLookup extends MessageLookupByLibrary {
   ) =>
       "Dies ist die Einladung um deine(n) Freund:in (Absender der Nachricht) in der BladeNightApp zu sehen und euch im Skaterzug wiederzufinden. Wenn du das möchtest lade Dir die Baldenigthapp und gib den Code: ${requestId} ein.\nWenn die App schon installiert ist benutze den link ${bnaLink} auf dem Telefon. \nViel Spass beim skaten.\nDie App ist verfügbar im Playstore \n${playStoreLink} und im Apple App Store \n${iosAppStoreLink}";
 
-  static String m17(timeout) =>
+  static String m18(timeout) =>
       "Eventzeit (${timeout} min) überzogen. Tracking abschalten nicht vergessen!";
 
-  static String m18(name, requestid) =>
+  static String m19(name, requestid) =>
       "Sende an \'${name}\' den Code \n${requestid}\nDein(e) Freund:in muss den Code in dessen BladeNight-App bestätigen.\nDer Code ist 60 min gültig!\nBitte über ↻ den Status manuell aktualisieren.";
 
-  static String m19(time) => "${time} Uhr";
-
-  static String m20(level) =>
-      "Tracking gestoppt wegen niedriger Batterie ${level}%. Um dies zu vermeiden, deaktivieren Sie Autostop in den Einstellungen";
+  static String m20(time) => "${time} Uhr";
 
   static String m21(level) =>
+      "Tracking gestoppt wegen niedriger Batterie ${level}%. Um dies zu vermeiden, deaktivieren Sie Autostop in den Einstellungen";
+
+  static String m22(level) =>
       "Display bleibt ist aktiviert - Warnung, das Batterieladung niedrig ${level}%.";
 
-  static String m22(date) => "${date}";
+  static String m23(date) => "${date}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -854,6 +857,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "routeoverview": MessageLookupByLibrary.simpleMessage("Routenverlauf"),
     "running": MessageLookupByLibrary.simpleMessage("Wir fahren gerade"),
     "save": MessageLookupByLibrary.simpleMessage("Speichern"),
+    "scanCodeForFriend": m16,
     "scrollMapTo": MessageLookupByLibrary.simpleMessage("Scrolle Karte zu ..."),
     "searchNearby": MessageLookupByLibrary.simpleMessage(
       "Suche Geräte in der Nähe ...",
@@ -872,7 +876,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ich habe ein Problem! (Email-Support)",
     ),
     "sendlink": MessageLookupByLibrary.simpleMessage("Link senden"),
-    "sendlinkdescription": m16,
+    "sendlinkdescription": m17,
     "sendlinksubject": MessageLookupByLibrary.simpleMessage(
       "Sende link an BladeNight-App. Ihr könnt euch gegenseitig sehen.",
     ),
@@ -1008,15 +1012,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopParticipationTracking": MessageLookupByLibrary.simpleMessage(
       "Stoppe Teilnahme/ Tracking",
     ),
-    "stopTrackingTimeOut": m17,
+    "stopTrackingTimeOut": m18,
     "submit": MessageLookupByLibrary.simpleMessage("Senden"),
     "symbols": MessageLookupByLibrary.simpleMessage("Symbole"),
     "tail": MessageLookupByLibrary.simpleMessage("Zugende"),
-    "tellcode": m18,
+    "tellcode": m19,
     "thanksForParticipating": MessageLookupByLibrary.simpleMessage(
       "Danke fürs Teilnehmen.",
     ),
-    "timeIntl": m19,
+    "timeIntl": m20,
     "timeOutDurationExceedTitle": MessageLookupByLibrary.simpleMessage(
       "Zeitüberschreitung Dauer der BladeNight",
     ),
@@ -1048,7 +1052,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingRestarted": MessageLookupByLibrary.simpleMessage(
       "Tracking wieder gestartet",
     ),
-    "trackingStoppedLowBat": m20,
+    "trackingStoppedLowBat": m21,
     "train": MessageLookupByLibrary.simpleMessage("Skater-Zug"),
     "trainlength": MessageLookupByLibrary.simpleMessage("Zuglänge"),
     "tryOpenAppSettings": MessageLookupByLibrary.simpleMessage(
@@ -1077,12 +1081,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "wakelockEnabled": MessageLookupByLibrary.simpleMessage(
       "Display bleibt an",
     ),
-    "wakelockWarnBattery": m21,
+    "wakelockWarnBattery": m22,
     "warning": MessageLookupByLibrary.simpleMessage("Achtung!"),
     "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
       "wurde leider abgesagt! Bitte prüfe dies auf https://bladenight-muenchen.de",
     ),
-    "weekdayIntl": m22,
+    "weekdayIntl": m23,
     "yes": MessageLookupByLibrary.simpleMessage("Ja"),
     "yesterday": MessageLookupByLibrary.simpleMessage("war gestern"),
   };

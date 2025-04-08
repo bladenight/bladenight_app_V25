@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../../helpers/enums/tracking_type.dart';
+import '../../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../../helpers/logger/logger.dart';
 import '../../../../helpers/time_converter_helper.dart';
 import '../../../../models/event.dart';
@@ -103,131 +104,153 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
               top: MediaQuery.of(context).padding.top + 10,
               left: 15,
               right: 15,
-              child: GestureDetector(
-                onLongPress: () async {},
-                onTap: () {
-                  showCupertinoModalBottomSheet(
-                      backgroundColor: CupertinoDynamicColor.resolve(
-                          CupertinoColors.systemBackground, context),
-                      context: context,
-                      builder: (context) {
-                        return Container(
-                          constraints: BoxConstraints(
-                            maxHeight: kIsWeb
-                                ? MediaQuery.of(context).size.height * 0.5
-                                : MediaQuery.of(context).size.height * 0.7,
-                          ),
-                          child: MapEventInformation(
-                            mapController: widget.controller,
-                          ),
-                        );
-                      });
-                },
-                child: ClipShadow(
-                  boxShadows: [
-                    BoxShadow(
-                      //outer shadow
-                      offset: Offset(1.1, 1.1),
-                      blurRadius: 10.0,
-                      blurStyle: BlurStyle.outer,
-                      spreadRadius: 0.0,
-                      color: actualOrNextEvent.statusColor,
-                    ),
-                  ],
-                  clipper: InfoClipper(),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Stack(children: [
-                      Builder(builder: (context) {
-                        return Container(
-                          color: CupertinoDynamicColor.resolve(
-                              CupertinoColors.transparent, context),
-                          padding: const EdgeInsets.all(10),
-                          child: Column(children: [
-                            const SpecialFunctionInfo(),
-                            if (eventIsActive &&
-                                ref.watch(isTrackingProvider) &&
-                                rtu.user.isOnRoute)
-                              EventActiveTrackingActiveUserOnRoute(),
-                            if (eventIsActive &&
-                                    !ref.watch(isTrackingProvider) ||
-                                !rtu.user.isOnRoute)
-                              EventActiveNoTrackingNotOnRouteWidget(),
-                            if (eventIsActive)
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    // estimated time of arrival is time from start
-                                    Flexible(
-                                      fit: FlexFit.tight,
-                                      child: Text(
-                                        '⏱Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 30 * 60 * 1000)}',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.clip,
-                                        softWrap: false,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: CupertinoTheme.of(context)
-                                                .primaryColor),
-                                      ),
+              child: ClipShadow(
+                boxShadows: [
+                  BoxShadow(
+                    //outer shadow
+                    offset: Offset(1.1, 1.1),
+                    blurRadius: 10.0,
+                    blurStyle: BlurStyle.outer,
+                    spreadRadius: 0.0,
+                    color: actualOrNextEvent.statusColor,
+                  ),
+                ],
+                clipper: InfoClipper(),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Stack(children: [
+                    Builder(builder: (context) {
+                      return Container(
+                        color: CupertinoDynamicColor.resolve(
+                            CupertinoColors.transparent, context),
+                        padding: const EdgeInsets.all(10),
+                        child: Column(children: [
+                          const SpecialFunctionInfo(),
+                          if (eventIsActive &&
+                              ref.watch(isTrackingProvider) &&
+                              rtu.user.isOnRoute)
+                            EventActiveTrackingActiveUserOnRoute(),
+                          if (eventIsActive && !ref.watch(isTrackingProvider) ||
+                              !rtu.user.isOnRoute)
+                            EventActiveNoTrackingNotOnRouteWidget(),
+                          if (eventIsActive)
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  // estimated time of arrival is time from start
+                                  Flexible(
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      '⏱Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 30 * 60 * 1000)}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.clip,
+                                      softWrap: false,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: CupertinoTheme.of(context)
+                                              .primaryColor),
                                     ),
+                                  ),
 
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    if (ref.watch(isTrackingProvider))
-                                      Flexible(
-                                        fit: FlexFit.tight,
-                                        child: Text(
-                                          '⇥ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail(), maxvalue: 120 * 60 * 1000)}',
-                                          maxLines: 1,
-                                          softWrap: false,
-                                          overflow: TextOverflow.fade,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                            color: CupertinoTheme.of(context)
-                                                .primaryColor,
-                                          ),
-                                        ),
-                                      ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  if (ref.watch(isTrackingProvider))
                                     Flexible(
                                       fit: FlexFit.tight,
                                       child: Text(
-                                        '📏 ${(rtu.distanceOfTrainComplete() / 1000).toStringAsFixed(1)} km',
+                                        '⇥ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail(), maxvalue: 120 * 60 * 1000)}',
                                         maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.end,
                                         softWrap: false,
+                                        overflow: TextOverflow.fade,
                                         style: TextStyle(
                                           fontWeight: FontWeight.normal,
                                           color: CupertinoTheme.of(context)
                                               .primaryColor,
                                         ),
                                       ),
+                                    ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Flexible(
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      '📏 ${(rtu.distanceOfTrainComplete() / 1000).toStringAsFixed(1)} km',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.end,
+                                      softWrap: false,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: CupertinoTheme.of(context)
+                                            .primaryColor,
+                                      ),
+                                    ),
+                                  )
+                                ]),
+                          //hide event to save space
+                          if (actualOrNextEvent.rpcException == null) ...[
+                            GestureDetector(
+                              onTap: () {
+                                actualOrNextEvent.isRunning &&
+                                        MapSettings.eventDetailsVisible
+                                    ? MapSettings.setEventDetailsVisible(false)
+                                    : null;
+                              },
+                              child: MapSettings.eventDetailsVisible ||
+                                      !actualOrNextEvent.isRunning
+                                  ? EventDataMapOverview(
+                                      nextEvent: actualOrNextEvent,
+                                      showMap: false,
+                                      showSeparator: false,
+                                      eventIsRunning: eventIsActive,
                                     )
-                                  ]),
-                            if (rtu.rpcException == null) ...[
-                              EventDataMapOverview(
-                                nextEvent: actualOrNextEvent,
-                                showMap: false,
-                                showSeparator: false,
-                                eventIsRunning: eventIsActive,
-                              ),
-                            ],
-                            const UpdateProgress(),
-                          ]),
-                        );
-                      }),
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: ConnectionWarning(),
-                      ),
-                    ]),
-                  ),
+                                  : SizedBox(),
+                            ),
+                          ],
+                          GestureDetector(
+                            onLongPress: () async {},
+                            onTap: () {
+                              if (!MapSettings.eventDetailsVisible) {
+                                MapSettings.setEventDetailsVisible(true);
+                              }
+                              showCupertinoModalBottomSheet(
+                                  backgroundColor:
+                                      CupertinoDynamicColor.resolve(
+                                          CupertinoColors.systemBackground,
+                                          context),
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      constraints: BoxConstraints(
+                                        maxHeight: kIsWeb
+                                            ? MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.5
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.7,
+                                      ),
+                                      child: MapEventInformation(
+                                        mapController: widget.controller,
+                                      ),
+                                    );
+                                  });
+                            },
+                            child: const UpdateProgress(),
+                          ),
+                        ]),
+                      );
+                    }),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: ConnectionWarning(),
+                    ),
+                  ]),
                 ),
               ),
             ),

@@ -229,7 +229,10 @@ class _MessagesPage extends ConsumerState with WidgetsBindingObserver {
                       secondaryBackground: Container(
                           color: Colors.redAccent,
                           child: CupertinoListTile(
-                              title: Text(Localize.of(context).deleteMessage),
+                              title: Text(
+                                Localize.of(context).deleteMessage,
+                                style: TextStyle(color: Colors.black),
+                              ),
                               trailing: const Icon(Icons.delete,
                                   color: Colors.white, size: 36.0))),
                     );

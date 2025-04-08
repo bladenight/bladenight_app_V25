@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app_settings/app_configuration_helper.dart'
+    show systemPrimaryDarkDefaultColor;
+
 class ShadowBoxWidget extends ConsumerWidget {
   const ShadowBoxWidget(
       {super.key,
       required this.child,
       this.borderRadius = 15,
-      this.boxShadowColor = const Color(0xFFFFD700),
+      this.boxShadowColor = systemPrimaryDarkDefaultColor,
       this.offset = const Offset(1.1, 1.1),
       this.edgeInset =
           const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5)});

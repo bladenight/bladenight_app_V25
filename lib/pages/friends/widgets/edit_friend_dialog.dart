@@ -271,10 +271,14 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                                                     children: [
                                                       Icon(
                                                         Icons.save_alt,
+                                                        color: Colors.black,
                                                       ),
                                                       FittedBox(
                                                         fit: BoxFit.scaleDown,
                                                         child: Text(
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black),
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
@@ -296,7 +300,10 @@ class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: CupertinoButton(
                           color: Colors.redAccent,
-                          child: Text(Localize.of(context).cancel),
+                          child: Text(
+                            Localize.of(context).cancel,
+                            style: TextStyle(color: Colors.black),
+                          ),
                           onPressed: () {
                             dismissKeyboard(context);
                             if (context.canPop()) {
@@ -401,6 +408,8 @@ Future showFriendLink(BuildContext context, Friend friend) {
               child: Text(
                 Localize.current.tellcode(friend.name, friend.requestId),
                 textAlign: TextAlign.center,
+                style:
+                    TextStyle(color: CupertinoTheme.of(context).primaryColor),
               ),
             ),
             CupertinoFormSection(
@@ -455,8 +464,8 @@ Future showFriendLink(BuildContext context, Friend friend) {
                 ]),
             CupertinoFormSection(
                 header: Text(
-                  '${Localize.current.invitebyname(friend.name)}  '
-                  'Code:${friend.requestId}',
+                  Localize.current.scanCodeForFriend(
+                      friend.name, HiveSettingsDB.myName, friend.requestId),
                   textAlign: TextAlign.center,
                 ),
                 children: [

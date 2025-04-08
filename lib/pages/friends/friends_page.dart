@@ -336,7 +336,10 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                       secondaryBackground: Container(
                         color: Colors.redAccent,
                         child: CupertinoListTile(
-                          title: Text(Localize.of(context).deletefriend),
+                          title: Text(
+                            Localize.of(context).deletefriend,
+                            style: TextStyle(color: Colors.black),
+                          ),
                           trailing: const Icon(Icons.delete,
                               color: Colors.white, size: 36.0),
                         ),
