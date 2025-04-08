@@ -13,40 +13,6 @@ import 'location_provider.dart';
 
 part 'active_event_route_provider.g.dart';
 
-@Riverpod(keepAlive: false)
-class ActiveEventRoute extends _$ActiveEventRoute {
-  RoutePoints rp = RoutePoints('', <LatLng>[]);
-
-  @override
-  Future<RoutePoints> build() async {
-    var activeEvent = ref.watch(activeEventProvider);
-    return await _updateRoutePoints(activeEvent);
-  }
-
-  Future<RoutePoints> _updateRoutePoints(Event event) async {
-    if (event.status != EventStatus.noevent) {
-      var oldEventInPrefs = HiveSettingsDB.getActualEvent;
-      //get route points on event update to update Map
-      if (oldEventInPrefs.compareTo(event) != 0 ||
-          rp.name != event.routeName ||
-          rp.points.length <= 2) {
-        var route = await RoutePoints.getActiveRoutePointsWamp();
-        if (route.rpcException != null) {
-          //don't_update
-          return rp;
-        } else {
-          rp = route;
-          return rp;
-        }
-      } else {
-        return rp;
-      }
-    }
-    rp = RoutePoints('', <LatLng>[]);
-    return rp;
-  }
-}
-
 @riverpod
 class HeadingPoints extends _$HeadingPoints {
   @override
@@ -82,12 +48,12 @@ class ProcessionRoutePoints extends _$ProcessionRoutePoints {
 
   @override
   Future<List<LatLng>> build() async {
-    var activeRoute = await ref.watch(activeEventRouteProvider.future);
+    var activeRoute = ref.read(activeEventProvider).nodes;
     var realtimeData = ref.watch(realtimeDataProvider);
     if (realtimeData != null) {
       failCounter = 0;
-      rtData = runningRoute(activeRoute.points, realtimeData.head.position,
-          realtimeData.tail.position);
+      rtData = runningRoute(
+          activeRoute, realtimeData.head.position, realtimeData.tail.position);
       SendToWatch.updateRunningRoute(rtData);
       state = AsyncValue.data(rtData);
       return Future(() => rtData);
