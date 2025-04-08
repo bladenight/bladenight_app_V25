@@ -182,7 +182,10 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                         uri, 'Bladeguard-Registrierung');
                                   },
                                   color: Colors.lightGreen,
-                                  child: Text(Localize.of(context).register),
+                                  child: Text(
+                                    Localize.of(context).register,
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -195,7 +198,10 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     context.pop();
                                   },
                                   color: Colors.redAccent,
-                                  child: Text(Localize.of(context).later),
+                                  child: Text(
+                                    Localize.of(context).later,
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
                               ),
                             ],

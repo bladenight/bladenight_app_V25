@@ -341,11 +341,15 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                               children: [
                                 Icon(
                                   Icons.save_alt,
+                                  color: Colors.black,
                                 ),
                                 Expanded(
                                   child: Center(
                                     child: FittedBox(
-                                      child: Text(Localize.of(context).save),
+                                      child: Text(
+                                        Localize.of(context).save,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -383,10 +387,10 @@ class _EventEditorState extends ConsumerState<EventEditor> {
     });
     ref.invalidate(allEventsProvider);
     if (!res) {
-      showToast(message: 'Fehler beim Speichern!');
+      showToast(message: 'Fehler beim Speichern! $res');
     }
     if (mounted && context.mounted && res && context.canPop()) {
-      context.pop(_event);
+      showToast(message: 'Event gespeichert!'); //(context).pop(_event);
     }
   }
 }
