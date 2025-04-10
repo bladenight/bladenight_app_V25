@@ -311,6 +311,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "bladeguardInfo": m0,
     "bladenight": MessageLookupByLibrary.simpleMessage("BladeNight"),
+    "bladenightInfoTitle": MessageLookupByLibrary.simpleMessage(
+      "WebApp and Information about BladeNight Munich",
+    ),
     "bladenightUpdate": MessageLookupByLibrary.simpleMessage(
       "BladeNight mise à jour",
     ),

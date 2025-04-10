@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -83,8 +84,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
       return TrackOnlyOverlayWidget();
     }
     var actualOrNextEvent = ref.watch(activeEventProvider);
-    var eventIsActive = actualOrNextEvent.status == EventStatus.running ||
-        (rtu != null && rtu.eventIsActive);
+
     //Error no data
     if (rtu == null ||
         rtu.rpcException != null ||
@@ -117,23 +117,28 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                 ],
                 clipper: InfoClipper(),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  filter: kIsWeb
+                      ? ImageFilter.blur(sigmaX: 20, sigmaY: 10)
+                      : ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                   child: Stack(children: [
                     Builder(builder: (context) {
                       return Container(
-                        color: CupertinoDynamicColor.resolve(
-                            CupertinoColors.transparent, context),
+                        color: kIsWeb
+                            ? Colors.grey
+                            : CupertinoDynamicColor.resolve(
+                                CupertinoColors.transparent, context),
                         padding: const EdgeInsets.all(10),
                         child: Column(children: [
                           const SpecialFunctionInfo(),
-                          if (eventIsActive &&
+                          if (actualOrNextEvent.isRunning &&
                               ref.watch(isTrackingProvider) &&
                               rtu.user.isOnRoute)
                             EventActiveTrackingActiveUserOnRoute(),
-                          if (eventIsActive && !ref.watch(isTrackingProvider) ||
+                          if (actualOrNextEvent.isRunning &&
+                                  !ref.watch(isTrackingProvider) ||
                               !rtu.user.isOnRoute)
                             EventActiveNoTrackingNotOnRouteWidget(),
-                          if (eventIsActive)
+                          if (actualOrNextEvent.isRunning)
                             Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -205,7 +210,8 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                                       nextEvent: actualOrNextEvent,
                                       showMap: false,
                                       showSeparator: false,
-                                      eventIsRunning: eventIsActive,
+                                      eventIsRunning:
+                                          actualOrNextEvent.isRunning,
                                     )
                                   : SizedBox(),
                             ),

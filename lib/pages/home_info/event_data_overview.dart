@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
+import '../../providers/app_start_and_router/go_router.dart';
 import '../widgets/event_info/event_state_traffic_light.dart';
 import 'event_map_small.dart';
 
@@ -77,7 +78,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
         if (widget.showMap)
           GestureDetector(
             onTap: () {
-              context.goNamed('map');
+              context.goNamed(AppRoute.map.name);
             },
             child: EventMapSmall(
                 nextEvent: widget.nextEvent, borderRadius: widget.borderRadius),

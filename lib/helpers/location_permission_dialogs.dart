@@ -80,7 +80,8 @@ class LocationPermissionDialog {
     return getPermissionsStatus();
   }
 
-  ///Shows Disclosure on Android and return true if positive or false on denied forever or negative answer
+  ///Shows Disclosure on Android and return true if positive or false
+  ///on denied forever or negative answer
   Future<bool> showProminentAndroidDisclosure() async {
     double? platformVersion;
     if (GetPlatform.isAndroid) {
@@ -313,21 +314,11 @@ class LocationPermissionDialog {
 
   ///Returns [LocationPermissionStatus] of device
   Future<LocationPermissionStatus> getPermissionsStatus() async {
-    Stopwatch sw = Stopwatch();
-    sw.start();
     LocationPermission permission = await Geolocator.checkPermission();
-
-    if (!kIsWeb) {
-      BnLog.info(
-          className: 'locationProvider',
-          methodName: 'init',
-          text: 'init get permissions status ${sw.elapsedMicroseconds} micros');
-    }
-    if (kDebugMode) {
-      print(
-          'init get permissions status ${sw.elapsedMicroseconds} micros /${sw.elapsedMilliseconds}ms');
-    }
-    sw.stop();
+    BnLog.info(
+        className: 'locationProvider',
+        methodName: 'getPermissionsStatus',
+        text: 'Got permissions status $permission');
     if (permission == LocationPermission.always) {
       return LocationPermissionStatus.always;
     }

@@ -22,7 +22,6 @@ import '../../providers/location_provider.dart';
 import '../../providers/messages_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/route_providers.dart';
-import '../map/map_page.dart';
 import '../widgets/sponsors.dart';
 import 'event_info.dart';
 
@@ -179,6 +178,22 @@ class _HomePageState extends ConsumerState<HomePage>
             parent: AlwaysScrollableScrollPhysics(),
           ),
           slivers: [
+            CupertinoSliverNavigationBar(
+              leading: const Icon(CupertinoIcons.home),
+              largeTitle: Text(
+                  Localize.of(context).home), //Text(Localize.of(context).home),
+              middle: SponsorCarousel(), alwaysShowMiddle: true,
+            ),
+            CupertinoSliverRefreshControl(
+              onRefresh: () async {
+                ref.read(messagesLogicProvider).updateServerMessages();
+                var _ = ref.refresh(currentRouteProvider);
+                ref
+                    .read(activeEventProvider.notifier)
+                    .refresh(forceUpdate: true);
+                ref.invalidate(bgIsOnSiteProvider);
+              },
+            ),
             SliverFillRemaining(
               hasScrollBody: true,
               fillOverscroll: true,
@@ -215,10 +230,12 @@ class _HomePageState extends ConsumerState<HomePage>
                         ),
                       //EventInfo(),
                       kIsWeb
-                          ? SizedBox(
-                              width: MediaQuery.sizeOf(context).width,
-                              height: MediaQuery.sizeOf(context).height,
-                              child: MapPage())
+                          ? Center(
+                              child: Text(
+                                  Localize.of(context).bladenightInfoTitle))
+                          : SizedBox(),
+                      kIsWeb
+                          ? EventInfo()
                           : GestureDetector(
                               onTap: () {
                                 ref
@@ -255,18 +272,6 @@ class _HomePageState extends ConsumerState<HomePage>
                   ),
                 ),
               ),
-            ),
-            CupertinoSliverRefreshControl(
-              refreshTriggerPullDistance: 40,
-              refreshIndicatorExtent: 30,
-              onRefresh: () async {
-                ref.read(messagesLogicProvider).updateServerMessages();
-                var _ = ref.refresh(currentRouteProvider);
-                ref
-                    .read(activeEventProvider.notifier)
-                    .refresh(forceUpdate: true);
-                ref.invalidate(bgIsOnSiteProvider);
-              },
             ),
           ],
         ),

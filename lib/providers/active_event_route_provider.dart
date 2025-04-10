@@ -1,10 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location_bearing_distance.dart';
 import '../helpers/logger/logger.dart';
 import '../helpers/watch_communication_helper.dart';
-import '../models/event.dart';
 import '../models/route.dart';
 import '../models/special_point.dart';
 import 'active_event_provider.dart';

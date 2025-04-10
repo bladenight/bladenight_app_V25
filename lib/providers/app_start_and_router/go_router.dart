@@ -47,7 +47,7 @@ final GlobalKey<NavigatorState> _sectionSettingsNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'sectionSettingsNav');
 final _friendsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'friend');
 final _messageLinkNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'appLink');
+    GlobalKey<NavigatorState>(debugLabel: '_messageLinkNavigatorKey');
 
 enum AppRoute {
   aboutPage,
@@ -355,107 +355,110 @@ GoRouter goRouter(Ref ref) {
                   ),
                 ],
               ),
-            StatefulShellBranch(
-                navigatorKey: _sectionSettingsNavigatorKey,
-                routes: [
-                  GoRoute(
-                    path: '/${AppRoute.settings.name}',
-                    name: AppRoute.settings.name,
-                    pageBuilder: (context, state) => const NoTransitionPage(
-                      child: SettingsPage(),
-                    ),
-                    routes: [
-                      GoRoute(
-                        path: '/${AppRoute.bladeguard.name}',
-                        name: AppRoute.bladeguard.name,
-                        builder: (context, state) => BladeGuardPage(),
-                        pageBuilder: GoTransitions.slide.withBackGesture.call,
+            if (!kIsWeb)
+              StatefulShellBranch(
+                  navigatorKey: _sectionSettingsNavigatorKey,
+                  routes: [
+                    GoRoute(
+                      path: '/${AppRoute.settings.name}',
+                      name: AppRoute.settings.name,
+                      pageBuilder: (context, state) => const NoTransitionPage(
+                        child: SettingsPage(),
                       ),
-                      GoRoute(
-                        path: '/${AppRoute.aboutPage.name}',
-                        name: AppRoute.aboutPage.name,
-                        pageBuilder: (context, state) => const NoTransitionPage(
-                          child: AboutPage(),
+                      routes: [
+                        GoRoute(
+                          path: '/${AppRoute.bladeguard.name}',
+                          name: AppRoute.bladeguard.name,
+                          builder: (context, state) => BladeGuardPage(),
+                          pageBuilder: GoTransitions.slide.withBackGesture.call,
                         ),
-                      ),
-                      GoRoute(
-                        path: '/${AppRoute.signIn.name}',
-                        name: AppRoute.signIn.name,
-                        pageBuilder: (context, state) => const NoTransitionPage(
-                          child: BladeGuardPage(),
+                        GoRoute(
+                          path: '/${AppRoute.aboutPage.name}',
+                          name: AppRoute.aboutPage.name,
+                          pageBuilder: (context, state) =>
+                              const NoTransitionPage(
+                            child: AboutPage(),
+                          ),
                         ),
-                      ),
-                      GoRoute(
-                        path: '/${AppRoute.logMonitor.name}',
-                        name: AppRoute.logMonitor.name,
-                        pageBuilder: (context, state) => NoTransitionPage(
-                          child: TalkerMonitor(
-                              theme: TalkerScreenTheme(), talker: talker),
+                        GoRoute(
+                          path: '/${AppRoute.signIn.name}',
+                          name: AppRoute.signIn.name,
+                          pageBuilder: (context, state) =>
+                              const NoTransitionPage(
+                            child: BladeGuardPage(),
+                          ),
                         ),
-                      ),
-                      GoRoute(
-                          path: '/${AppRoute.userTrackDialog.name}',
-                          name: AppRoute.userTrackDialog.name,
-                          pageBuilder: GoTransitions.slide.call,
-                          builder: (context, state) {
-                            var queryParameters = state.uri.queryParameters;
-                            var date = queryParameters['date'] as String;
-                            var userGpxPoints =
-                                queryParameters['userGPXPoints'];
-                            if (userGpxPoints == null) {
+                        GoRoute(
+                          path: '/${AppRoute.logMonitor.name}',
+                          name: AppRoute.logMonitor.name,
+                          pageBuilder: (context, state) => NoTransitionPage(
+                            child: TalkerMonitor(
+                                theme: TalkerScreenTheme(), talker: talker),
+                          ),
+                        ),
+                        GoRoute(
+                            path: '/${AppRoute.userTrackDialog.name}',
+                            name: AppRoute.userTrackDialog.name,
+                            pageBuilder: GoTransitions.slide.call,
+                            builder: (context, state) {
+                              var queryParameters = state.uri.queryParameters;
+                              var date = queryParameters['date'] as String;
+                              var userGpxPoints =
+                                  queryParameters['userGPXPoints'];
+                              if (userGpxPoints == null) {
+                                return UserTrackDialog(
+                                  userGPXPoints: UserGPXPoints([]),
+                                  date: date,
+                                );
+                              }
+                              var userGPXPoints =
+                                  UserGPXPointsMapper.fromJson(userGpxPoints);
                               return UserTrackDialog(
-                                userGPXPoints: UserGPXPoints([]),
+                                userGPXPoints: userGPXPoints,
                                 date: date,
                               );
-                            }
-                            var userGPXPoints =
-                                UserGPXPointsMapper.fromJson(userGpxPoints);
-                            return UserTrackDialog(
-                              userGPXPoints: userGPXPoints,
-                              date: date,
-                            );
-                          }),
-                      GoRoute(
-                          path: '/intro',
-                          name: AppRoute.introScreen.name,
-                          pageBuilder: (context, state) =>
-                              NoTransitionPage(child: IntroScreen())),
-                      GoRoute(
-                          path: '/${AppRoute.adminLogin.name}',
-                          name: AppRoute.adminLogin.name,
-                          redirect:
-                              (BuildContext context, GoRouterState state) {
-                            /* if (!ref.read(userIsAdminProvider)) {
+                            }),
+                        GoRoute(
+                            path: '/intro',
+                            name: AppRoute.introScreen.name,
+                            pageBuilder: (context, state) =>
+                                NoTransitionPage(child: IntroScreen())),
+                        GoRoute(
+                            path: '/${AppRoute.adminLogin.name}',
+                            name: AppRoute.adminLogin.name,
+                            redirect:
+                                (BuildContext context, GoRouterState state) {
+                              /* if (!ref.read(userIsAdminProvider)) {
                               return '/';
                             } else */
-                            if (ref.read(adminPwdSetProvider)) {
-                              return '/settings/${AppRoute.adminPage.name}';
-                            } else {
-                              return null;
-                            }
-                          },
-                          builder: (context, state) {
-                            return AdminPasswordDialog();
-                          },
-                          pageBuilder: GoTransitions.bottomSheet),
-                      GoRoute(
-                          path: '/${AppRoute.adminPage.name}',
-                          name: AppRoute.adminPage.name,
-                          redirect:
-                              (BuildContext context, GoRouterState state) {
-                            if (!ref.read(adminPwdSetProvider)) {
-                              return '/${AppRoute.adminLogin.name}';
-                            } else {
-                              return null;
-                            }
-                          },
-                          builder: (context, state) {
-                            return AdminPage();
-                          },
-                          pageBuilder: GoTransitions.bottomSheet),
-                    ],
-                  ),
-                ]),
+                              if (ref.read(adminPwdSetProvider)) {
+                                return '/settings/${AppRoute.adminPage.name}';
+                              } else {
+                                return null;
+                              }
+                            },
+                            builder: (context, state) {
+                              return AdminPasswordDialog();
+                            },
+                            pageBuilder: GoTransitions.bottomSheet),
+                        GoRoute(
+                            path: '/${AppRoute.adminPage.name}',
+                            name: AppRoute.adminPage.name,
+                            redirect:
+                                (BuildContext context, GoRouterState state) {
+                              if (!ref.read(adminPwdSetProvider)) {
+                                return '/${AppRoute.adminLogin.name}';
+                              } else {
+                                return null;
+                              }
+                            },
+                            builder: (context, state) {
+                              return AdminPage();
+                            },
+                            pageBuilder: GoTransitions.bottomSheet),
+                      ],
+                    ),
+                  ]),
             StatefulShellBranch(
                 navigatorKey: _messageLinkNavigatorKey,
                 routes: [

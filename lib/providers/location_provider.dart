@@ -10,7 +10,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:synchronized/synchronized.dart' show Lock;
 import 'package:universal_io/io.dart';
 import 'package:vector_math/vector_math.dart' show radians;
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -30,6 +32,7 @@ import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
 import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
+import '../helpers/notification/toast_notification.dart' show showToast;
 import '../helpers/speed_to_color.dart';
 import '../helpers/time_converter_helper.dart';
 import '../helpers/wamp/subscribe_message.dart';
@@ -852,15 +855,33 @@ class LocationProvider with ChangeNotifier {
     });
   }
 
+  Future<bool> _collectLocationWithPermissionService() async {
+    var status = await Permission.location.request();
+    if (status == PermissionStatus.granted) {
+      _gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse;
+      if (kIsWeb) return true;
+    }
+    if (HiveSettingsDB.hasAskedAlwaysAllowLocationPermission) return true;
+    var alwaysStatus = await Permission.locationAlways.request();
+    if (alwaysStatus == PermissionStatus.granted) {
+      _gpsLocationPermissionsStatus == LocationPermissionStatus.always;
+      return true;
+    }
+    return false;
+  }
+
   ///Check and request necessary location permissions
   Future<bool> _collectLocationPermissions(BuildContext context) async {
+    if (kIsWeb) return false;
     var serviceEnabled = await geolocator.Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Location services are not enabled don't continue
       // accessing the position and request users of the
       // App to enable the location services.
-      HiveSettingsDB.setHasShownProminentDisclosure(false);
-      HiveSettingsDB.setHasAskedAlwaysAllowLocationPermission(false);
+      //web no always request!
+      HiveSettingsDB.setHasShownProminentDisclosure(kIsWeb ? true : false);
+      HiveSettingsDB.setHasAskedAlwaysAllowLocationPermission(
+          kIsWeb ? true : false);
       if (context.mounted) {
         await LocationPermissionDialog().requestAndOpenAppSettings(context);
       }
@@ -903,7 +924,8 @@ class LocationProvider with ChangeNotifier {
       if (permission == geolocator.LocationPermission.deniedForever) {
         // Permissions are denied forever, handle appropriately.
         HiveSettingsDB.setHasShownProminentDisclosure(false);
-        HiveSettingsDB.setHasAskedAlwaysAllowLocationPermission(false);
+        HiveSettingsDB.setHasAskedAlwaysAllowLocationPermission(
+            kIsWeb ? true : false);
         _gpsLocationPermissionsStatus =
             LocationPermissionStatus.locationNotEnabled;
         Fluttertoast.showToast(
@@ -952,7 +974,8 @@ class LocationProvider with ChangeNotifier {
       }
     }
 
-    if (locationPermission == geolocator.LocationPermission.whileInUse) {
+    if (!kIsWeb &&
+        locationPermission == geolocator.LocationPermission.whileInUse) {
       _gpsLocationPermissionsStatus = LocationPermissionStatus.whenInUse;
       var res =
           await LocationPermissionDialog().requestAlwaysLocationPermissions();
@@ -964,12 +987,8 @@ class LocationProvider with ChangeNotifier {
 
     if (locationPermission == geolocator.LocationPermission.always) {
       _gpsLocationPermissionsStatus = LocationPermissionStatus.always;
-      var locationIsPrecise =
-          await LocationPermissionDialog().checkOrRequestPreciseLocation();
-      return locationIsPrecise == geolocator.LocationAccuracyStatus.precise
-          ? true
-          : false;
     }
+
     //Check precise location
     _locationIsPrecise =
         await LocationPermissionDialog().checkOrRequestPreciseLocation() ==
@@ -987,19 +1006,32 @@ class LocationProvider with ChangeNotifier {
       _trackWaitStatus = TrackWaitStatus.starting;
       notifyListeners();
 
-      var permissionOk = await _collectLocationPermissions(context);
+      bool permissionOk;
+      if (kIsWeb) {
+        permissionOk = await _collectLocationWithPermissionService();
+      } else {
+        permissionOk = await _collectLocationPermissions(context);
+      }
       if (!permissionOk) {
         return false;
       }
       //if (kIsWeb) return false;
       _trackingType = trackingType;
-      _userIsParticipant = trackingType == TrackingType.userParticipating;
+      if (kIsWeb) {
+        _userIsParticipant = trackingType == TrackingType.userNotParticipating;
+        if (context.mounted) {
+          showToast(message: Localize.of(context).showonly);
+        }
+      } else {
+        _userIsParticipant = trackingType == TrackingType.userParticipating;
+      }
       _isHead = HiveSettingsDB.specialCodeValue == 1 ||
           HiveSettingsDB.specialCodeValue == 5;
       _isTail = HiveSettingsDB.specialCodeValue == 2 ||
           HiveSettingsDB.specialCodeValue == 6;
 
-      if (HiveSettingsDB.trackingFirstStart &&
+      if (!kIsWeb &&
+          HiveSettingsDB.trackingFirstStart &&
           HiveSettingsDB.autoStartTrackingEnabled &&
           context.mounted) {
         await QuickAlert.show(
@@ -1033,9 +1065,8 @@ class LocationProvider with ChangeNotifier {
             text: 'alternative location tracking started',
             className: 'location_provider',
             methodName: '_startTracking');
-        if (kIsWeb) {
-          HiveSettingsDB.setUseAlternativeLocationProvider(true);
-        }
+        //set if kIsWeb
+        HiveSettingsDB.setUseAlternativeLocationProvider(true);
         _listenLocationWithAlternativePackage();
         _trackingType = trackingType;
         stopRealtimedataSubscription();
@@ -1046,11 +1077,11 @@ class LocationProvider with ChangeNotifier {
             .refresh(forceUpdate: true);
         _trackWaitStatus = TrackWaitStatus.none;
         notifyListeners();
-        var loc = await _updateLocation();
+        /*var loc = await _updateLocation();
         if (loc != null) {
           _getRealtimeDataWithLocation(loc);
         }
-        SendToWatch.setIsLocationTracking(isTracking);
+        SendToWatch.setIsLocationTracking(isTracking);*/
         HiveSettingsDB.setTrackingActive(isTracking);
       }
       //####################################################
@@ -1314,7 +1345,7 @@ class LocationProvider with ChangeNotifier {
           accuracy: geolocator.LocationAccuracy.high,
           distanceFilter: 20,
           maximumAge: Duration(minutes: 1),
-          timeLimit: Duration(seconds: 2));
+          timeLimit: Duration(seconds: 3));
     } else {
       locationSettings = geolocator.LocationSettings(
           accuracy: geolocator.LocationAccuracy.high,
@@ -1438,51 +1469,62 @@ class LocationProvider with ChangeNotifier {
     return _lastKnownPoint;
   }
 
+  var lock = Lock();
+
   ///only called if no subscription
   Future<void> _getRealtimeData() async {
-    try {
-      //update procession when no location data were sent
-      var update = await RealtimeUpdate.realtimeDataUpdate();
+    lock
+        .synchronized(() async {
+          try {
+            //update procession when no location data were sent
+            var update = await RealtimeUpdate.realtimeDataUpdate();
 
-      if (update.rpcException != null && update.rpcException is WampException) {
-        BnLog.error(
-            className: 'locationProvider',
-            methodName: 'refresh realtimedata',
-            text: update.rpcException.toString());
-        _realUserSpeedKmh = null;
-        SendToWatch.updateUserLocationData(
-            UserLocationPoint.userLocationPointEmpty());
-        _updateWatchData();
-        _maxFails--;
-        if (_maxFails <= 0) {
-          _realtimeUpdate = null;
-          _maxFails = 3;
-        }
+            if (update.rpcException != null &&
+                update.rpcException is WampException) {
+              BnLog.verbose(
+                  className: 'locationProvider',
+                  methodName: 'refresh realtimedata',
+                  text: update.rpcException.toString());
+              _realUserSpeedKmh = null;
+              SendToWatch.updateUserLocationData(
+                  UserLocationPoint.userLocationPointEmpty());
+              _updateWatchData();
+              _maxFails--;
+              if (_maxFails <= 0) {
+                _realtimeUpdate = null;
+                _maxFails = 3;
+              }
 
-        if (!_isInBackground) {
-          notifyListeners();
-        }
-        return;
-      }
+              if (!_isInBackground) {
+                notifyListeners();
+              }
+              return;
+            }
 
-      _setRealtimeUpdate(update, notify: !_isInBackground);
-      _maxFails = 3;
+            _setRealtimeUpdate(update, notify: !_isInBackground);
+            _maxFails = 3;
 
-      if (_lastKnownPoint == null) {
-        _realUserSpeedKmh = null;
-        if (!kIsWeb) {
-          _updateWatchData();
-        }
-      }
-      if (!_isInBackground) {
-        notifyListeners();
-      }
-    } catch (e) {
-      BnLog.error(
-          className: 'locationProvider',
-          methodName: 'refreshRealtimeData',
-          text: e.toString());
-    }
+            if (_lastKnownPoint == null) {
+              _realUserSpeedKmh = null;
+              if (!kIsWeb) {
+                _updateWatchData();
+              }
+            }
+            if (!_isInBackground) {
+              notifyListeners();
+            }
+          } catch (e) {
+            BnLog.error(
+                className: 'locationProvider',
+                methodName: 'refreshRealtimeData',
+                text: e.toString());
+          }
+        })
+        .timeout(Duration(seconds: 11))
+        .catchError((error) {
+          BnLog.error(
+              text: 'lock failed ${error.toString()}', className: toString());
+        });
   }
 
   Future<bg.Location?> getCurrentLocation() async {

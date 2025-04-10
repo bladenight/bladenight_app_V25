@@ -32,6 +32,7 @@ class _SponsorCarouselState extends ConsumerState<SponsorCarousel> {
               options: CarouselOptions(
                 aspectRatio: 2.0,
                 scrollDirection: Axis.horizontal,
+                autoPlayInterval: Duration(seconds: 4),
                 autoPlay: (sponsors.value!.length).round() > 1 ? true : false,
                 enlargeCenterPage: true,
                 enlargeStrategy: CenterPageEnlargeStrategy.zoom,

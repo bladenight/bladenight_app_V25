@@ -562,5 +562,6 @@
   "enableAlwaysLocationGeofenceText": "For automatic on-site login, the location release should be set to always. Should the system settings be opened?",
   "polyLinesAmountHeader": "Amount",
   "polyLinesAmount": "To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying.",
-  "scanCodeForFriend": "Your friend ({friendName}) can also take a photo of this barcode and add your name:{myName} and code:{code} to his BladeNightApp if the app is installed."
+  "scanCodeForFriend": "Your friend ({friendName}) can also take a photo of this barcode and add your name:{myName} and code:{code} to his BladeNightApp if the app is installed.",
+  "bladenightInfoTitle": "WebApp and Information about BladeNight Munich"
 }

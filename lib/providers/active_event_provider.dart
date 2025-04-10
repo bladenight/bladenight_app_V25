@@ -34,7 +34,7 @@ class ActiveEvent extends _$ActiveEvent {
         state = event;
       }
       SendToWatch.updateEvent(event);
-      if (event.isActive && !_hasPushed) {
+      if (event.isRunning && !_hasPushed) {
         _hasPushed = true;
         ref.read(goRouterProvider).goNamed(AppRoute.map.name);
       }

@@ -66,12 +66,13 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                             ),
                             icon: Icon(Icons.people_alt_rounded),
                           ),
-                        NavigationRailDestination(
-                          label: Text(
-                            Localize.of(context).settings,
+                        if (!kIsWeb)
+                          NavigationRailDestination(
+                            label: Text(
+                              Localize.of(context).settings,
+                            ),
+                            icon: Icon(Icons.settings),
                           ),
-                          icon: Icon(Icons.settings),
-                        ),
                       ],
                     ),
                   ),

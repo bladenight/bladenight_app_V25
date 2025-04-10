@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/file_name_helper.dart';
+import '../../helpers/url_launch_helper.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/settings/bladeguard_provider.dart';
 import '../widgets/common_widgets/shadow_box_widget.dart';
@@ -27,7 +30,12 @@ class BladeGuardAdvertise extends ConsumerWidget {
             backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
             heroTag: 'isBladeGuardTag',
             onPressed: () {
-              context.pushNamed(AppRoute.bladeguard.name);
+              kIsWeb
+                  ? Launch.launchUrlFromString(
+                      'https://bladenight-muenchen.de/blade-guards/',
+                      'https://bladenight-muenchen.de/blade-guards/',
+                      mode: LaunchMode.externalApplication)
+                  : context.pushNamed(AppRoute.bladeguard.name);
             },
             label: Text(Localize.of(context).becomeBladeguard),
             icon: Image.asset(

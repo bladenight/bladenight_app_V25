@@ -4152,6 +4152,16 @@ class Localize {
       args: [friendName, myName, code],
     );
   }
+
+  /// `WebApp and Information about BladeNight Munich`
+  String get bladenightInfoTitle {
+    return Intl.message(
+      'WebApp and Information about BladeNight Munich',
+      name: 'bladenightInfoTitle',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

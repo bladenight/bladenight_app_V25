@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,8 +24,7 @@ class _AppRootWidget extends ConsumerState<AppRootWidget> {
   @override
   void initState() {
     super.initState();
-
-    initDeepLinks();
+    if (!kIsWeb) initDeepLinks();
   }
 
   @override
