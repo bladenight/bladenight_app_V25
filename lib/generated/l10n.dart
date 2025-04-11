@@ -4033,9 +4033,14 @@ class Localize {
     );
   }
 
-  /// `Our sponsors`
+  /// `Thanks to our sponsors`
   String get sponsors {
-    return Intl.message('Our sponsors', name: 'sponsors', desc: '', args: []);
+    return Intl.message(
+      'Thanks to our sponsors',
+      name: 'sponsors',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Starts in`

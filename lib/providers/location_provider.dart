@@ -857,7 +857,11 @@ class LocationProvider with ChangeNotifier {
     var status = await Permission.location.request();
     if (status == PermissionStatus.granted) {
       _gpsLocationPermissionsStatus == LocationPermissionStatus.whenInUse;
+      //web no always Loc
       if (kIsWeb) return true;
+    } else if (status == PermissionStatus.denied) {
+      _gpsLocationPermissionsStatus == LocationPermissionStatus.denied;
+      return false;
     }
     if (HiveSettingsDB.hasAskedAlwaysAllowLocationPermission) return true;
     var alwaysStatus = await Permission.locationAlways.request();

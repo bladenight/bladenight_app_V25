@@ -969,7 +969,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sondereinstellungen - nur nach Rücksprache ändern!",
     ),
     "speed": MessageLookupByLibrary.simpleMessage("Geschwindigkeit"),
-    "sponsors": MessageLookupByLibrary.simpleMessage("Unsere Sponsoren"),
+    "sponsors": MessageLookupByLibrary.simpleMessage(
+      "Danke an unsere Unterstützer",
+    ),
     "start": MessageLookupByLibrary.simpleMessage("Start"),
     "startLocationWithoutParticipating": MessageLookupByLibrary.simpleMessage(
       "Tracking ohne Teilnahme",

@@ -244,7 +244,7 @@ class _HomePageState extends ConsumerState<HomePage>
                               },
                               child: EventInfo(),
                             ),
-                      kIsWeb ? Container() : SponsorCarousel(),
+                      //kIsWeb ? Container() : SponsorCarousel(),
                       SizedBox(height: MediaQuery.sizeOf(context).height * 0.5),
                       Builder(builder: (context) {
                         var activeEvent = ref.watch(activeEventProvider);
