@@ -267,8 +267,6 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _init() async {
-    _showOwnTrack = MapSettings.showOwnTrack;
-    _showOwnColoredTrack = MapSettings.showOwnColoredTrack;
     startRealtimeUpdateSubscriptionIfNotTracking();
 
     _geolocatorServiceStatusStream =
@@ -278,7 +276,7 @@ class LocationProvider with ChangeNotifier {
     });
 
     if (kIsWeb) {
-      HiveSettingsDB.useAlternativeLocationProvider;
+      HiveSettingsDB.setUseAlternativeLocationProvider(true);
       notifyListeners();
       return;
     }
@@ -1001,6 +999,8 @@ class LocationProvider with ChangeNotifier {
   /// Returns false if no location-permissions given or fails
   Future<bool> startTracking(TrackingType trackingType) async {
     try {
+      _showOwnTrack = MapSettings.showOwnTrack;
+      _showOwnColoredTrack = MapSettings.showOwnColoredTrack;
       _polylineTrackPointsAmount = MapSettings.polylineTrackPointsAmount;
       var context = rootNavigatorKey.currentContext!;
       _trackWaitStatus = TrackWaitStatus.starting;
