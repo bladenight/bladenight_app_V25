@@ -91,6 +91,12 @@ class _EventsPageState extends ConsumerState<EventsPage>
   }
 
   @override
+  void deactivate() {
+    _removeOverlay();
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var networkAvailable = ref.watch(networkAwareProvider);
     return NestedScrollView(
@@ -337,10 +343,17 @@ class _EventsPageState extends ConsumerState<EventsPage>
     return lst;
   }
 
+  OverlayState? overlayState;
+  OverlayEntry? overlayEntry;
+
+  void _removeOverlay() {
+    if (overlayState != null) overlayEntry?.remove();
+    overlayState = null;
+  }
+
   void _showOverlay(BuildContext context) async {
     var bottomOffset = kBottomNavigationBarHeight + 38;
-    OverlayState? overlayState = Overlay.of(context);
-    OverlayEntry overlayEntry;
+    overlayState = Overlay.of(context);
     overlayEntry = OverlayEntry(builder: (context) {
       return SafeArea(
         child: Stack(
@@ -434,15 +447,15 @@ class _EventsPageState extends ConsumerState<EventsPage>
       );
     });
     animationController!.addListener(() {
-      overlayState.setState(() {});
+      overlayState?.setState(() {});
     });
     // inserting overlay entry
-    overlayState.insert(overlayEntry);
+    overlayState?.insert(overlayEntry!);
     animationController!.forward();
     await Future.delayed(const Duration(seconds: 3)).whenComplete(() =>
             animationController!
                 .reverse()
-                .whenCompleteOrCancel(() => overlayEntry.remove())
+                .whenCompleteOrCancel(() => _removeOverlay())
         // removing overlay entry after stipulated time.
         );
   }

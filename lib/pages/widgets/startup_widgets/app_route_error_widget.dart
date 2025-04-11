@@ -22,7 +22,7 @@ class AppRouteErrorWidget extends StatelessWidget {
             ElevatedButton(
               onPressed: onRetry,
               child: const Text(
-                  'Sorry da ist was schief gelaufen - Startseite öffnen'),
+                  'Sorry, da ist was schief gelaufen - Startseite öffnen'),
             ),
             Image(
               image: AssetImage('assets/images/skatemunich_child_stop.png'),

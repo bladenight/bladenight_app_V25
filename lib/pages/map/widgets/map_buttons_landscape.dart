@@ -51,13 +51,14 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
   StreamSubscription<LatLng?>? locationSubscription;
   AnimationController? animationController;
   Animation<double>? animation;
-  final double bottomOffset = 40;
+  final double bottomOffset = kIsWeb ? 30 : 40;
   final double rowDistOffset = 55;
   final double distanceOffset = 60;
   final double leftOffset = 10;
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 250));
     animation = CurveTween(curve: Curves.easeIn).animate(animationController!);
@@ -66,10 +67,17 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     animationController = null;
     animation = null;
     locationSubscription?.cancel();
     super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    _removeOverlay();
+    super.deactivate();
   }
 
   @override
@@ -132,7 +140,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
 
             return GestureDetector(
               onLongPress: () async {
-                LocationProvider().toggleAutoStop();
+                kIsWeb ? null : LocationProvider().toggleAutoStop();
                 await QuickAlert.show(
                   context: context,
                   type: QuickAlertType.warning,
@@ -623,11 +631,18 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
   // Description overlay
   //#######################################################################
 
-  void _showOverlay(BuildContext context, {required String text}) async {
-    var bottomOffset = kIsWeb ? kBottomNavigationBarHeight : 10.0;
+  OverlayState? overlayState;
+  OverlayEntry? overlayEntry;
 
-    OverlayState? overlayState = Overlay.of(context);
-    OverlayEntry overlayEntry;
+  void _removeOverlay() {
+    if (overlayState != null) overlayEntry?.remove();
+    overlayState = null;
+  }
+
+  void _showOverlay(BuildContext context, {required String text}) async {
+    var bottomOffset = kIsWeb ? 10.0 : 10.0;
+
+    overlayState = Overlay.of(context);
     overlayEntry = OverlayEntry(builder: (context) {
       return SafeArea(
         maintainBottomViewPadding: true,
@@ -866,7 +881,9 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      Localize.of(context).startParticipationShort,
+                      kIsWeb
+                          ? Localize.of(context).startNoParticipationShort
+                          : Localize.of(context).startParticipationShort,
                       style: TextStyle(
                         color: CupertinoTheme.of(context).barBackgroundColor,
                         backgroundColor:
@@ -929,15 +946,15 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
       );
     });
     animationController!.addListener(() {
-      overlayState.setState(() {});
+      overlayState?.setState(() {});
     });
     // inserting overlay entry
-    overlayState.insert(overlayEntry);
+    overlayState?.insert(overlayEntry!);
     animationController!.forward();
     await Future.delayed(const Duration(seconds: 3)).whenComplete(() =>
             animationController!
                 .reverse()
-                .whenCompleteOrCancel(() => overlayEntry.remove())
+                .whenCompleteOrCancel(() => _removeOverlay())
         // removing overlay entry after stipulated time.
         );
   }

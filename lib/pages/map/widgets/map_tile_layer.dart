@@ -71,9 +71,8 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
     var osmEnabled =
         ref.watch(useOpenStreetMapProvider) || widget.hasSpecialStartPoint;
     return TileLayer(
-      userAgentPackageName: 'app.huth.bladenightappflutter',
-      retinaMode: false,
-      // RetinaMode.isHighDensity(context) ? true : false,
+      userAgentPackageName: 'app.huth.bladenightapp',
+      //retinaMode: RetinaMode.isHighDensity(context) ? true : false,
       minNativeZoom: osmEnabled
           ? MapSettings.minNativeZoom
           : MapSettings.minNativeZoomDefault,

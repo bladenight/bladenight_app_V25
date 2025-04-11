@@ -1012,6 +1012,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "startLocationWithoutParticipatingInfo": MessageLookupByLibrary.simpleMessage(
       "Veuillez lire attentivement.\nCeci démarre l\'affichage de la position sur la carte sans participer au procession et transfère votre position au serveur pour calculer les temps. Vos amis dans le procession seront affichés. La durée du trajet entre le début et la fin du procession à partir de votre position sera calculée. En outre, votre vitesse et vos données de suivi seront enregistrées et vous pourrez les sauvegarder. N\'utilisez pas cette fonction si vous participez à la BladeNight. Le mode doit être arrêté manuellement.\nVous voulez démarrer ceci ?",
     ),
+    "startNoParticipationShort": MessageLookupByLibrary.simpleMessage(
+      "Show your Position",
+    ),
     "startParticipation": MessageLookupByLibrary.simpleMessage(
       "Démarrer la participation",
     ),

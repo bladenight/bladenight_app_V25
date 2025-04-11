@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_compass/flutter_map_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -32,7 +33,7 @@ class MapButtonsLayerLight extends ConsumerStatefulWidget {
 }
 
 class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   var animationDuration = const Duration(milliseconds: 800);
   ProviderSubscription<AsyncValue<LatLng?>>? locationSubscription;
   AnimationController? animationController;
@@ -40,6 +41,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 250));
     animation = CurveTween(curve: Curves.easeIn).animate(animationController!);
@@ -47,7 +49,14 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
   }
 
   @override
+  void deactivate() {
+    _removeOverlay();
+    super.deactivate();
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     animationController = null;
     animation = null;
     locationSubscription?.close();
@@ -72,6 +81,28 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
       //#######################################################################
       //Left side buttons
       //#######################################################################
+      Positioned(
+        right: 10,
+        bottom: widget.bottomMargin,
+        height: 40,
+        child: Builder(builder: (context) {
+          return FloatingActionButton(
+            heroTag: 'mapCompassHeroTagL1',
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            onPressed: () {
+              final controller = MapController.of(context);
+              controller.rotate(0);
+            },
+            child: MapCompass(
+              hideIfRotatedNorth: true,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(0),
+              icon: Image.asset('assets/images/compass_2.png'),
+            ),
+          );
+        }),
+      ),
       PositionedVisibilityOpacity(
         left: 10,
         bottom: widget.bottomMargin + 150,
@@ -254,6 +285,28 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
           );
         }),
       ),
+      Positioned(
+        right: 10,
+        bottom: widget.bottomMargin,
+        height: 40,
+        child: Builder(builder: (context) {
+          return FloatingActionButton(
+            heroTag: 'mapCompassHeroTagL2',
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            onPressed: () {
+              final controller = MapController.of(context);
+              controller.rotate(0);
+            },
+            child: MapCompass(
+              hideIfRotatedNorth: true,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(0),
+              icon: Image.asset('assets/images/compass_2.png'),
+            ),
+          );
+        }),
+      ),
       if (widget.showHelp)
         Positioned(
           top: kIsWeb ? 10 : 10,
@@ -277,11 +330,18 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
     ]);
   }
 
+  OverlayState? overlayState;
+  OverlayEntry? overlayEntry;
+
+  void _removeOverlay() {
+    if (overlayState != null) overlayEntry?.remove();
+    overlayState = null;
+  }
+
   void _showOverlay(BuildContext context, {required String text}) async {
     var bottomOffset = kIsWeb ? kBottomNavigationBarHeight : 0.0;
 
-    OverlayState? overlayState = Overlay.of(context);
-    OverlayEntry overlayEntry;
+    overlayState = Overlay.of(context);
     overlayEntry = OverlayEntry(builder: (context) {
       return SafeArea(
         child: Stack(
@@ -411,15 +471,15 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
       );
     });
     animationController!.addListener(() {
-      overlayState.setState(() {});
+      overlayState?.setState(() {});
     });
     // inserting overlay entry
-    overlayState.insert(overlayEntry);
+    overlayState?.insert(overlayEntry!);
     animationController!.forward();
     await Future.delayed(const Duration(seconds: 3)).whenComplete(() =>
             animationController!
                 .reverse()
-                .whenCompleteOrCancel(() => overlayEntry.remove())
+                .whenCompleteOrCancel(() => _removeOverlay())
         // removing overlay entry after stipulated time.
         );
   }

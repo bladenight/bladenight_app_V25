@@ -943,6 +943,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "startLocationWithoutParticipatingInfo": MessageLookupByLibrary.simpleMessage(
       "Please read carefully.\nThis starts the location display on the map without participating in the train and transfers your location to the server to calculate the times. Your friends on the train will be displayed. The time to the beginning / end of the train from your location will be calculated. Furthermore, your speed and location data will be recorded which you can save. Please do not use this function if you participate in the BladeNight. The mode must be ended manually.\nDo you want to start this?",
     ),
+    "startNoParticipationShort": MessageLookupByLibrary.simpleMessage(
+      "Show your Position",
+    ),
     "startParticipation": MessageLookupByLibrary.simpleMessage(
       "Start participation",
     ),

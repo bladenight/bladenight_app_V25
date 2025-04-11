@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../app_settings/app_constants.dart';
 import '../helpers/enums/tracking_type.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger/logger.dart';
+import '../helpers/notification/toast_notification.dart';
 import '../wamp/wamp_v2.dart';
 import 'location_provider.dart';
 
@@ -31,7 +34,16 @@ class IsTracking extends _$IsTracking {
     if (LocationProvider().isTracking) {
       state = !await _stopTracking();
     } else {
-      state = await _startTracking(trackingType) != TrackingType.noTracking;
+      //kIsWeb only tracking
+      var active = await _startTracking(
+              kIsWeb ? TrackingType.userNotParticipating : trackingType)
+          .timeout(Duration(seconds: 20))
+          .catchError((error, stackTrace) {
+        BnLog.error(text: 'Can not start Tracking $error');
+        showToast(message: 'Fehler beim starten!');
+        return TrackingType.noTracking;
+      });
+      state = active != TrackingType.noTracking;
     }
     return state;
   }

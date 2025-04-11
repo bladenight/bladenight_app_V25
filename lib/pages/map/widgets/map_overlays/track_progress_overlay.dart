@@ -117,14 +117,14 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                 ],
                 clipper: InfoClipper(),
                 child: BackdropFilter(
-                  filter: kIsWeb
-                      ? ImageFilter.blur(sigmaX: 20, sigmaY: 10)
-                      : ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                   child: Stack(children: [
                     Builder(builder: (context) {
                       return Container(
                         color: kIsWeb
-                            ? Colors.grey
+                            ? CupertinoTheme.of(context)
+                                .barBackgroundColor
+                                .withAlpha(200)
                             : CupertinoDynamicColor.resolve(
                                 CupertinoColors.transparent, context),
                         padding: const EdgeInsets.all(10),

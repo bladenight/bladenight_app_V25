@@ -977,6 +977,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "startLocationWithoutParticipatingInfo": MessageLookupByLibrary.simpleMessage(
       "Tracking ohne Teilnahme\nDies startet die Standortdarstellung auf der Karte ohne Teilnahme an der BladeNight und überträgt zur Berechnung der Zeiten deinen Standort auf den Server. Deine Freunde im Zug werden Dir angezeigt. Die Zeit zum Zuganfang /-ende von deinem Standort werden berechnet. Weiterhin, werden deine Geschwindigkeit und Trackingdaten aufgezeichnet die du speichern kannst. Bitte diese Funktion nicht verwenden, wenn du an der BladeNight teilnimmst. Der Modus muss manuell beendet werden. \nSoll dies gestartet werden?",
     ),
+    "startNoParticipationShort": MessageLookupByLibrary.simpleMessage(
+      "Zeige deine Position",
+    ),
     "startParticipation": MessageLookupByLibrary.simpleMessage(
       "Teilnahme starten\nDu bist aktiver Skater im Zug und möchtest die Darstellung des BladeNight-Zuges unterstützen. Danke wenn du Teilnahme an Bladenight starten drückst.",
     ),

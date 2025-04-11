@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../models/event.dart';
 import '../../../home_info/event_data_overview.dart';
@@ -26,12 +27,20 @@ class NoEventOverlayWidget extends StatelessWidget {
               Stack(children: [
                 BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Builder(builder: (context) {
-                    return EventDataOverview(
-                      nextEvent: event,
-                      showMap: false,
-                    );
-                  }),
+                  child: Container(
+                    color: kIsWeb
+                        ? CupertinoTheme.of(context)
+                            .barBackgroundColor
+                            .withAlpha(200)
+                        : CupertinoDynamicColor.resolve(
+                            CupertinoColors.transparent, context),
+                    child: Builder(builder: (context) {
+                      return EventDataOverview(
+                        nextEvent: event,
+                        showMap: false,
+                      );
+                    }),
+                  ),
                 ),
               ]),
               Align(

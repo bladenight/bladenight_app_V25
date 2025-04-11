@@ -47,7 +47,10 @@ class RouteNameDialog extends ConsumerWidget {
                   return Stack(children: [
                     MapLayer(
                       event: Event(
-                          startDate: DateTime.now(), routeName: routeName),
+                          startDate: DateTime.utc(DateTime.now().year),
+                          status: EventStatus.unknown,
+                          routeName: routeName,
+                          routeLength: route.getRouteTotalDistance.toInt()),
                       startPoint: LatLng(defaultLatitude, defaultLongitude),
                       finishPoint: route.finishLatLngOrDefault,
                       routePoints: route.points,
@@ -59,8 +62,11 @@ class RouteNameDialog extends ConsumerWidget {
                 }
                 return Stack(children: [
                   MapLayer(
-                    event:
-                        Event(startDate: DateTime.now(), routeName: routeName),
+                    event: Event(
+                        startDate: DateTime.utc(DateTime.now().year),
+                        status: EventStatus.unknown,
+                        routeName: routeName,
+                        routeLength: route.getRouteTotalDistance.toInt()),
                     startPoint: route.startLatLngOrDefault,
                     finishPoint: route.finishLatLngOrDefault,
                     routePoints: route.points,

@@ -116,17 +116,6 @@ GoRouter goRouter(Ref ref) {
     initialLocation: '/',
     navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: kDebugMode,
-    //onException: onGoRouterException,
-    /*refreshListenable: ref.watch(isActiveEventChangeNotifierProvider),
-    redirect: (context, state) {
-      final isActive =
-          ref.read(isActiveEventChangeNotifierProvider).eventIsActive;
-      if (isActive) {
-        return '/${AppRoute.map.name}';
-      } else {
-        return null;
-      }
-    },*/
     routes: [
       GoRoute(
 
@@ -222,8 +211,15 @@ GoRouter goRouter(Ref ref) {
                           ),
                         ),
                         GoRoute(
-                          path: 'showRoute',
+                          path: AppRoute.showRoute.name,
                           name: AppRoute.showEventRouteDetails.name,
+                          redirect:
+                              (BuildContext context, GoRouterState state) {
+                            if (state.extra is Event) {
+                              return null;
+                            }
+                            return '/${AppRoute.events.name}';
+                          },
                           pageBuilder: (context, state) => NoTransitionPage(
                             child: RouteDialog(event: state.extra as Event),
                           ),
@@ -325,12 +321,12 @@ GoRouter goRouter(Ref ref) {
                     redirect: (BuildContext context, GoRouterState state) {
                       var parameters = state.uri.queryParameters;
                       if (!parameters.containsKey('action')) {
-                        return 'friends';
+                        return '/${AppRoute.friend.name}';
                       } else if (parameters.containsKey('action')) {
                         var action = FriendsAction.values.firstWhereOrNull(
                             (x) => parameters['action'] == x.name);
                         if (action == null) {
-                          return 'friends';
+                          return '/${AppRoute.friend.name}';
                         }
                       }
                       return null;
@@ -479,27 +475,3 @@ GoRouter goRouter(Ref ref) {
     ),
   );
 }
-
-/* redirect: (context, state) {
-      try {
-        final isLoading = userState!.subscription.maybeMap(
-          loading: (_) => true,
-          orElse: () => false,
-        );
-        if (isLoading) {
-          return '/loading';
-        }
-        if (!userState.subscription.isActive && state.matchedLocation == '/') {
-          debugPrint("Redirect to premium from (${state.matchedLocation})");
-          return '/premium';
-        }
-      } catch (e) {
-        debugPrint("Error in redirect: $e");
-      }
-      return null;
-    },
-  );
-});*/
-
-void onGoRouterException(
-    BuildContext context, GoRouterState state, GoRouter router) {}

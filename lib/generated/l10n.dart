@@ -4162,6 +4162,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Show your Position`
+  String get startNoParticipationShort {
+    return Intl.message(
+      'Show your Position',
+      name: 'startNoParticipationShort',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

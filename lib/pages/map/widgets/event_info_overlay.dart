@@ -38,67 +38,79 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                 child: Stack(children: [
                   BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Column(children: [
-                      Center(
-                        child: FittedBox(
-                          child: Text(
-                            '${Localize.of(context).route}: ${widget.event.routeName}  '
-                            '${Localize.of(context).length}: ${(widget.event.routeLength / 1000).toStringAsFixed(1)} km  ',
-                            overflow: TextOverflow.fade,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                          ),
-                        ),
-                      ),
-                      if (widget.event.status != EventStatus.noevent)
+                    child: Container(
+                      color: kIsWeb
+                          ? CupertinoTheme.of(context)
+                              .barBackgroundColor
+                              .withAlpha(200)
+                          : CupertinoDynamicColor.resolve(
+                              CupertinoColors.transparent, context),
+                      child: Column(children: [
                         Center(
                           child: FittedBox(
+                            child: Text(
+                              '${Localize.of(context).route}: ${widget.event.routeName}  '
+                              '${Localize.of(context).length}: ${(widget.event.routeLength / 1000).toStringAsFixed(1)} km  ',
+                              overflow: TextOverflow.fade,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                            ),
+                          ),
+                        ),
+                        if (widget.event.status != EventStatus.noevent &&
+                            widget.event.status != EventStatus.unknown)
+                          Center(
                             child: FittedBox(
-                              child: Text(
-                                '${Localize.of(context).at} ${Localize.current.dateTimeIntl(widget.event.startDate, widget.event.startDate)}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
+                              child: FittedBox(
+                                child: Text(
+                                  '${Localize.of(context).at} ${Localize.current.dateTimeIntl(widget.event.startDate, widget.event.startDate)}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      if (widget.event.startPoint != null)
-                        Center(
-                          child: FittedBox(
-                            child: Text(
-                              '${Localize.of(context).startPointTitle} ${widget.event.startPoint}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
+                        if (widget.event.startPoint != null)
+                          Center(
+                            child: FittedBox(
+                              child: Text(
+                                '${Localize.of(context).startPointTitle} ${widget.event.startPoint}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ),
-                        ),
-                      if (widget.event.participants != 0)
-                        Center(
-                          child: FittedBox(
-                            child: Text(
-                              '${Localize.of(context).participant}: ${widget.event.participants}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
+                        if (widget.event.participants != 0)
+                          Center(
+                            child: FittedBox(
+                              child: Text(
+                                '${Localize.of(context).participant}: ${widget.event.participants}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ),
-                        ),
-                      Center(
-                        child: FittedBox(
-                          child: Text(
-                            widget.event.statusText,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
+                        if (widget.event.status != EventStatus.noevent &&
+                            widget.event.status != EventStatus.unknown)
+                          Center(
+                            child: FittedBox(
+                              child: Text(
+                                widget.event.statusText,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                            textAlign: TextAlign.center,
                           ),
-                        ),
-                      ),
-                    ]),
+                      ]),
+                    ),
                   ),
                 ]),
               )

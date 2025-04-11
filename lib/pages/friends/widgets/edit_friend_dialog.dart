@@ -473,8 +473,9 @@ Future showFriendLink(BuildContext context, Friend friend) {
                     barcode: Barcode.qrCode(),
                     color: Colors.white,
                     backgroundColor: Colors.black,
-                    data: 'bna://bladenight.app/friend/addfriend?action='
-                        'addFriend&code=${friend.requestId}&name=${HiveSettingsDB.myName}',
+                    data: Uri.encodeFull(
+                        'bna://bladenight.app/friend/addfriend?action='
+                        'addFriend&code=${friend.requestId}&name=${HiveSettingsDB.myName}'),
                     width: MediaQuery.sizeOf(context).shortestSide / 2,
                     height: MediaQuery.sizeOf(context).shortestSide / 2,
                   ),
