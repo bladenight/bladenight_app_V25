@@ -935,7 +935,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Special functions - change only when you know what you do!",
     ),
     "speed": MessageLookupByLibrary.simpleMessage("Speed"),
-    "sponsors": MessageLookupByLibrary.simpleMessage("Thanks to our sponsors"),
+    "sponsors": MessageLookupByLibrary.simpleMessage("Thanks to\nour sponsors"),
     "start": MessageLookupByLibrary.simpleMessage("Start"),
     "startLocationWithoutParticipating": MessageLookupByLibrary.simpleMessage(
       "Start location without participating",

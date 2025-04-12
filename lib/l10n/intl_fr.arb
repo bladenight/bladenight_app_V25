@@ -546,7 +546,7 @@
   "changeDarkColor": "Changer la couleur du mode sombre",
   "changeMeColor": "Change-moi de couleur",
   "enterBgPassword": "Veuillez saisir le mot de passe de sécurité Bladeguard",
-  "sponsors": "Nos sponsors",
+  "sponsors": "Nos\nsponsors",
   "bgTodayTapToUnRegister": "Désinscrivez-vous en tant que Bladeguard aujourd'hui !",
   "startsIn": "Commence en",
   "wakelockWarnBattery": "Affichage activé par les paramètres de l'application - Avertissement, batterie faible {level} %",

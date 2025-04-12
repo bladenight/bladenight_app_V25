@@ -970,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "speed": MessageLookupByLibrary.simpleMessage("Geschwindigkeit"),
     "sponsors": MessageLookupByLibrary.simpleMessage(
-      "Danke an unsere Unterstützer",
+      "Danke an\nunsere Unterstützer",
     ),
     "start": MessageLookupByLibrary.simpleMessage("Start"),
     "startLocationWithoutParticipating": MessageLookupByLibrary.simpleMessage(
