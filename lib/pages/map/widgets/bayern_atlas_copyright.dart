@@ -7,9 +7,11 @@ import '../../../helpers/url_launch_helper.dart';
 class BayernAtlasCopyright extends StatelessWidget {
   const BayernAtlasCopyright({super.key});
 
+  final mapCopyright = '© Datenquellen: Bayerische Vermessungsverwaltung,\n'
+      'GeoBasis-DE / BKG 2023 - Daten verändert';
   final link = 'https://www.ldbv.bayern.de';
   final copyright =
-      '© Datenquellen: Bayerische Vermessungsverwaltung, GeoBasis-DE / BKG 2023 – Daten verändert - Bayernatlas Landesamt für Digitalisierung, Breitband und Vermessung';
+      '© Datenquellen: Bayerische Vermessungsverwaltung,\nGeoBasis-DE / BKG 2023 – Daten verändert - Bayernatlas Landesamt für Digitalisierung, Breitband und Vermessung';
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +28,11 @@ class BayernAtlasCopyright extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    '© Datenquellen: Bayerische Vermessungsverwaltung, GeoBasis-DE / BKG 2023 – Daten verändert',
+                    mapCopyright,
+                    maxLines: 3,
                     style: TextStyle(
                         fontSize: fontSize == null ? 10 : fontSize * 0.8,
-                        color: CupertinoTheme.brightnessOf(context) ==
-                                Brightness.dark
-                            ? Colors.black
-                            : Colors.white),
+                        color: Colors.black),
                     textAlign: TextAlign.right,
                   ),
                 ),
@@ -47,10 +47,11 @@ class BayernAtlasCopyright extends StatelessWidget {
               },
               child: FittedBox(
                 fit: BoxFit.scaleDown,
-                child: const Text(
-                  '© Datenquellen: Bayerische Vermessungsverwaltung, '
-                  'GeoBasis-DE / BKG 2023 – Daten verändert',
-                  style: TextStyle(fontSize: 8),
+                child: Text(
+                  mapCopyright,
+                  maxLines: 3,
+                  style: TextStyle(
+                      fontSize: fontSize, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
               ),

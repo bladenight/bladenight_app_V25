@@ -76,14 +76,7 @@ class _EventDataMapOverviewState extends ConsumerState<EventDataMapOverview>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!widget.nextEvent.isRunning) ...[
-          LayoutBuilder(builder: (context, constraints) {
-            if (constraints.maxHeight > 500) {
-              return SponsorCarousel(
-                  height: MediaQuery.sizeOf(context).height * 0.05);
-            } else {
-              return Container();
-            }
-          }),
+          SponsorCarousel(height: MediaQuery.sizeOf(context).height * 0.05)
         ],
         SizedBox(
           child: Padding(

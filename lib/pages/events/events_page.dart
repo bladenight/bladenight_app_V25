@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
+import '../../app_settings/app_constants.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/device_id_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
@@ -260,6 +261,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
     var lst = List.generate(groupedEvents.keys.length, (pageIndex) {
       var itemsCount =
           groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events.length;
+      var evenOddCount = 0;
       var pageEvents =
           groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events;
       return StickyHeader(
@@ -295,6 +297,8 @@ class _EventsPageState extends ConsumerState<EventsPage>
                   itemCount: itemsCount * 2 - 1,
                   itemBuilder: (BuildContext context, int index) {
                     if (index % 2 == 0) {
+                      evenOddCount++;
+                      var odd = evenOddCount % 2 == 0; //odd row
                       var event = pageEvents[(index / 2).round()];
                       var eventStartState = EventStartState.eventOver;
                       var eventOver = event.startDateUtc
@@ -322,16 +326,16 @@ class _EventsPageState extends ConsumerState<EventsPage>
                         return Container(
                             key: _dataKey,
                             child: _editEventWidget(
-                                context, ref, event, eventStartState));
+                                context, ref, event, eventStartState, odd));
                       }
                       return _editEventWidget(
-                          context, ref, event, eventStartState);
+                          context, ref, event, eventStartState, odd);
                     } else {
                       return Divider(
                         color: CupertinoTheme.of(context).primaryColor,
                         height: 1,
-                        indent: 16,
-                        endIndent: 16,
+                        indent: tileIntend,
+                        endIndent: tileIntend,
                       );
                     }
                   }),
@@ -464,7 +468,7 @@ class _EventsPageState extends ConsumerState<EventsPage>
 enum EventStartState { eventOver, eventActual, eventFuture }
 
 Widget _editEventWidget(BuildContext context, WidgetRef ref, Event event,
-    EventStartState startState) {
+    EventStartState startState, bool odd) {
   if (ref.watch(adminPwdSetProvider)) {
     return Dismissible(
       onDismissed: (direction) async {
@@ -514,15 +518,15 @@ Widget _editEventWidget(BuildContext context, WidgetRef ref, Event event,
           trailing: const Icon(Icons.map, color: Colors.white, size: 36.0),
         ),
       ),
-      child: _listTile(context, event, startState),
+      child: _listTile(context, event, startState, odd),
     );
   } else {
-    return _listTile(context, event, startState);
+    return _listTile(context, event, startState, odd);
   }
 }
 
 Widget _listTile(
-    BuildContext context, Event event, EventStartState startState) {
+    BuildContext context, Event event, EventStartState startState, bool odd) {
   //mark old actual an new events
   Color? color;
   if (startState == EventStartState.eventOver) {
@@ -541,8 +545,13 @@ Widget _listTile(
       RouteDialog.show(context, event);
     },
     child: Container(
-      color: CupertinoDynamicColor.resolve(
-          CupertinoColors.systemBackground, context),
+      decoration: BoxDecoration(
+          color: odd
+              ? CupertinoDynamicColor.resolve(
+                  CupertinoColors.secondarySystemFill, context)
+              : CupertinoDynamicColor.resolve(
+                  CupertinoColors.systemBackground, context),
+          borderRadius: BorderRadius.all(Radius.circular(tileIntend))),
       padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 16),
       child: Row(
         children: [

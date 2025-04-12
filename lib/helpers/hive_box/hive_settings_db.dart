@@ -648,6 +648,7 @@ class HiveSettingsDB {
 
   ///get Tracking is Active means locations updating is active
   static bool get wakeLockEnabled {
+    if (kIsWeb) return true;
     return _hiveBox.get(_wakeLockEnabledKey, defaultValue: false);
   }
 

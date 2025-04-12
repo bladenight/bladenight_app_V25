@@ -8,6 +8,7 @@ import 'package:flutter/material.dart'
     show Icons, Colors, Scaffold, Badge, FloatingActionButton;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
@@ -124,6 +125,8 @@ class _HomePageState extends ConsumerState<HomePage>
         });
         await openIntroScreenFirstTime();
         await _openBladeguardRequestFirstTime();
+      } else {
+        WakelockPlus.enable();
       }
     });
   }
