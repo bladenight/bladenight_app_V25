@@ -28,6 +28,9 @@ const int maxDurationCodeIsValid = 3600000; //1hour
 
 const double primaryContrastingAlpha = 0.3;
 
+///Intend for list tiles and divider
+const double tileIntend = 16.0;
+
 class ColorConstants {
   static const List<Color> friendPickerColors = [
     ...colors1,

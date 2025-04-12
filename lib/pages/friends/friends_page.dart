@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:quickalert/quickalert.dart';
 
+import '../../app_settings/app_constants.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/device_info_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
@@ -287,14 +288,17 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
           ),
           Builder(builder: (context) {
             var friends = ref.watch(filteredFriends);
+            int count = friends.length;
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
+                  bool odd = count % 2 == 0;
                   if (index % 2 == 0) {
+                    count++;
                     var friend = friends[(index / 2).round()];
                     return Dismissible(
                       key: ObjectKey(friend.hashCode),
-                      child: _friendRow(context, friend),
+                      child: _friendRow(context, friend, odd),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.endToStart) {
                           await QuickAlert.show(
@@ -349,8 +353,8 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     return Divider(
                       color: CupertinoTheme.of(context).primaryColor,
                       height: 1,
-                      indent: 16,
-                      endIndent: 16,
+                      indent: tileIntend,
+                      endIndent: tileIntend,
                     );
                   }
                 },
@@ -363,8 +367,15 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
     );
   }
 
-  _friendRow(BuildContext context, Friend friend) {
+  _friendRow(BuildContext context, Friend friend, bool odd) {
     return Container(
+      decoration: BoxDecoration(
+          color: odd
+              ? CupertinoDynamicColor.resolve(
+                  CupertinoColors.secondarySystemFill, context)
+              : CupertinoDynamicColor.resolve(
+                  CupertinoColors.systemBackground, context),
+          borderRadius: BorderRadius.all(Radius.circular(tileIntend))),
       padding: const EdgeInsets.only(left: 5, top: 8, bottom: 8, right: 5),
       child: Row(
         children: [

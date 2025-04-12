@@ -1060,7 +1060,7 @@ class LocationProvider with ChangeNotifier {
       //set user track points
       _initUserTrackStore();
       _startNoLocationUpdateTimer();
-      if (!kIsWeb && HiveSettingsDB.wakeLockEnabled) {
+      if (HiveSettingsDB.wakeLockEnabled) {
         await WakelockPlus.enable();
       }
 
