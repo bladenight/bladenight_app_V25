@@ -549,7 +549,7 @@
   "changeDarkColor": "Change dark mode color",
   "changeMeColor": "Change me color",
   "enterBgPassword": "Please enter Bladeguard security password",
-  "sponsors": "Thanks to\nour sponsors",
+  "sponsors": "Thanks to our sponsors",
   "startsIn": "Starts in",
   "trackingStoppedLowBat": "Tracking stopped due to low battery {level}%. To avoid turn off Autostop in settings",
   "setLogLevel": "Set log level",

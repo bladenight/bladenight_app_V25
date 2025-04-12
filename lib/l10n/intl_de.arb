@@ -549,7 +549,7 @@
   "changeDarkColor": "Ändere Dunkelmodus Farbe",
   "changeMeColor": "Ändere Eigene Farbe",
   "enterBgPassword": "Sicherheits-Passwort Bladeguard eingeben",
-  "sponsors": "Danke an\nunsere Unterstützer",
+  "sponsors": "Danke an unsere Unterstützer",
   "startsIn": "Startet in",
   "trackingStoppedLowBat": "Tracking gestoppt wegen niedriger Batterie {level}%. Um dies zu vermeiden, deaktivieren Sie Autostop in den Einstellungen",
   "setLogLevel": "Loglevel einstellen",
