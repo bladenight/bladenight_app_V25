@@ -23,13 +23,15 @@ class SponsorCarousel extends ConsumerStatefulWidget {
 class _SponsorCarouselState extends ConsumerState<SponsorCarousel> {
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.sizeOf(context).height > 500) {
+    if (MediaQuery.orientationOf(context) == Orientation.portrait &&
+        MediaQuery.sizeOf(context).height > 500) {
       return SizedBox(
           height: widget.height,
           child: Column(
             children: [_header(maxLines: 1), _carousel],
           ));
-    } else if (MediaQuery.sizeOf(context).width > 500) {
+    } else if (MediaQuery.orientationOf(context) == Orientation.landscape &&
+        MediaQuery.sizeOf(context).width > 500) {
       return SizedBox(
         height: widget.height,
         child: Row(

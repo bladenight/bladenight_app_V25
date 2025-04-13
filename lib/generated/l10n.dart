@@ -4033,10 +4033,10 @@ class Localize {
     );
   }
 
-  /// `Thanks to\nour sponsors`
+  /// `Thanks to our sponsors`
   String get sponsors {
     return Intl.message(
-      'Thanks to\nour sponsors',
+      'Thanks to our sponsors',
       name: 'sponsors',
       desc: '',
       args: [],

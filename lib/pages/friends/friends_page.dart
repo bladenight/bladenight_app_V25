@@ -264,35 +264,32 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
             ),
           ),
           SliverToBoxAdapter(
-            child: FractionallySizedBox(
-              widthFactor: 0.9,
-              child: ClipRect(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: CupertinoSearchTextField(
-                    controller: _searchTextController,
-                    onChanged: (value) {
-                      ref.read(friendNameProvider.notifier).state = value;
-                    },
-                    onSubmitted: (value) {
-                      ref.read(friendNameProvider.notifier).state = value;
-                    },
-                    onSuffixTap: () {
-                      ref.read(friendNameProvider.notifier).state = '';
-                      _searchTextController.text = '';
-                    },
-                  ),
+            child: ClipRect(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                child: CupertinoSearchTextField(
+                  controller: _searchTextController,
+                  onChanged: (value) {
+                    ref.read(friendNameProvider.notifier).state = value;
+                  },
+                  onSubmitted: (value) {
+                    ref.read(friendNameProvider.notifier).state = value;
+                  },
+                  onSuffixTap: () {
+                    ref.read(friendNameProvider.notifier).state = '';
+                    _searchTextController.text = '';
+                  },
                 ),
               ),
             ),
           ),
           Builder(builder: (context) {
             var friends = ref.watch(filteredFriends);
-            int count = friends.length;
+            int count = 1;
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  bool odd = count % 2 == 0;
+                  var odd = count % 2 == 0;
                   if (index % 2 == 0) {
                     count++;
                     var friend = friends[(index / 2).round()];
