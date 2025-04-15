@@ -17,12 +17,12 @@ if (localPropertiesFile.exists()) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '2501'
+    flutterVersionCode = '2502'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.25.01'
+    flutterVersionName = '1.25.02'
 }
 
 def keystoreProperties = new Properties()
@@ -137,7 +137,7 @@ dependencies {
     //implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.android.material:material:1.9.0'
     //implementation("androidx.work:work-runtime-ktx:2.8.1") //workaround for Onesignal 5.0.0 duplicateClass
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 }
 // ...
 flutter {
