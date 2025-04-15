@@ -80,7 +80,8 @@ class HiveSettingsDB {
   }
 
   static void setBackgroundLocationLogLevel(int val) {
-    BnLog.info(text: 'setBackgroundLocationLogLevel to $val');
+    var strLevel = logLevelPriorityList[val];
+    BnLog.info(text: 'setBackgroundLocationLogLevel to $val $strLevel');
     _hiveBox.put(_bgLoglevelKey, val);
   }
 
@@ -169,8 +170,9 @@ class HiveSettingsDB {
 
   ///set loglevel from [logLevelPriorityList]
   static void setLoggerLogLevel(LogLevel level) {
-    if (!kIsWeb) BnLog.info(text: 'setFlogLevel to ${level.index}');
-    _hiveBox.put(_loggerLogLevelKey, level.index);
+    var index = logLevelPriorityList.indexOf(level);
+    BnLog.info(text: 'set log level to $index ${logLevelPriorityList[index]}');
+    _hiveBox.put(_loggerLogLevelKey, index);
   }
 
   static const String _odometerKey = 'odometerKeyPref';

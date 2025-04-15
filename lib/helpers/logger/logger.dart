@@ -246,7 +246,7 @@ class BnLog {
   //store Loglevel in database
   static void setActiveLogLevel(LogLevel logLevel) async {
     _logLevel = logLevel;
-    _talkerLogger.info('Loglevel changed to ${logLevel.name}');
+    //_talkerLogger.info('Loglevel changed to ${logLevel.name}');
     HiveSettingsDB.setLoggerLogLevel(logLevel);
   }
 
