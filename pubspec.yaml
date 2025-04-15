@@ -6,7 +6,7 @@ version: 1.25.02
 
 environment:
   sdk: ">=2.17.0 <4.0.0"
-  flutter: ">=3.27.1"
+  flutter: ">=3.29.0"
 
 dependencies:
   adaptive_theme: ^3.7.0
@@ -46,10 +46,10 @@ dependencies:
   flutter_map_cache: ^2.0.0
   flutter_map_cancellable_tile_provider: ^3.1.0
   flutter_map_compass: ^1.1.1
-  flutter_map_location_marker: ^10.0.3
+  flutter_map_location_marker: ^10.0.2
   flutter_map_marker_popup: #^7.0.0
     path: ../flutter_map_marker_popup
-  flutter_map_tile_caching: ^10.1.2
+  flutter_map_tile_caching: ^10.1.1
   flutter_native_splash: ^2.4.6
   #flutter_nearby_connections:
   #path: ../flutter_nearby_connections
@@ -242,12 +242,12 @@ flutter_native_splash:
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
-  image: assets/images/ic-launcher.png
+  image: assets/images/ic_launcher.png
 
   # The branding property allows you to specify an image used as branding in the splash screen.
   # It must be a png file. It is supported for Android, iOS and the Web.  For Android 12,
   # see the Android 12 section below.
-  branding: assets/images/ic-launcher.png
+  branding: assets/images/ic_launcher.png
 
   # To position the branding image at the bottom of the screen you can use bottom, bottomRight,
   # and bottomLeft. The default values is bottom if not specified or specified something else.
@@ -260,21 +260,21 @@ flutter_native_splash:
   # set.
   color_dark: "#222222"
   #background_image_dark: "assets/dark-background.png"
-  image_dark: assets/images/ic-launcher.png
-  branding_dark: assets/images/ic-launcher.png
+  image_dark: assets/images/ic_launcher.png
+  branding_dark: assets/images/ic_launcher.png
 
   # Android 12 handles the splash screen differently than previous versions.  Please visit
   # https://developer.android.com/guide/topics/ui/splash-screen
   # Following are Android 12 specific parameter.
   android_12:
-  # The image parameter sets the splash screen icon image.  If this parameter is not specified,
-  # the app's launcher icon will be used instead.
-  # Please note that the splash screen will be clipped to a circle in the center of the screen.
-  # App icon with an icon background: This should be 960×960 pixels, and fit within a circle
-  # 640 pixels in diameter.
-  # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
-  # 768 pixels in diameter.
-  #image: assets/android12splash.png
+    # The image parameter sets the splash screen icon image.  If this parameter is not specified,
+    # the app's launcher icon will be used instead.
+    # Please note that the splash screen will be clipped to a circle in the center of the screen.
+    # App icon with an icon background: This should be 960×960 pixels, and fit within a circle
+    # 640 pixels in diameter.
+    # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
+    # 768 pixels in diameter.
+    image: assets/images/SKM_Kindel_Wappen_1152x1152px.png
 
   # Splash screen background color.
   #color: "#42a5f5"

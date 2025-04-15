@@ -189,7 +189,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   ///[message] if message empty get actual realtime data
   static Future<RealtimeUpdate> realtimeDataUpdate([dynamic message]) async {
     BnLog.debug(
-      className: 'Future<RealtimeUpdate>  wampUpdate',
+      className: 'Future<RealtimeUpdate>  wampUpdate 192',
       methodName: 'sendLocation',
       text: 'will realtimeDataUpdate send:$message',
     );
@@ -203,7 +203,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
           .timeout(wampTimeout)
           .catchError((error, stackTrace) => error);
       BnLog.verbose(
-        className: 'Future<RealtimeUpdate>  wampUpdate',
+        className: 'Future<RealtimeUpdate>  wampUpdate 207',
         methodName: 'sendLocation',
         text: 'received:$message',
       );
