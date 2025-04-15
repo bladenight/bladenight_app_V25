@@ -13,11 +13,11 @@ flutter_icons:
     theme_color: "#hexcode"
   windows:
     generate: true
-    image_path: "assets/images/skatemunichchild_1400_1400.png"
+    image_path: "assets/images/ic_launcher.png"
     icon_size: 48 # min:48, max:256, default: 48
   macos:
     generate: true
-    image_path: "assets/images/skatemunichchild_1400_1400.png"
+    image_path: "assets/images/ic_launcher.png"
 
     #update with
     #flutter pub get
