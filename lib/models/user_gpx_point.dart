@@ -11,7 +11,7 @@ part 'user_gpx_point.mapper.dart';
 @MappableClass()
 class UserGpxPoint with UserGpxPointMappable {
   UserGpxPoint(this.latitude, this.longitude, this.realSpeedKmh, this.heading,
-      this.altitude, this.odometer, this.timeStamp);
+      this.altitude, this.odometer, this.dateTime);
 
   final double latitude;
   final double longitude;
@@ -19,7 +19,7 @@ class UserGpxPoint with UserGpxPointMappable {
   final double heading;
   final double altitude;
   final double odometer;
-  final DateTime timeStamp;
+  final DateTime dateTime;
 
   Color get color => SpeedToColor.getColorFromSpeed(realSpeedKmh);
 
@@ -32,7 +32,7 @@ class UserGpxPoint with UserGpxPointMappable {
         '\t\t\t<speed>${realSpeedKmh.toStringAsFixed(1)}</speed>\n'
         '\t\t\t<heading>${heading == -1.0 ? 0.0 : heading.toStringAsFixed(2)}</heading>\n'
         '\t\t\t<odometer>${odometer.toStringAsFixed(2)}</odometer>\n'
-        '\t\t\t<time>${f.format(timeStamp.toUtc())}Z</time>\n'
+        '\t\t\t<time>${f.format(dateTime.toUtc())}Z</time>\n'
         '\t\t</trkpt>\n';
   }
 }
@@ -58,6 +58,7 @@ class UserGPXPoints with UserGPXPointsMappable {
       if (lastLatLng == null) {
         //first point
         UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+          tp.dateTime,
           tp.latitude,
           tp.longitude,
           tp.realSpeedKmh,
@@ -66,8 +67,8 @@ class UserGPXPoints with UserGPXPointsMappable {
         lastLatLng = LatLng(tp.latitude, tp.longitude);
         userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
       } else {
-        UserSpeedPoint userSpeedPoint = UserSpeedPoint(
-            tp.latitude, tp.longitude, tp.realSpeedKmh, lastLatLng);
+        UserSpeedPoint userSpeedPoint = UserSpeedPoint(tp.dateTime, tp.latitude,
+            tp.longitude, tp.realSpeedKmh, lastLatLng);
         userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
         lastLatLng = LatLng(tp.latitude, tp.longitude);
       }
@@ -93,5 +94,16 @@ class UserGPXPoints with UserGPXPointsMappable {
         '\t</trk>\n'
         '</gpx>\n';
     return str;
+  }
+}
+
+// both algorithms combined for awesome performance
+extension UserGpxPointExtenison on List<UserGpxPoint> {
+  List<LatLng> get toLatLngList {
+    List<LatLng> latLngList = [];
+    for (var point in this) {
+      latLngList.add(point.latLng);
+    }
+    return latLngList;
   }
 }

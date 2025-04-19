@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:universal_io/io.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import '../helpers/debug_helper.dart';
 import '../helpers/logger/logger.dart';
@@ -31,6 +32,9 @@ class NetworkStateModel {
 }
 
 class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
+  late final AppLifecycleListener? _listener;
+  bool isInBackground = false;
+
   static const _initialNetworkState =
       NetworkStateModel(connectivityStatus: ConnectivityStatus.unknown);
 
@@ -40,9 +44,15 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   final StreamController<ConnectivityStatus> _connectionStreamController =
       StreamController<ConnectivityStatus>();
 
-  InternetConnectionChecker? _internetConnection;
-
   static bool _wasWampDisconnected = false;
+
+  static InternetConnection get internetConnection => _internetConnection;
+  static final InternetConnection _internetConnection =
+      InternetConnection.createInstance(
+          /*customCheckOptions: [
+      InternetCheckOption(uri: WampV2.getServerUri()),
+    ],*/
+          );
 
   ConnectivityStatus connectivityStatus = ConnectivityStatus.unknown;
   StreamSubscription? _icCheckerSubscription;
@@ -53,15 +63,36 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
       setStateIfChanged(ConnectivityStatus.wampConnected);
       return;
     }
-    _init();
+    init();
   }
 
   final bool printDebug = true && kDebugMode;
 
-  _init() async {
-    _internetConnection = WampV2.internetConnChecker;
-    _icCheckerSubscription = _internetConnection!.onStatusChange
-        .listen((InternetConnectionStatus status) {
+  refresh() {
+    _checkStatus(null);
+  }
+
+  init() {
+    //see https://github.com/OutdatedGuy/internet_connection_checker_plus?tab=readme-ov-file
+    _listener = AppLifecycleListener(
+      onResume: () {
+        _icCheckerSubscription?.resume;
+        isInBackground = false;
+        BnLog.verbose(text: 'network_connection_provider is not in background');
+      },
+      onHide: () {
+        _icCheckerSubscription?.pause;
+        isInBackground = true;
+        BnLog.verbose(text: 'set network_connection_provider to background');
+      },
+      onPause: () {
+        _icCheckerSubscription?.pause;
+        isInBackground = true;
+        BnLog.verbose(text: 'set network_connection_provider to background');
+      },
+    );
+    _icCheckerSubscription =
+        _internetConnection.onStatusChange.listen((InternetStatus status) {
       BnLog.verbose(
           text:
               '${DateTime.now().toIso8601String()} Internet connection status change: {$status}',
@@ -69,17 +100,13 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
           className: toString());
 
       switch (status) {
-        case InternetConnectionStatus.connected:
+        case InternetStatus.connected:
           // The internet is now connected
           _checkStatus(ConnectivityStatus.wampNotConnected);
           break;
-        case InternetConnectionStatus.disconnected:
+        case InternetStatus.disconnected:
           // The internet is now disconnected
           _checkStatus(ConnectivityStatus.internetOffline);
-          break;
-        case InternetConnectionStatus.slow:
-          // The internet is now disconnected
-          _checkStatus(ConnectivityStatus.wampConnected);
           break;
       }
     });
@@ -94,21 +121,16 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
         _checkStatus(ConnectivityStatus.wampNotConnected);
       }
     });
-
-    /*Timer.periodic(const Duration(seconds: 30), (timer) {
-      refresh();
-    });*/
-  }
-
-  refresh() {
-    _checkStatus(null);
   }
 
   @override
   void dispose() {
     _icCheckerSubscription?.cancel();
     _isServerConnectedSubscription?.cancel();
-    _internetConnection = null;
+    _listener?.dispose();
+    _isServerConnectedSubscription = null;
+    _icCheckerSubscription = null;
+    _listener = null;
     super.dispose();
   }
 
@@ -127,8 +149,8 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
             'network_connection_provider - _internetConnection==null');
         isOnline = true;
       } else {
-        isOnline = await _internetConnection!.hasConnection;
-      } //; await InternetAddress.lookup('skatemunich.de');
+        isOnline = await _internetConnection.hasInternetAccess;
+      }
     } on SocketException catch (e) {
       BnLog.error(
           text:

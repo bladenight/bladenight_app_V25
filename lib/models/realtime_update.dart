@@ -190,8 +190,10 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   static Future<RealtimeUpdate> realtimeDataUpdate([dynamic message]) async {
     BnLog.debug(
       className: 'Future<RealtimeUpdate>  wampUpdate 192',
-      methodName: 'sendLocation',
-      text: 'will realtimeDataUpdate send:$message',
+      methodName: 'realtimeDataUpdate',
+      text: message == null
+          ? 'Sending update request'
+          : 'Sending realtimeDataUpdate location update $message',
     );
 
     Completer? completer = Completer();

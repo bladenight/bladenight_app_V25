@@ -12,12 +12,16 @@ class UserLocationPoint with UserLocationPointMappable {
   @MappableField(key: 'spd')
   final String speed;
 
+  /// User location point to send to watch
+  /// contains lat,lon,speed
   UserLocationPoint({
     required this.latitude,
     required this.longitude,
     required this.speed,
   });
 
+  /// empty user location point to send to watch
+  /// contains lat = 0 ,lon = 0 ,speed = ''
   static UserLocationPoint userLocationPointEmpty() {
     return UserLocationPoint(latitude: 0, longitude: 0, speed: '');
   }

@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart' show SentryFlutter;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart'
@@ -63,7 +64,9 @@ void main() async {
       // turn off the # in the URLs on the web
       usePathUrlStrategy();
 
-      /*await SentryFlutter.init((options) {
+      await SentryFlutter.init((options) {
+        options.enableMemoryPressureBreadcrumbs = true;
+        options.enableWatchdogTerminationTracking = true;
         options.dsn =
             'https://260152b2325af41400820edd53e3a54c@o4507936224706560.ingest.de.sentry.io/4507936226541648';
         https: //examplePublicKey@o0.ingest.sentry.io/0';
@@ -78,12 +81,12 @@ void main() async {
           appRunner: () => runApp(
                 ProviderScope(
                   observers: [
-                    LoggingObserver(),
+                    // LoggingObserver(),
                   ],
                   child: AppRootWidget(),
                 ),
               ));
-*/
+
       runApp(
         ProviderScope(
           observers: [

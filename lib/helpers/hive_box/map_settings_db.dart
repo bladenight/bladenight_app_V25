@@ -302,7 +302,7 @@ extension MapSettings on HiveSettingsDB {
   ///get polylineTrackPointsAmount level for online map
   static int get polylineTrackPointsAmount {
     return HiveSettingsDB._hiveBox
-        .get(_polylineTrackPointsAmountKey, defaultValue: 1000);
+        .get(_polylineTrackPointsAmountKey, defaultValue: 300);
   }
 
   ///set polylineTrackPointsAmount for online for drawn poly lines while tracking

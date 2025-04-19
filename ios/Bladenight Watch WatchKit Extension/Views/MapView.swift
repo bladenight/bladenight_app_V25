@@ -108,11 +108,12 @@ struct MapView: View {
                     }
                 }
                 
-                if (!viewModel.userRoute.isEmpty){
+                /*not a good solution , in bg no update
+                 if (!viewModel.userRoute.isEmpty){
                     MapPolyline(
                         coordinates: viewModel.userRoute
                     ).stroke(Color(hex: 0xFF00FF), lineWidth: 2)
-                }
+                }*/
                 
                 if (viewModel.isLocationTracking == true &&
                     viewModel.userlocation != nil && viewModel.userlocation?.locCoordinate.latitude != 0.0

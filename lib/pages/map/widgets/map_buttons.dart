@@ -72,7 +72,9 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
   @override
   void didChangeMetrics() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 

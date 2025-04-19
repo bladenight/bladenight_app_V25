@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:universal_io/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/server_connections.dart';
@@ -47,14 +46,6 @@ class WampV2 {
     _instance ??= WampV2._privateConstructor();
     return _instance!;
   }
-
-  static InternetConnectionChecker get internetConnChecker =>
-      _internetConnChecker;
-  static final _internetConnChecker = InternetConnectionChecker.createInstance(
-      /*customCheckOptions: [
-      InternetCheckOption(uri: WampV2.getServerUri()),
-    ],*/
-      );
 
   var _busyTimeStamp = DateTime.now();
   var _lock = Lock();

@@ -16,8 +16,10 @@ dependencies:
   auto_size_text: ^3.0.0
   background_fetch: ^1.3.8
   barcode_widget: ^2.0.4
+  battery_plus: ^6.2.1
   cached_network_image: ^3.4.1
   carousel_slider: ^5.0.0
+  connectivity_plus: ^6.1.3
   convert: ^3.1.2
   crypto: ^3.0.2
   cupertino_icons: ^1.0.8
@@ -75,9 +77,10 @@ dependencies:
   hive_flutter: ^1.1.0
   #home_widget: ^0.7.0
   http: any
-  internet_connection_checker: ^3.0.1
+  internet_connection_checker_plus: ^2.7.1
   intl: any
   intro_slider: ^4.2.1
+
   latlong2: ^0.9.1
   lottie: ^3.3.1
   maps_toolkit: ^3.1.0
@@ -103,10 +106,11 @@ dependencies:
   riverpod: ^2.4.9
   riverpod_annotation: ^2.3.3
   rxdart: ^0.28.0
-  #sentry_flutter: ^8.9.0
+  sentry_flutter: ^8.14.1
   settings_ui: ^2.0.2
   share_plus: ^10.1.4
   shared_preferences: ^2.5.3
+  simplify: ^1.1.0
   smooth_page_indicator: ^1.2.1
   step_progress_indicator: ^1.0.2
   sticky_headers: ^0.3.0+2

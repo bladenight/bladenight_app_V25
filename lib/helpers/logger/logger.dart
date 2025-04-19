@@ -79,7 +79,8 @@ class BnLog {
     StackTrace? stacktrace,
   }) async {
     //critical 0 // info 3 verbose 5
-    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.debug)) return;
+    if (logLevelPriorityList.indexOf(_logLevel) <
+        logLevelPriorityList.indexOf(LogLevel.debug)) return;
     var logText = '$text\n'
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}';
@@ -97,7 +98,8 @@ class BnLog {
     StackTrace? stacktrace,
   }) async {
     //critical 0 // info 3 verbose 5
-    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.info)) return;
+    if (logLevelPriorityList.indexOf(_logLevel) <
+        logLevelPriorityList.indexOf(LogLevel.info)) return;
     _talkerLogger.info(text);
     fileLogger?.output(text, LogLevel.info.name);
   }
@@ -108,7 +110,8 @@ class BnLog {
     required String text,
   }) async {
     //critical 0 // info 3 verbose 5
-    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.info)) return;
+    if (logLevelPriorityList.indexOf(_logLevel) <
+        logLevelPriorityList.indexOf(LogLevel.info)) return;
     _talkerLogger.info(text);
     fileLogger?.output(text, LogLevel.info.name);
   }
@@ -119,7 +122,8 @@ class BnLog {
     required String text,
     String? dataLogType,
   }) async {
-    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.warning)) {
+    if (logLevelPriorityList.indexOf(_logLevel) <
+        logLevelPriorityList.indexOf(LogLevel.warning)) {
       return;
     }
     var logText = '$text'
@@ -145,7 +149,8 @@ class BnLog {
     required String text,
   }) async {
     //critical 0 // info 3 verbose 5
-    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.verbose)) {
+    if (logLevelPriorityList.indexOf(_logLevel) <
+        logLevelPriorityList.indexOf(LogLevel.verbose)) {
       return;
     }
     var logText = '$text'
@@ -171,7 +176,8 @@ class BnLog {
     String? dataLogType,
     StackTrace? stacktrace,
   }) async {
-    if (_logLevel.index < logLevelPriorityList.indexOf(LogLevel.error)) return;
+    if (logLevelPriorityList.indexOf(_logLevel) <
+        logLevelPriorityList.indexOf(LogLevel.error)) return;
     var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}'

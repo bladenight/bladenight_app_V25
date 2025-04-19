@@ -73,10 +73,10 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
         ),
 
       //user‘s track points
-      if (locationUpdate.userSpeedPoints.userSpeedPoints.isNotEmpty &&
+      if (locationUpdate.userTrackPolyLines.userSpeedPoints.isNotEmpty &&
           ref.watch(showOwnTrackProvider) &&
           ref.watch(showOwnColoredTrackProvider))
-        for (var part in locationUpdate.userSpeedPoints.userSpeedPoints)
+        for (var part in locationUpdate.userTrackPolyLines.userSpeedPoints)
           Polyline(
               points: part.latLngList,
               color: part.color,

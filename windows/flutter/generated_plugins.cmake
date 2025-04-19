@@ -4,11 +4,13 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
+  battery_plus
   connectivity_plus
   firebase_core
   geolocator_windows
   objectbox_flutter_libs
   permission_handler_windows
+  sentry_flutter
   share_plus
   url_launcher_windows
 )

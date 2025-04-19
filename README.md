@@ -154,7 +154,7 @@ Known issues
   flutter.buildMode=release
   flutter.sdk=/pathToFolder/development/flutter
   sdk.dir=/pathToFolder/Android/sdk
-  flutter.versionName=1.25.01
+  flutter.versionName=1.25.02
   ```
 
 ### Cant't run on iPhone. message:„iproxy“ kann nicht geöffnet werden, da der Entwickler nicht verifiziert werden kann.

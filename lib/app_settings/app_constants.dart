@@ -31,6 +31,8 @@ const double primaryContrastingAlpha = 0.3;
 ///Intend for list tiles and divider
 const double tileIntend = 16.0;
 
+const double maxSimplifyTolerance = 0.000000000001;
+
 class ColorConstants {
   static const List<Color> friendPickerColors = [
     ...colors1,
