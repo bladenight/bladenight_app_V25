@@ -1,11 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/url_launch_helper.dart';
-import '../../providers/app_start_and_router/go_router.dart';
 import 'privacy.dart';
 import '../widgets/common_widgets/version_widget.dart';
 
@@ -14,10 +10,6 @@ class AboutPage extends StatefulWidget {
 
   @override
   State<AboutPage> createState() => _AboutPageState();
-
-  static Future<void> show(BuildContext context) async {
-    context.goNamed(AppRoute.aboutPage.name);
-  }
 }
 
 class _AboutPageState extends State<AboutPage> {

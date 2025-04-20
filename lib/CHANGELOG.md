@@ -17,6 +17,7 @@
 ### Common
 
 * new design and logos 2025
+* new internal map routing with goRouter
 
 ### IOS
 

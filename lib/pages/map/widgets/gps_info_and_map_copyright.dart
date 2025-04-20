@@ -86,7 +86,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    BnLog.info(text: 'GPS-info didChangeAppLifecycleState $state');
+    //BnLog.info(text: 'GPS-info didChangeAppLifecycleState $state');
     switch (state) {
       case AppLifecycleState.resumed:
         _initListeners();

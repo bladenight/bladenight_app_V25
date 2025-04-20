@@ -105,9 +105,6 @@ You need the bladenight-server written in java to communicate routes, friends, p
   ```bash
   flutter clean
   flutter packages pub get
-  ```
-
-  ```bash
   dart run build_runner build -d
   ```
 * Rebuild riverpod providers / Mapping watch on editing and save

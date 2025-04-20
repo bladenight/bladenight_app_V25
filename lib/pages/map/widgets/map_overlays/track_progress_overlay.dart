@@ -67,8 +67,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    BnLog.verbose(
-        text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
+    // BnLog.verbose(text: 'Track_progress_overlay - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       ref.read(refreshTimerProvider.notifier).start();
     } else if (state == AppLifecycleState.paused) {
