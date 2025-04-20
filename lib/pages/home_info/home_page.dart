@@ -183,9 +183,26 @@ class _HomePageState extends ConsumerState<HomePage>
           slivers: [
             CupertinoSliverNavigationBar(
               leading: const Icon(CupertinoIcons.home),
-              largeTitle: Text(
-                  Localize.of(context).home), //Text(Localize.of(context).home),
-              middle: SponsorCarousel(), alwaysShowMiddle: true,
+              largeTitle: Text(Localize.of(context).home),
+              //Text(Localize.of(context).home),
+              middle: SponsorCarousel(),
+              alwaysShowMiddle: true,
+              trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (!kIsWeb) // instruction not on webapp / route not defined
+                      CupertinoButton(
+                        onPressed: () =>
+                            context.pushNamed(AppRoute.introScreen.name),
+                        child: Icon(CupertinoIcons.book_circle),
+                      ),
+                    CupertinoButton(
+                      onPressed: () =>
+                          context.pushNamed(AppRoute.aboutPage.name),
+                      child: Icon(CupertinoIcons.info_circle),
+                    ),
+                  ]),
             ),
             CupertinoSliverRefreshControl(
               onRefresh: () async {

@@ -174,6 +174,14 @@ GoRouter goRouter(Ref ref) {
                       builder: (BuildContext context, GoRouterState state) =>
                           const MessagesPage(),
                     ),
+                    if (kIsWeb) //is in settings available on no kIsWebApps
+                      GoRoute(
+                        path: '/${AppRoute.aboutPage.name}',
+                        name: AppRoute.aboutPage.name,
+                        pageBuilder: (context, state) => const NoTransitionPage(
+                          child: AboutPage(),
+                        ),
+                      ),
                   ],
                 ),
               ],
