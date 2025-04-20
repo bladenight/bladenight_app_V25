@@ -323,9 +323,11 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
                       );
                     }
                     return CircleAvatar(
-                      radius: sizeValue,
+                      radius: 15,
                       backgroundColor: friend.color,
-                      child: Center(child: Text(friend.name.substring(0, 1))),
+                      child: Center(
+                          child: Text(
+                              String.fromCharCode(friend.name.runes.first))),
                     );
                   },
                 ),

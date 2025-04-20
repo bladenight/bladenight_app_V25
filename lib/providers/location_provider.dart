@@ -496,19 +496,18 @@ class LocationProvider with ChangeNotifier {
         //update last track point
         userLatLngList.removeLast();
         _userLatLngList.add(LatLng(
-            location.coords.latitude.toShortenedDouble(6),
-            location.coords.longitude.toShortenedDouble(6)));
+            location.coords.latitude.toShortenedDouble(8),
+            location.coords.longitude.toShortenedDouble(8)));
 
         notifyListeners();
         return;
       }
+    } else {
+      _userLatLngList
+          .add(LatLng(location.coords.latitude, location.coords.longitude));
+      _lastKnownPoint = location;
     }
-    _lastKnownPoint = location;
-    //update ui tracked lines only every 4 secs
-    // if (MapSettings.showOwnTrack && !MapSettings.showOwnColoredTrack) {
-    _userLatLngList
-        .add(LatLng(location.coords.latitude, location.coords.longitude));
-    // }
+
     if (MapSettings.showOwnTrack) {
       var userTrackingPoint = UserGpxPoint(
           location.coords.latitude.toShortenedDouble(6),
@@ -626,6 +625,39 @@ class LocationProvider with ChangeNotifier {
         }
       }
       return Future.value(true);
+    });
+  }
+
+  ///load UserTrack from database for current day
+  void _initUserTrackStore() {
+    Future.microtask(() {
+      _userGpxPoints.clear();
+      _userReachedFinishDateTime == null;
+      if (_userGpxPoints.length <= 1 &&
+          MapSettings.showOwnTrack &&
+          LocationStore.dataTodayAvailable) {
+        //reload data
+        _userGpxPoints.addAll(LocationStore.userTrackPointsList);
+        _userSpeedPoints.clear();
+        for (int i = 0; i < _userGpxPoints.length - 1; i++) {
+          if (i == 0) {
+            _userSpeedPoints.add(
+              _userGpxPoints[0].latitude,
+              _userGpxPoints[0].longitude,
+              _userGpxPoints[0].realSpeedKmh,
+              _userGpxPoints[0].latLng,
+            );
+          } else {
+            _userSpeedPoints.add(
+              _userGpxPoints[i].latitude,
+              _userGpxPoints[i].longitude,
+              _userGpxPoints[i].realSpeedKmh,
+              _userGpxPoints[i - 1].latLng,
+            );
+          }
+        }
+      }
+      notifyListeners();
     });
   }
 
@@ -1980,48 +2012,7 @@ class LocationProvider with ChangeNotifier {
     }
     return true;
   }
-
-  ///load UserTrack from database for current day
-  void _initUserTrackStore() {
-    Future.microtask(() {
-      //clear _userGpxPoints on a new day
-      if (_userGpxPoints.isNotEmpty &&
-          DateTime.now().toDateOnly() !=
-              _userGpxPoints.last.timeStamp.toDateOnly() &&
-          _userGpxPoints.length > 1) {
-        _userGpxPoints.clear();
-        BnLog.info(text: '_userGpxPoints cleared due a new day');
-      }
-      _userReachedFinishDateTime == null;
-      if (_userGpxPoints.length <= 1 &&
-          MapSettings.showOwnTrack &&
-          LocationStore.dataTodayAvailable) {
-        //reload data
-        _userGpxPoints.addAll(LocationStore.userTrackPointsList);
-        _userSpeedPoints.clear();
-        for (int i = 0; i < _userGpxPoints.length - 1; i++) {
-          if (i == 0) {
-            _userSpeedPoints.add(
-              _userGpxPoints[0].latitude,
-              _userGpxPoints[0].longitude,
-              _userGpxPoints[0].realSpeedKmh,
-              _userGpxPoints[0].latLng,
-            );
-          } else {
-            _userSpeedPoints.add(
-              _userGpxPoints[i].latitude,
-              _userGpxPoints[i].longitude,
-              _userGpxPoints[i].realSpeedKmh,
-              _userGpxPoints[i - 1].latLng,
-            );
-          }
-        }
-      }
-      notifyListeners();
-    });
-  }
 }
-
 //Providers
 
 final locationProvider = ChangeNotifierProvider((ref) => LocationProvider());

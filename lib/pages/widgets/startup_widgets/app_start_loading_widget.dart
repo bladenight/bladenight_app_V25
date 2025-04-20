@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
@@ -15,7 +16,9 @@ class AppStartLoadingWidget extends StatelessWidget {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           CupertinoActivityIndicator(),
           Image.asset(
-            'assets/images/2025_SKM_Wappen_Logo.png',
+            kIsWeb
+                ? 'images/app_logo/skm_bn_child__red_1152x2_android.png'
+                : 'assets/images/app_logo/skm_bn_child__red_1152x2_android.png',
             width: MediaQuery.sizeOf(context).height * 0.3,
           ),
           ColoredBox(

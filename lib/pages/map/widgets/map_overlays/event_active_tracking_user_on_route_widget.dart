@@ -194,8 +194,9 @@ class EventActiveTrackingActiveUserOnRoute extends ConsumerWidget {
                     width: MediaQuery.textScalerOf(context).scale(20),
                     height: MediaQuery.textScalerOf(context).scale(20),
                     child: CircleAvatar(
+                      radius: 15,
                       backgroundColor: friend.color,
-                      child: Text(friend.name.substring(0, 1)),
+                      child: Text(String.fromCharCode(friend.name.runes.first)),
                     ),
                   ),
                 ),

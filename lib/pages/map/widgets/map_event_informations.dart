@@ -314,7 +314,8 @@ class MapEventInformation extends ConsumerWidget {
                                 padding: const EdgeInsets.all(5),
                                 child: CircleAvatar(
                                   backgroundColor: friend.color,
-                                  child: Text(friend.name.substring(0, 1)),
+                                  child: Text(String.fromCharCode(
+                                      friend.name.runes.first)),
                                 ),
                               ),
                               const SizedBox(width: 10),

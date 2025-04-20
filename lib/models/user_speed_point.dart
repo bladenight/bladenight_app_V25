@@ -11,8 +11,8 @@ part 'user_speed_point.mapper.dart';
 
 /// Helper to create a polyline btw. two Points
 class UserSpeedPoint with UserSpeedPointMappable {
-  UserSpeedPoint(this.dateTime, this.latitude, this.longitude,
-      this.realSpeedKmh, LatLng? previousLatLng) {
+  UserSpeedPoint(this.latitude, this.longitude, this.realSpeedKmh,
+      LatLng? previousLatLng) {
     if (previousLatLng != null) {
       previousLatitude = previousLatLng.latitude;
       previousLongitude = previousLatLng.longitude;
@@ -21,7 +21,6 @@ class UserSpeedPoint with UserSpeedPointMappable {
       previousLongitude = longitude;
     }
   }
-  final DateTime dateTime;
   final double latitude;
   final double longitude;
   final double realSpeedKmh;
@@ -49,10 +48,10 @@ class UserSpeedPoints with UserSpeedPointsMappable {
 
   final List<UserSpeedPoint> userSpeedPoints;
 
-  add(DateTime dateTime, double latitude, double longitude, double realSpeedKmh,
+  add(double latitude, double longitude, double realSpeedKmh,
       LatLng previousLatLng) {
-    userSpeedPoints.add(UserSpeedPoint(
-        dateTime, latitude, longitude, realSpeedKmh, previousLatLng));
+    userSpeedPoints
+        .add(UserSpeedPoint(latitude, longitude, realSpeedKmh, previousLatLng));
   }
 
   addUserSpeedPoint(UserSpeedPoint userSpeedPoint) {

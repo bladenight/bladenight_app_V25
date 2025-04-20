@@ -116,11 +116,18 @@ You need the bladenight-server written in java to communicate routes, friends, p
   dart run build_runner watch -d
   ```  
 
-* Build Icons Android
+## Build Icons Android
+
 * icon is saved in assets folder
 
  ```bash
   dart run flutter_launcher_icons -f flutter_launcher_icons.yaml
+ ``` 
+
+## Build Native splash
+
+ ```bash
+  dart run flutter_native_splash:create
  ```
 
 ## Connection

@@ -142,14 +142,8 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     }
     bool isOnline = false;
     try {
-      if (_internetConnection == null) {
-        BnLog.warning(
-            text: 'network_connection_provider - _internetConnection==null');
-        debugPrintTime(
-            'network_connection_provider - _internetConnection==null');
+      if (await _internetConnection.hasInternetAccess) {
         isOnline = true;
-      } else {
-        isOnline = await _internetConnection.hasInternetAccess;
       }
     } on SocketException catch (e) {
       BnLog.error(

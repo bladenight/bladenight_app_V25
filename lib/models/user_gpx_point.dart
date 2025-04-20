@@ -58,7 +58,6 @@ class UserGPXPoints with UserGPXPointsMappable {
       if (lastLatLng == null) {
         //first point
         UserSpeedPoint userSpeedPoint = UserSpeedPoint(
-          tp.dateTime,
           tp.latitude,
           tp.longitude,
           tp.realSpeedKmh,
@@ -67,8 +66,8 @@ class UserGPXPoints with UserGPXPointsMappable {
         lastLatLng = LatLng(tp.latitude, tp.longitude);
         userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
       } else {
-        UserSpeedPoint userSpeedPoint = UserSpeedPoint(tp.dateTime, tp.latitude,
-            tp.longitude, tp.realSpeedKmh, lastLatLng);
+        UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+            tp.latitude, tp.longitude, tp.realSpeedKmh, lastLatLng);
         userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
         lastLatLng = LatLng(tp.latitude, tp.longitude);
       }

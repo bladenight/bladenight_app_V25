@@ -105,7 +105,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
             },
             icon: const Icon(Icons.pin)),
         MultiButton(
-            heroTag: 'refreshFABTag',
+            heroTag: 'refreshFabTag',
             labelText: Localize.of(context).refresh,
             icon: const Icon(Icons.update),
             onPressed: () async {
@@ -394,10 +394,13 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                   height: 5,
                 ),
                 CircleAvatar(
-                  radius: 25,
+                  radius: 15,
                   backgroundColor: friend.color,
-                  child: Text(
-                      friend.name.isEmpty ? '' : friend.name.substring(0, 1)),
+                  child: Center(
+                    child: Text(friend.name.isEmpty
+                        ? ''
+                        : String.fromCharCode(friend.name.runes.first)),
+                  ),
                 ),
                 const SizedBox(
                   height: 5,
