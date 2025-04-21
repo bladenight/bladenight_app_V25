@@ -65,16 +65,16 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Share your location to find out more about the Bladenight skater train and length and make friends. Allow “When using” recommendation.</string>
+	<string>Share your location to find out more about the Bladenight skater train and length and make friends. &quot;Allow While Using App” recommendation.</string>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>procession</key>
 		<string>In order to display the procession accurately and to see the position of your friends, an exact position is necessary!</string>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation</string>
+	<string>Share your location to find out more about the Bladenight skater procession and length and make friends. &quot;Allow While Using App” recommendation</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation</string>
+	<string>Share your location to find out more about the Bladenight skater procession and length and make friends. &quot;Allow While Using App” recommendation</string>
 	<key>NSMotionUsageDescription</key>
 	<string>To save battery, the movement of the phone is used and the location is only activated when it is moving.</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -85,7 +85,7 @@
 		<string>location</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>Launch Screen</string>
+	<string>LaunchScreen.storyboard</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
@@ -113,5 +113,7 @@
 	<false/>
 	<key>UIRequiresPersistentWiFi</key>
 	<true/>
+	<key>UIStatusBarHidden</key>
+	<false/>
 </dict>
 </plist>

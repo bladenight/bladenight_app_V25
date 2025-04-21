@@ -218,10 +218,5 @@ sudo xattr -d com.apple.quarantine iproxy
 
 ### TODO
 
-- fix BG - if off hide all other switches
-- mapbuttons - landscape horizontal instead vertical
-- overlay map
-- checkin bg
 - count bg onsite
 - ios deeplink closed app
-- 

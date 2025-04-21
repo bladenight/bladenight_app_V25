@@ -1,117 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>OneSignal_app_groups_key</key>
-	<string>group.app.huth.bn.onesignal</string>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>app.bn.bgtask</string>
-		<string>workmanager.background.task</string>
-	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key>
-	<string>BladeNight!</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleLocalizations</key>
-	<array>
-		<string>en</string>
-		<string>de</string>
-		<string>fr</string>
-	</array>
-	<key>CFBundleName</key>
-	<string>bladenight_app_flutter</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
+	<dict>
+		<key>OneSignal_app_groups_key</key>
+		<string>group.app.huth.bn.onesignal</string>
+		<key>BGTaskSchedulerPermittedIdentifiers</key>
+		<array>
+			<string>app.bn.bgtask</string>
+			<string>workmanager.background.task</string>
+		</array>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+		<true/>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>CFBundleDisplayName</key>
+		<string>BladeNight!</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleLocalizations</key>
+		<array>
+			<string>en</string>
+			<string>de</string>
+			<string>fr</string>
+		</array>
+		<key>CFBundleName</key>
+		<string>bladenight_app_flutter</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(MARKETING_VERSION)</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>bladenight.app</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>bna</string>
+				</array>
+			</dict>
+		</array>
+		<key>CFBundleVersion</key>
+		<string>$(CURRENT_PROJECT_VERSION)</string>
+		<key>FlutterDeepLinkingEnabled</key>
+		<true/>
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<string>false</string>
+		<key>LSApplicationCategoryType</key>
+		<string>public.app-category.sports</string>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>mailto</string>
+			<string>https</string>
+			<string>http</string>
+		</array>
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>Share your location to find out more about the Bladenight skater train and length and make friends. “Allow While Using App” recommendation.</string>
+		<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>bladenight.app</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bna</string>
-			</array>
+			<key>procession</key>
+			<string>In order to display the procession accurately and to see the position of your friends, an exact position is necessary!</string>
 		</dict>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>FlutterDeepLinkingEnabled</key>
-	<true/>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<string>false</string>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.sports</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>mailto</string>
-		<string>https</string>
-		<string>http</string>
-	</array>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Share your location to find out more about the Bladenight skater train and length and make friends. Allow “When using” recommendation.</string>
-	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
-	<dict>
-		<key>procession</key>
-		<string>In order to display the procession accurately and to see the position of your friends, an exact position is necessary!</string>
-	</dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation</string>
-	<key>NSMotionUsageDescription</key>
-	<string>To save battery, the movement of the phone is used and the location is only activated when it is moving.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>The microphone is not used by this app - the request can be denied.</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>location</string>
-	</array>
-	<key>UILaunchStoryboardName</key>
-	<string>Launch Screen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>Share your location to find out more about the Bladenight skater procession and length and make friends. “Allow While Using App” recommendation</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Share your location to find out more about the Bladenight skater procession and length and make friends. “Allow While Using App” recommendation</string>
+		<key>NSMotionUsageDescription</key>
+		<string>To save battery, the movement of the phone is used and the location is only activated when it is moving.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>The microphone is not used by this app - the request can be denied.</string>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>fetch</string>
+			<string>location</string>
+		</array>
+		<key>UILaunchStoryboardName</key>
+		<string>Launch Screen</string>
+		<key>UIMainStoryboardFile</key>
+		<string>Main</string>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+			<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		</array>
+		<key>UISupportedInterfaceOrientations~ipad</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationPortraitUpsideDown</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>UIApplicationSceneManifest</key>
+		<dict>
+			<key>UIApplicationSupportsMultipleScenes</key>
+			<false/>
+			<key>UISceneConfigurations</key>
+			<dict/>
+		</dict>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
-		<key>UISceneConfigurations</key>
-		<dict/>
+		<key>UIRequiresPersistentWiFi</key>
+		<true/>
+		<key>UIStatusBarHidden</key>
+		<false/>
 	</dict>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>UIRequiresPersistentWiFi</key>
-	<true/>
-</dict>
 </plist>

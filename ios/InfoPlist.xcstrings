@@ -62,7 +62,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Share your location to find out more about the Bladenight skater train and length and make friends. Allow “When using” recommendation."
+            "value" : "Share your location to find out more about the Bladenight skater train and length and make friends. \"Allow While Using App” recommendation."
           }
         },
         "fr" : {
@@ -80,13 +80,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teile deinen Standort um den Bladenight-Skaterzug  und die Länge genauer zu ermitteln und finde Freunde. Empfehlung \"Beim Verwenden\" erlauben"
+            "value" : "Teile deinen Standort um den Bladenight-Skaterzug  und die Länge genauer zu ermitteln und finde Freunde. Empfehlung „Immer erlauben“"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation"
+            "value" : "Share your location to find out more about the Bladenight skater procession and length and make friends. \"Allow While Using App” recommendation"
           }
         },
         "fr" : {
@@ -110,7 +110,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Share your location to find out more about the Bladenight skater procession and length and make friends. Allow “When using” recommendation"
+            "value" : "Share your location to find out more about the Bladenight skater procession and length and make friends. \"Allow While Using App” recommendation"
           }
         },
         "fr" : {
