@@ -26,9 +26,7 @@ class UpdatingOverlayWidget extends StatelessWidget {
               child: Builder(builder: (context) {
                 return Container(
                   color: kIsWeb
-                      ? CupertinoTheme.of(context)
-                          .barBackgroundColor
-                          .withAlpha(200)
+                      ? CupertinoTheme.of(context).barBackgroundColor
                       : CupertinoDynamicColor.resolve(
                           CupertinoColors.transparent, context),
                   padding: const EdgeInsets.all(15),

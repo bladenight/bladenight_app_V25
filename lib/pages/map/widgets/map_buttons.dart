@@ -327,58 +327,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
           }),
         ),
 
-        //Left located button web
-        /* if (kIsWeb)
-        AnimatedPositioned(
-          duration: const Duration(milliseconds: 500),
-          left: 10,
-          bottom: ref.watch(mapMenuVisibleProvider) ? 250 : 100,
-          height: 40,
-          child: Builder(builder: (context) {
-            return FloatingActionButton(
-              onPressed: () {
-                final controller = MapController.maybeOf(context);
-                final camera = MapCamera.maybeOf(context);
-                if (controller == null || camera == null) {
-                  return;
-                }
-                switch (followLocationState) {
-                  case CameraFollow.followOff:
-                  case CameraFollow.followMeStopped:
-                    followLocationState = CameraFollow.followTrain;
-                    startFollowingTrainHead(controller);
-                    showToast(message: Localize.of(context).mapFollowTrain);
-                    break;
-                  case CameraFollow.followTrain:
-                    followLocationState = CameraFollow.followTrainStopped;
-                    stopFollowingLocation();
-                    showToast(
-                        message: Localize.of(context).mapFollowTrainStopped);
-                    break;
-                  case CameraFollow.followTrainStopped:
-                    followLocationState = CameraFollow.followOff;
-                    _moveMapToDefault(controller);
-                    showToast(
-                        message: Localize.of(context).mapToStartNoFollowing);
-                    break;
-                  default:
-                    followLocationState = CameraFollow.followOff;
-                    if (locationSubscription != null) {
-                      stopFollowingLocation();
-                    } else {
-                      startFollowingMeLocation();
-                    }
-                    break;
-                }
-              },
-              heroTag: 'locationBtnTagWeb',
-              child: FollowingLocationIcon(
-                followLocationStatus: followLocationState,
-              ),
-            );
-          }),
-        ),*/
-
         //#######################################################################
         //Left side buttons
         //#######################################################################
@@ -396,7 +344,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   var currentRoute = ref.watch(currentRouteProvider);
                   return currentRoute.when(data: (data) {
                     return FloatingActionButton(
-                        heroTag: 'barcodeBtnTag',
+                        heroTag: 'barcodeBtnTagMapBtn',
                         backgroundColor: Colors.blue,
                         onPressed: () {
                           _showLiveMapLink(
@@ -506,7 +454,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             left: 10,
             bottom: 190,
             height: 40,
-            heroTag: 'zoomOutTag',
+            heroTag: 'zoomOutTagMapBtn',
             onPressed: () {
               final controller = MapController.maybeOf(context);
               final camera = MapCamera.maybeOf(context);
@@ -523,7 +471,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             ),
           ),
           PositionedVisibilityOpacity(
-            heroTag: 'zoomInTag',
+            heroTag: 'zoomInTagMapBtn',
             left: 10,
             bottom: 140,
             height: 40,
@@ -555,7 +503,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                 HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.light);
               }
             },
-            heroTag: 'darkLightTag',
+            heroTag: 'darkLightTagMapBtn',
             child: CupertinoAdaptiveTheme.of(context).theme.brightness ==
                     Brightness.light
                 ? const Icon(CupertinoIcons.moon)
@@ -573,7 +521,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   });
                 },
                 tooltip: 'Menu',
-                heroTag: 'showMenuTag',
+                heroTag: 'showMenuTagMapBtn',
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 500),
                   child: ref.watch(mapMenuVisibleProvider)
@@ -612,236 +560,6 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
       ]),
     );
   }
-
-  /* Builder _showMapButtonsPortrait(BuildContext context){
-    return Builder(builder: (context) {
-      if (!kIsWeb)
-        Positioned(
-          left: 80,
-          bottom: 40,
-          //same height as qrcode in web
-          height: 40,
-          width: 40,
-          child: Builder(builder: (context) {
-            if (ref.watch(isActiveEventProvider)) {
-              var currentRoute = ref.watch(currentRouteProvider);
-              return currentRoute.when(data: (data) {
-                return FloatingActionButton(
-                    heroTag: 'barcodeBtnTag',
-                    backgroundColor: Colors.blue,
-                    onPressed: () {
-                      _showLiveMapLink(
-                          ref.read(liveMapImageAndLinkProvider).link);
-                    },
-                    child: const Icon(
-                      CupertinoIcons.qrcode,
-                      color: Colors.white,
-                    ));
-              }, error: (err, stack) {
-                return Container();
-              }, loading: () {
-                return Container();
-              });
-            } else {
-              return Container();
-            }
-          }),
-        ),
-      if (!kIsWeb)
-      Positioned(
-      left: 10,
-      bottom: ref.watch(mapMenuVisibleProvider) ? 340 : 130,
-      height: 40,
-      child: Builder(builder: (context) {
-      var isTracking = ref.watch(isTrackingProvider);
-      if (!isTracking) {
-      return FloatingActionButton(
-      heroTag: 'viewerBtnTag',
-      //backgroundColor: Colors.blue,
-      onPressed: () async {
-      var res = await showCupertinoModalBottomSheet(
-      backgroundColor: CupertinoDynamicColor.resolve(
-      CupertinoColors.systemBackground, context),
-      context: context,
-      builder: (context) {
-      return Container(
-      constraints: BoxConstraints(
-      maxHeight: kIsWeb
-      ? MediaQuery.of(context).size.height * 0.5
-          : MediaQuery.of(context).size.height * 0.7,
-      ),
-      child: const TrackingTypeWidget(),
-      );
-      });
-      if (res != null) {
-      _toggleLocationService(res);
-      }
-      },
-      child: const Icon(
-      CupertinoIcons.play,
-      //color: CupertinoColors.white
-      ),
-      /*CupertinoAdaptiveTheme.of(context).brightness ==
-                                Brightness.light
-                            ? ref.watch(ThemePrimaryDarkColor.provider)
-                            : ref.watch(ThemePrimaryColor.provider)),*/
-      );
-      } else {
-      return Container();
-      }
-      }),
-      ),
-      if (!kIsWeb)
-      Positioned(
-      bottom: ref.watch(mapMenuVisibleProvider) ? 300 : 90,
-      left: kIsWeb ? 10 : 10,
-      height: 30,
-      child: Builder(builder: (context) {
-      var messageProvider = ref.watch(messagesLogicProvider);
-      return FloatingActionButton(
-      heroTag: 'messageBtnTag',
-      onPressed: () async {
-      context.pushNamed(AppRoute.messagesPage.name);
-      },
-      child: messageProvider.messages.isNotEmpty &&
-      messageProvider.readMessages > 0
-      ? Badge(
-      label:
-      Text(messageProvider.readMessages.toString()),
-      child: const Icon(Icons.mark_email_unread),
-      )
-          : const Icon(CupertinoIcons.envelope));
-      }),
-      ),
-      if (!kIsWeb)
-      PositionedVisibilityOpacity(
-      left: 10,
-      bottom: 250,
-      //same height as qrcode in web
-      height: 40,
-      heroTag: 'resetBtnTag',
-      //backgroundColor: Colors.blue,
-      onPressed: () async {
-      await LocationProvider().resetOdoMeterAndRoutePoints(context);
-      setState(() {});
-      },
-      visibility: ref.watch(mapMenuVisibleProvider),
-      child: const Icon(
-      Icons.restart_alt,
-      //color: Colors.white,
-      ),
-      ),
-      PositionedVisibilityOpacity(
-      left: 10,
-      bottom: 190,
-      height: 40,
-      heroTag: 'zoomOutTag2',
-      onPressed: () {
-      final controller = MapController.maybeOf(context);
-      final camera = MapCamera.maybeOf(context);
-      if (controller == null || camera == null) {
-      return;
-      }
-      controller.move(controller.camera.center, camera.zoom - 0.5);
-      ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
-      },
-      visibility: ref.watch(mapMenuVisibleProvider),
-      child: Icon(
-      CupertinoIcons.zoom_out,
-      semanticLabel: MapController.of(context).camera.zoom.toString(),
-      ),
-      ),
-      PositionedVisibilityOpacity(
-      heroTag: 'zoomInTagT2',
-      left: 10,
-      bottom: 140,
-      height: 40,
-      visibility: ref.watch(mapMenuVisibleProvider),
-      onPressed: () {
-      final controller = MapController.of(context);
-      final camera = MapCamera.of(context);
-      controller.move(controller.camera.center, camera.zoom + 0.5);
-      //print('>Zoom ${controller.camera.zoom}');
-      ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
-      },
-      child: Icon(
-      CupertinoIcons.zoom_in,
-      semanticLabel: MapController.of(context).camera.zoom.toString(),
-      ),
-      ),
-      PositionedVisibilityOpacity(
-      left: 10,
-      bottom: 90,
-      height: 40,
-      visibility: ref.watch(mapMenuVisibleProvider),
-      onPressed: () {
-      var theme = CupertinoAdaptiveTheme.of(context).theme;
-      if (theme.brightness == Brightness.light) {
-      CupertinoAdaptiveTheme.of(context).setDark();
-      HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.dark);
-      } else {
-      CupertinoAdaptiveTheme.of(context).setLight();
-      HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.light);
-      }
-      },
-      heroTag: 'darkLightTag',
-      child: CupertinoAdaptiveTheme.of(context).theme.brightness ==
-      Brightness.light
-      ? const Icon(CupertinoIcons.moon)
-          : const Icon(CupertinoIcons.sun_min),
-      ),
-      Positioned(
-      left: 10,
-      bottom: 40,
-      height: 40,
-      child: Builder(builder: (context) {
-      return FloatingActionButton(
-      onPressed: () {
-      setState(() {
-      MapSettings.setMapMenuVisible(!MapSettings.mapMenuVisible);
-      });
-      },
-      tooltip: 'Menu',
-      heroTag: 'showMenuTag',
-      child: AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      child: ref.watch(mapMenuVisibleProvider)
-      ? const Icon(
-      Icons.menu_open,
-      key: ValueKey<int>(1),
-      )
-          : const Icon(
-      Icons.menu,
-      key: ValueKey<int>(2),
-      ),
-      ),
-      );
-      }),
-      ),
-      Positioned(
-      top: 0,
-      right: kIsWeb ? 10 : 10,
-      height: 30,
-      child: Builder(builder: (context) {
-      return GestureDetector(
-      onTap: () {
-      setState(() {
-      MapSettings.setMapMenuVisible(true);
-      });
-      _showOverlay(context, text: '');
-      },
-      child: const AnimatedSwitcher(
-      duration: Duration(milliseconds: 500),
-      child: Icon(
-      Icons.help,
-      )));
-      }),
-      ),
-      ],
-  });
-}
-
-*/
 
   OverlayState? overlayState;
   OverlayEntry? overlayEntry;

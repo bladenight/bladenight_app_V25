@@ -55,25 +55,16 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
     if (kIsWeb) return;
     _locationStreamListener =
         LocationProvider().userBgLocationStream.listen((location) {
-      setState(() {
-        currentUserSpeed = location.coords.speed * 3.6;
-        if (!widget.showOdoMeter) {
-          return;
-        }
-        currentUserOdoDriven = location.odometer / 1000;
-      });
+      if (mounted) {
+        setState(() {
+          currentUserSpeed = location.coords.speed * 3.6;
+          if (!widget.showOdoMeter) {
+            return;
+          }
+          currentUserOdoDriven = location.odometer / 1000;
+        });
+      }
     });
-    /*if (!kIsWeb) {
-      _compassListener = FlutterCompass.events?.listen((event) {
-        if (event.heading != null) {
-          //avoid extreme rebuilds
-          if ((_compassHeading - event.heading!).abs() < 2) return;
-          setState(() {
-            _compassHeading = event.heading!;
-          });
-        }
-      });
-    }*/
   }
 
   void _stopListeners() {

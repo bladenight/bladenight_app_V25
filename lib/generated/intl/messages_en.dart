@@ -233,7 +233,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "apptrackingtransparancy": MessageLookupByLibrary.simpleMessage(
       "We care about your privacy and data security.\nTo help us improve the BladeNight experience, we transfer your location to our server. This information includes a unique ID created when you first start the app to enable friends to be assigned. This data is never passed on to third parties or used for advertising purposes.",
     ),
-    "at": MessageLookupByLibrary.simpleMessage("on"),
+    "at": MessageLookupByLibrary.simpleMessage("at"),
     "autoStartTracking": MessageLookupByLibrary.simpleMessage(
       "Location sharing started automatically. To disable behaviour go to settings and switch Auto-Start/Stop location sharing off",
     ),
@@ -298,7 +298,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "bladeguardInfo": m0,
     "bladenight": MessageLookupByLibrary.simpleMessage("BladeNight"),
-    "bladenightInfoTitle": MessageLookupByLibrary.simpleMessage(
+    "bladenightInfoTitleApp": MessageLookupByLibrary.simpleMessage(
+      "Information about BladeNight Munich",
+    ),
+    "bladenightInfoTitleWeb": MessageLookupByLibrary.simpleMessage(
       "WebApp and Information about BladeNight Munich",
     ),
     "bladenightUpdate": MessageLookupByLibrary.simpleMessage(
@@ -432,6 +435,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "eventNotStarted": MessageLookupByLibrary.simpleMessage(
       "Event not started",
     ),
+    "eventOn": MessageLookupByLibrary.simpleMessage("Event on"),
     "events": MessageLookupByLibrary.simpleMessage("Events"),
     "export": MessageLookupByLibrary.simpleMessage("Export"),
     "exportLogData": MessageLookupByLibrary.simpleMessage(
@@ -714,7 +718,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "now": MessageLookupByLibrary.simpleMessage("Now"),
     "offline": MessageLookupByLibrary.simpleMessage("Offline"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
-    "on": MessageLookupByLibrary.simpleMessage("at"),
+    "on": MessageLookupByLibrary.simpleMessage("on"),
     "onRoute": MessageLookupByLibrary.simpleMessage("on route"),
     "oneSignalId": MessageLookupByLibrary.simpleMessage("OneSignal-Id: "),
     "oneSignalIdTitle": MessageLookupByLibrary.simpleMessage(

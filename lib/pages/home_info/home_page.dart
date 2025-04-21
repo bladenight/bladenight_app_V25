@@ -249,11 +249,11 @@ class _HomePageState extends ConsumerState<HomePage>
                           ),
                         ),
                       //EventInfo(),
-                      kIsWeb
-                          ? Center(
-                              child: Text(
-                                  Localize.of(context).bladenightInfoTitle))
-                          : SizedBox(),
+                      Center(
+                        child: kIsWeb
+                            ? Text(Localize.of(context).bladenightInfoTitleWeb)
+                            : Text(Localize.of(context).bladenightInfoTitleApp),
+                      ),
                       kIsWeb
                           ? EventInfo()
                           : GestureDetector(

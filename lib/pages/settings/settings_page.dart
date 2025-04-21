@@ -481,6 +481,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                                   exportProgressNotifier)
                                               .timeout(Duration(seconds: 60))
                                               .catchError((error) {
+                                            if (mounted) {
+                                              setState(() {
+                                                _exportLogInProgress = false;
+                                              });
+                                            }
                                             return Future.value(false);
                                           });
                                           setState(() {
@@ -498,15 +503,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           child: Text(
                                               Localize.of(context).showLogData),
                                           onPressed: () async {
-                                            if (_exportLogInProgress) return;
-                                            setState(() {
-                                              _exportLogInProgress = true;
-                                            });
                                             await context.pushNamed(
                                                 AppRoute.logMonitor.name);
-                                            setState(() {
-                                              _exportLogInProgress = false;
-                                            });
                                           }),
                                     ),
                             _exportLogInProgress

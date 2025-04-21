@@ -16,6 +16,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
+import '../../../generated/intl/messages_de.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/enums/tracking_type.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
@@ -91,6 +92,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
   Widget build(BuildContext context) {
     CameraFollow followLocationState = ref.watch(cameraFollowLocationProvider);
     var trackingType = ref.watch(trackingTypeProvider);
+    var messageProvider = ref.watch(messagesLogicProvider);
     return SafeArea(
       child: Stack(fit: StackFit.passthrough, children: [
         //#######################################################################
@@ -389,7 +391,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
         //Left side buttons
         //#######################################################################
         //if (ResponsiveBreakpoints.of(context).smallerThan(PHONE))
-        if (!kIsWeb)
+        if (!kIsWeb && MediaQuery.sizeOf(context).height > 300)
           Positioned(
             left: leftOffset,
             bottom: bottomOffset + rowDistOffset * 2,
@@ -432,7 +434,6 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
               if (!isTracking) {
                 return FloatingActionButton(
                   heroTag: 'viewerBtnTag',
-                  //backgroundColor: Colors.blue,
                   onPressed: () async {
                     var res = await showCupertinoModalBottomSheet(
                         backgroundColor: CupertinoDynamicColor.resolve(
@@ -467,29 +468,25 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
             }),
           ),
         if (!kIsWeb)
-          Positioned(
-            left: distanceOffset + leftOffset,
-            bottom: bottomOffset + rowDistOffset,
-            height: 40,
-            child: Builder(builder: (context) {
-              var messageProvider = ref.watch(messagesLogicProvider);
-              return FloatingActionButton(
-                  heroTag: 'messageBtnTag',
-                  onPressed: () async {
-                    ref
-                        .read(goRouterProvider)
-                        .pushNamed(AppRoute.messagesPage.name);
-                  },
-                  child: messageProvider.messages.isNotEmpty &&
-                          messageProvider.readMessagesCount > 0
-                      ? Badge(
-                          label: Text(
-                              messageProvider.readMessagesCount.toString()),
-                          child: const Icon(Icons.mark_email_unread),
-                        )
-                      : const Icon(CupertinoIcons.envelope));
-            }),
-          ),
+          PositionedVisibilityOpacity(
+              left: 5 * distanceOffset + leftOffset,
+              bottom: bottomOffset,
+              height: 40,
+              heroTag: 'messageBtnTag2',
+              onPressed: () {
+                ref
+                    .read(goRouterProvider)
+                    .pushNamed(AppRoute.messagesPage.name);
+              },
+              visibility: ref.watch(mapMenuVisibleProvider),
+              child: messageProvider.messages.isNotEmpty &&
+                      messageProvider.readMessagesCount > 0
+                  ? Badge(
+                      label: Text(messageProvider.readMessagesCount.toString()),
+                      child: const Icon(Icons.mark_email_unread),
+                    )
+                  : const Icon(CupertinoIcons.envelope)),
+
         if (!kIsWeb)
           PositionedVisibilityOpacity(
             left: 4 * distanceOffset + leftOffset,

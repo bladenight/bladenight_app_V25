@@ -561,7 +561,7 @@ Widget _listTile(
               children: [
                 FittedBox(
                   child: Text(
-                    '${startState == EventStartState.eventActual ? Localize.of(context).nextEvent : Localize.of(context).route} ${Localize.of(context).on} ',
+                    '${startState == EventStartState.eventActual ? Localize.of(context).nextEvent : Localize.of(context).eventOn} ',
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       color: color,

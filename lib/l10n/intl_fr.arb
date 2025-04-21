@@ -562,7 +562,9 @@
   "polyLinesAmountHeader": "Nombre",
   "polyLinesAmount": "Pour augmenter la vitesse de rendu sur les appareils lents, vous pouvez augmenter/diminuer la quantité de polylignes dessinées (points d'itinéraire) sur la carte avant de simplifier.",
   "scanCodeForFriend": "Votre ami ({friendName}) peut également prendre une photo de ce code-barres et ajouter le nom {myName} et {code} à BladeNightApp si l'application est installée.",
-  "bladenightInfoTitle": "WebApp and Information about BladeNight Munich",
-  "startNoParticipationShort": "Show your Position"
+  "bladenightInfoTitleWeb": "WebApp et informations sur",
+  "bladenightInfoTitleApp": "Bladenight et informations sur",
+  "startNoParticipationShort": "Montrez votre position",
+  "eventOn": "Événement sur"
 }
 

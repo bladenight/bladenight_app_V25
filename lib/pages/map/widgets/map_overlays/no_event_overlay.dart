@@ -29,9 +29,7 @@ class NoEventOverlayWidget extends StatelessWidget {
                   filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                   child: Container(
                     color: kIsWeb
-                        ? CupertinoTheme.of(context)
-                            .barBackgroundColor
-                            .withAlpha(200)
+                        ? CupertinoTheme.of(context).barBackgroundColor
                         : CupertinoDynamicColor.resolve(
                             CupertinoColors.transparent, context),
                     child: Builder(builder: (context) {

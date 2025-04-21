@@ -120,6 +120,10 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
                   child: Stack(children: [
                     Builder(builder: (context) {
                       return Container(
+                        color: kIsWeb
+                            ? CupertinoTheme.of(context).barBackgroundColor
+                            : CupertinoDynamicColor.resolve(
+                                CupertinoColors.transparent, context),
                         padding: const EdgeInsets.all(10),
                         child: Column(children: [
                           const SpecialFunctionInfo(),

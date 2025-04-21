@@ -304,7 +304,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "bladeguardInfo": m0,
     "bladenight": MessageLookupByLibrary.simpleMessage("BladeNight"),
-    "bladenightInfoTitle": MessageLookupByLibrary.simpleMessage(
+    "bladenightInfoTitleApp": MessageLookupByLibrary.simpleMessage(
+      "Information zur Münchner BladeNight",
+    ),
+    "bladenightInfoTitleWeb": MessageLookupByLibrary.simpleMessage(
       "WebApp and Information zur Münchner BladeNight",
     ),
     "bladenightUpdate": MessageLookupByLibrary.simpleMessage(
@@ -442,6 +445,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "eventNotStarted": MessageLookupByLibrary.simpleMessage(
       "Noch nicht gestartet",
     ),
+    "eventOn": MessageLookupByLibrary.simpleMessage("Event am"),
     "events": MessageLookupByLibrary.simpleMessage("Termine"),
     "export": MessageLookupByLibrary.simpleMessage("Exportieren"),
     "exportLogData": MessageLookupByLibrary.simpleMessage(

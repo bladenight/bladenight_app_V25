@@ -147,7 +147,7 @@
   "appTitle": "BladeNight",
   "appsupport": "Application support",
   "apptrackingtransparancy": "We care about your privacy and data security.\nTo help us improve the BladeNight experience, we transfer your location to our server. This information includes a unique ID created when you first start the app to enable friends to be assigned. This data is never passed on to third parties or used for advertising purposes.",
-  "at": "on",
+  "at": "at",
   "autoStopTracking": "Info - please read - Stop automatic on finish",
   "automatedStopInfo": "On long press at ▶️ automatic location sharing stop will activated. This means, as long the app is active and reaching the finish, location sharing will stopped automatically.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and location sharing with auto stop.",
   "becomeBladeguard": "Become a Bladeguard",
@@ -346,7 +346,7 @@
   "now": "Now",
   "offline": "Offline",
   "ok": "OK",
-  "on": "at",
+  "on": "on",
   "onRoute": "on route",
   "oneSignalId": "OneSignal-Id: ",
   "oneSignalIdTitle": "This is the assigned Id for receiving push messages. Let us know the ID if you have problems receiving push messages.",
@@ -563,6 +563,8 @@
   "polyLinesAmountHeader": "Amount",
   "polyLinesAmount": "To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying.",
   "scanCodeForFriend": "Your friend ({friendName}) can also take a photo of this barcode and add your name:{myName} and code:{code} to his BladeNightApp if the app is installed.",
-  "bladenightInfoTitle": "WebApp and Information about BladeNight Munich",
-  "startNoParticipationShort": "Show your Position"
+  "bladenightInfoTitleWeb": "WebApp and Information about BladeNight Munich",
+  "bladenightInfoTitleApp": "Information about BladeNight Munich",
+  "startNoParticipationShort": "Show your Position",
+  "eventOn": "Event on"
 }

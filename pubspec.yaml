@@ -198,6 +198,7 @@ flutter:
     - assets/images/
     - assets/images/instruction/
     - assets/images/event/
+    - assets/images/app_logo/
     - assets/iosStore/
     - assets/lottie/
     - assets/images/bladeGuard/

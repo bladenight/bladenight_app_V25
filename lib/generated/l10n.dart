@@ -560,9 +560,9 @@ class Localize {
     );
   }
 
-  /// `on`
+  /// `at`
   String get at {
-    return Intl.message('on', name: 'at', desc: '', args: []);
+    return Intl.message('at', name: 'at', desc: '', args: []);
   }
 
   /// `Info - please read - Stop automatic on finish`
@@ -2301,9 +2301,9 @@ class Localize {
     return Intl.message('OK', name: 'ok', desc: '', args: []);
   }
 
-  /// `at`
+  /// `on`
   String get on {
-    return Intl.message('at', name: 'on', desc: '', args: []);
+    return Intl.message('on', name: 'on', desc: '', args: []);
   }
 
   /// `on route`
@@ -4159,10 +4159,20 @@ class Localize {
   }
 
   /// `WebApp and Information about BladeNight Munich`
-  String get bladenightInfoTitle {
+  String get bladenightInfoTitleWeb {
     return Intl.message(
       'WebApp and Information about BladeNight Munich',
-      name: 'bladenightInfoTitle',
+      name: 'bladenightInfoTitleWeb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Information about BladeNight Munich`
+  String get bladenightInfoTitleApp {
+    return Intl.message(
+      'Information about BladeNight Munich',
+      name: 'bladenightInfoTitleApp',
       desc: '',
       args: [],
     );
@@ -4176,6 +4186,11 @@ class Localize {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Event on`
+  String get eventOn {
+    return Intl.message('Event on', name: 'eventOn', desc: '', args: []);
   }
 }
 
