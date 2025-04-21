@@ -12,11 +12,11 @@ class AppStartLoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
+      backgroundColor: Colors.black,
       child: Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           LinearProgressIndicator(
-            color: CupertinoTheme.of(context).primaryColor,
+            color: systemPrimaryDarkDefaultColor,
           ),
           Image.asset(
             kIsWeb
@@ -24,13 +24,10 @@ class AppStartLoadingWidget extends StatelessWidget {
                 : 'assets/images/app_logo/skm_bn_child__red_1152x2_android.png',
             width: MediaQuery.sizeOf(context).height * 0.3,
           ),
-          ColoredBox(
-            color: Colors.black,
-            child: Text(
-              Localize.of(context).loading,
-              style: TextStyle(
-                color: CupertinoTheme.of(context).primaryColor,
-              ),
+          Text(
+            Localize.of(context).loading,
+            style: TextStyle(
+              color: systemPrimaryDarkDefaultColor,
             ),
           ),
         ]),

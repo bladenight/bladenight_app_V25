@@ -1,13 +1,17 @@
 import 'package:background_fetch/background_fetch.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:talker/talker.dart';
 import 'package:universal_io/io.dart';
 
 import '../../app_settings/app_constants.dart';
+import '../../app_settings/globals.dart';
+import '../../firebase_options.dart';
 import '../../headleass_task.dart';
-import '../../helpers/debug_helper.dart';
 import '../../helpers/device_id_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
@@ -42,7 +46,7 @@ class AppStartNotifier extends _$AppStartNotifier {
     await Hive.openBox(hiveBoxLocationDbName);
     await Hive.openBox(hiveBoxServerConfigDBName);
     await DeviceId.initAppId();
-    debugPrintTime('initLogger');
+    initCrashLogs();
     await initLogger();
     initSettings();
 
@@ -68,11 +72,51 @@ class AppStartNotifier extends _$AppStartNotifier {
     }
   }
 
+  void initCrashLogs() async {
+    if (kDebugMode && !kIsWeb) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      FlutterError.onError = (details) {
+        talker.log(
+          details.exceptionAsString(),
+          logLevel: LogLevel.critical,
+          stackTrace: details.stack,
+        );
+        FlutterError.presentError(details);
+      };
+    } else if (!kDebugMode && !kIsWeb && HiveSettingsDB.chrashlyticsEnabled) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      FlutterError.onError = (details) {
+        talker.log(
+          details.exceptionAsString(),
+          logLevel: LogLevel.critical,
+          stackTrace: details.stack,
+        );
+        if (Globals.logToCrashlytics) {
+          FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+        }
+      };
+      // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+      PlatformDispatcher.instance.onError = (error, stack) {
+        if (Globals.logToCrashlytics) {
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: false);
+        }
+        talker.handle(error, stack, 'PlatformDispatcher Instance Error');
+        return true;
+      };
+      talker.log('BladenightApp started');
+      talker.configure(logger: TalkerLogger());
+    }
+  }
+
   Future<bool> _initNotifications() async {
     try {
       await NotificationHelper().initialiseNotifications();
     } catch (e) {
-      print('initNotifications failed + $e');
+      BnLog.warning(text: 'initNotifications failed + $e');
       return false;
     }
     return true;

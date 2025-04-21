@@ -51,7 +51,6 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       talker = TalkerFlutter.init();
-      initCrashLogs();
       initializeMappers();
 
       //HomeWidget.registerInteractivityCallback(backgroundCallback);
@@ -63,50 +62,51 @@ void main() async {
 
       // turn off the # in the URLs on the web
       usePathUrlStrategy();
-
-      await SentryFlutter.init((options) {
-        options.enableMemoryPressureBreadcrumbs = true;
-        options.enableWatchdogTerminationTracking = true;
-        options.dsn =
-            'https://260152b2325af41400820edd53e3a54c@o4507936224706560.ingest.de.sentry.io/4507936226541648';
-        https: //examplePublicKey@o0.ingest.sentry.io/0';
-        // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
-        // We recommend adjusting this value in production.
-        options.tracesSampleRate = 1.0;
-        // The sampling rate for profiling is relative to tracesSampleRate
-        // Setting to 1.0 will profile 100% of sampled transactions:
-        // Note: Profiling alpha is available for iOS and macOS since SDK version 7.12.0
-        options.profilesSampleRate = 1.0;
-      },
-          appRunner: () => runApp(
-                ProviderScope(
-                  observers: [
-                    // LoggingObserver(),
-                  ],
-                  child: AppRootWidget(),
+      if (kIsWeb) {
+        await SentryFlutter.init((options) {
+          options.enableMemoryPressureBreadcrumbs = true;
+          options.enableWatchdogTerminationTracking = true;
+          options.dsn =
+              'https://260152b2325af41400820edd53e3a54c@o4507936224706560.ingest.de.sentry.io/4507936226541648';
+          https: //examplePublicKey@o0.ingest.sentry.io/0';
+          // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
+          // We recommend adjusting this value in production.
+          options.tracesSampleRate = 1.0;
+          // The sampling rate for profiling is relative to tracesSampleRate
+          // Setting to 1.0 will profile 100% of sampled transactions:
+          // Note: Profiling alpha is available for iOS and macOS since SDK version 7.12.0
+          options.profilesSampleRate = 1.0;
+        },
+            appRunner: () => runApp(
+                  ProviderScope(
+                    observers: [
+                      // LoggingObserver(),
+                    ],
+                    child: AppRootWidget(),
+                  ),
+                ));
+      } else {
+        runApp(
+          ProviderScope(
+            observers: [
+              if (riverPodDebugLog)
+                TalkerRiverpodObserver(
+                  talker: talker,
+                  settings: TalkerRiverpodLoggerSettings(
+                    enabled: true,
+                    printStateFullData: false,
+                    printProviderAdded: true,
+                    printProviderUpdated: true,
+                    printProviderDisposed: true,
+                    printProviderFailed: true,
+                  ),
                 ),
-              ));
-
-      runApp(
-        ProviderScope(
-          observers: [
-            if (riverPodDebugLog)
-              TalkerRiverpodObserver(
-                talker: talker,
-                settings: TalkerRiverpodLoggerSettings(
-                  enabled: true,
-                  printStateFullData: false,
-                  printProviderAdded: true,
-                  printProviderUpdated: true,
-                  printProviderDisposed: true,
-                  printProviderFailed: true,
-                ),
-              ),
-            //LoggingObserver(),
-          ],
-          child: AppRootWidget(),
-        ),
-      );
+              //LoggingObserver(),
+            ],
+            child: AppRootWidget(),
+          ),
+        );
+      }
     },
     (dynamic error, StackTrace stackTrace) {
       print(
@@ -120,43 +120,6 @@ void main() async {
           text: '$error\n$stackTrace');
     },
   );
-}
-
-void initCrashLogs() async {
-  if (kDebugMode) {
-    FlutterError.onError = (details) {
-      talker.log(
-        details.exceptionAsString(),
-        logLevel: LogLevel.critical,
-        stackTrace: details.stack,
-      );
-      FlutterError.presentError(details);
-    };
-  } else if (!kDebugMode && !kIsWeb) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    FlutterError.onError = (details) {
-      talker.log(
-        details.exceptionAsString(),
-        logLevel: LogLevel.critical,
-        stackTrace: details.stack,
-      );
-      if (Globals.logToCrashlytics) {
-        FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-      }
-    };
-    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-    PlatformDispatcher.instance.onError = (error, stack) {
-      if (Globals.logToCrashlytics) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: false);
-      }
-      talker.handle(error, stack, 'PlatformDispatcher Instance Error');
-      return true;
-    };
-    talker.log('BladenightApp started');
-    talker.configure(logger: TalkerLogger());
-  }
 }
 
 Future<bool> initLogger() async {
