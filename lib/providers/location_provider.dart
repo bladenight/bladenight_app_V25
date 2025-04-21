@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:battery_plus/battery_plus.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -83,6 +84,7 @@ class LocationProvider with ChangeNotifier {
   bool locationRequested = false;
   bool _isInBackground = false;
   bool _wakelockDisabled = false;
+  bool _hasAutoStoppedDueLowBatt = false;
 
   static DateTime _lastRealtimedataUpdate = DateTime(2022, 1, 1, 0, 0, 0);
   static DateTime _lastForceStop = DateTime(2022, 1, 1, 0, 0, 0);
@@ -460,9 +462,6 @@ class LocationProvider with ChangeNotifier {
             '_onLocation ${location.coords} battery: ${location.battery.level}%');
     _lastLocationTimeStamp = DateTime.now();
     updateUserLocation(location);
-    if (location.battery.level != -1) {
-      checkWakeLock(location.battery.level, location.battery.isCharging);
-    }
   }
 
   ///Update user location and track points list
@@ -487,6 +486,14 @@ class LocationProvider with ChangeNotifier {
 
     _realUserSpeedKmh = _realUserSpeedKmh!.toShortenedDouble(2);
     _odometer = location.odometer / 1000;
+
+    var bat = Battery();
+    var batteryLevel = await bat.batteryLevel;
+    var isCharging = await bat.batteryState == BatteryState.charging;
+    if (batteryLevel != -1) {
+      checkWakeLock(batteryLevel / 100, isCharging);
+      checkLowPowerStopTracking(batteryLevel / 100, isCharging);
+    }
 
     if (_lastKnownPoint != null) {
       var headingDiff =
@@ -624,19 +631,18 @@ class LocationProvider with ChangeNotifier {
           _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
         }
       }
+      notifyListeners();
       return Future.value(true);
     });
   }
 
   ///load UserTrack from database for current day
-  void _initUserTrackStore() {
-    Future.microtask(() {
+  void _initUserTrackStore() async {
+    await Future.microtask(() {
       _userGpxPoints.clear();
       _userReachedFinishDateTime == null;
-      if (_userGpxPoints.length <= 1 &&
-          MapSettings.showOwnTrack &&
-          LocationStore.dataTodayAvailable) {
-        //reload data
+      if (MapSettings.showOwnTrack && LocationStore.dataTodayAvailable) {
+        //load data
         _userGpxPoints.addAll(LocationStore.userTrackPointsList);
         _userSpeedPoints.clear();
         for (int i = 0; i < _userGpxPoints.length - 1; i++) {
@@ -1415,27 +1421,57 @@ class LocationProvider with ChangeNotifier {
   }
 
   void checkWakeLock(double batteryLevel, bool isCharging) async {
-    if (_isInBackground) return;
     BnLog.verbose(text: 'checkWakelock');
     if (HiveSettingsDB.wakeLockEnabled &&
         _wakelockDisabled == false &&
         !isCharging &&
         batteryLevel != -1 &&
         batteryLevel < 0.2) {
-      BnLog.verbose(text: 'checkWakelock disable Wakelock');
-      //await WakelockPlus.disable();
+      BnLog.info(text: 'checkWakelock disable Wakelock');
+      await WakelockPlus.disable();
       _wakelockDisabled = true;
-      NotificationHelper().showString(
-          id: DateTime.now().hashCode,
-          text: Localize.current.wakelockWarnBattery(batteryLevel * 100));
-      //showToast(message: Localize.current.wakelockEnabled);
+      await stopTracking();
+      if (!_isInBackground) {
+        NotificationHelper().showString(
+            id: DateTime.now().hashCode,
+            text: Localize.current.wakelockWarnBattery(batteryLevel * 100));
+      } else {
+        showToast(
+            message: Localize.current.wakelockWarnBattery(batteryLevel * 100));
+      }
     }
     if (HiveSettingsDB.wakeLockEnabled &&
         _wakelockDisabled == true &&
-        (batteryLevel > 0.2 || isCharging)) {
-      //await WakelockPlus.enable();
+        (batteryLevel > 0.2 && isCharging)) {
       _wakelockDisabled = false;
-      //showToast(message: Localize.current.wakelockEnabled);
+    }
+  }
+
+  void checkLowPowerStopTracking(double batteryLevel, bool isCharging) async {
+    if (HiveSettingsDB.autoStopTrackingEnabled &&
+        _hasAutoStoppedDueLowBatt == false &&
+        !isCharging &&
+        batteryLevel != -1 &&
+        batteryLevel < 0.15) {
+      BnLog.info(text: 'Low Power Stop tracking');
+      await stopTracking();
+      _hasAutoStoppedDueLowBatt = true;
+
+      if (!_isInBackground) {
+        NotificationHelper().showString(
+            id: DateTime.now().hashCode,
+            text: Localize.current
+                .autoStopTrackingDueLowBattery(batteryLevel * 100));
+      } else {
+        showToast(
+            message: Localize.current
+                .autoStopTrackingDueLowBattery(batteryLevel * 100));
+      }
+    }
+    if (HiveSettingsDB.autoStopTrackingEnabled &&
+        _hasAutoStoppedDueLowBatt == true &&
+        (batteryLevel > 0.2 && isCharging)) {
+      _hasAutoStoppedDueLowBatt = false;
     }
   }
 

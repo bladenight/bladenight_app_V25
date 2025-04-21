@@ -149,6 +149,7 @@
   "apptrackingtransparancy": "Wir schützen uns um Ihre Privatsphäre und Datensicherheit.\nUm uns dabei zu helfen, das BladeNight-Erlebnis zu verbessern, übertragen wir Ihren Standort auf unseren Server. Dies Information beinhaltet eine beim ersten Start der App erstellte eindeutige ID, um die Zuordnung der Freunde zu ermöglichen. Diese Daten werden niemals an Dritte weitergegeben oder für Werbezwecke verwendet.",
   "at": "am",
   "autoStopTracking": "Stoppe Tracking automatisch",
+  "autoStopTrackingDueLowBattery": "Tracking automatisch wegen niedrigen Akkustand {batteryLevel} % gestoppt",
   "automatedStopInfo": "Durch langes drücken auf ▶️ wird der automatische Trackingstopp aktiviert. Das heißt, solange die App geöffnet ist, wird nach dem erreichen des Zieles der BladeNight das Tracking und Freundefreigabe automatisch gestoppt.\nWiederholt langes drücken auf  ▶️,⏸︎,⏹︎ stellt auf manuell Stopp oder Autostopp um.",
   "becomeBladeguard": "Werde Bladeguard",
   "behindMe": "hinter mir",

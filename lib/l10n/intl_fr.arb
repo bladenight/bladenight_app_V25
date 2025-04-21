@@ -149,6 +149,7 @@
   "apptrackingtransparancy": "Nous nous soucions de votre vie privée et de la sécurité de vos données.nPour nous aider à améliorer l'expérience BladeNight, nous transférons votre position sur notre serveur. Ces informations comprennent un identifiant unique créé lorsque vous démarrez l'application pour permettre l'attribution d'amis. Ces données ne sont jamais transmises à des tiers ni utilisées à des fins publicitaires.",
   "at": "at",
   "autoStopTracking": "Info - à lire - Arrêt automatique à l'arrivée",
+  "autoStopTrackingDueLowBattery": "Le suivi s'est interrompu en raison d'un faible niveau de batterie {batteryLevel} %",
   "automatedStopInfo": "En cas d'appui long sur ▶️, l'arrêt automatique du suivi sera activé. Cela signifie que tant que l'application est active et que le suivi s'arrête à la fin de BladeNight, le suivi s'arrête automatiquement.\nRépétez un appui long sur ▶️,⏸︎,⏹︎ ︎ pour passer à l'arrêt manuel et au partage de la localisation avec l'arrêt automatique.",
   "becomeBladeguard": "Devenir un Bladeguard",
   "behindMe": "derrière moi",

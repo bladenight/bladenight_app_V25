@@ -575,6 +575,16 @@ class Localize {
     );
   }
 
+  /// `Tracking stopped because low battery level {batteryLevel} %`
+  String autoStopTrackingDueLowBattery(Object batteryLevel) {
+    return Intl.message(
+      'Tracking stopped because low battery level $batteryLevel %',
+      name: 'autoStopTrackingDueLowBattery',
+      desc: '',
+      args: [batteryLevel],
+    );
+  }
+
   /// `On long press at ▶️ automatic location sharing stop will activated. This means, as long the app is active and reaching the finish, location sharing will stopped automatically.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and location sharing with auto stop.`
   String get automatedStopInfo {
     return Intl.message(

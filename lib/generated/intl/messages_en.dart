@@ -20,51 +20,54 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(bladeguardRegisterlink, bladeguardPrivacyLink) =>
+  static String m0(batteryLevel) =>
+      "Tracking stopped because low battery level ${batteryLevel} %";
+
+  static String m1(bladeguardRegisterlink, bladeguardPrivacyLink) =>
       "<h2>Requirements and rules:</h2><ul><li>You are at least 16 years old.</li><li>You are comfortable with inline skates and can brake.</li><li>You know the rules of the road </li><li>You are helpful, friendly and a team player </li><li>You read our Bladeguard-training module before your first trip and answers the questions.</li></ul><p>There are no costs to you as a Bladeguard. You can unsubscribe at any time. <h3>Here you can go to <a href=\"${bladeguardRegisterlink}\">Online registration</a> and <a href=\"${bladeguardPrivacyLink}\">Data protection</a></p></h3>";
 
-  static String m1(date) => "${date}";
+  static String m2(date) => "${date}";
 
-  static String m2(date, time) => "${date} at ${time}";
+  static String m3(date, time) => "${date} at ${time}";
 
-  static String m3(date, time) => "${date} ${time}";
+  static String m4(date, time) => "${date} ${time}";
 
-  static String m4(date, time) => "${date} ${time}Uhr";
+  static String m5(date, time) => "${date} ${time}Uhr";
 
-  static String m5(name) => "Delete linking with ${name} forever";
+  static String m6(name) => "Delete linking with ${name} forever";
 
-  static String m6(name) => "Edit ${name} colors and name";
+  static String m7(name) => "Edit ${name} colors and name";
 
-  static String m7(timeout) =>
+  static String m8(timeout) =>
       "Location sharing after ${timeout} min of BladeNight automatic stopped. (Press long on ▶️ to deactivate automatic location sharing stop)";
 
-  static String m8(code) =>
+  static String m9(code) =>
       "Alternative can your friend scan the barcode below or manually enter the code ${code} in his app";
 
-  static String m9(bladeguardPrivacyLink) =>
+  static String m10(bladeguardPrivacyLink) =>
       "We need support from volunteers. As a Bladeguard you actively support BladeNight. The <a href=\"${bladeguardPrivacyLink}\">Munich BladeNight data protection regulations</a></p> apply";
 
-  static String m10(name) => "invite ${name}";
+  static String m11(name) => "invite ${name}";
 
-  static String m11(linkDescription, link) =>
+  static String m12(linkDescription, link) =>
       "You clicked \n${linkDescription} (${link}) and you will be redirected to your device internet browser. Please switch back to this app when finished. The app continues to run in the background.";
 
-  static String m12(deviceName) =>
+  static String m13(deviceName) =>
       "<h2>Important information!</h2><ul><li>Your friend must use the same type of phone. Apple to Android does not work. In this case, use the code pairing.</li><li> Your friend must be within a maximum distance of 2 m from you!</li><li>Please open the Friends tab for your friend in the BladeNight! app.</li><li>Select Plus at the top right<span class=\"icon\">plus</span></li><li>Select Add friend next to you</li><li>Now with this device <b><em>${deviceName}</em></b> Pair.</li><li>Alternatively, you can scan your friend\'s barcode with the camera or use the connection with the Add friend with code option </li></ul>You can enter your transmitted name change in the text field. This is only for transferring via direct connection.";
 
-  static String m13(deviceName, code) =>
+  static String m14(deviceName, code) =>
       "<h2>Important information!</h2><ul><li>Your friend must use the same type of phone. Apple to Android does not work. In this case, use the code pairing.</li><li> Your friend must be within a maximum distance of 2 m from you!</li><li>Please open the Friends tab for your friend in the BladeNight! app.</li><li>Select Plus at the top right<span class=\"icon\">plus</span></li><li>Choose to accept a friend next to you</li><li>Now with this device <b><em>${deviceName}</em></b> pair.</li><li>Alternatively, your friend can scan the barcode with the camera or connect you with <br>code <b>${code}</b></li></ul>You can change your submitted name in the text field. This is only for transfer via direct connection / scan.";
 
-  static String m14(distInMeter) =>
+  static String m15(distInMeter) =>
       "You have to be close to the starting point, but you are at least ${distInMeter} m away. If you are late, inform your team leader, please!";
 
-  static String m15(timeout) =>
+  static String m16(timeout) =>
       "No Event active since more than ${timeout} min. - Location sharing stopped automatically.";
 
-  static String m16(friendName, myName, code) =>
+  static String m17(friendName, myName, code) =>
       "Your friend (${friendName}) can also take a photo of this barcode and add your name:${myName} and code:${code} to his BladeNightApp if the app is installed.";
 
-  static String m17(
+  static String m18(
     requestId,
     bnaLink,
     myName,
@@ -73,21 +76,21 @@ class MessageLookup extends MessageLookupByLibrary {
   ) =>
       "Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: ${requestId} in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: ${bnaLink} on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n${playStoreLink} and on Apple App Store \n${iosAppStoreLink}";
 
-  static String m18(timeout) =>
+  static String m19(timeout) =>
       "Event timed out (${timeout} min). Don\'t forget to stop location sharing.";
 
-  static String m19(name, requestid) =>
+  static String m20(name, requestid) =>
       "Please tell \'${name}\' this code \n\n${requestid}\nHe/she/it has to confirm this in his/her/it \'BladeNight-App\'.\nThe Code is only 60 minutes valid!\nPlease update with ↻ button the status manually.";
 
-  static String m20(time) => "${time}";
-
-  static String m21(level) =>
-      "Tracking stopped due to low battery ${level}%. To avoid turn off Autostop in settings";
+  static String m21(time) => "${time}";
 
   static String m22(level) =>
+      "Tracking stopped due to low battery ${level}%. To avoid turn off Autostop in settings";
+
+  static String m23(level) =>
       "Display on activated by app settings - Warning, battery low ${level} %.";
 
-  static String m23(date) => "${date}";
+  static String m24(date) => "${date}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -249,6 +252,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "autoStopTracking": MessageLookupByLibrary.simpleMessage(
       "Info - please read - Stop automatic on finish",
     ),
+    "autoStopTrackingDueLowBattery": m0,
     "automatedStopInfo": MessageLookupByLibrary.simpleMessage(
       "On long press at ▶️ automatic location sharing stop will activated. This means, as long the app is active and reaching the finish, location sharing will stopped automatically.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and location sharing with auto stop.",
     ),
@@ -296,7 +300,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bladeguardAtStartPointTitle": MessageLookupByLibrary.simpleMessage(
       "BladeNight!-App - registered onsite",
     ),
-    "bladeguardInfo": m0,
+    "bladeguardInfo": m1,
     "bladenight": MessageLookupByLibrary.simpleMessage("BladeNight"),
     "bladenightInfoTitleApp": MessageLookupByLibrary.simpleMessage(
       "Information about BladeNight Munich",
@@ -370,13 +374,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "dataCouldBeOutdated": MessageLookupByLibrary.simpleMessage(
       "Data could be outdated.",
     ),
-    "dateIntl": m1,
-    "dateTimeDayIntl": m2,
-    "dateTimeIntl": m3,
-    "dateTimeSecIntl": m4,
+    "dateIntl": m2,
+    "dateTimeDayIntl": m3,
+    "dateTimeIntl": m4,
+    "dateTimeSecIntl": m5,
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "deleteEvent": MessageLookupByLibrary.simpleMessage("Delete Event"),
-    "deleteFriendHeader": m5,
+    "deleteFriendHeader": m6,
     "deleteMessage": MessageLookupByLibrary.simpleMessage("Delete Message"),
     "deletefriend": MessageLookupByLibrary.simpleMessage("Remove friend"),
     "deny": MessageLookupByLibrary.simpleMessage("Deny"),
@@ -401,7 +405,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "distanceToTail": MessageLookupByLibrary.simpleMessage("Distance to tail"),
     "done": MessageLookupByLibrary.simpleMessage("Done"),
     "editEvent": MessageLookupByLibrary.simpleMessage("Edit Event"),
-    "editFriendHeader": m6,
+    "editFriendHeader": m7,
     "editfriend": MessageLookupByLibrary.simpleMessage("Edit friend"),
     "enableAlwaysLocationGeofenceText": MessageLookupByLibrary.simpleMessage(
       "For automatic on-site login, the location release should be set to always. Should the system settings be opened?",
@@ -477,7 +481,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "finishStopTrackingEventOver": MessageLookupByLibrary.simpleMessage(
       "Automatic location sharing stopped, because this BladeNight event is finished. (Press long on ▶️ to deactivate automatic location sharing stop)",
     ),
-    "finishStopTrackingTimeout": m7,
+    "finishStopTrackingTimeout": m8,
     "finished": MessageLookupByLibrary.simpleMessage("Finished"),
     "fireBaseCrashlytics": MessageLookupByLibrary.simpleMessage(
       "Crashlytics on/off",
@@ -501,7 +505,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "forward": MessageLookupByLibrary.simpleMessage("Forward"),
     "friend": MessageLookupByLibrary.simpleMessage("Friend"),
     "friendIs": MessageLookupByLibrary.simpleMessage("Friend is"),
-    "friendScanQrCode": m8,
+    "friendScanQrCode": m9,
     "friends": MessageLookupByLibrary.simpleMessage("Friends"),
     "friendswillmissyou": MessageLookupByLibrary.simpleMessage(
       "Please support the exact presentation of BladeNight skater procession.\nYour friends will miss you!",
@@ -519,7 +523,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "iAmBladeGuard": MessageLookupByLibrary.simpleMessage(
       "I am already a Bladeguard",
     ),
-    "iAmBladeGuardTitle": m9,
+    "iAmBladeGuardTitle": m10,
     "iam": MessageLookupByLibrary.simpleMessage("I am"),
     "ignoreBatteriesOptimisation": MessageLookupByLibrary.simpleMessage(
       "Note - some manufacturers switch off the apps due to unfavorable battery optimization or close the app. If so, please try disabling battery optimization for the app. Set to No restrictions.",
@@ -548,7 +552,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Email not found or wrong birthday",
     ),
     "invalidcode": MessageLookupByLibrary.simpleMessage("invalid code"),
-    "invitebyname": m10,
+    "invitebyname": m11,
     "invitenewfriend": MessageLookupByLibrary.simpleMessage("Invite friend"),
     "isIgnoring": MessageLookupByLibrary.simpleMessage("Is ignored"),
     "ist": MessageLookupByLibrary.simpleMessage("is"),
@@ -558,15 +562,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "later": MessageLookupByLibrary.simpleMessage("Later"),
     "lead": MessageLookupByLibrary.simpleMessage("Procession start/end"),
     "leadspec": MessageLookupByLibrary.simpleMessage("Procession + Special"),
-    "leaveAppWarning": m11,
+    "leaveAppWarning": m12,
     "leaveAppWarningTitle": MessageLookupByLibrary.simpleMessage(
       "Open an external browser?",
     ),
     "leavewheninuse": MessageLookupByLibrary.simpleMessage("Leave settings"),
     "length": MessageLookupByLibrary.simpleMessage("Length"),
-    "linkAsBrowserDevice": m12,
+    "linkAsBrowserDevice": m13,
     "linkNearBy": MessageLookupByLibrary.simpleMessage("Accept friend nearby"),
-    "linkOnOtherDevice": m13,
+    "linkOnOtherDevice": m14,
     "linkingFailed": MessageLookupByLibrary.simpleMessage("Linking failed"),
     "linkingSuccessful": MessageLookupByLibrary.simpleMessage(
       "Linking successful",
@@ -622,7 +626,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Field must contain at least 1 character",
     ),
     "model": MessageLookupByLibrary.simpleMessage("Model"),
-    "mustNearbyStartingPoint": m14,
+    "mustNearbyStartingPoint": m15,
     "mustentername": MessageLookupByLibrary.simpleMessage(
       "You must enter a name!",
     ),
@@ -658,7 +662,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noEventStartedAutoStop": MessageLookupByLibrary.simpleMessage(
       "No Event - Autostop",
     ),
-    "noEventTimeOut": m15,
+    "noEventTimeOut": m16,
     "noGpsAllowed": MessageLookupByLibrary.simpleMessage("GPS not active"),
     "noLocationAvailable": MessageLookupByLibrary.simpleMessage(
       "No location known",
@@ -834,7 +838,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "routeoverview": MessageLookupByLibrary.simpleMessage("Route overview"),
     "running": MessageLookupByLibrary.simpleMessage("We are on route"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
-    "scanCodeForFriend": m16,
+    "scanCodeForFriend": m17,
     "scrollMapTo": MessageLookupByLibrary.simpleMessage("Scroll map to ..."),
     "searchNearby": MessageLookupByLibrary.simpleMessage(
       "Searching nearby devices",
@@ -851,7 +855,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sendMail": MessageLookupByLibrary.simpleMessage("Send email to support"),
     "sendlink": MessageLookupByLibrary.simpleMessage("Send link"),
-    "sendlinkdescription": m17,
+    "sendlinkdescription": m18,
     "sendlinksubject": MessageLookupByLibrary.simpleMessage(
       "Send link to BladeNight-App. You can see each other.",
     ),
@@ -990,15 +994,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopParticipationTracking": MessageLookupByLibrary.simpleMessage(
       "Stop participation location sharing",
     ),
-    "stopTrackingTimeOut": m18,
+    "stopTrackingTimeOut": m19,
     "submit": MessageLookupByLibrary.simpleMessage("Senden"),
     "symbols": MessageLookupByLibrary.simpleMessage("Symbols"),
     "tail": MessageLookupByLibrary.simpleMessage("Tail"),
-    "tellcode": m19,
+    "tellcode": m20,
     "thanksForParticipating": MessageLookupByLibrary.simpleMessage(
       "Thank you for participating.",
     ),
-    "timeIntl": m20,
+    "timeIntl": m21,
     "timeOutDurationExceedTitle": MessageLookupByLibrary.simpleMessage(
       "Timeout - duration of BladeNight exceed",
     ),
@@ -1022,7 +1026,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingRestarted": MessageLookupByLibrary.simpleMessage(
       "Location sharing restartet",
     ),
-    "trackingStoppedLowBat": m21,
+    "trackingStoppedLowBat": m22,
     "train": MessageLookupByLibrary.simpleMessage("Train"),
     "trainlength": MessageLookupByLibrary.simpleMessage("Trainlength"),
     "tryOpenAppSettings": MessageLookupByLibrary.simpleMessage(
@@ -1046,12 +1050,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "wakelockEnabled": MessageLookupByLibrary.simpleMessage(
       "Display remains an",
     ),
-    "wakelockWarnBattery": m22,
+    "wakelockWarnBattery": m23,
     "warning": MessageLookupByLibrary.simpleMessage("Warning!"),
     "wasCanceledPleaseCheck": MessageLookupByLibrary.simpleMessage(
       "is canceled! Please check this on https://bladenight-muenchen.de",
     ),
-    "weekdayIntl": m23,
+    "weekdayIntl": m24,
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
     "yesterday": MessageLookupByLibrary.simpleMessage("was yesterday"),
   };

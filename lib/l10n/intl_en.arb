@@ -149,6 +149,7 @@
   "apptrackingtransparancy": "We care about your privacy and data security.\nTo help us improve the BladeNight experience, we transfer your location to our server. This information includes a unique ID created when you first start the app to enable friends to be assigned. This data is never passed on to third parties or used for advertising purposes.",
   "at": "at",
   "autoStopTracking": "Info - please read - Stop automatic on finish",
+  "autoStopTrackingDueLowBattery": "Tracking stopped because low battery level {batteryLevel} %",
   "automatedStopInfo": "On long press at ▶️ automatic location sharing stop will activated. This means, as long the app is active and reaching the finish, location sharing will stopped automatically.\nRepeat long press at ▶️,⏸︎,⏹︎ ︎ switches to manual stop and location sharing with auto stop.",
   "becomeBladeguard": "Become a Bladeguard",
   "behindMe": "behind me",
