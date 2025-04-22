@@ -94,7 +94,7 @@ class LocationProvider with ChangeNotifier {
       _startTrackingCheckTimer,
 
       ///Timer to reset speed and user location if no new data
-      _noLocationCheckTimer;
+      _noLocationAndBatteryTimer;
 
   bool _autoTrackingStarted = false;
   String _lastRouteName = '';
@@ -258,7 +258,7 @@ class LocationProvider with ChangeNotifier {
     _wampConnectedSubscription?.cancel();
     _userLocationMarkerPositionStreamController.close();
     _userLocationMarkerHeadingStreamController.close();
-    _noLocationCheckTimer?.cancel();
+    _noLocationAndBatteryTimer?.cancel();
     _startTrackingCheckTimer?.cancel();
     _saveLocationsTimer?.cancel();
     _updateRealtimedataIfTrackingTimer?.cancel();
@@ -475,14 +475,6 @@ class LocationProvider with ChangeNotifier {
 
     _realUserSpeedKmh = _realUserSpeedKmh!.toShortenedDouble(2);
     _odometer = location.odometer / 1000;
-
-    var bat = Battery();
-    var batteryLevel = await bat.batteryLevel;
-    var isCharging = await bat.batteryState == BatteryState.charging;
-    if (batteryLevel != -1) {
-      checkWakeLock(batteryLevel / 100, isCharging);
-      checkLowPowerStopTracking(batteryLevel / 100, isCharging);
-    }
 
     if (_lastKnownPoint != null) {
       var headingDiff =
@@ -807,7 +799,7 @@ class LocationProvider with ChangeNotifier {
     _realUserSpeedKmh = null;
     _userLatLng = null;
     _trackingType = TrackingType.noTracking;
-    _stopNoLocationUpdateTimer();
+    _stopNoLocationAndBatteryTimer();
     //reset autostart
     //avoid second autostart on an event , reset after end
     var activeEventData = ProviderContainer().read(activeEventProvider);
@@ -1085,7 +1077,7 @@ class LocationProvider with ChangeNotifier {
       }
       //set user track points
       _initUserTrackStore();
-      _startNoLocationUpdateTimer();
+      _startNoLocationAndBatteryTimer();
       if (HiveSettingsDB.wakeLockEnabled) {
         await WakelockPlus.enable();
       }
@@ -1261,17 +1253,25 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  void _stopNoLocationUpdateTimer() {
-    _noLocationCheckTimer?.cancel();
+  void _stopNoLocationAndBatteryTimer() {
+    _noLocationAndBatteryTimer?.cancel();
   }
 
   ///Start timer to autostart tracking on event start every minute
-  void _startNoLocationUpdateTimer() {
+  void _startNoLocationAndBatteryTimer() {
     BnLog.verbose(text: 'init checkLocationUpdateTimer');
-    _noLocationCheckTimer?.cancel();
-    _noLocationCheckTimer = Timer.periodic(
+    _noLocationAndBatteryTimer?.cancel();
+    _noLocationAndBatteryTimer = Timer.periodic(
       const Duration(seconds: 60),
       (timer) async {
+        var bat = Battery();
+        var batteryLevel = await bat.batteryLevel;
+        var isCharging = await bat.batteryState == BatteryState.charging;
+        if (batteryLevel != -1) {
+          checkWakeLock(batteryLevel / 100, isCharging);
+          checkLowPowerStopTracking(batteryLevel / 100, isCharging);
+        }
+
         if (_lastKnownPoint == null || _lastLocationTimeStamp == null) {
           _resetLocation();
         } else {
@@ -1436,6 +1436,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   void checkLowPowerStopTracking(double batteryLevel, bool isCharging) async {
+    if (!isTracking) return;
     if (HiveSettingsDB.autoStopTrackingEnabled &&
         _hasAutoStoppedDueLowBatt == false &&
         !isCharging &&
