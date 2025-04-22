@@ -40,7 +40,7 @@ class BayernAtlasCopyright extends StatelessWidget {
             ),
           )
         : Padding(
-            padding: const EdgeInsets.only(left: 60, right: 60),
+            padding: const EdgeInsets.only(left: 0, right: 0),
             child: GestureDetector(
               onTap: () {
                 Launch.launchUrlFromString(link, copyright);
@@ -51,7 +51,9 @@ class BayernAtlasCopyright extends StatelessWidget {
                   mapCopyright,
                   maxLines: 3,
                   style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.w600),
+                      fontSize: fontSize ?? 30,
+                      fontWeight: FontWeight.bold,
+                      color: CupertinoTheme.of(context).primaryColor),
                   textAlign: TextAlign.center,
                 ),
               ),
