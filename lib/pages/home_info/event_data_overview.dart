@@ -6,6 +6,7 @@ import '../../generated/l10n.dart';
 import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
 import '../../providers/app_start_and_router/go_router.dart';
+import '../../wamp/wamp_exception.dart';
 import '../widgets/event_info/event_state_traffic_light.dart';
 import 'event_map_small.dart';
 
@@ -71,6 +72,17 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
   Widget build(BuildContext context) {
     var normalFontSize =
         CupertinoTheme.of(context).textTheme.textStyle.fontSize ?? 12;
+
+    if (widget.nextEvent.rpcException is WampException) {
+      var ex = widget.nextEvent.rpcException as WampException;
+      if (ex.reason == WampExceptionReason.offline ||
+          ex.reason == WampExceptionReason.connectionError) {
+        return CupertinoActivityIndicator(
+          color: CupertinoTheme.of(context).primaryColor,
+        );
+      }
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

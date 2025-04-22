@@ -16,7 +16,6 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
-import '../../../generated/intl/messages_de.dart';
 import '../../../generated/l10n.dart';
 import '../../../helpers/enums/tracking_type.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';

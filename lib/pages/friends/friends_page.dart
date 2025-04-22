@@ -161,7 +161,6 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                     ConnectivityStatus.wampConnected)
                 ? Row(
                     mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CupertinoButton(
                         padding: EdgeInsets.zero,
@@ -221,7 +220,10 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
                           );
                           // if (result != null) {}
                         },
-                        child: const Icon(Icons.menu),
+                        child: const Icon(
+                          Icons.menu,
+                          size: 30,
+                        ),
                       ),
                     ],
                   )

@@ -103,7 +103,7 @@ class ScaffoldWithTabBarNavigation extends StatelessWidget {
               label: Localize.of(context).map,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.ticket),
+              icon: const Icon(CupertinoIcons.calendar),
               label: Localize.of(context).events,
             ),
             if (!kIsWeb)

@@ -28,6 +28,11 @@ enum ConnectivityStatus {
 class NetworkStateModel {
   const NetworkStateModel({required this.connectivityStatus});
 
+  @override
+  String toString() {
+    return 'NetworkStateModel State:$connectivityStatus';
+  }
+
   final ConnectivityStatus connectivityStatus;
 }
 
@@ -77,6 +82,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     _listener = AppLifecycleListener(
       onResume: () {
         _icCheckerSubscription?.resume;
+        _checkStatus(null);
         isInBackground = false;
         BnLog.verbose(text: 'network_connection_provider is not in background');
       },

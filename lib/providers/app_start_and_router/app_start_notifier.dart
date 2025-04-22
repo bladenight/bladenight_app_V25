@@ -17,6 +17,7 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/notification_helper.dart';
 import '../../helpers/notification/onesignal_handler.dart';
+import '../../helpers/watch_communication_helper.dart';
 import '../../main.dart';
 import '../messages_provider.dart';
 
@@ -62,6 +63,7 @@ class AppStartNotifier extends _$AppStartNotifier {
         await initOneSignal();
         ref.read(messagesLogicProvider).updateServerMessages();
       });
+      initWatchFlutterChannel();
     }
 
     if (Platform.isAndroid && HiveSettingsDB.onsiteGeoFencingActive) {

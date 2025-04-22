@@ -724,7 +724,7 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //called by geolocator and bg id gps disabled / enabled
+  //called by geolocator and bg id gps disabled / enabled chrashs sometimes
   void _onLocationPermissionChange(bool gpsIsEnabled) {
     if (gpsIsEnabled) {
       _gpsLocationPermissionsStatus = LocationPermissionStatus.notDetermined;

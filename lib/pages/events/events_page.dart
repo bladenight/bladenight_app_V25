@@ -14,6 +14,7 @@ import '../../helpers/logger/logger.dart';
 import '../../models/event.dart';
 import '../../models/messages/edit_event_on_server.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
+import '../widgets/buttons/hidden_admin_button.dart';
 import '../widgets/indicators/data_loading_indicator.dart';
 import '../widgets/common_widgets/no_data_warning.dart';
 import '../widgets/route/route_dialog.dart';
@@ -105,7 +106,9 @@ class _EventsPageState extends ConsumerState<EventsPage>
       floatHeaderSlivers: true,
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         CupertinoSliverNavigationBar(
-          leading: const Icon(CupertinoIcons.ticket),
+          leading: HiddenAdminButton(
+            child: const Icon(CupertinoIcons.calendar),
+          ),
           largeTitle: Text(_header),
           trailing: (networkAvailable.connectivityStatus ==
                   ConnectivityStatus.wampConnected)
@@ -130,7 +133,10 @@ class _EventsPageState extends ConsumerState<EventsPage>
                             ref.invalidate(allEventsProvider);
                           }
                         },
-                        child: const Icon(CupertinoIcons.add_circled),
+                        child: const Icon(
+                          CupertinoIcons.add_circled,
+                          size: 30,
+                        ),
                       ),
                     const SizedBox(
                       width: 10,
@@ -141,7 +147,10 @@ class _EventsPageState extends ConsumerState<EventsPage>
                       onPressed: () async {
                         ref.invalidate(allEventsProvider);
                       },
-                      child: const Icon(Icons.update),
+                      child: const Icon(
+                        Icons.refresh,
+                        size: 30,
+                      ),
                     ),
                     const SizedBox(
                       width: 10,
@@ -152,7 +161,10 @@ class _EventsPageState extends ConsumerState<EventsPage>
                       onPressed: () async {
                         _showOverlay(context);
                       },
-                      child: const Icon(Icons.help),
+                      child: const Icon(
+                        Icons.help,
+                        size: 30,
+                      ),
                     ),
                   ],
                 )

@@ -15,7 +15,6 @@ import '../../../helpers/background_location_helper.dart';
 import '../../../helpers/distance_converter.dart';
 import '../../../helpers/hive_box/hive_settings_db.dart';
 import '../../../helpers/location_permission_dialogs.dart';
-import '../../../helpers/logger/logger.dart';
 import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/map_settings_provider.dart';

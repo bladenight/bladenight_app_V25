@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../helpers/enums/tracking_type.dart';
 import '../../helpers/logger/logger.dart';
 import '../../providers/active_event_provider.dart';
-import '../../providers/get_images_and_links_provider.dart';
 import '../../providers/location_provider.dart';
 import '../bladeguard/bladeguard_advertise.dart';
 import '../bladeguard/bladeguard_on_site_page.dart';
@@ -52,7 +51,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    BnLog.info(text: 'event_info - didChangeAppLifecycleState $state');
+    BnLog.verbose(text: 'event_info - didChangeAppLifecycleState $state');
     if (state == AppLifecycleState.resumed) {
       initEventUpdates(forceUpdate: true);
       ref.read(locationProvider).refreshRealtimeData(forceUpdate: true);
@@ -64,8 +63,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
   }
 
   void initEventUpdates({forceUpdate = false}) async {
-    // first start
-    ref.invalidate(updateImagesAndLinksProvider);
+    //not used due init ref.invalidate(updateImagesAndLinksProvider);
     await Future.delayed(const Duration(seconds: 2));
     await ref
         .read(activeEventProvider.notifier)

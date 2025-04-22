@@ -80,7 +80,9 @@ class BnLog {
   }) async {
     //critical 0 // info 3 verbose 5
     if (logLevelPriorityList.indexOf(_logLevel) <
-        logLevelPriorityList.indexOf(LogLevel.debug)) return;
+        logLevelPriorityList.indexOf(LogLevel.debug)) {
+      return;
+    }
     var logText = '$text\n'
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}';
@@ -99,7 +101,9 @@ class BnLog {
   }) async {
     //critical 0 // info 3 verbose 5
     if (logLevelPriorityList.indexOf(_logLevel) <
-        logLevelPriorityList.indexOf(LogLevel.info)) return;
+        logLevelPriorityList.indexOf(LogLevel.info)) {
+      return;
+    }
     _talkerLogger.info(text);
     fileLogger?.output(text, LogLevel.info.name);
   }
@@ -111,7 +115,9 @@ class BnLog {
   }) async {
     //critical 0 // info 3 verbose 5
     if (logLevelPriorityList.indexOf(_logLevel) <
-        logLevelPriorityList.indexOf(LogLevel.info)) return;
+        logLevelPriorityList.indexOf(LogLevel.info)) {
+      return;
+    }
     _talkerLogger.info(text);
     fileLogger?.output(text, LogLevel.info.name);
   }
@@ -177,7 +183,9 @@ class BnLog {
     StackTrace? stacktrace,
   }) async {
     if (logLevelPriorityList.indexOf(_logLevel) <
-        logLevelPriorityList.indexOf(LogLevel.error)) return;
+        logLevelPriorityList.indexOf(LogLevel.error)) {
+      return;
+    }
     var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}'

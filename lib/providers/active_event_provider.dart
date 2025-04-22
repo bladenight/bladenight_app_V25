@@ -18,6 +18,7 @@ part 'active_event_provider.g.dart';
 class ActiveEvent extends _$ActiveEvent {
   StreamSubscription<Event>? _evtStream;
   bool _hasPushed = false;
+  int _fails = 0;
 
   @override
   Event build() {
@@ -43,6 +44,7 @@ class ActiveEvent extends _$ActiveEvent {
     ref.onDispose(() {
       _evtStream?.cancel();
     });
+    refresh(forceUpdate: true);
     return state;
   }
 
@@ -60,14 +62,20 @@ class ActiveEvent extends _$ActiveEvent {
         var rpcEvent = await Event.getEventWamp(forceUpdate: forceUpdate);
         if (rpcEvent.rpcException != null) {
           state.rpcException = rpcEvent.rpcException;
-          await Future.delayed(const Duration(milliseconds: 1000));
-          refresh(forceUpdate: true);
+          state = rpcEvent;
+          _fails++;
+          if (_fails < 3) {
+            await Future.delayed(const Duration(milliseconds: 2000));
+            if (forceUpdate) refresh(forceUpdate: true);
+          } else {
+            _fails = 0;
+          }
           //don't update
           return;
         }
 
         var oldEventInPrefs = HiveSettingsDB.getActualEvent;
-        if (oldEventInPrefs.compareTo(rpcEvent) != 0) {
+        if (kIsWeb || oldEventInPrefs.compareTo(rpcEvent) != 0) {
           if (rpcEvent.nodes == [] && rpcEvent.status != EventStatus.noevent) {
             //get route points if not delivered
             var rn = await RoutePoints.getActiveRoutePointsByNameWamp(

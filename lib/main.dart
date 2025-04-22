@@ -4,7 +4,6 @@ library main;
 import 'dart:async';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -21,9 +20,7 @@ import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart'
 import 'package:talker_riverpod_logger/talker_riverpod_logger_settings.dart';
 
 import 'app_settings/app_configuration_helper.dart';
-import 'app_settings/globals.dart';
 import 'app_settings/server_connections.dart';
-import 'firebase_options.dart';
 import 'helpers/hive_box/adapter/color_adapter.dart';
 import 'helpers/hive_box/adapter/images_and_links_adapter.dart';
 import 'helpers/hive_box/app_server_config_db.dart';

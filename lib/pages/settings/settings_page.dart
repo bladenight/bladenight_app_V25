@@ -68,25 +68,31 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ResponsiveBreakpoints.of(context).orientation ==
                     Orientation.portrait
                 ? CupertinoSliverNavigationBar(
-                    leading: Icon(CupertinoIcons.settings),
+                    leading:
+                        HiddenAdminButton(child: Icon(CupertinoIcons.settings)),
                     largeTitle: Text(Localize.of(context).settings),
                     backgroundColor:
                         CupertinoTheme.of(context).barBackgroundColor,
-                    trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CupertinoButton(
-                            onPressed: () =>
-                                context.pushNamed(AppRoute.introScreen.name),
-                            child: Icon(CupertinoIcons.book_circle),
-                          ),
-                          CupertinoButton(
-                            onPressed: () =>
-                                context.pushNamed(AppRoute.aboutPage.name),
-                            child: Icon(CupertinoIcons.info_circle),
-                          ),
-                        ]),
+                    trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                      CupertinoButton(
+                        sizeStyle: CupertinoButtonSize.medium,
+                        onPressed: () =>
+                            context.pushNamed(AppRoute.introScreen.name),
+                        child: Icon(
+                          CupertinoIcons.book_circle,
+                          size: 30,
+                        ),
+                      ),
+                      CupertinoButton(
+                        sizeStyle: CupertinoButtonSize.medium,
+                        onPressed: () =>
+                            context.pushNamed(AppRoute.aboutPage.name),
+                        child: Icon(
+                          CupertinoIcons.info_circle,
+                          size: 30,
+                        ),
+                      ),
+                    ]),
                   )
                 : SliverToBoxAdapter(
                     child: CupertinoNavigationBar(
@@ -111,9 +117,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ),
             SliverToBoxAdapter(
               child: CupertinoFormSection(
-                  header: HiddenAdminButton(
-                    child: Text(Localize.of(context).bladeGuardSettingsTitle),
-                  ),
+                  header: Text(Localize.of(context).bladeGuardSettingsTitle),
                   children: <Widget>[
                     SizedTintedCupertinoButton(
                       child: Text(Localize.of(context).bladeGuardSettings),

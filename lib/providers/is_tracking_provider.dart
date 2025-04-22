@@ -7,8 +7,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../app_settings/app_constants.dart';
 import '../helpers/enums/tracking_type.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
-import '../helpers/logger/logger.dart';
-import '../helpers/notification/toast_notification.dart';
 import '../wamp/wamp_v2.dart';
 import 'location_provider.dart';
 

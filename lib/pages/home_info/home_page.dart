@@ -15,7 +15,6 @@ import '../../generated/l10n.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/time_converter_helper.dart';
-import '../../helpers/watch_communication_helper.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/get_images_and_links_provider.dart';
@@ -40,44 +39,27 @@ class _HomePageState extends ConsumerState<HomePage>
 
   @override
   Future<AppExitResponse> didRequestAppExit() async {
-    print('App exit requested');
-    BnLog.error(text: 'App exit requested');
+    BnLog.critical(text: 'App exit requested');
     return AppExitResponse.cancel;
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    BnLog.debug(text: 'home_screen - didChangeAppLifecycleState $state');
+    BnLog.info(text: 'Home_screen - didChangeAppLifecycleState to $state');
     switch (state) {
       case AppLifecycleState.resumed:
         resumeUpdates(force: true);
         LocationProvider().setToBackground(false);
         break;
       case AppLifecycleState.paused:
-        BnLog.verbose(
-            className: toString(),
-            methodName: 'didChangeAppLifecycleState',
-            text: 'App paused - LocProvider instance pause updates calling');
         pauseUpdates();
         LocationProvider().setToBackground(true);
         break;
       case AppLifecycleState.hidden:
-        BnLog.verbose(
-            className: toString(),
-            methodName: 'didChangeAppLifecycleState',
-            text: 'App hidden - ');
         break;
       case AppLifecycleState.detached:
-        BnLog.verbose(
-            className: toString(),
-            methodName: 'didChangeAppLifecycleState',
-            text: 'App detached - ');
         break;
       case AppLifecycleState.inactive:
-        BnLog.verbose(
-            className: toString(),
-            methodName: 'didChangeAppLifecycleState',
-            text: 'App inactive - ');
         break;
     }
   }
@@ -113,8 +95,6 @@ class _HomePageState extends ConsumerState<HomePage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    initWatchFlutterChannel();
-    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!kIsWeb) {
         Future.microtask(() async {
@@ -140,7 +120,7 @@ class _HomePageState extends ConsumerState<HomePage>
     }
     _initImgCount++;
     if (!imagesLoaded && _initImgCount < 5) {
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 30));
       _initImages();
     } else {
       _initImgCount = 0;
@@ -187,22 +167,26 @@ class _HomePageState extends ConsumerState<HomePage>
               //Text(Localize.of(context).home),
               middle: SponsorCarousel(),
               alwaysShowMiddle: true,
-              trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (!kIsWeb) // instruction not on webapp / route not defined
-                      CupertinoButton(
-                        onPressed: () =>
-                            context.pushNamed(AppRoute.introScreen.name),
-                        child: Icon(CupertinoIcons.book_circle),
-                      ),
-                    CupertinoButton(
-                      onPressed: () =>
-                          context.pushNamed(AppRoute.aboutPage.name),
-                      child: Icon(CupertinoIcons.info_circle),
+              trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                if (!kIsWeb) // instruction not on webapp / route not defined
+                  CupertinoButton(
+                    sizeStyle: CupertinoButtonSize.medium,
+                    onPressed: () =>
+                        context.pushNamed(AppRoute.introScreen.name),
+                    child: Icon(
+                      CupertinoIcons.book_circle,
+                      size: 30,
                     ),
-                  ]),
+                  ),
+                CupertinoButton(
+                  sizeStyle: CupertinoButtonSize.medium,
+                  onPressed: () => context.pushNamed(AppRoute.aboutPage.name),
+                  child: Icon(
+                    CupertinoIcons.info_circle,
+                    size: 30,
+                  ),
+                ),
+              ]),
             ),
             CupertinoSliverRefreshControl(
               onRefresh: () async {
