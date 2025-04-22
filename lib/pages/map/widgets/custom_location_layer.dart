@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -64,7 +65,7 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
                 ? AlignOnUpdate.always
                 : AlignOnUpdate.never,
             style: LocationMarkerStyle(
-              showAccuracyCircle: false,
+              showAccuracyCircle: true,
               showHeadingSector: true,
               headingSectorColor: CupertinoTheme.of(context).primaryColor,
               accuracyCircleColor: ref.watch(meColorProvider),

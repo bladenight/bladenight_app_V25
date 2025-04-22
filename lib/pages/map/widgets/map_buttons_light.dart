@@ -81,28 +81,29 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
       //#######################################################################
       //Left side buttons
       //#######################################################################
-      Positioned(
-        right: 10,
-        bottom: widget.bottomMargin,
-        height: 40,
-        child: Builder(builder: (context) {
-          return FloatingActionButton(
-            heroTag: 'mapCompassHeroTagL1',
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            onPressed: () {
-              final controller = MapController.of(context);
-              controller.rotate(0);
-            },
-            child: MapCompass(
-              hideIfRotatedNorth: true,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(0),
-              icon: Image.asset('assets/images/compass_2.png'),
-            ),
-          );
-        }),
-      ),
+      if (!kIsWeb)
+        Positioned(
+          right: 10,
+          bottom: widget.bottomMargin,
+          height: 40,
+          child: Builder(builder: (context) {
+            return FloatingActionButton(
+              heroTag: 'mapCompassHeroTagL1',
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              onPressed: () {
+                final controller = MapController.of(context);
+                controller.rotate(0);
+              },
+              child: MapCompass(
+                hideIfRotatedNorth: true,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(0),
+                icon: Image.asset('assets/images/compass_2.png'),
+              ),
+            );
+          }),
+        ),
       PositionedVisibilityOpacity(
         left: 10,
         bottom: widget.bottomMargin + 150,
@@ -285,28 +286,29 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
           );
         }),
       ),
-      Positioned(
-        right: 10,
-        bottom: widget.bottomMargin,
-        height: 40,
-        child: Builder(builder: (context) {
-          return FloatingActionButton(
-            heroTag: 'mapCompassHeroTagL2',
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            onPressed: () {
-              final controller = MapController.of(context);
-              controller.rotate(0);
-            },
-            child: MapCompass(
-              hideIfRotatedNorth: true,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(0),
-              icon: Image.asset('assets/images/compass_2.png'),
-            ),
-          );
-        }),
-      ),
+      if (!kIsWeb)
+        Positioned(
+          right: 10,
+          bottom: widget.bottomMargin,
+          height: 40,
+          child: Builder(builder: (context) {
+            return FloatingActionButton(
+              heroTag: 'mapCompassHeroTagL2',
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              onPressed: () {
+                final controller = MapController.of(context);
+                controller.rotate(0);
+              },
+              child: MapCompass(
+                hideIfRotatedNorth: true,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(0),
+                icon: Image.asset('assets/images/compass_2.png'),
+              ),
+            );
+          }),
+        ),
       if (widget.showHelp)
         Positioned(
           top: kIsWeb ? 10 : 10,

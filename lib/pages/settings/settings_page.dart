@@ -557,7 +557,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           setState(() {});
                                         }),
                                   ]),
-                              if (!HiveSettingsDB
+                              /*if (!HiveSettingsDB
                                       .useAlternativeLocationProvider &&
                                   HiveSettingsDB.loggerLogLevel.index > 3)
                                 CupertinoFormSection(
@@ -568,7 +568,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                               .setExportLogSupport),
                                           onPressed: () =>
                                               exportBgLocationLogs()),
-                                    ]),
+                                    ]),*/
                               const SizedBox(height: 10),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 1, 0, 1),
@@ -601,7 +601,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               ),
 
                               //if (Platform.isAndroid)
-                              CupertinoFormSection(
+                              /* CupertinoFormSection(
                                   header: Text(Localize.of(context)
                                       .alternativeLocationProviderTitle),
                                   children: <Widget>[
@@ -624,7 +624,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         ),
                                       ),
                                     ),
-                                  ]),
+                                  ]),*/
                               CupertinoFormSection(
                                   header:
                                       Text(Localize.of(context).openStreetMap),

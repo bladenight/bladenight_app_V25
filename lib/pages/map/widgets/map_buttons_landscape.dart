@@ -313,27 +313,28 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
             );
           }),
         ),
-        Positioned(
-          right: 10,
-          bottom: 220,
-          child: Builder(builder: (context) {
-            return FloatingActionButton(
-              heroTag: 'mapCompassHeroTag',
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              onPressed: () {
-                final controller = MapController.of(context);
-                controller.rotate(0);
-              },
-              child: MapCompass(
-                hideIfRotatedNorth: true,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(0),
-                icon: Image.asset('assets/images/compass_2.png'),
-              ),
-            );
-          }),
-        ),
+        if (!kIsWeb)
+          Positioned(
+            right: 10,
+            bottom: 220,
+            child: Builder(builder: (context) {
+              return FloatingActionButton(
+                heroTag: 'mapCompassHeroTag',
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                onPressed: () {
+                  final controller = MapController.of(context);
+                  controller.rotate(0);
+                },
+                child: MapCompass(
+                  hideIfRotatedNorth: true,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(0),
+                  icon: Image.asset('assets/images/compass_2.png'),
+                ),
+              );
+            }),
+          ),
 
         //Left located button web
         /* if (kIsWeb)

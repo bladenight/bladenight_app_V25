@@ -35,7 +35,6 @@ import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/toast_notification.dart' show showToast;
 import '../helpers/speed_to_color.dart';
-import '../helpers/time_converter_helper.dart';
 import '../helpers/wamp/subscribe_message.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
@@ -80,7 +79,6 @@ class LocationProvider with ChangeNotifier {
 
   bg.State? _state;
   StreamSubscription<geolocator.Position>? _locationSubscription;
-  StreamSubscription<geolocator.ServiceStatus>? _geolocatorServiceStatusStream;
   bool locationRequested = false;
   bool _isInBackground = false;
   bool _wakelockDisabled = false;
@@ -264,18 +262,11 @@ class LocationProvider with ChangeNotifier {
     _startTrackingCheckTimer?.cancel();
     _saveLocationsTimer?.cancel();
     _updateRealtimedataIfTrackingTimer?.cancel();
-    _geolocatorServiceStatusStream?.cancel();
     super.dispose();
   }
 
   void _init() async {
     startRealtimeUpdateSubscriptionIfNotTracking();
-
-    _geolocatorServiceStatusStream =
-        geolocator.Geolocator.getServiceStatusStream()
-            .listen((geolocator.ServiceStatus status) {
-      _onLocationPermissionChange(status == geolocator.ServiceStatus.enabled);
-    });
 
     if (kIsWeb) {
       HiveSettingsDB.setUseAlternativeLocationProvider(true);
@@ -457,9 +448,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onLocation(bg.Location location) {
-    BnLog.verbose(
-        text:
-            '_onLocation ${location.coords} battery: ${location.battery.level}%');
+    BnLog.verbose(text: '_onLocation ${location.coords}');
     _lastLocationTimeStamp = DateTime.now();
     updateUserLocation(location);
   }
@@ -813,7 +802,6 @@ class LocationProvider with ChangeNotifier {
         className: 'location_provider',
         methodName: '_stopTracking');
     _locationSubscription?.cancel();
-    _geolocatorServiceStatusStream?.cancel();
     _locationSubscription = null;
     _lastKnownPoint = null;
     _realUserSpeedKmh = null;
@@ -1130,46 +1118,46 @@ class LocationProvider with ChangeNotifier {
       //# use Transistorsoft geolocator for Android and iOS
       //####################################################
       else {
-        _geolocatorServiceStatusStream?.cancel();
         await bg.BackgroundGeolocation.start()
             .then((bg.State bgGeoLocState) async {
           BnLog.info(
               text: 'location tracking started',
               className: 'location_provider',
-              methodName: '_startTracking');
+              methodName: 'startTracking');
           _startedTrackingTime = DateTime.now();
           _trackingType =
               bgGeoLocState.enabled ? trackingType : TrackingType.noTracking;
-          stopRealtimedataSubscription();
-          setRealtimedataUpdateTimerIfTracking(true);
-          ProviderContainer()
-              .read(activeEventProvider.notifier)
-              .refresh(forceUpdate: true);
           _trackWaitStatus = TrackWaitStatus.none;
           notifyListeners();
+          stopRealtimedataSubscription();
+          setRealtimedataUpdateTimerIfTracking(true);
+          HiveSettingsDB.setTrackingActive(isTracking);
+          SendToWatch.setIsLocationTracking(isTracking);
           var loc = await _updateLocation();
           if (loc != null) {
             _getRealtimeDataWithLocation(loc);
           }
-          HiveSettingsDB.setTrackingActive(isTracking);
-          SendToWatch.setIsLocationTracking(isTracking);
         }).catchError((error) {
           BnLog.error(text: 'LocStarting ERROR: $error');
-          HiveSettingsDB.setTrackingActive(false);
+          _trackWaitStatus = TrackWaitStatus.none;
           trackingType = TrackingType.noTracking;
+          notifyListeners();
+          HiveSettingsDB.setTrackingActive(false);
+          SendToWatch.setIsLocationTracking(false);
           setRealtimedataUpdateTimerIfTracking(false);
           startRealtimeUpdateSubscriptionIfNotTracking();
-          SendToWatch.setIsLocationTracking(false);
-          notifyListeners();
           //re-update on error
           return null;
         });
         await bg.BackgroundGeolocation.setConfig(bg.Config(
-            distanceFilter: 0,
+            distanceFilter: trackingType == TrackingType.onlyTracking ? 10 : 0,
             locationUpdateInterval: 1000,
-            stopTimeout: 1000, // <-- a very long stopTimeout
-            disableStopDetection:
-                true // <-- Don't interrupt location updates when Motion API says "still"
+            stopTimeout: trackingType == TrackingType.onlyTracking
+                ? 5
+                : 100, // <-- a very long stopTimeout
+            disableStopDetection: trackingType == TrackingType.onlyTracking
+                ? false
+                : true // <-- Don't interrupt location updates when Motion API says "still"
             ));
         await bg.BackgroundGeolocation.changePace(true);
       }

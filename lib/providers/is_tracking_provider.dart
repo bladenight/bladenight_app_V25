@@ -36,13 +36,7 @@ class IsTracking extends _$IsTracking {
     } else {
       //kIsWeb only tracking
       var active = await _startTracking(
-              kIsWeb ? TrackingType.userNotParticipating : trackingType)
-          .timeout(Duration(seconds: 20))
-          .catchError((error, stackTrace) {
-        BnLog.error(text: 'Can not start Tracking $error');
-        showToast(message: 'Fehler beim starten!');
-        return TrackingType.noTracking;
-      });
+          kIsWeb ? TrackingType.userNotParticipating : trackingType);
       state = active != TrackingType.noTracking;
     }
     return state;

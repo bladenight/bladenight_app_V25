@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -155,7 +157,13 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     const GPSInfoAndMapCopyright(),
                     const HeadingsLayer(),
                     //SpecialPointsLayer(_popupController), //crashes with global key multi usage on open Popup
-                    CustomLocationLayer(_hasGesture),
+                    kIsWeb
+                        ? CurrentLocationLayer(
+                            positionStream: ref
+                                .watch(locationProvider.notifier)
+                                .userLocationMarkerPositionStream,
+                          )
+                        : CustomLocationLayer(_hasGesture),
                     //needs map controller
                     MarkersLayer(_popupController, event.nodes),
 
