@@ -99,7 +99,7 @@ class _HomePageState extends ConsumerState<HomePage>
       if (!kIsWeb) {
         Future.microtask(() async {
           _initImages();
-          ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
+          ActiveEventProvider().refresh(forceUpdate: true);
           ref.read(messagesLogicProvider).updateServerMessages();
           await BnLog.cleanUpLogsByFilter(8);
         });
@@ -192,9 +192,7 @@ class _HomePageState extends ConsumerState<HomePage>
               onRefresh: () async {
                 ref.read(messagesLogicProvider).updateServerMessages();
                 var _ = ref.refresh(currentRouteProvider);
-                ref
-                    .read(activeEventProvider.notifier)
-                    .refresh(forceUpdate: true);
+                ActiveEventProvider().refresh(forceUpdate: true);
                 ref.invalidate(bgIsOnSiteProvider);
               },
             ),
@@ -242,8 +240,7 @@ class _HomePageState extends ConsumerState<HomePage>
                           ? EventInfo()
                           : GestureDetector(
                               onTap: () {
-                                ref
-                                    .read(activeEventProvider.notifier)
+                                ActiveEventProvider()
                                     .refresh(forceUpdate: true);
                               },
                               child: EventInfo(),
@@ -256,8 +253,7 @@ class _HomePageState extends ConsumerState<HomePage>
                             ? Container()
                             : GestureDetector(
                                 onTap: () {
-                                  ref
-                                      .read(activeEventProvider.notifier)
+                                  ActiveEventProvider()
                                       .refresh(forceUpdate: true);
                                 },
                                 child: Center(

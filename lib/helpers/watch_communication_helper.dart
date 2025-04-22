@@ -146,12 +146,8 @@ Future<void> initWatchFlutterChannel() async {
       case 'getEventDataFromFlutter':
         //print('getEventDataFromFlutter received');
         try {
-          ProviderContainer()
-              .read(activeEventProvider.notifier)
-              .refresh(forceUpdate: true);
-          ProviderContainer()
-              .read(locationProvider)
-              .refreshRealtimeData(forceUpdate: true);
+          ActiveEventProvider().refresh(forceUpdate: true);
+          LocationProvider().refreshRealtimeData(forceUpdate: true);
         } catch (e) {
           BnLog.error(
               className: 'watchCommunication_helper',

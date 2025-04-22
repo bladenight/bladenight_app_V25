@@ -802,7 +802,7 @@ class LocationProvider with ChangeNotifier {
     _stopNoLocationAndBatteryTimer();
     //reset autostart
     //avoid second autostart on an event , reset after end
-    var activeEventData = ProviderContainer().read(activeEventProvider);
+    var activeEventData = ActiveEventProvider().event;
     if (_startedTrackingTime != null &&
         DateTime.now().difference(_startedTrackingTime!).inMinutes >
             activeEventData.duration.inMinutes) {
@@ -1094,9 +1094,7 @@ class LocationProvider with ChangeNotifier {
         stopRealtimedataSubscription();
         setRealtimedataUpdateTimerIfTracking(true);
         _startedTrackingTime = DateTime.now();
-        ProviderContainer()
-            .read(activeEventProvider.notifier)
-            .refresh(forceUpdate: true);
+        ActiveEventProvider().refresh(forceUpdate: true);
         _trackWaitStatus = TrackWaitStatus.none;
         notifyListeners();
         /*var loc = await _updateLocation();
@@ -1307,10 +1305,7 @@ class LocationProvider with ChangeNotifier {
 
   ///Autostart tracking and show map page if event is active
   Future<void> _showMapAndAutoStartTimerCallBack() async {
-    await ProviderContainer()
-        .read(activeEventProvider.notifier)
-        .refresh(forceUpdate: true);
-    _eventIsRunning = ProviderContainer().read(activeEventProvider).isRunning;
+    _eventIsRunning = ActiveEventProvider().event.isRunning;
 
     if (_eventIsRunning && !_mapPushed) {
       _mapPushed = true;
@@ -1534,58 +1529,57 @@ class LocationProvider with ChangeNotifier {
 
   ///only called if no subscription
   Future<void> _getRealtimeData() async {
-    lock
-        .synchronized(() async {
-          try {
-            //update procession when no location data were sent
-            var update = await RealtimeUpdate.realtimeDataUpdate();
+    //lock.synchronized(() async {
+    try {
+      //update procession when no location data were sent
+      var update = await RealtimeUpdate.realtimeDataUpdate();
 
-            if (update.rpcException != null &&
-                update.rpcException is WampException) {
-              BnLog.verbose(
-                  className: 'locationProvider',
-                  methodName: 'refresh realtimedata',
-                  text: update.rpcException.toString());
-              _realUserSpeedKmh = null;
-              SendToWatch.updateUserLocationData(
-                  UserLocationPoint.userLocationPointEmpty());
-              _updateWatchData();
-              _maxFails--;
-              if (_maxFails <= 0) {
-                _realtimeUpdate = null;
-                _maxFails = 3;
-              }
+      if (update.rpcException != null && update.rpcException is WampException) {
+        BnLog.verbose(
+            className: 'locationProvider',
+            methodName: 'refresh realtimedata',
+            text: update.rpcException.toString());
+        _realUserSpeedKmh = null;
+        SendToWatch.updateUserLocationData(
+            UserLocationPoint.userLocationPointEmpty());
+        _updateWatchData();
+        _maxFails--;
+        if (_maxFails <= 0) {
+          _realtimeUpdate = null;
+          _maxFails = 3;
+        }
 
-              if (!_isInBackground) {
-                notifyListeners();
-              }
-              return;
-            }
+        if (!_isInBackground) {
+          notifyListeners();
+        }
+        return;
+      }
 
-            _setRealtimeUpdate(update, notify: !_isInBackground);
-            _maxFails = 3;
+      _setRealtimeUpdate(update, notify: !_isInBackground);
+      _maxFails = 3;
 
-            if (_lastKnownPoint == null) {
-              _realUserSpeedKmh = null;
-              if (!kIsWeb) {
-                _updateWatchData();
-              }
-            }
-            if (!_isInBackground) {
-              notifyListeners();
-            }
-          } catch (e) {
-            BnLog.error(
-                className: 'locationProvider',
-                methodName: 'refreshRealtimeData',
-                text: e.toString());
-          }
-        })
+      if (_lastKnownPoint == null) {
+        _realUserSpeedKmh = null;
+        if (!kIsWeb) {
+          _updateWatchData();
+        }
+      }
+      if (!_isInBackground) {
+        notifyListeners();
+      }
+    } catch (e) {
+      BnLog.error(
+          className: 'locationProvider',
+          methodName: 'refreshRealtimeData',
+          text: e.toString());
+    }
+
+    /*});
         .timeout(Duration(seconds: 11))
         .catchError((error) {
           BnLog.error(
               text: 'lock failed ${error.toString()}', className: toString());
-        });
+        });*/
   }
 
   Future<bg.Location?> getCurrentLocation() async {
@@ -1613,7 +1607,7 @@ class LocationProvider with ChangeNotifier {
 
   void checkUserFinishedOrEndEvent() async {
     try {
-      var activeEventData = ProviderContainer().read(activeEventProvider);
+      var activeEventData = ActiveEventProvider().event;
       //Check for 'user reached finish' event and inform user
 
       int userPos = _realtimeUpdate?.user.position ?? 0;
@@ -1918,9 +1912,7 @@ class LocationProvider with ChangeNotifier {
       if (_lastRouteName != rtu.routeName || _eventState != rtu.eventState) {
         _lastRouteName = rtu.routeName;
         _eventState = rtu.eventState;
-        ProviderContainer()
-            .read(activeEventProvider.notifier)
-            .refresh(forceUpdate: true);
+        ActiveEventProvider().refresh(forceUpdate: true);
       }
     }
 
@@ -1930,9 +1922,7 @@ class LocationProvider with ChangeNotifier {
       _lastRouteName = rtu.routeName;
       _eventState = rtu.eventState;
       _eventIsRunning = rtu.eventIsActive;
-      ProviderContainer()
-          .read(activeEventProvider.notifier)
-          .refresh(forceUpdate: true);
+      ActiveEventProvider().refresh(forceUpdate: true);
     }
     if (notify) {
       notifyListeners();

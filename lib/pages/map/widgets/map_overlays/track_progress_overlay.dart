@@ -53,7 +53,7 @@ class _TrackProgressOverlayState extends ConsumerState<TrackProgressOverlay>
       ref
           .read(locationProvider)
           .refreshRealtimeData(forceUpdate: true); //update in map
-      ref.read(activeEventProvider.notifier).refresh(forceUpdate: true);
+      ActiveEventProvider().refresh(forceUpdate: true);
       ref.read(refreshTimerProvider.notifier).start();
     });
   }

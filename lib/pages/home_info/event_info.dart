@@ -65,9 +65,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
   void initEventUpdates({forceUpdate = false}) async {
     //not used due init ref.invalidate(updateImagesAndLinksProvider);
     await Future.delayed(const Duration(seconds: 2));
-    await ref
-        .read(activeEventProvider.notifier)
-        .refresh(forceUpdate: forceUpdate);
+    ActiveEventProvider().refresh(forceUpdate: forceUpdate);
     _updateTimer?.cancel();
     _updateTimer = Timer.periodic(
       const Duration(minutes: 10),
@@ -75,7 +73,7 @@ class _EventInfoState extends ConsumerState<EventInfo>
         if (LocationProvider().trackingType == TrackingType.onlyTracking) {
           return;
         }
-        ref.read(activeEventProvider.notifier).refresh();
+        ActiveEventProvider().refresh();
       },
     );
   }

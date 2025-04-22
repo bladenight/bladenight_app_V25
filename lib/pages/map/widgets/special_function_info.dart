@@ -14,31 +14,8 @@ class SpecialFunctionInfo extends ConsumerWidget {
     var isTracking = ref.watch(isTrackingProvider);
     var isProcessionHead = ref.watch(isProcessionHeadProvider);
     var isProcessionTail = ref.watch(isProcessionTailProvider);
-
-    return Column(children: [
-      if (isTracking && isProcessionHead)
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: ([
-            Expanded(
-              child: SizedBox(
-                height: MediaQuery.textScalerOf(context).scale(15),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child: ColoredBox(
-                    color: systemPrimaryDarkDefaultColor,
-                    child: FittedBox(
-                      child: Text(
-                        Localize.of(context).head,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ]),
-        ),
-      if (isTracking && isProcessionTail)
+    if (isTracking && (isProcessionHead || isProcessionTail)) {
+      return Column(children: [
         Row(
           mainAxisSize: MainAxisSize.min,
           children: ([
@@ -48,11 +25,13 @@ class SpecialFunctionInfo extends ConsumerWidget {
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
                   child: ColoredBox(
-                    color: Colors.redAccent,
+                    color: isProcessionHead ? Colors.yellow : Colors.redAccent,
                     child: FittedBox(
                       child: Text(
                         style: TextStyle(color: Colors.black),
-                        Localize.of(context).tail,
+                        isProcessionHead
+                            ? Localize.of(context).head
+                            : Localize.of(context).tail,
                       ),
                     ),
                   ),
@@ -61,11 +40,14 @@ class SpecialFunctionInfo extends ConsumerWidget {
             ),
           ]),
         ),
-      /*if (!kIsWeb &&
+        /*if (!kIsWeb &&
           (ref.watch(showOwnColoredTrackProvider) ||
               (isTracking && wantSeeFullProcession))) ...[
         const SpeedInfoColors(),
       ],*/
-    ]);
+      ]);
+    }
+
+    return SizedBox();
   }
 }

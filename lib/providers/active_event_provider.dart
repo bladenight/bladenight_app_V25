@@ -1,28 +1,54 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../helpers/hive_box/hive_settings_db.dart';
+import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/watch_communication_helper.dart';
+import '../main.dart';
 import '../models/event.dart';
 import '../models/route.dart';
 import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 import 'app_start_and_router/go_router.dart';
 
-part 'active_event_provider.g.dart';
+class ActiveEventProvider with ChangeNotifier {
+  static ActiveEventProvider? _instance =
+      ActiveEventProvider._privateConstructor();
 
-@Riverpod(keepAlive: true)
-class ActiveEvent extends _$ActiveEvent {
+  //instance factory
+  factory ActiveEventProvider() {
+    _instance ??= ActiveEventProvider._privateConstructor();
+    return _instance!;
+  }
+
   StreamSubscription<Event>? _evtStream;
-  bool _hasPushed = false;
+
+  Event get event => _event;
+  Event _event = Event.init;
+  bool _mapPushed = false;
   int _fails = 0;
 
+  ActiveEventProvider._privateConstructor() {
+    runZonedGuarded(() async {
+      await _init();
+    }, errorHandler);
+  }
+
+  void errorHandler(Object error, StackTrace stack) {}
+
   @override
-  Event build() {
-    state = HiveSettingsDB.getActualEvent
+  void dispose() {
+    _evtStream?.cancel();
+    super.dispose();
+  }
+
+  Future<Event> _init() async {
+    _event = HiveSettingsDB.getActualEvent
         .copyWith(rpcException: WampException(WampExceptionReason.offline));
     _evtStream =
         WampV2().eventUpdateStreamController.stream.listen((event) async {
@@ -30,26 +56,25 @@ class ActiveEvent extends _$ActiveEvent {
         //get route points if not delivered
         var rn =
             await RoutePoints.getActiveRoutePointsByNameWamp(event.routeName);
-        state = event.copyWith(nodes: rn.points);
+        _event = event.copyWith(nodes: rn.points);
       } else {
-        state = event;
+        _event = event;
       }
+      notifyListeners();
       SendToWatch.updateEvent(event);
-      if (event.isRunning && !_hasPushed) {
-        _hasPushed = true;
-        ref.read(goRouterProvider).goNamed(AppRoute.map.name);
+      if (event.isRunning && !_mapPushed) {
+        _mapPushed = true;
+        rootNavigatorKey.currentContext?.goNamed(AppRoute.map.name);
       }
-    });
-
-    ref.onDispose(() {
-      _evtStream?.cancel();
     });
     refresh(forceUpdate: true);
-    return state;
+    notifyListeners();
+    return _event;
   }
 
   update(Event event) {
-    state = event;
+    _event = event;
+    notifyListeners();
   }
 
   ///Refresh [Event]
@@ -61,16 +86,15 @@ class ActiveEvent extends _$ActiveEvent {
       if (diffSec > 10 || forceUpdate) {
         var rpcEvent = await Event.getEventWamp(forceUpdate: forceUpdate);
         if (rpcEvent.rpcException != null) {
-          state.rpcException = rpcEvent.rpcException;
-          state = rpcEvent;
           _fails++;
           if (_fails < 3) {
             await Future.delayed(const Duration(milliseconds: 2000));
             if (forceUpdate) refresh(forceUpdate: true);
           } else {
+            _event = rpcEvent;
             _fails = 0;
+            notifyListeners();
           }
-          //don't update
           return;
         }
 
@@ -80,25 +104,34 @@ class ActiveEvent extends _$ActiveEvent {
             //get route points if not delivered
             var rn = await RoutePoints.getActiveRoutePointsByNameWamp(
                 rpcEvent.routeName);
-            state = rpcEvent.copyWith(nodes: rn.points);
+            _event = rpcEvent.copyWith(nodes: rn.points);
           } else {
-            state = rpcEvent;
+            _event = rpcEvent;
           }
-
-          SendToWatch.updateEvent(state);
-          HiveSettingsDB.setActualEvent(state);
+          notifyListeners();
+          SendToWatch.updateEvent(_event);
+          HiveSettingsDB.setActualEvent(_event);
           if ((DateTime.now().difference(lastUpdate)).inSeconds > 60) {
             //avoid multiple notifications on force update
-            if (!kIsWeb && state.status != EventStatus.finished) {
-              NotificationHelper().updateNotifications(oldEventInPrefs, state);
+            if (!kIsWeb && _event.status != EventStatus.finished) {
+              NotificationHelper().updateNotifications(oldEventInPrefs, _event);
             }
           }
         }
+        return; //avoid 2nd trigger
       }
     } catch (e) {
-      print(e);
-      state = HiveSettingsDB.getActualEvent;
-      SendToWatch.updateEvent(state);
+      BnLog.error(text: 'failed Refresh activeEvent', exception: e);
     }
+    _event = HiveSettingsDB.getActualEvent;
+    SendToWatch.updateEvent(_event);
+    notifyListeners();
   }
 }
+
+final activeEventProviderInstance =
+    ChangeNotifierProvider((ref) => ActiveEventProvider());
+
+final activeEventProvider = Provider.autoDispose((ref) {
+  return ref.watch(activeEventProviderInstance.select((ae) => ae.event));
+});

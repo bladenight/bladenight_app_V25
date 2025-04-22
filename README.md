@@ -95,7 +95,7 @@ You need the bladenight-server written in java to communicate routes, friends, p
   ```bash
   flutter packages pub add NAME_OF_PACKAGE
   ```
-* show dependencies tree
+* show a dependency tree
 
   ```bash
   flutter pub deps
@@ -107,6 +107,12 @@ You need the bladenight-server written in java to communicate routes, friends, p
   flutter packages pub get
   dart run build_runner build -d
   ```
+    * Rebuild mapping/riverpod provider after changing @Mappable @riverpod annotiations class / class not found
+
+  ```bash
+  dart run build_runner build -d
+  ```  
+
 * Rebuild riverpod providers / Mapping watch on editing and save
 
   ```bash
