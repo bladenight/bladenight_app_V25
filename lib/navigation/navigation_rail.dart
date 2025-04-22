@@ -57,7 +57,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                           label: Text(
                             Localize.of(context).events,
                           ),
-                          icon: Icon(Icons.event_available_rounded),
+                          icon: Icon(CupertinoIcons.calendar),
                         ),
                         if (!kIsWeb)
                           NavigationRailDestination(
