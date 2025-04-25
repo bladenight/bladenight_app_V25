@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,6 +29,7 @@ class _MapTileState extends State<MapTileLayer> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //update map colors for static tiles
       /* CupertinoAdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
@@ -66,12 +68,26 @@ class MapTileLayerWidget extends ConsumerStatefulWidget {
 }
 
 class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
+  Uint8List? errorImageBytes;
+
+  @override
+  void initState() {
+    initErrorImage();
+    super.initState();
+  }
+
+  void initErrorImage() async {
+    final ByteData bytes =
+        await rootBundle.load('assets/images/skateMunichMapError.png');
+    errorImageBytes = bytes.buffer.asUint8List();
+  }
+
   @override
   Widget build(BuildContext context) {
     var osmEnabled =
         ref.watch(useOpenStreetMapProvider) || widget.hasSpecialStartPoint;
     return TileLayer(
-      userAgentPackageName: 'app.huth.bladenightapp',
+      userAgentPackageName: 'app.skatemunich.bladenight',
       //retinaMode: RetinaMode.isHighDensity(context) ? true : false,
       minNativeZoom: osmEnabled
           ? MapSettings.minNativeZoom
@@ -103,17 +119,12 @@ class _MapTileLayerState extends ConsumerState<MapTileLayerWidget> {
               loadingStrategy: BrowseLoadingStrategy.cacheFirst,
               stores: {fmtcTileStoreName: BrowseStoreStrategy.readUpdateCreate},
               cachedValidDuration: Duration(days: 90),
-            ),
-      /*BnCachedAssetProvider(
-              context: context,
-              errorListener: () {
-                print('errlistbntile');
+              errorHandler: (failure) {
+                return errorImageBytes;
               },
-              callBack: (TileImage tile, Object error, StackTrace? stackTrace) {
-                print('errbntile');
-              }),*/
+            ),
       errorImage: const AssetImage(
-        'assets/images/skatemunichmaperror.png',
+        'assets/images/skateMunichMapErrorInverted.png',
       ),
     );
   }

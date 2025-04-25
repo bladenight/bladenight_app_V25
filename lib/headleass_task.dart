@@ -12,6 +12,7 @@ import 'helpers/hive_box/hive_settings_db.dart';
 import 'helpers/logger/logger.dart';
 import 'helpers/notification/notification_helper.dart';
 import 'helpers/time_converter_helper.dart';
+import 'models/event.dart';
 
 /// Receive events from BackgroundGeolocation in Headless state.
 @pragma('vm:entry-point')
@@ -45,13 +46,12 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 
   try {
     var location = await bg.BackgroundGeolocation.getCurrentPosition(
-        samples: 1, extras: {'event': 'background-fetch', 'geofence': true});
+        samples: 3, extras: {'event': 'background-fetch', 'geofence': true});
     //_sendLocationWhenTracking(location);
     print('[bg_location] $location');
   } catch (error) {
     print('[_bglocation] ERROR: $error');
   }
-
   BackgroundFetch.finish(taskId);
 }
 
@@ -63,6 +63,7 @@ Future<bool> headlessSetBladeguardOnSite() async {
     if (prefs.getBool(HiveSettingsDB.setOnsiteGeoFencingKey) == false) {
       return false;
     }
+
     var eventConfirmed = prefs.getBool('eventConfirmed');
     var lastTimeStampDate =
         prefs.getString(HiveSettingsDB.bladeguardLastSetOnsiteKey);
@@ -76,6 +77,11 @@ Future<bool> headlessSetBladeguardOnSite() async {
     //hive not working in an isolate
 
     var serverLink = prefs.getString(ServerConfigDb.restApiLinkKey);
+    var nextEventJson = prefs.getString('nextEvent');
+    if (nextEventJson != null) {
+      EventMapper.ensureInitialized();
+      EventMapper.fromJson(nextEventJson);
+    }
     var email = prefs.getString(HiveSettingsDB.bladeguardEmailKey);
     if (email == null) return false;
     var birthday = prefs.getString(HiveSettingsDB.bladeguardBirthdayKey);
@@ -109,21 +115,23 @@ Future<bool> headlessSetBladeguardOnSite() async {
       } else if (response.data is Map && response.data.keys.contains('fail')) {
         return false;
       }
+      prefs.setString('geofenceHeadlessResult',
+          '${DateTime.now().toIso8601StringWithTimezone()} GeofenceOK ${response.data.toString()}');
     } else {
-      BnLog.warning(
-          text: response.statusCode.toString(),
-          methodName: 'setBladeguardOnSite');
+      prefs.setString('geofenceHeadlessResult',
+          '${DateTime.now().toIso8601StringWithTimezone()} Geofence Failed ${response.statusCode.toString()}');
     }
   } on DioException catch (e) {
-    BnLog.warning(text: e.toString(), methodName: 'setBladeguardOnSite $e');
     if (e.response == null) {
       return false;
     }
     return false;
   } catch (e) {
-    BnLog.warning(text: e.toString(), methodName: 'setBladeguardOnSite');
+    print('geofenceHeadlessResult failed ${e.toString()}');
   }
+
   NotificationHelper().showString(
-      id: DateTime.now().hashCode, text: 'Bladeguard vor Ort angemeldet');
+      id: DateTime.now().hashCode,
+      text: 'Geofence Bladeguard vor Ort angemeldet');
   return true;
 }

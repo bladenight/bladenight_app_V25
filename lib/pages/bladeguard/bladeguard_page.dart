@@ -14,6 +14,7 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
+import '../../helpers/preferences_helper.dart';
 import '../../helpers/url_launch_helper.dart';
 import '../widgets/common_widgets/no_connection_warning.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
@@ -316,6 +317,17 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           CupertinoFormSection(
                             header: Text(Localize.of(context).geoFencingTitle),
                             children: <Widget>[
+                              FutureBuilder<String?>(
+                                  future:
+                                      PreferencesHelper.getLastGeoFenceResult(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<String?> snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text('${snapshot.data}');
+                                    } else {
+                                      return SizedBox();
+                                    }
+                                  }),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 20, right: 20),

@@ -136,6 +136,14 @@ GoRouter goRouter(Ref ref) {
               ),
             );
           }),
+      GoRoute(
+          path: '/privacy.html',
+          name: 'privacy.html',
+          pageBuilder: (context, state) {
+            return NoTransitionPage(
+              child: AboutPage(),
+            );
+          }),
 
       // Stateful navigation based on:
       // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart

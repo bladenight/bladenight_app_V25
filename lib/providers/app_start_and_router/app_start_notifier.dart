@@ -49,7 +49,6 @@ class AppStartNotifier extends _$AppStartNotifier {
     await DeviceId.initAppId();
     initCrashLogs();
     await initLogger();
-    initSettings();
 
     if (!kIsWeb && !fMTCInitialized) {
       await FMTCObjectBoxBackend().initialise();
@@ -75,7 +74,7 @@ class AppStartNotifier extends _$AppStartNotifier {
   }
 
   void initCrashLogs() async {
-    if (kDebugMode && !kIsWeb) {
+    if (kDebugMode && !kIsWeb && HiveSettingsDB.chrashlyticsEnabled) {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );

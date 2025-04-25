@@ -277,7 +277,9 @@ class Event with EventMappable implements Comparable {
     if (nodes.length.compareTo(otherEvent.nodes.length) != 0) {
       return 200;
     }
-    if (nodes.hashCode.compareTo(otherEvent.nodes.hashCode) != 0) {
+    //hashcode comparing creates different results
+    //normally every route has different route points amount
+    if (nodes.length.compareTo(otherEvent.nodes.length) != 0) {
       return 250;
     }
     return 0;

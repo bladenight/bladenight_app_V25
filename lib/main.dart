@@ -29,7 +29,9 @@ import 'helpers/logger/logger.dart';
 import 'helpers/preferences_helper.dart';
 import 'main.init.dart';
 
+import 'models/event.dart';
 import 'pages/widgets/startup_widgets/app_root_widget.dart';
+import 'providers/active_event_provider.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 const String openRouteMapRoute = '/eventRoute';
@@ -126,29 +128,4 @@ Future<bool> initLogger() async {
     print('Logger init failed --> $e');
     return false;
   }
-}
-
-void initSettings() async {
-  try {
-    globalSharedPrefs = await SharedPreferences.getInstance();
-    PreferencesHelper.getImagesAndLinksPref();
-    if (HiveSettingsDB.firstStart2421 && globalSharedPrefs != null && !kIsWeb) {
-      var restApiLink = ServerConfigDb.restApiLinkBg;
-      globalSharedPrefs?.setString(ServerConfigDb.restApiLinkKey, restApiLink);
-      var onSite = HiveSettingsDB.onsiteGeoFencingActive;
-      globalSharedPrefs?.setBool(HiveSettingsDB.setOnsiteGeoFencingKey, onSite);
-      var mail = HiveSettingsDB.bladeguardEmail;
-      globalSharedPrefs?.setString(HiveSettingsDB.bladeguardEmailKey, mail);
-      var val = HiveSettingsDB.bladeguardBirthday;
-      var bdStr =
-          '${val.year}-${val.month.toString().padLeft(2, '0')}-${val.day.toString().padLeft(2, '0')}';
-      globalSharedPrefs?.setString(HiveSettingsDB.bladeguardBirthdayKey, bdStr);
-      var oneSignalId = HiveSettingsDB.oneSignalId;
-      globalSharedPrefs?.setString(HiveSettingsDB.oneSignalId, oneSignalId);
-      globalSharedPrefs?.setBool('eventConfirmed', false);
-      // uncomment for testing headlessSetBladeguardOnSite(true);
-      //
-      HiveSettingsDB.setFirstStart2421(false);
-    }
-  } catch (_) {}
 }

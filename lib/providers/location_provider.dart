@@ -34,6 +34,7 @@ import '../helpers/location_permission_dialogs.dart';
 import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/toast_notification.dart' show showToast;
+import '../helpers/preferences_helper.dart';
 import '../helpers/speed_to_color.dart';
 import '../helpers/wamp/subscribe_message.dart';
 import '../helpers/watch_communication_helper.dart';
@@ -761,6 +762,8 @@ class LocationProvider with ChangeNotifier {
           .setOnSiteState(true, triggeredByGeofence: true);
       //invalidate provider to reload state
       _geoFenceEventStreamController.sink.add(event);
+      await PreferencesHelper.setLastGeoFenceResult(
+          '${DateTime.now().toIso8601String()} Geofence');
     }
   }
 

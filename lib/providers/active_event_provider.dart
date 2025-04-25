@@ -4,10 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../app_settings/app_configuration_helper.dart';
+import '../helpers/hive_box/app_server_config_db.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
+import '../helpers/preferences_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
 import '../models/event.dart';
@@ -111,6 +115,7 @@ class ActiveEventProvider with ChangeNotifier {
           notifyListeners();
           SendToWatch.updateEvent(_event);
           HiveSettingsDB.setActualEvent(_event);
+          initOrUpdateSettingsHeadlessSettings();
           if ((DateTime.now().difference(lastUpdate)).inSeconds > 60) {
             //avoid multiple notifications on force update
             if (!kIsWeb && _event.status != EventStatus.finished) {
@@ -126,6 +131,39 @@ class ActiveEventProvider with ChangeNotifier {
     _event = HiveSettingsDB.getActualEvent;
     SendToWatch.updateEvent(_event);
     notifyListeners();
+  }
+
+  void initOrUpdateSettingsHeadlessSettings() async {
+    try {
+      if (!kDebugMode ||
+          !(HiveSettingsDB.isBladeGuard &&
+              HiveSettingsDB.onsiteGeoFencingActive)) {
+        return;
+      }
+      globalSharedPrefs = await SharedPreferences.getInstance();
+      PreferencesHelper.getImagesAndLinksPref();
+      if (globalSharedPrefs != null && !kIsWeb) {
+        var restApiLink = ServerConfigDb.restApiLinkBg;
+        globalSharedPrefs?.setString(
+            ServerConfigDb.restApiLinkKey, restApiLink);
+        var onSite = HiveSettingsDB.onsiteGeoFencingActive;
+        globalSharedPrefs?.setBool(
+            HiveSettingsDB.setOnsiteGeoFencingKey, onSite);
+        var mail = HiveSettingsDB.bladeguardEmail;
+        globalSharedPrefs?.setString(HiveSettingsDB.bladeguardEmailKey, mail);
+        var val = HiveSettingsDB.bladeguardBirthday;
+        var bdStr =
+            '${val.year}-${val.month.toString().padLeft(2, '0')}-${val.day.toString().padLeft(2, '0')}';
+        globalSharedPrefs?.setString(
+            HiveSettingsDB.bladeguardBirthdayKey, bdStr);
+        var oneSignalId = HiveSettingsDB.oneSignalId;
+        globalSharedPrefs?.setString(HiveSettingsDB.oneSignalId, oneSignalId);
+        globalSharedPrefs?.setBool(
+            'eventConfirmed', event.status == EventStatus.confirmed);
+        globalSharedPrefs?.setString(
+            'nextEvent', ActiveEventProvider().event.toJson());
+      }
+    } catch (_) {}
   }
 }
 
