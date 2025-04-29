@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../generated/l10n.dart';
+import '../../geofence/geofence_helper.dart';
 import '../../helpers/hive_box/app_server_config_db.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/location_bearing_distance.dart';

@@ -22,6 +22,7 @@ import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/app_constants.dart';
 import '../app_settings/server_connections.dart';
 import '../generated/l10n.dart';
+import '../geofence/geofence_helper.dart';
 import '../helpers/average_list.dart';
 import '../helpers/device_id_helper.dart';
 import '../helpers/device_info_helper.dart';
@@ -34,13 +35,11 @@ import '../helpers/location_permission_dialogs.dart';
 import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
 import '../helpers/notification/toast_notification.dart' show showToast;
-import '../helpers/preferences_helper.dart';
 import '../helpers/speed_to_color.dart';
 import '../helpers/wamp/subscribe_message.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
 import '../models/event.dart';
-import '../models/geofence_point.dart' as gfp;
 import '../models/location.dart';
 import '../models/realtime_update.dart';
 import '../models/route.dart';
@@ -51,8 +50,6 @@ import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
 import 'active_event_provider.dart';
 import 'app_start_and_router/go_router.dart';
-import 'images_and_links/geofence_image_and_link_provider.dart';
-import 'rest_api/onsite_state_provider.dart';
 
 ///[LocationProvider] gets actual procession of BladeNight
 ///when tracking is active is result included users position and friends
@@ -208,9 +205,6 @@ class LocationProvider with ChangeNotifier {
 
   final _userLatLngStreamController = StreamController<LatLng>.broadcast();
 
-  final _geoFenceEventStreamController =
-      StreamController<bg.GeofenceEvent>.broadcast();
-
   final _trainHeadStreamController = StreamController<LatLng>.broadcast();
   final _userTrackPointsStreamController =
       StreamController<UserGpxPoint>.broadcast();
@@ -224,9 +218,6 @@ class LocationProvider with ChangeNotifier {
       _userPositionStreamController.stream;
 
   Stream<LatLng> get userLatLngStream => _userLatLngStreamController.stream;
-
-  Stream<bg.GeofenceEvent> get geoFenceEventStream =>
-      _geoFenceEventStreamController.stream;
 
   Stream<LatLng> get trainHeadUpdateStream => _trainHeadStreamController.stream;
 
@@ -281,7 +272,6 @@ class LocationProvider with ChangeNotifier {
         notifyListeners();
         return;
       }
-      startStopGeoFencing();
     }
 
     _autoStopTracking = HiveSettingsDB.autoStopTrackingEnabled;
@@ -332,16 +322,22 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> ensureBackgroundGeolocationInitialized() async {
+    var initialized = await _startBackgroundGeolocation();
+    return initialized != null;
+  }
+
   ///Initializes BackgroundLocationPlugin
   Future<bg.State?> _startBackgroundGeolocation() async {
     try {
+      if (_state != null) return _state;
       bg.BackgroundGeolocation.onLocation(_onLocation, _onLocationError);
       bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
       bg.BackgroundGeolocation.onActivityChange(_onActivityChange);
       bg.BackgroundGeolocation.onHeartbeat(_onHeartBeat);
       bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
       bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
-      bg.BackgroundGeolocation.onGeofence(_onGeoFenceEvent);
+      //bg.BackgroundGeolocation.onGeofence(_onGeoFenceEvent);
 
       var isMotionDetectionDisabled = HiveSettingsDB.isMotionDetectionDisabled;
 
@@ -361,7 +357,7 @@ class LocationProvider with ChangeNotifier {
           persistMode: bg.Config.PERSIST_MODE_NONE,
           stopAfterElapsedMinutes: 3600,
           preventSuspend: true,
-          stopOnTerminate: true,
+          stopOnTerminate: false,
           startOnBoot: false,
           logLevel: bg.Config.LOG_LEVEL_OFF,
           // bgLogLevel,
@@ -725,7 +721,7 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //called by geolocator and bg id gps disabled / enabled chrashs sometimes
+  //called by geolocator and bg id gps disabled / enabled crash sometimes
   void _onLocationPermissionChange(bool gpsIsEnabled) {
     if (gpsIsEnabled) {
       _gpsLocationPermissionsStatus = LocationPermissionStatus.notDetermined;
@@ -734,37 +730,6 @@ class LocationProvider with ChangeNotifier {
       stopTracking();
     }
     notifyListeners();
-  }
-
-  void _onGeoFenceEvent(bg.GeofenceEvent event) async {
-    if (HiveSettingsDB.isBladeGuard && HiveSettingsDB.onsiteGeoFencingActive) {
-      BnLog.info(text: '_geofenceEvent recognized ${event.toString()}');
-      if (event.action != 'ENTER') {
-        return;
-      }
-      var lastTimeStamp = HiveSettingsDB.bladeguardLastSetOnsite;
-      var now = DateTime.now();
-      var diff = now.difference(lastTimeStamp);
-      var minTimeDiff =
-          kDebugMode ? const Duration(seconds: 5) : const Duration(hours: 1);
-      if (diff < minTimeDiff || eventIsActive) {
-        return;
-      }
-      final repo = ProviderContainer().read(bladeGuardApiRepositoryProvider);
-      var res = await repo.checkBladeguardIsOnSite();
-      //is is already onsite do nothing
-      if (res.result != null && res.result == true) {
-        return;
-      }
-      //set onsite and notify user
-      var _ = await ProviderContainer()
-          .read(bgIsOnSiteProvider.notifier)
-          .setOnSiteState(true, triggeredByGeofence: true);
-      //invalidate provider to reload state
-      _geoFenceEventStreamController.sink.add(event);
-      await PreferencesHelper.setLastGeoFenceResult(
-          '${DateTime.now().toIso8601String()} Geofence');
-    }
   }
 
   void toggleAutoStop() async {
@@ -781,8 +746,9 @@ class LocationProvider with ChangeNotifier {
     } else {
       bg.BackgroundGeolocation.stop().then((bg.State state) async {
         _trackingStopped();
-        await startStopGeoFencing();
+        HiveSettingsDB.setOdometerValue(odometer);
         await WakelockPlus.disable();
+        GeofenceHelper().startStopGeoFencing();
         await startRealtimeUpdateSubscriptionIfNotTracking();
       }).catchError((error) {
         BnLog.error(text: 'Stopping location error: $error');
@@ -815,63 +781,6 @@ class LocationProvider with ChangeNotifier {
     HiveSettingsDB.setTrackingActive(false);
     LocationStore.saveUserTrackPointList(_userGpxPoints, DateTime.now());
     notifyListeners();
-  }
-
-  ///Starts or stops geofencing
-  Future<void> startStopGeoFencing() async {
-    //stop geofencing if not Bladeguard
-    if (!HiveSettingsDB.bgSettingVisible ||
-        !HiveSettingsDB.isBladeGuard ||
-        !HiveSettingsDB.onsiteGeoFencingActive) {
-      if (!isTracking) {
-        await bg.BackgroundGeolocation.stop().catchError((error) {
-          BnLog.error(text: 'Stopping geofence error: $error');
-          return bg.State({'err': error});
-        });
-      }
-      return;
-    }
-    try {
-      var gpsLocationPermissionsStatus =
-          await LocationPermissionDialog().getPermissionsStatus();
-      if (gpsLocationPermissionsStatus == LocationPermissionStatus.denied) {
-        return;
-      }
-      if (!kIsWeb && !HiveSettingsDB.hasAskedAlwaysAllowLocationPermission) {
-        if (gpsLocationPermissionsStatus != LocationPermissionStatus.always &&
-            rootNavigatorKey.currentContext!.mounted) {
-          await LocationPermissionDialog()
-              .getGeofenceAlways(rootNavigatorKey.currentContext!);
-          BnLog.warning(
-              text:
-                  'startGeoFencing not possible - LocationPermission is $gpsLocationPermissionsStatus');
-        }
-      }
-      if (!kIsWeb && !HiveSettingsDB.useAlternativeLocationProvider) {
-        setGeoFence();
-        bg.BackgroundGeolocation.startGeofences().catchError((error) {
-          BnLog.error(text: 'Starting Geofence error: $error');
-          return bg.State({'err': error});
-        });
-      }
-    } catch (e) {
-      BnLog.error(text: 'startGeoFencing failed: $e');
-    }
-  }
-
-  void setGeoFence() async {
-    if (!HiveSettingsDB.bgSettingVisible ||
-        !HiveSettingsDB.isBladeGuard ||
-        !HiveSettingsDB.onsiteGeoFencingActive) {
-      return;
-    }
-    var points = await ProviderContainer().read(geofencePointsProvider.future);
-    var geofencePoints = gfp.GeofencePoints.getGeofenceList(points);
-    bg.BackgroundGeolocation.addGeofences(geofencePoints).then((bool success) {
-      BnLog.info(text: '[addGeofence] success');
-    }).catchError((dynamic error) {
-      BnLog.warning(text: '[addGeofence] FAILURE: $error');
-    });
   }
 
   Future<bool> _collectLocationWithPermissionService() async {
@@ -1220,7 +1129,6 @@ class LocationProvider with ChangeNotifier {
     if (update.rpcException != null) {
       return;
     }
-    HiveSettingsDB.setOdometerValue(odometer);
     //rt update by stream
     var friendList = update.updateMapPointFriends(update.friends);
     var friends = friendList.where((x) => x.specialValue == 0).toList();
@@ -1809,11 +1717,11 @@ class LocationProvider with ChangeNotifier {
           confirmBtnText: Localize.current.ok,
           cancelBtnText: Localize.current.cancel,
           onConfirmBtnTap: () async {
-            await resetTrackPoints();
-            notifyListeners();
             if (context.mounted && context.canPop()) {
               context.pop();
             }
+            await resetTrackPoints();
+            notifyListeners();
           });
     }
   }
@@ -1837,13 +1745,13 @@ class LocationProvider with ChangeNotifier {
           confirmBtnText: Localize.current.ok,
           cancelBtnText: Localize.current.cancel,
           onConfirmBtnTap: () async {
-            await resetTrackPoints();
-            notifyListeners();
             if (!rootNavigatorKey.currentContext!.mounted &&
                 rootNavigatorKey.currentContext!.canPop()) {
               return;
             }
             rootNavigatorKey.currentContext!.pop();
+            await resetTrackPoints();
+            notifyListeners();
           });
     }
   }
@@ -1856,6 +1764,7 @@ class LocationProvider with ChangeNotifier {
   int _realTimeDataSubscriptionId = 0;
 
   Future<void> startRealtimeUpdateSubscriptionIfNotTracking() async {
+    if (_trackingType == TrackingType.onlyTracking) return;
     _wampConnectedListener?.cancel();
     _realTimeDataStreamListener?.cancel();
     _wampConnectedListener = null;
@@ -2111,11 +2020,4 @@ final isUserParticipatingProvider = Provider.autoDispose((ref) {
 final isActiveEventProvider = Provider.autoDispose((ref) {
   print('${DateTime.now().toIso8601String()} isActiveEventProvider');
   return ref.watch(locationProvider.select((l) => l.eventIsActive));
-});
-
-final geoFenceEventProvider =
-    StreamProvider.autoDispose<bg.GeofenceEvent>((ref) {
-  return LocationProvider().geoFenceEventStream.map((event) {
-    return event;
-  });
 });

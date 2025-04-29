@@ -69,7 +69,7 @@ class ActiveEventProviderOld extends ChangeNotifier {
           if ((DateTime.now().difference(_providerLastUpdate)).inSeconds > 30) {
             //avoid multiple notifications on force update
             if (!kIsWeb && event.status != EventStatus.finished) {
-              NotificationHelper().updateNotifications(oldEventInPrefs, _event);
+              NotificationHelper().updateNotifications(_event);
             }
           }
         }

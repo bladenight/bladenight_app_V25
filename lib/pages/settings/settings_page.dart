@@ -18,6 +18,7 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
+import '../../helpers/preferences_helper.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/is_tracking_provider.dart';
@@ -655,8 +656,22 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               const SizedBox(
                                 height: 10,
                               ),
+                              FutureBuilder<String?>(
+                                  future:
+                                      PreferencesHelper.getLastGeoFenceResult(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<String?> snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(
+                                        '${snapshot.data}',
+                                        style: TextStyle(fontSize: 8),
+                                      );
+                                    } else {
+                                      return SizedBox();
+                                    }
+                                  }),
                               CupertinoFormSection(
-                                  header: const Text('Testing only'),
+                                  header: const Text('Only for Test purposes'),
                                   children: <Widget>[
                                     const Text('Server'),
                                     CupertinoTextFormFieldRow(

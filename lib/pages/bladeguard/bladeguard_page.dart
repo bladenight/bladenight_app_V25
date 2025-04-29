@@ -10,16 +10,15 @@ import 'package:go_router/go_router.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
+import '../../geofence/geofence_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
-import '../../helpers/preferences_helper.dart';
 import '../../helpers/url_launch_helper.dart';
 import '../widgets/common_widgets/no_connection_warning.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
-import '../../providers/location_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../providers/rest_api/onsite_state_provider.dart';
 import '../../providers/settings/bladeguard_provider.dart';
@@ -317,17 +316,6 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                           CupertinoFormSection(
                             header: Text(Localize.of(context).geoFencingTitle),
                             children: <Widget>[
-                              FutureBuilder<String?>(
-                                  future:
-                                      PreferencesHelper.getLastGeoFenceResult(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<String?> snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Text('${snapshot.data}');
-                                    } else {
-                                      return SizedBox();
-                                    }
-                                  }),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 20, right: 20),
@@ -341,12 +329,11 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                       await HiveSettingsDB
                                           .setSetOnsiteGeoFencingActiveAsync(
                                               val);
-                                      await LocationProvider()
+                                      await GeofenceHelper()
                                           .startStopGeoFencing();
                                       setState(() {});
                                     },
-                                    value:
-                                        HiveSettingsDB.onsiteGeoFencingActive,
+                                    value: HiveSettingsDB.geoFencingActive,
                                   ),
                                   descriptionRight: '',
                                 ),

@@ -28,6 +28,8 @@ class NotificationHelper {
   final StreamController<String?> selectNotificationStream =
       StreamController<String?>.broadcast();
 
+  DateTime cancelLastUpdate = DateTime(2000);
+
   factory NotificationHelper() {
     return _instance;
   }
@@ -185,19 +187,18 @@ class NotificationHelper {
     _show(id: id, title: title ?? Localize.current.bladenight, body: text);
   }
 
-  void updateNotifications(Event oldEvent, Event newEvent) {
+  void updateNotifications(Event newEvent) {
     if (kIsWeb) return;
-    if (oldEvent.compareTo(newEvent) != 0) {
+    if ((DateTime.now().difference(cancelLastUpdate)).inSeconds > 3600 &&
+        newEvent.status == EventStatus.cancelled) {
       NotificationHelper().cancelAllNotifications();
-      if (oldEvent.status != newEvent.status &&
-          newEvent.status == EventStatus.cancelled) {
-        showEventUpdated(
-            id: newEvent.hashCode,
-            event: newEvent,
-            title: Localize.current.note_statuschanged);
-        return;
-      }
-      /* if (newEvent.status == EventStatus.confirmed) {
+      showEventUpdated(
+          id: newEvent.hashCode,
+          event: newEvent,
+          title: Localize.current.note_statuschanged);
+      return;
+    }
+    /* if (newEvent.status == EventStatus.confirmed) {
         NotificationHelper().scheduleNotification(
             newEvent.hashCode,
             Localize.current.bladenight,
@@ -205,7 +206,6 @@ class NotificationHelper {
             newEvent.startDateUtc);
         return;
       }*/
-    }
   }
 
   void resumeNotification() {

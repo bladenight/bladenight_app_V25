@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker/talker.dart';
@@ -11,7 +12,7 @@ import 'package:universal_io/io.dart';
 import '../../app_settings/app_constants.dart';
 import '../../app_settings/globals.dart';
 import '../../firebase_options.dart';
-import '../../headleass_task.dart';
+import '../../geofence/geofence_helper.dart';
 import '../../helpers/device_id_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
@@ -32,7 +33,7 @@ class AppStartNotifier extends _$AppStartNotifier {
   Future<void> build() async {
     await _initializationLogic();
     ref.onDispose(() {
-      BnLog.verbose(text: 'start notifier was disposed');
+      BnLog.verbose(text: 'Start notifier was disposed');
     });
   }
 
@@ -58,18 +59,13 @@ class AppStartNotifier extends _$AppStartNotifier {
     if (!kIsWeb) {
       await FMTCStore(fmtcTileStoreName).manage.create();
       Future.microtask(() async {
-        await _initNotifications();
-        await initOneSignal();
-        ref.read(messagesLogicProvider).updateServerMessages();
+        await ref.read(messagesLogicProvider).updateServerMessages();
+        if (await _initNotifications() == true) {
+          GeofenceHelper().activateGeofencing();
+          await initOneSignal();
+        }
       });
       initWatchFlutterChannel();
-    }
-
-    if (Platform.isAndroid && HiveSettingsDB.onsiteGeoFencingActive) {
-      await initPlatformState();
-
-      /// Register BackgroundGeolocation headless-task
-      BackgroundFetch.registerHeadlessTask(backgroundGeolocationHeadlessTask);
     }
   }
 

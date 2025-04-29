@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'helpers/hive_box/app_server_config_db.dart';
 import 'helpers/hive_box/hive_settings_db.dart';
-import 'helpers/logger/logger.dart';
 import 'helpers/notification/notification_helper.dart';
 import 'helpers/time_converter_helper.dart';
 import 'models/event.dart';
@@ -22,10 +21,9 @@ void backgroundGeolocationHeadlessTask(bg.HeadlessEvent headlessEvent) async {
   switch (headlessEvent.name) {
     case bg.Event.GEOFENCE:
       bg.GeofenceEvent geofenceEvent = headlessEvent.event;
-      if (geofenceEvent.action != 'ENTER') {
-        return;
+      if (geofenceEvent.action == 'DWELL') {
+        headlessSetBladeguardOnSite();
       }
-      headlessSetBladeguardOnSite();
       break;
   }
 }
@@ -64,12 +62,19 @@ Future<bool> headlessSetBladeguardOnSite() async {
       return false;
     }
 
-    var eventConfirmed = prefs.getBool('eventConfirmed');
+    var eventConfirmed = false; //prefs.getBool('eventConfirmed');
+    var nextEventJson = prefs.getString(HiveSettingsDB.actualEventStringKey);
+    if (nextEventJson != null) {
+      EventMapper.ensureInitialized();
+      var nextEvent = EventMapper.fromJson(nextEventJson);
+      if (nextEvent.status == EventStatus.confirmed && !nextEvent.isRunning) {
+        eventConfirmed == true;
+      }
+    }
     var lastTimeStampDate =
         prefs.getString(HiveSettingsDB.bladeguardLastSetOnsiteKey);
     var nowDate = DateTime.now().toDateOnlyString();
-    if (eventConfirmed != null &&
-        eventConfirmed == true &&
+    if (eventConfirmed == true &&
         lastTimeStampDate != null &&
         lastTimeStampDate == nowDate) {
       return false;
@@ -77,11 +82,6 @@ Future<bool> headlessSetBladeguardOnSite() async {
     //hive not working in an isolate
 
     var serverLink = prefs.getString(ServerConfigDb.restApiLinkKey);
-    var nextEventJson = prefs.getString('nextEvent');
-    if (nextEventJson != null) {
-      EventMapper.ensureInitialized();
-      EventMapper.fromJson(nextEventJson);
-    }
     var email = prefs.getString(HiveSettingsDB.bladeguardEmailKey);
     if (email == null) return false;
     var birthday = prefs.getString(HiveSettingsDB.bladeguardBirthdayKey);

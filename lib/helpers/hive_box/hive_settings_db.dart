@@ -16,6 +16,7 @@ import 'package:talker_logger/talker_logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/app_constants.dart';
+import '../../geofence/geofence_helper.dart';
 import '../../models/event.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
@@ -552,15 +553,20 @@ class HiveSettingsDB {
   static const String setOnsiteGeoFencingKey = 'setOnsiteGeoFencingPref';
 
   ///Bladeguard is registered for GeoFencing
-  static bool get onsiteGeoFencingActive {
+  static bool get geoFencingActive {
     return _hiveBox.get(setOnsiteGeoFencingKey, defaultValue: false);
   }
 
   ///Set if Bladeguard is registered for OneSignalPush
-  static Future<void> setSetOnsiteGeoFencingActive(bool val) async {
+  static Future<void> setGeoFencingActive(bool val) async {
     _hiveBox.put(setOnsiteGeoFencingKey, val);
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool(setOnsiteGeoFencingKey, val);
+    if (val) {
+      GeofenceHelper().activateGeofencing();
+    } else {
+      GeofenceHelper().deActivateGeofencing();
+    }
   }
 
   ///Set if Bladeguard is registered for OneSignalPush
@@ -863,18 +869,18 @@ class HiveSettingsDB {
     _hiveBox.put(_actualEventLastUpdate, val);
   }
 
-  static const String _actualEventStringKey = 'actualEventStringPref';
+  static const String actualEventStringKey = 'actualEventStringPref';
 
   ///get actualEventStringAsString
   static String get actualEventAsJson {
-    return _hiveBox.get(_actualEventStringKey, defaultValue: '');
+    return _hiveBox.get(actualEventStringKey, defaultValue: '');
   }
 
   ///Get actual [Event] from preferences and
   ///return saved event or if nothing saved [Event.init]
   static Event get getActualEvent {
     try {
-      var jsonData = _hiveBox.get(_actualEventStringKey);
+      var jsonData = _hiveBox.get(actualEventStringKey);
       if (jsonData != null) {
         return MapperContainer.globals.fromJson<Event>(jsonData);
       } else {
@@ -891,10 +897,11 @@ class HiveSettingsDB {
   static Future<void> setActualEvent(Event event) async {
     event.lastUpdate = DateTime.now();
     String eventJson = MapperContainer.globals.toJson(event);
-    _hiveBox.put(_actualEventStringKey, eventJson);
+    _hiveBox.put(actualEventStringKey, eventJson);
     setActualEventLastUpdate(DateTime.now());
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('eventConfirmed', event.status == EventStatus.confirmed);
+    prefs.setString(actualEventStringKey, eventJson);
   }
 
   static const String _imagesAndLinksDataKey = 'imagesAndLinksJsonPref';

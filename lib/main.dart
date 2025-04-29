@@ -13,25 +13,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart' show SentryFlutter;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart'
     show TalkerRiverpodObserver;
 import 'package:talker_riverpod_logger/talker_riverpod_logger_settings.dart';
 
-import 'app_settings/app_configuration_helper.dart';
 import 'app_settings/server_connections.dart';
 import 'helpers/hive_box/adapter/color_adapter.dart';
 import 'helpers/hive_box/adapter/images_and_links_adapter.dart';
-import 'helpers/hive_box/app_server_config_db.dart';
-import 'helpers/hive_box/hive_settings_db.dart';
 import 'helpers/logger/logger.dart';
-import 'helpers/preferences_helper.dart';
 import 'main.init.dart';
 
-import 'models/event.dart';
 import 'pages/widgets/startup_widgets/app_root_widget.dart';
-import 'providers/active_event_provider.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 const String openRouteMapRoute = '/eventRoute';
@@ -67,7 +60,6 @@ void main() async {
           options.enableWatchdogTerminationTracking = true;
           options.dsn =
               'https://260152b2325af41400820edd53e3a54c@o4507936224706560.ingest.de.sentry.io/4507936226541648';
-          https: //examplePublicKey@o0.ingest.sentry.io/0';
           // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
           // We recommend adjusting this value in production.
           options.tracesSampleRate = 1.0;

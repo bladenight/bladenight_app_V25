@@ -182,7 +182,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                     : isTracking
                         ? CupertinoColors.systemRed
                         : CupertinoColors.activeGreen,
-                heroTag: 'startStopTrackingBtnTag',
+                heroTag: 'startStopTrackingBtnTagLandscape',
                 child: Builder(builder: (context) {
                   var trackingType = ref.watch(trackingTypeProvider);
                   switch (trackingType) {
@@ -247,7 +247,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                       break;
                   }
                 },
-                heroTag: 'mapAlignBtnTag',
+                heroTag: 'mapAlignBtnTagLandscape',
                 child: AlignMapIcon(
                   alignMapStatus: alignMap,
                 ),
@@ -305,7 +305,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                     break;
                 }
               },
-              heroTag: 'locationBtnTag',
+              heroTag: 'locationBtnTagLandscape',
               child: FollowingLocationIcon(
                 followLocationStatus: followLocationState,
               ),
@@ -318,7 +318,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
             bottom: 220,
             child: Builder(builder: (context) {
               return FloatingActionButton(
-                heroTag: 'mapCompassHeroTag',
+                heroTag: 'mapCompassHeroTagLandscape',
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 onPressed: () {
@@ -379,7 +379,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                     break;
                 }
               },
-              heroTag: 'locationBtnTagWeb',
+              heroTag: 'locationBtnTagLandscapeWeb',
               child: FollowingLocationIcon(
                 followLocationStatus: followLocationState,
               ),
@@ -403,7 +403,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                 var currentRoute = ref.watch(currentRouteProvider);
                 return currentRoute.when(data: (data) {
                   return FloatingActionButton(
-                      heroTag: 'barcodeBtnTag',
+                      heroTag: 'barcodeBtnTagLandscape',
                       backgroundColor: Colors.blue,
                       onPressed: () {
                         _showLiveMapLink(
@@ -433,7 +433,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
               var isTracking = ref.watch(isTrackingProvider);
               if (!isTracking) {
                 return FloatingActionButton(
-                  heroTag: 'viewerBtnTag',
+                  heroTag: 'viewerBtnTagLandscape',
                   onPressed: () async {
                     var res = await showCupertinoModalBottomSheet(
                         backgroundColor: CupertinoDynamicColor.resolve(
@@ -472,7 +472,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
               left: 5 * distanceOffset + leftOffset,
               bottom: bottomOffset,
               height: 40,
-              heroTag: 'messageBtnTag2',
+              heroTag: 'messageBtnTagLandscape',
               onPressed: () {
                 ref
                     .read(goRouterProvider)
@@ -493,7 +493,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
             bottom: bottomOffset,
             //same height as qrcode in web
             height: 40,
-            heroTag: 'resetBtnTag',
+            heroTag: 'resetBtnTagLandscape',
             //backgroundColor: Colors.blue,
             onPressed: () async {
               await LocationProvider().resetOdoMeterAndRoutePoints(context);
@@ -558,7 +558,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
               HiveSettingsDB.setAdaptiveThemeMode(AdaptiveThemeMode.light);
             }
           },
-          heroTag: 'darkLightTag',
+          heroTag: 'darkLightTagLandscape',
           child: CupertinoAdaptiveTheme.of(context).theme.brightness ==
                   Brightness.light
               ? const Icon(CupertinoIcons.moon)
@@ -579,7 +579,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
                 });
               },
               tooltip: 'Menu',
-              heroTag: 'showMenuTag',
+              heroTag: 'showMenuTagLandscape',
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
                 child: ref.watch(mapMenuVisibleProvider)

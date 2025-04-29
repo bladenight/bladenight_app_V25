@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_settings/app_configuration_helper.dart';
@@ -11,7 +10,6 @@ import '../helpers/hive_box/app_server_config_db.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger/logger.dart';
 import '../helpers/notification/notification_helper.dart';
-import '../helpers/preferences_helper.dart';
 import '../helpers/watch_communication_helper.dart';
 import '../main.dart';
 import '../models/event.dart';
@@ -102,8 +100,8 @@ class ActiveEventProvider with ChangeNotifier {
           return;
         }
 
-        var oldEventInPrefs = HiveSettingsDB.getActualEvent;
-        if (kIsWeb || oldEventInPrefs.compareTo(rpcEvent) != 0) {
+        var compareResult = _event.compareTo(rpcEvent);
+        if (kIsWeb || compareResult != 0) {
           if (rpcEvent.nodes == [] && rpcEvent.status != EventStatus.noevent) {
             //get route points if not delivered
             var rn = await RoutePoints.getActiveRoutePointsByNameWamp(
@@ -118,11 +116,12 @@ class ActiveEventProvider with ChangeNotifier {
           initOrUpdateSettingsHeadlessSettings();
           if ((DateTime.now().difference(lastUpdate)).inSeconds > 60) {
             //avoid multiple notifications on force update
-            if (!kIsWeb && _event.status != EventStatus.finished) {
-              NotificationHelper().updateNotifications(oldEventInPrefs, _event);
+            if (!kIsWeb && _event.status == EventStatus.cancelled) {
+              NotificationHelper().updateNotifications(_event);
             }
           }
         }
+        if (forceUpdate) notifyListeners();
         return; //avoid 2nd trigger
       }
     } catch (e) {
@@ -136,19 +135,17 @@ class ActiveEventProvider with ChangeNotifier {
   void initOrUpdateSettingsHeadlessSettings() async {
     try {
       if (!kDebugMode ||
-          !(HiveSettingsDB.isBladeGuard &&
-              HiveSettingsDB.onsiteGeoFencingActive)) {
+          !(HiveSettingsDB.isBladeGuard && HiveSettingsDB.geoFencingActive)) {
         return;
       }
       globalSharedPrefs = await SharedPreferences.getInstance();
-      PreferencesHelper.getImagesAndLinksPref();
       if (globalSharedPrefs != null && !kIsWeb) {
         var restApiLink = ServerConfigDb.restApiLinkBg;
         globalSharedPrefs?.setString(
             ServerConfigDb.restApiLinkKey, restApiLink);
-        var onSite = HiveSettingsDB.onsiteGeoFencingActive;
+        var geofenceActive = HiveSettingsDB.geoFencingActive;
         globalSharedPrefs?.setBool(
-            HiveSettingsDB.setOnsiteGeoFencingKey, onSite);
+            HiveSettingsDB.setOnsiteGeoFencingKey, geofenceActive);
         var mail = HiveSettingsDB.bladeguardEmail;
         globalSharedPrefs?.setString(HiveSettingsDB.bladeguardEmailKey, mail);
         var val = HiveSettingsDB.bladeguardBirthday;
@@ -160,8 +157,8 @@ class ActiveEventProvider with ChangeNotifier {
         globalSharedPrefs?.setString(HiveSettingsDB.oneSignalId, oneSignalId);
         globalSharedPrefs?.setBool(
             'eventConfirmed', event.status == EventStatus.confirmed);
-        globalSharedPrefs?.setString(
-            'nextEvent', ActiveEventProvider().event.toJson());
+        globalSharedPrefs?.setString(HiveSettingsDB.actualEventStringKey,
+            ActiveEventProvider().event.toJson());
       }
     } catch (_) {}
   }
