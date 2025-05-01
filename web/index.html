@@ -1,45 +1,24 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <!--
-      If you are serving your web app in a path other than the root, change the
-      href value below to reflect the base path you are serving from.
-      The path provided below has to start and end with a slash "/" in order for
-      it to work correctly.
-      For more details:
-      * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-      This is a placeholder for base href that will be replaced by the value of
-      the `--base-href` argument provided to `flutter build`.
-    -->
-    <base href="$FLUTTER_BASE_HREF">
-
+    <base href="/">
     <meta charset="UTF-8">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-    <meta content="BladeNight App." name="description">
+    <meta content="BladeNight WebApp" name="description">
 
     <!-- iOS meta tags & icons -->
     <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="bladenightappflutter" name="apple-mobile-web-app-title">
-
-    <script crossorigin="anonymous" src="https://cdn.zipy.ai/sdk/v1.0/zipy.min.umd.js"></script>
-    <script> window.zipy && window.zipy.init('9fd5846f');</script>
-    <link href="icons/android-chrome-192x192.png" rel="apple-touch-icon">
+    <link href="images/icons/android-chrome-192x192.png" rel="apple-touch-icon">
 
     <!-- Favicon -->
     <link href="favicon.ico" rel="icon" type="image/x-icon"/>
 
-    <title>Bladenight München Karte</title>
+    <title>BladeNight München Live Karte</title>
     <link href="manifest.json" rel="manifest">
     <script defer src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"></script>
-    <script>
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(function (OneSignal) {
-            OneSignal.init({
-                appId: "355f1e66-9d60-4558-88a9-b74875b5ce35",
-            });
-        });
-    </script>
     <link href="loading/style.css" rel="stylesheet" type="text/css">
     <!-- Custom CSS styling for the loading spinner -->
     <style>
@@ -79,6 +58,7 @@
 </head>
 <body>
 <div class='onesignal-customlink-container' style="z-index:99999999;"></div>
+<input id="osUserID" type="hidden" value="ERR"/>
 <div class="container" id="loadingContainer">
     <div class="row">
         <img alt="Logo1" src="images/2025_Bladenight_Logo_Skm.jpg"></img>
@@ -91,14 +71,24 @@
         <div id="progressBarText" style="color: #EEEEEE">Lade...</div>
     </div>
 </div>
+<script async src="flutter_bootstrap.js"></script>
 <script>
-    OneSignalDeferred.push(function (OneSignal) {
-        OneSignal.init({
+    let oneSignal = undefined;
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async function (OneSignal) {
+
+        oneSignal = OneSignal;
+        await OneSignal.init({
             appId: "3c72b3fa-515e-4ca4-93a5-98201c8bee5c",
+            notifyButton: {
+                enable: true
+            }
+
         });
+        //https://documentation.onesignal.com/docs/web-sdk-reference
+        OneSignal.Slidedown.promptPush();
     });
 
 </script>
-<script async src="flutter_bootstrap.js"></script>
 </body>
 </html>
