@@ -264,25 +264,23 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ]),
                   const SettingsInvisibleOfflineWidget(),
                   GestureDetector(
-                    onDoubleTap: () {
+                    onTertiaryLongPress: () {
                       if (kIsWeb) return;
                       setState(() {
-                        _openInvisibleSettings = !_openInvisibleSettings;
+                        _openInvisibleSettings = true;
                       });
                     },
                     onLongPress: () {
                       if (kIsWeb) return;
                       setState(() {
-                        _openInvisibleSettings = !_openInvisibleSettings;
+                        _openInvisibleSettings = true;
                       });
                     },
                     child: Column(
                       children: [
                         const AppIdWidget(),
-                        if ((networkConnected.connectivityStatus ==
-                                    ConnectivityStatus.wampConnected ||
-                                networkConnected.connectivityStatus ==
-                                    ConnectivityStatus.wampNotConnected) &&
+                        if (networkConnected.connectivityStatus !=
+                                ConnectivityStatus.internetOffline &&
                             !kIsWeb)
                           CupertinoFormSection(
                             header: Text(Localize.of(context)

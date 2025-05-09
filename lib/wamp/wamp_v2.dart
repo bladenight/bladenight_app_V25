@@ -279,6 +279,8 @@ class WampV2 {
         return;
       }
 
+      if (_wampStopped) return;
+
       var diffWampLastLifeSign =
           DateTime.now().difference(_lastWampStreamLifeSign);
       if (diffWampLastLifeSign.inMinutes > 2) {
@@ -290,7 +292,6 @@ class WampV2 {
       }
 
       if (_wampConnectionState != WampConnectionState.connected &&
-          !_wampStopped &&
           LocationProvider().isInBackground &&
           LocationProvider().trackingType != TrackingType.onlyTracking) {
         BnLog.debug(text: 'initWamp by _connLoop');

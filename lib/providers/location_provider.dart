@@ -334,7 +334,7 @@ class LocationProvider with ChangeNotifier {
     try {
       if (_state != null) return _state;
       bg.BackgroundGeolocation.onLocation(_onLocation, _onLocationError);
-      bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
+      //bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
       bg.BackgroundGeolocation.onActivityChange(_onActivityChange);
       bg.BackgroundGeolocation.onHeartbeat(_onHeartBeat);
       bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
@@ -634,19 +634,11 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  void _onMotionChange(bg.Location location) {
-    BnLog.verbose(
-        text: '_onMotionChange ${location.coords} ${location.battery.level}% ');
-    _isMoving = location.isMoving;
+  void _onActivityChange(bg.ActivityChangeEvent event) {
+    _isMoving = event.activity != 'still';
     if (!_isInBackground) {
       notifyListeners();
     }
-    //sendLocation(location); //dont send!!
-  }
-
-  void _onActivityChange(bg.ActivityChangeEvent event) {
-    BnLog.verbose(text: '_onActivityChangeEvent ${event.activity}');
-    //_subToUpdates();
   }
 
   void _onHeartBeat(bg.HeartbeatEvent event) {

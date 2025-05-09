@@ -11,9 +11,7 @@ class SettingsInvisibleOfflineWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var connectionStatus = ref.watch(networkAwareProvider).connectivityStatus;
-    if (connectionStatus == ConnectivityStatus.wampConnected) {
-      return Container();
-    } else {
+    if (connectionStatus == ConnectivityStatus.internetOffline) {
       return AlertAnimated(
         child: Text(
           Localize.of(context).someSettingsNotAvailableBecauseOffline,
@@ -22,6 +20,8 @@ class SettingsInvisibleOfflineWidget extends ConsumerWidget {
               color: CupertinoColors.white, fontWeight: FontWeight.bold),
         ),
       );
+    } else {
+      return Container();
     }
   }
 }
