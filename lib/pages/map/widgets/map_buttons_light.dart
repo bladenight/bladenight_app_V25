@@ -174,7 +174,7 @@ class _MapButtonsLayerLightOverlay extends ConsumerState<MapButtonsLayerLight>
               });
             },
             tooltip: 'Menu',
-            heroTag: 'showMenuTag',
+            heroTag: 'showMenuTagL1',
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 500),
               child: ref.watch(mapMenuVisibleProvider)

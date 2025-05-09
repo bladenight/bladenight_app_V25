@@ -143,7 +143,7 @@ class _HomePageState extends ConsumerState<HomePage>
                       messageProvider.readMessagesCount > 0)
                   ? Colors.black
                   : null,
-              heroTag: 'msgActionBtn',
+              heroTag: 'msgActionBtnH1',
               onPressed: () async {
                 context.pushNamed(AppRoute.messagesPage.name);
               },

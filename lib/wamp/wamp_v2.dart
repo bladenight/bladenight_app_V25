@@ -10,12 +10,14 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../app_settings/app_configuration_helper.dart';
 import '../app_settings/server_connections.dart';
+import '../helpers/enums/tracking_type.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger/logger.dart';
 import '../helpers/wamp/message_types.dart';
 import '../models/event.dart';
 import '../models/realtime_update.dart';
 import '../models/shake_hand_result.dart';
+import '../providers/location_provider.dart';
 import 'bn_wamp_message.dart';
 import 'http_overrides.dart';
 import 'wamp_exception.dart';
@@ -48,6 +50,7 @@ class WampV2 {
   }
 
   var _busyTimeStamp = DateTime.now();
+  StreamSubscription<dynamic>? _channelStreamLister;
   var _lock = Lock();
   WebSocketChannel? _channel; //initialize a websocket channel
   static bool _hadShakeHands = false;
@@ -120,7 +123,7 @@ class WampV2 {
     } on TimeoutException catch (_) {
       BnLog.verbose(text: 'Timeout _startStream');
     } catch (ex) {
-      BnLog.verbose(text: 'InitWamp error:$e ex:${ex.toString()}');
+      BnLog.error(text: 'InitWamp error:$e ex:${ex.toString()}');
     } finally {
       if (_wampConnectionState != WampConnectionState.connected) {
         //_wampConnectionState = WampConnectionState.failed;
@@ -130,17 +133,17 @@ class WampV2 {
     if (startResult == false) {
       return _wampConnectionState;
     }
-    BnLog.verbose(
-        text: 'Wamp start result $startResult',
-        methodName: '_initWamp',
-        className: toString());
     if (kIsWeb) {
       _hadShakeHands = true;
       return startResult == true
           ? WampConnectionState.connected
           : WampConnectionState.failed;
     }
-    _shakeHands();
+    await _shakeHands();
+    BnLog.verbose(
+        text: 'Wamp start result $startResult',
+        methodName: '_initWamp',
+        className: toString());
     return startResult == true
         ? WampConnectionState.connected
         : WampConnectionState.failed;
@@ -193,55 +196,63 @@ class WampV2 {
     if (_startShakeHands == true) {
       return;
     }
-    shakeHandsLock
-        .synchronized(() async {
-          if (_hadShakeHands == false) {
-            _startShakeHands = true;
-            var shkRes = await ShakeHandResult.shakeHandsWamp();
-            _startShakeHands = false;
+    try {
+      shakeHandsLock
+          .synchronized(() async {
+            if (_hadShakeHands == false) {
+              _startShakeHands = true;
+              var shkRes = await ShakeHandResult.shakeHandsWamp();
+              _startShakeHands = false;
 
-            if (shkRes.rpcException != null) {
-              _startShakeHandsRetryCounter++;
-              BnLog.verbose(
-                  text: 'shakeHands failed retry$_startShakeHandsRetryCounter',
-                  methodName: '_shakeHands',
-                  className: toString());
-              if (_startShakeHandsRetryCounter <= 3) {
-                await Future.delayed(const Duration(seconds: 3));
+              if (shkRes.rpcException != null) {
+                _startShakeHandsRetryCounter++;
                 BnLog.verbose(
                     text:
                         'shakeHands failed retry$_startShakeHandsRetryCounter',
                     methodName: '_shakeHands',
                     className: toString());
+                if (_startShakeHandsRetryCounter <= 3) {
+                  await Future.delayed(const Duration(seconds: 3));
+                  BnLog.verbose(
+                      text:
+                          'shakeHands failed retry$_startShakeHandsRetryCounter',
+                      methodName: '_shakeHands',
+                      className: toString());
 
-                _shakeHands();
+                  _shakeHands();
+                } else {
+                  BnLog.warning(
+                      text:
+                          'shakeHands failed after 3 attempts ${shkRes.rpcException}  wait 15 secs',
+                      methodName: '_shakeHands',
+                      className: toString());
+                  _startShakeHandsRetryCounter = 0;
+                }
+                return;
               } else {
-                BnLog.warning(
+                BnLog.info(
                     text:
-                        'shakeHands failed after 3 attempts ${shkRes.rpcException}  wait 15 secs',
+                        'shakeHands = ${shkRes.status}, minBuild:${shkRes.minBuild}',
                     methodName: '_shakeHands',
                     className: toString());
                 _startShakeHandsRetryCounter = 0;
+                _hadShakeHands = true;
+                shakeHandAppOutdatedResult = shkRes;
+                HiveSettingsDB.setAppOutDated(!shkRes.status);
+                HiveSettingsDB.setServerVersion(shkRes.serverVersion);
               }
-              return;
-            } else {
-              BnLog.info(
-                  text:
-                      'shakeHands = ${shkRes.status}, minBuild:${shkRes.minBuild}',
-                  methodName: '_shakeHands',
-                  className: toString());
-              _startShakeHandsRetryCounter = 0;
-              _hadShakeHands = true;
-              shakeHandAppOutdatedResult = shkRes;
-              HiveSettingsDB.setAppOutDated(!shkRes.status);
-              HiveSettingsDB.setServerVersion(shkRes.serverVersion);
             }
-          }
-        })
-        .timeout(Duration(seconds: 5))
-        .catchError((error) {
-          BnLog.warning(text: 'Shakehands not successfully $error');
-        });
+          })
+          .timeout(Duration(seconds: 5))
+          .catchError((error) {
+            BnLog.warning(text: 'Shakehands not successfully $error');
+          });
+    } catch (ex) {
+      BnLog.error(
+          text: 'Wamp shakehands error $ex',
+          methodName: '_shakehands',
+          className: toString());
+    }
   }
 
   ///called from App and put to queue
@@ -279,7 +290,9 @@ class WampV2 {
       }
 
       if (_wampConnectionState != WampConnectionState.connected &&
-          !_wampStopped) {
+          !_wampStopped &&
+          LocationProvider().isInBackground &&
+          LocationProvider().trackingType != TrackingType.onlyTracking) {
         BnLog.debug(text: 'initWamp by _connLoop');
         await _connectToWamp();
       }
@@ -378,11 +391,28 @@ class WampV2 {
         HttpOverrides.global = MyHttpOverrides();
       }
       final url = _getLink().replaceAll('\r', '').replaceAll('\n', '');
-      _channel = WebSocketChannel.connect(
+
+      var channel = WebSocketChannel.connect(
         Uri.parse(url), //connect to a websocket
       );
+
+      try {
+        await channel.ready;
+        _channel = channel;
+      } on SocketException catch (e) {
+        _channel = null;
+        _wampConnectionState = WampConnectionState.failed;
+        BnLog.error(text: 'error SocketException $e', exception: e);
+        return false;
+      } on WebSocketChannelException catch (e) {
+        _channel = null;
+        _wampConnectionState = WampConnectionState.failed;
+        BnLog.error(
+            text: 'error WebsocketChannel start stream $e', exception: e);
+        return false;
+      }
       var welcomeCompleter = Completer();
-      _channel!.stream.listen(
+      _channelStreamLister = _channel!.stream.listen(
         (event) async {
           _lastWampStreamLifeSign = DateTime.now();
           var wampMessage = json.decode(event) as List;
@@ -547,7 +577,7 @@ class WampV2 {
                 text: 'WampStream error ${err.toString()} restart Stream',
                 methodName: 'startStream',
                 className: toString());
-            _startStream();
+            // _startStream(); perhaps memory leak
           } else {
             BnLog.verbose(
                 text: 'WampStream error ${err.toString()} too many fails',
@@ -577,10 +607,12 @@ class WampV2 {
     return true;
   }
 
-  void _closeStream() {
+  void _closeStream() async {
     //disposes of the stream
+    await _channelStreamLister?.cancel();
+    _channelStreamLister = null;
     if (_channel != null) {
-      _channel!.sink.close();
+      await _channel!.sink.close();
       _channel = null;
     }
   }

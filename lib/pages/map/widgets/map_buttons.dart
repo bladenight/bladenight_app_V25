@@ -175,7 +175,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     : isTracking
                         ? CupertinoColors.systemRed
                         : CupertinoColors.activeGreen,
-                heroTag: 'startStopTrackingBtnTag',
+                heroTag: 'startStopTrackingBtnTagMB1',
                 child: Builder(builder: (context) {
                   var trackingType = ref.watch(trackingTypeProvider);
                   switch (trackingType) {
@@ -240,7 +240,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                       break;
                   }
                 },
-                heroTag: 'mapAlignBtnTag',
+                heroTag: 'mapAlignBtnTagMb1',
                 child: AlignMapIcon(
                   alignMapStatus: alignMap,
                 ),
@@ -298,7 +298,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                     break;
                 }
               },
-              heroTag: 'locationBtnTag',
+              heroTag: 'locationBtnTagMb1',
               child: FollowingLocationIcon(
                 followLocationStatus: followLocationState,
               ),
@@ -311,7 +311,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
             bottom: 220,
             child: Builder(builder: (context) {
               return FloatingActionButton(
-                heroTag: 'mapCompassHeroTag',
+                heroTag: 'mapCompassHeroTagMb1',
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 onPressed: () {
@@ -345,7 +345,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   var currentRoute = ref.watch(currentRouteProvider);
                   return currentRoute.when(data: (data) {
                     return FloatingActionButton(
-                        heroTag: 'barcodeBtnTagMapBtn',
+                        heroTag: 'barcodeBtnTagMapBtnMb1',
                         backgroundColor: Colors.blue,
                         onPressed: () {
                           _showLiveMapLink(
@@ -417,7 +417,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
               child: Builder(builder: (context) {
                 var messageProvider = ref.watch(messagesLogicProvider);
                 return FloatingActionButton(
-                    heroTag: 'messageBtnTag',
+                    heroTag: 'messageBtnTagMb1',
                     onPressed: () async {
                       ref
                           .read(goRouterProvider)
@@ -522,7 +522,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                   });
                 },
                 tooltip: 'Menu',
-                heroTag: 'showMenuTagMapBtn',
+                heroTag: 'showMenuTagMapBtnMb1',
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 500),
                   child: ref.watch(mapMenuVisibleProvider)

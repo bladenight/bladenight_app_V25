@@ -807,6 +807,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Pour augmenter la vitesse de rendu sur les appareils lents, vous pouvez augmenter/diminuer la quantité de polylignes dessinées (points d\'itinéraire) sur la carte avant de simplifier.",
     ),
     "polyLinesAmountHeader": MessageLookupByLibrary.simpleMessage("Nombre"),
+    "polyLinesTolerance": MessageLookupByLibrary.simpleMessage(
+      "To increase rendering speed on slow devices you can increase/decrease the tolerance of drawn polylines (routepoints) on map.",
+    ),
+    "polyLinesToleranceHeader": MessageLookupByLibrary.simpleMessage(
+      "tolerance",
+    ),
     "position": MessageLookupByLibrary.simpleMessage("Position"),
     "positiveInFront": MessageLookupByLibrary.simpleMessage(
       "Positif si je suis devant, négatif si je suis derrière",

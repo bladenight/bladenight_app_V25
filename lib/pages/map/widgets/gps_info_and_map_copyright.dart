@@ -145,6 +145,7 @@ class _GPSInfoAndMapCopyright extends ConsumerState<GPSInfoAndMapCopyright>
                                                   ? Colors.green
                                                   : Colors.yellow,
                                           child: FloatingActionButton.extended(
+                                            heroTag: 'gpsInfoTagGPS1',
                                             backgroundColor: ref
                                                     .watch(isTrackingProvider)
                                                 ? alwaysPermissionGranted

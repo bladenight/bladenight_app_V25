@@ -29,6 +29,8 @@ import '../helpers/device_info_helper.dart';
 import '../helpers/distance_converter.dart';
 import '../helpers/double_helper.dart';
 import '../helpers/enums/tracking_type.dart';
+import '../helpers/geolocation/simplify_list_lat_lng.dart';
+import '../helpers/geolocation/simplify_user_gpx_points_list.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location2_to_bglocation.dart';
 import '../helpers/location_permission_dialogs.dart';
@@ -97,6 +99,8 @@ class LocationProvider with ChangeNotifier {
   bool _autoTrackingStarted = false;
   String _lastRouteName = '';
   EventStatus? _eventState;
+
+  bool get isInBackground => _isInBackground;
 
   EventStatus? get eventState => _eventState;
 
@@ -238,7 +242,6 @@ class LocationProvider with ChangeNotifier {
 
   static bool _showOwnTrack = false;
   static bool _showOwnColoredTrack = false;
-  static int _polylineTrackPointsAmount = 300;
 
   @override
   void dispose() {
@@ -336,7 +339,7 @@ class LocationProvider with ChangeNotifier {
       bg.BackgroundGeolocation.onActivityChange(_onActivityChange);
       bg.BackgroundGeolocation.onHeartbeat(_onHeartBeat);
       bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
-      bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
+      //bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
       //bg.BackgroundGeolocation.onGeofence(_onGeoFenceEvent);
 
       var isMotionDetectionDisabled = HiveSettingsDB.isMotionDetectionDisabled;
@@ -473,25 +476,9 @@ class LocationProvider with ChangeNotifier {
     _realUserSpeedKmh = _realUserSpeedKmh!.toShortenedDouble(2);
     _odometer = location.odometer / 1000;
 
-    if (_lastKnownPoint != null) {
-      var headingDiff =
-          (_lastKnownPoint!.coords.heading - location.coords.heading).abs();
-
-      if (userLatLngList.isNotEmpty && headingDiff < 1) {
-        //update last track point
-        userLatLngList.removeLast();
-        _userLatLngList.add(LatLng(
-            location.coords.latitude.toShortenedDouble(8),
-            location.coords.longitude.toShortenedDouble(8)));
-
-        notifyListeners();
-        return;
-      }
-    } else {
-      _userLatLngList
-          .add(LatLng(location.coords.latitude, location.coords.longitude));
-      _lastKnownPoint = location;
-    }
+    _userLatLngList
+        .add(LatLng(location.coords.latitude, location.coords.longitude));
+    _lastKnownPoint = location;
 
     if (MapSettings.showOwnTrack) {
       var userTrackingPoint = UserGpxPoint(
@@ -526,34 +513,28 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
+  //init 0 then 0 plus 1
+  //if 0 recalculate
+  static int rerenderTrackCount = -1;
+
   Future<bool> updateUserLocationTrack(bg.Location location) {
     return Future.microtask(() {
-      int maxSize = _polylineTrackPointsAmount;
-      if (_showOwnTrack && !_showOwnColoredTrack) {
-        if (_userGpxPoints.length > maxSize) {
-          var smallTrackPointList = <LatLng>[];
-          var divider = _userGpxPoints.length ~/ maxSize;
+      rerenderTrackCount++;
+      if (rerenderTrackCount >= 30) {
+        var simplifyUserGpxPoints =
+            simplifyUserGpxPointList(_userGpxPoints, tolerance: 0.2 / 10000);
+        _userGpxPoints.clear();
+        _userGpxPoints.addAll(simplifyUserGpxPoints);
+        rerenderTrackCount = 0;
+      }
+      if (!_showOwnTrack) return true;
 
-          for (var counter = 0; counter < _userGpxPoints.length - divider;) {
-            smallTrackPointList.add(LatLng(_userGpxPoints[counter].latitude,
-                _userGpxPoints[counter].longitude));
-            counter = counter + divider.toInt();
-          }
-          //avoid jumping of tracking if list is large
-          //var lastUserGpxPoints = _userGpxPoints.last;
-          var last5 = _userGpxPoints.reversed.take(5).toList();
-          for (var i = last5.length - 1; i < 0; i--) {
-            smallTrackPointList
-                .add(LatLng(last5[i].latitude, last5[i].longitude));
-          }
-          _userLatLngList.clear();
-          _userLatLngList.addAll(smallTrackPointList);
-          last5.clear();
-        } else {
-          _userLatLngList
-              .add(LatLng(location.coords.latitude, location.coords.longitude));
-        }
-      } else if (_showOwnTrack && _showOwnColoredTrack) {
+      if (!_showOwnColoredTrack && rerenderTrackCount == 0) {
+        _userLatLngList.clear();
+        _userLatLngList.addAll(_userGpxPoints.toLatLngList);
+      }
+
+      if (_showOwnColoredTrack) {
         if (_userSpeedPoints.latLngList.isEmpty) {
           //first point
           UserSpeedPoint userSpeedPoint = UserSpeedPoint(
@@ -564,12 +545,11 @@ class LocationProvider with ChangeNotifier {
                 location.coords.longitude.toShortenedDouble(6)),
           );
           _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
-        } else if (_userGpxPoints.length > maxSize) {
+        } else if (rerenderTrackCount == 0) {
           //decrease numbers of poly lines
           var smallTrackPointList = UserSpeedPoints([]);
-          var divider = _userGpxPoints.length ~/ maxSize;
           LatLng? lastLatLng;
-          for (var counter = 0; counter < _userGpxPoints.length - divider;) {
+          for (var counter = 0; counter < _userGpxPoints.length; counter++) {
             if (counter == 0) {
               //no followed polylinePoint first line has same endpoint
               smallTrackPointList.add(
@@ -586,19 +566,17 @@ class LocationProvider with ChangeNotifier {
                   lastLatLng!);
               lastLatLng = _userGpxPoints[counter].latLng;
             }
-            counter = counter + divider.toInt();
-          }
-          //avoid jumping of tracking if list is large
-          //changed to add only last single point to list
-          var last5 = _userGpxPoints.reversed.take(6).toList();
-          for (var i = last5.length - 2; i < 0; i--) {
-            smallTrackPointList.add(last5[i].latitude, last5[i].longitude,
-                last5[i].realSpeedKmh, last5[i + 1].latLng);
           }
           _userSpeedPoints.clear();
           _userSpeedPoints.userSpeedPoints
               .addAll(smallTrackPointList.userSpeedPoints);
-          last5.clear();
+          UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+            location.coords.latitude,
+            location.coords.longitude,
+            _realUserSpeedKmh!,
+            _userSpeedPoints.lastSpeedPointLatLng,
+          );
+          _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
         } else {
           UserSpeedPoint userSpeedPoint = UserSpeedPoint(
             location.coords.latitude,
@@ -609,8 +587,10 @@ class LocationProvider with ChangeNotifier {
           _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
         }
       }
-      notifyListeners();
-      return Future.value(true);
+      if (!_isInBackground) {
+        notifyListeners();
+      }
+      return true;
     });
   }
 
@@ -641,7 +621,9 @@ class LocationProvider with ChangeNotifier {
           }
         }
       }
-      notifyListeners();
+      if (!_isInBackground) {
+        notifyListeners();
+      }
     });
   }
 
@@ -670,11 +652,6 @@ class LocationProvider with ChangeNotifier {
   void _onHeartBeat(bg.HeartbeatEvent event) {
     BnLog.verbose(text: '_onHeartbeatEvent  ${event.location}');
     _getHeartBeatLocation();
-  }
-
-  _onConnectivityChange(bg.ConnectivityChangeEvent event) {
-    BnLog.verbose(text: '_onConnectivityChange  $event');
-    //_networkConnected = event.connected;
   }
 
   void _getHeartBeatLocation() async {
@@ -718,7 +695,9 @@ class LocationProvider with ChangeNotifier {
             bg.Config(disableLocationAuthorizationAlert: true));
         break;
     }
-    notifyListeners();
+    if (!_isInBackground) {
+      notifyListeners();
+    }
   }
 
   //called by geolocator and bg id gps disabled / enabled crash sometimes
@@ -933,10 +912,9 @@ class LocationProvider with ChangeNotifier {
   /// Returns false if no location-permissions given or fails
   Future<bool> startTracking(TrackingType trackingType) async {
     try {
+      var context = rootNavigatorKey.currentContext!;
       _showOwnTrack = MapSettings.showOwnTrack;
       _showOwnColoredTrack = MapSettings.showOwnColoredTrack;
-      _polylineTrackPointsAmount = MapSettings.polylineTrackPointsAmount;
-      var context = rootNavigatorKey.currentContext!;
       _trackWaitStatus = TrackWaitStatus.starting;
       notifyListeners();
 

@@ -562,6 +562,8 @@
   "enableAlwaysLocationGeofenceText": "Pour la connexion automatique sur place, le partage de site devrait être réglé sur toujours. Faut-il ouvrir les paramètres système ?",
   "polyLinesAmountHeader": "Nombre",
   "polyLinesAmount": "Pour augmenter la vitesse de rendu sur les appareils lents, vous pouvez augmenter/diminuer la quantité de polylignes dessinées (points d'itinéraire) sur la carte avant de simplifier.",
+  "polyLinesToleranceHeader": "tolerance",
+  "polyLinesTolerance": "To increase rendering speed on slow devices you can increase/decrease the tolerance of drawn polylines (routepoints) on map.",
   "scanCodeForFriend": "Votre ami ({friendName}) peut également prendre une photo de ce code-barres et ajouter le nom {myName} et {code} à BladeNightApp si l'application est installée.",
   "bladenightInfoTitleWeb": "WebApp et informations sur",
   "bladenightInfoTitleApp": "Bladenight et informations sur",

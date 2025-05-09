@@ -22,6 +22,7 @@ import '../../helpers/preferences_helper.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/is_tracking_provider.dart';
+import '../../providers/location_provider.dart';
 import '../../providers/map/map_settings_provider.dart';
 import '../../providers/network_connection_provider.dart';
 import '../../wamp/wamp_v2.dart';
@@ -60,6 +61,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   Widget build(BuildContext context) {
     var networkConnected = ref.watch(networkAwareProvider);
     var adminPass = ref.watch(adminPwdSetProvider);
+    var polygonTolerance = MapSettings.simplifyTolerance;
+    var ok = MapSettings.simplifyTolerance >= MapSettings.minTolerance;
+    var ok2 = MapSettings.simplifyTolerance <= MapSettings.maxTolerance;
     return CupertinoPageScaffold(
       child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -404,9 +408,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 ),
                               ),
                             ]),
-                        CupertinoFormSection(
-                            header: Text(Localize.of(context).polyLinesAmount),
-                            children: <Widget>[
+
+                        /*
+    <Widget>[
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 20, right: 20),
@@ -414,7 +418,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                     descriptionLeft: Localize.of(context)
                                         .polyLinesAmountHeader,
                                     descriptionRight: '',
-                                    rightWidget: GestureDetector(
+                                    rightWidget: Slider(value: value, onChanged: onChanged)  GestureDetector(
                                       onTap: () async {
                                         var result =
                                             await InputNumberDialog.show(
@@ -436,7 +440,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           .toString()),
                                     )),
                               ),
-                            ]),
+                            ]),*/
                         if (Platform.isAndroid)
                           CupertinoFormSection(
                               header: Text(Localize.of(context)
@@ -630,6 +634,46 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                       ),
                                     ),
                                   ]),*/
+
+                              CupertinoFormSection(
+                                  header: Text(
+                                      Localize.of(context).polyLinesTolerance),
+                                  children: <Widget>[
+                                    Text(
+                                        '${Localize.of(context).polyLinesToleranceHeader} ${MapSettings.simplifyTolerance.toStringAsFixed(2)}'),
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          CupertinoSlider(
+                                            key: const Key(
+                                                'sliderPolygonTolerance'),
+                                            value: polygonTolerance,
+                                            min: MapSettings.minTolerance,
+                                            max: MapSettings.maxTolerance,
+                                            activeColor:
+                                                CupertinoTheme.of(context)
+                                                    .primaryColor,
+                                            thumbColor:
+                                                CupertinoTheme.of(context)
+                                                    .primaryContrastingColor,
+                                            onChanged: (double value) {
+                                              MapSettings.setSimplifyTolerance(
+                                                  value);
+                                              setState(() {
+                                                polygonTolerance = value;
+                                              });
+                                            },
+                                            onChangeEnd: ((val) => MapSettings
+                                                .setSimplifyTolerance(val)),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Center(
+                                            child: Text(
+                                                '${LocationProvider().userGpxPoints.length.toStringAsFixed(0)} pt'),
+                                          ),
+                                        ]),
+                                  ]),
                               CupertinoFormSection(
                                   header:
                                       Text(Localize.of(context).openStreetMap),

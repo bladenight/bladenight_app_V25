@@ -37,7 +37,7 @@ class NetworkStateModel {
 }
 
 class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
-  late final AppLifecycleListener? _listener;
+  late final AppLifecycleListener? _appLifecycleListener;
   bool isInBackground = false;
 
   static const _initialNetworkState =
@@ -79,27 +79,30 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
 
   init() {
     //see https://github.com/OutdatedGuy/internet_connection_checker_plus?tab=readme-ov-file
-    _listener = AppLifecycleListener(
+    _appLifecycleListener = AppLifecycleListener(
       onResume: () {
         _icCheckerSubscription?.resume;
+        _isServerConnectedSubscription?.resume;
         _checkStatus(null);
         isInBackground = false;
         BnLog.verbose(text: 'network_connection_provider is not in background');
       },
       onHide: () {
         _icCheckerSubscription?.pause;
+        _isServerConnectedSubscription?.pause;
         isInBackground = true;
         BnLog.verbose(text: 'set network_connection_provider to background');
       },
       onPause: () {
         _icCheckerSubscription?.pause;
+        _isServerConnectedSubscription?.pause;
         isInBackground = true;
         BnLog.verbose(text: 'set network_connection_provider to background');
       },
     );
     _icCheckerSubscription =
         _internetConnection.onStatusChange.listen((InternetStatus status) {
-      BnLog.verbose(
+      BnLog.critical(
           text:
               '${DateTime.now().toIso8601String()} Internet connection status change: {$status}',
           methodName: 'Internet connection listener',
@@ -133,14 +136,15 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   void dispose() {
     _icCheckerSubscription?.cancel();
     _isServerConnectedSubscription?.cancel();
-    _listener?.dispose();
+    _appLifecycleListener?.dispose();
     _isServerConnectedSubscription = null;
     _icCheckerSubscription = null;
-    _listener = null;
+    _appLifecycleListener = null;
     super.dispose();
   }
 
   void _checkStatus(ConnectivityStatus? result) async {
+    if (isInBackground) return;
     if (result != null && result == ConnectivityStatus.wampConnected) {
       setStateIfChanged(ConnectivityStatus.wampConnected);
       _connectionStreamController.sink.add(ConnectivityStatus.wampConnected);
@@ -185,7 +189,8 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   void setStateIfChanged(ConnectivityStatus connectivityStatus) {
     if (state.connectivityStatus != connectivityStatus) {
       BnLog.verbose(
-          text: 'Network state changed from $state to $connectivityStatus',
+          text:
+              'Network state changed from $state to $connectivityStatus is in bg $isInBackground',
           methodName: 'setStateIfChanged',
           className: toString());
       state = NetworkStateModel(connectivityStatus: connectivityStatus);

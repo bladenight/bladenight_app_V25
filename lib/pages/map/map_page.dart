@@ -8,6 +8,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:talker/talker.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
@@ -154,6 +155,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     accuracy: 1.0
                 ),
               ),*/
+
                     const GPSInfoAndMapCopyright(),
                     const HeadingsLayer(),
                     //SpecialPointsLayer(_popupController), //crashes with global key multi usage on open Popup
@@ -174,6 +176,17 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     if (MediaQuery.orientationOf(context) ==
                         Orientation.landscape)
                       MapButtonsLandscapeLayer(),
+                    if (HiveSettingsDB.loggerLogLevel == LogLevel.verbose)
+                      Column(
+                        children: [
+                          Text(
+                              'GPX ${ref.read(locationProvider.notifier).userGpxPoints.length}'),
+                          Text(
+                              'userlttlong ${ref.read(locationProvider.notifier).userLatLngList.length}'),
+                          Text(
+                              'speedpnts ${ref.read(locationProvider.notifier).userSpeedPoints.userSpeedPoints.length}'),
+                        ],
+                      ),
                   ],
                 );
               }),

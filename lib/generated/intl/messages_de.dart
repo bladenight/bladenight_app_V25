@@ -789,6 +789,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Auf manchen Geräten führt eine hohe Anzahl an eigenen Routenpunkten dazu das die Karte sehr langsam wird. Empfehlung 200-2000 Einzellinien der Route. Die Fahrlinie wird bei überschreiten der Anzahl Punkte reduziert.",
     ),
     "polyLinesAmountHeader": MessageLookupByLibrary.simpleMessage("Anzahl"),
+    "polyLinesTolerance": MessageLookupByLibrary.simpleMessage(
+      "Auf manchen Geräten führt eine hohe Anzahl an eigenen Routenpunkten dazu das die Karte sehr langsam wird. Die Fahrlinie wird reduziert hier kann man die Toleranz.",
+    ),
+    "polyLinesToleranceHeader": MessageLookupByLibrary.simpleMessage(
+      "Toleranz",
+    ),
     "position": MessageLookupByLibrary.simpleMessage("Position"),
     "positiveInFront": MessageLookupByLibrary.simpleMessage(
       "Positiv vor mir, Negativ hinter mir.",

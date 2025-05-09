@@ -309,4 +309,35 @@ extension MapSettings on HiveSettingsDB {
   static void setPolylineTrackPointsAmount(int val) {
     HiveSettingsDB._hiveBox.put(_polylineTrackPointsAmountKey, val);
   }
+
+  static const String _simplifyToleranceKey = 'simplifyTolerancePrefKey';
+
+  ///get simplifyTolerance level for online map
+  static double get simplifyTolerance {
+    var val =
+        HiveSettingsDB._hiveBox.get(_simplifyToleranceKey, defaultValue: 0.2);
+    if (val < minTolerance) {
+      return minTolerance;
+    }
+    if (val > maxTolerance) {
+      return maxTolerance;
+    }
+    return val;
+  }
+
+  ///set simplifyTolerance for online for drawn poly lines while tracking
+  static void setSimplifyTolerance(double val) {
+    if (val < minTolerance) {
+      HiveSettingsDB._hiveBox.put(_simplifyToleranceKey, minTolerance);
+      return;
+    }
+    if (val > maxTolerance) {
+      HiveSettingsDB._hiveBox.put(_simplifyToleranceKey, maxTolerance);
+      return;
+    }
+    HiveSettingsDB._hiveBox.put(_simplifyToleranceKey, val);
+  }
+
+  static double minTolerance = 0.05;
+  static double maxTolerance = 0.8;
 }

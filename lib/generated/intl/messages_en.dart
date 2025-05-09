@@ -762,6 +762,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "To increase rendering speed on slow devices you can increase/decrease the amount of drawn polylines (routepoints) on map before simplifying.",
     ),
     "polyLinesAmountHeader": MessageLookupByLibrary.simpleMessage("Amount"),
+    "polyLinesTolerance": MessageLookupByLibrary.simpleMessage(
+      "To increase rendering speed on slow devices you can increase/decrease the tolerance of drawn polylines (routepoints) on map.",
+    ),
+    "polyLinesToleranceHeader": MessageLookupByLibrary.simpleMessage(
+      "tolerance",
+    ),
     "position": MessageLookupByLibrary.simpleMessage("Position"),
     "positiveInFront": MessageLookupByLibrary.simpleMessage(
       "Positive if in front, negative if behind me.",

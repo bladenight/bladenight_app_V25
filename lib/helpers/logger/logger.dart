@@ -161,9 +161,10 @@ class BnLog {
     }
     var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
-        '${methodName != null ? '\nm:$methodName' : ""}';
+        '${methodName != null ? '\nm:$methodName' : ""}'
+        '${'\nstack: ${StackTrace.current}'}';
     _talkerLogger.verbose(logText);
-    fileLogger?.output(logText, LogLevel.verbose.name);
+    fileLogger?.output(logText, LogLevel.verbose.name, flush: true);
   }
 
   /// error
@@ -190,7 +191,7 @@ class BnLog {
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}'
         '${exception != null ? '\nex:${exception.toString()}' : ""}'
-        '${stacktrace != null ? '\nex:$stacktrace' : ""}';
+        '${stacktrace != null ? '\nex:$stacktrace' : '\nex:${StackTrace.current}'}';
     _talkerLogger.error(logText);
     fileLogger?.output(logText, LogLevel.error.name, flush: true);
   }
@@ -216,7 +217,7 @@ class BnLog {
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}'
         '${exception != null ? '\nex:${exception.toString()}' : ""}'
-        '${stacktrace != null ? '\nex:$stacktrace' : ""}';
+        '${stacktrace != null ? '\nex:$stacktrace' : '\nex:${StackTrace.current}'}';
     _talkerLogger.critical(logText);
     fileLogger?.output(logText, LogLevel.critical.name, flush: true);
   }

@@ -4158,6 +4158,26 @@ class Localize {
     );
   }
 
+  /// `tolerance`
+  String get polyLinesToleranceHeader {
+    return Intl.message(
+      'tolerance',
+      name: 'polyLinesToleranceHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To increase rendering speed on slow devices you can increase/decrease the tolerance of drawn polylines (routepoints) on map.`
+  String get polyLinesTolerance {
+    return Intl.message(
+      'To increase rendering speed on slow devices you can increase/decrease the tolerance of drawn polylines (routepoints) on map.',
+      name: 'polyLinesTolerance',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Your friend ({friendName}) can also take a photo of this barcode and add your name:{myName} and code:{code} to his BladeNightApp if the app is installed.`
   String scanCodeForFriend(Object friendName, Object myName, Object code) {
     return Intl.message(
