@@ -112,8 +112,11 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                         normalFontSize: normalFontSize,
                         dividerWidth: 110,
                         dividerColor: CupertinoTheme.of(context).primaryColor,
-                        text: widget.nextEvent.status == EventStatus.noevent
-                            ? Localize.of(context).noEventPlanned
+                        text: widget.nextEvent.status == EventStatus.noevent ||
+                                widget.nextEvent.status == EventStatus.nodata
+                            ? widget.nextEvent.status == EventStatus.nodata
+                                ? Localize.of(context).nodatareceived
+                                : Localize.of(context).noEventPlanned
                             : DateFormatter(Localize.of(context))
                                 .getLocalDayDateTimeRepresentation(
                                     widget.nextEvent.getUtcIso8601DateTime),
@@ -121,7 +124,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                         showSeparator: widget.showSeparator),
                   if (MediaQuery.orientationOf(context) ==
                           Orientation.landscape &&
-                      widget.nextEvent.status != EventStatus.noevent) ...[
+                      widget.nextEvent.status != EventStatus.noevent &&
+                      widget.nextEvent.status != EventStatus.nodata) ...[
                     eventDetail(
                         textCrossedOut:
                             widget.nextEvent.status == EventStatus.cancelled,
@@ -149,7 +153,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
           ),
         ),
         if (MediaQuery.orientationOf(context) == Orientation.portrait &&
-            widget.nextEvent.status != EventStatus.noevent)
+            widget.nextEvent.status != EventStatus.noevent &&
+            widget.nextEvent.status != EventStatus.nodata)
           Padding(
             padding:
                 const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
@@ -183,6 +188,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
             ),
           ),
         if (widget.nextEvent.status != EventStatus.noevent &&
+            widget.nextEvent.status != EventStatus.nodata &&
             !widget.eventIsRunning &&
             widget.nextEvent.status != EventStatus.cancelled)
           Padding(

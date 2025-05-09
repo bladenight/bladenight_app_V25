@@ -56,7 +56,8 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                           ),
                         ),
                         if (widget.event.status != EventStatus.noevent &&
-                            widget.event.status != EventStatus.unknown)
+                            widget.event.status != EventStatus.unknown &&
+                            widget.event.status != EventStatus.nodata)
                           Center(
                             child: FittedBox(
                               child: FittedBox(
@@ -94,7 +95,8 @@ class _EventInfoOverlayState extends State<EventInfoOverlay> {
                             ),
                           ),
                         if (widget.event.status != EventStatus.noevent &&
-                            widget.event.status != EventStatus.unknown)
+                            widget.event.status != EventStatus.unknown &&
+                            widget.event.status != EventStatus.nodata)
                           Center(
                             child: FittedBox(
                               child: Text(

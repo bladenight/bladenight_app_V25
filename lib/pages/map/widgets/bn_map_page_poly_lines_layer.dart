@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app_settings/app_configuration_helper.dart';
+import '../../../helpers/enums/tracking_type.dart';
 import '../../../helpers/logger/logger.dart';
 import '../../../models/images_and_links.dart';
 import '../../../providers/active_event_provider.dart' show activeEventProvider;
@@ -39,8 +40,6 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
         : <LatLng>[];
 
     var processionRoutePoints = <LatLng>[];
-
-    ///TODO Singe build layer - on locationUpdate get processionRoutePoints
     var processionRoutePointsP = ref.read(processionRoutePointsProvider);
     processionRoutePointsP.hasValue
         ? processionRoutePoints = processionRoutePointsP.value!
@@ -103,7 +102,8 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
               : CupertinoColors.white,
           borderStrokeWidth: 2.0, // ref.watch(isTrackingProvider),
         ),
-      if (processionRoutePoints.isNotEmpty)
+      if (processionRoutePoints.isNotEmpty &&
+          locationUpdate.trackingType != TrackingType.onlyTracking)
         Polyline(
           points: processionRoutePoints,
           color: CupertinoAdaptiveTheme.of(context).theme.brightness ==

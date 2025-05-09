@@ -41,6 +41,8 @@ class EventStatusMapper extends EnumMapper<EventStatus> {
         return EventStatus.deleted;
       case 'UKN':
         return EventStatus.unknown;
+      case 'ERR':
+        return EventStatus.nodata;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -65,6 +67,8 @@ class EventStatusMapper extends EnumMapper<EventStatus> {
         return 'DEL';
       case EventStatus.unknown:
         return 'UKN';
+      case EventStatus.nodata:
+        return 'ERR';
     }
   }
 }

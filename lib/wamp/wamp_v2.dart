@@ -30,7 +30,6 @@ enum WampConnectionState {
   offline,
   delayed,
   disconnected,
-  stopped
 }
 
 ///State for network_connection_provider
@@ -139,7 +138,7 @@ class WampV2 {
           ? WampConnectionState.connected
           : WampConnectionState.failed;
     }
-    await _shakeHands();
+    Future.microtask(() async => await _shakeHands());
     BnLog.verbose(
         text: 'Wamp start result $startResult',
         methodName: '_initWamp',
@@ -182,12 +181,9 @@ class WampV2 {
   void stopWamp() {
     BnLog.verbose(
         text: 'stopWamp', methodName: 'stopWamp', className: toString());
-
     _wampStopped = true;
     _closeStream();
     _resetWampState();
-    /*_liveCycleTimer?.cancel();
-    _liveCycleTimer = null;*/
   }
 
   var shakeHandsLock = Lock();
@@ -199,35 +195,26 @@ class WampV2 {
     try {
       shakeHandsLock
           .synchronized(() async {
+            ShakeHandResult shkRes;
             if (_hadShakeHands == false) {
-              _startShakeHands = true;
-              var shkRes = await ShakeHandResult.shakeHandsWamp();
-              _startShakeHands = false;
+              do {
+                _startShakeHands = true;
+                shkRes = await _requestShakeHands();
+                if (shkRes.rpcException != null) {
+                  _startShakeHandsRetryCounter++;
+                  await Future.delayed(const Duration(milliseconds: 1000));
+                }
+              } while (shkRes.rpcException != null &&
+                  _startShakeHandsRetryCounter <= 3);
 
+              _startShakeHands = false;
+              _startShakeHandsRetryCounter = 0;
               if (shkRes.rpcException != null) {
-                _startShakeHandsRetryCounter++;
-                BnLog.verbose(
+                BnLog.warning(
                     text:
-                        'shakeHands failed retry$_startShakeHandsRetryCounter',
+                        'shakeHands failed after 3 attempts ${shkRes.rpcException}  wait 15 secs',
                     methodName: '_shakeHands',
                     className: toString());
-                if (_startShakeHandsRetryCounter <= 3) {
-                  await Future.delayed(const Duration(seconds: 3));
-                  BnLog.verbose(
-                      text:
-                          'shakeHands failed retry$_startShakeHandsRetryCounter',
-                      methodName: '_shakeHands',
-                      className: toString());
-
-                  _shakeHands();
-                } else {
-                  BnLog.warning(
-                      text:
-                          'shakeHands failed after 3 attempts ${shkRes.rpcException}  wait 15 secs',
-                      methodName: '_shakeHands',
-                      className: toString());
-                  _startShakeHandsRetryCounter = 0;
-                }
                 return;
               } else {
                 BnLog.info(
@@ -243,7 +230,7 @@ class WampV2 {
               }
             }
           })
-          .timeout(Duration(seconds: 5))
+          .timeout(Duration(seconds: 20))
           .catchError((error) {
             BnLog.warning(text: 'Shakehands not successfully $error');
           });
@@ -259,11 +246,6 @@ class WampV2 {
   Future addToWamp<T>(BnWampMessage message) async {
     _put(message);
     return message.completer.future;
-    /*} else {
-      return message.completer
-          .complete(WampException(WampExceptionReason.wampStopped));
-    }*/
-    //});
   }
 
   Future<WampConnectionState> _startConnectionMonitoring() async {
@@ -271,7 +253,9 @@ class WampV2 {
     _liveCycleTimer =
         Timer.periodic(const Duration(milliseconds: 2000), (timer) async {
       var diffLastPutMessage = DateTime.now().difference(_lastPutMessage);
-      if (subscriptions.isEmpty && diffLastPutMessage.inMinutes > 3) {
+      if (subscriptions.isEmpty &&
+          diffLastPutMessage.inMinutes > 2 &&
+          _wampConnectionState != WampConnectionState.disconnected) {
         BnLog.info(
             text:
                 'no new Messages since ${_lastPutMessage.toIso8601String()} / ${diffLastPutMessage.inSeconds}  stop wamp by _connLoop');
@@ -279,15 +263,15 @@ class WampV2 {
         return;
       }
 
-      if (_wampStopped) return;
+      if (_wampStopped && diffLastPutMessage.inMinutes > 2) return;
 
       var diffWampLastLifeSign =
           DateTime.now().difference(_lastWampStreamLifeSign);
-      if (diffWampLastLifeSign.inMinutes > 2) {
+      if (diffWampLastLifeSign.inMinutes > 2 && !_wampStopped) {
         BnLog.info(
             text:
                 'Close wamp by _connLoop. LastLifeSign = ${_lastWampStreamLifeSign.toIso8601String()} ');
-        //_lastWampStreamLifeSign=DateTime.now();//reset
+        _lastWampStreamLifeSign = DateTime.now(); //reset
         closeWamp();
       }
 
@@ -367,6 +351,13 @@ class WampV2 {
               calls.remove(message.requestId);
               busy = true;
               continue;
+            }
+            int fail = 0;
+            if (_channel == null && fail <= 5) {
+              // wait 5sec
+              await Future.delayed(Duration(milliseconds: 1000));
+              fail++;
+              //listener should start socket
             }
             _channel?.sink.add(message.getMessageAsJson);
 
@@ -669,5 +660,9 @@ class WampV2 {
     String link = _getLink();
     Uri linkUri = Uri.parse(link);
     return linkUri;
+  }
+
+  Future<ShakeHandResult> _requestShakeHands() async {
+    return await ShakeHandResult.shakeHandsWamp();
   }
 }

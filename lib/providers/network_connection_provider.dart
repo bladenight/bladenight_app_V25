@@ -116,6 +116,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
 
     _isServerConnectedSubscription =
         WampV2().wampConnectedStreamController.stream.listen((status) {
+      //check same state
       if (status == WampConnectedState.connected &&
           state.connectivityStatus == ConnectivityStatus.wampConnected) {
         return;
@@ -125,7 +126,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
           state.connectivityStatus == ConnectivityStatus.wampNotConnected) {
         return;
       }
-
+      // check and set state
       if (status == WampConnectedState.connected &&
           state.connectivityStatus != ConnectivityStatus.wampConnected) {
         _checkStatus(ConnectivityStatus.wampConnected);

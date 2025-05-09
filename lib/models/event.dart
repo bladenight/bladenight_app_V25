@@ -48,6 +48,8 @@ enum EventStatus {
   ///Event actual finished
   @MappableValue('UKN')
   unknown,
+  @MappableValue('ERR')
+  nodata,
 }
 
 @MappableClass(
@@ -90,7 +92,7 @@ class Event with EventMappable implements Comparable {
         startDate: DateTime.now().toUtc(),
         routeName: Localize.current.noEventStarted,
         duration: initDaysDuration,
-        status: EventStatus.noevent,
+        status: EventStatus.nodata,
         rpcException: exception);
   }
 
@@ -166,6 +168,8 @@ class Event with EventMappable implements Comparable {
         return Colors.grey;
       case EventStatus.unknown:
         return Colors.transparent;
+      case EventStatus.nodata:
+        return Colors.deepPurpleAccent;
     }
   }
 
@@ -186,6 +190,8 @@ class Event with EventMappable implements Comparable {
       case EventStatus.deleted:
         return Colors.black;
       case EventStatus.unknown:
+        return Colors.black;
+      case EventStatus.nodata:
         return Colors.black;
     }
   }
@@ -208,6 +214,7 @@ class Event with EventMappable implements Comparable {
       case EventStatus.deleted:
         return 'assets/images/event/traffic_none.png';
       case EventStatus.unknown:
+      case EventStatus.nodata:
         return 'assets/images/event/traffic_none.png';
     }
   }
@@ -218,7 +225,7 @@ class Event with EventMappable implements Comparable {
         startDate: DateTime.now().toUtc(),
         routeName: Localize.current.noEventStarted,
         duration: initDaysDuration,
-        status: EventStatus.noevent);
+        status: EventStatus.nodata);
   }
 
   static Duration get initDaysDuration {
@@ -300,6 +307,7 @@ class Event with EventMappable implements Comparable {
           EventStatus.running: Localize.current.running,
           EventStatus.finished: Localize.current.finished,
           EventStatus.deleted: Localize.current.delete,
+          EventStatus.nodata: Localize.current.nodatareceived,
           'other': Localize.current.unknown
         })}';
   }

@@ -73,7 +73,6 @@ class LocationProvider with ChangeNotifier {
   }
 
   bool _mapPushed = false;
-  int _maxFails = 3;
   AverageList<double> realtimeSpeedAvgList = AverageList(maxLength: 5);
 
   bg.State? _state;
@@ -1432,7 +1431,6 @@ class LocationProvider with ChangeNotifier {
       }
 
       _setRealtimeUpdate(update, notify: !_isInBackground);
-      _maxFails = 3;
 
       if (_lastKnownPoint == null) {
         _realUserSpeedKmh = null;
@@ -1727,6 +1725,7 @@ class LocationProvider with ChangeNotifier {
   StreamSubscription<RealtimeUpdate?>? _realTimeDataStreamListener;
   StreamSubscription<WampConnectedState>? _wampConnectedListener;
   int _realTimeDataSubscriptionId = 0;
+  WampConnectedState _lastConnectionState = WampConnectedState.disconnected;
 
   Future<void> startRealtimeUpdateSubscriptionIfNotTracking() async {
     if (_trackingType == TrackingType.onlyTracking) return;
@@ -1739,6 +1738,9 @@ class LocationProvider with ChangeNotifier {
         className: 'location_provider');
     _wampConnectedListener =
         WampV2().wampConnectedStreamController.stream.listen((connected) async {
+      //check status change!
+      if (_lastConnectionState == connected) return;
+      _lastConnectionState = connected;
       if (connected == WampConnectedState.connected) {
         await (Future.delayed(const Duration(seconds: 3)));
         _maxSubscribeFails = 10;
@@ -1808,7 +1810,6 @@ class LocationProvider with ChangeNotifier {
 
   void stopRealtimedataSubscription() {
     //print('${DateTime.now().toIso8601String()} _stopRealtimedataSubscription');
-    BnLog.debug(text: 'rtProvider dispose');
     _subscriptionTimer?.cancel();
     _wampConnectedListener?.cancel();
     _realTimeDataStreamListener?.cancel();
