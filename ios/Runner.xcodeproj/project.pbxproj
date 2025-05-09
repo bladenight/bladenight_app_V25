@@ -55,7 +55,6 @@
 		E2C0C38B2D8F3EC2006D62BC /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E2C0C38A2D8F3EC2006D62BC /* InfoPlist.xcstrings */; };
 		E2C0C38D2D900786006D62BC /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C0C38C2D900786006D62BC /* ColorHelper.swift */; };
 		E2C0C38F2D9207A6006D62BC /* Info-Release.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E2C0C38E2D9207A6006D62BC /* Info-Release.xcstrings */; };
-		E2C23F2229D4E87C00E06959 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2C23F2129D4E87C00E06959 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -225,7 +224,6 @@
 		E2C0C38A2D8F3EC2006D62BC /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		E2C0C38C2D900786006D62BC /* ColorHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorHelper.swift; sourceTree = "<group>"; };
 		E2C0C38E2D9207A6006D62BC /* Info-Release.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = "Info-Release.xcstrings"; sourceTree = "<group>"; };
-		E2C23F2129D4E87C00E06959 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E2EEFEA12BC7F022005205C4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -449,7 +447,6 @@
 				46E3B2C72867833000FBC3DB /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
-				E2C23F2129D4E87C00E06959 /* Images.xcassets */,
 				1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
@@ -712,7 +709,6 @@
 			files = (
 				E20B15502DB66A51009DD319 /* Assets.xcassets in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
-				E2C23F2229D4E87C00E06959 /* Images.xcassets in Resources */,
 				E23FA98C2CB4084C00F26A01 /* Profile.xcconfig in Resources */,
 				E20B154F2DB661C8009DD319 /* LaunchScreen.storyboard in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
