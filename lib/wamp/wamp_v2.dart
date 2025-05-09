@@ -415,6 +415,7 @@ class WampV2 {
       _channelStreamLister = _channel!.stream.listen(
         (event) async {
           _lastWampStreamLifeSign = DateTime.now();
+          _wampConnectedStreamController.sink.add(WampConnectedState.connected);
           var wampMessage = json.decode(event) as List;
           var requestId = 0;
           if (wampMessage.length >= 2) {

@@ -315,7 +315,7 @@ extension MapSettings on HiveSettingsDB {
   ///get simplifyTolerance level for online map
   static double get simplifyTolerance {
     var val =
-        HiveSettingsDB._hiveBox.get(_simplifyToleranceKey, defaultValue: 0.2);
+        HiveSettingsDB._hiveBox.get(_simplifyToleranceKey, defaultValue: 0.3);
     if (val < minTolerance) {
       return minTolerance;
     }
@@ -339,5 +339,5 @@ extension MapSettings on HiveSettingsDB {
   }
 
   static double minTolerance = 0.05;
-  static double maxTolerance = 0.8;
+  static double maxTolerance = 1.0;
 }

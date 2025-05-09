@@ -29,7 +29,6 @@ import '../helpers/device_info_helper.dart';
 import '../helpers/distance_converter.dart';
 import '../helpers/double_helper.dart';
 import '../helpers/enums/tracking_type.dart';
-import '../helpers/geolocation/simplify_list_lat_lng.dart';
 import '../helpers/geolocation/simplify_user_gpx_points_list.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location2_to_bglocation.dart';
@@ -313,7 +312,7 @@ class LocationProvider with ChangeNotifier {
       }
     } else {
       if (_trackingType == TrackingType.noTracking ||
-          _trackingType == TrackingType.onlyTracking) {
+          _trackingType != TrackingType.onlyTracking) {
         WampV2().startWamp();
       }
       if (_trackingType == TrackingType.noTracking) {
@@ -517,12 +516,13 @@ class LocationProvider with ChangeNotifier {
   //if 0 recalculate
   static int rerenderTrackCount = -1;
 
+  //tolerance 0.4 - before
   Future<bool> updateUserLocationTrack(bg.Location location) {
     return Future.microtask(() {
       rerenderTrackCount++;
       if (rerenderTrackCount >= 30) {
-        var simplifyUserGpxPoints =
-            simplifyUserGpxPointList(_userGpxPoints, tolerance: 0.2 / 10000);
+        var simplifyUserGpxPoints = simplifyUserGpxPointList(_userGpxPoints,
+            tolerance: MapSettings.simplifyTolerance);
         _userGpxPoints.clear();
         _userGpxPoints.addAll(simplifyUserGpxPoints);
         rerenderTrackCount = 0;
@@ -1432,11 +1432,6 @@ class LocationProvider with ChangeNotifier {
         SendToWatch.updateUserLocationData(
             UserLocationPoint.userLocationPointEmpty());
         _updateWatchData();
-        _maxFails--;
-        if (_maxFails <= 0) {
-          _realtimeUpdate = null;
-          _maxFails = 3;
-        }
 
         if (!_isInBackground) {
           notifyListeners();
@@ -1777,8 +1772,8 @@ class LocationProvider with ChangeNotifier {
 
   void _setRealtimeUpdate(RealtimeUpdate rtu, {required bool notify}) {
     BnLog.verbose(text: '_setRealtimeUpdate $rtu');
-    _realtimeUpdate = rtu;
     if (rtu.rpcException == null) {
+      _realtimeUpdate = rtu;
       rtUpdateFails = 0;
       _lastRealtimedataUpdate = DateTime.now();
       _eventIsRunning = rtu.eventIsActive;

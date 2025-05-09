@@ -24,8 +24,6 @@ class BnLog {
     init();
   }
 
-  static Timer? _timer;
-
   ///clean Log folder
   static Future<bool?> clearLogs() async {
     talker.cleanHistory();
@@ -45,7 +43,6 @@ class BnLog {
   static void close() {
     fileLogger?.output(
         '${DateTime.now().toIso8601String()} AppClosed', LogLevel.info.name);
-    _timer?.cancel();
   }
 
   static Future<bool> init({LogLevel? logLevel}) async {
@@ -62,7 +59,7 @@ class BnLog {
       if (!kIsWeb) {
         fileLogger = FileLogger(await _getLogDir());
       }
-      _timer = Timer(Duration(minutes: 5000), clearOlderLogs);
+      talker.settings = TalkerSettings(maxHistoryItems: 3000);
       return true;
     } catch (e) {
       print('Error init logger $error');

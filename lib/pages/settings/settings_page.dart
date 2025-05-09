@@ -14,6 +14,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../generated/l10n.dart';
 import '../../helpers/background_location_helper.dart';
 import '../../helpers/export_import_data_helper.dart';
+import '../../helpers/geolocation/simplify_user_gpx_points_list.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
@@ -32,7 +33,6 @@ import '../widgets/buttons/tinted_cupertino_button.dart';
 import '../widgets/common_widgets/app_id_widget.dart';
 import '../widgets/common_widgets/data_widget_left_right.dart';
 import '../widgets/common_widgets/one_signal_id_widget.dart';
-import '../widgets/input/input_int_dialog.dart';
 import '../widgets/map/tracking_export_widget.dart';
 import 'color_settings_widget.dart';
 
@@ -54,6 +54,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   bool _openInvisibleSettings = false;
   bool _exportLogInProgress = false;
   bool _showPushProgressIndicator = false;
+  var trackPointsCount = 0;
   final _textController = TextEditingController();
   ValueNotifier<double> exportProgressNotifier = ValueNotifier(0);
 
@@ -62,8 +63,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     var networkConnected = ref.watch(networkAwareProvider);
     var adminPass = ref.watch(adminPwdSetProvider);
     var polygonTolerance = MapSettings.simplifyTolerance;
-    var ok = MapSettings.simplifyTolerance >= MapSettings.minTolerance;
-    var ok2 = MapSettings.simplifyTolerance <= MapSettings.maxTolerance;
+
     return CupertinoPageScaffold(
       child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -656,7 +656,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                                     .primaryColor,
                                             thumbColor:
                                                 CupertinoTheme.of(context)
-                                                    .primaryContrastingColor,
+                                                    .primaryColor,
                                             onChanged: (double value) {
                                               MapSettings.setSimplifyTolerance(
                                                   value);
@@ -664,13 +664,27 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                                 polygonTolerance = value;
                                               });
                                             },
-                                            onChangeEnd: ((val) => MapSettings
-                                                .setSimplifyTolerance(val)),
+                                            onChangeEnd: ((val) {
+                                              Future.microtask(() {
+                                                MapSettings
+                                                    .setSimplifyTolerance(val);
+                                                var pts = LocationProvider()
+                                                    .userGpxPoints;
+                                                var smpl =
+                                                    simplifyUserGpxPointList(
+                                                        pts,
+                                                        tolerance: val);
+                                                setState(() {
+                                                  trackPointsCount =
+                                                      smpl.length;
+                                                });
+                                              });
+                                            }),
                                           ),
                                           const SizedBox(width: 10),
                                           Center(
                                             child: Text(
-                                                '${LocationProvider().userGpxPoints.length.toStringAsFixed(0)} pt'),
+                                                '${trackPointsCount == 0 ? LocationProvider().userGpxPoints.length.toString() : trackPointsCount} pt'),
                                           ),
                                         ]),
                                   ]),

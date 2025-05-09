@@ -790,7 +790,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "polyLinesAmountHeader": MessageLookupByLibrary.simpleMessage("Anzahl"),
     "polyLinesTolerance": MessageLookupByLibrary.simpleMessage(
-      "Auf manchen Geräten führt eine hohe Anzahl an eigenen Routenpunkten dazu das die Karte sehr langsam wird. Die Fahrlinie wird reduziert hier kann man die Toleranz.",
+      "Auf manchen Geräten führt eine hohe Anzahl an eigenen Routenpunkten dazu das die Karte sehr langsam wird. Die Fahrlinie wird reduziert hier kann man die Toleranz einstellen je höher umso ungenauer. Kleiner/links = langsam und genauer/ Größer/rechts = schneller und gröbere Darstellung",
     ),
     "polyLinesToleranceHeader": MessageLookupByLibrary.simpleMessage(
       "Toleranz",

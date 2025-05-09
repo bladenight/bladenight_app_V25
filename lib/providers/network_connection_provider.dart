@@ -38,18 +38,11 @@ class NetworkStateModel {
 
 class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   late final AppLifecycleListener? _appLifecycleListener;
-  bool isInBackground = false;
+  static bool _isInBackground = false;
+  static bool _wasWampDisconnected = false;
 
   static const _initialNetworkState =
       NetworkStateModel(connectivityStatus: ConnectivityStatus.unknown);
-
-  StreamController<ConnectivityStatus> get connectionStreamController =>
-      _connectionStreamController;
-
-  final StreamController<ConnectivityStatus> _connectionStreamController =
-      StreamController<ConnectivityStatus>();
-
-  static bool _wasWampDisconnected = false;
 
   static InternetConnection get internetConnection => _internetConnection;
   static final InternetConnection _internetConnection =
@@ -58,8 +51,8 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
       InternetCheckOption(uri: WampV2.getServerUri()),
     ],*/
           );
+  ConnectivityStatus connectivityStatus = ConnectivityStatus.wampNotConnected;
 
-  ConnectivityStatus connectivityStatus = ConnectivityStatus.unknown;
   StreamSubscription? _icCheckerSubscription;
   StreamSubscription? _isServerConnectedSubscription;
 
@@ -78,31 +71,32 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   }
 
   init() {
-    //see https://github.com/OutdatedGuy/internet_connection_checker_plus?tab=readme-ov-file
+    //see memory leak issue
+    // https://github.com/OutdatedGuy/internet_connection_checker_plus?tab=readme-ov-file
     _appLifecycleListener = AppLifecycleListener(
       onResume: () {
         _icCheckerSubscription?.resume;
         _isServerConnectedSubscription?.resume;
         _checkStatus(null);
-        isInBackground = false;
+        _isInBackground = false;
         BnLog.verbose(text: 'network_connection_provider is not in background');
       },
       onHide: () {
         _icCheckerSubscription?.pause;
         _isServerConnectedSubscription?.pause;
-        isInBackground = true;
+        _isInBackground = true;
         BnLog.verbose(text: 'set network_connection_provider to background');
       },
       onPause: () {
         _icCheckerSubscription?.pause;
         _isServerConnectedSubscription?.pause;
-        isInBackground = true;
+        _isInBackground = true;
         BnLog.verbose(text: 'set network_connection_provider to background');
       },
     );
     _icCheckerSubscription =
         _internetConnection.onStatusChange.listen((InternetStatus status) {
-      BnLog.critical(
+      BnLog.verbose(
           text:
               '${DateTime.now().toIso8601String()} Internet connection status change: {$status}',
           methodName: 'Internet connection listener',
@@ -122,6 +116,16 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
 
     _isServerConnectedSubscription =
         WampV2().wampConnectedStreamController.stream.listen((status) {
+      if (status == WampConnectedState.connected &&
+          state.connectivityStatus == ConnectivityStatus.wampConnected) {
+        return;
+      }
+
+      if (status == WampConnectedState.disconnected &&
+          state.connectivityStatus == ConnectivityStatus.wampNotConnected) {
+        return;
+      }
+
       if (status == WampConnectedState.connected &&
           state.connectivityStatus != ConnectivityStatus.wampConnected) {
         _checkStatus(ConnectivityStatus.wampConnected);
@@ -144,10 +148,9 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   }
 
   void _checkStatus(ConnectivityStatus? result) async {
-    if (isInBackground) return;
+    if (_isInBackground) return;
     if (result != null && result == ConnectivityStatus.wampConnected) {
       setStateIfChanged(ConnectivityStatus.wampConnected);
-      _connectionStreamController.sink.add(ConnectivityStatus.wampConnected);
       return;
     }
     bool isOnline = false;
@@ -171,18 +174,14 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
       }
       if (WampV2().webSocketIsConnected) {
         _wasWampDisconnected = false;
-        _connectionStreamController.sink.add(ConnectivityStatus.wampConnected);
         setStateIfChanged(ConnectivityStatus.wampConnected);
       } else {
         _wasWampDisconnected = true;
-        _connectionStreamController.sink
-            .add(ConnectivityStatus.wampNotConnected);
         setStateIfChanged(ConnectivityStatus.wampNotConnected);
       }
     } else {
       setStateIfChanged(ConnectivityStatus.internetOffline);
       _wasWampDisconnected = true;
-      _connectionStreamController.sink.add(ConnectivityStatus.internetOffline);
     }
   }
 
@@ -190,7 +189,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     if (state.connectivityStatus != connectivityStatus) {
       BnLog.verbose(
           text:
-              'Network state changed from $state to $connectivityStatus is in bg $isInBackground',
+              'Network state changed from $state to $connectivityStatus is in bg $_isInBackground',
           methodName: 'setStateIfChanged',
           className: toString());
       state = NetworkStateModel(connectivityStatus: connectivityStatus);

@@ -564,7 +564,7 @@
   "polyLinesAmountHeader": "Anzahl",
   "polyLinesAmount": "Auf manchen Geräten führt eine hohe Anzahl an eigenen Routenpunkten dazu das die Karte sehr langsam wird. Empfehlung 200-2000 Einzellinien der Route. Die Fahrlinie wird bei überschreiten der Anzahl Punkte reduziert.",
   "polyLinesToleranceHeader": "Toleranz",
-  "polyLinesTolerance": "Auf manchen Geräten führt eine hohe Anzahl an eigenen Routenpunkten dazu das die Karte sehr langsam wird. Die Fahrlinie wird reduziert hier kann man die Toleranz.",
+  "polyLinesTolerance": "Auf manchen Geräten führt eine hohe Anzahl an eigenen Routenpunkten dazu das die Karte sehr langsam wird. Die Fahrlinie wird reduziert hier kann man die Toleranz einstellen je höher umso ungenauer. Kleiner/links = langsam und genauer/ Größer/rechts = schneller und gröbere Darstellung",
   "scanCodeForFriend": "Dein Freund ({friendName}) kann auch diesen Barcode fotografieren und erhält die Daten automatisch in seiner App. Dies ist dein oben eingetragener Name: {myName} und Code: {code}, wenn die BladeNightApp auf seinem Handy installiert ist.",
   "bladenightInfoTitleWeb": "WebApp and Information zur Münchner BladeNight",
   "bladenightInfoTitleApp": "Information zur Münchner BladeNight",

@@ -125,7 +125,8 @@ List<UserGpxPoint> simplifyUserGpxPointList(
 
   List<UserGpxPoint> nextPoints = points;
 
-  final double sqTolerance = tolerance != null ? tolerance * tolerance : 1;
+  final double sqTolerance =
+      tolerance != null ? tolerance / 10000 * tolerance / 10000 : 1 / 10000;
 
   nextPoints =
       highestQuality ? points : _simplifyRadialDist(nextPoints, sqTolerance);

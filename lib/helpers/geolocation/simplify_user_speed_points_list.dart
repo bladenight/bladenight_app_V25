@@ -4,7 +4,6 @@
 // All rights reserved.
 
 import '../../models/images_and_links.dart';
-import '../../models/user_gpx_point.dart';
 import '../../models/user_speed_point.dart';
 
 /// Square distance between two points
@@ -126,7 +125,8 @@ List<UserSpeedPoint> simplifyUserSpeedPointList(
 
   List<UserSpeedPoint> nextPoints = points;
 
-  final double sqTolerance = tolerance != null ? tolerance * tolerance : 1;
+  final double sqTolerance =
+      tolerance != null ? tolerance / 10000 * tolerance / 10000 : 1 / 10000;
 
   nextPoints =
       highestQuality ? points : _simplifyRadialDist(nextPoints, sqTolerance);
