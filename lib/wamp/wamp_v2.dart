@@ -158,7 +158,6 @@ class WampV2 {
   }
 
   void closeWamp() async {
-    _closeStream();
     _resetWampState();
   }
 
@@ -182,7 +181,6 @@ class WampV2 {
     BnLog.verbose(
         text: 'stopWamp', methodName: 'stopWamp', className: toString());
     _wampStopped = true;
-    _closeStream();
     _resetWampState();
   }
 
@@ -600,18 +598,14 @@ class WampV2 {
     return true;
   }
 
-  void _closeStream() async {
-    //disposes of the stream
+  ///Reset wamp so it can reconnect - close stream before
+  void _resetWampState() async {
     await _channelStreamLister?.cancel();
     _channelStreamLister = null;
     if (_channel != null) {
       await _channel!.sink.close();
       _channel = null;
     }
-  }
-
-  ///Reset wamp so it can reconnect - close stream before
-  void _resetWampState() {
     _lastConnectionStatus = false;
     _wampStopped = false;
     _wampConnectedStreamController.sink.add(WampConnectedState.disconnected);
@@ -619,6 +613,10 @@ class WampV2 {
     _hadShakeHands = false;
     _startShakeHands = false;
     _subscriptions.clear();
+    BnLog.verbose(
+        text: '_resetWampState $_wampConnectionState',
+        methodName: 'resetWampState',
+        className: toString());
   }
 
   String _getLink() {

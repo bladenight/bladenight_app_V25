@@ -54,9 +54,10 @@ You need the bladenight-server written in java to communicate routes, friends, p
 
 ## Build:
 
-* Create communication certificate as pkcs12 Certificate (see below) for server communication -> put it in
-  assets/certs/bnp12.pkcs12</li>
-* Build in IntelliJ Terminal. Enter following:
+* Create a communication certificate as pkcs12 Certificate (see below) for server communication
+  → put it in
+  assets/certs/bnp12.pkcs12
+* Build in IntelliJ Terminal. Enter the following:
   ```bash
   flutter clean
   ```

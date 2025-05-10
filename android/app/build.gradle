@@ -91,7 +91,7 @@ android {
         }
 
         debug {
-            defaultConfig.minSdkVersion 24
+            defaultConfig.minSdkVersion 21
             shrinkResources false
             minifyEnabled false
             signingConfig signingConfigs.debug

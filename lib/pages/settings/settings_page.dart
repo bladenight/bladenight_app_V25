@@ -752,10 +752,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                         descriptionRight: '',
                                         rightWidget: CupertinoSwitch(
                                           onChanged: (val) {
-                                            WampV2().closeWamp();
-                                            HiveSettingsDB.setUseCustomServer(
-                                                val);
-                                            setState(() {});
+                                            Future.microtask(() async {
+                                              WampV2().closeWamp();
+                                              await HiveSettingsDB
+                                                  .setUseCustomServer(val);
+                                              await WampV2().refresh();
+                                              setState(() {});
+                                            });
                                           },
                                           value: HiveSettingsDB.useCustomServer,
                                         ),

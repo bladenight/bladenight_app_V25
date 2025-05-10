@@ -708,8 +708,8 @@ class HiveSettingsDB {
   }
 
   ///set if  set use CustomServer
-  static void setUseCustomServer(bool val) {
-    _hiveBox.put(_useCustomServerKey, val);
+  static Future<void> setUseCustomServer(bool val) async {
+    await _hiveBox.put(_useCustomServerKey, val);
   }
 
   static const String _customServerAddressKey = 'customServerAddressKey';
