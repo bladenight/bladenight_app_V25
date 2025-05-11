@@ -396,6 +396,7 @@
 			isa = PBXGroup;
 			children = (
 				3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */,
+				E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */,
 				9740EEB21CF90195004384FC /* Debug.xcconfig */,
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
 				9740EEB31CF90195004384FC /* Generated.xcconfig */,
@@ -419,7 +420,6 @@
 				CF747FC8B35BEB56F72E6AFC /* Pods */,
 				8368F15BE167CB08ED423476 /* Frameworks */,
 				D97977E4A022AD00497110AC /* GoogleService-Info.plist */,
-				E23FA98B2CB4084C00F26A01 /* Profile.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
