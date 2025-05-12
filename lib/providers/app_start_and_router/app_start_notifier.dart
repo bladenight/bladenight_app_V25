@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:talker/talker.dart';
+import 'package:talker/talker.dart' as tl;
 
 import '../../app_settings/app_constants.dart';
 import '../../app_settings/globals.dart';
@@ -75,7 +75,7 @@ class AppStartNotifier extends _$AppStartNotifier {
       FlutterError.onError = (details) {
         talker.log(
           details.exceptionAsString(),
-          logLevel: LogLevel.critical,
+          logLevel: tl.LogLevel.critical,
           stackTrace: details.stack,
         );
         FlutterError.presentError(details);
@@ -87,7 +87,7 @@ class AppStartNotifier extends _$AppStartNotifier {
       FlutterError.onError = (details) {
         talker.log(
           details.exceptionAsString(),
-          logLevel: LogLevel.critical,
+          logLevel: tl.LogLevel.error,
           stackTrace: details.stack,
         );
         if (Globals.logToCrashlytics) {
@@ -103,7 +103,7 @@ class AppStartNotifier extends _$AppStartNotifier {
         return true;
       };
       talker.log('BladenightApp started');
-      talker.configure(logger: TalkerLogger());
+      talker.configure(logger: tl.TalkerLogger());
     }
   }
 

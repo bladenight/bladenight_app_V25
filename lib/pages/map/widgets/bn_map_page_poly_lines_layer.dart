@@ -45,7 +45,7 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
         ? processionRoutePoints = processionRoutePointsP.value!
         : <LatLng>[];
     if (!processionRoutePointsP.hasValue || processionRoutePoints.isEmpty) {
-      BnLog.verbose(
+      BnLog.all(
           text: 'ProcessionRoutePointsCount = ${processionRoutePoints.length}');
     }
     //print('${DateTime.now().toIso8601String()} Build Polylines Layer');

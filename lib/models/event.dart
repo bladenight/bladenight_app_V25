@@ -17,6 +17,7 @@ import '../wamp/bn_wamp_message.dart';
 import '../wamp/wamp_endpoints.dart';
 import '../wamp/wamp_exception.dart';
 import '../wamp/wamp_v2.dart';
+import 'hooks/datetime_utc_formatter_hook.dart' show EventDateTimeHook;
 import 'lat_lng_mapper.dart';
 import 'start_point.dart';
 
@@ -55,7 +56,7 @@ enum EventStatus {
 @MappableClass(
     includeCustomMappers: [DurationMapper(), DateTimeMapper(), LatLngMapper()])
 class Event with EventMappable implements Comparable {
-  @MappableField(key: 'sta')
+  @MappableField(key: 'sta', hook: EventDateTimeHook())
   final DateTime startDate;
   @MappableField(key: 'dur')
   final Duration duration;
@@ -443,8 +444,13 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   @override
   DateTime decode(value) {
     try {
-      var val = DateTime.parse(value.toString());
-      return val;
+      /*var df =
+          DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").tryParse(value.toString());
+      if (df != null) {
+        return df;
+      }*/
+      var val = (value.toString());
+      return DateTime.parse(val);
     } catch (e) {
       BnLog.error(text: 'Could not parse $value');
       rethrow;

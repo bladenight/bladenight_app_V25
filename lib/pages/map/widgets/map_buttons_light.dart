@@ -22,7 +22,7 @@ import '../../widgets/common_widgets/positioned_visibility_opacity.dart';
 /// - [showHelp] avoid or show ? symbol to avoid displaying a wrong overlay
 class MapButtonsLayerLight extends ConsumerStatefulWidget {
   const MapButtonsLayerLight(
-      {super.key, this.bottomMargin = 40, this.showHelp = true});
+      {super.key, this.bottomMargin = 60, this.showHelp = true});
 
   final double bottomMargin;
   final bool showHelp;

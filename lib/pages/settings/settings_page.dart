@@ -19,7 +19,6 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
-import '../../helpers/preferences_helper.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../providers/is_tracking_provider.dart';
@@ -564,7 +563,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           setState(() {});
                                         }),
                                   ]),
-                              /*if (!HiveSettingsDB
+                              if (!HiveSettingsDB
                                       .useAlternativeLocationProvider &&
                                   HiveSettingsDB.loggerLogLevel.index > 3)
                                 CupertinoFormSection(
@@ -575,7 +574,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                               .setExportLogSupport),
                                           onPressed: () =>
                                               exportBgLocationLogs()),
-                                    ]),*/
+                                    ]),
                               const SizedBox(height: 10),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 1, 0, 1),
@@ -602,37 +601,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   ),
                                 ),
                               ),
-
                               const SizedBox(
                                 height: 15,
                               ),
-
-                              //if (Platform.isAndroid)
-                              /* CupertinoFormSection(
-                                  header: Text(Localize.of(context)
-                                      .alternativeLocationProviderTitle),
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, right: 20),
-                                      child: DataLeftRightContent(
-                                        descriptionLeft: Localize.of(context)
-                                            .alternativeLocationProvider,
-                                        descriptionRight: '',
-                                        rightWidget: CupertinoSwitch(
-                                          onChanged: (val) {
-                                            HiveSettingsDB
-                                                .setUseAlternativeLocationProvider(
-                                                    val);
-                                            setState(() {});
-                                          },
-                                          value: HiveSettingsDB
-                                              .useAlternativeLocationProvider,
-                                        ),
-                                      ),
-                                    ),
-                                  ]),*/
-
                               CupertinoFormSection(
                                   header: Text(
                                       Localize.of(context).polyLinesTolerance),
@@ -712,20 +683,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              FutureBuilder<String?>(
-                                  future:
-                                      PreferencesHelper.getLastGeoFenceResult(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<String?> snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Text(
-                                        '${snapshot.data}',
-                                        style: TextStyle(fontSize: 8),
-                                      );
-                                    } else {
-                                      return SizedBox();
-                                    }
-                                  }),
                               CupertinoFormSection(
                                   header: const Text('Only for Test purposes'),
                                   children: <Widget>[
@@ -761,6 +718,30 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                             });
                                           },
                                           value: HiveSettingsDB.useCustomServer,
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
+                              CupertinoFormSection(
+                                  header: Text(Localize.of(context)
+                                      .alternativeLocationProviderTitle),
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: DataLeftRightContent(
+                                        descriptionLeft: Localize.of(context)
+                                            .alternativeLocationProvider,
+                                        descriptionRight: '',
+                                        rightWidget: CupertinoSwitch(
+                                          onChanged: (val) {
+                                            HiveSettingsDB
+                                                .setUseAlternativeLocationProvider(
+                                                    val);
+                                            setState(() {});
+                                          },
+                                          value: HiveSettingsDB
+                                              .useAlternativeLocationProvider,
                                         ),
                                       ),
                                     ),

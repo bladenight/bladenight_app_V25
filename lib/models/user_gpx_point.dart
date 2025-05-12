@@ -8,7 +8,7 @@ import 'images_and_links.dart';
 
 part 'user_gpx_point.mapper.dart';
 
-@MappableClass()
+@MappableClass(includeCustomMappers: [DateTimeMapper()])
 class UserGpxPoint with UserGpxPointMappable {
   UserGpxPoint(this.latitude, this.longitude, this.realSpeedKmh, this.heading,
       this.altitude, this.odometer, this.dateTime);
@@ -26,13 +26,13 @@ class UserGpxPoint with UserGpxPointMappable {
   LatLng get latLng => LatLng(latitude, longitude);
 
   String toXML() {
-    final f = DateFormat('yyyy-MM-ddTHH:mm:ss');
+    final f = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     return '\t\t<trkpt lat="$latitude" lon="$longitude">\n'
         '\t\t\t<ele>${altitude.toStringAsFixed(2)}</ele>\n'
         '\t\t\t<speed>${realSpeedKmh.toStringAsFixed(1)}</speed>\n'
         '\t\t\t<heading>${heading == -1.0 ? 0.0 : heading.toStringAsFixed(2)}</heading>\n'
         '\t\t\t<odometer>${odometer.toStringAsFixed(2)}</odometer>\n'
-        '\t\t\t<time>${f.format(dateTime.toUtc())}Z</time>\n'
+        '\t\t\t<time>${f.format(dateTime.toUtc())}</time>\n'
         '\t\t</trkpt>\n';
   }
 }
@@ -79,11 +79,11 @@ class UserGPXPoints with UserGPXPointsMappable {
   String toXML() {
     var str = r'<?xml version="1.0" encoding="utf-8" standalone="yes"?>'
         '<gpx version="1.1" '
-        'creator="BladenightApp https://www.bladenight.app/" '
+        'creator="BladeNightApp https://www.bladenight.app/" '
         'xmlns="http://www.topografix.com/GPX/1/1" '
         'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
         'xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">'
-        '<name>Bladenight Aufzeichnung vom ${DateTime.now().toIso8601String()}</name>\n'
+        '<name>BladeNightApp Aufzeichnung erzeugt am ${DateTime.now().toIso8601String()}</name>\n'
         '\t<trk>\n'
         '\t\t<trkseg>\n';
     for (var tp in userGPXPointList) {

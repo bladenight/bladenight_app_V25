@@ -6,18 +6,19 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
     as bg;
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:talker/talker.dart';
+import 'package:talker/talker.dart' as tl;
 import 'package:universal_io/io.dart';
 
 import '../../app_settings/server_connections.dart';
 import '../../generated/l10n.dart';
 import '../../main.dart';
 import '../hive_box/hive_settings_db.dart';
+import '../logger/log_level.dart';
 import 'file_logger.dart';
 
 class BnLog {
   static FileLogger? fileLogger;
-  static final Talker _talkerLogger = talker;
+  static final tl.Talker _talkerLogger = talker;
   static LogLevel _logLevel = kDebugMode ? LogLevel.verbose : LogLevel.info;
 
   BnLog._() {
@@ -59,7 +60,7 @@ class BnLog {
       if (!kIsWeb) {
         fileLogger = FileLogger(await _getLogDir());
       }
-      talker.settings = TalkerSettings(maxHistoryItems: 3000);
+      talker.settings = tl.TalkerSettings(maxHistoryItems: 3000);
       return true;
     } catch (e) {
       print('Error init logger $error');
@@ -156,12 +157,38 @@ class BnLog {
         logLevelPriorityList.indexOf(LogLevel.verbose)) {
       return;
     }
+    var stackString = StackTrace.current.toString();
+    if (stackString.length > 400) {
+      stackString = stackString.substring(0, 299);
+    }
     var logText = '$text'
         '${className != null ? '\nc:$className' : ""}'
         '${methodName != null ? '\nm:$methodName' : ""}'
-        '${'\nstack: ${StackTrace.current}'}';
+        '${'\nstack: $stackString'}';
     _talkerLogger.verbose(logText);
     fileLogger?.output(logText, LogLevel.verbose.name, flush: true);
+  }
+
+  static void all({
+    String? className,
+    String? methodName,
+    required String text,
+  }) async {
+    //critical 0 // info 3 verbose 5
+    if (logLevelPriorityList.indexOf(_logLevel) <
+        logLevelPriorityList.indexOf(LogLevel.all)) {
+      return;
+    }
+    var stackString = StackTrace.current.toString();
+    if (stackString.length > 400) {
+      stackString = stackString.substring(0, 800);
+    }
+    var logText = '$text'
+        '${className != null ? '\nc:$className' : ""}'
+        '${methodName != null ? '\nm:$methodName' : ""}'
+        '${'\nstack: $stackString'}';
+    _talkerLogger.verbose(logText);
+    fileLogger?.output(logText, LogLevel.all.name, flush: true);
   }
 
   /// error

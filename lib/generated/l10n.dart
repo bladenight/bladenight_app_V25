@@ -2727,10 +2727,10 @@ class Localize {
     );
   }
 
-  /// `Connecting to server ...`
+  /// `Waiting for connection...`
   String get serverNotReachable {
     return Intl.message(
-      'Connecting to server ...',
+      'Waiting for connection...',
       name: 'serverNotReachable',
       desc: '',
       args: [],

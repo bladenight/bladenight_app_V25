@@ -99,7 +99,7 @@ class EventMapper extends ClassMapperBase<Event> {
 
   static DateTime _$startDate(Event v) => v.startDate;
   static const Field<Event, DateTime> _f$startDate =
-      Field('startDate', _$startDate, key: r'sta');
+      Field('startDate', _$startDate, key: r'sta', hook: EventDateTimeHook());
   static String _$routeName(Event v) => v.routeName;
   static const Field<Event, String> _f$routeName =
       Field('routeName', _$routeName, key: r'rou');

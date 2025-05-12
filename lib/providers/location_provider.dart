@@ -29,6 +29,7 @@ import '../helpers/device_info_helper.dart';
 import '../helpers/distance_converter.dart';
 import '../helpers/double_helper.dart';
 import '../helpers/enums/tracking_type.dart';
+import '../helpers/logger/log_level.dart';
 import '../helpers/geolocation/simplify_user_gpx_points_list.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/location2_to_bglocation.dart';
@@ -335,7 +336,7 @@ class LocationProvider with ChangeNotifier {
       bg.BackgroundGeolocation.onLocation(_onLocation, _onLocationError);
       //bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
       bg.BackgroundGeolocation.onActivityChange(_onActivityChange);
-      bg.BackgroundGeolocation.onHeartbeat(_onHeartBeat);
+      //bg.BackgroundGeolocation.onHeartbeat(_onHeartBeat);
       bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
       //bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
       //bg.BackgroundGeolocation.onGeofence(_onGeoFenceEvent);
@@ -364,7 +365,7 @@ class LocationProvider with ChangeNotifier {
           // bgLogLevel,
           //bg.Config.LOG_LEVEL_VERBOSE,//
           //locationUpdateInterval: 1000, not used - distance filter must be 0
-          stopTimeout: 10,
+          stopTimeout: 180,
           //20 minutes
           // <-- a very long stopTimeout
           //disableStopDetection: true,
@@ -384,26 +385,28 @@ class LocationProvider with ChangeNotifier {
         return bg.BackgroundGeolocation.ready(bg.Config(
           locationAuthorizationRequest: 'Any',
           reset: true,
-          debug: false,
+          debug: BnLog.getActiveLogLevel() == LogLevel.all ? true : false,
           fastestLocationUpdateInterval: 1000,
           //ALL
-          logLevel: bg.Config.LOG_LEVEL_OFF,
-          //logLevel: bgLogLevel,
+          logLevel: BnLog.getActiveLogLevel() == LogLevel.verbose
+              ? bg.Config.LOG_LEVEL_VERBOSE
+              : bg.Config.LOG_LEVEL_INFO,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
           distanceFilter: 2,
           disableLocationAuthorizationAlert: true,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
-          logMaxDays: 0,
+          logMaxDays: BnLog.getActiveLogLevel() == LogLevel.verbose ? 8 : 0,
           heartbeatInterval: 60,
-          stopDetectionDelay: 5,
-          persistMode: bg.Config.PERSIST_MODE_NONE,
+          stopDetectionDelay: 180,
+          persistMode: BnLog.getActiveLogLevel() == LogLevel.verbose
+              ? bg.Config.PERSIST_MODE_ALL
+              : bg.Config.PERSIST_MODE_NONE,
           // Activity Recognition
           activityRecognitionInterval: 3000,
-          allowIdenticalLocations: true,
           showsBackgroundLocationIndicator: true,
           preventSuspend: true,
           //locationUpdateInterval: 1000, not used - distance filter must be 0
-          stopTimeout: 3,
+          stopTimeout: 180,
           // <-- a very long stopTimeout
           //disableStopDetection: false,
           // <-- Don't interrupt location updates when Motion API says "still"
@@ -446,15 +449,17 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onLocation(bg.Location location) {
-    BnLog.verbose(text: '_onLocation ${location.coords}');
+    BnLog.all(text: '_onLocation ${location.coords} ${location.isMoving}');
     _lastLocationTimeStamp = DateTime.now();
-    updateUserLocation(location);
+    _updateUserLocation(location);
   }
 
   ///Update user location and track points list
-  void updateUserLocation(bg.Location location) async {
+  void _updateUserLocation(bg.Location location) async {
+    BnLog.verbose(text: 'updateuserloc ${location.coords}');
+    _lastKnownPoint = location;
     if (!isTracking) return;
-    _isMoving = true;
+    _isMoving = location.isMoving;
     _userPositionStreamController.add(location);
     _userLatLngStreamController
         .add(LatLng(location.coords.latitude, location.coords.longitude));
@@ -476,7 +481,6 @@ class LocationProvider with ChangeNotifier {
 
     _userLatLngList
         .add(LatLng(location.coords.latitude, location.coords.longitude));
-    _lastKnownPoint = location;
 
     if (MapSettings.showOwnTrack) {
       var userTrackingPoint = UserGpxPoint(
@@ -1142,14 +1146,22 @@ class LocationProvider with ChangeNotifier {
     _noLocationAndBatteryTimer = Timer.periodic(
       const Duration(seconds: 60),
       (timer) async {
+        BnLog.verbose(text: 'checkBatteryTimer elapsed');
         var bat = Battery();
-        var batteryLevel = await bat.batteryLevel;
-        var isCharging = await bat.batteryState == BatteryState.charging;
-        if (batteryLevel != -1) {
-          checkWakeLock(batteryLevel / 100, isCharging);
-          checkLowPowerStopTracking(batteryLevel / 100, isCharging);
-        }
+        try {
+          var batteryLevel = await bat.batteryLevel;
 
+          var isCharging = await bat.batteryState == BatteryState.charging;
+          if (batteryLevel != -1) {
+            checkWakeLock(batteryLevel / 100, isCharging);
+            checkLowPowerStopTracking(batteryLevel / 100, isCharging);
+          }
+          BnLog.verbose(
+              text:
+                  'checkBatteryTimer finished $batteryLevel %, chg:$isCharging');
+        } catch (ex) {
+          BnLog.verbose(text: 'checkBatteryTimer cant executed due $ex');
+        }
         if (_lastKnownPoint == null || _lastLocationTimeStamp == null) {
           _resetLocation();
         } else {
@@ -1613,7 +1625,8 @@ class LocationProvider with ChangeNotifier {
         var userLoc = UserLocationPoint(
             latitude: _lastKnownPoint!.coords.latitude.toShortenedDouble(6),
             longitude: _lastKnownPoint!.coords.longitude.toShortenedDouble(6),
-            speed: '${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
+            speed:
+                '${_realUserSpeedKmh != null ? _realUserSpeedKmh?.toStringAsFixed(1) : '-'} km/h');
         SendToWatch.updateUserLocationData(userLoc);
       }
       SendToWatch.setIsLocationTracking(isTracking);

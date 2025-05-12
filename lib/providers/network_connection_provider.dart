@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:universal_io/io.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-
 import '../helpers/debug_helper.dart';
 import '../helpers/logger/logger.dart';
 import '../wamp/wamp_v2.dart';
@@ -44,13 +42,6 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
   static const _initialNetworkState =
       NetworkStateModel(connectivityStatus: ConnectivityStatus.unknown);
 
-  static InternetConnection get internetConnection => _internetConnection;
-  static final InternetConnection _internetConnection =
-      InternetConnection.createInstance(
-          /*customCheckOptions: [
-      InternetCheckOption(uri: WampV2.getServerUri()),
-    ],*/
-          );
   ConnectivityStatus connectivityStatus = ConnectivityStatus.wampNotConnected;
 
   StreamSubscription? _icCheckerSubscription;
@@ -94,25 +85,6 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
         BnLog.verbose(text: 'set network_connection_provider to background');
       },
     );
-    _icCheckerSubscription =
-        _internetConnection.onStatusChange.listen((InternetStatus status) {
-      BnLog.verbose(
-          text:
-              '${DateTime.now().toIso8601String()} Internet connection status change: {$status}',
-          methodName: 'Internet connection listener',
-          className: toString());
-
-      switch (status) {
-        case InternetStatus.connected:
-          // The internet is now connected
-          _checkStatus(ConnectivityStatus.wampNotConnected);
-          break;
-        case InternetStatus.disconnected:
-          // The internet is now disconnected
-          _checkStatus(ConnectivityStatus.internetOffline);
-          break;
-      }
-    });
 
     _isServerConnectedSubscription =
         WampV2().wampConnectedStreamController.stream.listen((status) {
@@ -156,9 +128,7 @@ class NetworkDetectorNotifier extends StateNotifier<NetworkStateModel> {
     }
     bool isOnline = false;
     try {
-      if (await _internetConnection.hasInternetAccess) {
-        isOnline = true;
-      }
+      isOnline = true;
     } on SocketException catch (e) {
       BnLog.error(
           text:

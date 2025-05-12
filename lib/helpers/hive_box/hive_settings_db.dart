@@ -12,7 +12,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:talker_logger/talker_logger.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../app_settings/app_constants.dart';
@@ -21,6 +20,7 @@ import '../../models/event.dart';
 import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../models/user_gpx_point.dart';
+import '../logger/log_level.dart';
 import '../logger/logger.dart';
 import '../notification/onesignal_handler.dart';
 import '../time_converter_helper.dart';

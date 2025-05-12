@@ -80,18 +80,24 @@ class SendToWatch {
   static UserLocationPoint _lastPoint =
       UserLocationPoint.userLocationPointEmpty();
 
-  static void updateUserLocationData(UserLocationPoint userLocationPoint) {
+  static Future<void> updateUserLocationData(
+      UserLocationPoint userLocationPoint) async {
     if (!Platform.isIOS) {
       return;
     }
+    BnLog.verbose(
+        text: 'update userLoc to watch', className: 'watch_communication');
     if (_lastPoint.hashCode == userLocationPoint.hashCode) {
       return; //no update if equal locations
     }
     _lastPoint = userLocationPoint;
-    channel.invokeMethod(flutterToWatch, {
+    var res = await channel.invokeMethod(flutterToWatch, {
       'method': 'updateUserLocationData',
       'data': userLocationPoint.toJson()
     });
+    BnLog.verbose(
+        text: 'update userLoc to watch finish $res',
+        className: 'watch_communication');
   }
 
   static void phoneAppWillTerminate() {

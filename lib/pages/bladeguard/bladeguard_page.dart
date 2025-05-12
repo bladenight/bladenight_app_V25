@@ -15,6 +15,7 @@ import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
+import '../../helpers/preferences_helper.dart' show PreferencesHelper;
 import '../../helpers/url_launch_helper.dart';
 import '../widgets/common_widgets/no_connection_warning.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
@@ -340,6 +341,24 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                               ),
                             ],
                           ),
+                          if (HiveSettingsDB.geoFencingActive)
+                            FutureBuilder<String?>(
+                                future:
+                                    PreferencesHelper.getLastGeoFenceResult(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<String?> snapshot) {
+                                  if (snapshot.hasData) {
+                                    return FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        '${snapshot.data}',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    );
+                                  } else {
+                                    return SizedBox();
+                                  }
+                                }),
                           CupertinoFormSection(
                             header: Text(Localize.of(context)
                                 .pushMessageParticipateAsBladeGuardTitle),

@@ -296,7 +296,7 @@ class WampV2 {
   ///Put messages to queue
   ///removing double requests
   ///remove calls older than 60 secs
-  void _put(BnWampMessage message) {
+  Future<void> _put(BnWampMessage message) async {
     _messageCallStreamController.sink.add(message);
     _lastPutMessage = DateTime.now();
   }
@@ -306,6 +306,10 @@ class WampV2 {
   void _messageQueueRunner() async {
     _messageCallStreamController.stream.listen((message) async {
       runZonedGuarded(() async {
+        if (_channel == null) {
+          var _ = await _initWamp(force: true);
+          await Future.delayed(Duration(milliseconds: 1000));
+        }
         var outdatedCalls = <int, BnWampMessage>{};
         for (var call in calls.entries) {
           if (call.value.endpoint == message.endpoint) {
@@ -349,13 +353,6 @@ class WampV2 {
               calls.remove(message.requestId);
               busy = true;
               continue;
-            }
-            int fail = 0;
-            if (_channel == null && fail <= 5) {
-              // wait 5sec
-              await Future.delayed(Duration(milliseconds: 1000));
-              fail++;
-              //listener should start socket
             }
             _channel?.sink.add(message.getMessageAsJson);
 

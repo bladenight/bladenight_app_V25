@@ -13,7 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart' show SentryFlutter;
-import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker/talker.dart' show Talker;
+import 'package:talker_flutter/talker_flutter.dart' show TalkerFlutter;
 import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart'
     show TalkerRiverpodObserver;
 import 'package:talker_riverpod_logger/talker_riverpod_logger_settings.dart';
@@ -106,9 +107,7 @@ void main() async {
         FirebaseCrashlytics.instance.recordError(error, stackTrace);
       }
       BnLog.error(
-          className: 'main',
-          methodName: 'runZonedGuarded',
-          text: '$error\n$stackTrace');
+          className: 'main', methodName: 'runZonedGuarded', text: '$error');
     },
   );
 }

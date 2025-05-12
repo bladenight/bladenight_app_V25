@@ -398,7 +398,7 @@
   "sendlink": "Send link",
   "sendlinkdescription": "Hi, this is my invitation to share your skating position in BladeNight App, and find me. If you like this, get the BladeNight app from AppStore end enter the code: {requestId} in Friends after pressing + add friend by code.\nWhen the BladeNight App is installed use following link: {bnaLink} on your mobile. \nHave fun and we will find together.\nThe BladeNight-App is available on Playstore \n{playStoreLink} and on Apple App Store \n{iosAppStoreLink}",
   "sendlinksubject": "Send link to BladeNight-App. You can see each other.",
-  "serverNotReachable": "Connecting to server ...",
+  "serverNotReachable": "Waiting for connection...",
   "sessionConnectionError": "Error negotiate session connection",
   "setClearLogs": "Clear log data",
   "setDarkMode": "Activate Dark Mode",

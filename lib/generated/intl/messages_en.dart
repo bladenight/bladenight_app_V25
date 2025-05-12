@@ -867,7 +867,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "serverConnected": MessageLookupByLibrary.simpleMessage("Server connected"),
     "serverNotReachable": MessageLookupByLibrary.simpleMessage(
-      "Connecting to server ...",
+      "Waiting for connection...",
     ),
     "serverVersion": MessageLookupByLibrary.simpleMessage("Server version"),
     "sessionConnectionError": MessageLookupByLibrary.simpleMessage(

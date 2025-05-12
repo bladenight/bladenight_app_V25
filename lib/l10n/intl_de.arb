@@ -398,7 +398,7 @@
   "sendlink": "Link senden",
   "sendlinkdescription": "Dies ist die Einladung um deine(n) Freund:in (Absender der Nachricht) in der BladeNightApp zu sehen und euch im Skaterzug wiederzufinden. Wenn du das möchtest lade Dir die Baldenigthapp und gib den Code: {requestId} ein.\nWenn die App schon installiert ist benutze den link {bnaLink} auf dem Telefon. \nViel Spass beim skaten.\nDie App ist verfügbar im Playstore \n{playStoreLink} und im Apple App Store \n{iosAppStoreLink}",
   "sendlinksubject": "Sende link an BladeNight-App. Ihr könnt euch gegenseitig sehen.",
-  "serverNotReachable": "Verbinde mit Server ..",
+  "serverNotReachable": "Warte auf Verbindung ..",
   "sessionConnectionError": "Fehler beim Verbinden",
   "setClearLogs": "Logdateien löschen",
   "setDarkMode": "Dunkelmodus aktivieren",

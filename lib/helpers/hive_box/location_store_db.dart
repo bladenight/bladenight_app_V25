@@ -62,8 +62,9 @@ extension LocationStore on HiveSettingsDB {
         return Future.value(false);
       }
       var utp = UserGPXPoints(val);
+      var utpJson = utp.toJson();
       await HiveSettingsDB._locationHiveBox
-          .put(_userTrackPointsKey + dateTime.toDateOnlyString(), utp.toJson());
+          .put(_userTrackPointsKey + dateTime.toDateOnlyString(), utpJson);
       setUserTrackPointsLastUpdate(DateTime.now());
       BnLog.info(
           text: 'Saved user track points list with an amount of ${val.length}');
