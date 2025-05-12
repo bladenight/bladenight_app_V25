@@ -361,10 +361,9 @@ class LocationProvider with ChangeNotifier {
           preventSuspend: true,
           stopOnTerminate: false,
           startOnBoot: false,
-          logLevel: bg.Config.LOG_LEVEL_OFF,
-          // bgLogLevel,
-          //bg.Config.LOG_LEVEL_VERBOSE,//
-          //locationUpdateInterval: 1000, not used - distance filter must be 0
+          logLevel: BnLog.getActiveLogLevel() == LogLevel.verbose
+              ? bg.Config.LOG_LEVEL_VERBOSE
+              : bg.Config.LOG_LEVEL_INFO,
           stopTimeout: 180,
           //20 minutes
           // <-- a very long stopTimeout
@@ -713,7 +712,7 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<bool> stopTracking() async {
-    setRealtimedataUpdateTimerIfTracking(false);
+    _setRealtimedataUpdateTimerIfTracking(false);
     if (HiveSettingsDB.useAlternativeLocationProvider) {
       _trackingStopped();
       await startRealtimeUpdateSubscriptionIfNotTracking();
@@ -977,7 +976,7 @@ class LocationProvider with ChangeNotifier {
         _listenLocationWithAlternativePackage();
         _trackingType = trackingType;
         stopRealtimedataSubscription();
-        setRealtimedataUpdateTimerIfTracking(true);
+        _setRealtimedataUpdateTimerIfTracking(true);
         _startedTrackingTime = DateTime.now();
         ActiveEventProvider().refresh(forceUpdate: true);
         _trackWaitStatus = TrackWaitStatus.none;
@@ -1005,7 +1004,7 @@ class LocationProvider with ChangeNotifier {
           _trackWaitStatus = TrackWaitStatus.none;
           notifyListeners();
           stopRealtimedataSubscription();
-          setRealtimedataUpdateTimerIfTracking(true);
+          _setRealtimedataUpdateTimerIfTracking(true);
           HiveSettingsDB.setTrackingActive(isTracking);
           SendToWatch.setIsLocationTracking(isTracking);
           var loc = await _updateLocation();
@@ -1019,7 +1018,7 @@ class LocationProvider with ChangeNotifier {
           notifyListeners();
           HiveSettingsDB.setTrackingActive(false);
           SendToWatch.setIsLocationTracking(false);
-          setRealtimedataUpdateTimerIfTracking(false);
+          _setRealtimedataUpdateTimerIfTracking(false);
           startRealtimeUpdateSubscriptionIfNotTracking();
           //re-update on error
           return null;
@@ -1114,7 +1113,7 @@ class LocationProvider with ChangeNotifier {
   ///Get Location updates if tracking is enabled
   ///[enabled] = true
   ///[enabled] = false stop timer
-  void setRealtimedataUpdateTimerIfTracking(bool enabled) {
+  void _setRealtimedataUpdateTimerIfTracking(bool enabled) {
     BnLog.verbose(text: 'init setLocationTimer to $enabled');
     _updateRealtimedataIfTrackingTimer?.cancel();
     _saveLocationsTimer?.cancel();
@@ -1473,7 +1472,8 @@ class LocationProvider with ChangeNotifier {
       if (HiveSettingsDB.useAlternativeLocationProvider) {
         geolocator.Position position =
             await geolocator.Geolocator.getCurrentPosition(
-                locationSettings: locationSettings);
+                    locationSettings: locationSettings)
+                .timeout(Duration(seconds: 3));
         _onLocation(position.convertToBGLocation());
       } else {
         return await bg.BackgroundGeolocation.getCurrentPosition(

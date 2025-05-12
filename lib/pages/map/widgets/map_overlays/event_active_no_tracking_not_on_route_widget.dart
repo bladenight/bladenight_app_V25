@@ -104,27 +104,33 @@ class EventActiveNoTrackingNotOnRouteWidget extends ConsumerWidget {
                       ) //Text when Event confirmed
                     : Container()),
           ),
-          /* if (actualOrNextEvent.status !=
-                                          EventStatus.confirmed &&
-                                      actualOrNextEvent.status !=
-                                          EventStatus.noevent)
-                                    FittedBox(
-                                      child: Text(
-                                        '${Localize.of(context).nextEvent} ${DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(actualOrNextEvent.getUtcIso8601DateTime)}',
-                                      ),
-                                    ),
-                                  if (actualOrNextEvent.status ==
-                                          EventStatus.confirmed &&
-                                      actualOrNextEvent.status !=
-                                          EventStatus.noevent)
-                                    FittedBox(
-                                      child: Text(
-                                        DateFormatter(Localize.of(context))
-                                            .getLocalDayDateTimeRepresentation(
-                                                actualOrNextEvent
-                                                    .getUtcIso8601DateTime),
-                                      ),
-                                    ),*/
+          if (!isTracking)
+            Container()
+          else
+            ref.watch(isUserParticipatingProvider)
+                //tracking in viewer mode  participating
+                ? (actualOrNextEvent.status == EventStatus.confirmed ||
+                        actualOrNextEvent.status == EventStatus.running)
+                    ? Shimmer(
+                        gradient: LinearGradient(colors: [
+                          actualOrNextEvent.statusColor.withValues(alpha: 0.8),
+                          actualOrNextEvent.statusColor,
+                          actualOrNextEvent.statusColor.withValues(alpha: 0.8)
+                        ]),
+                        child: Text(
+                          Localize.of(context).bladenightViewerTracking,
+                        ),
+                      ) /*Text(
+                                                              '${Localize.of(context).start} ${DateFormatter(Localize.of(context)).getLocalDayDateTimeRepresentation(actualOrNextEvent.getUtcIso8601DateTime)}',
+                                                        )*/
+                    : Container()
+                //tracking in viewer mode not participating
+                : Text(
+                    Localize.of(context).bladenightViewerTracking,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        color: CupertinoTheme.of(context).primaryColor),
+                  )
         ],
         if (eventIsActive)
           Column(children: [

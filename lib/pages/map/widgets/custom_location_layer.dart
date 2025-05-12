@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/follow_location_state.dart';
 import '../../../providers/is_tracking_provider.dart';
+import '../../../providers/location_provider.dart' show LocationProvider;
 import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
@@ -20,9 +22,17 @@ class CustomLocationLayer extends ConsumerStatefulWidget {
 }
 
 class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
+  late final Stream<LocationMarkerPosition?> _positionStream;
+  late final Stream<LocationMarkerHeading?> _headingStream;
+
   @override
   void initState() {
     super.initState();
+    const factory = LocationMarkerDataStreamFactory();
+    _positionStream = LocationProvider().userLocationMarkerPositionStream;
+    _headingStream = kIsWeb || kDebugMode
+        ? LocationProvider().userLocationMarkerHeadingStream
+        : factory.fromRotationSensorHeadingStream().asBroadcastStream();
   }
 
   @override
@@ -43,7 +53,8 @@ class _CustomLocationLayer extends ConsumerState<CustomLocationLayer> {
         ? Container()
         : CurrentLocationLayer(
             //indicators: const LocationMarkerIndicators(),
-
+            positionStream: _positionStream,
+            headingStream: _headingStream,
             alignDirectionAnimationDuration: const Duration(milliseconds: 300),
             alignPositionOnUpdate: cameraFollow == CameraFollow.followMe &&
                     !widget.hasGesture &&

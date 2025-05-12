@@ -318,7 +318,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "BladeNight Update",
     ),
     "bladenightViewerTracking": MessageLookupByLibrary.simpleMessage(
-      "Zuschauermodus mit GPS",
+      "Zuschauermodus mit Standort",
     ),
     "bladenighttracking": MessageLookupByLibrary.simpleMessage(
       "Zuschauermodus, Teilnehmer ▶️ drücken.",
@@ -604,7 +604,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Standortübertragung ist in den Einstellungen deaktiviert oder noch nie gestartet! Tracking nicht möglich.",
     ),
     "locationServiceRunning": MessageLookupByLibrary.simpleMessage(
-      "Standortübertragung gestartet und aktiv.",
+      "Standortübertragung aktiv.",
     ),
     "login": MessageLookupByLibrary.simpleMessage("Anmelden"),
     "loginThreeHoursBefore": MessageLookupByLibrary.simpleMessage(

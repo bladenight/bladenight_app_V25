@@ -168,7 +168,7 @@
   "bladeguardInfo": "<h2>Exigences et règles :</h2><ul><li>Vous avez au moins 16 ans.</li><li>Vous êtes à l'aise avec les rollers en ligne et savez freiner.</li ><li>Vous connaissez le code de la route </li><li>Vous êtes serviable, sympathique et avez l'esprit d'équipe </li><li>Vous participez à notre formation gratuite avant votre premier voyage.</li> </ul ><p>En tant que Bladeguard, il n'y a aucun frais pour vous. Vous pouvez vous désinscrire à tout moment. <h3>Ici, vous pouvez accéder à <a href=\"{bladeguardRegisterlink}\">Inscription en ligne</a> et <a href=\"{ bladeguardPrivacyLink}\">Protection des données</a></p></h3>",
   "bladenight": "BladeNight",
   "bladenightUpdate": "BladeNight mise à jour",
-  "bladenightViewerTracking": "Mode visualisation avec GPS",
+  "bladenightViewerTracking": "Mode visualisation avec position",
   "bladenighttracking": "Mode visualisation, poussée du participant ▶ s'il vous plaît",
   "cancel": "Annuler",
   "canceled": "\uD83D\uDE1E Annulé \uD83D\uDE1E",

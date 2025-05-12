@@ -325,7 +325,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "BladeNight mise à jour",
     ),
     "bladenightViewerTracking": MessageLookupByLibrary.simpleMessage(
-      "Mode visualisation avec GPS",
+      "Mode visualisation avec position",
     ),
     "bladenighttracking": MessageLookupByLibrary.simpleMessage(
       "Mode visualisation, poussée du participant ▶ s\'il vous plaît",

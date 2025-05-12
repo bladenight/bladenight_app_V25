@@ -8,7 +8,35 @@
 
 ### Changed
 
+### Removed#
+
+## [1.25.03]
+
+## [Unreleased]
+
+### Added
+
+- own [LogLevel] implementation
+
+### Fixed
+
+- realspeed raises nullpointerexception in updateWatchdate
+- missing seconds in gpx-track
+- Web
+-
+    - timeout for location refresh if the user has tracking enabled
+-
+    - fixed missing rotation sensor
+
+### Changed
+
+- Stoptimeout to 180 min
+- eventupdate with to hook to in favor that only one [SimpleMapper<DateTime>] is possible - the last registered will
+  used
+
 ### Removed
+
+- Internetconnection checker—crashes on iOS
 
 ## [1.25.00] - 2025 - dev
 

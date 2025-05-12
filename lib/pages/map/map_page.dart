@@ -44,12 +44,18 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   final PopupController _popupController = PopupController();
 
   StreamSubscription<LatLng>? locationSubscription;
-
   bool _hasGesture = false;
+  late final Stream<LocationMarkerPosition?> _positionStream;
+  late final Stream<LocationMarkerHeading?> _headingStream;
 
   @override
   void initState() {
     super.initState();
+    const factory = LocationMarkerDataStreamFactory();
+    _positionStream = LocationProvider().userLocationMarkerPositionStream;
+    _headingStream = kIsWeb || kDebugMode
+        ? LocationProvider().userLocationMarkerHeadingStream
+        : factory.fromRotationSensorHeadingStream().asBroadcastStream();
     _mapController = MapController();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {});
@@ -160,9 +166,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                     //SpecialPointsLayer(_popupController), //crashes with global key multi usage on open Popup
                     kIsWeb
                         ? CurrentLocationLayer(
-                            positionStream: ref
-                                .watch(locationProvider.notifier)
-                                .userLocationMarkerPositionStream,
+                            positionStream: _positionStream,
+                            headingStream: _headingStream,
                           )
                         : CustomLocationLayer(_hasGesture),
                     //needs map controller

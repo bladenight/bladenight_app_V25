@@ -753,10 +753,10 @@ class Localize {
     );
   }
 
-  /// `Viewermode with GPS`
+  /// `Viewermode with location`
   String get bladenightViewerTracking {
     return Intl.message(
-      'Viewermode with GPS',
+      'Viewermode with location',
       name: 'bladenightViewerTracking',
       desc: '',
       args: [],
