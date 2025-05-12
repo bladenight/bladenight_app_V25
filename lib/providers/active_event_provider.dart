@@ -30,6 +30,9 @@ class ActiveEventProvider with ChangeNotifier {
 
   StreamSubscription<Event>? _evtStream;
 
+  DateTime get lastUpdate => _lastUpdate;
+  DateTime _lastUpdate = DateTime(2000);
+
   Event get event => _event;
   Event _event = Event.init;
   bool _mapPushed = false;
@@ -101,6 +104,8 @@ class ActiveEventProvider with ChangeNotifier {
         }
 
         var compareResult = _event.compareTo(rpcEvent);
+        HiveSettingsDB.setActualEventLastUpdate(DateTime.now());
+        _lastUpdate = DateTime.now();
         if (kIsWeb || compareResult != 0) {
           if (rpcEvent.nodes == [] && rpcEvent.status != EventStatus.noevent) {
             //get route points if not delivered
@@ -127,6 +132,7 @@ class ActiveEventProvider with ChangeNotifier {
     } catch (e) {
       BnLog.error(text: 'failed Refresh activeEvent', exception: e);
     }
+
     _event = HiveSettingsDB.getActualEvent;
     SendToWatch.updateEvent(_event);
     notifyListeners();
@@ -169,4 +175,8 @@ final activeEventProviderInstance =
 
 final activeEventProvider = Provider.autoDispose((ref) {
   return ref.watch(activeEventProviderInstance.select((ae) => ae.event));
+});
+
+final activeEventLastUpdateProvider = Provider.autoDispose((ref) {
+  return ref.watch(activeEventProviderInstance.select((ae) => ae.lastUpdate));
 });

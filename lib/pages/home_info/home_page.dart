@@ -261,7 +261,8 @@ class _HomePageState extends ConsumerState<HomePage>
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(Localize.of(context).lastupdate),
-                                      Text(activeEvent.lastUpdate!
+                                      Text(ref
+                                          .watch(activeEventLastUpdateProvider)
                                           .toEventLastUpdateDateTime)
                                     ],
                                   ),
