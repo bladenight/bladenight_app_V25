@@ -15,6 +15,8 @@ class EventDateTimeHook extends MappingHook {
 
   @override
   Object? afterEncode(Object? value) {
+    //var newStr = value.toString().replaceFirst(':00.000Z', '');
+    //return newStr;
     //server don't understand zulu time till V 1.0.12
     //from V1.0.13 implemented
     // on server dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm");
@@ -24,16 +26,14 @@ class EventDateTimeHook extends MappingHook {
             .tryParse(value.toString(), true);
         if (df != null) {
           var newDf = DateFormat("yyyy-MM-dd'T'HH:mm");
-          var val = newDf.format(df);
+          var val = newDf.format(df.toLocal());
           return val;
         }
       } catch (e) {
         BnLog.error(text: 'Could not parse $value');
       }
-      var newStr = value.toString().replaceFirst(':00.000Z', '');
-      return newStr;
     }
-    return value;
+    return super.afterEncode(value);
   }
 
   @override

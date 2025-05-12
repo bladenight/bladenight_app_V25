@@ -181,6 +181,6 @@ extension DateExtension on DateTime {
   }
 
   String toEventMessageDateTime() {
-    return DateFormat('yyyy-MM-ddTHH:mm').format(this);
+    return DateFormat("yyyy-MM-dd'T'HH:mm").format(this);
   }
 }
