@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:vector_math/vector_math.dart';
 
+import '../app_settings/app_configuration_helper.dart' show defaultInitialZoom;
 import '../models/route.dart';
 
 class GeoLocationHelper {
-  static List<HeadingPoint> calculateHeadings(List<LatLng> routePoints) {
+  static List<HeadingPoint> calculateHeadings(List<LatLng> routePoints,
+      {zoom = defaultInitialZoom}) {
     if (routePoints.isEmpty) {
       return [];
     }
@@ -29,9 +31,10 @@ class GeoLocationHelper {
           distP1P2.toDouble()));
     }
     //max 20
-    if (headingPoints.length > 30) {
+    var headingsCount = zoom * pow(1.3, 5);
+    if (headingPoints.length > headingsCount) {
       var sublist = <HeadingPoint>[];
-      int i = (headingPoints.length / 30).round();
+      int i = (headingPoints.length / headingsCount).round();
       var subCount = 0;
       for (var hp in headingPoints) {
         if (subCount == 0) sublist.add(hp);

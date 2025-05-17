@@ -55,19 +55,17 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
         Polyline(
           //current and active route points
           points: activeEventRoutePoints,
-          strokeWidth: ref.watch(isTrackingProvider) ? 5 : 3,
+          strokeWidth: ref.watch(isTrackingProvider) ? 7 : 7,
+          color: CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                  Brightness.light
+              ? systemPrimaryDarkDefaultColor
+              : systemPrimaryDefaultColor,
           borderColor: CupertinoAdaptiveTheme.of(context).theme.brightness ==
                   Brightness.light
               ? systemPrimaryDefaultColor
               : systemPrimaryDarkDefaultColor,
-          color: ref.watch(isTrackingProvider)
-              ? CupertinoAdaptiveTheme.of(context).theme.brightness ==
-                      Brightness.light
-                  ? CupertinoColors.white
-                  : CupertinoColors.darkBackgroundGray
-              : Colors.transparent,
           useStrokeWidthInMeter: true,
-          borderStrokeWidth: ref.watch(isTrackingProvider) ? 4 : 5,
+          borderStrokeWidth: ref.watch(isTrackingProvider) ? 4 : 4,
           //ref.watch(isTrackingProvider),
         ),
 
@@ -108,15 +106,15 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
           points: processionRoutePoints,
           color: CupertinoAdaptiveTheme.of(context).theme.brightness ==
                   Brightness.light
-              ? ref.watch(themePrimaryDarkColorProvider)
-              : ref.watch(themePrimaryLightColorProvider),
-          borderColor: CupertinoAdaptiveTheme.of(context).theme.brightness ==
-                  Brightness.light
               ? ref.watch(themePrimaryLightColorProvider)
               : ref.watch(themePrimaryDarkColorProvider),
+          borderColor: CupertinoAdaptiveTheme.of(context).theme.brightness ==
+                  Brightness.light
+              ? ref.watch(themePrimaryDarkColorProvider)
+              : ref.watch(themePrimaryLightColorProvider),
           strokeWidth: ref.watch(iconSizeProvider) - 10,
           borderStrokeWidth: 2.0,
-          pattern: const StrokePattern.dotted(),
+          pattern: const StrokePattern.dotted(spacingFactor: 1.5),
         ),
     ]);
   }

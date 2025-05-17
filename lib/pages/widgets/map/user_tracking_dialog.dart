@@ -55,7 +55,7 @@ class UserTrackDialog extends ConsumerWidget {
           return FlutterMap(
             options: MapOptions(
               keepAlive: true,
-              initialZoom: 13.0,
+              initialZoom: defaultInitialZoom,
               initialCameraFit: bounds != null
                   ? CameraFit.insideBounds(bounds: bounds)
                   : null,

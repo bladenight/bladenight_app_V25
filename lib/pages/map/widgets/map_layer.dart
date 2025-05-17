@@ -59,7 +59,7 @@ class _MapLayerState extends State<MapLayer> {
       options: MapOptions(
         keepAlive: true,
         initialCameraFit: CameraFit.insideBounds(bounds: bounds),
-        initialZoom: initialZoom,
+        initialZoom: defaultInitialZoom,
         minZoom: MapSettings.openStreetMapEnabled
             ? MapSettings.minZoom
             : MapSettings.minZoomDefault,

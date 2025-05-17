@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app_settings/app_configuration_helper.dart'
+    show defaultInitialZoom;
 import '../../../models/event.dart';
 import '../../../models/route.dart';
 import '../../map/widgets/gps_info_and_map_copyright.dart';
@@ -22,7 +24,7 @@ class MapLayerOverview extends ConsumerStatefulWidget {
     this.markerList = const [],
     this.polyLineList = const [],
     this.controller,
-    this.initialZoom = 13,
+    this.initialZoom = defaultInitialZoom,
     this.minZoom = 5,
     this.maxZoom = 19,
     this.interactionOptions = const InteractionOptions(

@@ -106,7 +106,7 @@ class MapEventInformation extends ConsumerWidget {
                             DataLeftRightContent(
                               descriptionLeft: Localize.of(context).waittime,
                               descriptionRight:
-                                  '⏱Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 120 * 60 * 1000)}',
+                                  '⏱Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 180 * 60 * 1000)}',
                               rightWidget: const SizedBox(
                                 width: 20,
                               ),
@@ -151,6 +151,14 @@ class MapEventInformation extends ConsumerWidget {
                                     : '📟 ${(rtu.head.realSpeed ?? rtu.head.speed).toStringAsFixed(1)} km/h',
                                 rightWidget: Container()),
                             DataLeftRightContent(
+                                descriptionLeft:
+                                    '${Localize.of(context).timeToFinish} ${Localize.of(context).head}',
+                                descriptionRight:
+                                    ' ${(rtu.head.eta) != null ? TimeConverter.millisecondsToDateTimeString(value: (rtu.head.eta)!) : '-'} ',
+                                rightWidget: Container()),
+
+                            //tail
+                            DataLeftRightContent(
                               descriptionLeft:
                                   '${Localize.of(context).distanceDriven} ${Localize.of(context).tail}',
                               descriptionRight:
@@ -180,8 +188,14 @@ class MapEventInformation extends ConsumerWidget {
                                     '${Localize.of(context).speed} ${Localize.of(context).tail}',
                                 descriptionRight: ref
                                         .watch(wantSeeFullProcessionProvider)
-                                    ? '📟 ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)}/ 🖥️ ${(rtu.tail.speed).toStringAsFixed(1)} km/h'
-                                    : '📟 ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)} km/h',
+                                    ? '⏱ ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)}/ 🖥️ ${(rtu.tail.speed).toStringAsFixed(1)} km/h'
+                                    : '⏱ ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)} km/h',
+                                rightWidget: Container()),
+                            DataLeftRightContent(
+                                descriptionLeft:
+                                    '${Localize.of(context).timeToFinish} ${Localize.of(context).tail}',
+                                descriptionRight:
+                                    ' ${(rtu.tail.eta) != null ? TimeConverter.millisecondsToDateTimeString(value: (rtu.tail.eta)!) : '-'} ',
                                 rightWidget: Container()),
                           ]),
                     ),
@@ -240,9 +254,22 @@ class MapEventInformation extends ConsumerWidget {
                             ),
                           if (rtu.user.isOnRoute) ...[
                             DataLeftRightContent(
+                              descriptionLeft:
+                                  Localize.of(context).timeToFinish,
+                              descriptionRight:
+                                  '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToFinish().abs(), maxvalue: 180 * 60 * 1000)}',
+                              rightWidget: Container(
+                                alignment: Alignment.centerRight,
+                                width: 20,
+                                child: Icon(
+                                  Icons.access_time_filled_sharp,
+                                ),
+                              ),
+                            ),
+                            DataLeftRightContent(
                               descriptionLeft: Localize.of(context).timeToHead,
                               descriptionRight:
-                                  '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToHead().abs(), maxvalue: 120 * 60 * 1000)}',
+                                  '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToHead().abs(), maxvalue: 180 * 60 * 1000)}',
                               rightWidget: Container(
                                 alignment: Alignment.centerRight,
                                 width: 20,
@@ -257,7 +284,7 @@ class MapEventInformation extends ConsumerWidget {
                             DataLeftRightContent(
                               descriptionLeft: Localize.of(context).timeToTail,
                               descriptionRight:
-                                  '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail().abs(), maxvalue: 120 * 60 * 1000)}',
+                                  '${TimeConverter.millisecondsToDateTimeString(value: rtu.timeUserToTail().abs(), maxvalue: 180 * 60 * 1000)}',
                               rightWidget: Container(
                                 alignment: Alignment.centerRight,
                                 width: 20,

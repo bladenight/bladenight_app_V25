@@ -99,7 +99,7 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
             mapController: _mapController,
             options: MapOptions(
               keepAlive: true,
-              initialZoom: 13.0,
+              initialZoom: defaultInitialZoom,
               onMapEvent: (event) {
                 //print('${DateTime.now().toIso8601String()} mapevent $event ');
               },

@@ -963,7 +963,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
 
   Future<bool> _stopLocationService() async {
     MapController ctr = MapController.of(context);
-    ctr.move(defaultLatLng, initialZoom);
+    ctr.move(defaultLatLng, defaultInitialZoom);
     return ref.read(isTrackingProvider.notifier).stopTracking();
   }
 

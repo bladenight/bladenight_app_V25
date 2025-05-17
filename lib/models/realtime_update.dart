@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../app_settings/app_constants.dart';
 import '../generated/l10n.dart';
 import '../helpers/hive_box/hive_settings_db.dart';
 import '../helpers/logger/logger.dart';
@@ -115,6 +114,12 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     int userEta = user.eta ?? 0;
     if (headEta == 0 || userEta == 0) return 0;
     return userEta - headEta;
+  }
+
+  int timeUserToFinish() {
+    if (!user.isOnRoute || head.position == tail.position) return 0;
+    int userEta = user.eta ?? 0;
+    return userEta;
   }
 
   ///Returns length as int in meter between head and tail

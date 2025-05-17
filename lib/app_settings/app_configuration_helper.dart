@@ -17,7 +17,7 @@ const double defaultAppLongitude = 11.543837661522703;
 double defaultLatitude = 48.13250913196827;
 double defaultLongitude = 11.543837661522703;
 final LatLng defaultLatLng = LatLng(defaultLatitude, defaultLongitude);
-const double initialZoom = 12.5;
+const double defaultInitialZoom = 12.5;
 
 ///Bounds for flutter map if no polyline is available
 final LatLngBounds defaultMapCamBounds =
