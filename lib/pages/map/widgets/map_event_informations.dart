@@ -21,8 +21,9 @@ import 'speed_info_colors.dart';
 import 'update_progress.dart';
 
 class MapEventInformation extends ConsumerWidget {
-  const MapEventInformation({super.key, required this.mapController});
+  MapEventInformation({super.key, required this.mapController});
 
+  final _scrollController = ScrollController();
   final MapController mapController;
 
   @override
@@ -35,6 +36,7 @@ class MapEventInformation extends ConsumerWidget {
         (fr) => fr.where((element) => element.isOnline && element.isActive)));
     var event = ref.watch(activeEventProvider);
     return CupertinoScrollbar(
+      controller: _scrollController,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
@@ -42,6 +44,7 @@ class MapEventInformation extends ConsumerWidget {
             const GripBar(),
             Expanded(
               child: ListView(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(8),
                 children: [
                   Padding(

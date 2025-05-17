@@ -64,6 +64,9 @@ class _AdminPasswordDialogState extends ConsumerState<AdminPasswordDialog> {
                 });
               },
               onSubmitted: (value) {
+                if (context.canPop()) {
+                  context.pop();
+                }
                 //Navigator.of(context, rootNavigator: true).pop(value);
               },
             ),

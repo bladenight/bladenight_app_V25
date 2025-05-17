@@ -388,7 +388,7 @@ class _MapButtonsOverlay extends ConsumerState<MapButtonsLayer>
                                     ? MediaQuery.of(context).size.height * 0.5
                                     : MediaQuery.of(context).size.height * 0.7,
                               ),
-                              child: const TrackingTypeWidget(),
+                              child: TrackingTypeWidget(),
                             );
                           });
                       if (res != null) {

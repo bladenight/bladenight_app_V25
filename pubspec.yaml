@@ -89,7 +89,7 @@ dependencies:
   #    url: https://github.com/followthemoney1/modal_bottom_sheet.git
   #    ref: main
   #    path: modal_bottom_sheet
-  onesignal_flutter: ^5.3.0
+  onesignal_flutter: ^5.3.2
   package_info_plus: ^8.3.0
   path: ^1.9.1
   path_provider: ^2.0.15

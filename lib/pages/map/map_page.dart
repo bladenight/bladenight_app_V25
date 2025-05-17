@@ -151,23 +151,17 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                         child: const BnMapPagePolyLinesLayer(),
                       ),
                     ),
-
-                    //CurrentLocationLayer(),
-                    /*AnimatedLocationMarkerLayer(
-                position: LocationMarkerPosition(
-                    latitude: ref.watch(realtimeDataProvider)!.head.latitude!,
-                    longitude: ref.watch(realtimeDataProvider)!.head.longitude!,
-                    accuracy: 1.0
-                ),
-              ),*/
-
                     const GPSInfoAndMapCopyright(),
                     const HeadingsLayer(),
                     //SpecialPointsLayer(_popupController), //crashes with global key multi usage on open Popup
                     kIsWeb
                         ? CurrentLocationLayer(
                             positionStream: _positionStream,
-                            headingStream: _headingStream,
+                            headingStream: kIsWeb || kDebugMode
+                                ? null
+                                : LocationMarkerDataStreamFactory()
+                                    .fromRotationSensorHeadingStream()
+                                    .asBroadcastStream(),
                           )
                         : CustomLocationLayer(_hasGesture),
                     //needs map controller
@@ -183,7 +177,6 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
                   ],
                 );
               }),
-              //CurrentLocationLayer(),
             ],
           ),
         ]),

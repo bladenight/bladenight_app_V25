@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,6 +48,7 @@ final userLocationMarkerHeadingStreamController =
 
 @riverpod
 Raw<Stream<LocationMarkerHeading>> rawStream(Ref ref) {
+  if (kIsWeb) return userLocationMarkerHeadingStreamController.stream;
   var listener = FlutterCompass.events?.listen((event) {
     if (event.heading != null) {
       userLocationMarkerHeadingStreamController.sink.add(LocationMarkerHeading(

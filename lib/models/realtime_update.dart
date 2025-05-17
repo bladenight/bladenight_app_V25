@@ -202,12 +202,12 @@ class RealtimeUpdate with RealtimeUpdateMappable {
     try {
       var wampResult = await WampV2()
           .addToWamp(bnWampMessage)
-          .timeout(wampTimeout)
+          .timeout(Duration(seconds: 5))
           .catchError((error, stackTrace) => error);
       BnLog.debug(
-        className: 'Future<RealtimeUpdate>  wampUpdate 207',
+        className: 'realtimeDataUpdate  wampUpdate 208',
         methodName: 'sendLocation',
-        text: 'received: $message',
+        text: '$message received: $wampResult',
       );
 
       if (wampResult is Map<String, dynamic>) {

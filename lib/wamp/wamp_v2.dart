@@ -265,10 +265,12 @@ class WampV2 {
 
       var diffWampLastLifeSign =
           DateTime.now().difference(_lastWampStreamLifeSign);
-      if (diffWampLastLifeSign.inMinutes > 2 && !_wampStopped) {
+      if (diffWampLastLifeSign.inSeconds > 20 &&
+          diffLastPutMessage.inSeconds < 15 &&
+          !_wampStopped) {
         BnLog.info(
             text:
-                'Close wamp by _connLoop. LastLifeSign = ${_lastWampStreamLifeSign.toIso8601String()} ');
+                'Close wamp by connection monitoring. LastLifeSign = ${_lastWampStreamLifeSign.toIso8601String()} < 20 - lastPut ${diffLastPutMessage.inSeconds} < 15');
         _lastWampStreamLifeSign = DateTime.now(); //reset
         closeWamp();
       }

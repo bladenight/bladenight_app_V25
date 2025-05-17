@@ -2,12 +2,14 @@ package de.bladenight.bladenight_app_flutter;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.window.SplashScreenView;
 import androidx.annotation.NonNull;
 import androidx.core.view.WindowCompat;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
+
 public class MainActivity extends FlutterActivity {
     private static final String CHANNEL = "bladenightchannel";
 
@@ -20,10 +22,9 @@ public class MainActivity extends FlutterActivity {
                             //Future implementation to show data on Watch
                             if (call.method.equals("flutterToWatch")) {
                                 result.success(true);
-                            }
-                            else {
-                                result.success(true);
-                                //result.notImplemented();
+                            } else {
+                                //result.success(false);
+                                result.notImplemented();
                             }
 
                         }
@@ -43,6 +44,27 @@ public class MainActivity extends FlutterActivity {
                             SplashScreenView::remove);
         }
 
+        // Context.startForegroundService() did not then call Service.startForeground()
+        // https://github.com/transistorsoft/flutter_background_geolocation/wiki/
+        // Android-ANR-%22Context.startForegroundService()-did-not-then-call-Service.startForeground();
+        //
+        // Implement Strict mode.  Should be disabled on RELEASE builds.
+        //
+        //
+          /*
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectAll()
+                .penaltyLog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
+*/
         super.onCreate(savedInstanceState);
     }
     /*@Override

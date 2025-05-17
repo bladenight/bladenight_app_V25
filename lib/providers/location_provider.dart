@@ -310,7 +310,8 @@ class LocationProvider with ChangeNotifier {
       if (HiveSettingsDB.wakeLockEnabled) {
         WakelockPlus.disable();
       }
-    } else {
+    } //set to foreground
+    else {
       if (_trackingType == TrackingType.noTracking ||
           _trackingType != TrackingType.onlyTracking) {
         WampV2().startWamp();
@@ -321,6 +322,7 @@ class LocationProvider with ChangeNotifier {
       if (HiveSettingsDB.wakeLockEnabled) {
         WakelockPlus.enable();
       }
+      _updateUserLocationTrack;
     }
   }
 
@@ -351,7 +353,8 @@ class LocationProvider with ChangeNotifier {
           debug: false,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
           allowIdenticalLocations: true,
-          distanceFilter: 2,
+          activityRecognitionInterval: 10000,
+          distanceFilter: 0,
           heartbeatInterval: 60,
           disableLocationAuthorizationAlert: true,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
@@ -367,7 +370,7 @@ class LocationProvider with ChangeNotifier {
           stopTimeout: 180,
           //20 minutes
           // <-- a very long stopTimeout
-          //disableStopDetection: true,
+          disableStopDetection: true,
           // <-- Don't interrupt location updates when Motion API says "still"
           backgroundPermissionRationale: bg.PermissionRationale(
               title: Localize.current.requestAlwaysPermissionTitle,
@@ -391,7 +394,7 @@ class LocationProvider with ChangeNotifier {
               ? bg.Config.LOG_LEVEL_VERBOSE
               : bg.Config.LOG_LEVEL_INFO,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-          distanceFilter: 2,
+          distanceFilter: 0,
           disableLocationAuthorizationAlert: true,
           disableMotionActivityUpdates: isMotionDetectionDisabled,
           logMaxDays: BnLog.getActiveLogLevel() == LogLevel.verbose ? 8 : 0,
@@ -401,7 +404,7 @@ class LocationProvider with ChangeNotifier {
               ? bg.Config.PERSIST_MODE_ALL
               : bg.Config.PERSIST_MODE_NONE,
           // Activity Recognition
-          activityRecognitionInterval: 3000,
+          activityRecognitionInterval: 10000,
           showsBackgroundLocationIndicator: true,
           preventSuspend: true,
           //locationUpdateInterval: 1000, not used - distance filter must be 0
@@ -483,8 +486,8 @@ class LocationProvider with ChangeNotifier {
 
     if (MapSettings.showOwnTrack) {
       var userTrackingPoint = UserGpxPoint(
-          location.coords.latitude.toShortenedDouble(6),
-          location.coords.longitude.toShortenedDouble(6),
+          location.coords.latitude.toShortenedDouble(9),
+          location.coords.longitude.toShortenedDouble(9),
           _realUserSpeedKmh!,
           location.coords.heading,
           location.coords.altitude,
@@ -492,8 +495,8 @@ class LocationProvider with ChangeNotifier {
           DateTime.now());
       if (_userGpxPoints.isNotEmpty) {
         var userLastPoint = _userGpxPoints.last;
-        var lon = location.coords.longitude.toShortenedDouble(6);
-        var lat = location.coords.latitude.toShortenedDouble(6);
+        var lon = location.coords.longitude.toShortenedDouble(9);
+        var lat = location.coords.latitude.toShortenedDouble(9);
         if (userLastPoint.latitude != lat && userLastPoint.longitude != lon) {
           _userGpxPoints.add(userTrackingPoint);
         }
@@ -503,11 +506,11 @@ class LocationProvider with ChangeNotifier {
     }
 
     var userLoc = UserLocationPoint(
-        latitude: location.coords.latitude.toShortenedDouble(6),
-        longitude: location.coords.longitude.toShortenedDouble(6),
+        latitude: location.coords.latitude.toShortenedDouble(9),
+        longitude: location.coords.longitude.toShortenedDouble(9),
         speed: '${_realUserSpeedKmh!.toStringAsFixed(1)} km/h');
     SendToWatch.updateUserLocationData(userLoc);
-    await updateUserLocationTrack(location);
+    await _updateUserLocationTrack(location);
 
     if (!_isInBackground) {
       notifyListeners();
@@ -517,80 +520,91 @@ class LocationProvider with ChangeNotifier {
   //init 0 then 0 plus 1
   //if 0 recalculate
   static int rerenderTrackCount = -1;
+  static bool calcUpdateUserLocationTrack = false;
 
-  //tolerance 0.4 - before
-  Future<bool> updateUserLocationTrack(bg.Location location) {
+  /// simplify user location track
+  /// all variables are static
+  ///
+  Future<bool> _updateUserLocationTrack(bg.Location location) {
+    if (calcUpdateUserLocationTrack) return Future.value(false);
     return Future.microtask(() {
-      rerenderTrackCount++;
-      if (rerenderTrackCount >= 30) {
-        var simplifyUserGpxPoints = simplifyUserGpxPointList(_userGpxPoints,
-            tolerance: MapSettings.simplifyTolerance);
-        _userGpxPoints.clear();
-        _userGpxPoints.addAll(simplifyUserGpxPoints);
-        rerenderTrackCount = 0;
-      }
-      if (!_showOwnTrack) return true;
-
-      if (!_showOwnColoredTrack && rerenderTrackCount == 0) {
-        _userLatLngList.clear();
-        _userLatLngList.addAll(_userGpxPoints.toLatLngList);
-      }
-
-      if (_showOwnColoredTrack) {
-        if (_userSpeedPoints.latLngList.isEmpty) {
-          //first point
-          UserSpeedPoint userSpeedPoint = UserSpeedPoint(
-            location.coords.latitude.toShortenedDouble(6),
-            location.coords.longitude.toShortenedDouble(6),
-            _realUserSpeedKmh!,
-            LatLng(location.coords.latitude.toShortenedDouble(6),
-                location.coords.longitude.toShortenedDouble(6)),
-          );
-          _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
-        } else if (rerenderTrackCount == 0) {
-          //decrease numbers of poly lines
-          var smallTrackPointList = UserSpeedPoints([]);
-          LatLng? lastLatLng;
-          for (var counter = 0; counter < _userGpxPoints.length; counter++) {
-            if (counter == 0) {
-              //no followed polylinePoint first line has same endpoint
-              smallTrackPointList.add(
-                  _userGpxPoints[counter].latitude,
-                  _userGpxPoints[counter].longitude,
-                  _userGpxPoints[counter].realSpeedKmh,
-                  _userGpxPoints[counter].latLng);
-              lastLatLng = _userGpxPoints[counter].latLng;
-            } else {
-              smallTrackPointList.add(
-                  _userGpxPoints[counter].latitude,
-                  _userGpxPoints[counter].longitude,
-                  _userGpxPoints[counter].realSpeedKmh,
-                  lastLatLng!);
-              lastLatLng = _userGpxPoints[counter].latLng;
-            }
-          }
-          _userSpeedPoints.clear();
-          _userSpeedPoints.userSpeedPoints
-              .addAll(smallTrackPointList.userSpeedPoints);
-          UserSpeedPoint userSpeedPoint = UserSpeedPoint(
-            location.coords.latitude,
-            location.coords.longitude,
-            _realUserSpeedKmh!,
-            _userSpeedPoints.lastSpeedPointLatLng,
-          );
-          _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
-        } else {
-          UserSpeedPoint userSpeedPoint = UserSpeedPoint(
-            location.coords.latitude,
-            location.coords.longitude,
-            _realUserSpeedKmh!,
-            _userSpeedPoints.lastSpeedPointLatLng,
-          );
-          _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+      try {
+        calcUpdateUserLocationTrack = true;
+        rerenderTrackCount++;
+        if (rerenderTrackCount >= 30) {
+          var simplifyUserGpxPoints = simplifyUserGpxPointList(_userGpxPoints,
+              tolerance: MapSettings.simplifyTolerance);
+          _userGpxPoints.clear();
+          _userGpxPoints.addAll(simplifyUserGpxPoints);
+          rerenderTrackCount = 0;
         }
-      }
-      if (!_isInBackground) {
-        notifyListeners();
+        if (!_showOwnTrack) return true;
+
+        if (!_showOwnColoredTrack && rerenderTrackCount == 0) {
+          _userLatLngList.clear();
+          _userLatLngList.addAll(_userGpxPoints.toLatLngList);
+        }
+
+        if (_showOwnColoredTrack) {
+          if (_userSpeedPoints.latLngList.isEmpty) {
+            //first point
+            UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+              location.coords.latitude.toShortenedDouble(9),
+              location.coords.longitude.toShortenedDouble(9),
+              _realUserSpeedKmh!,
+              LatLng(location.coords.latitude.toShortenedDouble(9),
+                  location.coords.longitude.toShortenedDouble(9)),
+            );
+            _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+          } else if (rerenderTrackCount == 0) {
+            //decrease numbers of poly lines
+            var smallTrackPointList = UserSpeedPoints([]);
+            LatLng? lastLatLng;
+            for (var counter = 0; counter < _userGpxPoints.length; counter++) {
+              if (counter == 0) {
+                //no followed polylinePoint first line has same endpoint
+                smallTrackPointList.add(
+                    _userGpxPoints[counter].latitude,
+                    _userGpxPoints[counter].longitude,
+                    _userGpxPoints[counter].realSpeedKmh,
+                    _userGpxPoints[counter].latLng);
+                lastLatLng = _userGpxPoints[counter].latLng;
+              } else {
+                smallTrackPointList.add(
+                    _userGpxPoints[counter].latitude,
+                    _userGpxPoints[counter].longitude,
+                    _userGpxPoints[counter].realSpeedKmh,
+                    lastLatLng!);
+                lastLatLng = _userGpxPoints[counter].latLng;
+              }
+            }
+            _userSpeedPoints.clear();
+            _userSpeedPoints.userSpeedPoints
+                .addAll(smallTrackPointList.userSpeedPoints);
+            UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+              location.coords.latitude,
+              location.coords.longitude,
+              _realUserSpeedKmh!,
+              _userSpeedPoints.lastSpeedPointLatLng,
+            );
+            _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+          } else {
+            UserSpeedPoint userSpeedPoint = UserSpeedPoint(
+              location.coords.latitude,
+              location.coords.longitude,
+              _realUserSpeedKmh!,
+              _userSpeedPoints.lastSpeedPointLatLng,
+            );
+            _userSpeedPoints.addUserSpeedPoint(userSpeedPoint);
+          }
+        }
+        if (!_isInBackground) {
+          notifyListeners();
+        }
+      } catch (e) {
+        BnLog.error(text: 'failed to calculate usertrack');
+      } finally {
+        calcUpdateUserLocationTrack = false;
       }
       return true;
     });
@@ -637,7 +651,16 @@ class LocationProvider with ChangeNotifier {
   }
 
   void _onActivityChange(bg.ActivityChangeEvent event) {
-    _isMoving = event.activity != 'still';
+    _isMoving = event.activity.toLowerCase() != 'still';
+    if (_lastKnownPoint != null && !_isMoving) {
+      _realUserSpeedKmh = 0.0;
+      var userLocationPoint = UserLocationPoint(
+          latitude: _lastKnownPoint!.coords.latitude.toShortenedDouble(9),
+          longitude: _lastKnownPoint!.coords.longitude.toShortenedDouble(9),
+          speed: '- km/h');
+      SendToWatch.updateUserLocationData(userLocationPoint);
+    }
+
     if (!_isInBackground) {
       notifyListeners();
     }
@@ -654,7 +677,7 @@ class LocationProvider with ChangeNotifier {
     try {
       await bg.BackgroundGeolocation.getCurrentPosition(
         timeout: 2,
-        maximumAge: 60000,
+        maximumAge: 5000,
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         samples: 2, // How many location samples to attempt.
       );
@@ -1024,11 +1047,11 @@ class LocationProvider with ChangeNotifier {
           return null;
         });
         await bg.BackgroundGeolocation.setConfig(bg.Config(
-            distanceFilter: trackingType == TrackingType.onlyTracking ? 10 : 0,
-            locationUpdateInterval: 1000,
+            distanceFilter: trackingType == TrackingType.onlyTracking ? 5 : 0,
+            locationUpdateInterval: 500,
             stopTimeout: trackingType == TrackingType.onlyTracking
                 ? 5
-                : 100, // <-- a very long stopTimeout
+                : 180, // <-- a very long stopTimeout
             disableStopDetection: trackingType == TrackingType.onlyTracking
                 ? false
                 : true // <-- Don't interrupt location updates when Motion API says "still"
@@ -1083,8 +1106,8 @@ class LocationProvider with ChangeNotifier {
           locationTimeStamp:
               DateTime.now().millisecondsSinceEpoch - location.age,
           //6 digits => 1 m location accuracy
-          coords: LatLng(location.coords.latitude.toShortenedDouble(6),
-              location.coords.longitude.toShortenedDouble(6)),
+          coords: LatLng(location.coords.latitude.toShortenedDouble(9),
+              location.coords.longitude.toShortenedDouble(9)),
           deviceId: DeviceId.appId,
           isParticipating: _userIsParticipant,
           specialFunction: HiveSettingsDB.specialCodeValue != 0
@@ -1237,8 +1260,8 @@ class LocationProvider with ChangeNotifier {
           accuracy: geolocator.LocationAccuracy.high,
           distanceFilter: 10,
           forceLocationManager: true,
-          intervalDuration: const Duration(seconds: 5),
-          timeLimit: Duration(seconds: 2),
+          intervalDuration: const Duration(seconds: 1),
+          timeLimit: Duration(seconds: 3),
           //(Optional) Set foreground notification config to keep the app alive
           //when going to the background
           foregroundNotificationConfig: geolocator.ForegroundNotificationConfig(
@@ -1255,26 +1278,25 @@ class LocationProvider with ChangeNotifier {
           pauseLocationUpdatesAutomatically: true,
           // Only set to true if our app will be started up in the background.
           showBackgroundLocationIndicator: true,
-          timeLimit: Duration(seconds: 2));
+          timeLimit: Duration(seconds: 3));
     } else if (kIsWeb) {
       locationSettings = geolocator.WebSettings(
           accuracy: geolocator.LocationAccuracy.high,
-          distanceFilter: 20,
-          maximumAge: Duration(minutes: 1),
+          distanceFilter: 10,
+          maximumAge: Duration(seconds: 5),
           timeLimit: Duration(seconds: 3));
     } else {
       locationSettings = geolocator.LocationSettings(
           accuracy: geolocator.LocationAccuracy.high,
-          distanceFilter: 20,
-          timeLimit: Duration(seconds: 2));
+          distanceFilter: 2,
+          timeLimit: Duration(seconds: 3));
     }
 
     _locationSubscription = geolocator.Geolocator.getPositionStream(
             locationSettings: locationSettings)
         .listen((geolocator.Position? position) async {
       if (position == null) return;
-      var newLoc = position.convertToBGLocation();
-      _onLocation(newLoc);
+      _onLocation(position.convertToBGLocation());
     });
   }
 
@@ -1364,7 +1386,7 @@ class LocationProvider with ChangeNotifier {
     if ((_trackingType == TrackingType.userNotParticipating ||
             _trackingType == TrackingType.userParticipating) &&
         timeDiff <
-            const Duration(milliseconds: defaultLocationUpdateInterval - 100) &&
+            const Duration(milliseconds: defaultLocationUpdateInterval - 50) &&
         !forceUpdate) {
       //print('${DateTime.now().toIso8601String()} lower $defaultLocationUpdateInterval ms rt update');
 
@@ -1374,7 +1396,7 @@ class LocationProvider with ChangeNotifier {
 
     var timeDiff2 = dtNow.difference(_lastRealtimedataUpdate);
     if (timeDiff2 <
-            const Duration(milliseconds: defaultRealtimeUpdateInterval - 100) &&
+            const Duration(milliseconds: defaultRealtimeUpdateInterval - 50) &&
         _trackingType == TrackingType.noTracking &&
         !forceUpdate) {
       //print('${DateTime.now().toIso8601String()} lower $defaultRealtimeUpdateInterval ms rt update');
@@ -1407,7 +1429,7 @@ class LocationProvider with ChangeNotifier {
       var ts = DateTime.parse(_lastKnownPoint!.timestamp);
       var diff = DateTime.now().toUtc().difference(ts.toUtc());
       //set lastKnownPoint to null after x sec
-      if (diff > const Duration(seconds: 30)) {
+      if (diff > const Duration(seconds: 5)) {
         _lastKnownPoint = await getCurrentLocation();
       }
     } else {
@@ -1478,7 +1500,7 @@ class LocationProvider with ChangeNotifier {
       } else {
         return await bg.BackgroundGeolocation.getCurrentPosition(
           timeout: 2,
-          maximumAge: 30000,
+          maximumAge: 5000,
           desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         );
       }
@@ -1623,8 +1645,8 @@ class LocationProvider with ChangeNotifier {
             UserLocationPoint.userLocationPointEmpty());
       } else {
         var userLoc = UserLocationPoint(
-            latitude: _lastKnownPoint!.coords.latitude.toShortenedDouble(6),
-            longitude: _lastKnownPoint!.coords.longitude.toShortenedDouble(6),
+            latitude: _lastKnownPoint!.coords.latitude.toShortenedDouble(9),
+            longitude: _lastKnownPoint!.coords.longitude.toShortenedDouble(9),
             speed:
                 '${_realUserSpeedKmh != null ? _realUserSpeedKmh?.toStringAsFixed(1) : '-'} km/h');
         SendToWatch.updateUserLocationData(userLoc);

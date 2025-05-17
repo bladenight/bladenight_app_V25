@@ -60,6 +60,7 @@ class AppStartNotifier extends _$AppStartNotifier {
         await ref.read(messagesLogicProvider).updateServerMessages();
         if (await _initNotifications() == true) {
           GeofenceHelper().activateGeofencing();
+          await Future.delayed(Duration(seconds: 45));
           await initOneSignal();
         }
       });

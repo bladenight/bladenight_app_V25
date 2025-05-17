@@ -10,6 +10,20 @@
 
 ### Removed#
 
+## [1.25.04]
+
+### Added
+
+### Fixed
+
+- CupertinoScrollController with nested Listview - set same ScrollController
+
+### Changed
+
+- decreased distances and location timeouts
+
+### Removed#
+
 ## [1.25.03]
 
 ## [Unreleased]

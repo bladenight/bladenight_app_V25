@@ -8,17 +8,21 @@ import '../buttons/tinted_cupertino_button.dart';
 import '../sheets/grip_bar.dart';
 
 class TrackingTypeWidget extends ConsumerWidget {
-  const TrackingTypeWidget({super.key});
+  TrackingTypeWidget({super.key});
+
+  final _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return CupertinoScrollbar(
+      controller: _scrollController,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(children: [
           const GripBar(),
           Expanded(
             child: ListView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(8),
               children: [
                 CupertinoFormSection(
