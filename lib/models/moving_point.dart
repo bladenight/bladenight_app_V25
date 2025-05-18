@@ -3,7 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 part 'moving_point.mapper.dart';
 
 @MappableClass()
-class MovingPoint with MovingPointMappable{
+class MovingPoint with MovingPointMappable {
   @MappableField(key: 'pos')
   final int position;
 
@@ -11,7 +11,7 @@ class MovingPoint with MovingPointMappable{
   @MappableField(key: 'rsp')
   final double? realSpeed;
 
-  //calculated speed in m/s
+  //calculated linear speed in m/s
   @MappableField(key: 'spd')
   final int speed;
   @MappableField(key: 'eta')
@@ -43,7 +43,7 @@ class MovingPoint with MovingPointMappable{
     this.accuracy,
   });
 
-  static MovingPoint movingPointEmpty()  {
+  static MovingPoint movingPointEmpty() {
     return MovingPoint(position: 0, speed: 0);
   }
 }

@@ -1046,14 +1046,18 @@ class LocationProvider with ChangeNotifier {
           //re-update on error
           return null;
         });
+        var alwaysEnabled =
+            _gpsLocationPermissionsStatus == LocationPermissionStatus.always;
         await bg.BackgroundGeolocation.setConfig(bg.Config(
             distanceFilter: trackingType == TrackingType.onlyTracking ? 5 : 0,
-            locationUpdateInterval: 500,
+            locationUpdateInterval: 1000,
             stopTimeout: trackingType == TrackingType.onlyTracking
-                ? 5
-                : 180, // <-- a very long stopTimeout
+                ? alwaysEnabled
+                    ? 120 //if when in use location service doesn't restart after still
+                    : 10000 //Refused to initiate location-services from MotionTransition event in the background with WhenInUse authorization
+                : 10000, // <-- a very long stopTimeout
             disableStopDetection: trackingType == TrackingType.onlyTracking
-                ? false
+                ? true
                 : true // <-- Don't interrupt location updates when Motion API says "still"
             ));
         await bg.BackgroundGeolocation.changePace(true);
@@ -1816,18 +1820,14 @@ class LocationProvider with ChangeNotifier {
         return;
       }
     }
+    if (ActiveEventProvider().event.rpcException != null) {
+      ActiveEventProvider().refresh(forceUpdate: true);
+    }
 
     if (rtu.head.longitude != 0.0) {
       double lat = rtu.head.latitude ?? defaultLatitude;
       double lon = rtu.head.longitude ?? defaultLongitude;
-
       _trainHeadStreamController.add(LatLng(lat, lon));
-
-      if (_lastRouteName != rtu.routeName || _eventState != rtu.eventState) {
-        _lastRouteName = rtu.routeName;
-        _eventState = rtu.eventState;
-        ActiveEventProvider().refresh(forceUpdate: true);
-      }
     }
 
     if ((_lastRouteName != rtu.routeName ||
@@ -1836,6 +1836,9 @@ class LocationProvider with ChangeNotifier {
       _lastRouteName = rtu.routeName;
       _eventState = rtu.eventState;
       _eventIsRunning = rtu.eventIsActive;
+    }
+    if (ActiveEventProvider().event.rpcException != null) {
+      BnLog.debug(text: 'ActiveEventProvider refreshing forced because error');
       ActiveEventProvider().refresh(forceUpdate: true);
     }
     if (notify) {

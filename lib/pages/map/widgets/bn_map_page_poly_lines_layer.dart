@@ -55,7 +55,7 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
         Polyline(
           //current and active route points
           points: activeEventRoutePoints,
-          strokeWidth: ref.watch(isTrackingProvider) ? 7 : 7,
+          strokeWidth: ref.watch(isTrackingProvider) ? 3 : 3,
           color: CupertinoAdaptiveTheme.of(context).theme.brightness ==
                   Brightness.light
               ? systemPrimaryDarkDefaultColor
@@ -65,7 +65,7 @@ class _BnMapPagePolyLinesLayer extends ConsumerState<BnMapPagePolyLinesLayer> {
               ? systemPrimaryDefaultColor
               : systemPrimaryDarkDefaultColor,
           useStrokeWidthInMeter: true,
-          borderStrokeWidth: ref.watch(isTrackingProvider) ? 4 : 4,
+          borderStrokeWidth: ref.watch(isTrackingProvider) ? 8 : 8,
           //ref.watch(isTrackingProvider),
         ),
 

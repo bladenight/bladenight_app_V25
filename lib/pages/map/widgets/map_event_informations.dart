@@ -54,41 +54,39 @@ class MapEventInformation extends ConsumerWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  GestureDetector(
-                    child: Container(
-                      color: CupertinoDynamicColor.resolve(
-                          CupertinoColors.systemGroupedBackground, context),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          DataLeftRightContent(
-                            descriptionLeft: Localize.of(context).lastupdate,
-                            descriptionRight: DateFormatter(Localize.current)
-                                .getFullDateTimeString(rtu.timeStamp),
-                            rightWidget: const UpdateProgress(),
-                          ),
-                          DataLeftRightContent(
-                              descriptionLeft: Localize.of(context).route,
-                              descriptionRight: rtu.routeName,
-                              rightWidget: Container()),
-                          DataLeftRightContent(
-                              descriptionLeft: Localize.of(context).length,
-                              descriptionRight:
-                                  '${((rtu.runningLength) / 1000).toStringAsFixed(1)} km',
-                              rightWidget: Container()),
-                          DataLeftRightContent(
-                              descriptionLeft: Localize.of(context).trackers,
-                              descriptionRight: rtu.usersTracking.toString(),
-                              rightWidget: Container()),
-                          DataLeftRightContent(
-                              descriptionLeft: Localize.of(context).startTime,
-                              descriptionRight:
-                                  DateFormatter(Localize.of(context))
-                                      .getLocalDayDateTimeRepresentation(
-                                          event.getUtcIso8601DateTime),
-                              rightWidget: Container()),
-                        ],
-                      ),
+                  Container(
+                    color: CupertinoDynamicColor.resolve(
+                        CupertinoColors.systemGroupedBackground, context),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DataLeftRightContent(
+                          descriptionLeft: Localize.of(context).lastupdate,
+                          descriptionRight: DateFormatter(Localize.current)
+                              .getFullDateTimeString(rtu.timeStamp),
+                          rightWidget: const UpdateProgress(),
+                        ),
+                        DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).route,
+                            descriptionRight: rtu.routeName,
+                            rightWidget: Container()),
+                        DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).length,
+                            descriptionRight:
+                                '${((rtu.runningLength) / 1000).toStringAsFixed(1)} km',
+                            rightWidget: Container()),
+                        DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).trackers,
+                            descriptionRight: rtu.usersTracking.toString(),
+                            rightWidget: Container()),
+                        DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).startTime,
+                            descriptionRight:
+                                DateFormatter(Localize.of(context))
+                                    .getLocalDayDateTimeRepresentation(
+                                        event.getUtcIso8601DateTime),
+                            rightWidget: Container()),
+                      ],
                     ),
                   ),
                   Padding(
@@ -96,109 +94,129 @@ class MapEventInformation extends ConsumerWidget {
                     child: Text(Localize.of(context).train,
                         style: const TextStyle(fontWeight: FontWeight.bold)),
                   ),
-                  GestureDetector(
-                    child: Container(
-                      color: CupertinoDynamicColor.resolve(
-                          CupertinoColors.systemGroupedBackground, context),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            DataLeftRightContent(
-                              descriptionLeft: Localize.of(context).waittime,
-                              descriptionRight:
-                                  '⏱Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 180 * 60 * 1000)}',
-                              rightWidget: const SizedBox(
-                                width: 20,
-                              ),
-                            ),
-                            DataLeftRightContent(
-                                descriptionLeft:
-                                    Localize.of(context).trainlength,
-                                descriptionRight:
-                                    '📏 ${(rtu.distanceOfTrainComplete() / 1000).toStringAsFixed(1)} km',
-                                rightWidget: Container()),
-                            DataLeftRightContent(
-                              descriptionLeft:
-                                  '${Localize.of(context).distanceDriven} ${Localize.of(context).head}',
-                              descriptionRight:
-                                  '📏 ${(rtu.head.position / 1000).toStringAsFixed(1)} km',
-                              rightWidget: (rtu.head.latitude != null &&
-                                      rtu.head.longitude != 0.00)
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        mapController.move(
-                                            LatLng(
-                                                rtu.head.latitude ??
-                                                    defaultLatitude,
-                                                rtu.head.longitude ??
-                                                    defaultLongitude),
-                                            15);
-                                        context.pop();
-                                      },
-                                      child: Icon(Icons.gps_fixed_sharp,
-                                          color: CupertinoTheme.of(context)
-                                              .primaryColor,
-                                          size: 20),
-                                    )
-                                  : Container(),
-                            ),
-                            DataLeftRightContent(
-                                descriptionLeft:
-                                    '${Localize.of(context).speed} ${Localize.of(context).head}',
-                                descriptionRight: ref
-                                        .watch(wantSeeFullProcessionProvider)
-                                    ? '📟 ${(rtu.head.realSpeed ?? rtu.head.speed).toStringAsFixed(1)}/ 🖥️ ${(rtu.head.speed).toStringAsFixed(1)} km/h'
-                                    : '📟 ${(rtu.head.realSpeed ?? rtu.head.speed).toStringAsFixed(1)} km/h',
-                                rightWidget: Container()),
-                            DataLeftRightContent(
-                                descriptionLeft:
-                                    '${Localize.of(context).timeToFinish} ${Localize.of(context).head}',
-                                descriptionRight:
-                                    ' ${(rtu.head.eta) != null ? TimeConverter.millisecondsToDateTimeString(value: (rtu.head.eta)!) : '-'} ',
-                                rightWidget: Container()),
-
-                            //tail
-                            DataLeftRightContent(
-                              descriptionLeft:
-                                  '${Localize.of(context).distanceDriven} ${Localize.of(context).tail}',
-                              descriptionRight:
-                                  '📏 ${(rtu.tail.position / 1000).toStringAsFixed(1)} km',
-                              rightWidget: (rtu.tail.latitude != null &&
-                                      rtu.tail.longitude != 0.00)
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        mapController.move(
-                                            LatLng(
-                                                rtu.tail.latitude ??
-                                                    defaultLatitude,
-                                                rtu.tail.longitude ??
-                                                    defaultLongitude),
-                                            15);
-                                        context.pop();
-                                      },
-                                      child: Icon(Icons.gps_fixed_sharp,
-                                          color: CupertinoTheme.of(context)
-                                              .primaryColor,
-                                          size: 20),
-                                    )
-                                  : Container(),
-                            ),
-                            DataLeftRightContent(
-                                descriptionLeft:
-                                    '${Localize.of(context).speed} ${Localize.of(context).tail}',
-                                descriptionRight: ref
-                                        .watch(wantSeeFullProcessionProvider)
-                                    ? '⏱ ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)}/ 🖥️ ${(rtu.tail.speed).toStringAsFixed(1)} km/h'
-                                    : '⏱ ${(rtu.tail.realSpeed ?? rtu.tail.speed).toStringAsFixed(1)} km/h',
-                                rightWidget: Container()),
-                            DataLeftRightContent(
-                                descriptionLeft:
-                                    '${Localize.of(context).timeToFinish} ${Localize.of(context).tail}',
-                                descriptionRight:
-                                    ' ${(rtu.tail.eta) != null ? TimeConverter.millisecondsToDateTimeString(value: (rtu.tail.eta)!) : '-'} ',
-                                rightWidget: Container()),
-                          ]),
+                  Container(
+                    color: CupertinoDynamicColor.resolve(
+                        CupertinoColors.systemGroupedBackground, context),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        DataLeftRightContent(
+                          descriptionLeft: Localize.of(context).waittime,
+                          descriptionRight:
+                              '⏱Σ ${TimeConverter.millisecondsToDateTimeString(value: rtu.timeTrainComplete(), maxvalue: 180 * 60 * 1000)}',
+                          rightWidget: const SizedBox(
+                            width: 20,
+                          ),
+                        ),
+                        DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).trainlength,
+                            descriptionRight:
+                                '📏 ${(rtu.distanceOfTrainComplete() / 1000).toStringAsFixed(1)} km',
+                            rightWidget: Container()),
+                      ],
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                    child: Text(Localize.of(context).head,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  Container(
+                    color: CupertinoDynamicColor.resolve(
+                        CupertinoColors.systemGroupedBackground, context),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        DataLeftRightContent(
+                          descriptionLeft: Localize.of(context).distanceDriven,
+                          descriptionRight:
+                              '📏 ${(rtu.head.position / 1000).toStringAsFixed(1)} km',
+                          rightWidget: (rtu.head.latitude != null &&
+                                  rtu.head.longitude != 0.00)
+                              ? GestureDetector(
+                                  onTap: () {
+                                    mapController.move(
+                                        LatLng(
+                                            rtu.head.latitude ??
+                                                defaultLatitude,
+                                            rtu.head.longitude ??
+                                                defaultLongitude),
+                                        15);
+                                    context.pop();
+                                  },
+                                  child: Icon(Icons.gps_fixed_sharp,
+                                      color: CupertinoTheme.of(context)
+                                          .primaryColor,
+                                      size: 20),
+                                )
+                              : Container(),
+                        ),
+                        DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).speed,
+                            descriptionRight: ref
+                                    .watch(wantSeeFullProcessionProvider)
+                                ? '📟 ${(rtu.head.realSpeed ?? rtu.head.speed * 3.6).toStringAsFixed(1)}/ 🖥️ ${(rtu.head.speed * 3.6).toStringAsFixed(1)} km/h'
+                                : '📟 ${(rtu.head.realSpeed ?? rtu.head.speed * 3.6).toStringAsFixed(1)} km/h',
+                            rightWidget: Container()),
+                        DataLeftRightContent(
+                            descriptionLeft: Localize.of(context).timeToFinish,
+                            descriptionRight:
+                                ' ${(rtu.head.eta) != null ? TimeConverter.millisecondsToDateTimeString(value: (rtu.head.eta)!) : '-'} ',
+                            rightWidget: Container()),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                    child: Text(Localize.of(context).tail,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  Container(
+                    color: CupertinoDynamicColor.resolve(
+                        CupertinoColors.systemGroupedBackground, context),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          //tail
+                          DataLeftRightContent(
+                            descriptionLeft:
+                                Localize.of(context).distanceDriven,
+                            descriptionRight:
+                                '📏 ${(rtu.tail.position / 1000).toStringAsFixed(1)} km',
+                            rightWidget: (rtu.tail.latitude != null &&
+                                    rtu.tail.longitude != 0.00)
+                                ? GestureDetector(
+                                    onTap: () {
+                                      mapController.move(
+                                          LatLng(
+                                              rtu.tail.latitude ??
+                                                  defaultLatitude,
+                                              rtu.tail.longitude ??
+                                                  defaultLongitude),
+                                          15);
+                                      context.pop();
+                                    },
+                                    child: Icon(Icons.gps_fixed_sharp,
+                                        color: CupertinoTheme.of(context)
+                                            .primaryColor,
+                                        size: 20),
+                                  )
+                                : Container(),
+                          ),
+                          DataLeftRightContent(
+                              descriptionLeft: '${Localize.of(context).speed} ',
+                              descriptionRight: ref
+                                      .watch(wantSeeFullProcessionProvider)
+                                  ? '📟 ${(rtu.tail.realSpeed ?? rtu.tail.speed * 3.6).toStringAsFixed(1)}/ 🖥️ ${(rtu.tail.speed * 3.6).toStringAsFixed(1)} km/h'
+                                  : '📟 ${(rtu.tail.realSpeed ?? rtu.tail.speed * 3.6).toStringAsFixed(1)} km/h',
+                              rightWidget: Container()),
+                          DataLeftRightContent(
+                              descriptionLeft:
+                                  Localize.of(context).timeToFinish,
+                              descriptionRight:
+                                  ' ${(rtu.tail.eta) != null ? TimeConverter.millisecondsToDateTimeString(value: (rtu.tail.eta)!) : '-'} ',
+                              rightWidget: Container()),
+                        ]),
                   ),
                   if (ref.watch(isTrackingProvider)) ...[
                     Padding(
@@ -244,7 +262,7 @@ class MapEventInformation extends ConsumerWidget {
                           DataLeftRightContent(
                               descriptionLeft: Localize.of(context).speed,
                               descriptionRight:
-                                  '${(rtu.user.realSpeed != null ? rtu.user.realSpeed!.toStringAsFixed(1) : rtu.user.speed)} km/h',
+                                  '${(rtu.user.realSpeed != null ? rtu.user.realSpeed!.toStringAsFixed(1) : rtu.user.speed * 3.6)} km/h',
                               rightWidget: Container()),
                           if (!rtu.user.isOnRoute)
                             DataLeftRightContent(
