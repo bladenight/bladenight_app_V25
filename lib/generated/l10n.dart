@@ -3310,14 +3310,19 @@ class Localize {
     );
   }
 
-  /// `Train`
+  /// `Procession`
   String get train {
-    return Intl.message('Train', name: 'train', desc: '', args: []);
+    return Intl.message('Procession', name: 'train', desc: '', args: []);
   }
 
-  /// `Trainlength`
+  /// `length of procession`
   String get trainlength {
-    return Intl.message('Trainlength', name: 'trainlength', desc: '', args: []);
+    return Intl.message(
+      'length of procession',
+      name: 'trainlength',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `This can only be changed in the system settings! Try opening system settings?`

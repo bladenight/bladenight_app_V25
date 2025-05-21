@@ -1033,8 +1033,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Location sharing restartet",
     ),
     "trackingStoppedLowBat": m22,
-    "train": MessageLookupByLibrary.simpleMessage("Train"),
-    "trainlength": MessageLookupByLibrary.simpleMessage("Trainlength"),
+    "train": MessageLookupByLibrary.simpleMessage("Procession"),
+    "trainlength": MessageLookupByLibrary.simpleMessage("length of procession"),
     "tryOpenAppSettings": MessageLookupByLibrary.simpleMessage(
       "This can only be changed in the system settings! Try opening system settings?",
     ),

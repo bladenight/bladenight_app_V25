@@ -249,9 +249,15 @@ class OnesignalHandler {
         timeStamp: DateTime.now().millisecondsSinceEpoch,
         lastChange: DateTime.now().millisecondsSinceEpoch);
 
-    if (buttons != null && buttons.length == 1) {
+    if (buttons != null && buttons.length >= 1) {
       var button1 = buttons.first;
       message.button1Text = button1.text;
+      if (data != null) {
+        if (data.keys.contains('url')) {
+          message.url = data['url'];
+        }
+      }
+      ProviderContainer().read(messagesLogicProvider).addMessage(message);
       await QuickAlert.show(
           showCancelBtn: true,
           cancelBtnText: Localize.current.cancel,
@@ -263,10 +269,10 @@ class OnesignalHandler {
           onConfirmBtnTap: () {
             if (data != null) {
               if (data.keys.contains('url')) {
+                message.url = data['url'];
                 Launch.launchUrlFromString(data['url'], title ?? 'ext. Link');
               }
             }
-            ProviderContainer().read(messagesLogicProvider).addMessage(message);
             return rootNavigatorKey.currentState?.pop();
           });
     }
@@ -276,6 +282,12 @@ class OnesignalHandler {
       var button2 = buttons.last;
       message.button1Text = button1.text;
       message.button2Text = button2.text;
+      if (data != null) {
+        if (data.keys.contains('url')) {
+          message.url = data['url'];
+        }
+      }
+      ProviderContainer().read(messagesLogicProvider).addMessage(message);
       await QuickAlert.show(
           context: rootNavigatorKey.currentContext!,
           title: title ?? Localize.current.notification,
@@ -286,10 +298,10 @@ class OnesignalHandler {
           onConfirmBtnTap: () {
             if (data != null) {
               if (data.keys.contains('url')) {
+                message.url = data['url'];
                 Launch.launchUrlFromString(data['url'], title ?? 'ext. Link');
               }
             }
-            ProviderContainer().read(messagesLogicProvider).addMessage(message);
             return rootNavigatorKey.currentState?.pop();
           });
     }
@@ -303,7 +315,7 @@ class OnesignalHandler {
           ExternalAppMessage(
               uid: UUID.createUuid(),
               title: call.arguments,
-              body: 'test',
+              body: call.toString(),
               timeStamp: DateTime.now().millisecondsSinceEpoch,
               lastChange: DateTime.now().millisecondsSinceEpoch));
     } catch (e) {

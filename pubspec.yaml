@@ -2,7 +2,7 @@ name: bladenight_app_flutter
 description: BladeNight! App
 
 publish_to: 'none'
-version: 1.25.04
+version: 1.25.05
 
 environment:
   sdk: ">=2.17.0 <4.0.0"
