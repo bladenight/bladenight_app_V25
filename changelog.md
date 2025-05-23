@@ -1,14 +1,18 @@
 # Changelog - BladeNight App
 
-## [Unreleased]
+## [1.25.05]
 
 ### Added
 
+- Bladeguardcounter
+
 ### Fixed
+
+- fix non working onesignal action button
 
 ### Changed
 
-### Removed#
+- designchange home
 
 ## [1.25.04]
 

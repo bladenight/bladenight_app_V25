@@ -569,5 +569,6 @@
   "bladenightInfoTitleWeb": "WebApp and Information zur Münchner BladeNight",
   "bladenightInfoTitleApp": "Information zur Münchner BladeNight",
   "startNoParticipationShort": "Zeige deine Position",
-  "eventOn": "Event am"
+  "eventOn": "Event am",
+  "onsiteCount": "Bladeguards vor Ort angemeldet"
 }

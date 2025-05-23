@@ -569,5 +569,6 @@
   "bladenightInfoTitleWeb": "WebApp and Information about BladeNight Munich",
   "bladenightInfoTitleApp": "Information about BladeNight Munich",
   "startNoParticipationShort": "Show your Position",
-  "eventOn": "Event on"
+  "eventOn": "Event on",
+  "onsiteCount": "Bladeguards registered onsite "
 }

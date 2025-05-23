@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,6 +9,7 @@ import '../../models/event.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../wamp/wamp_exception.dart';
 import '../widgets/event_info/event_state_traffic_light.dart';
+import '../widgets/sponsors.dart';
 import 'event_map_small.dart';
 
 ///Event overview
@@ -87,14 +89,6 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.showMap)
-          GestureDetector(
-            onTap: () {
-              context.goNamed(AppRoute.map.name);
-            },
-            child: EventMapSmall(
-                nextEvent: widget.nextEvent, borderRadius: widget.borderRadius),
-          ),
         SizedBox(
           child: Padding(
             padding:
@@ -227,6 +221,28 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               ),
             ),
             child: EventStatusTrafficLight(event: widget.nextEvent),
+          ),
+        Container(
+          alignment: Alignment.topCenter,
+          width: double.infinity,
+          child: Text(
+            Localize.of(context).routeoverview,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        //SponsorCarousel(height: MediaQuery.sizeOf(context).height * 0.15),
+
+        /*Divider(
+          height: 4,
+          color: widget.nextEvent.statusColor,
+        ),*/
+        if (widget.showMap)
+          GestureDetector(
+            onTap: () {
+              context.goNamed(AppRoute.map.name);
+            },
+            child: EventMapSmall(
+                nextEvent: widget.nextEvent, borderRadius: widget.borderRadius),
           ),
       ],
     );

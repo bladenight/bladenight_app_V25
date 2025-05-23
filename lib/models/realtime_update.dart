@@ -57,10 +57,14 @@ class RealtimeUpdate with RealtimeUpdateMappable {
   @MappableField(key: 'spf')
   final int? specialFunction;
 
+  //Text to show Bladeguard count onsite
+  @MappableField(key: 'bgt')
+  final String? bladeguardApiText;
+
   Exception? rpcException;
   final timeStamp = DateTime.now();
 
-  ///All datas from server about actual procession
+  ///All data from server about actual procession
   RealtimeUpdate(
       {required this.head,
       required this.tail,
@@ -73,6 +77,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
       this.specialFunction,
       this.rpcException,
       this.eventState,
+      this.bladeguardApiText,
       this.eventIsActive = true});
 
   static RealtimeUpdate rpcError(Exception exception) {
@@ -84,6 +89,7 @@ class RealtimeUpdate with RealtimeUpdateMappable {
         routeName: 'error',
         usersTracking: '0',
         users: '0',
+        bladeguardApiText: '',
         friends: FriendsMessage(<String, FriendMessage>{}),
         rpcException: exception);
   }

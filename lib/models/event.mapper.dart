@@ -138,6 +138,9 @@ class EventMapper extends ClassMapperBase<Event> {
   static bool _$isActive(Event v) => v.isActive;
   static const Field<Event, bool> _f$isActive =
       Field('isActive', _$isActive, key: r'isa', opt: true, def: true);
+  static int _$minBladeguards(Event v) => v.minBladeguards;
+  static const Field<Event, int> _f$minBladeguards =
+      Field('minBladeguards', _$minBladeguards, key: r'mbg', opt: true, def: 0);
 
   @override
   final MappableFields<Event> fields = const {
@@ -154,6 +157,7 @@ class EventMapper extends ClassMapperBase<Event> {
     #startPointLongitude: _f$startPointLongitude,
     #startPoint: _f$startPoint,
     #isActive: _f$isActive,
+    #minBladeguards: _f$minBladeguards,
   };
 
   static Event _instantiate(DecodingData data) {
@@ -170,7 +174,8 @@ class EventMapper extends ClassMapperBase<Event> {
         startPointLatitude: data.dec(_f$startPointLatitude),
         startPointLongitude: data.dec(_f$startPointLongitude),
         startPoint: data.dec(_f$startPoint),
-        isActive: data.dec(_f$isActive));
+        isActive: data.dec(_f$isActive),
+        minBladeguards: data.dec(_f$minBladeguards));
   }
 
   @override
@@ -233,7 +238,8 @@ abstract class EventCopyWith<$R, $In extends Event, $Out>
       double? startPointLatitude,
       double? startPointLongitude,
       String? startPoint,
-      bool? isActive});
+      bool? isActive,
+      int? minBladeguards});
   EventCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -261,7 +267,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
           Object? startPointLatitude = $none,
           Object? startPointLongitude = $none,
           Object? startPoint = $none,
-          bool? isActive}) =>
+          bool? isActive,
+          int? minBladeguards}) =>
       $apply(FieldCopyWithData({
         if (startDate != null) #startDate: startDate,
         if (routeName != null) #routeName: routeName,
@@ -277,7 +284,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
         if (startPointLongitude != $none)
           #startPointLongitude: startPointLongitude,
         if (startPoint != $none) #startPoint: startPoint,
-        if (isActive != null) #isActive: isActive
+        if (isActive != null) #isActive: isActive,
+        if (minBladeguards != null) #minBladeguards: minBladeguards
       }));
   @override
   Event $make(CopyWithData data) => Event(
@@ -295,7 +303,8 @@ class _EventCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Event, $Out>
       startPointLongitude:
           data.get(#startPointLongitude, or: $value.startPointLongitude),
       startPoint: data.get(#startPoint, or: $value.startPoint),
-      isActive: data.get(#isActive, or: $value.isActive));
+      isActive: data.get(#isActive, or: $value.isActive),
+      minBladeguards: data.get(#minBladeguards, or: $value.minBladeguards));
 
   @override
   EventCopyWith<$R2, Event, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

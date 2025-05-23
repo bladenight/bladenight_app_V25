@@ -114,18 +114,26 @@ class _HomePageState extends ConsumerState<HomePage>
   static int _initImgCount = 0;
 
   void _initImages() async {
+    await Future.delayed(const Duration(seconds: 1));
     var imagesLoaded = false;
+
+    do {
+      var res = await _getImages();
+      if (!res) {
+        await Future.delayed(const Duration(seconds: 30));
+        _initImgCount++;
+      } else {
+        imagesLoaded = true;
+        _initImgCount = 0;
+      }
+    } while (!imagesLoaded && _initImgCount < 5 && mounted);
+  }
+
+  Future<bool> _getImages() async {
     if (mounted) {
-      imagesLoaded = await ref.refresh(updateImagesAndLinksProvider.future);
+      return await ref.refresh(updateImagesAndLinksProvider.future);
     }
-    _initImgCount++;
-    if (!imagesLoaded && _initImgCount < 5) {
-      await Future.delayed(const Duration(seconds: 30));
-      _initImages();
-    } else {
-      _initImgCount = 0;
-      return;
-    }
+    return false;
   }
 
   @override
@@ -163,10 +171,10 @@ class _HomePageState extends ConsumerState<HomePage>
           slivers: [
             CupertinoSliverNavigationBar(
               leading: const Icon(CupertinoIcons.home),
-              largeTitle: Text(Localize.of(context).home),
+              largeTitle: SponsorCarousel(), // Text(Localize.of(context).home),
               //Text(Localize.of(context).home),
-              middle: SponsorCarousel(),
-              alwaysShowMiddle: true,
+              //middle: SponsorCarousel(),
+              //alwaysShowMiddle: true,
               trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                 if (!kIsWeb) // instruction not on webapp / route not defined
                   CupertinoButton(

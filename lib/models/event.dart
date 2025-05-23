@@ -78,10 +78,14 @@ class Event with EventMappable implements Comparable {
   final double? startPointLongitude;
   @MappableField(key: 'stp') //startPointInfo
   final String? startPoint;
-  @MappableField(
-      key:
-          'isa') //event is running - means it't after start time or manual active
+
+  //event is running - means it't after start time or manual active
+  @MappableField(key: 'isa')
   final bool isActive;
+
+  //minimum amount of bladeguards
+  @MappableField(key: 'mbg')
+  final int minBladeguards;
 
   @MappableField(key: 'lastupdate')
   late DateTime? lastUpdate;
@@ -110,7 +114,8 @@ class Event with EventMappable implements Comparable {
       this.startPointLatitude,
       this.startPointLongitude,
       this.startPoint,
-      this.isActive = true});
+      this.isActive = true,
+      this.minBladeguards = 0});
 
   @override
   String toString() {

@@ -10,6 +10,7 @@ import '../../../helpers/file_name_helper.dart';
 import '../../../providers/rest_api/onsite_state_provider.dart';
 import '../../widgets/buttons/tinted_cupertino_button.dart';
 import '../../widgets/common_widgets/shadow_box_widget.dart';
+import 'onsite_counter.dart';
 
 class IsOnsiteRegistered extends ConsumerStatefulWidget {
   const IsOnsiteRegistered({super.key, this.animationController});
@@ -75,10 +76,12 @@ class _IsOnsiteRegisteredState extends ConsumerState<IsOnsiteRegistered>
                         Text(
                           Localize.of(context).bgTodayIsRegistered,
                           textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.w800),
                         ),
                         SizedBox(
                           height: 5,
                         ),
+                        OnsiteCounter(),
                         SizedTintedCupertinoButton(
                           color: Colors.redAccent,
                           onPressed: () async {

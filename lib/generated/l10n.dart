@@ -4227,6 +4227,16 @@ class Localize {
   String get eventOn {
     return Intl.message('Event on', name: 'eventOn', desc: '', args: []);
   }
+
+  /// `Bladeguards registered onsite `
+  String get onsiteCount {
+    return Intl.message(
+      'Bladeguards registered onsite ',
+      name: 'onsiteCount',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

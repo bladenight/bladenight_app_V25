@@ -98,6 +98,8 @@ class _EventInfoState extends ConsumerState<EventInfo>
           children: [
             ConnectionWarning(animationController: _animationController),
             AppOutdated(animationController: _animationController),
+            const BladeGuardAdvertise(),
+            const BladeGuardOnsite(),
             ShadowBoxWidget(
               boxShadowColor: nextEvent.statusColor,
               child: EventDataOverview(
@@ -107,8 +109,6 @@ class _EventInfoState extends ConsumerState<EventInfo>
             SizedBox(
               height: 5,
             ),
-            const BladeGuardAdvertise(),
-            const BladeGuardOnsite(),
           ],
         ),
       ),

@@ -744,6 +744,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "onlyWhileInUse": MessageLookupByLibrary.simpleMessage(
       "GPS WhileInUse - app works only in foreground. Please change Operating Systems settings",
     ),
+    "onsiteCount": MessageLookupByLibrary.simpleMessage(
+      "Bladeguards registered onsite ",
+    ),
     "openOperatingSystemSettings": MessageLookupByLibrary.simpleMessage(
       "Open operating system settings",
     ),

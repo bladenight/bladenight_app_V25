@@ -789,6 +789,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onlyWhileInUse": MessageLookupByLibrary.simpleMessage(
       "GPS Pendant l\'utilisation - l\'application ne fonctionne qu\'au premier plan. Veuillez modifier les paramètres du système d\'exploitation",
     ),
+    "onsiteCount": MessageLookupByLibrary.simpleMessage("Bladeguards onsite "),
     "openOperatingSystemSettings": MessageLookupByLibrary.simpleMessage(
       "Ouvrir les paramètres du système d\'exploitation",
     ),

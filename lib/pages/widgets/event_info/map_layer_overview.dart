@@ -60,7 +60,7 @@ class _MapLayerOverviewState extends ConsumerState<MapLayerOverview> {
     } else {
       bounds = widget.event.nodes.getBoundsLandscape;
     }
-    var factor = kIsWeb ? 0.6 : 0.4;
+    var factor = kIsWeb ? 0.4 : 0.4;
     return SizedBox(
       height: MediaQuery.of(context).size.height * factor,
       child: FlutterMap(

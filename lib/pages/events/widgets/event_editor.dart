@@ -269,6 +269,28 @@ class _EventEditorState extends ConsumerState<EventEditor> {
                           height: 3,
                           color: CupertinoTheme.of(context).primaryColor,
                         ),
+                        //Teilnehmer
+                        CupertinoListTile(
+                            title: const Text(
+                              'min. Bladeguardzahl',
+                            ),
+                            trailing: Text(_event.minBladeguards.toString()),
+                            onTap: () async {
+                              var minBladeguards = await InputNumberDialog.show(
+                                  context, 'min. Bladeguardanzahl',
+                                  initialValue: _event.minBladeguards,
+                                  minValue: 0);
+                              if (minBladeguards != null) {
+                                _event = _event.copyWith(
+                                    minBladeguards: minBladeguards);
+                                setState(() {});
+                              }
+                            }),
+                        Divider(
+                          thickness: 2,
+                          height: 3,
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
                         CupertinoListTile(
                             title: const Text(
                               'Startpunkt',

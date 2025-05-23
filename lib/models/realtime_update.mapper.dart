@@ -56,6 +56,9 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
   static EventStatus? _$eventState(RealtimeUpdate v) => v.eventState;
   static const Field<RealtimeUpdate, EventStatus> _f$eventState =
       Field('eventState', _$eventState, key: r'sts', opt: true);
+  static String? _$bladeguardApiText(RealtimeUpdate v) => v.bladeguardApiText;
+  static const Field<RealtimeUpdate, String> _f$bladeguardApiText =
+      Field('bladeguardApiText', _$bladeguardApiText, key: r'bgt', opt: true);
   static bool _$eventIsActive(RealtimeUpdate v) => v.eventIsActive;
   static const Field<RealtimeUpdate, bool> _f$eventIsActive = Field(
       'eventIsActive', _$eventIsActive,
@@ -77,6 +80,7 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
     #specialFunction: _f$specialFunction,
     #rpcException: _f$rpcException,
     #eventState: _f$eventState,
+    #bladeguardApiText: _f$bladeguardApiText,
     #eventIsActive: _f$eventIsActive,
     #timeStamp: _f$timeStamp,
   };
@@ -94,6 +98,7 @@ class RealtimeUpdateMapper extends ClassMapperBase<RealtimeUpdate> {
         specialFunction: data.dec(_f$specialFunction),
         rpcException: data.dec(_f$rpcException),
         eventState: data.dec(_f$eventState),
+        bladeguardApiText: data.dec(_f$bladeguardApiText),
         eventIsActive: data.dec(_f$eventIsActive));
   }
 
@@ -167,6 +172,7 @@ abstract class RealtimeUpdateCopyWith<$R, $In extends RealtimeUpdate, $Out>
       int? specialFunction,
       Exception? rpcException,
       EventStatus? eventState,
+      String? bladeguardApiText,
       bool? eventIsActive});
   RealtimeUpdateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -205,6 +211,7 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
           Object? specialFunction = $none,
           Object? rpcException = $none,
           Object? eventState = $none,
+          Object? bladeguardApiText = $none,
           bool? eventIsActive}) =>
       $apply(FieldCopyWithData({
         if (head != null) #head: head,
@@ -218,6 +225,7 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
         if (specialFunction != $none) #specialFunction: specialFunction,
         if (rpcException != $none) #rpcException: rpcException,
         if (eventState != $none) #eventState: eventState,
+        if (bladeguardApiText != $none) #bladeguardApiText: bladeguardApiText,
         if (eventIsActive != null) #eventIsActive: eventIsActive
       }));
   @override
@@ -233,6 +241,8 @@ class _RealtimeUpdateCopyWithImpl<$R, $Out>
       specialFunction: data.get(#specialFunction, or: $value.specialFunction),
       rpcException: data.get(#rpcException, or: $value.rpcException),
       eventState: data.get(#eventState, or: $value.eventState),
+      bladeguardApiText:
+          data.get(#bladeguardApiText, or: $value.bladeguardApiText),
       eventIsActive: data.get(#eventIsActive, or: $value.eventIsActive));
 
   @override

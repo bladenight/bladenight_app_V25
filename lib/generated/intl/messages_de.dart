@@ -771,6 +771,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "onlyWhileInUse": MessageLookupByLibrary.simpleMessage(
       "Standortfreigabe \'Während App in Benutzung\' erteilt.",
     ),
+    "onsiteCount": MessageLookupByLibrary.simpleMessage(
+      "Bladeguards vor Ort angemeldet",
+    ),
     "openOperatingSystemSettings": MessageLookupByLibrary.simpleMessage(
       "Öffne Systemeinstellungen",
     ),

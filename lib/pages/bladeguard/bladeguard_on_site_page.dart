@@ -73,40 +73,6 @@ class _BladeGuardOnsiteState extends ConsumerState<BladeGuardOnsite>
     var networkConnected = ref.watch(networkAwareProvider);
     return isOnSiteAsync.when(error: (e, st) {
       return IsOnsiteError(error: e.toString());
-      /*Column(mainAxisSize: MainAxisSize.max, children: [
-        Padding(
-            padding: const EdgeInsets.fromLTRB(15.0, 1, 15.0, 1),
-            child: Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Colors.redAccent,
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              ),
-              child: Column(mainAxisSize: MainAxisSize.max, children: [
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: CupertinoButton(
-                    padding: const EdgeInsets.all(10.0),
-                    onPressed: () async {
-                      var _ = ref.refresh(bgIsOnSiteProvider);
-                    },
-                    color: Colors.redAccent,
-                    child: e == ''
-                        ? Text(
-                            Localize.of(context).networkerror,
-                            style: const TextStyle(color: Colors.black),
-                            textAlign: TextAlign.center,
-                          )
-                        : Text(
-                            e.toString(),
-                            style: const TextStyle(color: Colors.black),
-                            textAlign: TextAlign.center,
-                          ),
-                  ),
-                )
-              ]),
-            ))
-      ]);*/
     }, loading: () {
       return const CupertinoActivityIndicator();
     }, data: (status) {
@@ -134,6 +100,9 @@ class _BladeGuardOnsiteState extends ConsumerState<BladeGuardOnsite>
 
                 if (status == false) IsOnsiteNotRegistered(),
                 if (status == true) IsOnsiteRegistered(),
+                SizedBox(
+                  height: 10,
+                )
               ],
             )
           : (nextEvent.status == EventStatus.confirmed &&
