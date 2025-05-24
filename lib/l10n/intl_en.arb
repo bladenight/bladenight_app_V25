@@ -570,5 +570,6 @@
   "bladenightInfoTitleApp": "Information about BladeNight Munich",
   "startNoParticipationShort": "Show your Position",
   "eventOn": "Event on",
-  "onsiteCount": "Bladeguards registered onsite "
+  "onsiteCount": "Bladeguards registered onsite ",
+  "noLocationRequestPermission": "Location service is necessary for onsite check - Tap to allow location"
 }

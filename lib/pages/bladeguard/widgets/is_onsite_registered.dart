@@ -82,7 +82,7 @@ class _IsOnsiteRegisteredState extends ConsumerState<IsOnsiteRegistered>
                           height: 5,
                         ),
                         OnsiteCounter(),
-                        SizedTintedCupertinoButton(
+                        /*SizedTintedCupertinoButton(
                           color: Colors.redAccent,
                           onPressed: () async {
                             await QuickAlert.show(
@@ -112,7 +112,7 @@ class _IsOnsiteRegisteredState extends ConsumerState<IsOnsiteRegistered>
                             ),
                             textAlign: TextAlign.center,
                           ),
-                        ),
+                        ),*/
                       ],
                     ),
                   ),

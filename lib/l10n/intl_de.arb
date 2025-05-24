@@ -570,5 +570,6 @@
   "bladenightInfoTitleApp": "Information zur Münchner BladeNight",
   "startNoParticipationShort": "Zeige deine Position",
   "eventOn": "Event am",
-  "onsiteCount": "Bladeguards vor Ort angemeldet"
+  "onsiteCount": "Bladeguards vor Ort angemeldet",
+  "noLocationRequestPermission": "Standortfreigabe notwendig für Vor-Ort-Anmeldung - Tippen zur Aktivierung"
 }

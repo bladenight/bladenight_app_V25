@@ -249,7 +249,7 @@ class OnesignalHandler {
         timeStamp: DateTime.now().millisecondsSinceEpoch,
         lastChange: DateTime.now().millisecondsSinceEpoch);
 
-    if (buttons != null && buttons.length >= 1) {
+    if (buttons != null && buttons.isNotEmpty) {
       var button1 = buttons.first;
       message.button1Text = button1.text;
       if (data != null) {

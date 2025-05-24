@@ -724,6 +724,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noLocationPermitted": MessageLookupByLibrary.simpleMessage(
       "No location permission, please check device settings",
     ),
+    "noLocationRequestPermission": MessageLookupByLibrary.simpleMessage(
+      "Location service is necessary for onsite check - Tap to allow location",
+    ),
     "noNearbyService": MessageLookupByLibrary.simpleMessage(
       "Service à proximité non activé",
     ),

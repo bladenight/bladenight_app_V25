@@ -17,6 +17,7 @@ import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
 import '../../helpers/preferences_helper.dart' show PreferencesHelper;
 import '../../helpers/url_launch_helper.dart';
+import '../../providers/location_provider.dart';
 import '../widgets/common_widgets/no_connection_warning.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
@@ -646,7 +647,9 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                     await _activatePush();
                     if (mounted) {
                       showToast(message: Localize.of(context).ok);
+                      LocationProvider().requestLocationPermissions(context);
                     }
+
                     ref.invalidate(bgIsOnSiteProvider);
                     setState(() {});
                     return;

@@ -1,5 +1,4 @@
 import 'package:bladenight_app_flutter/generated/l10n.dart';
-import 'package:bladenight_app_flutter/models/event.dart';
 import 'package:bladenight_app_flutter/pages/home_info/event_data_overview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,10 +45,6 @@ extension on WidgetTester {
             builder: (context) {
               return EventDataOverview(
                 showMap: false,
-                nextEvent: Event(
-                  startDate: DateTime.now(),
-                  routeName: 'Ost-nn',
-                ),
               );
             },
           ),

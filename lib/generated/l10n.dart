@@ -4237,6 +4237,16 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Location service is necessary for onsite check - Tap to allow location`
+  String get noLocationRequestPermission {
+    return Intl.message(
+      'Location service is necessary for onsite check - Tap to allow location',
+      name: 'noLocationRequestPermission',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

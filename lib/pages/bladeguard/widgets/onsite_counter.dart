@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../models/event.dart';
 import '../../../providers/location_provider.dart';
 
 class OnsiteCounter extends ConsumerStatefulWidget {

@@ -34,7 +34,6 @@ class NoEventOverlayWidget extends StatelessWidget {
                             CupertinoColors.transparent, context),
                     child: Builder(builder: (context) {
                       return EventDataOverview(
-                        nextEvent: event,
                         showMap: false,
                       );
                     }),

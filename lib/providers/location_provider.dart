@@ -798,6 +798,20 @@ class LocationProvider with ChangeNotifier {
     return false;
   }
 
+  /// Check if location permissions are granted
+  /// if not request and return the result
+  Future<bool> requestLocationPermissions(context) async {
+    if (LocationProvider().hasLocationPermissions) return true;
+
+    bool permissionOk;
+    if (kIsWeb) {
+      permissionOk = await _collectLocationWithPermissionService();
+    } else {
+      permissionOk = await _collectLocationPermissions(context);
+    }
+    return permissionOk ? true : false;
+  }
+
   ///Check and request necessary location permissions
   Future<bool> _collectLocationPermissions(BuildContext context) async {
     if (kIsWeb) return false;

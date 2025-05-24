@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../generated/l10n.dart';
 import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
+import '../../providers/active_event_provider.dart';
 import '../../providers/app_start_and_router/go_router.dart';
 import '../../wamp/wamp_exception.dart';
 import '../widgets/event_info/event_state_traffic_light.dart';
-import '../widgets/sponsors.dart';
 import 'event_map_small.dart';
 
 ///Event overview
@@ -18,6 +17,8 @@ import 'event_map_small.dart';
 /// - [nextEvent] set the [Event] to show
 /// Optional
 /// - [borderRadius] set the [Radius] for outer corners
+/// - [fontsizeFactorDate] set multiplier for date
+/// - [fontsizeFactorOther] set multiplier for route and length
 /// - [showMap] hide map above the info if not needed
 ///    default false set to false to hide map
 /// - [showSeparator] hide animated separator
@@ -25,15 +26,17 @@ import 'event_map_small.dart';
 class EventDataOverview extends ConsumerStatefulWidget {
   const EventDataOverview({
     super.key,
-    required this.nextEvent,
     this.borderRadius = 15.0,
+    this.fontsizeFactorDate = 1.0,
+    this.fontsizeFactorOther = 1.0,
     this.showMap = true,
     this.showSeparator = true,
     this.eventIsRunning = false,
   });
 
   final double borderRadius;
-  final Event nextEvent;
+  final double fontsizeFactorDate;
+  final double fontsizeFactorOther;
   final bool showMap;
   final bool showSeparator;
   final bool eventIsRunning;
@@ -74,9 +77,10 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
   Widget build(BuildContext context) {
     var normalFontSize =
         CupertinoTheme.of(context).textTheme.textStyle.fontSize ?? 12;
+    var nextEvent = ref.watch(activeEventProvider);
 
-    if (widget.nextEvent.rpcException is WampException) {
-      var ex = widget.nextEvent.rpcException as WampException;
+    if (nextEvent.rpcException is WampException) {
+      var ex = nextEvent.rpcException as WampException;
       if (ex.reason == WampExceptionReason.offline ||
           ex.reason == WampExceptionReason.connectionError) {
         return CupertinoActivityIndicator(
@@ -100,46 +104,49 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                   if (!widget.eventIsRunning)
                     eventDetail(
                         textCrossedOut:
-                            widget.nextEvent.status == EventStatus.cancelled,
+                            nextEvent.status == EventStatus.cancelled,
                         context: context,
                         animation: _valueAnimation,
-                        normalFontSize: normalFontSize,
+                        normalFontSize:
+                            normalFontSize * widget.fontsizeFactorDate,
                         dividerWidth: 110,
                         dividerColor: CupertinoTheme.of(context).primaryColor,
-                        text: widget.nextEvent.status == EventStatus.noevent ||
-                                widget.nextEvent.status == EventStatus.nodata
-                            ? widget.nextEvent.status == EventStatus.nodata
+                        text: (nextEvent.status == EventStatus.noevent ||
+                                nextEvent.status == EventStatus.nodata)
+                            ? nextEvent.status == EventStatus.nodata
                                 ? Localize.of(context).nodatareceived
                                 : Localize.of(context).noEventPlanned
                             : DateFormatter(Localize.of(context))
                                 .getLocalDayDateTimeRepresentation(
-                                    widget.nextEvent.getUtcIso8601DateTime),
+                                    nextEvent.getUtcIso8601DateTime),
                         description: Localize.of(context).nextEvent,
                         showSeparator: widget.showSeparator),
                   if (MediaQuery.orientationOf(context) ==
                           Orientation.landscape &&
-                      widget.nextEvent.status != EventStatus.noevent &&
-                      widget.nextEvent.status != EventStatus.nodata) ...[
+                      nextEvent.status != EventStatus.noevent &&
+                      nextEvent.status != EventStatus.nodata) ...[
                     eventDetail(
                         textCrossedOut:
-                            widget.nextEvent.status == EventStatus.cancelled,
+                            nextEvent.status == EventStatus.cancelled,
                         context: context,
                         animation: _valueAnimation,
-                        normalFontSize: normalFontSize,
+                        normalFontSize:
+                            normalFontSize * widget.fontsizeFactorOther,
                         dividerWidth: 70,
                         dividerColor: CupertinoTheme.of(context).primaryColor,
-                        text: widget.nextEvent.routeName,
+                        text: nextEvent.routeName,
                         description: Localize.of(context).route,
                         showSeparator: widget.showSeparator),
                     eventDetail(
                         textCrossedOut:
-                            widget.nextEvent.status == EventStatus.cancelled,
+                            nextEvent.status == EventStatus.cancelled,
                         context: context,
                         animation: _valueAnimation,
-                        normalFontSize: normalFontSize,
+                        normalFontSize:
+                            normalFontSize * widget.fontsizeFactorOther,
                         dividerWidth: 70,
                         dividerColor: CupertinoTheme.of(context).primaryColor,
-                        text: widget.nextEvent.formatDistance,
+                        text: nextEvent.formatDistance,
                         description: Localize.of(context).length,
                         showSeparator: widget.showSeparator)
                   ],
@@ -147,8 +154,8 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
           ),
         ),
         if (MediaQuery.orientationOf(context) == Orientation.portrait &&
-            widget.nextEvent.status != EventStatus.noevent &&
-            widget.nextEvent.status != EventStatus.nodata)
+            nextEvent.status != EventStatus.noevent &&
+            nextEvent.status != EventStatus.nodata)
           Padding(
             padding:
                 const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
@@ -157,34 +164,32 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 eventDetail(
-                    textCrossedOut:
-                        widget.nextEvent.status == EventStatus.cancelled,
+                    textCrossedOut: nextEvent.status == EventStatus.cancelled,
                     context: context,
                     animation: _valueAnimation,
-                    normalFontSize: normalFontSize,
+                    normalFontSize: normalFontSize * widget.fontsizeFactorOther,
                     dividerWidth: 70,
                     dividerColor: CupertinoTheme.of(context).primaryColor,
-                    text: widget.nextEvent.routeName,
+                    text: nextEvent.routeName,
                     description: Localize.of(context).route,
                     showSeparator: false),
                 eventDetail(
-                    textCrossedOut:
-                        widget.nextEvent.status == EventStatus.cancelled,
+                    textCrossedOut: nextEvent.status == EventStatus.cancelled,
                     context: context,
                     animation: _valueAnimation,
-                    normalFontSize: normalFontSize,
+                    normalFontSize: normalFontSize * widget.fontsizeFactorOther,
                     dividerWidth: 70,
                     dividerColor: CupertinoTheme.of(context).primaryColor,
-                    text: widget.nextEvent.formatDistance,
+                    text: nextEvent.formatDistance,
                     description: Localize.of(context).length,
                     showSeparator: false)
               ],
             ),
           ),
-        if (widget.nextEvent.status != EventStatus.noevent &&
-            widget.nextEvent.status != EventStatus.nodata &&
+        if (nextEvent.status != EventStatus.noevent &&
+            nextEvent.status != EventStatus.nodata &&
             !widget.eventIsRunning &&
-            widget.nextEvent.status != EventStatus.cancelled)
+            nextEvent.status != EventStatus.cancelled)
           Padding(
             padding:
                 const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
@@ -194,7 +199,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                 fit: BoxFit.scaleDown,
                 child: Text(
                   '${Localize.of(context).start} '
-                  '${widget.nextEvent.getStartPoint.startPoint}',
+                  '${nextEvent.getStartPoint.startPoint}',
                   textAlign: TextAlign.center,
                   style:
                       TextStyle(color: CupertinoTheme.of(context).primaryColor),
@@ -202,17 +207,17 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               ),
             ),
           ),
-        if (!widget.nextEvent.isNoEventPlanned)
+        if (!nextEvent.isNoEventPlanned)
           Container(
             alignment: Alignment.topCenter,
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
-                widget.nextEvent.statusColor.withValues(alpha: 0.5),
-                widget.nextEvent.statusColor,
-                widget.nextEvent.statusColor.withValues(alpha: 0.5)
+                nextEvent.statusColor.withValues(alpha: 0.5),
+                nextEvent.statusColor,
+                nextEvent.statusColor.withValues(alpha: 0.5)
               ]),
-              color: widget.nextEvent.statusColor,
+              color: nextEvent.statusColor,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(0),
                 topRight: Radius.circular(0),
@@ -220,7 +225,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
                 bottomRight: Radius.circular(widget.borderRadius),
               ),
             ),
-            child: EventStatusTrafficLight(event: widget.nextEvent),
+            child: EventStatusTrafficLight(event: nextEvent),
           ),
         Container(
           alignment: Alignment.topCenter,
@@ -234,7 +239,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
 
         /*Divider(
           height: 4,
-          color: widget.nextEvent.statusColor,
+          color: nextEvent.statusColor,
         ),*/
         if (widget.showMap)
           GestureDetector(
@@ -242,7 +247,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               context.goNamed(AppRoute.map.name);
             },
             child: EventMapSmall(
-                nextEvent: widget.nextEvent, borderRadius: widget.borderRadius),
+                nextEvent: nextEvent, borderRadius: widget.borderRadius),
           ),
       ],
     );
@@ -327,6 +332,7 @@ Widget eventDetail(
                         decoration:
                             textCrossedOut ? TextDecoration.lineThrough : null,
                         fontWeight: FontWeight.w900,
+                        fontSize: normalFontSize,
                         color: CupertinoTheme.of(context).primaryColor),
                   ),
                 ),

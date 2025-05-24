@@ -8,11 +8,11 @@
 
 ### Fixed
 
-- fix non working onesignal action button
+- fix non-working onesignal action button — by replacing
 
 ### Changed
 
-- designchange home
+- design change home
 
 ## [1.25.04]
 

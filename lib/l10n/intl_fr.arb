@@ -569,6 +569,7 @@
   "bladenightInfoTitleApp": "Bladenight et informations sur",
   "startNoParticipationShort": "Montrez votre position",
   "eventOn": "Événement sur",
-  "onsiteCount": "Bladeguards onsite "
+  "onsiteCount": "Bladeguards onsite ",
+  "noLocationRequestPermission": "Location service is necessary for onsite check - Tap to allow location"
 }
 

@@ -87,7 +87,6 @@ class _EventInfoState extends ConsumerState<EventInfo>
   Widget build(
     BuildContext context,
   ) {
-    var nextEvent = ref.watch(activeEventProvider);
     return SafeArea(
       //height: 300,
       child: SingleChildScrollView(
@@ -101,9 +100,10 @@ class _EventInfoState extends ConsumerState<EventInfo>
             const BladeGuardAdvertise(),
             const BladeGuardOnsite(),
             ShadowBoxWidget(
-              boxShadowColor: nextEvent.statusColor,
+              boxShadowColor: ref.watch(activeEventProvider).statusColor,
               child: EventDataOverview(
-                nextEvent: nextEvent,
+                fontsizeFactorDate: 1.2,
+                fontsizeFactorOther: 1.2,
               ),
             ),
             SizedBox(

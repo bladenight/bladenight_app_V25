@@ -85,7 +85,8 @@ class _CurrentEventOverview extends ConsumerState<CurrentEventOverview>
                       height: 250,
                       width: 200,
                       child: EventDataOverview(
-                        nextEvent: nextEvent,
+                        fontsizeFactorDate: 1.5,
+                        fontsizeFactorOther: 1.2,
                       ),
                     ),
                   ),

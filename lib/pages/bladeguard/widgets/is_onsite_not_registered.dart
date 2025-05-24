@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../helpers/file_name_helper.dart';
+import '../../../providers/location_provider.dart';
 import '../../../providers/rest_api/onsite_state_provider.dart';
 import '../../widgets/buttons/tinted_cupertino_button.dart';
 import '../../widgets/common_widgets/shadow_box_widget.dart';
@@ -54,6 +55,8 @@ class _IsOnsiteNotRegisteredState extends ConsumerState<IsOnsiteNotRegistered>
 
   @override
   Widget build(BuildContext context) {
+    var hasLocationPermissions = LocationProvider().hasLocationPermissions;
+
     return AnimatedBuilder(
         animation: _colorAnimation,
         builder: (context, child) {
@@ -80,24 +83,43 @@ class _IsOnsiteNotRegisteredState extends ConsumerState<IsOnsiteNotRegistered>
                           height: 5,
                         ),
                         OnsiteCounter(),
-                        SizedTintedCupertinoButton(
-                          color: Colors.greenAccent,
-                          onPressed: () async {
-                            ref
-                                .read(bgIsOnSiteProvider.notifier)
-                                .setOnSiteState(true);
-                          },
-                          child: Text(
-                            Localize.of(context).bgTodayTapToRegister,
-                            style: TextStyle(
-                              color: CupertinoTheme.brightnessOf(context) ==
-                                      Brightness.light
-                                  ? Colors.black
-                                  : Colors.black,
+                        if (hasLocationPermissions)
+                          SizedTintedCupertinoButton(
+                            color: Colors.greenAccent,
+                            onPressed: () async {
+                              ref
+                                  .read(bgIsOnSiteProvider.notifier)
+                                  .setOnSiteState(true);
+                            },
+                            child: Text(
+                              Localize.of(context).bgTodayTapToRegister,
+                              style: TextStyle(
+                                color: CupertinoTheme.brightnessOf(context) ==
+                                        Brightness.light
+                                    ? Colors.black
+                                    : Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
                           ),
-                        ),
+                        if (!hasLocationPermissions)
+                          SizedTintedCupertinoButton(
+                            color: Colors.redAccent,
+                            onPressed: () async {
+                              LocationProvider()
+                                  .requestLocationPermissions(context);
+                            },
+                            child: Text(
+                              Localize.of(context).noLocationRequestPermission,
+                              style: TextStyle(
+                                color: CupertinoTheme.brightnessOf(context) ==
+                                        Brightness.light
+                                    ? Colors.black
+                                    : Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                       ],
                     ),
                   ),

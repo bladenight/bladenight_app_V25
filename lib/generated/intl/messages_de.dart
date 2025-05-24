@@ -704,6 +704,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noLocationPermitted": MessageLookupByLibrary.simpleMessage(
       "Keine Standortfreigabe, Bitte Einstellungen des Gerätes prüfen",
     ),
+    "noLocationRequestPermission": MessageLookupByLibrary.simpleMessage(
+      "Standortfreigabe notwendig für Vor-Ort-Anmeldung - Tippen zur Aktivierung",
+    ),
     "noNearbyService": MessageLookupByLibrary.simpleMessage(
       "Nah-Gerätesuche nicht aktiv",
     ),
