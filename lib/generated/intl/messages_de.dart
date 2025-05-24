@@ -728,7 +728,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Veralted bitte,neu anlegen/löschen!",
     ),
     "notOnRoute": MessageLookupByLibrary.simpleMessage(
-      "Nicht in Bladenight-Zug!",
+      "Nicht im BladeNight-Zug!",
     ),
     "notVisibleOnMap": MessageLookupByLibrary.simpleMessage(
       "Auf Karte nicht angezeigt",
