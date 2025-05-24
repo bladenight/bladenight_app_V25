@@ -2216,10 +2216,10 @@ class Localize {
     );
   }
 
-  /// `Not on route!`
+  /// `Not in procession!`
   String get notOnRoute {
     return Intl.message(
-      'Not on route!',
+      'Not in procession!',
       name: 'notOnRoute',
       desc: '',
       args: [],

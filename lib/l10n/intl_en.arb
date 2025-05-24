@@ -336,7 +336,7 @@
   "nogpsenabled": "Sorry, no GPS in device found or denied. Please check your privacy and location settings.",
   "notAvailable": "not available",
   "notKnownOnServer": "Obsolete! Delete it!",
-  "notOnRoute": "Not on route!",
+  "notOnRoute": "Not in procession!",
   "notVisibleOnMap": "Not visible on map!",
   "note_bladenightCanceled": "The BladeNight was canceled.",
   "note_bladenightStartInFiveMinutesStartTracking": "Next BladeNight will start in 5 minutes. Don't forget to turn location sharing on !",

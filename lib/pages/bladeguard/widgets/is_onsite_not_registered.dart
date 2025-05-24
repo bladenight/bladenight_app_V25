@@ -106,8 +106,9 @@ class _IsOnsiteNotRegisteredState extends ConsumerState<IsOnsiteNotRegistered>
                           SizedTintedCupertinoButton(
                             color: Colors.redAccent,
                             onPressed: () async {
-                              LocationProvider()
+                              await LocationProvider()
                                   .requestLocationPermissions(context);
+                              setState(() {});
                             },
                             child: Text(
                               Localize.of(context).noLocationRequestPermission,

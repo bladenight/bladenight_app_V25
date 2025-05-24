@@ -1786,17 +1786,16 @@ class LocationProvider with ChangeNotifier {
     _realTimeDataStreamListener?.cancel();
     _wampConnectedListener = null;
     _realTimeDataStreamListener = null;
-    BnLog.info(
-        text: 'started startRealtimeUpdateSubscriptionIfNotTracking',
-        className: 'location_provider');
-    _wampConnectedListener =
-        WampV2().wampConnectedStreamController.stream.listen((connected) async {
+    _wampConnectedListener = WampV2()
+        .wampConnectedStreamController
+        .stream
+        .listen((newConnectionState) async {
       //check status change!
-      if (_lastConnectionState == connected) return;
-      _lastConnectionState = connected;
-      if (connected == WampConnectedState.connected) {
+      if (_lastConnectionState == newConnectionState) return;
+      _lastConnectionState = newConnectionState;
+      if (newConnectionState == WampConnectedState.connected) {
         await (Future.delayed(const Duration(seconds: 3)));
-        _maxSubscribeFails = 10;
+        _maxSubscribeFails = 5;
         _subscribeIfNeeded(_trackingType);
       } else {
         _realTimeDataSubscriptionId = 0;
@@ -1900,7 +1899,7 @@ class LocationProvider with ChangeNotifier {
       }
       _reStartRealtimeUpdateTimer();
     } else {
-      _maxSubscribeFails = 3;
+      _maxSubscribeFails = 5;
       _unsubscribe();
       stopRealtimedataSubscription(); //realtimeDataUpdate in LocationProvider handled
     }

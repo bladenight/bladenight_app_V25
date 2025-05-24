@@ -728,7 +728,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Veralted bitte,neu anlegen/löschen!",
     ),
     "notOnRoute": MessageLookupByLibrary.simpleMessage(
-      "Nicht auf der Strecke!",
+      "Nicht in Bladenight-Zug!",
     ),
     "notVisibleOnMap": MessageLookupByLibrary.simpleMessage(
       "Auf Karte nicht angezeigt",
@@ -1006,7 +1006,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Teilnahme starten\nDu bist aktiver Skater im Zug und möchtest die Darstellung des BladeNight-Zuges unterstützen. Danke wenn du Teilnahme an Bladenight starten drückst.",
     ),
     "startParticipationHeader": MessageLookupByLibrary.simpleMessage(
-      "Du fährst heute bei der Bladenight mit und möchtest die Darstellung des Zuges unterstützen und deinen Standort mit Freunden teilen. Standortfreigabe starten?",
+      "Du fährst heute bei der Bladenight mit und möchtest die Darstellung des Zuges unterstützen und deinen Standort mit Freunden teilen. Dies ist auch notwendig um dich als Bladeguard vor Ort zu einzutragen.Standortfreigabe starten?",
     ),
     "startParticipationShort": MessageLookupByLibrary.simpleMessage(
       "Teilnahme starten",

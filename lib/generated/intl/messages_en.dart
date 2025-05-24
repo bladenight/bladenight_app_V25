@@ -702,7 +702,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notKnownOnServer": MessageLookupByLibrary.simpleMessage(
       "Obsolete! Delete it!",
     ),
-    "notOnRoute": MessageLookupByLibrary.simpleMessage("Not on route!"),
+    "notOnRoute": MessageLookupByLibrary.simpleMessage("Not in procession!"),
     "notVisibleOnMap": MessageLookupByLibrary.simpleMessage(
       "Not visible on map!",
     ),

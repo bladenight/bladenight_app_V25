@@ -31,7 +31,14 @@ class GeoLocationHelper {
           distP1P2.toDouble()));
     }
     //max 20
-    var headingsCount = zoom * pow(1.3, 5);
+    // zoom <11 fix
+    //=0.6736125*POTENZ(A16;2)+-15.4*A16+100
+    var headingsCount = 10.0;
+    if (zoom < 11) {
+      headingsCount = 10;
+    } else {
+      headingsCount = 0.6736125 * pow(zoom, 2) + -15.4 * zoom + 100;
+    }
     if (headingPoints.length > headingsCount) {
       var sublist = <HeadingPoint>[];
       int i = (headingPoints.length / headingsCount).round();
