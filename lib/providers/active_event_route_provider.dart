@@ -8,7 +8,7 @@ import '../models/special_point.dart';
 import 'active_event_provider.dart';
 import 'images_and_links/special_points_image_and_link_provider.dart';
 import 'location_provider.dart';
-import 'map/heading_marker_size_provider.dart';
+import 'map/heading_marker_amount_provider.dart';
 
 part 'active_event_route_provider.g.dart';
 
@@ -17,8 +17,17 @@ class HeadingPoints extends _$HeadingPoints {
   @override
   Future<List<HeadingPoint>> build() async {
     var activeRoute = ref.watch(activeEventProvider);
-    var zoom = ref.watch(headingMarkerSizeProvider);
+    var zoom = ref.watch(headingMarkerAmountProvider);
     return GeoLocationHelper.calculateHeadings(activeRoute.nodes, zoom: zoom);
+  }
+}
+
+@riverpod
+class HeadingMultiPoints extends _$HeadingMultiPoints {
+  @override
+  Future<List<HeadingPoint>> build(List<LatLng> points) async {
+    var zoom = ref.watch(headingMarkerAmountProvider);
+    return GeoLocationHelper.calculateHeadings(points, zoom: zoom);
   }
 }
 

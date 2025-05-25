@@ -14,12 +14,14 @@ ImageAndLink _defaultAndroidIal = ImageAndLink(
 class AndroidPlaystoreImageAndLink extends _$AndroidPlaystoreImageAndLink {
   @override
   ImageAndLink build() {
-    HiveSettingsDB.settingsHiveBox
+    var listener = HiveSettingsDB.settingsHiveBox
         .watch(key: androidIalKey)
         .listen((event) => state = event.value);
-    return  HiveSettingsDB.settingsHiveBox
+    ref.onDispose(() {
+      listener.cancel();
+    });
+    return HiveSettingsDB.settingsHiveBox
         .get(androidIalKey, defaultValue: _defaultAndroidIal);
-
   }
 
   void setValue(ImageAndLink imageAndLink) {

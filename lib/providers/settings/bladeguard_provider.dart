@@ -12,9 +12,13 @@ part 'bladeguard_provider.g.dart';
 class UserIsBladeguard extends _$UserIsBladeguard {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.isBladeGuardKey)
         .listen((event) => state = event.value);
+
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.isBladeGuard;
   }
 
@@ -35,9 +39,12 @@ class UserIsBladeguard extends _$UserIsBladeguard {
 class UserIsAdmin extends _$UserIsAdmin {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.bgIsAdmin)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.bgIsAdmin;
   }
 
@@ -50,9 +57,12 @@ class UserIsAdmin extends _$UserIsAdmin {
 class BladeguardSettingsVisible extends _$BladeguardSettingsVisible {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.bgSettingVisibleKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.bgSettingVisible;
   }
 
@@ -65,9 +75,12 @@ class BladeguardSettingsVisible extends _$BladeguardSettingsVisible {
 class IsValidBladeGuardEmail extends _$IsValidBladeGuardEmail {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.isBladeguardEmailValidKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return validateEmail(HiveSettingsDB.bladeguardEmail);
   }
 }

@@ -11,9 +11,12 @@ class AppOutdated extends _$AppOutdated {
   @override
   bool build() {
     //listen to global settings value
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.appOutDatedKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.appOutDated;
   }
 

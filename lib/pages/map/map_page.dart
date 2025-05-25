@@ -17,6 +17,7 @@ import '../../models/follow_location_state.dart';
 import '../../models/route.dart';
 import '../../providers/active_event_provider.dart';
 import '../../providers/location_provider.dart';
+import '../../providers/map/heading_marker_amount_provider.dart';
 import '../../providers/map/use_open_street_map_provider.dart';
 import 'widgets/custom_location_layer.dart';
 import 'widgets/gps_info_and_map_copyright.dart';
@@ -43,7 +44,8 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
       GlobalKey<ScaffoldMessengerState>();
   final PopupController _popupController = PopupController();
 
-  StreamSubscription<LatLng>? locationSubscription;
+  StreamSubscription<LatLng>? _locationSubscription;
+  StreamSubscription<MapEvent>? _mapEventStreamListener;
   bool _hasGesture = false;
   late final Stream<LocationMarkerPosition?> _positionStream;
   late final Stream<LocationMarkerHeading?> _headingStream;
@@ -57,6 +59,13 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
         ? LocationProvider().userLocationMarkerHeadingStream
         : factory.fromRotationSensorHeadingStream().asBroadcastStream();
     _mapController = MapController();
+    _mapEventStreamListener = _mapController.mapEventStream.listen((event) {
+      if (event.source == MapEventSource.multiFingerEnd) {
+        ref
+            .read(headingMarkerAmountProvider.notifier)
+            .setSize(event.camera.zoom);
+      }
+    });
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {});
   }
@@ -65,17 +74,18 @@ class _MapPageState extends ConsumerState<MapPage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _popupController.dispose();
+    _mapEventStreamListener?.cancel();
     _mapController.dispose();
-    locationSubscription?.cancel();
-    locationSubscription = null;
+    _locationSubscription?.cancel();
+    _locationSubscription = null;
     super.dispose();
   }
 
   void startFollowingTrainHead() {
-    locationSubscription?.cancel();
-    locationSubscription = null;
+    _locationSubscription?.cancel();
+    _locationSubscription = null;
     _mapController.move(defaultLatLng, _mapController.camera.zoom);
-    locationSubscription = LocationProvider().trainHeadUpdateStream.listen(
+    _locationSubscription = LocationProvider().trainHeadUpdateStream.listen(
       (value) {
         _mapController.move(value, _mapController.camera.zoom);
       },

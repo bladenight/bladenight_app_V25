@@ -21,9 +21,12 @@ ImageAndLink _defaultSpecialPoints = ImageAndLink(
 class SpecialPointsImageAndLink extends _$SpecialPointsImageAndLink {
   @override
   ImageAndLink build() {
-    HiveSettingsDB.settingsHiveBox
+    var listener = HiveSettingsDB.settingsHiveBox
         .watch(key: specialPointsImageAndLinkKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.settingsHiveBox
         .get(specialPointsImageAndLinkKey, defaultValue: _defaultSpecialPoints);
   }

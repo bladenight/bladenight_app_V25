@@ -11,9 +11,12 @@ class IconSize extends _$IconSize {
   @override
   double build() {
     //this makes provider global
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.iconSizeKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.iconSizeValue;
   }
 

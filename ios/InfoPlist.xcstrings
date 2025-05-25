@@ -13,7 +13,7 @@
         },
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "BladeNight!"
           }
         },
@@ -61,7 +61,7 @@
         },
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "Share your location to find out more about the Bladenight skater train and length and make friends. \"Allow While Using App” recommendation."
           }
         },

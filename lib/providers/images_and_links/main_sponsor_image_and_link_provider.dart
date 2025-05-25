@@ -13,9 +13,12 @@ ImageAndLink _defaultLiveMapImageAndLinkKey = ImageAndLink(
 class MainSponsorImageAndLink extends _$MainSponsorImageAndLink {
   @override
   ImageAndLink build() {
-    HiveSettingsDB.settingsHiveBox
+    var listener = HiveSettingsDB.settingsHiveBox
         .watch(key: mainSponsorImageAndLinkKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.settingsHiveBox.get(mainSponsorImageAndLinkKey,
         defaultValue: _defaultLiveMapImageAndLinkKey);
   }

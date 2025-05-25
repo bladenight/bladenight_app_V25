@@ -16,9 +16,12 @@ ImageAndLink _defaultStartpoint = ImageAndLink(
 class StartpointImageAndLink extends _$StartpointImageAndLink {
   @override
   ImageAndLink build() {
-    HiveSettingsDB.settingsHiveBox
+    var listener = HiveSettingsDB.settingsHiveBox
         .watch(key: startpointImageAndLinkKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.settingsHiveBox
         .get(startpointImageAndLinkKey, defaultValue: _defaultStartpoint);
   }

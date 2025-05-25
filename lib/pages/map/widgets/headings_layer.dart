@@ -4,8 +4,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../helpers/location_bearing_distance.dart';
+import '../../../models/route.dart' show RoutePoints;
 import '../../../providers/active_event_route_provider.dart';
-import '../../../providers/map/heading_marker_size_provider.dart';
+import '../../../providers/map/heading_marker_amount_provider.dart';
 
 class HeadingsLayer extends ConsumerStatefulWidget {
   const HeadingsLayer({super.key});
@@ -19,7 +20,7 @@ class _HeadingsLayerState extends ConsumerState<HeadingsLayer> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final camera = MapCamera.of(context);
-      ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+      ref.read(headingMarkerAmountProvider.notifier).setSize(camera.zoom);
     });
     super.initState();
   }
@@ -29,7 +30,7 @@ class _HeadingsLayerState extends ConsumerState<HeadingsLayer> {
     List<HeadingPoint> headingRoutePoints;
     var headingRoutePointsP = ref.watch(headingPointsProvider);
     headingRoutePoints = headingRoutePointsP.value ?? <HeadingPoint>[];
-    var headingMarkerSize = ref.watch(headingMarkerSizeProvider);
+    var headingMarkerSize = ref.watch(headingMarkerAmountProvider);
 
     return MarkerLayer(
       markers: [

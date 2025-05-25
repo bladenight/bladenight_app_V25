@@ -7,18 +7,25 @@ import '../../models/image_and_link.dart';
 part 'live_map_image_and_link_provider.g.dart';
 
 String liveMapImageAndLinkKey = 'liveMapIalKey';
-ImageAndLink _defaultLiveMap = ImageAndLink('', 'https://bladenight-muenchen.de/bladenight-live-karte/', 'Live Karte', 'liveMapLink');
+ImageAndLink _defaultLiveMap = ImageAndLink(
+    '',
+    'https://bladenight-muenchen.de/bladenight-live-karte/',
+    'Live Karte',
+    'liveMapLink');
 
 @riverpod
 class LiveMapImageAndLink extends _$LiveMapImageAndLink {
   @override
   ImageAndLink build() {
-    HiveSettingsDB.settingsHiveBox
+    var listener = HiveSettingsDB.settingsHiveBox
         .watch(key: liveMapImageAndLinkKey)
         .listen((event) => state =
-        MapperContainer.globals.fromJson<ImageAndLink>(event.value));
-    return HiveSettingsDB.settingsHiveBox.get(liveMapImageAndLinkKey,
-        defaultValue: _defaultLiveMap);
+            MapperContainer.globals.fromJson<ImageAndLink>(event.value));
+    ref.onDispose(() {
+      listener.cancel();
+    });
+    return HiveSettingsDB.settingsHiveBox
+        .get(liveMapImageAndLinkKey, defaultValue: _defaultLiveMap);
   }
 
   void setValue(ImageAndLink imageAndLink) {
@@ -27,9 +34,8 @@ class LiveMapImageAndLink extends _$LiveMapImageAndLink {
       if (storedVal.hashCode == imageAndLink.hashCode) return;
     }
 
-    HiveSettingsDB.settingsHiveBox.put(liveMapImageAndLinkKey,
-        MapperContainer.globals.toJson(imageAndLink));
+    HiveSettingsDB.settingsHiveBox.put(
+        liveMapImageAndLinkKey, MapperContainer.globals.toJson(imageAndLink));
     //state = imageAndLink;
   }
 }
-

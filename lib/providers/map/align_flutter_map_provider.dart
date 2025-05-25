@@ -12,9 +12,12 @@ class AlignFlutterMap extends _$AlignFlutterMap {
   @override
   AlignFlutterMapState build() {
     //this makes provider global
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: MapSettings.alignFlutterMap)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return MapSettings.alignFlutterMap;
   }
 

@@ -10,9 +10,12 @@ part 'rest_api_link_provider.g.dart';
 class RestApiLink extends _$RestApiLink {
   @override
   ImageAndLink build() {
-    ServerConfigDb.serverConfigBox
+    var listener = ServerConfigDb.serverConfigBox
         .watch(key: ServerConfigDb.restApiLinkKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return ServerConfigDb.restApiLinkConfig;
   }
 

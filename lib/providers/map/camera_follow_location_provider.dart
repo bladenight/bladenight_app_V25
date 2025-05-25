@@ -11,11 +11,14 @@ part 'camera_follow_location_provider.g.dart';
 class CameraFollowLocation extends _$CameraFollowLocation {
   @override
   CameraFollow build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: MapSettings.cameraFollowKey)
         .listen((event) => state = CameraFollow.values.firstWhere((element) {
               return event.value == element.index;
             }));
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return MapSettings.cameraFollow;
   }
 
