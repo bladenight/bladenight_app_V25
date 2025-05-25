@@ -10,9 +10,12 @@ part 'special_procession_function_provider.g.dart';
 class IsProcessionHead extends _$IsProcessionHead {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.isHeadOfProcessionKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.isHeadOfProcession;
   }
 }
@@ -21,9 +24,13 @@ class IsProcessionHead extends _$IsProcessionHead {
 class IsProcessionTail extends _$IsProcessionTail {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.isTailOfProcessionKey)
         .listen((event) => state = event.value);
+
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.isTailOfProcession;
   }
 }
@@ -32,9 +39,12 @@ class IsProcessionTail extends _$IsProcessionTail {
 class WantSeeFullProcession extends _$WantSeeFullProcession {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.wantSeeFullOfProcessionKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.wantSeeFullOfProcession;
   }
 }

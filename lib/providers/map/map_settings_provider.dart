@@ -10,9 +10,13 @@ part 'map_settings_provider.g.dart';
 class ShowOwnTrack extends _$ShowOwnTrack {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: MapSettings.showOwnTrackKey)
         .listen((event) => state = event.value);
+
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return MapSettings.showOwnTrack;
   }
 
@@ -25,9 +29,12 @@ class ShowOwnTrack extends _$ShowOwnTrack {
 class ShowOwnColoredTrack extends _$ShowOwnColoredTrack {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: MapSettings.showOwnColoredTrackKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return MapSettings.showOwnColoredTrack;
   }
 
@@ -40,9 +47,12 @@ class ShowOwnColoredTrack extends _$ShowOwnColoredTrack {
 class ShowCompass extends _$ShowCompass {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: MapSettings.compassVisibleKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return MapSettings.compassVisible;
   }
 

@@ -10,9 +10,12 @@ part 'use_open_street_map_provider.g.dart';
 class UseOpenStreetMap extends _$UseOpenStreetMap {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: MapSettings.openStreetMapEnabledKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return MapSettings.openStreetMapEnabled;
   }
 }

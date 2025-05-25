@@ -12,9 +12,12 @@ part 'light_color_provider.g.dart';
 class ThemePrimaryLightColor extends _$ThemePrimaryLightColor {
   @override
   Color build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.themePrimaryLightColorKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.themePrimaryLightColor;
   }
 

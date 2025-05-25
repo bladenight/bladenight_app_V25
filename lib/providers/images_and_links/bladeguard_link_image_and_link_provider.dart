@@ -16,16 +16,18 @@ ImageAndLink _defaultBladeguard = ImageAndLink(
 class BladeguardImageAndLink extends _$BladeguardImageAndLink {
   @override
   ImageAndLink build() {
-    HiveSettingsDB.settingsHiveBox
+    var listener = HiveSettingsDB.settingsHiveBox
         .watch(key: bladeguardImageAndLinkKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.settingsHiveBox
         .get(bladeguardImageAndLinkKey, defaultValue: _defaultBladeguard);
   }
 
   void setValue(ImageAndLink imageAndLink) {
-    HiveSettingsDB.settingsHiveBox
-        .put(bladeguardImageAndLinkKey, imageAndLink);
+    HiveSettingsDB.settingsHiveBox.put(bladeguardImageAndLinkKey, imageAndLink);
     //state = imageAndLink;
   }
 }

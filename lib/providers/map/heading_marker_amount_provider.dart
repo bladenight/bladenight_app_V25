@@ -2,10 +2,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'icon_size_provider.dart';
 
-part 'heading_marker_size_provider.g.dart';
+part 'heading_marker_amount_provider.g.dart';
 
 @riverpod
-class HeadingMarkerSize extends _$HeadingMarkerSize {
+class HeadingMarkerAmount extends _$HeadingMarkerAmount {
   var size = 20.0;
 
   @override

@@ -85,9 +85,12 @@ class IsTracking extends _$IsTracking {
 class AutoStopTracking extends _$AutoStopTracking {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.autoStopTrackingEnabledKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.autoStopTrackingEnabled;
   }
 
@@ -100,9 +103,12 @@ class AutoStopTracking extends _$AutoStopTracking {
 class AutoStartTracking extends _$AutoStartTracking {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.autoStartTrackingEnabledKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.autoStartTrackingEnabled;
   }
 

@@ -4,18 +4,19 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../helpers/location_bearing_distance.dart';
-import '../../../models/route.dart' show RoutePoints;
+import '../../../models/route.dart' show LatLng, RoutePoints;
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/map/heading_marker_amount_provider.dart';
 
-class HeadingsLayer extends ConsumerStatefulWidget {
-  const HeadingsLayer({super.key});
-
+class HeadingsMultiLayer extends ConsumerStatefulWidget {
+  HeadingsMultiLayer({required this.points, super.key});
+  List<LatLng> points;
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HeadingsLayerState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _HeadingsMultiLayerState();
 }
 
-class _HeadingsLayerState extends ConsumerState<HeadingsLayer> {
+class _HeadingsMultiLayerState extends ConsumerState<HeadingsMultiLayer> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -28,7 +29,8 @@ class _HeadingsLayerState extends ConsumerState<HeadingsLayer> {
   @override
   Widget build(BuildContext context) {
     List<HeadingPoint> headingRoutePoints;
-    var headingRoutePointsP = ref.watch(headingPointsProvider);
+    var headingRoutePointsP =
+        ref.watch(headingMultiPointsProvider(widget.points));
     headingRoutePoints = headingRoutePointsP.value ?? <HeadingPoint>[];
     var headingMarkerSize = ref.watch(headingMarkerAmountProvider);
 

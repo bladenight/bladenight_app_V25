@@ -13,9 +13,12 @@ ImageAndLink _defaultSecondSponsor = ImageAndLink(
 class SecondSponsorImageAndLink extends _$SecondSponsorImageAndLink {
   @override
   ImageAndLink build() {
-    HiveSettingsDB.settingsHiveBox
+    var listener = HiveSettingsDB.settingsHiveBox
         .watch(key: secondSponsorImageAndLinkKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.settingsHiveBox
         .get(secondSponsorImageAndLinkKey, defaultValue: _defaultSecondSponsor);
   }

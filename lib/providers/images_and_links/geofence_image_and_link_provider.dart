@@ -25,9 +25,12 @@ ImageAndLink _defaultGeofence = ImageAndLink(
 class GeofenceImageAndLink extends _$GeofenceImageAndLink {
   @override
   ImageAndLink build() {
-    HiveSettingsDB.settingsHiveBox
+    var listener = HiveSettingsDB.settingsHiveBox
         .watch(key: geofenceImageAndLinkKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.settingsHiveBox
         .get(geofenceImageAndLinkKey, defaultValue: _defaultGeofence);
   }

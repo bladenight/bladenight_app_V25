@@ -10,9 +10,12 @@ part 'map_button_visibility_provider.g.dart';
 class MapMenuVisible extends _$MapMenuVisible {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: MapSettings.mapMenuVisibleKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return MapSettings.mapMenuVisible;
   }
 }

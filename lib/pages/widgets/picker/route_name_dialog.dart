@@ -125,32 +125,6 @@ class RouteNameDialog extends ConsumerWidget {
                               ),
                             ),
                           ),
-                        if (route.points.length > 3) ...[
-                          for (var hp in GeoLocationHelper.calculateHeadings(
-                              route.points))
-                            Marker(
-                              point: hp.latLng,
-                              width: 20,
-                              height: 20,
-                              child: Builder(
-                                builder: (context) => Transform.rotate(
-                                  angle: hp.bearing,
-                                  child: Image(
-                                    image: CupertinoAdaptiveTheme.of(context)
-                                                .theme
-                                                .brightness ==
-                                            Brightness.dark
-                                        ? AssetImage(
-                                            'assets/images/arrow_up_pure_margin.png',
-                                          )
-                                        : AssetImage(
-                                            'assets/images/arrow_up_pure_margin_dark.png'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
                       ],
                     ],
                   ),

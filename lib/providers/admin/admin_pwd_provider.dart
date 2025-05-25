@@ -46,9 +46,12 @@ class AdminPasswordCheck extends _$AdminPasswordCheck {
 class AdminPwdSet extends _$AdminPwdSet {
   @override
   bool build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.serverPasswordKey)
         .listen((event) => state = event.value != null);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.serverPassword != null;
   }
 }
@@ -75,9 +78,12 @@ class AdminPwdSet extends _$AdminPwdSet {
 class AdminPwd extends _$AdminPwd {
   @override
   String? build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.serverPasswordKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.serverPassword;
   }
 

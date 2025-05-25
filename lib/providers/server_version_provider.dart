@@ -11,9 +11,12 @@ class ServerVersion extends _$ServerVersion {
   @override
   String build() {
     //listen to global settings value
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.serverVersionKey)
         .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
     return HiveSettingsDB.getServerVersion;
   }
 }

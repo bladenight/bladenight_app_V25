@@ -29,7 +29,7 @@ import '../../../providers/is_tracking_provider.dart';
 import '../../../providers/location_provider.dart';
 import '../../../providers/map/align_flutter_map_provider.dart';
 import '../../../providers/map/camera_follow_location_provider.dart';
-import '../../../providers/map/heading_marker_size_provider.dart';
+import '../../../providers/map/heading_marker_amount_provider.dart';
 import '../../../providers/map_button_visibility_provider.dart';
 import '../../../providers/messages_provider.dart';
 import '../../../providers/route_providers.dart';
@@ -517,7 +517,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
               return;
             }
             controller.move(controller.camera.center, camera.zoom - 0.5);
-            ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+            ref.read(headingMarkerAmountProvider.notifier).setSize(camera.zoom);
           },
           visibility: ref.watch(mapMenuVisibleProvider),
           child: Icon(
@@ -536,7 +536,7 @@ class _MapButtonsLandscapeLayer extends ConsumerState<MapButtonsLandscapeLayer>
             final camera = MapCamera.of(context);
             controller.move(controller.camera.center, camera.zoom + 0.5);
             //print('>Zoom ${controller.camera.zoom}');
-            ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+            ref.read(headingMarkerAmountProvider.notifier).setSize(camera.zoom);
           },
           child: Icon(
             CupertinoIcons.zoom_in,

@@ -12,10 +12,13 @@ part 'dark_color_provider.g.dart';
 class ThemePrimaryDarkColor extends _$ThemePrimaryDarkColor {
   @override
   Color build() {
-    Hive.box(hiveBoxSettingDbName)
+    var listener = Hive.box(hiveBoxSettingDbName)
         .watch(key: HiveSettingsDB.themePrimaryDarkColorKey)
         .listen((event) {
       state = event.value;
+    });
+    ref.onDispose(() {
+      listener.cancel();
     });
     return HiveSettingsDB.themePrimaryDarkColor;
   }

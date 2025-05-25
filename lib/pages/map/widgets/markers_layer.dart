@@ -15,7 +15,7 @@ import '../../../models/route.dart';
 import '../../../models/special_point.dart';
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/location_provider.dart';
-import '../../../providers/map/heading_marker_size_provider.dart';
+import '../../../providers/map/heading_marker_amount_provider.dart';
 import '../../../providers/map/icon_size_provider.dart';
 import 'map_friend_marker_popup.dart';
 import 'map_marker_popup.dart';
@@ -36,7 +36,7 @@ class _MarkersLayerState extends ConsumerState<MarkersLayer> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final camera = MapCamera.of(context);
-      ref.read(headingMarkerSizeProvider.notifier).setSize(camera.zoom);
+      ref.read(headingMarkerAmountProvider.notifier).setSize(camera.zoom);
     });
     super.initState();
   }
