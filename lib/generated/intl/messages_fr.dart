@@ -223,6 +223,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
       "Utiliser un autre fournisseur de localisation en cas de problèmes avec les données GPS",
     ),
+    "alwaysLocationPermissionRecommend": MessageLookupByLibrary.simpleMessage(
+      "\'Always location\' is recommend to avoid loosing GPS-signal",
+    ),
+    "alwaysLocationPermissionRecommendTitle":
+        MessageLookupByLibrary.simpleMessage(
+          "Please enable \'Always location\' in Settings",
+        ),
     "alwaysPermanentlyDenied": MessageLookupByLibrary.simpleMessage(
       "Permission de localisation toujours refusée dans le système !",
     ),

@@ -432,7 +432,8 @@ Future showFriendLink(BuildContext context, Friend friend) {
                       Share.share(
                           Localize.current.sendlinkdescription(
                               friend.requestId,
-                              'bna://bladenight.app/friend/addfriend?action=addFriend&code=${friend.requestId}&name=${HiveSettingsDB.myName}',
+                              'bna://bladenight.app/friend/addFriend?'
+                              'action=addFriend&code=${Uri.encodeComponent('${friend.requestId}')}&name=${Uri.encodeComponent(HiveSettingsDB.myName)}',
                               HiveSettingsDB.myName,
                               playStoreLink,
                               iOSAppStoreLink),
@@ -473,9 +474,8 @@ Future showFriendLink(BuildContext context, Friend friend) {
                     barcode: Barcode.qrCode(),
                     color: Colors.white,
                     backgroundColor: Colors.black,
-                    data: Uri.encodeFull(
-                        'bna://bladenight.app/friend/addfriend?action='
-                        'addFriend&code=${friend.requestId}&name=${HiveSettingsDB.myName}'),
+                    data: 'bna://bladenight.app/friend/addFriend?'
+                        'action=addFriend&code=${Uri.encodeComponent('${friend.requestId}')}&name=${Uri.encodeComponent(HiveSettingsDB.myName)}',
                     width: MediaQuery.sizeOf(context).shortestSide / 2,
                     height: MediaQuery.sizeOf(context).shortestSide / 2,
                   ),

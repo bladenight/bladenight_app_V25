@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quickalert/quickalert.dart';
 
 import '../../app_settings/app_configuration_helper.dart';
 import '../../generated/l10n.dart';
 import '../../geofence/geofence_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
+import '../../helpers/location_permission_dialogs.dart';
 import '../../helpers/logger/logger.dart';
 import '../../helpers/notification/onesignal_handler.dart';
 import '../../helpers/notification/toast_notification.dart';
@@ -441,6 +443,16 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     onChanged: (val) {
                                       setState(() {
                                         HiveSettingsDB.setIsSpecialHead(val);
+                                        if (LocationProvider()
+                                                .gpsLocationPermissionsStatus !=
+                                            LocationPermissionStatus.always) {
+                                          QuickAlert.show(
+                                              context: context,
+                                              type: QuickAlertType.warning,
+                                              title: Localize.of(context)
+                                                  .alwaysLocationPermissionRecommendTitle);
+                                        }
+                                        //turn off tail
                                         if (val) {
                                           HiveSettingsDB.setIsSpecialTail(
                                               false);
@@ -472,6 +484,16 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     onChanged: (val) {
                                       setState(() {
                                         HiveSettingsDB.setIsSpecialTail(val);
+                                        if (LocationProvider()
+                                                .gpsLocationPermissionsStatus !=
+                                            LocationPermissionStatus.always) {
+                                          QuickAlert.show(
+                                              context: context,
+                                              type: QuickAlertType.warning,
+                                              title: Localize.of(context)
+                                                  .alwaysLocationPermissionRecommendTitle);
+                                        }
+                                        //turn off head
                                         if (val) {
                                           HiveSettingsDB.setIsSpecialHead(
                                               false);

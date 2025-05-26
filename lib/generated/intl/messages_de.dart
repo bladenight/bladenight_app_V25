@@ -218,6 +218,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "alternativeLocationProviderTitle": MessageLookupByLibrary.simpleMessage(
       "Nutze alternativen Standorttreiber bei Problemen mit dem GPS Empfang",
     ),
+    "alwaysLocationPermissionRecommend": MessageLookupByLibrary.simpleMessage(
+      "\'Standortfreigabe immer\' ist empfohlen oder Display ein, um den Verlust des GPS-Signals wenn die App im Hintergrund ist zu vermeiden !",
+    ),
+    "alwaysLocationPermissionRecommendTitle":
+        MessageLookupByLibrary.simpleMessage(
+          "Bitte \'Standortfreigabe immer\' aktivieren",
+        ),
     "alwaysPermanentlyDenied": MessageLookupByLibrary.simpleMessage(
       "Standortfreigabe permanent verweigert oder im System gesperrt!",
     ),

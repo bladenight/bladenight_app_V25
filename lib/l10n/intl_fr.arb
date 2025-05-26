@@ -570,6 +570,8 @@
   "startNoParticipationShort": "Montrez votre position",
   "eventOn": "Événement sur",
   "onsiteCount": "Bladeguards onsite ",
-  "noLocationRequestPermission": "Location service is necessary for onsite check - Tap to allow location"
+  "noLocationRequestPermission": "Location service is necessary for onsite check - Tap to allow location",
+  "alwaysLocationPermissionRecommendTitle": "Please enable 'Always location' in Settings",
+  "alwaysLocationPermissionRecommend": "'Always location' is recommend to avoid loosing GPS-signal"
 }
 

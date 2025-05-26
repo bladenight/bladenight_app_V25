@@ -122,6 +122,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             SliverToBoxAdapter(
               child: CupertinoFormSection(
                   header: Text(Localize.of(context).bladeGuardSettingsTitle),
+                  backgroundColor:
+                      CupertinoTheme.of(context).primaryContrastingColor,
                   children: <Widget>[
                     SizedTintedCupertinoButton(
                       child: Text(Localize.of(context).bladeGuardSettings),

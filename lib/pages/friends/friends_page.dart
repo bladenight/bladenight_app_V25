@@ -71,6 +71,7 @@ class _FriendsPage extends ConsumerState with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    _nameTextController.text = HiveSettingsDB.myName;
     var networkAvailable = ref.watch(networkAwareProvider);
     var actionButton = MultiExpandableButton(
       onPressed: () {},

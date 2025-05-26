@@ -615,7 +615,7 @@ class HiveSettingsDB {
     _hiveBox.put(_trackingActiveKey, val);
   }
 
-  static const String autoStopTrackingEnabledKey = 'autoStopTrackingEnabledKey';
+  static const String autoStopTrackingEnabledKey = 'autoStopTrackingActiveKey';
 
   ///get Tracking is Active means locations updating is active
   static bool get autoStopTrackingEnabled {

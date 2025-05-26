@@ -4247,6 +4247,26 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Please enable 'Always location' in Settings`
+  String get alwaysLocationPermissionRecommendTitle {
+    return Intl.message(
+      'Please enable \'Always location\' in Settings',
+      name: 'alwaysLocationPermissionRecommendTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `'Always location' is recommend to avoid loosing GPS-signal`
+  String get alwaysLocationPermissionRecommend {
+    return Intl.message(
+      '\'Always location\' is recommend to avoid loosing GPS-signal',
+      name: 'alwaysLocationPermissionRecommend',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

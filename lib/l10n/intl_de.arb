@@ -571,5 +571,7 @@
   "startNoParticipationShort": "Zeige deine Position",
   "eventOn": "Event am",
   "onsiteCount": "Bladeguards vor Ort angemeldet",
-  "noLocationRequestPermission": "Standortfreigabe notwendig für Vor-Ort-Anmeldung - Tippen zur Aktivierung"
+  "noLocationRequestPermission": "Standortfreigabe notwendig für Vor-Ort-Anmeldung - Tippen zur Aktivierung",
+  "alwaysLocationPermissionRecommendTitle": "Bitte 'Standortfreigabe immer' aktivieren",
+  "alwaysLocationPermissionRecommend": "'Standortfreigabe immer' ist empfohlen oder Display ein, um den Verlust des GPS-Signals wenn die App im Hintergrund ist zu vermeiden !"
 }
