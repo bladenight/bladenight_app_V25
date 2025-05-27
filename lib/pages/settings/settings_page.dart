@@ -72,8 +72,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ResponsiveBreakpoints.of(context).orientation ==
                     Orientation.portrait
                 ? CupertinoSliverNavigationBar(
-                    leading:
-                        HiddenAdminButton(child: Icon(CupertinoIcons.settings)),
+                    leading: Icon(CupertinoIcons.settings),
                     largeTitle: Text(Localize.of(context).settings),
                     backgroundColor:
                         CupertinoTheme.of(context).barBackgroundColor,
@@ -122,8 +121,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             SliverToBoxAdapter(
               child: CupertinoFormSection(
                   header: Text(Localize.of(context).bladeGuardSettingsTitle),
-                  backgroundColor:
-                      CupertinoTheme.of(context).primaryContrastingColor,
                   children: <Widget>[
                     SizedTintedCupertinoButton(
                       child: Text(Localize.of(context).bladeGuardSettings),

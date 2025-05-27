@@ -84,10 +84,10 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                       ConnectivityStatus.wampConnected)
                   ? CupertinoButton(
                       padding: EdgeInsets.zero,
-                      minSize: 0,
                       onPressed: () async {
                         var _ = ref.refresh(bgIsOnSiteProvider);
                       },
+                      minimumSize: Size(0, 0),
                       child: isBladeguard
                           ? const Icon(Icons.update)
                           : const SizedBox(), //Container hides gesture from back button

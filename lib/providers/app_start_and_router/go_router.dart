@@ -76,7 +76,7 @@ enum AppRoute {
   //friends
   editFriendDialog,
   addFriend,
-  addFriendWithCode,
+  addfriend, //lower_case
 
   //messages
   message,
@@ -280,35 +280,16 @@ GoRouter goRouter(Ref ref) {
                         parentNavigatorKey: _friendsNavigatorKey,
                         pageBuilder: GoTransitions.fullscreenDialog,
                         builder: (context, state) {
-                          var friendsAction = FriendsAction.addNew;
-                          var name = '';
-                          var parameters = state.uri.queryParameters;
-                          if (parameters.containsKey('name') &&
-                              parameters['name']!.isNotEmpty) {
-                            name = parameters['name']!;
-                          }
-                          if (parameters.containsKey('code') &&
-                              parameters['code']!.length == 6) {
-                            var code = int.tryParse(parameters['code']!);
-                            if (code != null) {
-                              return EditFriendDialog(
-                                friend: Friend(
-                                    name: name, friendId: -1, requestId: code),
-                                action: FriendsAction.addWithCode,
-                              );
-                            } else {
-                              return EditFriendDialog(
-                                  friend: Friend(
-                                    name: name,
-                                    friendId: -1,
-                                  ),
-                                  action: FriendsAction.addWithCode);
-                            }
-                          }
-                          return EditFriendDialog(
-                            friend: Friend(name: name, friendId: -1),
-                            action: friendsAction,
-                          );
+                          return addFriendRouter(context, state);
+                        },
+                      ),
+                      GoRoute(
+                        path: '/${AppRoute.addfriend.name}',
+                        name: AppRoute.addfriend.name,
+                        parentNavigatorKey: _friendsNavigatorKey,
+                        pageBuilder: GoTransitions.fullscreenDialog,
+                        builder: (context, state) {
+                          return addFriendRouter(context, state);
                         },
                       ),
                     ],
@@ -489,5 +470,34 @@ GoRouter goRouter(Ref ref) {
           message: state.error!.message.toString(),
           onRetry: () => context.goNamed(AppRoute.home.name)),
     ),
+  );
+}
+
+Widget addFriendRouter(BuildContext context, GoRouterState state) {
+  var friendsAction = FriendsAction.addNew;
+  var name = '';
+  var parameters = state.uri.queryParameters;
+  if (parameters.containsKey('name') && parameters['name']!.isNotEmpty) {
+    name = parameters['name']!;
+  }
+  if (parameters.containsKey('code') && parameters['code']!.length == 6) {
+    var code = int.tryParse(parameters['code']!);
+    if (code != null) {
+      return EditFriendDialog(
+        friend: Friend(name: name, friendId: -1, requestId: code),
+        action: FriendsAction.addWithCode,
+      );
+    } else {
+      return EditFriendDialog(
+          friend: Friend(
+            name: name,
+            friendId: -1,
+          ),
+          action: FriendsAction.addWithCode);
+    }
+  }
+  return EditFriendDialog(
+    friend: Friend(name: name, friendId: -1),
+    action: friendsAction,
   );
 }
