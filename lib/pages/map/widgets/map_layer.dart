@@ -60,7 +60,8 @@ class _MapLayerState extends ConsumerState<MapLayer> {
   void initState() {
     _mapController = MapController();
     _mapEventStreamListener = _mapController.mapEventStream.listen((event) {
-      if (event.source == MapEventSource.multiFingerEnd) {
+      if (event.source == MapEventSource.multiFingerEnd ||
+          event.source == MapEventSource.scrollWheel) {
         ref
             .read(headingMarkerAmountProvider.notifier)
             .setSize(event.camera.zoom);

@@ -4,13 +4,15 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../helpers/location_bearing_distance.dart';
-import '../../../models/route.dart' show LatLng, RoutePoints;
+import '../../../models/route.dart' show LatLng;
 import '../../../providers/active_event_route_provider.dart';
 import '../../../providers/map/heading_marker_amount_provider.dart';
 
 class HeadingsMultiLayer extends ConsumerStatefulWidget {
-  HeadingsMultiLayer({required this.points, super.key});
-  List<LatLng> points;
+  const HeadingsMultiLayer({required this.points, super.key});
+
+  final List<LatLng> points;
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _HeadingsMultiLayerState();

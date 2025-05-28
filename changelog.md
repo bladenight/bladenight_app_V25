@@ -1,36 +1,35 @@
 # Changelog - BladeNight App
 
-## [1.25.06]
+## [1.25.07]
 
 ### Added
 
+- Bladeguardcounter
 - hint for always permissions
+- more arrows on map zoom in
+- hint for head and tail if no always location service enabled
 
 ### Fixed
 
-- deepling friend import
+- deeplink friend import
+- fix non-working onesignal action button — by removing
 
 ### Changed
 
-- made gorouter case insensitive
+- moved sponsors to direct header
+- design change for home
+- made goRouter case-insensitive
+- updated packages
 
 ### Removed
 
 - unnecessary routeOverview text if no event planned
 
+## [1.25.06]
+
 ## [1.25.05]
 
-### Added
-
-- Bladeguardcounter
-
-### Fixed
-
-- fix non-working onesignal action button — by replacing
-
-### Changed
-
-- design change home
+- not released
 
 ## [1.25.04]
 
