@@ -76,7 +76,6 @@ enum AppRoute {
   //friends
   editFriendDialog,
   addFriend,
-  addfriend, //lower_case
 
   //messages
   message,
@@ -120,6 +119,7 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
 
           ///qrCreatePage?infoText=24566&headerText=567&qrCodeText=132435
+          caseSensitive: false,
           path: '/${AppRoute.qrCreatePage.name}',
           name: AppRoute.qrCreatePage.name,
           pageBuilder: (context, state) {
@@ -137,8 +137,18 @@ GoRouter goRouter(Ref ref) {
             );
           }),
       GoRoute(
+          caseSensitive: false,
           path: '/privacy.html',
           name: 'privacy.html',
+          pageBuilder: (context, state) {
+            return NoTransitionPage(
+              child: AboutPage(),
+            );
+          }),
+      GoRoute(
+          caseSensitive: false,
+          path: '/privacy',
+          name: 'privacy',
           pageBuilder: (context, state) {
             return NoTransitionPage(
               child: AboutPage(),
@@ -175,6 +185,7 @@ GoRouter goRouter(Ref ref) {
                     // first tab. This will cover screen A but not the application
                     // shell (bottom navigation bar).
                     GoRoute(
+                      caseSensitive: false,
                       name: AppRoute.messagesPage.name,
                       path: '/messages',
                       parentNavigatorKey: _sectionHomeNavigatorKey,
@@ -184,6 +195,7 @@ GoRouter goRouter(Ref ref) {
                     ),
                     if (kIsWeb) //is in settings available on no kIsWebApps
                       GoRoute(
+                        caseSensitive: false,
                         path: '/${AppRoute.aboutPage.name}',
                         name: AppRoute.aboutPage.name,
                         pageBuilder: (context, state) => const NoTransitionPage(
@@ -200,6 +212,7 @@ GoRouter goRouter(Ref ref) {
             // #enddocregion configuration-branches
             StatefulShellBranch(navigatorKey: _sectionMapNavigatorKey, routes: [
               GoRoute(
+                caseSensitive: false,
                 path: '/${AppRoute.map.name}',
                 name: AppRoute.map.name,
                 pageBuilder: (context, state) => const NoTransitionPage(
@@ -211,6 +224,7 @@ GoRouter goRouter(Ref ref) {
                 navigatorKey: _sectionEventsNavigatorKey,
                 routes: [
                   GoRoute(
+                      caseSensitive: false,
                       path: '/${AppRoute.events.name}',
                       name: AppRoute.events.name,
                       pageBuilder: (context, state) {
@@ -220,6 +234,7 @@ GoRouter goRouter(Ref ref) {
                       },
                       routes: [
                         GoRoute(
+                          caseSensitive: false,
                           path: '/${AppRoute.showRoute.name}/:name',
                           pageBuilder: (context, state) => NoTransitionPage(
                             child: RouteNameDialog(
@@ -227,6 +242,7 @@ GoRouter goRouter(Ref ref) {
                           ),
                         ),
                         GoRoute(
+                          caseSensitive: false,
                           path: AppRoute.showRoute.name,
                           name: AppRoute.showEventRouteDetails.name,
                           redirect:
@@ -257,6 +273,7 @@ GoRouter goRouter(Ref ref) {
                 routes: [
                   //no locale
                   GoRoute(
+                    caseSensitive: false,
                     path: '/${AppRoute.friend.name}',
                     name: AppRoute.friend.name,
                     pageBuilder: (context, state) {
@@ -275,21 +292,13 @@ GoRouter goRouter(Ref ref) {
                         //
                         // adb devices with -s "xxxxx"
                         //adb -s "R3CT50CK8FP" shell 'am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "bna://bladenight.app/friend/addFriend?code=123456&name=tom"'
+                        caseSensitive: false,
                         path: '/${AppRoute.addFriend.name}',
                         name: AppRoute.addFriend.name,
                         parentNavigatorKey: _friendsNavigatorKey,
                         pageBuilder: GoTransitions.fullscreenDialog,
                         builder: (context, state) {
-                          return addFriendRouter(context, state);
-                        },
-                      ),
-                      GoRoute(
-                        path: '/${AppRoute.addfriend.name}',
-                        name: AppRoute.addfriend.name,
-                        parentNavigatorKey: _friendsNavigatorKey,
-                        pageBuilder: GoTransitions.fullscreenDialog,
-                        builder: (context, state) {
-                          return addFriendRouter(context, state);
+                          return addFriendRouterWidget(context, state);
                         },
                       ),
                     ],
@@ -297,6 +306,7 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     // const LinkFriendDevicePage(deviceType: DeviceType.advertiser,
                     //                            friendsAction: FriendsAction.addNearby,
+                    caseSensitive: false,
                     path: '/${AppRoute.linkFriendDevicePage.name}',
                     name: AppRoute.linkFriendDevicePage.name,
                     pageBuilder: (context, state) {
@@ -313,6 +323,7 @@ GoRouter goRouter(Ref ref) {
                     },
                   ),
                   GoRoute(
+                    caseSensitive: false,
                     path: '/${AppRoute.editFriendDialog.name}',
                     name: AppRoute.editFriendDialog.name,
                     redirect: (BuildContext context, GoRouterState state) {
@@ -353,6 +364,7 @@ GoRouter goRouter(Ref ref) {
                   navigatorKey: _sectionSettingsNavigatorKey,
                   routes: [
                     GoRoute(
+                      caseSensitive: false,
                       path: '/${AppRoute.settings.name}',
                       name: AppRoute.settings.name,
                       pageBuilder: (context, state) => const NoTransitionPage(
@@ -360,12 +372,14 @@ GoRouter goRouter(Ref ref) {
                       ),
                       routes: [
                         GoRoute(
+                          caseSensitive: false,
                           path: '/${AppRoute.bladeguard.name}',
                           name: AppRoute.bladeguard.name,
                           builder: (context, state) => BladeGuardPage(),
                           pageBuilder: GoTransitions.slide.withBackGesture.call,
                         ),
                         GoRoute(
+                          caseSensitive: false,
                           path: '/${AppRoute.aboutPage.name}',
                           name: AppRoute.aboutPage.name,
                           pageBuilder: (context, state) =>
@@ -473,15 +487,39 @@ GoRouter goRouter(Ref ref) {
   );
 }
 
-Widget addFriendRouter(BuildContext context, GoRouterState state) {
+Widget addFriendRouterWidget(BuildContext context, GoRouterState state) {
   var friendsAction = FriendsAction.addNew;
   var name = '';
   var parameters = state.uri.queryParameters;
-  if (parameters.containsKey('name') && parameters['name']!.isNotEmpty) {
-    name = parameters['name']!;
+  var fullText = state.uri.toString();
+  var unescaped = Uri.decodeFull(fullText);
+  var encodedUri = Uri.tryParse(unescaped);
+  if (encodedUri != null) {
+    parameters = encodedUri.queryParameters;
+  }
+
+  if (parameters.isEmpty) {
+    if (state.extra != null && state.extra is Map) {
+      var extra = state.extra as Map<String, String>;
+      if (extra.containsKey('code') && extra['code']!.length == 6) {
+        var code = int.tryParse(extra['code']!);
+        if (extra.containsKey('name') && extra['name']!.isNotEmpty) {
+          name = extra['name']!;
+        }
+        if (code != null) {
+          return EditFriendDialog(
+            friend: Friend(name: name, friendId: -1, requestId: code),
+            action: FriendsAction.addWithCode,
+          );
+        }
+      }
+    }
   }
   if (parameters.containsKey('code') && parameters['code']!.length == 6) {
     var code = int.tryParse(parameters['code']!);
+    if (parameters.containsKey('name') && parameters['name']!.isNotEmpty) {
+      name = parameters['name']!;
+    }
     if (code != null) {
       return EditFriendDialog(
         friend: Friend(name: name, friendId: -1, requestId: code),
@@ -494,6 +532,34 @@ Widget addFriendRouter(BuildContext context, GoRouterState state) {
             friendId: -1,
           ),
           action: FriendsAction.addWithCode);
+    }
+  } else if (parameters.containsKey('code') &&
+      parameters['code']!.length > 6 &&
+      parameters['code']!.contains('&')) {
+    var parts = parameters['code']!.split('&');
+    if (parts.length != 2) {
+      return EditFriendDialog(
+        friend: Friend(name: name, friendId: -1),
+        action: friendsAction,
+      );
+    } else {
+      var code = int.tryParse(parameters['code']!);
+      if (code != null) {
+        if (parameters.containsKey('name') && parameters['name']!.isNotEmpty) {
+          name = parameters['name']!;
+        }
+        return EditFriendDialog(
+          friend: Friend(name: name, friendId: -1, requestId: code),
+          action: FriendsAction.addWithCode,
+        );
+      } else {
+        return EditFriendDialog(
+            friend: Friend(
+              name: name,
+              friendId: -1,
+            ),
+            action: FriendsAction.addWithCode);
+      }
     }
   }
   return EditFriendDialog(

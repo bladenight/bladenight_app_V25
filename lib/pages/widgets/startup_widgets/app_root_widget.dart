@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert' show HtmlEscape;
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,7 +44,14 @@ class _AppRootWidget extends ConsumerState<AppRootWidget> {
   }
 
   void openAppLink(Uri uri) {
-    ref.read(goRouterProvider).push(uri.path, extra: uri.queryParameters);
+    //problem with some sw releases and bad encoded uri
+    var fullText = uri.toString();
+    var unescaped = Uri.decodeFull(fullText);
+    var encodedUri = Uri.tryParse(unescaped);
+    if (encodedUri == null) return;
+    ref
+        .read(goRouterProvider)
+        .push(encodedUri.path, extra: encodedUri.queryParameters);
   }
 
   @override
