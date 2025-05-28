@@ -1,5 +1,23 @@
 # Changelog - BladeNight App
 
+## [1.25.06]
+
+### Added
+
+- hint for always permissions
+
+### Fixed
+
+- deepling friend import
+
+### Changed
+
+- made gorouter case insensitive
+
+### Removed
+
+- unnecessary routeOverview text if no event planned
+
 ## [1.25.05]
 
 ### Added

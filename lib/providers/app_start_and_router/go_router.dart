@@ -388,6 +388,7 @@ GoRouter goRouter(Ref ref) {
                           ),
                         ),
                         GoRoute(
+                          caseSensitive: false,
                           path: '/${AppRoute.signIn.name}',
                           name: AppRoute.signIn.name,
                           pageBuilder: (context, state) =>
@@ -396,6 +397,7 @@ GoRouter goRouter(Ref ref) {
                           ),
                         ),
                         GoRoute(
+                          caseSensitive: false,
                           path: '/${AppRoute.logMonitor.name}',
                           name: AppRoute.logMonitor.name,
                           pageBuilder: (context, state) => NoTransitionPage(
@@ -404,6 +406,7 @@ GoRouter goRouter(Ref ref) {
                           ),
                         ),
                         GoRoute(
+                            caseSensitive: false,
                             path: '/${AppRoute.userTrackDialog.name}',
                             name: AppRoute.userTrackDialog.name,
                             pageBuilder: GoTransitions.slide.call,
@@ -426,11 +429,13 @@ GoRouter goRouter(Ref ref) {
                               );
                             }),
                         GoRoute(
+                            caseSensitive: false,
                             path: '/intro',
                             name: AppRoute.introScreen.name,
                             pageBuilder: (context, state) =>
                                 NoTransitionPage(child: IntroScreen())),
                         GoRoute(
+                            caseSensitive: false,
                             path: '/${AppRoute.adminLogin.name}',
                             name: AppRoute.adminLogin.name,
                             redirect:
@@ -449,6 +454,7 @@ GoRouter goRouter(Ref ref) {
                             },
                             pageBuilder: GoTransitions.bottomSheet),
                         GoRoute(
+                            caseSensitive: false,
                             path: '/${AppRoute.adminPage.name}',
                             name: AppRoute.adminPage.name,
                             redirect:
@@ -470,6 +476,7 @@ GoRouter goRouter(Ref ref) {
                 navigatorKey: _messageLinkNavigatorKey,
                 routes: [
                   GoRoute(
+                    caseSensitive: false,
                     path: '/messagesPageMenu',
                     name: AppRoute.messagesPageMenu.name,
                     pageBuilder: (context, state) => const NoTransitionPage(

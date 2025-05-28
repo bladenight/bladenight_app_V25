@@ -443,21 +443,25 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     onChanged: (val) {
                                       setState(() {
                                         HiveSettingsDB.setIsSpecialHead(val);
-                                        if (LocationProvider()
-                                                .gpsLocationPermissionsStatus !=
-                                            LocationPermissionStatus.always) {
-                                          QuickAlert.show(
-                                              context: context,
-                                              type: QuickAlertType.warning,
-                                              title: Localize.of(context)
-                                                  .alwaysLocationPermissionRecommendTitle);
-                                        }
                                         //turn off tail
                                         if (val) {
                                           HiveSettingsDB.setIsSpecialTail(
                                               false);
                                         }
                                       });
+
+                                      if (val &&
+                                          LocationProvider()
+                                                  .gpsLocationPermissionsStatus !=
+                                              LocationPermissionStatus.always) {
+                                        QuickAlert.show(
+                                            context: context,
+                                            type: QuickAlertType.warning,
+                                            title: Localize.of(context)
+                                                .alwaysLocationPermissionRecommendTitle,
+                                            text: Localize.of(context)
+                                                .alwaysLocationPermissionRecommend);
+                                      }
                                     },
                                     value: HiveSettingsDB.isHeadOfProcession,
                                   ),
@@ -484,21 +488,24 @@ class _BladeGuardPage extends ConsumerState with WidgetsBindingObserver {
                                     onChanged: (val) {
                                       setState(() {
                                         HiveSettingsDB.setIsSpecialTail(val);
-                                        if (LocationProvider()
-                                                .gpsLocationPermissionsStatus !=
-                                            LocationPermissionStatus.always) {
-                                          QuickAlert.show(
-                                              context: context,
-                                              type: QuickAlertType.warning,
-                                              title: Localize.of(context)
-                                                  .alwaysLocationPermissionRecommendTitle);
-                                        }
                                         //turn off head
                                         if (val) {
                                           HiveSettingsDB.setIsSpecialHead(
                                               false);
                                         }
                                       });
+                                      if (val &&
+                                          LocationProvider()
+                                                  .gpsLocationPermissionsStatus !=
+                                              LocationPermissionStatus.always) {
+                                        QuickAlert.show(
+                                            context: context,
+                                            type: QuickAlertType.warning,
+                                            title: Localize.of(context)
+                                                .alwaysLocationPermissionRecommendTitle,
+                                            text: Localize.of(context)
+                                                .alwaysLocationPermissionRecommend);
+                                      }
                                     },
                                     value: HiveSettingsDB.isTailOfProcession,
                                   ),

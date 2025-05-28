@@ -2,7 +2,7 @@ name: bladenight_app_flutter
 description: BladeNight! App
 
 publish_to: 'none'
-version: 1.25.06
+version: 1.25.07
 
 environment:
   sdk: ">=2.17.0 <4.0.0"
@@ -138,7 +138,7 @@ dev_dependencies:
   build_runner: ^2.4.11
   custom_lint:
   dart_mappable_builder: ^4.5.0
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   riverpod_generator: ^2.3.3
   riverpod_lint: ^2.3.13
 analyzer:

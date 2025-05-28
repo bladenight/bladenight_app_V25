@@ -207,7 +207,7 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
               ),
             ),
           ),
-        if (!nextEvent.isNoEventPlanned)
+        if (!nextEvent.isNoEventPlanned) ...[
           Container(
             alignment: Alignment.topCenter,
             width: double.infinity,
@@ -227,28 +227,29 @@ class _EventDataOverviewState extends ConsumerState<EventDataOverview>
             ),
             child: EventStatusTrafficLight(event: nextEvent),
           ),
-        Container(
-          alignment: Alignment.topCenter,
-          width: double.infinity,
-          child: Text(
-            Localize.of(context).routeoverview,
-            textAlign: TextAlign.center,
+          Container(
+            alignment: Alignment.topCenter,
+            width: double.infinity,
+            child: Text(
+              Localize.of(context).routeoverview,
+              textAlign: TextAlign.center,
+            ),
           ),
-        ),
-        //SponsorCarousel(height: MediaQuery.sizeOf(context).height * 0.15),
+          //SponsorCarousel(height: MediaQuery.sizeOf(context).height * 0.15),
 
-        /*Divider(
+          /*Divider(
           height: 4,
           color: nextEvent.statusColor,
         ),*/
-        if (widget.showMap)
-          GestureDetector(
-            onTap: () {
-              context.goNamed(AppRoute.map.name);
-            },
-            child: EventMapSmall(
-                nextEvent: nextEvent, borderRadius: widget.borderRadius),
-          ),
+          if (widget.showMap)
+            GestureDetector(
+              onTap: () {
+                context.goNamed(AppRoute.map.name);
+              },
+              child: EventMapSmall(
+                  nextEvent: nextEvent, borderRadius: widget.borderRadius),
+            ),
+        ], //noEvent
       ],
     );
   }
