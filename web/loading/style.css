@@ -1,0 +1,36 @@
+body {
+    background-color: #000000;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    margin-top: 100px;  /* Added a margin to shift it down a bit */
+    z-index: 999998; /* Higher than the splash screen */
+    position: relative; /* Required for z-index to take effect */
+}
+
+.lds-roller {
+    display: inline-block;
+    position: relative;
+    width: 119px;
+    height: 119px;
+}
+.lds-roller div {
+    animation: lds-roller 3.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 60px 60px;
+}
+
+
+
+@keyframes lds-roller {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,51 @@
+import 'package:hive_ce/hive.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../app_settings/app_constants.dart';
+import '../../helpers/hive_box/hive_settings_db.dart';
+import '../../models/follow_location_state.dart';
+
+part 'align_flutter_map_provider.g.dart';
+
+@riverpod
+class AlignFlutterMap extends _$AlignFlutterMap {
+  @override
+  AlignFlutterMapState build() {
+    //this makes provider global
+    var listener = Hive.box(hiveBoxSettingDbName)
+        .watch(key: MapSettings.alignFlutterMap)
+        .listen((event) => state = event.value);
+    ref.onDispose(() {
+      listener.cancel();
+    });
+    return MapSettings.alignFlutterMap;
+  }
+
+  AlignFlutterMapState setNext() {
+    switch (state) {
+      case AlignFlutterMapState.alignNever:
+        state = AlignFlutterMapState.alignPositionOnUpdateOnly;
+        break;
+      case AlignFlutterMapState.alignPositionOnUpdateOnly:
+        state = AlignFlutterMapState.alignDirectionAndPositionOnUpdate;
+        break;
+      case AlignFlutterMapState.alignDirectionOnUpdateOnly:
+        state = AlignFlutterMapState.alignDirectionAndPositionOnUpdate;
+        break;
+      case AlignFlutterMapState.alignDirectionAndPositionOnUpdate:
+        state = AlignFlutterMapState.alignNever;
+        break;
+      default:
+        state = AlignFlutterMapState.alignNever;
+        break;
+    }
+    MapSettings.setAlignFlutterMap(state);
+    return state;
+  }
+
+  AlignFlutterMapState setState(AlignFlutterMapState newState) {
+    state = newState;
+    MapSettings.setAlignFlutterMap(state);
+    return state;
+  }
+}

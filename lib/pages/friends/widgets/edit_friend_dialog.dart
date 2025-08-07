@@ -1,0 +1,489 @@
+import 'dart:math';
+
+import 'package:barcode_widget/barcode_widget.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:universal_io/io.dart';
+
+import '../../../app_settings/app_configuration_helper.dart';
+import '../../../app_settings/app_constants.dart';
+import '../../../generated/l10n.dart';
+import '../../../helpers/hive_box/hive_settings_db.dart';
+import '../../../helpers/keyboard_helper.dart';
+import '../../../helpers/logger/logger.dart';
+import '../../../models/friend.dart';
+import '../../../providers/app_start_and_router/go_router.dart';
+import '../../../providers/friends_provider.dart';
+import '../../../providers/network_connection_provider.dart';
+import '../../../wamp/wamp_exception.dart';
+import '../../widgets/buttons/tinted_cupertino_button.dart';
+import '../../widgets/common_widgets.dart';
+import '../../widgets/common_widgets/data_widget_left_right.dart';
+import '../../widgets/common_widgets/no_connection_warning.dart';
+import '../../widgets/input/number_input_widget.dart';
+import '../../widgets/input/text_input_widget.dart';
+import '../../widgets/sheets/base_bottom_sheet_widget.dart';
+
+class EditFriendResult {
+  final String name;
+  final Color color;
+  final String? code;
+  final bool active;
+
+  const EditFriendResult(this.name, this.color, this.code, this.active);
+}
+
+enum ValidationStatus { nameOk, codeOk }
+
+class EditFriendDialog extends ConsumerStatefulWidget {
+  const EditFriendDialog(
+      {this.friend, this.action = FriendsAction.edit, super.key});
+
+  final Friend? friend;
+  final FriendsAction action;
+
+  @override
+  ConsumerState<EditFriendDialog> createState() => _EditFriendDialogState();
+
+  static Future<EditFriendResult?> show(
+    BuildContext context, {
+    Friend? friend,
+    required FriendsAction friendDialogAction,
+  }) async {
+    var queryParameters = {'action': friendDialogAction.name};
+    if (friend != null) {
+      queryParameters['friend'] = friend.toJson();
+    }
+    return context.pushNamed(AppRoute.editFriendDialog.name,
+        queryParameters: queryParameters);
+  }
+}
+
+class _EditFriendDialogState extends ConsumerState<EditFriendDialog>
+    with WidgetsBindingObserver {
+  String? errorText;
+  String name = '';
+  String? code;
+  Color? color;
+  bool isActive = true;
+  bool isLoading = false;
+
+  final List<ValueNotifier<bool>> _validationState = [
+    ValueNotifier(false), //name
+    ValueNotifier(false), //code
+  ];
+
+  bool get validateCode =>
+      code != null && code!.length == 6 && int.tryParse(code!) != null;
+
+  bool get isValid =>
+      _validationState.elementAt(ValidationStatus.nameOk.index).value &&
+      (widget.action != FriendsAction.addWithCode ||
+          _validationState.elementAt(ValidationStatus.codeOk.index).value);
+
+  @override
+  void initState() {
+    super.initState();
+    name = widget.friend?.name ?? '';
+    color = widget.friend?.color ??
+        ColorConstants.friendPickerColors[
+            Random().nextInt(ColorConstants.friendPickerColors.length)];
+    code = widget.friend?.requestId.toString();
+    isActive = widget.friend?.isActive ?? true;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    color ??= widget.friend?.color ??
+        ColorConstants.friendPickerColors[
+            Random().nextInt(ColorConstants.friendPickerColors.length)];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _validationState[0].value = name.isNotEmpty;
+    _validationState[1].value = validateCode;
+    return CupertinoPageScaffold(
+      child: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          slivers: [
+            CupertinoSliverNavigationBar(
+                leading: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  minSize: 0,
+                  onPressed: () async {
+                    if (context.canPop()) context.pop();
+                  },
+                  child: const Icon(CupertinoIcons.back),
+                ),
+                largeTitle: Text(widget.action == FriendsAction.addWithCode
+                    ? Localize.of(context).addfriendwithcode
+                    : widget.friend != null && widget.friend?.friendId != -1
+                        ? Localize.of(context).editfriend
+                        : Localize.of(context).addnewfriend),
+                trailing: MultiValueListenableBuilder(
+                    valueListenables: _validationState,
+                    builder: (context, values, child) {
+                      if (!isLoading &&
+                          ((values[ValidationStatus.nameOk.index] &&
+                                  widget.action != FriendsAction.addWithCode) ||
+                              (values[ValidationStatus.nameOk.index] &&
+                                  widget.action == FriendsAction.addWithCode &&
+                                  values[ValidationStatus.codeOk.index]))) {
+                        return Row(mainAxisSize: MainAxisSize.min, children: [
+                          CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () async {
+                              _saveData();
+                            },
+                            child: const Icon(Icons.save_alt_outlined),
+                          ),
+                        ]);
+                      } else {
+                        return Container();
+                      }
+                    })),
+            if (ref.watch(networkAwareProvider).connectivityStatus !=
+                ConnectivityStatus.wampConnected)
+              const SliverToBoxAdapter(
+                child: FractionallySizedBox(
+                    widthFactor: 0.9, child: ConnectionWarning()),
+              ),
+            //if (!isLoading)
+            SliverToBoxAdapter(
+              child: FractionallySizedBox(
+                widthFactor: 0.9,
+                child: Column(
+                  children: [
+                    TextInputWidget(
+                      header: Localize.current.enterfriendname,
+                      placeholder: Localize.current.enterfriendname,
+                      value: name,
+                      minLength: 1,
+                      onChanged: (value) {
+                        name = value;
+                        //setState(() {
+                        _validationState[ValidationStatus.nameOk.index].value =
+                            value.isNotEmpty;
+                        // });
+                      },
+                    ),
+                    if (widget.action == FriendsAction.addWithCode) ...[
+                      NumberInputWidget(
+                        header: Localize.current.enter6digitcode,
+                        placeholder: Localize.current.enter6digitcode,
+                        code: code ?? '',
+                        onChanged: (value) {
+                          code = value;
+                          _validationState[ValidationStatus.codeOk.index]
+                              .value = validateCode;
+                        },
+                      )
+                    ],
+                    if (errorText != null)
+                      Text(
+                        maxLines: 3,
+                        errorText!,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          color: CupertinoColors.destructiveRed,
+                        ),
+                      ),
+                    const SizedBox(height: 5),
+                    DataLeftRightContent(
+                      descriptionLeft: Localize.of(context).isuseractive,
+                      descriptionRight: '',
+                      rightWidget: CupertinoSwitch(
+                        //Show friend in Map. Tracking stays active.
+                        value: isActive,
+                        onChanged: (value) {
+                          setState(() {
+                            isActive = value;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    ColorPicker(onColorChanged: (c) {
+                      setState(() {
+                        color = c;
+                      });
+                    }),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: MultiValueListenableBuilder(
+                            valueListenables: _validationState,
+                            builder: (context, values, child) {
+                              if (!isLoading &&
+                                  ((values[ValidationStatus.nameOk.index] &&
+                                          widget.action !=
+                                              FriendsAction.addWithCode) ||
+                                      (values.elementAt(
+                                              ValidationStatus.nameOk.index) &&
+                                          widget.action ==
+                                              FriendsAction.addWithCode &&
+                                          values.elementAt(ValidationStatus
+                                              .codeOk.index)))) {
+                                return CupertinoButton(
+                                  color: Colors.greenAccent,
+                                  onPressed: !isLoading &&
+                                              (_validationState
+                                                      .elementAt(
+                                                          ValidationStatus
+                                                              .nameOk.index)
+                                                      .value &&
+                                                  widget.action !=
+                                                      FriendsAction
+                                                          .addWithCode) ||
+                                          (values.elementAt(ValidationStatus
+                                                  .nameOk.index) &&
+                                              widget.action ==
+                                                  FriendsAction.addWithCode &&
+                                              values.elementAt(ValidationStatus
+                                                  .codeOk.index))
+                                      ? () {
+                                          _saveData();
+                                        }
+                                      : null,
+                                  child: isLoading
+                                      ? const CircularProgressIndicator()
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                              Expanded(
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.save_alt,
+                                                        color: Colors.black,
+                                                      ),
+                                                      FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            Localize.of(context)
+                                                                .save),
+                                                      ),
+                                                    ]),
+                                              ),
+                                            ]),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            })),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: CupertinoButton(
+                          color: Colors.redAccent,
+                          child: Text(
+                            Localize.of(context).cancel,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          onPressed: () {
+                            dismissKeyboard(context);
+                            if (context.canPop()) {
+                              context.pop();
+                            } else {
+                              context.pushNamed(AppRoute.friend.name);
+                            }
+                          }),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ]),
+    );
+  }
+
+  _saveData() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      if (widget.action == FriendsAction.edit) {
+        Navigator.of(context)
+            .pop(EditFriendResult(name, color!, code, isActive));
+        return;
+      }
+
+      if (widget.action == FriendsAction.addNew) {
+        var friend =
+            await ref.read(friendsLogicProvider).addNewFriend(name, color!);
+        if (friend == null && mounted) {
+          setState(() {
+            errorText =
+                '${Localize.of(context).addnewfriend} ${Localize.of(context).failed}';
+            isLoading = false;
+          });
+          return;
+        }
+        if (friend == null) return;
+        if (!mounted) return;
+        dismissKeyboard(context);
+        if (mounted && context.canPop()) {
+          context.pop();
+        }
+        await showFriendLink(context, friend);
+      } else if (widget.action == FriendsAction.addWithCode) //validate code
+      {
+        var result = await ref
+            .read(friendsLogicProvider)
+            .addFriendWithCode(name, color!, code!);
+        if (result is String && mounted) {
+          setState(() {
+            errorText =
+                '${Localize.of(context).addfriendwithcode} ${Localize.of(context).failed} $result';
+            isLoading = false;
+          });
+          return;
+        }
+        if (mounted && context.canPop()) {
+          dismissKeyboard(context);
+          context.pop();
+        }
+      }
+    } on SocketException {
+      setState(() {
+        errorText = Localize.of(context).networkerror;
+        isLoading = false;
+      });
+    } on WampException {
+      setState(() {
+        errorText = Localize.of(context).invalidcode;
+        isLoading = false;
+      });
+    } catch (e) {
+      BnLog.error(
+          className: toString(),
+          methodName: 'friendActionDialog',
+          text: e.toString());
+      setState(() {
+        errorText = Localize.of(context).unknownerror;
+        isLoading = false;
+      });
+    }
+  }
+}
+
+Future showFriendLink(BuildContext context, Friend friend) {
+  return showCupertinoModalBottomSheet(
+      backgroundColor: CupertinoDynamicColor.resolve(
+          CupertinoColors.systemBackground, context),
+      context: context,
+      builder: (context) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: kIsWeb
+                ? MediaQuery.of(context).size.height * 0.5
+                : MediaQuery.of(context).size.height * 0.7,
+          ),
+          child: BaseBottomSheetWidget(children: [
+            Center(
+              child: Text(
+                Localize.current.tellcode(friend.name, friend.requestId),
+                textAlign: TextAlign.center,
+                style:
+                    TextStyle(color: CupertinoTheme.of(context).primaryColor),
+              ),
+            ),
+            CupertinoFormSection(
+                header: Text(Localize.of(context).sendlink),
+                children: [
+                  SizedTintedCupertinoButton(
+                    child: Row(children: [
+                      const Icon(Icons.send),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Text(Localize.of(context).sendlink),
+                      ),
+                    ]),
+                    onPressed: () {
+                      if (context.canPop()) {
+                        context.pop();
+                      }
+                      Share.share(
+                          Localize.current.sendlinkdescription(
+                              friend.requestId,
+                              'bna://bladenight.app/friend/addFriend?'
+                              'action=addFriend&code=${Uri.encodeComponent('${friend.requestId}')}&name=${Uri.encodeComponent(HiveSettingsDB.myName)}',
+                              HiveSettingsDB.myName,
+                              playStoreLink,
+                              iOSAppStoreLink),
+                          subject: Localize.current.sendlink);
+                    },
+                  ),
+                ]),
+            CupertinoFormSection(
+                header: Text(Localize.of(context).copy),
+                children: [
+                  SizedTintedCupertinoButton(
+                    child: Row(children: [
+                      const Icon(Icons.copy),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Text(Localize.of(context).copy),
+                      ),
+                    ]),
+                    onPressed: () async {
+                      await Clipboard.setData(
+                          ClipboardData(text: friend.requestId.toString()));
+                      if (context.mounted && context.canPop()) {
+                        context.pop();
+                      }
+                    },
+                  ),
+                ]),
+            CupertinoFormSection(
+                header: Text(
+                  Localize.current.scanCodeForFriend(
+                      friend.name, HiveSettingsDB.myName, friend.requestId),
+                  textAlign: TextAlign.center,
+                ),
+                children: [
+                  BarcodeWidget(
+                    barcode: Barcode.qrCode(),
+                    color: Colors.white,
+                    backgroundColor: Colors.black,
+                    data: 'bna://bladenight.app/friend/addFriend?'
+                        'action=addFriend&code=${Uri.encodeComponent('${friend.requestId}')}&name=${Uri.encodeComponent(HiveSettingsDB.myName)}',
+                    width: MediaQuery.sizeOf(context).shortestSide / 2,
+                    height: MediaQuery.sizeOf(context).shortestSide / 2,
+                  ),
+                ]),
+            SizedBox(
+              height: MediaQuery.sizeOf(context).shortestSide,
+            )
+          ]),
+        );
+      });
+}

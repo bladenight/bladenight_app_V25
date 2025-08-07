@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta content="BladeNight WebApp" name="description">
+
+    <!-- iOS meta tags & icons -->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="bladenightappflutter" name="apple-mobile-web-app-title">
+    <link href="images/icons/android-chrome-192x192.png" rel="apple-touch-icon">
+
+    <!-- Favicon -->
+    <link href="favicon.ico" rel="icon" type="image/x-icon"/>
+
+    <title>BladeNight München Live Karte</title>
+    <link href="manifest.json" rel="manifest">
+    <script defer src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"></script>
+    <link href="loading/style.css" rel="stylesheet" type="text/css">
+    <!-- Custom CSS styling for the loading spinner -->
+    <style>
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        .loader {
+            /* border and border-top should match the app theme */
+            border: 4px solid #FFFFFF;
+            border-top: 4px solid #3F51B5;
+            border-radius: 50%;
+            /* similar size to CircularProgressIndicator */
+            width: 35px;
+            height: 35px;
+            /* similar animation to CircularProgressIndicator */
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class='onesignal-customlink-container' style="z-index:99999999;"></div>
+<input id="osUserID" type="hidden" value="ERR"/>
+<div class="container" id="loadingContainer">
+    <div class="row">
+        <img alt="Logo1" src="images/2025_Bladenight_Logo_Skm.jpg"></img>
+
+        <div class="lds-roller" style="color: #0a53be">
+            <div style="color: #0a53be">
+                <img alt="Logo" height="130" src="images/app_logo/skm_bn_child_red_130x2.png" width="130">
+            </div>
+        </div>
+        <div id="progressBarText" style="color: #EEEEEE">Lade...</div>
+    </div>
+</div>
+<script async src="flutter_bootstrap.js"></script>
+<script>
+    let oneSignal = undefined;
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async function (OneSignal) {
+
+        oneSignal = OneSignal;
+        await OneSignal.init({
+            appId: "3c72b3fa-515e-4ca4-93a5-98201c8bee5c",
+            notifyButton: {
+                enable: true
+            }
+
+        });
+        //https://documentation.onesignal.com/docs/web-sdk-reference
+        OneSignal.Slidedown.promptPush();
+    });
+
+</script>
+</body>
+</html>

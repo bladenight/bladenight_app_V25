@@ -1,0 +1,366 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+
+import '../../generated/l10n.dart';
+import '../../helpers/device_id_helper.dart';
+import '../../helpers/logger/logger.dart';
+import '../../helpers/time_converter_helper.dart';
+import '../../models/event.dart';
+import '../../models/messages/kill_server.dart';
+import '../../models/messages/set_procession_mode.dart';
+import '../../providers/active_event_provider.dart';
+import '../../providers/admin/admin_pwd_provider.dart';
+import '../../providers/app_start_and_router/go_router.dart';
+import '../../wamp/admin_calls.dart';
+import '../events/widgets/event_editor.dart';
+import '../widgets/buttons/tinted_cupertino_button.dart';
+import '../widgets/common_widgets/no_connection_warning.dart';
+
+class AdminPage extends ConsumerStatefulWidget {
+  const AdminPage({super.key});
+
+  @override
+  ConsumerState<AdminPage> createState() => _AdminPageState();
+}
+
+class _AdminPageState extends ConsumerState<AdminPage> {
+  bool _activityVisible = false;
+  final bool _resultTextVisibility = false;
+  String _resultText = '';
+
+  @override
+  Widget build(BuildContext context) {
+    var nextEventProvider = ref.watch(activeEventProvider);
+    var password = ref.watch(adminPwdProvider);
+    if (password == null || password.isEmpty) {
+      return CupertinoPageScaffold(
+        child: Column(mainAxisSize: MainAxisSize.max, children: [
+          Center(
+            child: SizedTintedCupertinoButton(
+                onPressed: () => context.goNamed(AppRoute.home.name),
+                child: Text(Localize.of(context).home)),
+          ),
+        ]),
+      );
+    }
+
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
+        middle: const Text('Admin'),
+      ),
+      child: SafeArea(
+        child: CupertinoScrollbar(
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Visibility(
+                visible: _activityVisible,
+                child: const Center(
+                  child: CupertinoActivityIndicator(
+                    radius: 20,
+                    color: Colors.green,
+                  ),
+                ),
+              ),
+              Text(Localize.of(context).nextEvent,
+                  textAlign: TextAlign.center,
+                  style: CupertinoTheme.of(context).textTheme.textStyle),
+              const SizedBox(height: 5),
+              FittedBox(
+                child: Text(
+                    '${Localize.of(context).route} ${nextEventProvider.routeName}',
+                    textAlign: TextAlign.center,
+                    style: CupertinoTheme.of(context)
+                        .textTheme
+                        .navLargeTitleTextStyle),
+              ),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15.0, 5, 15, 5),
+                child: FittedBox(
+                  child: Text(
+                      DateFormatter(Localize.of(context))
+                          .getLocalDayDateTimeRepresentation(
+                              nextEventProvider.getUtcIso8601DateTime),
+                      style: CupertinoTheme.of(context)
+                          .textTheme
+                          .navLargeTitleTextStyle),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15.0, 1, 15, 1),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: nextEventProvider.status == EventStatus.cancelled
+                        ? Colors.redAccent
+                        : nextEventProvider.status == EventStatus.confirmed
+                            ? Colors.green
+                            : Colors.transparent,
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                        topLeft: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0)),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(nextEventProvider.statusText,
+                        style: CupertinoTheme.of(context)
+                            .textTheme
+                            .pickerTextStyle),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 1,
+              ),
+              const ConnectionWarning(),
+              const SizedBox(height: 15),
+              Visibility(
+                visible: _resultTextVisibility,
+                child: Center(
+                  child: Text(_resultText),
+                ),
+              ),
+              SizedTintedCupertinoButton(
+                  child: Text('Event anpassen'),
+                  onPressed: () async {
+                    var event = ref.read(activeEventProvider);
+                    var _ = await EventEditor.show(context, event);
+                  }),
+              const SizedBox(height: 15),
+              SizedTintedCupertinoButton(
+                child: const Text('ProcessionMode'),
+                onPressed: () async {
+                  setState(() {
+                    _activityVisible = false;
+                  });
+                  var status = await showProcessionModeDialog(
+                    context,
+                    current: null,
+                  );
+
+                  if (status != null) {
+                    try {
+                      await AdminCalls.setProcessionMode(
+                          SetProcessionModeMessage.authenticate(
+                                  deviceId: DeviceId.appId,
+                                  password: password,
+                                  mode: status)
+                              .toMap());
+                    } catch (e) {
+                      BnLog.error(
+                          text: 'Error ProcessionMode',
+                          className: toString(),
+                          methodName: 'Admin page ProcessionMode');
+                    }
+
+                    setState(() {
+                      _activityVisible = false;
+                      _resultText = 'ProcessionMode Server sent!';
+                    });
+
+                    if (context.mounted && context.canPop()) {
+                      context.pop();
+                    }
+                  }
+                },
+              ),
+              const SizedBox(height: 15),
+              SizedTintedCupertinoButton(
+                child: const Text('Restart BN-Server'),
+                onPressed: () async {
+                  var status = await showKillServerDialog(
+                    context,
+                    current: 0,
+                  );
+
+                  if (status != null && status == 1) {
+                    try {
+                      await AdminCalls.killServer(
+                          KillServerMessage.authenticate(
+                        killValue: true,
+                        deviceId: DeviceId.appId,
+                        password: password,
+                      ).toMap());
+                    } catch (e) {
+                      BnLog.error(
+                          text: 'Error Restart Server',
+                          className: toString(),
+                          methodName: 'Admin page - Restart server');
+                    }
+
+                    _activityVisible = false;
+                    _resultText = 'Restart Server sent!';
+                    setState(() {});
+
+                    if (context.mounted) {
+                      context.pop();
+                    }
+                  }
+                },
+              ),
+              SizedBox(height: 15 + MediaQuery.of(context).padding.bottom),
+              SizedTintedCupertinoButton(
+                child: Text('Ausloggen'),
+                onPressed: () async {
+                  ref.read(adminPwdProvider.notifier).removePassword();
+                  if (context.canPop()) {
+                    context.pop();
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<EventStatus?> showEventStatusDialog(BuildContext context,
+      {EventStatus? current}) {
+    EventStatus? status;
+    return showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text(Localize.of(context).setState),
+          content: SizedBox(
+            height: 100,
+            child: CupertinoPicker(
+              scrollController:
+                  FixedExtentScrollController(initialItem: current?.index ?? 0),
+              onSelectedItemChanged: (int value) {
+                status = EventStatus.values[value];
+              },
+              itemExtent: 50,
+              children: [
+                for (var status in EventStatus.values)
+                  Center(
+                    child: Text(
+                        '${Localize.of(context).status}: ${Intl.select(status, {
+                          EventStatus.pending: Localize.of(context).pending,
+                          EventStatus.confirmed: Localize.of(context).confirmed,
+                          EventStatus.cancelled: Localize.of(context).canceled,
+                          EventStatus.noevent: Localize.of(context).noEvent,
+                          EventStatus.running: Localize.of(context).running,
+                          EventStatus.finished: Localize.of(context).finished,
+                          EventStatus.deleted: Localize.of(context).delete,
+                          'other': Localize.of(context).unknown
+                        })}'),
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text(Localize.of(context).cancel),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(Localize.of(context).save),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop(status);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<AdminProcessionMode?> showProcessionModeDialog(BuildContext context,
+      {AdminProcessionMode? current}) {
+    AdminProcessionMode? status;
+    return showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text(Localize.of(context).setState),
+          content: SizedBox(
+            height: 100,
+            child: CupertinoPicker(
+              scrollController:
+                  FixedExtentScrollController(initialItem: current?.index ?? 0),
+              onSelectedItemChanged: (int value) {
+                status = AdminProcessionMode.values[value];
+              },
+              itemExtent: 50,
+              children: [
+                for (var modeValue in AdminProcessionMode.values)
+                  Center(
+                    child: Text(modeValue.toString()),
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text(Localize.of(context).cancel),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(Localize.of(context).save),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop(status);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<int?> showKillServerDialog(BuildContext context, {int? current}) {
+    int? status;
+    return showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: const Text('Wirklich neu starten'),
+          content: SizedBox(
+            height: 100,
+            child: CupertinoPicker(
+              scrollController: FixedExtentScrollController(initialItem: 0),
+              onSelectedItemChanged: (int value) {
+                status = value;
+              },
+              itemExtent: 50,
+              children: [
+                Center(child: Text(Localize.of(context).no)),
+                Center(child: Text(Localize.of(context).yes)),
+              ],
+            ),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text(Localize.of(context).cancel),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(Localize.of(context).ok),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop(status);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

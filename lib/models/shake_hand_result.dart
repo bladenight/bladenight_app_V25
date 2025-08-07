@@ -1,0 +1,76 @@
+import 'dart:async';
+
+import '../wamp/wamp_endpoints.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+
+import '../app_settings/app_constants.dart';
+import '../helpers/device_id_helper.dart';
+import '../helpers/wamp/message_types.dart';
+import '../wamp/bn_wamp_message.dart';
+import '../wamp/wamp_exception.dart';
+import '../wamp/wamp_v2.dart';
+
+part 'shake_hand_result.mapper.dart';
+
+@MappableClass()
+class ShakeHandResult with ShakeHandResultMappable {
+  @MappableField(key: 'sta')
+  final bool status;
+  @MappableField(key: 'mbu')
+  final int minBuild;
+  @MappableField(key: 'ver')
+  final String? serverVersion;
+
+  Exception? rpcException;
+
+  /// Get result of ShakeHand
+  /// [status] = [true] -> App not outdated
+  /// [status] = [false] -> App is outdated
+  /// [minBuild] = Minimum required Buildnumber
+  ShakeHandResult(
+      {required this.status,
+      required this.minBuild,
+      this.serverVersion,
+      this.rpcException});
+
+  static Future<ShakeHandResult> shakeHandsWamp() async {
+    Completer? completer = Completer();
+    BnWampMessage? bnWampMessage = BnWampMessage(
+      WampMessageType.call,
+      completer,
+      WampEndpoint.shakeHand,
+      {
+        'bui': await DeviceId.appBuildNumber,
+        'did': DeviceId.appId,
+        'man': DeviceId.deviceManufacturer,
+        'mod': 'unused',
+        'rel': await DeviceId.getOSVersion
+      },
+    );
+    var wampResult = await WampV2()
+        .addToWamp(bnWampMessage)
+        .timeout(wampTimeout)
+        .catchError((error, stackTrace) => error);
+    bnWampMessage = null;
+    completer = null;
+    if (wampResult is Map<String, dynamic>) {
+      var shkRes = MapperContainer.globals.fromMap<ShakeHandResult>(wampResult);
+      return shkRes;
+    }
+    if (wampResult is ShakeHandResult) {
+      return wampResult;
+    }
+    if (wampResult is WampException) {
+      return ShakeHandResult(
+          status: true, minBuild: 1, rpcException: wampResult);
+    }
+    if (wampResult is TimeoutException) {
+      return ShakeHandResult(
+          status: true, minBuild: 1, rpcException: wampResult);
+    }
+    return ShakeHandResult(
+        status: true,
+        minBuild: 1,
+        rpcException: WampException(WampExceptionReason.unknown));
+  }
+}

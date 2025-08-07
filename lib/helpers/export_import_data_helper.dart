@@ -1,0 +1,386 @@
+import 'dart:convert';
+
+import 'package:archive/archive_io.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:universal_io/io.dart';
+
+import '../generated/l10n.dart';
+import '../main.dart';
+import '../models/friend.dart';
+import '../models/user_gpx_point.dart';
+import '../pages/friends/widgets/edit_friend_dialog.dart';
+import '../providers/friends_provider.dart';
+import 'device_id_helper.dart';
+import 'device_info_helper.dart';
+import 'hive_box/hive_settings_db.dart';
+import 'logger/logger.dart';
+import 'notification/toast_notification.dart';
+
+void exportData(BuildContext context) async {
+  try {
+    var res = false;
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.warning,
+        title: Localize.of(context).exportWarningTitle,
+        text: Localize.of(context).exportWarning,
+        confirmBtnText: Localize.of(context).export,
+        cancelBtnText: Localize.of(context).cancel,
+        onConfirmBtnTap: () {
+          res = true;
+          if (!context.mounted) return;
+          context.pop();
+        });
+    if (res == false) {
+      return;
+    }
+    var deviceID = DeviceId.appId;
+    var friends = await FriendsDb.getFriendsListAsync;
+    String exportdata =
+        'id=$deviceID&fri=${MapperContainer.globals.toJson(friends)}';
+    var bytes = utf8.encode(exportdata);
+    var text = 'bna://bladenight.app?data=${base64.encode(bytes)}';
+    await Share.share(text);
+    Fluttertoast.showToast(
+        msg: '${Localize.current.export} ${Localize.current.ok}',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: CupertinoColors.activeGreen,
+        textColor: CupertinoColors.black);
+  } catch (e) {
+    Fluttertoast.showToast(
+        msg: '${Localize.current.export} ${Localize.current.failed}',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: CupertinoColors.systemRed,
+        textColor: CupertinoColors.black);
+    BnLog.error(methodName: 'exportData', text: 'failed to export $e');
+  }
+}
+
+void importData(BuildContext context, String dataString) async {
+  try {
+    var res = false;
+    await QuickAlert.show(
+        context: context,
+        showCancelBtn: true,
+        type: QuickAlertType.warning,
+        title: Localize.current.importWarningTitle,
+        text: Localize.current.importWarning,
+        confirmBtnText: Localize.current.import,
+        cancelBtnText: Localize.current.cancel,
+        onConfirmBtnTap: () async {
+          res = true;
+          const String dataId = 'data=';
+          var dataPartIdx = dataString.indexOf(dataId);
+          var base64dataString = '';
+          if (dataPartIdx == -1) {
+            base64dataString = dataString;
+          } else {
+            base64dataString = dataString.substring(
+                dataPartIdx + dataId.length, dataString.length);
+          }
+          var base64Decoded = utf8.decode(base64.decode(base64dataString));
+          var dataParts = base64Decoded.split('&');
+          var id = dataParts[0].substring(3);
+          HiveSettingsDB.setAppId(id);
+          var friendJson = dataParts[1].substring(4);
+          var friends =
+              MapperContainer.globals.fromJson<List<Friend>>(friendJson);
+          await FriendsDb.saveFriendsAsync(friends);
+          if (context.mounted && context.canPop()) {
+            context.pop();
+          }
+          if (!context.mounted) {
+            return;
+          }
+          ProviderContainer().refresh(friendsProvider);
+          ProviderContainer().read(friendsLogicProvider).reloadFriends();
+          await QuickAlert.show(
+            context: context,
+            showCancelBtn: false,
+            type: QuickAlertType.info,
+            title:
+                '${Localize.current.import} ${Localize.current.ok} ${Localize.current.restartRequired}',
+          );
+
+          if (context.mounted &&
+              Navigator.of(context, rootNavigator: true).canPop()) {
+            Navigator.of(context, rootNavigator: true);
+            return;
+          }
+        });
+    if (res == false) {
+      if (context.mounted &&
+          Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true);
+      }
+      return;
+    }
+  } catch (e) {
+    BnLog.error(methodName: 'importData', text: 'failed to import $e');
+    showToast(
+        message: '${Localize.current.import} ${Localize.current.failed}',
+        backgroundColor: CupertinoColors.systemRed,
+        textColor: CupertinoColors.black);
+    if (context.mounted) {
+      QuickAlert.show(
+          context: context,
+          type: QuickAlertType.error,
+          title: Localize.current.import,
+          text: '${Localize.current.import} ${Localize.current.failed}');
+    }
+  }
+}
+
+Future<void> _deleteFile(String path) async {
+  try {
+    await File(path).delete();
+  } catch (e) {
+    BnLog.error(text: 'Error deleting file $path', exception: e);
+  }
+}
+
+Future<Directory> _getTempDirectory() async {
+  Directory appDocDir = await getApplicationCacheDirectory();
+  Directory tempPath = Directory('${appDocDir.path}/logTempData');
+  if (await tempPath.exists() == false) {
+    await tempPath.create(recursive: true);
+  }
+  var list = tempPath.listSync();
+  for (var item in list) {
+    if (await FileSystemEntity.isFile(item.path)) {
+      await _deleteFile(item.path);
+    }
+  }
+  return tempPath;
+}
+
+Future<File> _createLogFile(String fileName) async {
+  var tempDir = await _getTempDirectory();
+  File file = File('${tempDir.path}/$fileName.txt');
+  return await file.create();
+}
+
+Future<bool> exportLogFiles(ValueNotifier<double> progress) async {
+  try {
+    var files = await BnLog.collectLogFiles();
+    if (kIsWeb) {
+      //print(fileContent);
+      showToast(message: 'Siehe Console');
+      return true;
+    }
+    var fileName = '${DateTime.now().year}_'
+        '${DateTime.now().month}_'
+        '${DateTime.now().day}_'
+        '${DateTime.now().hour}_'
+        '${DateTime.now().minute}_'
+        '${DateTime.now().second}_Bladenight';
+    var logfile = await _createLogFile(fileName);
+    var zipFilePath = '${logfile.path}.zip';
+    //var logfilePath = await logfile.writeAsString(fileContent, flush: true);
+
+    var encoder = ZipFileEncoder();
+    encoder.create(zipFilePath);
+    for (var file in files) {
+      try {
+        await encoder.addFile(File(file.path));
+      } catch (e) {
+        print('could not write ${file.path} to export');
+      }
+    }
+    encoder.close();
+    showToast(
+        message:
+            '${files.length.toString()} Files exported  ${Localize.current.ok}');
+    var aV = await DeviceHelper.getAppVersionsData();
+
+    final Email email = Email(
+      subject:
+          'Supportanfrage Bladenight München App V${aV.version} build${aV.buildNumber} ',
+      body: 'Folgendes Problem ist aufgetreten:\n'
+          'Folgenden Vorschlag habe ich:\n\n'
+          'Bitte löschen falls nicht gewünscht !\n\n'
+          'Anbei auch die Logdaten der App (maximal 8 Tage alt). Diese können persönliche Standortdaten und Nutzerverhalten enthalten. Ich bin damit einverstanden die Daten für die Supportanfrage zu nutzen.',
+      recipients: ['lars.huth@skatemunich.de'],
+      //cc: ['cc@example.com'],
+      //bcc: ['bcc@example.com'],
+      attachmentPaths: [zipFilePath],
+      isHTML: true,
+    );
+    FlutterEmailSender.send(email);
+  } catch (e) {
+    showToast(message: 'Log export fail $e');
+  }
+  return true;
+}
+
+/*Future<bool> exportLogs(ValueNotifier<double> progress) async {
+  try {
+    var fileContent = await BnLog.collectLogs(progress);
+    if (kIsWeb) {
+      print(fileContent);
+      showToast(message: 'Siehe Console');
+      return true;
+    }
+    var fileName = '${DateTime.now().year}_'
+        '${DateTime.now().month}_'
+        '${DateTime.now().day}_'
+        '${DateTime.now().hour}_'
+        '${DateTime.now().minute}_'
+        '${DateTime.now().second}_Bladenight';
+    var logfile = await _createLogFile(fileName);
+    var zipFilePath = '${logfile.path}.zip';
+    var logfilePath = await logfile.writeAsString(fileContent, flush: true);
+
+    var encoder = ZipFileEncoder();
+    encoder.create(zipFilePath);
+    await encoder.addFile(logfilePath);
+    encoder.close();
+    showToast(
+        message: '${fileContent.length.toString()}  ${Localize.current.ok}');
+    var aV = await DeviceHelper.getAppVersionsData();
+
+    final Email email = Email(
+      subject:
+          'Supportanfrage Bladenight München App V${aV.version} build${aV.buildNumber} ',
+      body: 'Folgendes Problem ist aufgetreten:\n'
+          'Folgenden Vorschlag habe ich:\n\n'
+          'Bitte löschen falls nicht gewünscht !\n\n'
+          'Anbei auch die Logdaten der App (maximal 8 Tage alt). Diese können persönliche Standortdaten und Nutzerverhalten enthalten. Ich bin damit einverstanden die Daten für die Supportanfrage zu nutzen.',
+      recipients: ['it@huth.app'],
+      //cc: ['cc@example.com'],
+      //bcc: ['bcc@example.com'],
+      attachmentPaths: [zipFilePath],
+      isHTML: true,
+    );
+
+    FlutterEmailSender.send(email);
+
+    /*Share.shareXFiles(
+      [XFile(logfile.path)],
+      subject:
+          'Supportanfrage: an it@huth.app Bladenight München App ,V${aV.version} ,${aV.buildNumber} ',
+      text: 'Folgendes Problem ist aufgetreten: ....',
+    );*/
+    //print('All logs exported to: \nPath: ${fileContent.toString()}');
+  } catch (e) {
+    showToast(message: 'Log export fail $e');
+  }
+  return true;
+}*/
+
+String exportUserTrackingToXml(List<UserGpxPoint> userTrackPoints) {
+  var trkPts =
+      UserGPXPoints(userTrackPoints).toXML(); // jsonEncode(userTrackPoints);
+  return trkPts;
+}
+
+UserGPXPoints exportUserTrackPoints(List<UserGpxPoint> userTrackPoints) {
+  var trkPts = UserGPXPoints(userTrackPoints); // jsonEncode(userTrackPoints);
+  return trkPts;
+}
+
+Future<void> shareExportedTrackingData(String trkPts, String date) async {
+  try {
+    var tempDir = await getTemporaryDirectory();
+    final file = File(
+        '${tempDir.path}/BladeNight_${date}_${DateTime.now().millisecondsSinceEpoch}.gpx');
+    var tempFile = await file.writeAsString(trkPts, flush: true);
+    showToast(message: Localize.current.ok);
+    SharePlus.instance.share(ShareParams(
+        files: [XFile(tempFile.path)],
+        subject: Localize.current.trackingPoints,
+        text: Localize.current.trackPointsExporting));
+    BnLog.info(
+        text: 'TrackPoints exported to: \nPath: ${file.path.toString()}');
+  } catch (e) {
+    showToast(message: 'GPX export failed $e');
+  }
+}
+
+void exportBgLocationLogs() async {
+  bg.Logger.emailLog('it@huth.app').then((bool success) {
+    showToast(message: Localize.current.ok);
+  }).catchError((e) {
+    showToast(message: 'Log export failed $e');
+  });
+}
+
+Future<bool> addFriendWithCodeFromUrl(
+    BuildContext context, String uriString) async {
+  var dataStartIdx = uriString.indexOf('?');
+  var datas = uriString.substring(dataStartIdx + 1);
+  if (datas.length < 5) return false;
+  var content = datas.split('&');
+  //import code
+  const String codeId = 'code=';
+  var code = '';
+
+  const String nameId = 'name=';
+  var name = '';
+
+  for (var part in content) {
+    if (part.contains(nameId) && part.length > nameId.length) {
+      name = part.split('=')[1].trim();
+    }
+    if (part.contains(codeId) && part.length > codeId.length) {
+      code = part.split('=')[1].trim();
+    }
+  }
+
+  if (code.length < 6) {
+    return false;
+  }
+
+  var intCode = int.tryParse(code);
+  if (intCode == null) {
+    showToast(
+        message:
+            '${Localize.of(context).invalidcode} $intCode ${Localize.of(context).received}',
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.black);
+    return false;
+  }
+
+  showToast(
+      message:
+          '${Localize.of(context).friend} $name Code $intCode ${Localize.of(context).received}',
+      backgroundColor: Colors.green,
+      textColor: Colors.black);
+
+  EditFriendResult? result;
+
+  if (rootNavigatorKey.currentContext == null) return false;
+  result = await EditFriendDialog.show(rootNavigatorKey.currentContext!,
+      friend: Friend(
+          name: name,
+          friendId: await FriendsDb.getNewFriendId(),
+          requestId: intCode,
+          isActive: true),
+      friendDialogAction: FriendsAction.addWithCode);
+
+  if (result is Friend) {
+    Friend fr = result as Friend;
+    ProviderContainer()
+        .read(friendsLogicProvider)
+        .addFriendWithCode(fr.name, fr.color, code);
+  }
+  return true;
+}

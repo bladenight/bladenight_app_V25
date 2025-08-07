@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["6Y9WT2BQR9.app.huth.bn"],
+        "components": [ "/", "/friend/*", "/messages", "/map", /events/* , "/dl/*" ],
+        "paths": ["*","/"]
+      }
+    ]
+  }
+}

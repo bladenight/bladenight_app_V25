@@ -1,0 +1,146 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
+}
+
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '2508'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.25.08'
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+// flutter_background_geolocation
+Project background_geolocation = project(':flutter_background_geolocation')
+apply from: "${background_geolocation.projectDir}/background_geolocation.gradle"
+
+
+android {
+    namespace 'de.bladenight.bladenight_app_flutter'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+// Enable core library desugaring to support Java 8+ language features
+        coreLibraryDesugaringEnabled true
+    }
+
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        applicationId "de.bladenight.bladenight_app_flutter"
+        //minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 21
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources false
+            defaultConfig.minSdkVersion 21
+            // background_geolocation requires custom Proguard Rules with minifyEnabled
+            // proguardFiles "${background_geolocation.projectDir}/proguard-rules.pro"
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            //signingConfig signingConfigs.release
+            ndk {
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            }
+        }
+
+        debug {
+            defaultConfig.minSdkVersion 21
+            shrinkResources false
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+
+    }
+
+
+    subprojects {
+        afterEvaluate { project ->
+            if (project.extensions.findByName("android") != null) {
+                Integer pluginCompileSdk = project.android.compileSdk
+                if (pluginCompileSdk != null && pluginCompileSdk < 31) {
+                    project.logger.error(
+                            "Warning: Overriding compileSdk version in Flutter plugin: "
+                                    + project.name
+                                    + " from "
+                                    + pluginCompileSdk
+                                    + " to 31 (to work around https://issuetracker.google.com/issues/199180389)."
+                                    + "\nIf there is not a new version of " + project.name + ", consider filing an issue against "
+                                    + project.name
+                                    + " to increase their compileSdk to the latest (otherwise try updating to the latest version)."
+                    )
+                    project.android {
+                        compileSdk 31
+                    }
+                }
+            }
+        }
+
+        project.buildDir = "${rootProject.buildDir}/${project.name}"
+        project.evaluationDependsOn(":app")
+    }
+
+    subprojects {
+        project.buildDir = "${rootProject.buildDir}/${project.name}"
+        project.evaluationDependsOn(":app")
+    }
+}
+
+dependencies {
+    // ...
+    //implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    //implementation("androidx.work:work-runtime-ktx:2.8.1") //workaround for Onesignal 5.0.0 duplicateClass
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+}
+// ...
+flutter {
+    source '../..'
+}
+

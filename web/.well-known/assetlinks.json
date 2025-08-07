@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "de.bladenight.bladenight_app_flutter",
+      "sha256_cert_fingerprints": [
+        "72:C3:E5:FA:6F:57:1D:40:5C:02:B8:E8:22:37:C3:F2:7C:06:F0:EB:DC:86:34:33:B6:44:E6:E9:BC:5C:10:8D"
+      ]
+    }
+  }
+]
