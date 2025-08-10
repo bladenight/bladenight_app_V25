@@ -576,5 +576,8 @@
   "alwaysLocationPermissionRecommend": "'Always location' is recommend to avoid loosing GPS-signal",
   "locationNotPreciseTitle": "Location not precise",
   "locationNotPrecise": "Please set location to 'Precise'. Else you can't see detailed information",
-  "waitForLocation": "Checking your location ..."
+  "waitForLocation": "Checking your location ...",
+  "statistics": "Statistics",
+  "timePeriod": "Time period",
+  "cancelled": "Cancelled"
 }

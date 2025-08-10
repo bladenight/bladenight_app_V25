@@ -576,5 +576,8 @@
   "alwaysLocationPermissionRecommend": "'Standortfreigabe immer' ist empfohlen oder Display ein, um den Verlust des GPS-Signals wenn die App im Hintergrund ist zu vermeiden !",
   "locationNotPreciseTitle": "Standort ungenau",
   "locationNotPrecise": "Bitte die Standortfreigabe auf 'Genau'' in den Systemeinstellungen ändern, da die App sonst nicht korrekt arbeitet!",
-  "waitForLocation": "Ermittle Standort"
+  "waitForLocation": "Ermittle Standort",
+  "statistics": "Statistik",
+  "timePeriod": "Zeitraum",
+  "cancelled": "Abgesagt"
 }

@@ -6,6 +6,7 @@
 
 - Length to tail in overlay
 - scale for map
+- events statistics on events page
 
 ### Changed
 
@@ -14,12 +15,11 @@
 - adapted to new ShareX
 - open url in device browser instead inAppWebView
 - images and links and friends saving with hive instead shared prefs
+- package upgrades
 
 ### Removed
 
 - discontinued flutter_map_cancellable_tile_provider
-
-- package upgrades
 
 ## [1.25.07]
 

@@ -4297,6 +4297,21 @@ class Localize {
       args: [],
     );
   }
+
+  /// `Statistics`
+  String get statistics {
+    return Intl.message('Statistics', name: 'statistics', desc: '', args: []);
+  }
+
+  /// `Time period`
+  String get timePeriod {
+    return Intl.message('Time period', name: 'timePeriod', desc: '', args: []);
+  }
+
+  /// `Cancelled`
+  String get cancelled {
+    return Intl.message('Cancelled', name: 'cancelled', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localize> {

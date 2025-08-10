@@ -332,6 +332,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "cancel": MessageLookupByLibrary.simpleMessage("Abbruch"),
     "canceled": MessageLookupByLibrary.simpleMessage("Abgesagt 😞"),
+    "cancelled": MessageLookupByLibrary.simpleMessage("Abgesagt"),
     "change": MessageLookupByLibrary.simpleMessage("Ändern"),
     "changeDarkColor": MessageLookupByLibrary.simpleMessage(
       "Ändere Dunkelmodus Farbe",
@@ -1039,6 +1040,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Starte die Routenaufzeichnung ohne die Standortdaten an den Server zu übermitteln.",
     ),
     "startsIn": MessageLookupByLibrary.simpleMessage("Startet in"),
+    "statistics": MessageLookupByLibrary.simpleMessage("Statistik"),
     "status": MessageLookupByLibrary.simpleMessage("Status"),
     "status_active": MessageLookupByLibrary.simpleMessage("Aktiv"),
     "status_inactive": MessageLookupByLibrary.simpleMessage("Inaktiv"),
@@ -1065,6 +1067,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "timeOutDurationExceedTitle": MessageLookupByLibrary.simpleMessage(
       "Zeitüberschreitung Dauer der BladeNight",
     ),
+    "timePeriod": MessageLookupByLibrary.simpleMessage("Zeitraum"),
     "timeStamp": MessageLookupByLibrary.simpleMessage("Stand von"),
     "timeToFinish": MessageLookupByLibrary.simpleMessage(
       "Dauer bis zum Ziel (ca.)",

@@ -568,13 +568,16 @@
   "bladenightInfoTitleWeb": "WebApp et informations sur",
   "bladenightInfoTitleApp": "Bladenight et informations sur",
   "startNoParticipationShort": "Montrez votre position",
-  "eventOn": "BladeNight sur",
-  "onsiteCount": "Bladeguards onsite ",
-  "noLocationRequestPermission": "Location service is necessary for onsite check - Tap to allow location",
-  "alwaysLocationPermissionRecommendTitle": "Please enable 'Always location' in Settings",
-  "alwaysLocationPermissionRecommend": "'Always location' is recommend to avoid loosing GPS-signal",
-  "locationNotPreciseTitle": "Location not precise",
-  "locationNotPrecise": "Please set location to 'Precise'. Else you can't see detailed information",
-  "waitForLocation": "Checking your location ..."
+  "eventOn": "BladeNight suis",
+  "onsiteCount": "Les gardes de lame enregistrés sur place ",
+  "noLocationRequestPermission": "Le service de localisation est nécessaire pour la vérification sur place - Appuyez pour autoriser la localisation",
+  "alwaysLocationPermissionRecommendTitle": "Veuillez activer « Toujours localiser » dans les paramètres.",
+  "alwaysLocationPermissionRecommend": "Il est recommandé d'activer l'option « Toujours localiser » pour éviter de perdre le signal GPS.",
+  "locationNotPreciseTitle": "Emplacement imprécis",
+  "locationNotPrecise": "Veuillez régler la localisation sur « Précise ». Sinon, vous ne pourrez pas voir les informations détaillées.",
+  "waitForLocation": "Vérification de votre emplacement ...",
+  "statistics": "Statistiques",
+  "timePeriod": "Période",
+  "cancelled": "Annulé"
 }
 

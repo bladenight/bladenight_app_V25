@@ -326,6 +326,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "canceled": MessageLookupByLibrary.simpleMessage("Canceled 😞"),
+    "cancelled": MessageLookupByLibrary.simpleMessage("Cancelled"),
     "change": MessageLookupByLibrary.simpleMessage("Change it."),
     "changeDarkColor": MessageLookupByLibrary.simpleMessage(
       "Change dark mode color",
@@ -1005,6 +1006,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Start location recording without sending data to server.",
     ),
     "startsIn": MessageLookupByLibrary.simpleMessage("Starts in"),
+    "statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
     "status": MessageLookupByLibrary.simpleMessage("Status"),
     "status_active": MessageLookupByLibrary.simpleMessage("active"),
     "status_inactive": MessageLookupByLibrary.simpleMessage("inactive"),
@@ -1031,6 +1033,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "timeOutDurationExceedTitle": MessageLookupByLibrary.simpleMessage(
       "Timeout - duration of BladeNight exceed",
     ),
+    "timePeriod": MessageLookupByLibrary.simpleMessage("Time period"),
     "timeStamp": MessageLookupByLibrary.simpleMessage("Timestamp"),
     "timeToFinish": MessageLookupByLibrary.simpleMessage("to finish (est.)"),
     "timeToFriend": MessageLookupByLibrary.simpleMessage("Time to friend"),
