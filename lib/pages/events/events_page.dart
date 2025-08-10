@@ -11,10 +11,12 @@ import '../../generated/l10n.dart';
 import '../../helpers/device_id_helper.dart';
 import '../../helpers/hive_box/hive_settings_db.dart';
 import '../../helpers/logger/logger.dart';
+import '../../helpers/time_converter_helper.dart';
 import '../../models/event.dart';
 import '../../models/messages/edit_event_on_server.dart';
 import '../../providers/admin/admin_pwd_provider.dart';
 import '../widgets/buttons/hidden_admin_button.dart';
+import '../widgets/common_widgets/data_widget_left_right.dart';
 import '../widgets/indicators/data_loading_indicator.dart';
 import '../widgets/common_widgets/no_data_warning.dart';
 import '../widgets/route/route_dialog.dart';
@@ -270,9 +272,40 @@ class _EventsPageState extends ConsumerState<EventsPage>
     } else {
       groupedEvents = events.groupByYear();
     }
+
     var lst = List.generate(groupedEvents.keys.length, (pageIndex) {
+      DateTime? firstEventDate = null;
+      DateTime? lastEventDate = null;
+
+      var participants = 0;
+      var eventsCancelled = 0;
+      var eventsFinished = 0;
       var itemsCount =
           groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events.length;
+      for (var event
+          in groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events) {
+        if (firstEventDate == null) {
+          firstEventDate = event.startDate;
+          lastEventDate = event.startDate;
+        }
+        if (firstEventDate.millisecondsSinceEpoch >
+            event.startDate.millisecondsSinceEpoch) {
+          firstEventDate = event.startDate;
+        }
+        if (lastEventDate!.millisecondsSinceEpoch <
+            event.startDate.millisecondsSinceEpoch) {
+          lastEventDate = event.startDate;
+        }
+
+        participants += event.participants;
+        if (event.participants > 0) {
+          eventsFinished += 1;
+        }
+        if (event.status == EventStatus.cancelled) {
+          eventsCancelled += 1;
+        }
+      }
+
       var evenOddCount = 0;
       var pageEvents =
           groupedEvents[groupedEvents.keys.elementAt(pageIndex)]!.events;
@@ -306,9 +339,19 @@ class _EventsPageState extends ConsumerState<EventsPage>
               removeBottom: true,
               child: ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: itemsCount * 2 - 1,
+                  itemCount: (itemsCount + 1) * 2,
                   itemBuilder: (BuildContext context, int index) {
+                    if (index == itemsCount * 2) {
+                      return _summarizeListTile(
+                          context,
+                          participants,
+                          eventsCancelled,
+                          eventsFinished,
+                          '${Localize.current.dateIntl(firstEventDate!)} - ${Localize.current.dateIntl(lastEventDate!)}');
+                    }
                     if (index % 2 == 0) {
+                      //last item add summarized
+
                       evenOddCount++;
                       var odd = evenOddCount % 2 == 0; //odd row
                       var event = pageEvents[(index / 2).round()];
@@ -709,6 +752,52 @@ Widget _listTile(
           const Icon(CupertinoIcons.map),
         ],
       ),
+    ),
+  );
+}
+
+Widget _summarizeListTile(BuildContext context, int participants,
+    int eventsCancelled, int eventsFinished, String header) {
+  //mark old actual an new events
+  Color? color;
+  return Container(
+    decoration: BoxDecoration(
+        color: CupertinoTheme.of(context).primaryContrastingColor,
+        borderRadius: BorderRadius.all(Radius.circular(tileIntend))),
+    padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 16),
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${Localize.of(context).statistics}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                ),
+              ),
+              DataLeftRightContent(
+                  descriptionLeft: Localize.of(context).timePeriod,
+                  descriptionRight: header,
+                  rightWidget: SizedBox()),
+              DataLeftRightContent(
+                  descriptionLeft: Localize.of(context).finished,
+                  descriptionRight: eventsFinished.toString(),
+                  rightWidget: SizedBox()),
+              DataLeftRightContent(
+                  descriptionLeft: Localize.of(context).participant,
+                  descriptionRight: participants.toString(),
+                  rightWidget: SizedBox()),
+              DataLeftRightContent(
+                  descriptionLeft: Localize.of(context).cancelled,
+                  descriptionRight: eventsCancelled.toString(),
+                  rightWidget: SizedBox()),
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }

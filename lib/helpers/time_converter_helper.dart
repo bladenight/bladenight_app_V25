@@ -122,9 +122,8 @@ class DateFormatter {
 
   /// Create Date from Timestamp (time is set to 0:0:0)
   static DateTime toDateOnly(DateTime dateTime) {
-    var date = toDateOnly(
-        dateTime); //  DateTime(dateTime.year, dateTime.month, dateTime.day);
-    return date;
+    //  DateTime(dateTime.year, dateTime.month, dateTime.day);
+    return dateTime.toDateOnly();
   }
 
   static DateTime fromString(String inputDate) {

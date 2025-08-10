@@ -224,11 +224,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "Utiliser un autre fournisseur de localisation en cas de problèmes avec les données GPS",
     ),
     "alwaysLocationPermissionRecommend": MessageLookupByLibrary.simpleMessage(
-      "\'Always location\' is recommend to avoid loosing GPS-signal",
+      "Il est recommandé d\'activer l\'option « Toujours localiser » pour éviter de perdre le signal GPS.",
     ),
     "alwaysLocationPermissionRecommendTitle":
         MessageLookupByLibrary.simpleMessage(
-          "Please enable \'Always location\' in Settings",
+          "Veuillez activer « Toujours localiser » dans les paramètres.",
         ),
     "alwaysPermanentlyDenied": MessageLookupByLibrary.simpleMessage(
       "Permission de localisation toujours refusée dans le système !",
@@ -339,6 +339,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "cancel": MessageLookupByLibrary.simpleMessage("Annuler"),
     "canceled": MessageLookupByLibrary.simpleMessage("😞 Annulé 😞"),
+    "cancelled": MessageLookupByLibrary.simpleMessage("Annulé"),
     "change": MessageLookupByLibrary.simpleMessage("Le modifier."),
     "changeDarkColor": MessageLookupByLibrary.simpleMessage(
       "Changer la couleur du mode sombre",
@@ -479,7 +480,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "eventNotStarted": MessageLookupByLibrary.simpleMessage(
       "Événement non démarré",
     ),
-    "eventOn": MessageLookupByLibrary.simpleMessage("BladeNight sur"),
+    "eventOn": MessageLookupByLibrary.simpleMessage("BladeNight suis"),
     "events": MessageLookupByLibrary.simpleMessage("Événements"),
     "export": MessageLookupByLibrary.simpleMessage("Exporter"),
     "exportLogData": MessageLookupByLibrary.simpleMessage(
@@ -634,10 +635,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Données de chargement ...",
     ),
     "locationNotPrecise": MessageLookupByLibrary.simpleMessage(
-      "Please set location to \'Precise\'. Else you can\'t see detailed information",
+      "Veuillez régler la localisation sur « Précise ». Sinon, vous ne pourrez pas voir les informations détaillées.",
     ),
     "locationNotPreciseTitle": MessageLookupByLibrary.simpleMessage(
-      "Location not precise",
+      "Emplacement imprécis",
     ),
     "locationServiceOff": MessageLookupByLibrary.simpleMessage(
       "La localisation est désactivée dans les paramètres. Le suivi n\'est pas possible. Appuyez sur Play ▶️ ou allez dans OS-Paramètres.",
@@ -738,7 +739,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "No location permission, please check device settings",
     ),
     "noLocationRequestPermission": MessageLookupByLibrary.simpleMessage(
-      "Location service is necessary for onsite check - Tap to allow location",
+      "Le service de localisation est nécessaire pour la vérification sur place - Appuyez pour autoriser la localisation",
     ),
     "noNearbyService": MessageLookupByLibrary.simpleMessage(
       "Service à proximité non activé",
@@ -805,7 +806,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "onlyWhileInUse": MessageLookupByLibrary.simpleMessage(
       "GPS Pendant l\'utilisation - l\'application ne fonctionne qu\'au premier plan. Veuillez modifier les paramètres du système d\'exploitation",
     ),
-    "onsiteCount": MessageLookupByLibrary.simpleMessage("Bladeguards onsite "),
+    "onsiteCount": MessageLookupByLibrary.simpleMessage(
+      "Les gardes de lame enregistrés sur place ",
+    ),
     "openOperatingSystemSettings": MessageLookupByLibrary.simpleMessage(
       "Ouvrir les paramètres du système d\'exploitation",
     ),
@@ -1072,6 +1075,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Démarre le journal de trajet sans envoyer de données au serveur",
     ),
     "startsIn": MessageLookupByLibrary.simpleMessage("Commence en"),
+    "statistics": MessageLookupByLibrary.simpleMessage("Statistiques"),
     "status": MessageLookupByLibrary.simpleMessage("Statut"),
     "status_active": MessageLookupByLibrary.simpleMessage("actif"),
     "status_inactive": MessageLookupByLibrary.simpleMessage("inactif"),
@@ -1098,6 +1102,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "timeOutDurationExceedTitle": MessageLookupByLibrary.simpleMessage(
       "Timeout - duration of BladeNight exceed",
     ),
+    "timePeriod": MessageLookupByLibrary.simpleMessage("Période"),
     "timeStamp": MessageLookupByLibrary.simpleMessage("Timestamp"),
     "timeToFinish": MessageLookupByLibrary.simpleMessage("to finish (est.)"),
     "timeToFriend": MessageLookupByLibrary.simpleMessage("Le temps de amis"),
@@ -1140,7 +1145,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "version": MessageLookupByLibrary.simpleMessage("Version:"),
     "visibleOnMap": MessageLookupByLibrary.simpleMessage("Montré sur la carte"),
     "waitForLocation": MessageLookupByLibrary.simpleMessage(
-      "Checking your location ...",
+      "Vérification de votre emplacement ...",
     ),
     "waiting": MessageLookupByLibrary.simpleMessage("En attente..."),
     "waittime": MessageLookupByLibrary.simpleMessage("Temps d\'attente"),
